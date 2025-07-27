@@ -1,0 +1,87 @@
+/* src/app/styles/_tokens.css */
+/* Denna fil definierar alla globala design-tokens (CSS Custom Properties) */
+/* baserat på "Global UI-Standard". Den fungerar som den centrala sanningskällan */
+/* för färger, typografi och andra grundläggande stilvärden. */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap');
+
+:root {
+  /* ========================================================================== */
+  /* TYPOGRAPHY TOKENS                                                          */
+  /* Baserat på Tabell 2.1 i Global UI-Standard                                 */
+  /* ========================================================================== */
+
+  /* Font Families */
+  --font-family-primary: 'Inter', sans-serif;
+  --font-family-monospace: 'JetBrains Mono', monospace;
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Font Sizes */
+  --font-size-h1: 32px;
+  --font-size-h2: 24px;
+  --font-size-h3: 20px;
+  --font-size-body: 16px;
+  --font-size-label: 14px;
+  --font-size-small: 12px;
+  --font-size-data: 15px;
+  --font-size-code: 14px;
+
+  /* Line Heights */
+  --line-height-h1: 40px;
+  --line-height-h2: 32px;
+  --line-height-h3: 28px;
+  --line-height-body: 24px;
+  --line-height-label: 20px;
+  --line-height-small: 16px;
+  --line-height-data: 22px;
+  --line-height-code: 20px;
+
+  /* ========================================================================== */
+  /* COLOR TOKENS (MÖRKT TEMA - STANDARD)                                       */
+  /* Baserat på Tabell 2.2 i Global UI-Standard                                 */
+  /* ========================================================================== */
+
+  --color-surface-primary: #121212;
+  --color-surface-secondary: #1E1E1E;
+  --color-surface-tertiary: #2A2A2A;
+  --color-border-primary: #3C3C3C;
+  --color-text-high-emphasis: rgba(255, 255, 255, 0.9);
+  --color-text-medium-emphasis: rgba(255, 255, 255, 0.7);
+  --color-text-low-emphasis: rgba(255, 255, 255, 0.5);
+  --color-interactive-accent: #3391FF;
+  --color-interactive-accent-hover: #58A6FF;
+  --color-graph-series-1: #82AAFF;
+  --color-graph-series-2: #C39AFF;
+  --color-graph-series-3: #79F8F8;
+  --color-graph-series-4: #FFCB6B;
+  --color-status-error: #F44336;
+}
+
+/* ========================================================================== */
+/* COLOR TOKENS (LJUST TEMA)                                                  */
+/* Baserat på Tabell 2.3 i Global UI-Standard                                 */
+/* Dessa variabler appliceras när .light-theme klassen finns på ett element.  */
+/* ========================================================================== */
+
+.light-theme {
+  --color-surface-primary: #FFFFFF;
+  --color-surface-secondary: #F5F5F5;
+  --color-surface-tertiary: #EEEEEE;
+  --color-border-primary: #DCDCDC;
+  --color-text-high-emphasis: rgba(0, 0, 0, 0.87);
+  --color-text-medium-emphasis: rgba(0, 0, 0, 0.60);
+  --color-text-low-emphasis: rgba(0, 0, 0, 0.38);
+  --color-interactive-accent: #007BFF;
+  --color-interactive-accent-hover: #0056b3;
+  --color-graph-series-1: #005DFF;
+  --color-graph-series-2: #8A2BE2;
+  --color-graph-series-3: #008B8B;
+  --color-graph-series-4: #E59400;
+  --color-status-error: #D32F2F;
+}
+/* src/app/styles/_tokens.css */
