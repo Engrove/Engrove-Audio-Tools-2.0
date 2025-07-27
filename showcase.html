@@ -66,39 +66,50 @@
         
         h1, h2, h3 { color: var(--color-text-high-emphasis); }
         h1 { margin-bottom: 0.5rem; }
-        h2 { margin-top: 2rem; }
+        h2 { margin-top: 2rem; margin-bottom: 1rem; }
         h3 { margin-top: 1.5rem; font-weight: var(--font-weight-medium); }
         
         /* ================================================================== */
         /* PSEUDO-KLASSER FÖR ATT SIMULERA TILLSTÅND                          */
         /* ================================================================== */
 
-        /* BaseButton Simulators */
+        /* BaseButton */
         .base-button.pseudo-hover { transform: translateY(-1px); }
         .base-button.pseudo-focus { outline-offset: 2px; outline: 2px solid var(--color-interactive-accent); }
         .base-button.pseudo-active { transform: translateY(0); }
-        
         .base-button--primary.pseudo-hover { background-color: var(--color-interactive-accent-hover); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); }
         .base-button--primary.pseudo-active { background-color: var(--color-interactive-accent-hover); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2); }
-        
         .base-button--secondary.pseudo-hover { background-color: var(--color-surface-tertiary); color: var(--color-text-high-emphasis); border-color: var(--color-border-primary); }
         .base-button--secondary.pseudo-active { background-color: var(--color-surface-tertiary); color: var(--color-text-high-emphasis); border-color: var(--color-interactive-accent); }
 
-        /* BaseInput Simulators */
-        .base-input.pseudo-hover {
-            border-color: var(--color-text-medium-emphasis);
-        }
+        /* BaseInput */
+        .base-input.pseudo-hover { border-color: var(--color-text-medium-emphasis); }
         .base-input.pseudo-focus {
-            outline: none;
-            border-width: 2px;
-            padding: calc(0.75rem - 1px) calc(1rem - 1px);
-            background-color: var(--color-surface-secondary);
-            border-color: var(--color-interactive-accent);
+            outline: none; border-width: 2px; padding: calc(0.75rem - 1px) calc(1rem - 1px);
+            background-color: var(--color-surface-secondary); border-color: var(--color-interactive-accent);
             box-shadow: 0 0 0 2px rgba(51, 145, 255, 0.3);
         }
         .light-theme .base-input.pseudo-focus {
-             background-color: var(--color-surface-primary);
-             box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+             background-color: var(--color-surface-primary); box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+        
+        /* BaseSelect */
+        .base-select-wrapper.pseudo-hover { border-color: var(--color-text-medium-emphasis); }
+        .base-select-wrapper.pseudo-hover .base-select-arrow { color: var(--color-text-high-emphasis); }
+        .base-select-wrapper.pseudo-focus {
+            border-width: 2px; border-color: var(--color-interactive-accent);
+            box-shadow: 0 0 0 2px rgba(51, 145, 255, 0.3);
+        }
+        .base-select-wrapper.pseudo-focus .base-select { padding: calc(0.75rem - 1px) calc(2.5rem - 1px) calc(0.75rem - 1px) calc(1rem - 1px); }
+        .base-select-wrapper.pseudo-focus .base-select-arrow { color: var(--color-interactive-accent); }
+        .light-theme .base-select-wrapper.pseudo-focus {
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25); background-color: var(--color-surface-primary);
+        }
+
+        /* BaseToggle, BaseCheckbox, BaseRadio (alla delar samma focus-stil) */
+        .pseudo-focus-outline-wrapper:has(.pseudo-focus-target:focus-visible),
+        .pseudo-focus-outline-wrapper.pseudo-focus {
+            outline: 2px solid var(--color-interactive-accent); outline-offset: 2px;
         }
 
     </style>
@@ -107,28 +118,20 @@
 
     <div id="showcase-app">
         <h1>Engrove UI Component Showcase</h1>
-        
         <base-button variant="secondary" @click="toggleTheme">Växla till {{ otherTheme }} tema</base-button>
 
         <div class="info-box">
-            <h3>Om denna sida</h3>
-            <p>Detta är en levande, interaktiv verkstad för alla grundläggande UI-komponenter i <code>/src/shared/ui</code>. Sidan är helt fristående från huvudapplikationen och drivs av <code>/src/showcase.js</code>.</p>
-            <p>Syftet är att utveckla och visuellt verifiera varje komponent i alla dess tillstånd (Default, Hover, Focus, Active, Disabled) enligt den officiella UI-standarden. Om en komponent ser korrekt ut här, är den korrekt.</p>
+            <p>Detta är en levande, interaktiv verkstad för alla grundläggande UI-komponenter i <code>/src/shared/ui</code>. Om en komponent ser korrekt ut och fungerar här, är den korrekt.</p>
         </div>
 
-        <!-- Alla sektioner är oförändrade -->
         <div class="showcase-section">
             <h2>Knappar (BaseButton.vue)</h2>
-            <h3>Primär Knapp</h3>
             <div class="showcase-grid">
                 <div class="component-state"><span class="component-state-label">Default</span><base-button variant="primary">Klicka här</base-button></div>
                 <div class="component-state"><span class="component-state-label">:hover</span><base-button variant="primary" class="pseudo-hover">Klicka här</base-button></div>
                 <div class="component-state"><span class="component-state-label">:focus-visible</span><base-button variant="primary" class="pseudo-focus">Klicka här</base-button></div>
                 <div class="component-state"><span class="component-state-label">:active</span><base-button variant="primary" class="pseudo-active">Klicka här</base-button></div>
                 <div class="component-state"><span class="component-state-label">:disabled</span><base-button variant="primary" :disabled="true">Klicka här</base-button></div>
-            </div>
-            <h3>Sekundär Knapp</h3>
-            <div class="showcase-grid">
                 <div class="component-state"><span class="component-state-label">Default</span><base-button variant="secondary">Alternativ</base-button></div>
                 <div class="component-state"><span class="component-state-label">:hover</span><base-button variant="secondary" class="pseudo-hover">Alternativ</base-button></div>
                 <div class="component-state"><span class="component-state-label">:focus-visible</span><base-button variant="secondary" class="pseudo-focus">Alternativ</base-button></div>
@@ -148,40 +151,43 @@
         <div class="showcase-section">
             <h2>Dropdowns (BaseSelect.vue)</h2>
             <div class="showcase-grid">
-                <div class="component-state"><span class="component-state-label">Default</span><base-select></base-select></div>
-                <div class="component-state"><span class="component-state-label">:hover</span><base-select class="pseudo-hover"></base-select></div>
-                <div class="component-state"><span class="component-state-label">:focus</span><base-select class="pseudo-focus"></base-select></div>
-                <div class="component-state"><span class="component-state-label">:disabled</span><base-select :disabled="true"></base-select></div>
+                <div class="component-state"><span class="component-state-label">Default</span><base-select v-model="selectedValue" :options="selectOptions"></base-select></div>
+                <div class="component-state"><span class="component-state-label">:hover</span><base-select class="pseudo-hover" v-model="selectedValue" :options="selectOptions"></base-select></div>
+                <div class="component-state"><span class="component-state-label">:focus</span><base-select class="pseudo-focus" v-model="selectedValue" :options="selectOptions"></base-select></div>
+                <div class="component-state"><span class="component-state-label">:disabled</span><base-select :disabled="true" v-model="selectedValue" :options="selectOptions"></base-select></div>
             </div>
         </div>
         <div class="showcase-section">
             <h2>Växlare (BaseToggle.vue)</h2>
             <div class="showcase-grid">
-                <div class="component-state"><span class="component-state-label">Av (Off)</span><base-toggle></base-toggle></div>
-                <div class="component-state"><span class="component-state-label">På (On)</span><base-toggle></base-toggle></div>
-                <div class="component-state"><span class="component-state-label">:focus</span><base-toggle class="pseudo-focus"></base-toggle></div>
-                <div class="component-state"><span class="component-state-label">:disabled</span><base-toggle :disabled="true"></base-toggle></div>
+                <div class="component-state"><span class="component-state-label">Av (Off)</span><base-toggle v-model="toggleValueOff"></base-toggle></div>
+                <div class="component-state"><span class="component-state-label">På (On)</span><base-toggle v-model="toggleValueOn"></base-toggle></div>
+                <div class="component-state"><span class="component-state-label">:focus</span><base-toggle v-model="toggleValueOff" class="pseudo-focus"></base-toggle></div>
+                <div class="component-state"><span class="component-state-label">:disabled (Av)</span><base-toggle :disabled="true" :model-value="false"></base-toggle></div>
+                <div class="component-state"><span class="component-state-label">:disabled (På)</span><base-toggle :disabled="true" :model-value="true"></base-toggle></div>
             </div>
         </div>
         <div class="showcase-section">
-            <h2>Kryssrutor (BaseCheckbox.vue)</h2>
+            <h2>Kryssrutor & Radioknappar</h2>
+            <h3>Kryssruta (BaseCheckbox.vue)</h3>
             <div class="showcase-grid">
-                <div class="component-state"><span class="component-state-label">Omarkerad</span><base-checkbox>Etikett</base-checkbox></div>
-                <div class="component-state"><span class="component-state-label">Markerad</span><base-checkbox>Etikett</base-checkbox></div>
-                <div class="component-state"><span class="component-state-label">:focus</span><base-checkbox class="pseudo-focus">Etikett</base-checkbox></div>
-                <div class="component-state"><span class="component-state-label">:disabled</span><base-checkbox :disabled="true">Etikett</base-checkbox></div>
+                <div class="component-state"><span class="component-state-label">Omarkerad</span><base-checkbox v-model="checkboxUnchecked">Etikett</base-checkbox></div>
+                <div class="component-state"><span class="component-state-label">Markerad</span><base-checkbox v-model="checkboxChecked">Etikett</base-checkbox></div>
+                <div class="component-state"><span class="component-state-label">:focus</span><base-checkbox v-model="checkboxUnchecked" class="pseudo-focus">Etikett</base-checkbox></div>
+                <div class="component-state"><span class="component-state-label">:disabled (Omarkerad)</span><base-checkbox :disabled="true" :model-value="false">Etikett</base-checkbox></div>
+                <div class="component-state"><span class="component-state-label">:disabled (Markerad)</span><base-checkbox :disabled="true" :model-value="true">Etikett</base-checkbox></div>
             </div>
             <h3>Radioknappar (BaseRadio.vue)</h3>
             <div class="showcase-grid">
-                <div class="component-state"><span class="component-state-label">Ovald</span><base-radio name="showcase_radio" value="1">Val 1</base-radio></div>
-                <div class="component-state"><span class="component-state-label">Vald</span><base-radio name="showcase_radio" value="2">Val 2</base-radio></div>
-                <div class="component-state"><span class="component-state-label">:focus</span><base-radio name="showcase_radio_focus" value="3" class="pseudo-focus">Val 3</base-radio></div>
-                <div class="component-state"><span class="component-state-label">:disabled</span><base-radio name="showcase_radio_disabled" value="4" :disabled="true">Val 4</base-radio></div>
+                <div class="component-state"><span class="component-state-label">Ovald</span><base-radio name="interactive_radio" value="val1" v-model="radioValue">Val 1</base-radio></div>
+                <div class="component-state"><span class="component-state-label">Vald</span><base-radio name="interactive_radio" value="val2" v-model="radioValue">Val 2</base-radio></div>
+                <div class="component-state"><span class="component-state-label">:focus</span><base-radio name="focus_radio" value="f1" class="pseudo-focus">Val 3</base-radio></div>
+                <div class="component-state"><span class="component-state-label">:disabled (Ovald)</span><base-radio name="disabled_radio" value="d1" :disabled="true">Val 4</base-radio></div>
+                <div class="component-state"><span class="component-state-label">:disabled (Vald)</span><base-radio name="disabled_radio" value="d2" :disabled="true" model-value="d2">Val 5</base-radio></div>
             </div>
         </div>
     </div>
-
-    <!-- Denna script-tagg pekar nu på en källkodsfil som Vite kommer att hitta och bygga. -->
+    
     <script type="module" src="/src/showcase.js"></script>
 
 </body>
