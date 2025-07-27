@@ -1,14 +1,14 @@
 # /wrangler.toml
 # Denna fil är den primära konfigurationen för Cloudflare Pages.
-# Den talar om för Cloudflare vilket byggkommando som ska köras (`npm run build`)
+# Den talar om för Cloudflare vilket byggkommando som ska köras (`npm install && npm run build`)
 # och i vilken mapp resultatet av bygget kommer att finnas (`dist`).
-# Detta är avgörande för att driftsättningen ska lyckas.
+# Strukturen har justerats för att säkerställa kompatibilitet med Cloudflares parser.
 
 name = "engrove-audio-toolkit-2-0"
-compatibility_date = "2025-07-27"
+compatibility_date = "2024-05-08"
 
-[pages]
-# Detta är de viktiga inställningarna för Pages-plattformen.
+# Not: [pages]-sektionen är borttagen för en plattare och mer direkt
+# konfiguration som är vanligare i Pages-exempel.
 build_output_dir = "dist"
 build_command = "npm install && npm run build"
 
