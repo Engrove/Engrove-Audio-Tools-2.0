@@ -1,16 +1,12 @@
 # wrangler.toml
 # Detta är konfigurationsfilen för Cloudflare Pages.
 # Den talar om för Cloudflare hur man bygger och driftsätter projektet.
+# Denna version använder den korrekta, platta strukturen.
 
 name = "engrove-audio-toolkit-2-0"
-compatibility_date = "2024-07-25"
+pages_build_output_dir = "dist" # Anger den färdigbyggda mappen på toppnivå
 
-[pages]
-# Anger vilken mapp som innehåller de färdigbyggda, statiska filerna.
-# Vite bygger som standard till en mapp som heter "dist".
-pages_build_output_dir = "dist"
-
-# Anger vilket kommando som ska köras för att bygga projektet.
-[pages.build]
+# [build] är en separat sektion för byggrelaterade kommandon
+[build]
 command = "npm run build"
 # wrangler.toml
