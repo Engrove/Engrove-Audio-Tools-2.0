@@ -1,160 +1,68 @@
-<!-- public/showcase.html -->
-<!-- ==================================================================================== -->
-<!-- ARBETSFLÖDE & INSTRUKTIONER FÖR AI-PROGRAMMERAREN                                  -->
-<!-- ==================================================================================== -->
-<!-- SYFTE: Denna fil är en levande, interaktiv stilguide (en "KISS"-ersättning för      -->
-<!-- Storybook). Dess syfte är att utveckla och visuellt verifiera alla baskomponenter   -->
-<!-- från /src/shared/ui/ i en helt isolerad miljö.                                     -->
-<!--                                                                                    -->
-<!-- PROCESS FÖR ATT LÄGGA TILL EN NY KOMPONENT:                                        -->
-<!-- 1. KONTEXT: Samla ihop all kontext:                                                -->
-<!--    a) Hela innehållet i denna fil (showcase.html).                                 -->
-<!--    b) Hela innehållet i /public/showcase.js.                                       -->
-<!--    c) Den exakta komponentspecifikationen från "Global UI-Standard".               -->
-<!-- 2. PROMPT: Ge en specifik prompt, t.ex: "Uppdatera showcase.html och showcase.js   -->
-<!--    för att lägga till och visa upp den nya BaseInput-komponenten enligt den        -->
-<!--    bifogade specifikationen."                                                      -->
-<!-- 3. VERIFIERING: Öppna showcase.html i webbläsaren för att visuellt bekräfta att    -->
-<!--    komponenten ser ut och beter sig korrekt i alla sina tillstånd och teman.       -->
-<!-- ==================================================================================== -->
+// public/showcase.js
+// Detta skript är "motorn" för showcase.html. Det skapar en fristående Vue-app,
+// importerar ALLA UI-komponenter från /src/shared/ui, registrerar dem globalt (endast
+// för denna sida) och hanterar interaktivitet som temaväxling.
 
-<!DOCTYPE html>
-<html lang="sv">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Engrove UI Component Showcase</title>
+import { createApp, ref, computed } from 'vue';
 
-    <!-- Länkar till de faktiska CSS-filerna från projektet -->
-    <link rel="stylesheet" href="/src/app/styles/_tokens.css">
-    <link rel="stylesheet" href="/src/app/styles/_global.css">
+// Importera ALLA baskomponenter från källkodsmappen.
+import BaseButton from '../src/shared/ui/BaseButton.vue';
+import BaseInput from '../src/shared/ui/BaseInput.vue';
+import BaseSelect from '../src/shared/ui/BaseSelect.vue';
+import BaseToggle from '../src/shared/ui/BaseToggle.vue';
+import BaseCheckbox from '../src/shared/ui/BaseCheckbox.vue';
+import BaseRadio from '../src/shared/ui/BaseRadio.vue';
 
-    <style>
-        /* Interna stilar endast för denna showcase-sida för att strukturera innehållet */
-        body {
-            font-family: var(--font-family-primary);
-            padding: 2rem 4rem;
-            transition: background-color 0.3s, color 0.3s;
-            background-color: var(--color-surface-primary);
-            color: var(--color-text-medium-emphasis);
-        }
-        .showcase-section {
-            margin-top: 4rem;
-            border-top: 1px solid var(--color-border-primary);
-            padding-top: 2rem;
-        }
-        .showcase-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 2rem 1rem;
-            align-items: center;
-            margin-top: 1.5rem;
-        }
-        .component-state {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        .component-state-label {
-            font-size: var(--font-size-small);
-            color: var(--color-text-low-emphasis);
-            font-family: var(--font-family-monospace);
-        }
-        h1, h2, h3 { color: var(--color-text-high-emphasis); }
-        h1 { margin-bottom: 0.5rem; }
-        h2 { margin-top: 2rem; }
-        h3 { margin-top: 1.5rem; font-weight: var(--font-weight-medium); }
-        p {
-            max-width: 75ch;
-            color: var(--color-text-medium-emphasis);
-            margin-bottom: 2rem;
-        }
-    </style>
-</head>
-<body>
+// Vue-appens definition för showcase-sidan.
+const showcaseApp = {
+  setup() {
+    // === Reaktiva Variabler ===
+    const currentTheme = ref('dark'); // 'dark' eller 'light'.
 
-    <div id="showcase-app">
-        <h1>Engrove UI Component Showcase</h1>
-        <p>
-            Detta är en levande och interaktiv verkstad för alla baskomponenter i <code>/src/shared/ui/</code>.
-            Sidan är helt fristående från huvudapplikationen och används för att säkerställa att varje komponent
-            implementeras exakt enligt <strong>Global UI-Standard</strong> för alla sina visuella tillstånd (Default, Hover, Focus, Active, Disabled) och teman.
-        </p>
+    // === Beräknade Egenskaper (Computed Properties) ===
+    const themeClass = computed(() => {
+      // Om currentTheme.value är 'dark', returnera 'dark-theme'.
+      // Annars, returnera 'light-theme'.
+      return currentTheme.value === 'dark' ? 'dark-theme' : 'light-theme';
+    });
 
-        <base-button variant="secondary" @click="toggleTheme">
-            Växla till {{ otherTheme }} tema
-        </base-button>
+    const otherTheme = computed(() => {
+      // Om currentTheme.value är 'dark', returnera 'ljust'.
+      // Annars, returnera 'mörkt'.
+      return currentTheme.value === 'dark' ? 'ljust' : 'mörkt';
+    });
 
-        <!-- Sektion för att visa upp knappar -->
-        <div class="showcase-section">
-            <h2>Knappar (BaseButton.vue)</h2>
-            
-            <h3>Primär Knapp</h3>
-            <div class="showcase-grid">
-                <div class="component-state">
-                    <span class="component-state-label">Default</span>
-                    <base-button variant="primary">Klicka här</base-button>
-                </div>
-                <div class="component-state">
-                    <span class="component-state-label">Hover</span>
-                    <base-button variant="primary">Hovra över</base-button>
-                </div>
-                <div class="component-state">
-                    <span class="component-state-label">Focus</span>
-                    <base-button variant="primary">Fokusera</base-button>
-                </div>
-                <div class="component-state">
-                    <span class="component-state-label">Active</span>
-                    <base-button variant="primary">Håll nere</base-button>
-                </div>
-                <div class="component-state">
-                    <span class="component-state-label">Disabled</span>
-                    <base-button variant="primary" :disabled="true">Inaktiv</base-button>
-                </div>
-            </div>
-
-            <h3>Sekundär Knapp</h3>
-            <div class="showcase-grid">
-                 <div class="component-state">
-                    <span class="component-state-label">Default</span>
-                    <base-button variant="secondary">Klicka här</base-button>
-                </div>
-                <div class="component-state">
-                    <span class="component-state-label">Hover</span>
-                    <base-button variant="secondary">Hovra över</base-button>
-                </div>
-                <div class="component-state">
-                    <span class="component-state-label">Focus</span>
-                    <base-button variant="secondary">Fokusera</base-button>
-                </div>
-                <div class="component-state">
-                    <span class="component-state-label">Active</span>
-                    <base-button variant="secondary">Håll nere</base-button>
-                </div>
-                <div class="component-state">
-                    <span class="component-state-label">Disabled</span>
-                    <base-button variant="secondary" :disabled="true">Inaktiv</base-button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Sektion för att visa upp inmatningsfält (framtida) -->
-        <div class="showcase-section">
-            <h2>Inmatningsfält (BaseInput.vue)</h2>
-        </div>
-
-    </div>
-
-    <script type="importmap">
-    {
-        "imports": {
-            "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
-        }
+    // === Funktioner ===
+    function toggleTheme() {
+      currentTheme.value = currentTheme.value === 'dark' ? 'light' : 'dark';
+      // Applicera klassen direkt på <html>-taggen för global effekt.
+      document.documentElement.className = themeClass.value;
     }
-    </script>
-    
-    <script type="module" src="/showcase.js"></script>
 
-</body>
-</html>
-<!-- public/showcase.html -->```
+    // === Initialisering ===
+    // Sätt det initiala temat när appen startar.
+    document.documentElement.className = themeClass.value;
+
+    // Exponera till templaten i showcase.html
+    return {
+      themeClass,
+      otherTheme,
+      toggleTheme,
+    };
+  }
+};
+
+// Skapa Vue-appen
+const app = createApp(showcaseApp);
+
+// Registrera ALLA komponenter globalt så de kan användas i showcase.html
+app.component('BaseButton', BaseButton);
+app.component('BaseInput', BaseInput);
+app.component('BaseSelect', BaseSelect);
+app.component('BaseToggle', BaseToggle);
+app.component('BaseCheckbox', BaseCheckbox);
+app.component('BaseRadio', BaseRadio);
+
+// Montera appen
+app.mount('#showcase-app');
+// public/showcase.js
