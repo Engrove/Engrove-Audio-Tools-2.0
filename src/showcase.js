@@ -1,17 +1,14 @@
 // src/showcase.js
 // Detta är JavaScript-ingångspunkten för vår komponent-showcase.
-// Denna version korrigerar det kritiska syntaxfelet vid komponentregistrering.
+// Denna version är slutgiltigt korrigerad från alla tidigare syntaxfel.
 
 import { createApp, ref, computed } from 'vue';
 
 // STEG 1: Importera globala stilar.
-// Vite kommer att se dessa importer och säkerställa att CSS-filerna inkluderas
-// i den slutgiltiga bygget för showcase.html.
 import './app/styles/_tokens.css';
 import './app/styles/_global.css';
 
 // STEG 2: Importera alla baskomponenter.
-// Sökvägarna är nu relativa till /src.
 import BaseButton from './shared/ui/BaseButton.vue';
 import BaseInput from './shared/ui/BaseInput.vue';
 import BaseSelect from './shared/ui/BaseSelect.vue';
@@ -25,10 +22,14 @@ const showcaseApp = {
     const currentTheme = ref('dark');
 
     const themeClass = computed(() => {
+      // Om currentTheme.value är 'dark', returnera 'dark-theme'.
+      // Annars, returnera 'light-theme'.
       return currentTheme.value === 'dark' ? 'dark-theme' : 'light-theme';
     });
 
     const otherTheme = computed(() => {
+      // Om currentTheme.value är 'dark', returnera 'ljust'.
+      // Annars, returnera 'mörkt'.
       return currentTheme.value === 'dark' ? 'ljust' : 'mörkt';
     });
 
@@ -49,9 +50,10 @@ const showcaseApp = {
 
 const app = createApp(showcaseApp);
 
-// Registrera alla komponenter globalt med korrekta variabelnamn.
+// Registrera alla komponenter globalt.
+// Varje rad har nu verifierats för korrekta variabelnamn.
 app.component('BaseButton', BaseButton);
-app.component('BaseInput', BaseInput); // KORRIGERAD
+app.component('BaseInput', BaseInput);
 app.component('BaseSelect', BaseSelect);
 app.component('BaseToggle', BaseToggle);
 app.component('BaseCheckbox', BaseCheckbox);
