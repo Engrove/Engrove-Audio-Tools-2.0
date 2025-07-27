@@ -1,32 +1,31 @@
 // public/showcase.js
 // Detta skript är "motorn" för showcase.html. Det skapar en fristående Vue-app,
-// importerar UI-komponenter från /src/shared/ui, registrerar dem globalt (endast
+// importerar ALLA UI-komponenter från /src/shared/ui, registrerar dem globalt (endast
 // för denna sida) och hanterar interaktivitet som temaväxling.
 
 import { createApp, ref, computed } from 'vue';
 
-// Importera baskomponenter från källkodsmappen.
-// Denna relativa sökväg fungerar eftersom Vite's dev-server serverar från projektets rot.
+// Importera ALLA baskomponenter från källkodsmappen.
 import BaseButton from '../src/shared/ui/BaseButton.vue';
-// ... framtida komponenter importeras här, t.ex. BaseInput ...
+import BaseInput from '../src/shared/ui/BaseInput.vue';
+import BaseSelect from '../src/shared/ui/BaseSelect.vue';
+import BaseToggle from '../src/shared/ui/BaseToggle.vue';
+import BaseCheckbox from '../src/shared/ui/BaseCheckbox.vue';
+import BaseRadio from '../src/shared/ui/BaseRadio.vue';
 
 // Vue-appens definition för showcase-sidan.
 const showcaseApp = {
   setup() {
     // === Reaktiva Variabler ===
-    // 'dark' eller 'light'. Startar som mörkt tema.
-    const currentTheme = ref('dark');
+    const currentTheme = ref('dark'); // 'dark' eller 'light'.
 
     // === Beräknade Egenskaper (Computed Properties) ===
-
-    // Returnerar den CSS-klass som ska appliceras på body-elementet.
     const themeClass = computed(() => {
       // Om currentTheme.value är 'dark', returnera 'dark-theme'.
       // Annars, returnera 'light-theme'.
       return currentTheme.value === 'dark' ? 'dark-theme' : 'light-theme';
     });
 
-    // Returnerar texten för temaväxlarknappen.
     const otherTheme = computed(() => {
       // Om currentTheme.value är 'dark', returnera 'ljust'.
       // Annars, returnera 'mörkt'.
@@ -34,38 +33,36 @@ const showcaseApp = {
     });
 
     // === Funktioner ===
-
-    // Växlar det nuvarande temat och uppdaterar CSS-klassen på body.
     function toggleTheme() {
       currentTheme.value = currentTheme.value === 'dark' ? 'light' : 'dark';
-      // Applicera klassen direkt på <html>-taggen för att säkerställa
-      // att alla CSS-variabler uppdateras korrekt över hela sidan.
+      // Applicera klassen direkt på <html>-taggen för global effekt.
       document.documentElement.className = themeClass.value;
     }
 
     // === Initialisering ===
-
-    // Sätt det initiala temat när komponenten monteras.
+    // Sätt det initiala temat när appen startar.
     document.documentElement.className = themeClass.value;
 
-
-    // Exponera variabler och funktioner till templaten.
+    // Exponera till templaten i showcase.html
     return {
       themeClass,
       otherTheme,
-      toggleTheme
+      toggleTheme,
     };
   }
 };
 
-// Skapa en ny Vue app-instans med vår definition.
+// Skapa Vue-appen
 const app = createApp(showcaseApp);
 
-// Registrera alla importerade baskomponenter globalt så att de
-// kan användas direkt i showcase.html utan att behöva importeras där.
+// Registrera ALLA komponenter globalt så de kan användas i showcase.html
 app.component('BaseButton', BaseButton);
-// ... app.component('BaseInput', Base-Input) ...
+app.component('BaseInput', BaseInput);
+app.component('BaseSelect', BaseSelect);
+app.component('BaseToggle', BaseToggle);
+app.component('BaseCheckbox', BaseCheckbox);
+app.component('BaseRadio', BaseRadio);
 
-// Montera Vue-appen på div-elementet med id="showcase-app".
+// Montera appen
 app.mount('#showcase-app');
 // public/showcase.js
