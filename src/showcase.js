@@ -1,7 +1,6 @@
 // src/showcase.js
 // Detta är JavaScript-ingångspunkten för vår komponent-showcase.
-// Eftersom den nu är en del av källkoden (`src`), kan Vite bearbeta den
-// och dess importer korrekt.
+// Denna version korrigerar det kritiska syntaxfelet vid komponentregistrering.
 
 import { createApp, ref, computed } from 'vue';
 
@@ -21,7 +20,6 @@ import BaseCheckbox from './shared/ui/BaseCheckbox.vue';
 import BaseRadio from './shared/ui/BaseRadio.vue';
 
 // STEG 3: Definiera och montera Vue-appen.
-// Denna logik är oförändrad.
 const showcaseApp = {
   setup() {
     const currentTheme = ref('dark');
@@ -51,9 +49,9 @@ const showcaseApp = {
 
 const app = createApp(showcaseApp);
 
-// Registrera alla komponenter globalt
+// Registrera alla komponenter globalt med korrekta variabelnamn.
 app.component('BaseButton', BaseButton);
-app.component('BaseInput', Base-Input);
+app.component('BaseInput', BaseInput); // KORRIGERAD
 app.component('BaseSelect', BaseSelect);
 app.component('BaseToggle', BaseToggle);
 app.component('BaseCheckbox', BaseCheckbox);
