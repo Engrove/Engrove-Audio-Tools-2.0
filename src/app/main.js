@@ -5,7 +5,9 @@
 // och monterar den på DOM-elementet med id="app" i vår index.html.
 
 import { createApp } from 'vue'
-import App from '../../App.vue'
+// KORRIGERING: Sökvägen har ändrats från '../../App.vue' till '../App.vue'
+// för att korrekt peka från /src/app/ till /src/.
+import App from '../App.vue'
 
 createApp(App).mount('#app')
 // /src/app/main.js
