@@ -1,17 +1,15 @@
-<!-- public/showcase.html -->
+<!-- showcase.html -->
 <!-- Denna fil är en fristående, levande stilguide (KISS-ersättning för Storybook). -->
-<!-- Den laddar en egen liten Vue-app för att rendera och testa baskomponenter -->
-<!-- från /src/shared/ui/ i en isolerad miljö. -->
+<!-- Den ligger i projektets rot och agerar som en källkods-ingång för Vite. -->
+<!-- Vite kommer att bygga denna fil och injicera de korrekta, hashade CSS/JS-länkarna. -->
 <!DOCTYPE html>
 <html lang="sv" class="dark-theme">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Engrove UI Component Showcase</title>
-
-    <!-- Länkar till de faktiska CSS-filerna från projektet -->
-    <link rel="stylesheet" href="/src/app/styles/_tokens.css">
-    <link rel="stylesheet" href="/src/app/styles/_global.css">
+    <!-- NOTERA: Inga manuella <link>-taggar till CSS behövs här. -->
+    <!-- Vite kommer automatiskt att injicera dem baserat på importerna i showcase.js -->
 
     <style>
         /* Interna stilar för att strukturera showcase-sidan */
@@ -72,7 +70,6 @@
         h3 { margin-top: 1.5rem; font-weight: var(--font-weight-medium); }
         
         /* PSEUDO-KLASSER FÖR ATT SIMULERA TILLSTÅND */
-        /* Dessa klasser speglar :hover, :focus-visible och :active i komponenternas CSS */
         .base-button.pseudo-hover { transform: translateY(-1px); }
         .base-button.pseudo-focus { outline-offset: 2px; outline: 2px solid var(--color-interactive-accent); }
         .base-button.pseudo-active { transform: translateY(0); }
@@ -82,7 +79,6 @@
         
         .base-button--secondary.pseudo-hover { background-color: var(--color-surface-tertiary); color: var(--color-text-high-emphasis); border-color: var(--color-border-primary); }
         .base-button--secondary.pseudo-active { background-color: var(--color-surface-tertiary); color: var(--color-text-high-emphasis); border-color: var(--color-interactive-accent); }
-
     </style>
 </head>
 <body>
@@ -94,11 +90,11 @@
 
         <div class="info-box">
             <h3>Om denna sida</h3>
-            <p>Detta är en levande, interaktiv verkstad för alla grundläggande UI-komponenter i <code>/src/shared/ui</code>. Sidan är helt fristående från huvudapplikationen och drivs av <code>/public/showcase.js</code>.</p>
+            <p>Detta är en levande, interaktiv verkstad för alla grundläggande UI-komponenter i <code>/src/shared/ui</code>. Sidan är helt fristående från huvudapplikationen och drivs av <code>/src/showcase.js</code>.</p>
             <p>Syftet är att utveckla och visuellt verifiera varje komponent i alla dess tillstånd (Default, Hover, Focus, Active, Disabled) enligt den officiella UI-standarden. Om en komponent ser korrekt ut här, är den korrekt.</p>
         </div>
 
-        <!-- ==================== KNAPPAR ==================== -->
+        <!-- Alla sektioner är oförändrade -->
         <div class="showcase-section">
             <h2>Knappar (BaseButton.vue)</h2>
             <h3>Primär Knapp</h3>
@@ -109,7 +105,6 @@
                 <div class="component-state"><span class="component-state-label">:active</span><base-button variant="primary" class="pseudo-active">Klicka här</base-button></div>
                 <div class="component-state"><span class="component-state-label">:disabled</span><base-button variant="primary" :disabled="true">Klicka här</base-button></div>
             </div>
-
             <h3>Sekundär Knapp</h3>
             <div class="showcase-grid">
                 <div class="component-state"><span class="component-state-label">Default</span><base-button variant="secondary">Alternativ</base-button></div>
@@ -119,8 +114,6 @@
                 <div class="component-state"><span class="component-state-label">:disabled</span><base-button variant="secondary" :disabled="true">Alternativ</base-button></div>
             </div>
         </div>
-
-        <!-- ==================== INMATNINGSFÄLT ==================== -->
         <div class="showcase-section">
             <h2>Inmatningsfält (BaseInput.vue)</h2>
             <div class="showcase-grid">
@@ -130,8 +123,6 @@
                 <div class="component-state"><span class="component-state-label">:disabled</span><base-input placeholder="Disabled" :disabled="true"></base-input></div>
             </div>
         </div>
-
-        <!-- ==================== DROPDOWNS ==================== -->
         <div class="showcase-section">
             <h2>Dropdowns (BaseSelect.vue)</h2>
             <div class="showcase-grid">
@@ -141,8 +132,6 @@
                 <div class="component-state"><span class="component-state-label">:disabled</span><base-select :disabled="true"></base-select></div>
             </div>
         </div>
-
-        <!-- ==================== VÄXLARE ==================== -->
         <div class="showcase-section">
             <h2>Växlare (BaseToggle.vue)</h2>
             <div class="showcase-grid">
@@ -152,8 +141,6 @@
                 <div class="component-state"><span class="component-state-label">:disabled</span><base-toggle :disabled="true"></base-toggle></div>
             </div>
         </div>
-
-        <!-- ==================== KRYSSRUTOR & RADIOKNAPPAR ==================== -->
         <div class="showcase-section">
             <h2>Kryssrutor (BaseCheckbox.vue)</h2>
             <div class="showcase-grid">
@@ -162,7 +149,6 @@
                 <div class="component-state"><span class="component-state-label">:focus</span><base-checkbox class="pseudo-focus">Etikett</base-checkbox></div>
                 <div class="component-state"><span class="component-state-label">:disabled</span><base-checkbox :disabled="true">Etikett</base-checkbox></div>
             </div>
-            
             <h3>Radioknappar (BaseRadio.vue)</h3>
             <div class="showcase-grid">
                 <div class="component-state"><span class="component-state-label">Ovald</span><base-radio name="showcase_radio" value="1">Val 1</base-radio></div>
@@ -173,10 +159,9 @@
         </div>
     </div>
 
-    <!-- Import Map och JS-motorn för sidan -->
-    <script type="importmap">{"imports": {"vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"}}</script>
-    <script type="module" src="/showcase.js"></script>
+    <!-- Denna script-tagg pekar nu på en källkodsfil som Vite kommer att hitta och bygga. -->
+    <script type="module" src="/src/showcase.js"></script>
 
 </body>
 </html>
-<!-- public/showcase.html -->
+<!-- showcase.html -->
