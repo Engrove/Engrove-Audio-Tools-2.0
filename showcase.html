@@ -69,7 +69,11 @@
         h2 { margin-top: 2rem; }
         h3 { margin-top: 1.5rem; font-weight: var(--font-weight-medium); }
         
-        /* PSEUDO-KLASSER FÖR ATT SIMULERA TILLSTÅND */
+        /* ================================================================== */
+        /* PSEUDO-KLASSER FÖR ATT SIMULERA TILLSTÅND                          */
+        /* ================================================================== */
+
+        /* BaseButton Simulators */
         .base-button.pseudo-hover { transform: translateY(-1px); }
         .base-button.pseudo-focus { outline-offset: 2px; outline: 2px solid var(--color-interactive-accent); }
         .base-button.pseudo-active { transform: translateY(0); }
@@ -79,6 +83,24 @@
         
         .base-button--secondary.pseudo-hover { background-color: var(--color-surface-tertiary); color: var(--color-text-high-emphasis); border-color: var(--color-border-primary); }
         .base-button--secondary.pseudo-active { background-color: var(--color-surface-tertiary); color: var(--color-text-high-emphasis); border-color: var(--color-interactive-accent); }
+
+        /* BaseInput Simulators */
+        .base-input.pseudo-hover {
+            border-color: var(--color-text-medium-emphasis);
+        }
+        .base-input.pseudo-focus {
+            outline: none;
+            border-width: 2px;
+            padding: calc(0.75rem - 1px) calc(1rem - 1px);
+            background-color: var(--color-surface-secondary);
+            border-color: var(--color-interactive-accent);
+            box-shadow: 0 0 0 2px rgba(51, 145, 255, 0.3);
+        }
+        .light-theme .base-input.pseudo-focus {
+             background-color: var(--color-surface-primary);
+             box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+
     </style>
 </head>
 <body>
