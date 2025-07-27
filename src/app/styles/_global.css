@@ -1,0 +1,85 @@
+/* src/app/styles/_global.css */
+/* Denna fil applicerar de grundläggande stilarna för hela applikationen. */
+/* Den använder de design-tokens som definierats i _tokens.css för att */
+/* säkerställa en konsekvent visuell bas enligt Global UI-Standard. */
+
+/* ========================================================================== */
+/* GRUNDLÄGGANDE STILAR OCH ÅTERSTÄLLNING                                      */
+/* ========================================================================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px; /* Sätter en bas-fontstorlek för hela dokumentet */
+}
+
+body {
+  font-family: var(--font-family-primary);
+  background-color: var(--color-surface-primary);
+  color: var(--color-text-medium-emphasis);
+  line-height: var(--line-height-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* ========================================================================== */
+/* TYPOGRAFI-HIERARKI                                                         */
+/* Applicerar typsnitt, storlek och vikt för rubriker baserat på tokens.      */
+/* ========================================================================== */
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-text-high-emphasis);
+  font-family: var(--font-family-primary);
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-h1);
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-h2);
+}
+
+h3 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-h3);
+}
+
+/* ========================================================================== */
+/* LÄNKAR OCH INTERAKTIVA ELEMENT                                             */
+/* ========================================================================== */
+
+a {
+  color: var(--color-interactive-accent);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--color-interactive-accent-hover);
+  text-decoration: underline;
+}
+
+/* ========================================================================== */
+/* FORMULÄRELEMENT (GENERELLT)                                                */
+/* Grundläggande stilar för att säkerställa att formulärelement ärver        */
+/* typsnitt och färger korrekt.                                               */
+/* ========================================================================== */
+
+input,
+button,
+textarea,
+select {
+  font-family: inherit; /* Ärver typsnittet från body */
+}
+/* src/app/styles/_global.css */
