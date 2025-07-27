@@ -1,0 +1,121 @@
+<!-- public/showcase.html -->
+<!-- Denna fil är en fristående, levande stilguide (KISS-ersättning för Storybook). -->
+<!-- Den laddar en egen liten Vue-app för att rendera och testa baskomponenter -->
+<!-- från /src/shared/ui/ i en isolerad miljö. -->
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engrove UI Component Showcase</title>
+
+    <!-- Länkar till de faktiska CSS-filerna från projektet -->
+    <link rel="stylesheet" href="/src/app/styles/_tokens.css">
+    <link rel="stylesheet" href="/src/app/styles/_global.css">
+
+    <style>
+        /* Interna stilar endast för denna showcase-sida för att strukturera innehållet */
+        body {
+            font-family: var(--font-family-primary);
+            padding: 2rem;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: var(--color-surface-primary);
+            color: var(--color-text-medium-emphasis);
+        }
+
+        .showcase-section {
+            margin-bottom: 4rem;
+            border-bottom: 1px solid var(--color-border-primary);
+            padding-bottom: 2rem;
+        }
+
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 2rem;
+            align-items: center;
+            margin-top: 1.5rem;
+        }
+
+        .component-state {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .component-state-label {
+            font-size: var(--font-size-small);
+            color: var(--color-text-low-emphasis);
+            font-family: var(--font-family-monospace);
+        }
+
+        h1, h2, h3 {
+            color: var(--color-text-high-emphasis);
+        }
+
+        h1 { margin-bottom: 0.5rem; }
+        h2 { margin-top: 2rem; }
+        h3 { margin-top: 1.5rem; font-weight: var(--font-weight-medium); }
+
+        p {
+            max-width: 65ch;
+            color: var(--color-text-medium-emphasis);
+            margin-bottom: 2rem;
+        }
+
+        /* Klasser för att manuellt simulera interaktiva tillstånd i senare steg */
+        /* Dessa är ännu inte implementerade i BaseButton.vue men förbereds här. */
+        .pseudo-hover { /* Kommer användas för att tvinga hover-stilar */ }
+        .pseudo-focus { /* Kommer användas för att tvinga focus-stilar */ }
+        .pseudo-active { /* Kommer användas för att tvinga active-stilar */ }
+    </style>
+</head>
+<body>
+
+    <div id="showcase-app">
+        <h1>Engrove UI Component Showcase</h1>
+        <p>Detta är en levande dokumentation av alla baskomponenter i `shared/ui`. Sidan är helt fristående från huvudapplikationen.</p>
+        
+        <!-- Temaväxlaren kommer att drivas av Vue-logiken i showcase.js -->
+        <base-button variant="secondary" @click="toggleTheme">
+            Växla till {{ otherTheme }} tema
+        </base-button>
+
+        <!-- Sektion för att visa upp knappar -->
+        <div class="showcase-section">
+            <h2>Knappar (BaseButton.vue)</h2>
+            
+            <h3>Primär Knapp</h3>
+            <div class="showcase-grid">
+                <!-- Platshållare för knapp-tillstånd -->
+            </div>
+
+            <h3>Sekundär Knapp</h3>
+            <div class="showcase-grid">
+                <!-- Platshållare för knapp-tillstånd -->
+            </div>
+        </div>
+
+        <!-- Sektion för att visa upp inmatningsfält (framtida) -->
+        <div class="showcase-section">
+            <h2>Inmatningsfält (BaseInput.vue)</h2>
+            <!-- Platshållare för input-tillstånd -->
+        </div>
+
+    </div>
+
+    <!-- Import Map för att tala om för webbläsaren var den hittar Vue -->
+    <script type="importmap">
+    {
+        "imports": {
+            "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+        }
+    }
+    </script>
+    
+    <!-- Skriptet som startar Vue-appen för denna sida -->
+    <script type="module" src="/showcase.js"></script>
+
+</body>
+</html>
+<!-- public/showcase.html -->
