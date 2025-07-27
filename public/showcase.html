@@ -1,7 +1,23 @@
 <!-- public/showcase.html -->
-<!-- Denna fil är en fristående, levande stilguide (KISS-ersättning för Storybook). -->
-<!-- Den laddar en egen liten Vue-app för att rendera och testa baskomponenter -->
-<!-- från /src/shared/ui/ i en isolerad miljö. -->
+<!-- ==================================================================================== -->
+<!-- ARBETSFLÖDE & INSTRUKTIONER FÖR AI-PROGRAMMERAREN                                  -->
+<!-- ==================================================================================== -->
+<!-- SYFTE: Denna fil är en levande, interaktiv stilguide (en "KISS"-ersättning för      -->
+<!-- Storybook). Dess syfte är att utveckla och visuellt verifiera alla baskomponenter   -->
+<!-- från /src/shared/ui/ i en helt isolerad miljö.                                     -->
+<!--                                                                                    -->
+<!-- PROCESS FÖR ATT LÄGGA TILL EN NY KOMPONENT:                                        -->
+<!-- 1. KONTEXT: Samla ihop all kontext:                                                -->
+<!--    a) Hela innehållet i denna fil (showcase.html).                                 -->
+<!--    b) Hela innehållet i /public/showcase.js.                                       -->
+<!--    c) Den exakta komponentspecifikationen från "Global UI-Standard".               -->
+<!-- 2. PROMPT: Ge en specifik prompt, t.ex: "Uppdatera showcase.html och showcase.js   -->
+<!--    för att lägga till och visa upp den nya BaseInput-komponenten enligt den        -->
+<!--    bifogade specifikationen."                                                      -->
+<!-- 3. VERIFIERING: Öppna showcase.html i webbläsaren för att visuellt bekräfta att    -->
+<!--    komponenten ser ut och beter sig korrekt i alla sina tillstånd och teman.       -->
+<!-- ==================================================================================== -->
+
 <!DOCTYPE html>
 <html lang="sv">
 <head>
@@ -17,66 +33,54 @@
         /* Interna stilar endast för denna showcase-sida för att strukturera innehållet */
         body {
             font-family: var(--font-family-primary);
-            padding: 2rem;
+            padding: 2rem 4rem;
             transition: background-color 0.3s, color 0.3s;
             background-color: var(--color-surface-primary);
             color: var(--color-text-medium-emphasis);
         }
-
         .showcase-section {
-            margin-bottom: 4rem;
-            border-bottom: 1px solid var(--color-border-primary);
-            padding-bottom: 2rem;
+            margin-top: 4rem;
+            border-top: 1px solid var(--color-border-primary);
+            padding-top: 2rem;
         }
-
         .showcase-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 2rem;
+            gap: 2rem 1rem;
             align-items: center;
             margin-top: 1.5rem;
         }
-
         .component-state {
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
         }
-
         .component-state-label {
             font-size: var(--font-size-small);
             color: var(--color-text-low-emphasis);
             font-family: var(--font-family-monospace);
         }
-
-        h1, h2, h3 {
-            color: var(--color-text-high-emphasis);
-        }
-
+        h1, h2, h3 { color: var(--color-text-high-emphasis); }
         h1 { margin-bottom: 0.5rem; }
         h2 { margin-top: 2rem; }
         h3 { margin-top: 1.5rem; font-weight: var(--font-weight-medium); }
-
         p {
-            max-width: 65ch;
+            max-width: 75ch;
             color: var(--color-text-medium-emphasis);
             margin-bottom: 2rem;
         }
-
-        /* Klasser för att manuellt simulera interaktiva tillstånd i senare steg */
-        /* Dessa är ännu inte implementerade i BaseButton.vue men förbereds här. */
-        .pseudo-hover { /* Kommer användas för att tvinga hover-stilar */ }
-        .pseudo-focus { /* Kommer användas för att tvinga focus-stilar */ }
-        .pseudo-active { /* Kommer användas för att tvinga active-stilar */ }
     </style>
 </head>
 <body>
 
     <div id="showcase-app">
         <h1>Engrove UI Component Showcase</h1>
-        <p>Detta är en levande dokumentation av alla baskomponenter i `shared/ui`. Sidan är helt fristående från huvudapplikationen.</p>
-        
-        <!-- Temaväxlaren kommer att drivas av Vue-logiken i showcase.js -->
+        <p>
+            Detta är en levande och interaktiv verkstad för alla baskomponenter i <code>/src/shared/ui/</code>.
+            Sidan är helt fristående från huvudapplikationen och används för att säkerställa att varje komponent
+            implementeras exakt enligt <strong>Global UI-Standard</strong> för alla sina visuella tillstånd (Default, Hover, Focus, Active, Disabled) och teman.
+        </p>
+
         <base-button variant="secondary" @click="toggleTheme">
             Växla till {{ otherTheme }} tema
         </base-button>
@@ -87,24 +91,60 @@
             
             <h3>Primär Knapp</h3>
             <div class="showcase-grid">
-                <!-- Platshållare för knapp-tillstånd -->
+                <div class="component-state">
+                    <span class="component-state-label">Default</span>
+                    <base-button variant="primary">Klicka här</base-button>
+                </div>
+                <div class="component-state">
+                    <span class="component-state-label">Hover</span>
+                    <base-button variant="primary">Hovra över</base-button>
+                </div>
+                <div class="component-state">
+                    <span class="component-state-label">Focus</span>
+                    <base-button variant="primary">Fokusera</base-button>
+                </div>
+                <div class="component-state">
+                    <span class="component-state-label">Active</span>
+                    <base-button variant="primary">Håll nere</base-button>
+                </div>
+                <div class="component-state">
+                    <span class="component-state-label">Disabled</span>
+                    <base-button variant="primary" :disabled="true">Inaktiv</base-button>
+                </div>
             </div>
 
             <h3>Sekundär Knapp</h3>
             <div class="showcase-grid">
-                <!-- Platshållare för knapp-tillstånd -->
+                 <div class="component-state">
+                    <span class="component-state-label">Default</span>
+                    <base-button variant="secondary">Klicka här</base-button>
+                </div>
+                <div class="component-state">
+                    <span class="component-state-label">Hover</span>
+                    <base-button variant="secondary">Hovra över</base-button>
+                </div>
+                <div class="component-state">
+                    <span class="component-state-label">Focus</span>
+                    <base-button variant="secondary">Fokusera</base-button>
+                </div>
+                <div class="component-state">
+                    <span class="component-state-label">Active</span>
+                    <base-button variant="secondary">Håll nere</base-button>
+                </div>
+                <div class="component-state">
+                    <span class="component-state-label">Disabled</span>
+                    <base-button variant="secondary" :disabled="true">Inaktiv</base-button>
+                </div>
             </div>
         </div>
 
         <!-- Sektion för att visa upp inmatningsfält (framtida) -->
         <div class="showcase-section">
             <h2>Inmatningsfält (BaseInput.vue)</h2>
-            <!-- Platshållare för input-tillstånd -->
         </div>
 
     </div>
 
-    <!-- Import Map för att tala om för webbläsaren var den hittar Vue -->
     <script type="importmap">
     {
         "imports": {
@@ -113,9 +153,8 @@
     }
     </script>
     
-    <!-- Skriptet som startar Vue-appen för denna sida -->
     <script type="module" src="/showcase.js"></script>
 
 </body>
 </html>
-<!-- public/showcase.html -->
+<!-- public/showcase.html -->```
