@@ -1,70 +1,144 @@
 <!-- src/shared/ui/BaseCheckbox.vue -->
-<!-- Detta är en grundläggande, återanvändbar kryssrutekomponent. -->
-<!-- Den är en del av det centrala UI-biblioteket. -->
-<!-- IMPLEMENTATION VÄNTAR. -->
+<!-- Grundläggande, återanvändbar kryssrutekomponent. -->
+<!-- Implementerad enligt Global UI-Standard Komponentspecifikation (Sektion 5.1 & 5.2). -->
 <template>
   <label class="base-checkbox-wrapper">
-    <input type="checkbox" class="base-checkbox-input">
-    <span class="base-checkbox-custom"></span>
-    <span class="base-checkbox-label"><slot></slot></span>
+    <input
+      type="checkbox"
+      class="base-checkbox-input"
+      :checked="modelValue"
+      :disabled="disabled"
+      @change="$emit('update:modelValue', $event.target.checked)"
+    />
+    <span class="base-checkbox-custom">
+      <svg class="base-checkbox-checkmark" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z"/>
+      </svg>
+    </span>
+    <span v-if="$slots.default" class="base-checkbox-label">
+      <slot></slot>
+    </span>
   </label>
 </template>
 
 <script setup>
-// Props och logik för komponenten kommer att definieras här.
-// Exempel på props kan vara: label, disabled, modelValue.
+// Defines the component's props (API) and emitted events.
+// This component supports v-model for two-way data binding.
+
+defineProps({
+  // Status för kryssrutan (true = markerad), används med v-model
+  modelValue: {
+    type: Boolean,
+    default: false,
+  },
+  // Inaktiverar kryssrutan om satt till true
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+// Deklarerar händelsen som krävs för att v-model ska fungera
+defineEmits(['update:modelValue']);
 </script>
 
 <style scoped>
-/* Stilar för komponenten, enligt komponentspecifikationen, kommer här. */
+/* ========================================================================== */
+/* GRUNDSTRUKTUR OCH LAYOUT                                                   */
+/* ========================================================================== */
 .base-checkbox-wrapper {
-  /* Tillfällig stil för att vara synlig i showcase */
   display: inline-flex;
   align-items: center;
+  gap: 0.75rem; /* Mellanrum mellan ruta och etikett */
   cursor: pointer;
-  gap: 0.75rem;
 }
 
+/* Den faktiska checkboxen är dold, men funktionell för tillgänglighet */
 .base-checkbox-input {
+  position: absolute;
   opacity: 0;
   width: 0;
   height: 0;
-  position: absolute;
 }
 
+/* Den anpassade visuella kryssrutan */
 .base-checkbox-custom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 20px;
   height: 20px;
-  border: 2px solid #888;
   border-radius: 4px;
-  display: inline-block;
-  position: relative;
+  transition: all 0.2s ease-in-out;
+
+  /* Omarkerat tillstånd */
+  background-color: transparent;
+  border: 2px solid var(--color-text-medium-emphasis);
 }
 
-.base-checkbox-input:checked ~ .base-checkbox-custom {
-  background-color: #3391FF; /* Tillfällig 'markerad'-färg */
-  border-color: #3391FF;
+/* Bocken (SVG-ikonen) är initialt osynlig */
+.base-checkbox-checkmark {
+  width: 16px;
+  height: 16px;
+  color: var(--color-surface-primary); /* Färg på bocken */
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.2s ease-in-out;
 }
 
-.base-checkbox-custom::after {
-  content: "";
-  position: absolute;
-  display: none;
-  left: 6px;
-  top: 2px;
-  width: 5px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 3px 3px 0;
-  transform: rotate(45deg);
-}
-
-.base-checkbox-input:checked ~ .base-checkbox-custom::after {
-  display: block;
-}
-
+/* Etikett-texten */
 .base-checkbox-label {
   color: var(--color-text-medium-emphasis);
+  user-select: none; /* Förhindrar textmarkering vid klick på etiketten */
+}
+
+/* ========================================================================== */
+/* INTERAKTIVA TILLSTÅND                                                      */
+/* ========================================================================== */
+
+/* --- MARKERAT TILLSTÅND --- */
+.base-checkbox-input:checked + .base-checkbox-custom {
+  background-color: var(--color-interactive-accent);
+  border-color: var(--color-interactive-accent);
+}
+.base-checkbox-input:checked + .base-checkbox-custom .base-checkbox-checkmark {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* --- HOVER TILLSTÅND --- */
+/* Omarkerad + Hover */
+.base-checkbox-input:hover:not(:disabled):not(:checked) + .base-checkbox-custom {
+  background-color: var(--color-surface-tertiary);
+  border-color: var(--color-text-high-emphasis);
+}
+/* Markerad + Hover */
+.base-checkbox-input:hover:not(:disabled):checked + .base-checkbox-custom {
+  background-color: var(--color-interactive-accent-hover);
+  border-color: var(--color-interactive-accent-hover);
+}
+
+/* --- FOCUS TILLSTÅND (ENDAST TANGENTBORD) --- */
+.base-checkbox-input:focus-visible + .base-checkbox-custom {
+  outline: 2px solid var(--color-interactive-accent);
+  outline-offset: 2px;
+}
+
+/* --- DISABLED TILLSTÅND --- */
+.base-checkbox-wrapper:has(.base-checkbox-input:disabled) {
+  cursor: not-allowed;
+}
+.base-checkbox-input:disabled + .base-checkbox-custom {
+  background-color: var(--color-surface-secondary);
+  border-color: var(--color-text-low-emphasis);
+}
+.base-checkbox-input:disabled:checked + .base-checkbox-custom .base-checkbox-checkmark {
+  color: var(--color-text-low-emphasis);
+  opacity: 1;
+  transform: scale(1);
+}
+.base-checkbox-input:disabled ~ .base-checkbox-label {
+  color: var(--color-text-low-emphasis);
 }
 </style>
-<!-- src/shared/ui/BaseCheckbox.vue -->
+<!-- src/shared/ui/BaseCheckbox.vue -->```
