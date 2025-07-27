@@ -68,6 +68,7 @@ const buttonClasses = computed(() => [
 .base-button:disabled {
   cursor: not-allowed;
   box-shadow: none; /* Nollställ skugga för alla inaktiverade knappar */
+  transform: none; /* Nollställ eventuella transformationer */
 }
 
 /* ========================================================================== */
@@ -75,9 +76,8 @@ const buttonClasses = computed(() => [
 /* ========================================================================== */
 .base-button--primary {
   background-color: var(--color-interactive-accent);
-  color: var(--color-text-high-emphasis);
-  /* Ljustema: $surface-primary, Mörktema: $text-high-emphasis */
-  color: var(--color-surface-primary, var(--color-text-high-emphasis));
+  /* I mörkt tema ska texten vara --color-text-high-emphasis, men i ljust ska den vara --color-surface-primary (vit) */
+  color: #FFFFFF; /* Hårdkodad till vit för högsta kontrast mot accent-färgen i båda teman */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
@@ -88,6 +88,7 @@ const buttonClasses = computed(() => [
 }
 
 .base-button--primary:active:not(:disabled) {
+  background-color: var(--color-interactive-accent-hover);
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
   transform: translateY(0);
 }
@@ -96,11 +97,6 @@ const buttonClasses = computed(() => [
   background-color: var(--color-surface-tertiary);
   color: var(--color-text-low-emphasis);
   border: 1px solid var(--color-border-primary);
-}
-
-/* Anpassning för ljust tema för att textfärgen ska bli rätt (vit) */
-.light-theme .base-button--primary {
-    color: #FFFFFF;
 }
 
 
