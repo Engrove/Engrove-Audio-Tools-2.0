@@ -1,6 +1,6 @@
 <!-- src/App.vue -->
 <!-- Detta är applikationens rotkomponent. Den fungerar som den huvudsakliga layout-behållaren, -->
-<!-- renderar olika sidor via Vue Router, och applicerar nu dynamiskt temaklassen. -->
+<!-- renderar olika sidor via Vue Router, och inkluderar nu även den globala sidfoten. -->
 
 <template>
   <div id="app-container" :class="themeClass">
@@ -9,7 +9,6 @@
 
     <main class="main-content">
       <!-- Vue Router kommer att rendera den aktuella sidans komponent här. -->
-      <!-- Sidkomponenterna själva är nu ansvariga för sin egen interna padding och layout. -->
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
           <component :is="Component" />
@@ -17,6 +16,8 @@
       </router-view>
     </main>
 
+    <!-- Den globala sidfoten, nu en permanent del av layouten. -->
+    <GlobalFooter />
   </div>
 </template>
 
@@ -25,6 +26,7 @@ import { computed } from 'vue';
 import { RouterView } from 'vue-router';
 import { useThemeStore } from './features/theme-toggle/model/themeStore.js';
 import GlobalHeader from './widgets/GlobalHeader/GlobalHeader.vue';
+import GlobalFooter from './widgets/GlobalFooter/GlobalFooter.vue'; // Importerar den nya sidfoten
 
 // Hämtar en instans av vår theme store.
 const themeStore = useThemeStore();
@@ -51,7 +53,7 @@ const themeClass = computed(() => (
 }
 
 .main-content {
-  flex-grow: 1;
+  flex-grow: 1; /* Säkerställer att huvudinnehållet tar upp allt tillgängligt utrymme */
   width: 100%;
   padding-top: 64px; /* Kompenserar för den fasta headerns höjd. */
 }
