@@ -1,74 +1,87 @@
 <!-- src/widgets/GlobalHeader/GlobalHeader.vue -->
 <!-- Denna widget är den primära, globala headern för hela applikationen. -->
-<!-- Den är en sammansatt komponent som innehåller logotyp, primär navigering -->
-<!-- och en platshållare för temaväxlaren. -->
+<!-- Den är nu fullt responsiv och hanterar både desktop-navigering och -->
+<!-- den nya mobilmenyn. -->
 
 <template>
-  <header class="global-header">
-    <div class="header-container">
-      
-      <!-- Vänster sektion: Logotyp -->
-      <div class="header-left">
-        <Logo />
+  <div>
+    <header class="global-header">
+      <div class="header-container">
+        
+        <!-- Vänster sektion: Logotyp -->
+        <div class="header-left">
+          <Logo />
+        </div>
+
+        <!-- Mitten sektion: Traditionell navigering för desktop -->
+        <nav class="header-nav-desktop">
+          <router-link to="/alignment-calculator" class="nav-link">Alignment</router-link>
+          <router-link to="/compliance-estimator" class="nav-link">Estimator</router-link>
+          <router-link to="/data-explorer" class="nav-link">Data Explorer</router-link>
+        </nav>
+
+        <!-- Höger sektion: Knappar och kontroller -->
+        <div class="header-right">
+          <!-- Platshållare för temaväxlare -->
+          <BaseButton variant="secondary" class="theme-toggle-placeholder">
+            Theme
+          </BaseButton>
+          
+          <!-- Hamburgar-knappen, visas endast på mobil -->
+          <MobileMenuToggle class="mobile-menu-toggle-button" />
+        </div>
+
       </div>
+    </header>
 
-      <!-- Mitten sektion: Primär navigering -->
-      <nav class="header-nav">
-        <router-link to="/alignment-calculator" class="nav-link">Alignment Calculator</router-link>
-        <router-link to="/compliance-estimator" class="nav-link">Compliance Estimator</router-link>
-        <router-link to="/data-explorer" class="nav-link">Data Explorer</router-link>
-      </nav>
-
-      <!-- Höger sektion: Platshållare för framtida funktioner -->
-      <div class="header-right">
-        <!-- Platshållare för den framtida theme-toggle-featuren. -->
-        <!-- För tillfället används en BaseButton för att visualisera platsen. -->
-        <BaseButton variant="secondary">
-          Theme
-        </BaseButton>
-      </div>
-
-    </div>
-  </header>
+    <!-- Mobilmeny-overlay (utanför header-elementet för korrekt stackning) -->
+    <Transition name="fade">
+      <MobileNavMenu v-if="isMenuOpen" />
+    </Transition>
+  </div>
 </template>
 
 <script setup>
 import { RouterLink } from 'vue-router';
+import { useMobileMenu } from '../../features/mobile-menu-toggle/model/useMobileMenu.js';
 import Logo from '../../shared/ui/Logo.vue';
 import BaseButton from '../../shared/ui/BaseButton.vue';
+import MobileMenuToggle from '../../features/mobile-menu-toggle/ui/MobileMenuToggle.vue';
+import MobileNavMenu from '../MobileNavMenu/MobileNavMenu.vue';
+
+// Hämtar meny-tillståndet för att styra visningen av mobilmenyn
+const { isMenuOpen } = useMobileMenu();
 </script>
 
 <style scoped>
 /* Grundläggande stilar för header-elementet. */
 .global-header {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   background-color: var(--color-surface-secondary);
   border-bottom: 1px solid var(--color-border-primary);
-  /* z-index säkerställer att headern alltid ligger överst. */
-  z-index: 1000; 
-
-  /* Initialt är den statisk, kommer att göras 'fixed' vid integration i App.vue */
-  position: relative;
+  z-index: 1000;
 }
 
-/* En container för att centrera och begränsa innehållets bredd. */
+/* Container för att centrera och begränsa innehållets bredd. */
 .header-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1400px; /* En lite bredare max-width för headern */
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 2rem;
-  height: 64px; /* Standardhöjd för en header */
+  height: 64px;
 }
 
-/* Vänster sektion (Logotyp) */
 .header-left {
-  flex-shrink: 0; /* Förhindrar att logotypen krymper */
+  flex-shrink: 0;
 }
 
-/* Mitten sektion (Navigering) */
-.header-nav {
+/* Navigering för desktop */
+.header-nav-desktop {
   display: flex;
   gap: 2rem;
 }
@@ -101,7 +114,6 @@ import BaseButton from '../../shared/ui/BaseButton.vue';
   color: var(--color-text-high-emphasis);
 }
 
-/* Vue Routers aktiva länk-klass för att markera den nuvarande sidan. */
 .nav-link.router-link-exact-active {
   color: var(--color-text-high-emphasis);
 }
@@ -110,17 +122,51 @@ import BaseButton from '../../shared/ui/BaseButton.vue';
   transform: scaleX(1);
 }
 
-/* Höger sektion (Platshållare) */
+/* Höger sektion */
 .header-right {
-  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-/* Responsivitet: Dölj navigationslänkarna på mindre skärmar */
-/* Detta är en enkel lösning; en framtida "hamburgermeny" skulle vara mer robust. */
+/* Initialt döljs hamburgar-knappen på större skärmar */
+.mobile-menu-toggle-button {
+  display: none;
+}
+
+/* ========================================================================== */
+/* RESPONSIVITET                                                              */
+/* ========================================================================== */
+
+/* Brytpunkt för när mobil-layouten ska aktiveras (t.ex. surfplattor och mindre) */
 @media (max-width: 768px) {
-  .header-nav {
-    display: none;
+  .header-nav-desktop,
+  .theme-toggle-placeholder {
+    display: none; /* Dölj desktop-navigering och temaknapp */
   }
+
+  .mobile-menu-toggle-button {
+    display: flex; /* Visa hamburgar-knappen */
+  }
+
+  .header-container {
+    padding: 0 1rem; /* Minska padding på mindre skärmar */
+  }
+}
+
+/* ========================================================================== */
+/* ÖVERGÅNGSANIMATION FÖR MOBILMENY                                            */
+/* ========================================================================== */
+
+/* Klassen för fade-in-out-animationen */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
 <!-- src/widgets/GlobalHeader/GlobalHeader.vue -->
