@@ -3,7 +3,7 @@
 <!-- Den ligger i projektets rot och agerar som en källkods-ingång för Vite. -->
 <!-- Vite kommer att bygga denna fil och injicera de korrekta, hashade CSS/JS-länkarna. -->
 <!DOCTYPE html>
-<html lang="sv" class="dark-theme">
+<html lang="sv">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -69,6 +69,11 @@
         h2 { margin-top: 2rem; margin-bottom: 1rem; }
         h3 { margin-top: 1.5rem; font-weight: var(--font-weight-medium); }
         
+        /* Specifik stil för canvas-visaren för att ge den en definierad höjd */
+        .canvas-viewer-wrapper {
+            height: 500px;
+        }
+
         /* ================================================================== */
         /* PSEUDO-KLASSER FÖR ATT SIMULERA TILLSTÅND                          */
         /* ================================================================== */
@@ -102,7 +107,7 @@
         }
         .base-select-wrapper.pseudo-focus .base-select { padding: calc(0.75rem - 1px) calc(2.5rem - 1px) calc(0.75rem - 1px) calc(1rem - 1px); }
         .base-select-wrapper.pseudo-focus .base-select-arrow { color: var(--color-interactive-accent); }
-        .light-theme .base-select-wrapper.pseudo-focus {
+        html.light-theme .base-select-wrapper.pseudo-focus {
             box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25); background-color: var(--color-surface-primary);
         }
 
@@ -111,10 +116,9 @@
         .pseudo-focus-outline-wrapper.pseudo-focus {
             outline: 2px solid var(--color-interactive-accent); outline-offset: 2px;
         }
-
     </style>
 </head>
-<body>
+<body class="dark-theme">
 
     <div id="showcase-app">
         <h1>Engrove UI Component Showcase</h1>
@@ -186,6 +190,16 @@
                 <div class="component-state"><span class="component-state-label">:disabled (Vald)</span><base-radio name="disabled_radio" value="d2" :disabled="true" model-value="d2">Val 5</base-radio></div>
             </div>
         </div>
+        
+        <!-- NY SEKTION FÖR CANVAS-VISAREN -->
+        <div class="showcase-section">
+            <h2>Canvas Text Viewer (BaseCanvasTextViewer.vue)</h2>
+            <p>Denna komponent renderar lång text på ett canvas-element med scrollning.</p>
+            <div class="canvas-viewer-wrapper">
+                <base-canvas-text-viewer :text="licenseText"></base-canvas-text-viewer>
+            </div>
+        </div>
+
     </div>
     
     <script type="module" src="/src/showcase.js"></script>
