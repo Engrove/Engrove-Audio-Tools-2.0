@@ -4,11 +4,12 @@
 
 <template>
   <div id="app-container" :class="themeClass">
-    <!-- Den globala headern är nu en permanent del av layouten. -->
+    <!-- Den globala headern är en permanent del av layouten. -->
     <GlobalHeader />
 
     <main class="main-content">
       <!-- Vue Router kommer att rendera den aktuella sidans komponent här. -->
+      <!-- Sidkomponenterna själva är nu ansvariga för sin egen interna padding och layout. -->
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
           <component :is="Component" />
@@ -44,8 +45,6 @@ const themeClass = computed(() => (
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  /* Applicerar grundläggande bakgrunds- och textfärg från tokens. */
-  /* Detta säkerställer att övergången mellan teman är mjuk. */
   background-color: var(--color-surface-primary);
   color: var(--color-text-medium-emphasis);
   transition: background-color 0.3s, color 0.3s;
