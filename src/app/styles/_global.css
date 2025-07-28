@@ -82,4 +82,14 @@ textarea,
 select {
   font-family: inherit; /* Ärver typsnittet från body */
 }
+
+/* ========================================================================== */
+/* HJÄLPKLASS FÖR MOBILMENY                                                    */
+/* Denna klass appliceras på <body>-elementet via JavaScript när mobilmenyn   */
+/* är öppen. Den förhindrar att innehållet bakom menyn kan scrollas.          */
+/* ========================================================================== */
+
+.body-scroll-lock {
+  overflow: hidden;
+}
 /* src/app/styles/_global.css */
