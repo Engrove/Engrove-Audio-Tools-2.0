@@ -69,11 +69,6 @@
         h2 { margin-top: 2rem; margin-bottom: 1rem; }
         h3 { margin-top: 1.5rem; font-weight: var(--font-weight-medium); }
         
-        /* Specifik stil för canvas-visaren för att ge den en definierad höjd */
-        .canvas-viewer-wrapper {
-            height: 500px;
-        }
-
         /* ================================================================== */
         /* PSEUDO-KLASSER FÖR ATT SIMULERA TILLSTÅND                          */
         /* ================================================================== */
@@ -94,7 +89,7 @@
             background-color: var(--color-surface-secondary); border-color: var(--color-interactive-accent);
             box-shadow: 0 0 0 2px rgba(51, 145, 255, 0.3);
         }
-        .light-theme .base-input.pseudo-focus {
+        html.light-theme .base-input.pseudo-focus {
              background-color: var(--color-surface-primary); box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
         }
         
@@ -118,14 +113,22 @@
         }
     </style>
 </head>
-<body class="dark-theme">
+<body>
 
     <div id="showcase-app">
         <h1>Engrove UI Component Showcase</h1>
         <base-button variant="secondary" @click="toggleTheme">Växla till {{ otherTheme }} tema</base-button>
 
         <div class="info-box">
-            <p>Detta är en levande, interaktiv verkstad för alla grundläggande UI-komponenter i <code>/src/shared/ui</code>. Om en komponent ser korrekt ut och fungerar här, är den korrekt.</p>
+            <p>Detta är en levande, interaktiv verkstad för alla grundläggande UI-komponenter i <code>/src/shared/ui</code> och interaktiva features.</p>
+        </div>
+
+        <div class="showcase-section">
+            <h2>Modaler (BaseModal.vue & LicenseModal.vue)</h2>
+            <p>Test av den kompletta licensmodal-funktionen.</p>
+            <base-button variant="primary" @click="isLicenseModalOpen = true">
+                Öppna Licensmodal
+            </base-button>
         </div>
 
         <div class="showcase-section">
@@ -190,18 +193,12 @@
                 <div class="component-state"><span class="component-state-label">:disabled (Vald)</span><base-radio name="disabled_radio" value="d2" :disabled="true" model-value="d2">Val 5</base-radio></div>
             </div>
         </div>
-        
-        <!-- NY SEKTION FÖR CANVAS-VISAREN -->
-        <div class="showcase-section">
-            <h2>Canvas Text Viewer (BaseCanvasTextViewer.vue)</h2>
-            <p>Denna komponent renderar lång text på ett canvas-element med scrollning.</p>
-            <div class="canvas-viewer-wrapper">
-                <base-canvas-text-viewer :text="licenseText"></base-canvas-text-viewer>
-            </div>
-        </div>
 
     </div>
     
+    <!-- Modalen ligger utanför huvud-diven för att säkerställa korrekt stackning -->
+    <license-modal v-model:isOpen="isLicenseModalOpen"></license-modal>
+
     <script type="module" src="/src/showcase.js"></script>
 
 </body>
