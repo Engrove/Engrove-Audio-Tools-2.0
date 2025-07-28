@@ -1,26 +1,24 @@
 <!-- src/App.vue -->
 <!-- Detta är applikationens rotkomponent. Den fungerar som den huvudsakliga layout-behållaren -->
-<!-- och kommer att rendera olika sidor via Vue Router. -->
+<!-- och kommer att rendera olika sidor via Vue Router. Den inkluderar nu den globala headern. -->
 
 <template>
   <div id="app-container">
-    <!-- En platshållare för den globala headern som kommer att byggas senare -->
-    <!-- <GlobalHeader /> -->
+    <!-- Den globala headern är nu en permanent del av layouten. -->
+    <GlobalHeader />
 
     <main class="main-content">
-      <!-- Innehållet nedan är temporärt för att visa att de globala stilarna fungerar. -->
-      <!-- Det kommer att ersättas av <router-view /> när navigering implementeras. -->
-      <h1>Engrove Audio Toolkit 2.0</h1>
-      <p>Applikationens grund med de nya globala stilarna är nu på plats.</p>
+      <!-- Vue Router kommer att rendera den aktuella sidans komponent här. -->
+      <!-- Den tidigare platshållartexten är borttagen. -->
+      <router-view />
     </main>
 
   </div>
 </template>
 
 <script setup>
-// Detta är rotkomponenten för applikationen.
-// För närvarande krävs ingen specifik JavaScript-logik här.
-// Den kommer senare att interagera med globala system som temaväxlaren.
+import { RouterView } from 'vue-router';
+import GlobalHeader from './widgets/GlobalHeader/GlobalHeader.vue';
 </script>
 
 <style scoped>
@@ -36,26 +34,19 @@
 .main-content {
   flex-grow: 1;
   width: 100%;
+  
+  /* Viktigt: Lägger till padding-top som motsvarar headerns höjd (64px). */
+  /* Detta förhindrar att innehållet på sidan döljs bakom den fasta headern. */
+  padding-top: 64px; 
+}
+
+/* Anpassningar för att sidinnehållet ska vara centrerat */
+/* Denna del av koden kan tas bort eller justeras när sidorna får mer innehåll. */
+:deep(.main-content > *) {
+  width: 100%;
   max-width: 1200px; /* Sätter en maxbredd för innehållet */
   margin: 0 auto; /* Centrerar innehållet horisontellt */
   padding: 2rem; /* Ger lite luft runt innehållet */
-  
-  /* Temporär centrering för platshållartexten */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-h1 {
-  /* Använder de globala typografi-tokens som ärvts via _global.css */
-  margin-bottom: 1rem;
-}
-
-p {
-  /* Använder de globala typografi-tokens */
-  color: var(--color-text-medium-emphasis);
 }
 </style>
 <!-- src/App.vue -->
