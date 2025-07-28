@@ -1,49 +1,49 @@
 // src/app/router.js
-// Denna fil konfigurerar all navigering (routing) för applikationen.
-// Den mappar URL-sökvägar till specifika Vue-komponenter (sidor).
+// Denna fil definierar all navigering (routing) för applikationen.
+// Den mappar URL-sökvägar till specifika sidkomponenter.
 
 import { createRouter, createWebHistory } from 'vue-router';
-import HomePage from '../pages/home/HomePage.vue';
+import HomePage from '../../pages/home/HomePage.vue';
+import LicensePage from '../../pages/license/LicensePage.vue';
 
-// Definierar en array av ruttobjekt. Varje objekt representerar en sida.
+// Definition av alla applikationens rutter.
 const routes = [
   {
-    path: '/', // Rot-URL (t.ex. https://engrove-audio.pages.dev/)
+    path: '/',
     name: 'Home',
-    component: HomePage, // Komponenten som ska visas för denna sökväg
+    component: HomePage,
   },
-  // --- PLATSHÅLLARE FÖR FRAMTIDA SIDOR ---
-  // Dessa rutter är förberedda men pekar för närvarande på startsidan.
-  // De kommer att uppdateras när sidorna för kalkylatorerna skapas.
+  {
+    path: '/license',
+    name: 'License',
+    component: LicensePage,
+  },
+  // TODO: Ersätt dessa platshållar-komponenter när de faktiska sidorna skapas.
+  // Just nu pekar de till HomePage för att undvika 404-fel från länkarna i headern.
   {
     path: '/alignment-calculator',
     name: 'AlignmentCalculator',
-    component: HomePage, // TODO: Byt ut mot AlignmentCalculatorPage.vue
+    component: HomePage, // Platshållare
   },
   {
     path: '/compliance-estimator',
     name: 'ComplianceEstimator',
-    component: HomePage, // TODO: Byt ut mot ComplianceEstimatorPage.vue
+    component: HomePage, // Platshållare
   },
   {
     path: '/data-explorer',
     name: 'DataExplorer',
-    component: HomePage, // TODO: Byt ut mot DataExplorerPage.vue
+    component: HomePage, // Platshållare
   },
 ];
 
 // Skapar en router-instans.
+// createWebHistory används för ren URL-hantering utan #-tecken.
 const router = createRouter({
-  // `createWebHistory` möjliggör rena URL:er utan hashbang (#).
-  // Detta är standard för moderna SPA-applikationer.
   history: createWebHistory(),
-  routes, // Använder rutt-definitionerna från ovan.
-
-  // Funktion som säkerställer att användaren alltid scrollas till toppen
-  // av sidan vid navigering till en ny sida.
+  routes,
+  // Denna funktion säkerställer att man alltid scrollar till toppen av sidan vid sidbyte.
   scrollBehavior(to, from, savedPosition) {
-    // Om det finns en sparad position (från webbläsarens bakåt/framåt-knappar),
-    // återgå till den. Annars, scrolla till toppen.
     if (savedPosition) {
       return savedPosition;
     } else {
@@ -52,5 +52,6 @@ const router = createRouter({
   },
 });
 
+// Exporterar router-instansen så att den kan användas i main.js.
 export default router;
 // src/app/router.js
