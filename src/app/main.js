@@ -4,6 +4,8 @@
 // och monterar appen på DOM-trädet.
 
 import { createApp } from 'vue';
+import { createPinia } from 'pinia';
+import piniaPluginPersistedState from 'pinia-plugin-persistedstate';
 
 // Importerar rotkomponenten App.vue
 import App from '../App.vue';
@@ -12,18 +14,26 @@ import App from '../App.vue';
 import './styles/_tokens.css';
 import './styles/_global.css';
 
-// Importerar den nyligen skapade routern.
+// Importerar routern.
 import router from './router.js';
 
-
-// Skapar Vue-applikationsinstansen med App.vue som rotkomponent.
+// 1. Skapa Vue-applikationsinstansen.
 const app = createApp(App);
 
-// Talar om för Vue-appen att den ska använda vår router-konfiguration.
-// Detta är steget som aktiverar all navigering.
+// 2. Skapa en Pinia-instans.
+const pinia = createPinia();
+
+// 3. Registrera persistens-pluginet på Pinia-instansen.
+// Detta måste göras innan Pinia registreras i Vue-appen.
+pinia.use(piniaPluginPersistedState);
+
+// 4. Registrera den färdigkonfigurerade Pinia-instansen i appen.
+app.use(pinia);
+
+// 5. Registrera routern i appen.
 app.use(router);
 
-// Monterar den färdigkonfigurerade appen på HTML-elementet med id="app".
+// 6. Monterar den fullt konfigurerade appen på HTML-elementet med id="app".
 // Detta element finns i /index.html.
 app.mount('#app');
 // src/app/main.js
