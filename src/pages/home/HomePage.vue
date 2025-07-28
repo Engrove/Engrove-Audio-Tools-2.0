@@ -32,7 +32,7 @@ Explore the Tools
       <!-- Kort 1: Alignment Calculator -->
       <div class="tool-card">
         <div class="tool-image-wrapper">
-          <img src="/images/placeholders/tool-alignment.webp" alt="A screenshot of the Alignment Calculator interface, showing setup controls and optimal values." class="tool-image" loading="lazy">
+          <img src="/images/placeholders/preview-alignment.webp" alt="A screenshot of the Alignment Calculator interface, showing setup controls and optimal values." class="tool-image" loading="lazy">
         </div>
         <h3>Alignment Calculator</h3>
         <p>Visualize tracking error and distortion for different alignment geometries (Lofgren, Baerwald, Stevenson).</p>
@@ -44,7 +44,7 @@ Explore the Tools
       <!-- Kort 2: Resonance Calculator -->
       <div class="tool-card">
         <div class="tool-image-wrapper">
-          <img src="/images/placeholders/tool-resonance.webp" alt="A screenshot of the Resonance Calculator, showing sliders for mass and compliance." class="tool-image" loading="lazy">
+          <img src="/images/placeholders/preview-resonance.webp" alt="A screenshot of the Resonance Calculator, showing sliders for mass and compliance." class="tool-image" loading="lazy">
         </div>
         <h3>Resonance Calculator</h3>
         <p>Determine the resonant frequency of your tonearm and cartridge combination to avoid audible colorations.</p>
@@ -56,7 +56,7 @@ Explore the Tools
       <!-- Kort 3: Compliance Estimator -->
       <div class="tool-card">
         <div class="tool-image-wrapper">
-          <img src="/images/placeholders/tool-compliance.webp" alt="A screenshot of the Compliance Estimator tool, displaying an estimated result and a confidence level." class="tool-image" loading="lazy">
+          <img src="/images/placeholders/preview-compliance.webp" alt="A screenshot of the Compliance Estimator tool, displaying an estimated result and a confidence level." class="tool-image" loading="lazy">
         </div>
         <h3>Compliance Estimator</h3>
         <p>Estimate 10Hz compliance from 100Hz values using a statistical model from our open dataset.</p>
@@ -68,7 +68,7 @@ Explore the Tools
       <!-- Kort 4: Data Explorer -->
       <div class="tool-card">
          <div class="tool-image-wrapper">
-          <img src="/images/placeholders/tool-data-explorer.webp" alt="A screenshot of the Data Explorer, showing a table of cartridges with filter controls." class="tool-image" loading="lazy">
+          <img src="/images/placeholders/preview-explorer.webp" alt="A screenshot of the Data Explorer, showing a table of cartridges with filter controls." class="tool-image" loading="lazy">
         </div>
         <h3>Data Explorer</h3>
         <p>Search, filter, and explore the complete database of tonearms and cartridges used by the toolkit.</p>
@@ -93,8 +93,7 @@ Explore the Tools
       <p>This is a free and open-source project under the MIT License. The methodology is documented, the data is explorable, and community feedback is always welcome.</p>
     </div>
     <div class="philosophy-visual">
-       <!-- Denna bild är en platshållare och behöver laddas upp till public/images/ -->
-       <img src="/images/engrove-avatar.jpg" alt="An illustration of Jan-Eric Enlund, the creator of the Engrove Audio Toolkit." class="philosophy-avatar">
+       <img src="/images/engrove.webp" alt="An illustration of Jan-Eric Enlund, the creator of the Engrove Audio Toolkit." class="philosophy-avatar">
     </div>
   </div>
 </section>
@@ -133,7 +132,6 @@ const scrollToToolkit = () => {
 toolkitSection.value?.scrollIntoView({ behavior: 'smooth' });
 };
 
-// Här kommer vi senare att lägga till `useHead` för SEO-meta-taggar
 </script>
 
 <style scoped>
@@ -219,7 +217,7 @@ color: var(--color-text-medium-emphasis);
 }
 .tool-card .base-button {
 margin: 0 1.5rem 1.5rem 1.5rem;
-align-self: flex-start; /* Knappen justeras till vänster i kortet */
+align-self: flex-start;
 }
 
 
@@ -250,7 +248,7 @@ align-items: center;
 width: 100%;
 max-width: 350px;
 height: auto;
-border-radius: 50%; /* Gör avataren cirkulär */
+border-radius: 50%;
 box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 border: 3px solid var(--color-surface-tertiary);
 }
@@ -294,5 +292,4 @@ gap: 5rem;
 }
 }
 </style>
-
 <!-- src/pages/home/HomePage.vue -->
