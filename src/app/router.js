@@ -4,7 +4,7 @@
 
 import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from '../../pages/home/HomePage.vue';
-import LicensePage from '../../pages/license/LicensePage.vue';
+import AboutPage from '../../pages/about/AboutPage.vue'; // Importerar den nya About-sidan
 
 // Definition av alla applikationens rutter.
 const routes = [
@@ -14,10 +14,12 @@ const routes = [
     component: HomePage,
   },
   {
-    path: '/license',
-    name: 'License',
-    component: LicensePage,
+    path: '/about', // Ny rutt för About-sidan
+    name: 'About',
+    component: AboutPage,
   },
+  // Den gamla '/license'-rutten har tagits bort eftersom licensen nu visas i en modal.
+
   // TODO: Ersätt dessa platshållar-komponenter när de faktiska sidorna skapas.
   // Just nu pekar de till HomePage för att undvika 404-fel från länkarna i headern.
   {
@@ -35,6 +37,11 @@ const routes = [
     name: 'DataExplorer',
     component: HomePage, // Platshållare
   },
+  // En "catch-all"-rutt för att hantera okända sökvägar, omdirigerar till startsidan.
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/',
+  }
 ];
 
 // Skapar en router-instans.
