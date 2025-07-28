@@ -6,6 +6,8 @@
   "exclude": [
     "/assets/*",
     "/data/*",
-    "/favicon.ico"
+    "/favicon.ico",
+    "/images/*",
+    "/LICENSE"
   ]
 }
