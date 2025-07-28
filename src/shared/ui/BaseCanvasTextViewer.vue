@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import { useThemeStore } from '../../features/theme-toggle/model/themeStore.js';
 
 // --- PROPS ---
@@ -27,55 +27,21 @@ const props = defineProps({
 const canvasRef = ref(null);
 const containerRef = ref(null);
 const themeStore = useThemeStore();
-
-// --- STATE ---
-let animationFrameId = null; // För att hantera omritning vid storleksändring
+let animationFrameId = null;
 
 // --- RENDERING LOGIC ---
 
 /**
- * Bryter en lång textsträng till en array av rader.
- * @param {CanvasRenderingContext2D} context - Canvasens 2D-kontext.
- * @param {string} text - Texten som ska brytas.
- * @param {number} maxWidth - Maximal bredd en rad får ha.
- * @returns {Array} En array av textrader.
- */
-const wrapText = (context, text, maxWidth) => {
-  const lines = [];
-  const paragraphs = text.split('\n');
-
-  paragraphs.forEach(paragraph => {
-    if (paragraph === '') {
-      lines.push(''); // Behåll tomma rader mellan paragrafer
-    } else {
-      const words = paragraph.split(' ');
-      let currentLine = words[0];
-
-      for (let i = 1; i < words.length; i++) {
-        const word = words[i];
-        const width = context.measureText(currentLine + ' ' + word).width;
-        if (width < maxWidth) {
-          currentLine += ' ' + word;
-        } else {
-          lines.push(currentLine);
-          currentLine = word;
-        }
-      }
-      lines.push(currentLine);
-    }
-  });
-  return lines;
-};
-
-
-/**
- * Huvudfunktion för att rendera texten på canvasen.
+ * Huvudfunktion för att rendera texten. Denna funktion är designad för att vara
+ * säker att anropa flera gånger (idempotent).
  */
 const renderCanvasContent = () => {
+  // Avbryt eventuell pågående renderingsloop för att förhindra race conditions
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId);
   }
 
+  // Använd requestAnimationFrame för att synka med webbläsarens renderingscykel
   animationFrameId = requestAnimationFrame(() => {
     const canvas = canvasRef.value;
     const container = containerRef.value;
@@ -84,54 +50,96 @@ const renderCanvasContent = () => {
     const ctx = canvas.getContext('2d');
     const dpr = window.devicePixelRatio || 1;
 
-    // Hämta stilvärden från CSS-variabler
+    // Hämta stilvärden från CSS Custom Properties
     const styles = getComputedStyle(document.documentElement);
     const fontColor = styles.getPropertyValue('--color-text-medium-emphasis').trim();
     const fontFamily = styles.getPropertyValue('--font-family-monospace').trim();
     const fontSize = 14;
     const lineHeight = fontSize * 1.6;
+    const padding = 20;
 
-    // Sätt canvasens dimensioner baserat på containern och DPI
+    // Sätt canvasens bredd baserat på containern
     const rect = container.getBoundingClientRect();
     canvas.width = rect.width * dpr;
-    ctx.scale(dpr, dpr);
     
-    // Sätt textstil
+    // Nollställ eventuella tidigare transformationer
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+
+    // Sätt textstilar
     ctx.font = `${fontSize}px ${fontFamily}`;
+    ctx.fillStyle = fontColor;
+    ctx.textBaseline = 'top';
+
+    // --- Textbrytningslogik ---
+    const lines = [];
+    const paragraphs = props.text.split('\n');
+    paragraphs.forEach(paragraph => {
+      const words = paragraph.split(' ');
+      let currentLine = words[0] || '';
+
+      for (let i = 1; i < words.length; i++) {
+        const word = words[i];
+        const width = ctx.measureText(currentLine + ' ' + word).width;
+        if (width < rect.width - (padding * 2)) {
+          currentLine += ' ' + word;
+        } else {
+          lines.push(currentLine);
+          currentLine = word;
+        }
+      }
+      lines.push(currentLine);
+    });
+
+    // --- Slutgiltig Rendering ---
+    // Beräkna den totala höjden som texten kommer att uppta
+    const totalHeight = lines.length * lineHeight + (padding * 2);
+    canvas.height = totalHeight * dpr; // Justera canvas-höjden
     
-    // Bryt texten till rader
-    const lines = wrapText(ctx, props.text, rect.width - 40);
-
-    // Beräkna total höjd och justera canvas
-    const totalHeight = lines.length * lineHeight + 40;
-    canvas.height = totalHeight * dpr;
-
-    // Skala om för den nya höjden och sätt stilarna igen
+    // Skala om igen efter höjdjustering
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.scale(dpr, dpr);
+    
+    // Applicera stilar på nytt (viktigt efter setTransform)
     ctx.font = `${fontSize}px ${fontFamily}`;
     ctx.fillStyle = fontColor;
     ctx.textBaseline = 'top';
     
-    // Rensa och rita texten
+    // Rensa hela canvasen inför ny utritning
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Rita ut varje rad
     lines.forEach((line, index) => {
-      ctx.fillText(line, 20, 20 + index * lineHeight);
+      ctx.fillText(line, padding, padding + (index * lineHeight));
     });
   });
 };
 
-
 // --- LIFECYCLE & WATCHERS ---
+const resizeObserver = new ResizeObserver(() => {
+    renderCanvasContent();
+});
 
 onMounted(() => {
   renderCanvasContent();
-  window.addEventListener('resize', renderCanvasContent);
+  if (containerRef.value) {
+    resizeObserver.observe(containerRef.value);
+  }
 });
 
-watch(() => props.text, renderCanvasContent);
+onBeforeUnmount(() => {
+  if (containerRef.value) {
+    resizeObserver.unobserve(containerRef.value);
+  }
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId);
+  }
+});
 
+// Se till att rendera om när texten eller temat ändras
+watch(() => props.text, renderCanvasContent);
 watch(() => themeStore.isDarkTheme, () => {
-  // En kort fördröjning för att låta CSS-variabler uppdateras
+  // Liten fördröjning för att säkerställa att CSS-variablerna har uppdaterats
   setTimeout(renderCanvasContent, 50);
 });
 
@@ -141,16 +149,17 @@ watch(() => themeStore.isDarkTheme, () => {
 .canvas-viewer-container {
   width: 100%;
   height: 100%;
-  overflow-y: auto;
+  overflow-y: auto; /* Gör innehållet (den dynamiskt storleksändrade canvasen) scrollbart */
   background-color: var(--color-surface-secondary);
   border: 1px solid var(--color-border-primary);
   border-radius: 8px;
-  padding: 0;
 }
 
 canvas {
   display: block;
-  width: 100%;
+  /* Canvasens faktiska bredd och höjd sätts via JS för DPI-skalning, */
+  /* men CSS-bredden säkerställer att den fyller sin container. */
+  width: 100%; 
 }
 </style>
 // src/shared/ui/BaseCanvasTextViewer.vue
