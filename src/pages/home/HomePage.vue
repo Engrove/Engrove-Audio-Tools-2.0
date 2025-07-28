@@ -1,7 +1,6 @@
 <!-- src/pages/home/HomePage.vue -->
-<!-- Detta är applikationens landningssida. Den är strukturerad i sektioner -->
-<!-- för att introducera projektets syfte, verktyg och filosofi. -->
-<!-- Denna version använder de korrekta .webp-bilderna för att visualisera innehållet. -->
+<!-- Detta är applikationens landningssida. Denna uppdaterade version är mer -->
+<!-- fokuserad på att direkt presentera verktygen för användaren. -->
 <template>
 <main class="home-page">
 <!-- ====================================================================== -->
@@ -81,41 +80,6 @@ Explore the Tools
   </div>
 </section>
 
-<!-- ====================================================================== -->
-<!-- SEKTION 3: PHILOSOPHY                                                  -->
-<!-- ====================================================================== -->
-<section class="philosophy-section page-section">
-  <div class="section-container philosophy-layout">
-    <div class="philosophy-text">
-      <h2 class="section-title">An Open and Transparent Approach</h2>
-      <p>These tools were born from a desire for accuracy. No magic formulas, just established audio engineering principles applied in a clean, predictable interface.</p>
-      <p>The goal is to transform complex calculations into clear, understandable visualizations. The 'how' is just as important as the 'what', turning black boxes into glass boxes.</p>
-      <p>This is a free and open-source project under the MIT License. The methodology is documented, the data is explorable, and community feedback is always welcome.</p>
-    </div>
-    <div class="philosophy-visual">
-       <img src="/images/engrove.webp" alt="An illustration of Jan-Eric Enlund, the creator of the Engrove Audio Toolkit." class="philosophy-avatar">
-    </div>
-  </div>
-</section>
-
-<!-- ====================================================================== -->
-<!-- SEKTION 4: FINAL INVITATION                                            -->
-<!-- ====================================================================== -->
-<section class="final-cta-section page-section">
-   <div class="section-container">
-    <h2 class="section-title">Ready to Begin?</h2>
-    <p>Select a tool to get started, or dive into the source code to see how it all works.</p>
-    <div class="final-cta-buttons">
-      <router-link to="/alignment-calculator" custom v-slot="{ navigate }">
-        <BaseButton variant="primary" @click="navigate">Start with the Alignment Calculator</BaseButton>
-      </router-link>
-      <a href="https://github.com/Engrove/Engrove-Audio-Tools-2.0" target="_blank" rel="noopener noreferrer">
-        <BaseButton variant="secondary">View Project on GitHub</BaseButton>
-      </a>
-    </div>
-  </div>
-</section>
-
 </main>
 </template>
 
@@ -138,11 +102,14 @@ toolkitSection.value?.scrollIntoView({ behavior: 'smooth' });
 /* Generella stilar för sektioner och containers för konsistens */
 .page-section {
 padding: 6rem 1rem;
-border-bottom: 1px solid var(--color-border-primary);
+}
+.page-section:first-child {
+  border-bottom: 1px solid var(--color-border-primary);
 }
 .page-section:last-child {
-border-bottom: none;
+  padding-bottom: 8rem; /* Ge lite extra utrymme mot sidfoten */
 }
+
 .section-container {
 max-width: 1200px;
 margin: 0 auto;
@@ -159,7 +126,6 @@ display: flex;
 align-items: center;
 justify-content: center;
 text-align: center;
-border-bottom: none;
 padding-top: 0;
 padding-bottom: 4rem;
 }
@@ -220,61 +186,6 @@ margin: 0 1.5rem 1.5rem 1.5rem;
 align-self: flex-start;
 }
 
-
-/* Sektion 3: Philosophy */
-.philosophy-section .section-title {
-text-align: left;
-}
-.philosophy-layout {
-display: grid;
-grid-template-columns: 1fr;
-gap: 3rem;
-align-items: center;
-}
-.philosophy-text p {
-margin-bottom: 1.5rem;
-line-height: 1.7;
-max-width: 60ch;
-}
-.philosophy-text p:last-child {
-margin-bottom: 0;
-}
-.philosophy-visual {
-display: flex;
-justify-content: center;
-align-items: center;
-}
-.philosophy-avatar {
-width: 100%;
-max-width: 350px;
-height: auto;
-border-radius: 50%;
-box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-border: 3px solid var(--color-surface-tertiary);
-}
-
-/* Sektion 4: Final Invitation */
-.final-cta-section {
-background-color: var(--color-surface-secondary);
-}
-.final-cta-section .section-container {
-display: flex;
-flex-direction: column;
-align-items: center;
-text-align: center;
-}
-.final-cta-section p {
-max-width: 500px;
-margin-bottom: 2rem;
-color: var(--color-text-medium-emphasis);
-}
-.final-cta-buttons {
-display: flex;
-flex-wrap: wrap;
-justify-content: center;
-gap: 1rem;
-}
-
 /* Responsivitet för större skärmar */
 @media (min-width: 768px) {
 .page-section {
@@ -282,13 +193,6 @@ padding: 8rem 2rem;
 }
 .hero-section {
   padding-top: 4rem;
-}
-}
-
-@media (min-width: 992px) {
-.philosophy-layout {
-grid-template-columns: 2fr 1fr;
-gap: 5rem;
 }
 }
 </style>
