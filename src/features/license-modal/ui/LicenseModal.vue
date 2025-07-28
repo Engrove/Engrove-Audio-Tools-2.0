@@ -1,7 +1,7 @@
 <!-- src/features/license-modal/ui/LicenseModal.vue -->
 <!-- Denna feature-komponent representerar den kompletta "Licensmodal"-funktionen. -->
-<!-- Den använder den generella BaseModal-komponenten och fyller den med -->
-<!-- BaseCanvasTextViewer, samt hanterar sin egen synlighet och datahämtning. -->
+<!-- Denna korrigerade version använder en enkel och robust <pre>-tagg för att -->
+<!-- visa den förformaterade licenstexten, istället för canvas. -->
 <template>
   <BaseModal v-model:isOpen="isModalOpen">
     <template #header>
@@ -14,9 +14,9 @@
           Engrove Audio Toolkit is distributed under the GNU Affero General Public License v3.0.
           The full license text is provided below.
         </p>
-        <div class="license-viewer-wrapper">
-          <BaseCanvasTextViewer :text="licenseText" />
-        </div>
+        <!-- Använder en <pre>-tagg för att visa texten. -->
+        <!-- Den bevarar radbrytningar och mellanslag från textfilen. -->
+        <pre class="license-text-container">{{ licenseText }}</pre>
       </div>
     </template>
   </BaseModal>
@@ -25,11 +25,8 @@
 <script setup>
 import { ref, watch } from 'vue';
 import BaseModal from '../../../shared/ui/BaseModal.vue';
-import BaseCanvasTextViewer from '../../../shared/ui/BaseCanvasTextViewer.vue';
 
 // --- PROPS & EMITS ---
-// Denna komponent använder v-model:isOpen för att låta föräldern styra
-// när den ska visas.
 const props = defineProps({
   isOpen: {
     type: Boolean,
@@ -40,8 +37,6 @@ const props = defineProps({
 const emit = defineEmits(['update:isOpen']);
 
 // --- STATE ---
-// En lokal reaktiv referens för att synkronisera med prop.
-// Detta är standardpraxis för v-model i en Composition API-komponent.
 const isModalOpen = ref(props.isOpen);
 watch(() => props.isOpen, (newValue) => {
   isModalOpen.value = newValue;
@@ -51,15 +46,14 @@ watch(isModalOpen, (newValue) => {
 });
 
 const licenseText = ref('Laddar licenstext...');
-const hasFetched = ref(false); // Flagga för att undvika onödiga hämtningar
+const hasFetched = ref(false);
 
 // --- DATA FETCHING ---
 const fetchLicense = async () => {
-  // Hämta bara texten en gång.
   if (hasFetched.value) return;
 
   try {
-    const response = await fetch('/LICENSE');
+    const response = await fetch('/LICENSE'); // Hämtar från /public/LICENSE
     if (response.ok) {
       licenseText.value = await response.text();
     } else {
@@ -69,13 +63,12 @@ const fetchLicense = async () => {
     console.error('Fel vid hämtning av licens:', error);
     licenseText.value = 'Ett fel uppstod vid hämtning av licensfilen.';
   } finally {
-    hasFetched.value = true; // Markera att hämtning har försökts
+    hasFetched.value = true;
   }
 };
 
 // --- LOGIC ---
-// Använd en watcher för att trigga datahämtning endast när modalen öppnas
-// för första gången. Detta är mer effektivt än att hämta data onMounted.
+// Hämtar texten när modalen öppnas för första gången.
 watch(isModalOpen, (newValue) => {
   if (newValue && !hasFetched.value) {
     fetchLicense();
@@ -94,14 +87,29 @@ watch(isModalOpen, (newValue) => {
   color: var(--color-text-medium-emphasis);
   font-size: var(--font-size-label);
   margin-bottom: 0.5rem;
+  white-space: normal; /* Tillåt radbrytning i ingressen */
 }
 
-/* Denna wrapper är nödvändig för att ge canvas-komponenten en definierad höjd, */
-/* vilket i sin tur gör att dess interna scroll-funktion fungerar korrekt. */
-.license-viewer-wrapper {
-  /* Höjden sätts relativt till viewporten för att fungera bra i en modal */
+.license-text-container {
+  /* Styling för <pre>-taggen */
+  background-color: var(--color-surface-primary); /* Något mörkare bakgrund för kontrast */
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  padding: 1rem;
+  
+  /* Typsnitt och textformatering */
+  font-family: var(--font-family-monospace);
+  font-size: 13px; /* Något mindre för att få plats med mer text */
+  line-height: 1.6;
+  color: var(--color-text-medium-emphasis);
+  
+  /* Scroll-beteende */
+  white-space: pre-wrap; /* Tillåter webbläsaren att bryta långa rader */
+  overflow-y: auto; /* Lägger till en scrollbar om innehållet är för högt */
+
+  /* Höjd-begränsningar */
   height: 60vh;
-  max-height: 500px; /* Sätter ett max-tak på höjden */
+  max-height: 500px;
 }
 </style>
 <!-- src/features/license-modal/ui/LicenseModal.vue -->
