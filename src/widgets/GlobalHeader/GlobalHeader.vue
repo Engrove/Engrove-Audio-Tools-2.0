@@ -1,7 +1,6 @@
-<!-- src/widgets/GlobalHeader/GlobalHeader.vue -->
+ <!-- src/widgets/GlobalHeader/GlobalHeader.vue -->
 <!-- Denna widget är den primära, globala headern för hela applikationen. -->
-<!-- Den är nu fullt responsiv och hanterar både desktop-navigering och -->
-<!-- den nya mobilmenyn. -->
+<!-- Den är nu fullt responsiv och inkluderar den fungerande temaväxlaren. -->
 
 <template>
   <div>
@@ -22,10 +21,8 @@
 
         <!-- Höger sektion: Knappar och kontroller -->
         <div class="header-right">
-          <!-- Platshållare för temaväxlare -->
-          <BaseButton variant="secondary" class="theme-toggle-placeholder">
-            Theme
-          </BaseButton>
+          <!-- Den fungerande temaväxlaren, visas endast på desktop. -->
+          <ThemeToggle class="theme-toggle-desktop" />
           
           <!-- Hamburgar-knappen, visas endast på mobil -->
           <MobileMenuToggle class="mobile-menu-toggle-button" />
@@ -45,9 +42,9 @@
 import { RouterLink } from 'vue-router';
 import { useMobileMenu } from '../../features/mobile-menu-toggle/model/useMobileMenu.js';
 import Logo from '../../shared/ui/Logo.vue';
-import BaseButton from '../../shared/ui/BaseButton.vue';
 import MobileMenuToggle from '../../features/mobile-menu-toggle/ui/MobileMenuToggle.vue';
 import MobileNavMenu from '../MobileNavMenu/MobileNavMenu.vue';
+import ThemeToggle from '../../features/theme-toggle/ui/ThemeToggle.vue';
 
 // Hämtar meny-tillståndet för att styra visningen av mobilmenyn
 const { isMenuOpen } = useMobileMenu();
@@ -141,7 +138,7 @@ const { isMenuOpen } = useMobileMenu();
 /* Brytpunkt för när mobil-layouten ska aktiveras (t.ex. surfplattor och mindre) */
 @media (max-width: 768px) {
   .header-nav-desktop,
-  .theme-toggle-placeholder {
+  .theme-toggle-desktop {
     display: none; /* Dölj desktop-navigering och temaknapp */
   }
 
@@ -158,7 +155,6 @@ const { isMenuOpen } = useMobileMenu();
 /* ÖVERGÅNGSANIMATION FÖR MOBILMENY                                            */
 /* ========================================================================== */
 
-/* Klassen för fade-in-out-animationen */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s ease;
