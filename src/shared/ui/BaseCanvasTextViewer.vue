@@ -1,8 +1,8 @@
-// src/shared/ui/BaseCanvasTextViewer.vue
-// Denna komponent är en återanvändbar, generell textvisare som renderar
-// en given textsträng på ett HTML <canvas>-element. Den hanterar
-// automatisk radbrytning och hämtar stilinformation (färg, typsnitt)
-// från de globala design-tokens för att säkerställa visuell konsekvens.
+<!-- src/shared/ui/BaseCanvasTextViewer.vue -->
+<!-- Denna komponent är en återanvändbar, generell textvisare som renderar -->
+<!-- en given textsträng på ett HTML <canvas>-element. Den hanterar -->
+<!-- automatisk radbrytning och hämtar stilinformation (färg, typsnitt) -->
+<!-- från de globala design-tokens för att säkerställa visuell konsekvens. -->
 
 <template>
   <div class="canvas-viewer-container" ref="containerRef">
@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
+import { ref, onMounted, watch, nextTick } from 'vue';
 import { useThemeStore } from '../../features/theme-toggle/model/themeStore.js';
 
 // --- PROPS ---
@@ -27,139 +27,138 @@ const props = defineProps({
 const canvasRef = ref(null);
 const containerRef = ref(null);
 const themeStore = useThemeStore();
-let animationFrameId = null;
 
 // --- RENDERING LOGIC ---
 
 /**
- * Huvudfunktion för att rendera texten. Denna funktion är designad för att vara
- * säker att anropa flera gånger (idempotent).
+ * Bryter en lång textsträng till en array av rader baserat på en maximal bredd.
+ * Hanterar även manuella radbrytningar (`\n`).
+ * @param {CanvasRenderingContext2D} ctx - Canvasens 2D-kontext.
+ * @param {string} text - Texten som ska brytas.
+ * @param {number} maxWidth - Maximal bredd en rad får ha.
+ * @returns {Array<string>} En array av textrader.
+ */
+const getWrappedLines = (ctx, text, maxWidth) => {
+  const lines = [];
+  const paragraphs = text.split('\n'); // Splitta på manuella radbrytningar
+
+  paragraphs.forEach(paragraph => {
+    if (paragraph.trim() === '') {
+      lines.push(''); // Behåll tomma rader som avstånd mellan paragrafer
+      return;
+    }
+
+    const words = paragraph.split(' ');
+    let currentLine = words[0];
+
+    for (let i = 1; i < words.length; i++) {
+      const word = words[i];
+      const testLine = currentLine + ' ' + word;
+      const metrics = ctx.measureText(testLine);
+      const testWidth = metrics.width;
+
+      // Om testlinjen blir för bred, pusha den aktuella raden och starta en ny
+      if (testWidth > maxWidth && i > 0) {
+        lines.push(currentLine);
+        currentLine = word;
+      } else {
+        currentLine = testLine;
+      }
+    }
+    lines.push(currentLine); // Lägg till den sista raden i varje paragraf
+  });
+  return lines;
+};
+
+/**
+ * Huvudfunktion för att rendera texten på canvasen.
+ * Denna funktion initierar canvas och dess kontext, beräknar textlayout,
+ * justerar canvasens dimensioner dynamiskt och ritar sedan ut texten.
  */
 const renderCanvasContent = () => {
-  // Avbryt eventuell pågående renderingsloop för att förhindra race conditions
-  if (animationFrameId) {
-    cancelAnimationFrame(animationFrameId);
+  const canvas = canvasRef.value;
+  const container = containerRef.value;
+  if (!canvas || !container) {
+    return; // Säkerställ att elementen finns
   }
 
-  // Använd requestAnimationFrame för att synka med webbläsarens renderingscykel
-  animationFrameId = requestAnimationFrame(() => {
-    const canvas = canvasRef.value;
-    const container = containerRef.value;
-    if (!canvas || !container) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1; // Hämta enhetens pixelratio för skärpa
 
-    const ctx = canvas.getContext('2d');
-    const dpr = window.devicePixelRatio || 1;
+  // Hämta stilvärden från CSS-variabler (design-tokens)
+  const styles = getComputedStyle(document.documentElement);
+  const fontColor = styles.getPropertyValue('--color-text-medium-emphasis').trim();
+  const fontFamily = styles.getPropertyValue('--font-family-monospace').trim();
+  const fontSize = 14; // Definierad fontstorlek för licenstext
+  const lineHeight = fontSize * 1.6; // Radavstånd baserat på fontstorlek
 
-    // Hämta stilvärden från CSS Custom Properties
-    const styles = getComputedStyle(document.documentElement);
-    const fontColor = styles.getPropertyValue('--color-text-medium-emphasis').trim();
-    const fontFamily = styles.getPropertyValue('--font-family-monospace').trim();
-    const fontSize = 14;
-    const lineHeight = fontSize * 1.6;
-    const padding = 20;
+  // --- 1. Konfigurera canvasens interna dimensioner och skala för DPI ---
+  // Rätt bredd för canvasen, baserad på förälder-containerns faktiska bredd
+  const containerWidth = container.clientWidth;
+  const paddingX = 20; // Padding på sidorna av texten
+  const drawableWidth = containerWidth - (2 * paddingX);
 
-    // Sätt canvasens bredd baserat på containern
-    const rect = container.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    
-    // Nollställ eventuella tidigare transformationer
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.scale(dpr, dpr);
+  canvas.width = containerWidth * dpr; // Sätt canvasens interna pixelbredd
+  canvas.style.width = `${containerWidth}px`; // Sätt canvasens visuella bredd
+  
+  ctx.scale(dpr, dpr); // Skala kontexten för att rita med logiska pixlar
 
-    // Sätt textstilar
-    ctx.font = `${fontSize}px ${fontFamily}`;
-    ctx.fillStyle = fontColor;
-    ctx.textBaseline = 'top';
+  // --- 2. Sätt textstil för beräkningar och rendering ---
+  ctx.font = `${fontSize}px ${fontFamily}`;
+  ctx.fillStyle = fontColor;
+  ctx.textBaseline = 'top'; // Justera textens baslinje för enklare Y-positionering
 
-    // --- Textbrytningslogik ---
-    const lines = [];
-    const paragraphs = props.text.split('\n');
-    paragraphs.forEach(paragraph => {
-      const words = paragraph.split(' ');
-      let currentLine = words[0] || '';
+  // --- 3. Beräkna radbrytningar och total höjd ---
+  const lines = getWrappedLines(ctx, props.text, drawableWidth);
+  const totalTextHeight = lines.length * lineHeight;
+  const paddingY = 20; // Padding upptill och nedtill
+  const requiredCanvasHeight = totalTextHeight + (2 * paddingY);
 
-      for (let i = 1; i < words.length; i++) {
-        const word = words[i];
-        const width = ctx.measureText(currentLine + ' ' + word).width;
-        if (width < rect.width - (padding * 2)) {
-          currentLine += ' ' + word;
-        } else {
-          lines.push(currentLine);
-          currentLine = word;
-        }
-      }
-      lines.push(currentLine);
-    });
+  // --- 4. Justera canvasens höjd dynamiskt ---
+  // Sätt canvasens interna pixelhöjd och visuella höjd
+  canvas.height = requiredCanvasHeight * dpr;
+  canvas.style.height = `${requiredCanvasHeight}px`;
 
-    // --- Slutgiltig Rendering ---
-    // Beräkna den totala höjden som texten kommer att uppta
-    const totalHeight = lines.length * lineHeight + (padding * 2);
-    canvas.height = totalHeight * dpr; // Justera canvas-höjden
-    
-    // Skala om igen efter höjdjustering
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.scale(dpr, dpr);
-    
-    // Applicera stilar på nytt (viktigt efter setTransform)
-    ctx.font = `${fontSize}px ${fontFamily}`;
-    ctx.fillStyle = fontColor;
-    ctx.textBaseline = 'top';
-    
-    // Rensa hela canvasen inför ny utritning
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // --- 5. Rensa och rita ut all text ---
+  ctx.clearRect(0, 0, canvas.width, canvas.height); // Rensa hela canvasen
 
-    // Rita ut varje rad
-    lines.forEach((line, index) => {
-      ctx.fillText(line, padding, padding + (index * lineHeight));
-    });
+  // Rita ut varje rad
+  lines.forEach((line, index) => {
+    ctx.fillText(line, paddingX, paddingY + index * lineHeight);
   });
 };
 
-// --- LIFECYCLE & WATCHERS ---
-const resizeObserver = new ResizeObserver(() => {
-    renderCanvasContent();
-});
+// --- LIFECYCLE HOOKS & WATCHERS ---
 
+// Vid montering: Rendera innehållet och lägg till resize-lyssnare
 onMounted(() => {
   renderCanvasContent();
-  if (containerRef.value) {
-    resizeObserver.observe(containerRef.value);
-  }
+  window.addEventListener('resize', renderCanvasContent);
 });
 
-onBeforeUnmount(() => {
-  if (containerRef.value) {
-    resizeObserver.unobserve(containerRef.value);
-  }
-  if (animationFrameId) {
-    cancelAnimationFrame(animationFrameId);
-  }
-});
-
-// Se till att rendera om när texten eller temat ändras
+// Vid uppdatering av textprop: Rendera om innehållet
 watch(() => props.text, renderCanvasContent);
-watch(() => themeStore.isDarkTheme, () => {
-  // Liten fördröjning för att säkerställa att CSS-variablerna har uppdaterats
-  setTimeout(renderCanvasContent, 50);
-});
 
+// Vid temabyte: Vänta på att CSS-variabler uppdateras och rendera sedan om
+watch(() => themeStore.isDarkTheme, () => {
+  nextTick(() => { // Säkerställ att DOM har uppdaterats med de nya CSS-variablerna
+    renderCanvasContent();
+  });
+});
 </script>
 
 <style scoped>
 .canvas-viewer-container {
   width: 100%;
-  height: 100%;
-  overflow-y: auto; /* Gör innehållet (den dynamiskt storleksändrade canvasen) scrollbart */
+  height: 100%; /* Tar upp all tillgänglig höjd från sin förälder */
+  overflow-y: auto; /* Gör innehållet (canvasen) scrollbart */
   background-color: var(--color-surface-secondary);
   border: 1px solid var(--color-border-primary);
   border-radius: 8px;
 }
 
 canvas {
-  display: block;
-  /* Canvasens faktiska bredd och höjd sätts via JS för DPI-skalning, */
-  /* men CSS-bredden säkerställer att den fyller sin container. */
-  width: 100%; 
+  display: block; /* Tar bort extra marginaler under canvas */
 }
 </style>
-// src/shared/ui/BaseCanvasTextViewer.vue
+<!-- src/shared/ui/BaseCanvasTextViewer.vue -->
