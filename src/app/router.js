@@ -3,8 +3,9 @@
 // Den mappar URL-sökvägar till specifika sidkomponenter.
 
 import { createRouter, createWebHistory } from 'vue-router';
-import HomePage from '../../pages/home/HomePage.vue';
-import AboutPage from '../../pages/about/AboutPage.vue'; // Importerar den nya About-sidan
+// Korrigerade sökvägar: Går upp en nivå från /app till /src, sedan ner till /pages.
+import HomePage from '../pages/home/HomePage.vue';
+import AboutPage from '../pages/about/AboutPage.vue';
 
 // Definition av alla applikationens rutter.
 const routes = [
@@ -14,12 +15,10 @@ const routes = [
     component: HomePage,
   },
   {
-    path: '/about', // Ny rutt för About-sidan
+    path: '/about',
     name: 'About',
     component: AboutPage,
   },
-  // Den gamla '/license'-rutten har tagits bort eftersom licensen nu visas i en modal.
-
   // TODO: Ersätt dessa platshållar-komponenter när de faktiska sidorna skapas.
   // Just nu pekar de till HomePage för att undvika 404-fel från länkarna i headern.
   {
