@@ -7,7 +7,7 @@
 <!-- ====================================================================== -->
 <!-- SEKTION 1: HERO -->
 <!-- ====================================================================== -->
-<section class="hero-section page-section">
+<section class="hero-section page-section" :class="themeClass">
 <div class="section-container">
 <h1 class="hero-title">Precision Tools for the Analog Enthusiast.</h1>
 <p class="hero-subtitle">
@@ -85,9 +85,18 @@ Explore the Tools
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { RouterLink } from 'vue-router';
+import { useThemeStore } from '../../features/theme-toggle/model/themeStore.js';
 import BaseButton from '../../shared/ui/BaseButton.vue';
+
+// Hämtar theme store för att dynamiskt kunna sätta klass på hero-sektionen
+const themeStore = useThemeStore();
+const themeClass = computed(() => (
+  // Om isDarkTheme är sant, returnera 'dark-theme'.
+  // Om isDarkTheme är falskt, returnera 'light-theme'.
+  themeStore.isDarkTheme ? 'dark-theme' : 'light-theme'
+));
 
 // Ref för att kunna scrolla till verktygssektionen
 const toolkitSection = ref(null);
@@ -122,12 +131,7 @@ toolkitSection.value?.scrollIntoView({ behavior: 'smooth' });
 
 /* Sektion 1: Hero */
 .hero-section {
-  position: relative; /* Nödvändigt för overlay */
-  /* KORRIGERING: Definiera CSS-variabler för dynamisk ändring */
-  --hero-background-image: url('/images/bg_black.webp');
-  --hero-gradient: linear-gradient(to bottom, rgba(18, 18, 18, 0.4), var(--color-surface-primary));
-
-  background-image: var(--hero-background-image);
+  position: relative;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -138,10 +142,9 @@ toolkitSection.value?.scrollIntoView({ behavior: 'smooth' });
   text-align: center;
   padding-top: 0;
   padding-bottom: 4rem;
-  overflow: hidden; /* Håller overlayen inom sektionens gränser */
+  overflow: hidden;
 }
 
-/* Overlay för att tona ut bilden och säkerställa textläsbarhet */
 .hero-section::before {
   content: '';
   position: absolute;
@@ -149,7 +152,6 @@ toolkitSection.value?.scrollIntoView({ behavior: 'smooth' });
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--hero-gradient);
   z-index: 1;
 }
 
@@ -159,11 +161,19 @@ toolkitSection.value?.scrollIntoView({ behavior: 'smooth' });
   z-index: 2;
 }
 
-/* KORRIGERING: Ändra endast värdet på CSS-variablerna för det ljusa temat. */
-/* Detta kringgår CSS-specificitetsproblemet. */
-:global(.light-theme) .hero-section {
-  --hero-background-image: url('/images/bg_white.webp');
-  --hero-gradient: linear-gradient(to bottom, rgba(255, 255, 255, 0.7), var(--color-surface-primary));
+/* Specifika regler för varje tema för att undvika specificitetskonflikter */
+.hero-section.dark-theme {
+  background-image: url('/images/bg_black.webp');
+}
+.hero-section.dark-theme::before {
+  background: linear-gradient(to bottom, rgba(18, 18, 18, 0.4), var(--color-surface-primary));
+}
+
+.hero-section.light-theme {
+  background-image: url('/images/bg_white.webp');
+}
+.hero-section.light-theme::before {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.7), var(--color-surface-primary));
 }
 
 .hero-title {
