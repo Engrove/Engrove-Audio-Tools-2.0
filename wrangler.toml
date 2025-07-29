@@ -1,40 +1,15 @@
-# wrangler.toml
-#
-# Korrigerad Cloudflare Pages-konfiguration.
-# Denna version använder den korrekta syntaxen för att definiera SPA-routing
-# och undantag för statiska tillgångar, vilket löser problemet med att
-# JSON-filer felaktigt omdirigerades till index.html.
-
-# Projektets namn på Cloudflare Pages.
 name = "engrove-audio"
-
-# Kompatibilitetsdatum för Workers runtime.
 compatibility_date = "2025-07-16"
-
-# Mappen där Vite placerar den färdiga, byggda webbplatsen.
-# Cloudflare Pages kommer att söka efter din statiska webbplats i denna katalog.
 pages_build_output_dir = "dist"
 
-# KORRIGERING: Pages-specifik konfiguration måste ligga inom en [[pages.functions]]-sektion.
-# Detta block definierar routing-reglerna för din Single Page Application (SPA).
 [[pages.functions]]
-  # Denna regel agerar som en "catch-all" för din SPA. Den instruerar Cloudflare
-  # att alla sökvägar som inte matchar en existerande fil ska hanteras av din
-  # applikations routing-logik (dvs. servera index.html).
-  route = "/*"
-  
-  # Detta är den kritiska delen. Vi exkluderar specifika sökvägar från "catch-all"-regeln.
-  # Alla förfrågningar till dessa sökvägar kommer att behandlas som direkta förfrågningar
-  # till statiska filer, vilket förhindrar att de omdirigeras.
-  exclude = [
-    "/images/*",
-    "/data/*",
-    "/favicon.ico",
-    "/sitemap.xml",
-    "/robots.txt",
-    "/og-image.png",
-    "/LICENSE",
-    # Vi behöver inte längre exkludera .html-filer här eftersom route-regeln
-    # hanterar SPA-fallback på ett smartare sätt.
-  ]
-# wrangler.toml
+route = "/*"
+exclude = [
+  "/images/*",
+  "/data/*",
+  "/favicon.ico",
+  "/sitemap.xml",
+  "/robots.txt",
+  "/og-image.png",
+  "/LICENSE"
+]
