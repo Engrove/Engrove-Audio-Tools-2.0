@@ -1,0 +1,17 @@
+# wrangler.toml
+# Denna fil konfigurerar Cloudflare Pages-projektet explicit.
+# Den ger mer kontroll och kan överstyrda UI-inställningar i Cloudflare-panelen,
+# vilket säkerställer ett förutsägbart bygg- och driftsättningsbeteende.
+
+# Namnet på ditt Cloudflare Pages-projekt.
+# Detta bör matcha namnet du ser i din Cloudflare-dashboard.
+name = "engrove-audio"
+
+# Datumet för Workers runtime-versionen som ska användas.
+# Detta säkerställer att bygget är konsekvent över tid.
+compatibility_date = "2024-07-29"
+
+# Talar om för Cloudflare Pages vilken katalog som innehåller den färdigbyggda webbplatsen.
+# För ett standard Vite-projekt är detta alltid 'dist'.
+pages_build_output_dir = "dist"
+# wrangler.toml
