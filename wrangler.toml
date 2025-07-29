@@ -1,15 +1,16 @@
-name = "engrove-audio"
-compatibility_date = "2025-07-16"
-pages_build_output_dir = "dist"
+# wrangler.toml
+#
+# Återställd Cloudflare Pages-konfiguration till minimal version.
+# Denna fil definierar grundläggande bygginställningar och litar på
+# public/_routes.json för SPA-routing och hantering av statiska tillgångar.
 
-[[pages.functions]]
-route = "/*"
-exclude = [
-  "/images/*",
-  "/data/*",
-  "/favicon.ico",
-  "/sitemap.xml",
-  "/robots.txt",
-  "/og-image.png",
-  "/LICENSE"
-]
+# Projektets namn på Cloudflare Pages.
+name = "engrove-audio"
+
+# Kompatibilitetsdatum för Workers runtime.
+# Detta säkerställer att din Pages-projekt körs med en specifik version av Workers-miljön.
+compatibility_date = "2025-07-16"
+
+# Mappen där Vite placerar den färdiga, byggda webbplatsen.
+# Cloudflare Pages kommer att söka efter din statiska webbplats i denna katalog.
+pages_build_output_dir = "./dist"
