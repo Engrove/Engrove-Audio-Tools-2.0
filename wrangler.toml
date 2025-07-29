@@ -1,32 +1,10 @@
-# wrangler.toml
-# Denna fil konfigurerar Cloudflare Pages-projektet explicit.
-# Den innehåller nu routing-reglerna och ersätter behovet av _routes.json.
-
-# Namnet på ditt Cloudflare Pages-projekt.
+# The name of your Pages project.
 name = "engrove-audio"
 
-# Datumet för Workers runtime-versionen som ska användas.
-compatibility_date = "2024-07-29"
+# The date of the Workers runtime version to use.
+compatibility_date = "2025-07-16"
 
-# Talar om för Cloudflare Pages vilken katalog som innehåller den färdigbyggda webbplatsen.
+# This property tells Cloudflare Pages which directory contains the finished site.
+# It should be a simple string.
 pages_build_output_dir = "dist"
 
-# --- NYTT: Routing och Exkluderingar ---
-# Denna sektion ersätter _routes.json och är det moderna sättet att
-# definiera routing för "Cloudflare Pages Functions".
-[[pages.functions]]
-  # Denna regel matchar ALLA inkommande sökvägar.
-  route = "/*"
-  
-  # Denna lista specificerar vilka sökvägar som ska EXKLUDERAS från
-  # "route"-regeln ovan. Detta är avgörande för att förhindra att anrop till
-  # statiska filer (som våra .json-databaser) felaktigt omdirigeras
-  # till applikationens index.html.
-  exclude = [
-    "/assets/*",
-    "/data/*",
-    "/favicon.ico",
-    "/images/*",
-    "/LICENSE"
-  ]
-# wrangler.toml
