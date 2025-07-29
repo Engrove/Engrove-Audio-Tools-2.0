@@ -5,7 +5,7 @@
 
 # Namnet på ditt Cloudflare Pages-projekt.
 # Detta bör matcha namnet du ser i din Cloudflare-dashboard.
-name = "Engrove-Audio-Tools-2.0"
+name = "engrove-audio"
 
 # Datumet för Workers runtime-versionen som ska användas.
 # Detta säkerställer att bygget är konsekvent över tid.
