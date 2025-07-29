@@ -1,36 +1,40 @@
-# Cloudflare Pages-konfiguration för Engrove Audio Toolkit.
-# Denna fil definierar hur Cloudflare Pages ska bygga och deploya din webbplats,
-# inklusive hantering av statiska tillgångar och SPA-routing.
+# wrangler.toml
+#
+# Korrigerad Cloudflare Pages-konfiguration.
+# Denna version använder den korrekta syntaxen för att definiera SPA-routing
+# och undantag för statiska tillgångar, vilket löser problemet med att
+# JSON-filer felaktigt omdirigerades till index.html.
 
 # Projektets namn på Cloudflare Pages.
 name = "engrove-audio"
 
 # Kompatibilitetsdatum för Workers runtime.
-# Detta säkerställer att din Pages-projekt körs med en specifik version av Workers-miljön.
 compatibility_date = "2025-07-16"
 
 # Mappen där Vite placerar den färdiga, byggda webbplatsen.
 # Cloudflare Pages kommer att söka efter din statiska webbplats i denna katalog.
 pages_build_output_dir = "dist"
 
-# Konfigurerar vilka filer som ska behandlas som statiska tillgångar.
-# Detta är avgörande för att säkerställa att JSON-datafiler inte omdirigeras
-# till index.html i en SPA-miljö.
-# `asset_include` definierar vilka filer och mappar som Pages ska inkludera som statiska tillgångar.
-# `asset_exclude` definierar specifika mönster som ska undantas från den statiska tillgångshanteringen.
-# Detta är det korrekta sättet att styra routing för statiska filer på Cloudflare Pages när wrangler.toml används.
-asset_include = [
-    "/*"  # Inkludera allt som standard för statiska tillgångar
-]
-asset_exclude = [
-    "/index.html",     # Exkludera root index.html från att matchas som en direkt tillgång
-    "/showcase.html",  # Exkludera showcase.html från att matchas som en direkt tillgång
+# KORRIGERING: Pages-specifik konfiguration måste ligga inom en [[pages.functions]]-sektion.
+# Detta block definierar routing-reglerna för din Single Page Application (SPA).
+[[pages.functions]]
+  # Denna regel agerar som en "catch-all" för din SPA. Den instruerar Cloudflare
+  # att alla sökvägar som inte matchar en existerande fil ska hanteras av din
+  # applikations routing-logik (dvs. servera index.html).
+  route = "/*"
+  
+  # Detta är den kritiska delen. Vi exkluderar specifika sökvägar från "catch-all"-regeln.
+  # Alla förfrågningar till dessa sökvägar kommer att behandlas som direkta förfrågningar
+  # till statiska filer, vilket förhindrar att de omdirigeras.
+  exclude = [
+    "/images/*",
+    "/data/*",
     "/favicon.ico",
     "/sitemap.xml",
     "/robots.txt",
-    "/data/*",
-    "/og-image.png"
-]
-# Notera: _routes.json hanteras implicit av Pages när `asset_exclude` specificeras.
-# Det är inte nödvändigt att replikera dess logik här, utan snarare att definiera
-# vilka filer som direkt ska serveras av Pages som statiska tillgångar.
+    "/og-image.png",
+    "/LICENSE",
+    # Vi behöver inte längre exkludera .html-filer här eftersom route-regeln
+    # hanterar SPA-fallback på ett smartare sätt.
+  ]
+# wrangler.toml
