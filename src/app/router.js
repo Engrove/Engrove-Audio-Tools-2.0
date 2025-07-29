@@ -1,13 +1,14 @@
 // src/app/router.js
-// Denna fil definierar all navigering (routing) för applikationen.
-// Den mappar URL-sökvägar till specifika sidkomponenter.
-
+/**
+ * Denna fil konfigurerar Vue Router för hela applikationen.
+ * Den definierar alla tillgängliga "sidor" (routes) och kopplar dem
+ * till deras respektive sidkomponenter från /src/pages/.
+ */
 import { createRouter, createWebHistory } from 'vue-router';
-// Korrigerade sökvägar: Går upp en nivå från /app till /src, sedan ner till /pages.
 import HomePage from '../pages/home/HomePage.vue';
 import AboutPage from '../pages/about/AboutPage.vue';
+import DataExplorerPage from '../pages/data-explorer/DataExplorerPage.vue'; // <-- NY IMPORT
 
-// Definition av alla applikationens rutter.
 const routes = [
   {
     path: '/',
@@ -19,36 +20,19 @@ const routes = [
     name: 'About',
     component: AboutPage,
   },
-  // TODO: Ersätt dessa platshållar-komponenter när de faktiska sidorna skapas.
-  // Just nu pekar de till HomePage för att undvika 404-fel från länkarna i headern.
   {
-    path: '/alignment-calculator',
-    name: 'AlignmentCalculator',
-    component: HomePage, // Platshållare
-  },
-  {
-    path: '/compliance-estimator',
-    name: 'ComplianceEstimator',
-    component: HomePage, // Platshållare
-  },
-  {
+    // --- NY ROUTE FÖR DATA EXPLORER ---
     path: '/data-explorer',
     name: 'DataExplorer',
-    component: HomePage, // Platshållare
+    component: DataExplorerPage,
   },
-  // En "catch-all"-rutt för att hantera okända sökvägar, omdirigerar till startsidan.
-  {
-    path: '/:pathMatch(.*)*',
-    redirect: '/',
-  }
+  // TODO: Lägg till routes för Alignment Calculator och Compliance Estimator här.
 ];
 
-// Skapar en router-instans.
-// createWebHistory används för ren URL-hantering utan #-tecken.
 const router = createRouter({
   history: createWebHistory(),
   routes,
-  // Denna funktion säkerställer att man alltid scrollar till toppen av sidan vid sidbyte.
+  // Funktion för att scrolla till toppen av sidan vid varje sidbyte.
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition;
@@ -58,6 +42,5 @@ const router = createRouter({
   },
 });
 
-// Exporterar router-instansen så att den kan användas i main.js.
 export default router;
 // src/app/router.js
