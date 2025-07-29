@@ -1,4 +1,4 @@
- <!-- src/widgets/GlobalHeader/GlobalHeader.vue -->
+<!-- src/widgets/GlobalHeader/GlobalHeader.vue -->
 <!-- Denna widget är den primära, globala headern för hela applikationen. -->
 <!-- Den är nu fullt responsiv och inkluderar den fungerande temaväxlaren. -->
 
@@ -14,9 +14,12 @@
 
         <!-- Mitten sektion: Traditionell navigering för desktop -->
         <nav class="header-nav-desktop">
-          <router-link to="/alignment-calculator" class="nav-link">Alignment</router-link>
-          <router-link to="/compliance-estimator" class="nav-link">Estimator</router-link>
+          <!-- TODO: Lägg till länk för Alignment Calculator här -->
+          <!-- TODO: Lägg till länk för Compliance Estimator här -->
+          
+          <!-- NY LÄNK TILL DATA EXPLORER -->
           <router-link to="/data-explorer" class="nav-link">Data Explorer</router-link>
+
         </nav>
 
         <!-- Höger sektion: Knappar och kontroller -->
