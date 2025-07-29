@@ -123,7 +123,11 @@ toolkitSection.value?.scrollIntoView({ behavior: 'smooth' });
 /* Sektion 1: Hero */
 .hero-section {
   position: relative; /* Nödvändigt för overlay */
-  background-image: url('/images/bg_black.webp'); /* Standard (mörkt tema) */
+  /* KORRIGERING: Definiera CSS-variabler för dynamisk ändring */
+  --hero-background-image: url('/images/bg_black.webp');
+  --hero-gradient: linear-gradient(to bottom, rgba(18, 18, 18, 0.4), var(--color-surface-primary));
+
+  background-image: var(--hero-background-image);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -145,8 +149,7 @@ toolkitSection.value?.scrollIntoView({ behavior: 'smooth' });
   left: 0;
   width: 100%;
   height: 100%;
-  /* Gradienten tonar mot den primära bakgrundsfärgen för en sömlös övergång */
-  background: linear-gradient(to bottom, rgba(18, 18, 18, 0.4), var(--color-surface-primary));
+  background: var(--hero-gradient);
   z-index: 1;
 }
 
@@ -156,14 +159,11 @@ toolkitSection.value?.scrollIntoView({ behavior: 'smooth' });
   z-index: 2;
 }
 
-/* Byt bakgrundsbild och gradient för ljust tema */
+/* KORRIGERING: Ändra endast värdet på CSS-variablerna för det ljusa temat. */
+/* Detta kringgår CSS-specificitetsproblemet. */
 :global(.light-theme) .hero-section {
-  background-image: url('/images/bg_white.webp');
-}
-
-:global(.light-theme) .hero-section::before {
-  /* KORRIGERING: Ökad opacitet från 0.2 till 0.85 för att göra texten läsbar. */
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.85), var(--color-surface-primary));
+  --hero-background-image: url('/images/bg_white.webp');
+  --hero-gradient: linear-gradient(to bottom, rgba(255, 255, 255, 0.7), var(--color-surface-primary));
 }
 
 .hero-title {
@@ -180,7 +180,6 @@ toolkitSection.value?.scrollIntoView({ behavior: 'smooth' });
 
 /* Sektion 2: Tool Showcase */
 .toolkit-section {
-  /* Korrigering för att matcha mörk bakgrundsfärg på hero */
   background-color: var(--color-surface-primary);
 }
 
