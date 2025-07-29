@@ -162,7 +162,8 @@ toolkitSection.value?.scrollIntoView({ behavior: 'smooth' });
 }
 
 :global(.light-theme) .hero-section::before {
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), var(--color-surface-primary));
+  /* KORRIGERING: Ökad opacitet från 0.2 till 0.85 för att göra texten läsbar. */
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.85), var(--color-surface-primary));
 }
 
 .hero-title {
