@@ -1,6 +1,7 @@
 <!-- src/pages/home/HomePage.vue -->
 <!-- Detta är applikationens landningssida. Denna uppdaterade version är mer -->
-<!-- fokuserad på att direkt presentera verktygen för användaren. -->
+<!-- fokuserad på att direkt presentera verktygen för användaren och inkluderar nu -->
+<!-- en subtil bakgrundsbild i hero-sektionen som anpassar sig till temat. -->
 <template>
 <main class="home-page">
 <!-- ====================================================================== -->
@@ -101,7 +102,7 @@ toolkitSection.value?.scrollIntoView({ behavior: 'smooth' });
 <style scoped>
 /* Generella stilar för sektioner och containers för konsistens */
 .page-section {
-padding: 6rem 1rem;
+  padding: 6rem 1rem;
 }
 .page-section:first-child {
   border-bottom: 1px solid var(--color-border-primary);
@@ -111,50 +112,90 @@ padding: 6rem 1rem;
 }
 
 .section-container {
-max-width: 1200px;
-margin: 0 auto;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 .section-title {
-text-align: center;
-margin-bottom: 3rem;
+  text-align: center;
+  margin-bottom: 3rem;
 }
 
 /* Sektion 1: Hero */
 .hero-section {
-min-height: 80vh;
-display: flex;
-align-items: center;
-justify-content: center;
-text-align: center;
-padding-top: 0;
-padding-bottom: 4rem;
+  position: relative; /* Nödvändigt för overlay */
+  background-image: url('/images/bg_black.webp'); /* Standard (mörkt tema) */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding-top: 0;
+  padding-bottom: 4rem;
+  overflow: hidden; /* Håller overlayen inom sektionens gränser */
 }
+
+/* Overlay för att tona ut bilden och säkerställa textläsbarhet */
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Gradienten tonar mot den primära bakgrundsfärgen för en sömlös övergång */
+  background: linear-gradient(to bottom, rgba(18, 18, 18, 0.4), var(--color-surface-primary));
+  z-index: 1;
+}
+
+/* Säkerställer att innehållet ligger ovanpå overlayen */
+.hero-section .section-container {
+  position: relative;
+  z-index: 2;
+}
+
+/* Byt bakgrundsbild och gradient för ljust tema */
+:global(.light-theme) .hero-section {
+  background-image: url('/images/bg_white.webp');
+}
+
+:global(.light-theme) .hero-section::before {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), var(--color-surface-primary));
+}
+
 .hero-title {
-font-size: clamp(2rem, 5vw, 3.5rem);
-margin-bottom: 1.5rem;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  margin-bottom: 1.5rem;
 }
 .hero-subtitle {
-font-size: clamp(1rem, 2vw, 1.25rem);
-max-width: 650px;
-margin: 0 auto 2.5rem auto;
-color: var(--color-text-medium-emphasis);
-line-height: 1.6;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  max-width: 650px;
+  margin: 0 auto 2.5rem auto;
+  color: var(--color-text-medium-emphasis);
+  line-height: 1.6;
 }
 
 /* Sektion 2: Tool Showcase */
+.toolkit-section {
+  /* Korrigering för att matcha mörk bakgrundsfärg på hero */
+  background-color: var(--color-surface-primary);
+}
+
 .toolkit-grid {
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-gap: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
 }
 .tool-card {
-background-color: var(--color-surface-secondary);
-border: 1px solid var(--color-border-primary);
-border-radius: 12px;
-display: flex;
-flex-direction: column;
-overflow: hidden;
-transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  background-color: var(--color-surface-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 .tool-card:hover {
@@ -163,37 +204,37 @@ transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 .tool-image-wrapper {
-aspect-ratio: 16 / 9;
-background-color: var(--color-surface-tertiary);
-border-bottom: 1px solid var(--color-border-primary);
+  aspect-ratio: 16 / 9;
+  background-color: var(--color-surface-tertiary);
+  border-bottom: 1px solid var(--color-border-primary);
 }
 .tool-image {
-width: 100%;
-height: 100%;
-object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .tool-card h3 {
-margin: 1.5rem 1.5rem 1rem 1.5rem;
+  margin: 1.5rem 1.5rem 1rem 1.5rem;
 }
 .tool-card p {
-padding: 0 1.5rem;
-flex-grow: 1;
-margin-bottom: 2rem;
-color: var(--color-text-medium-emphasis);
+  padding: 0 1.5rem;
+  flex-grow: 1;
+  margin-bottom: 2rem;
+  color: var(--color-text-medium-emphasis);
 }
 .tool-card .base-button {
-margin: 0 1.5rem 1.5rem 1.5rem;
-align-self: flex-start;
+  margin: 0 1.5rem 1.5rem 1.5rem;
+  align-self: flex-start;
 }
 
 /* Responsivitet för större skärmar */
 @media (min-width: 768px) {
-.page-section {
-padding: 8rem 2rem;
-}
-.hero-section {
-  padding-top: 4rem;
-}
+  .page-section {
+    padding: 8rem 2rem;
+  }
+  .hero-section {
+    padding-top: 4rem;
+  }
 }
 </style>
 <!-- src/pages/home/HomePage.vue -->
