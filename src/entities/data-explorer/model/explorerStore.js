@@ -67,9 +67,6 @@ export function useExplorerStore() {
     }
   }
 
-  /**
-   * Återställer alla filter till sina ursprungliga värden.
-   */
   function resetFilters() {
     searchTerm.value = '';
     categoryFilters.value = {};
@@ -79,27 +76,85 @@ export function useExplorerStore() {
     currentPage.value = 1;
   }
 
-  /**
-   * Sätter vilken typ av data som ska visas och återställer filter.
-   * @param {'tonearms' | 'cartridges'} newDataType - Den nya datatypen.
-   */
   function setDataType(newDataType) {
     if (dataType.value !== newDataType) {
       dataType.value = newDataType;
-      // Återställ alla filter vid byte av datatyp för en ren start.
       resetFilters();
     }
   }
 
-  /**
-   * Uppdaterar ett numeriskt filter.
-   * @param {string} key - Nyckeln för filtret.
-   * @param {{min: number|null, max: number|null}} value - Det nya intervallvärdet.
-   */
   function updateNumericFilter(key, value) {
-    numericFilters.value[key] = value;
+    // Vue 3's reaktivitet behöver en ny objekt-referens för att upptäcka ändringen.
+    numericFilters.value = { ...numericFilters.value, [key]: value };
   }
 
+  /**
+   * Hanterar logiken för att byta sorteringskolumn och ordning.
+   * @param {string} newSortKey - Nyckeln för kolumnen som klickades.
+   */
+  function setSortKey(newSortKey) {
+    // Om man klickar på samma kolumn igen, byt sorteringsordning.
+    // Om man klickar på en ny kolumn, sätt den som aktiv med stigande ordning.
+    if (sortKey.value === newSortKey) {
+      sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
+    } else {
+      sortKey.value = newSortKey;
+      sortOrder.value = 'asc';
+    }
+  }
+
+  // Paginering
+  function nextPage() {
+    const totalPages = Math.ceil(filteredResults.value.length / itemsPerPage.value);
+    if (currentPage.value < totalPages) {
+      currentPage.value++;
+    }
+  }
+
+  function prevPage() {
+    if (currentPage.value > 1) {
+      currentPage.value--;
+    }
+  }
+
+  /**
+   * Genererar och laddar ner den filtrerade datan som en CSV-fil.
+   */
+  function exportToCSV() {
+    const itemsToExport = filteredAndSortedResults.value;
+    if (itemsToExport.length === 0) return;
+
+    // Använd headers från den första raden för att bestämma kolumner.
+    const headers = Object.keys(itemsToExport[0]);
+    const csvRows = [headers.join(',')];
+
+    for (const item of itemsToExport) {
+      const values = headers.map(header => {
+        let value = item[header];
+        if (value === null || value === undefined) {
+          return '';
+        }
+        // Hantera värden som innehåller kommatecken genom att sätta dem inom citattecken.
+        value = String(value);
+        if (value.includes(',')) {
+          return `"${value}"`;
+        }
+        return value;
+      });
+      csvRows.push(values.join(','));
+    }
+
+    const csvString = csvRows.join('\n');
+    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `engrove_data_export_${dataType.value}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
 
   // --- Beräknade Egenskaper (Computed Properties) ---
 
@@ -114,10 +169,12 @@ export function useExplorerStore() {
       const enrichedItem = { ...item };
       for (const key in maps) {
         const itemValue = item[key];
+        // Om ett ID existerar och det finns en match i uppslagstabellen, lägg till det läsbara namnet.
         if (itemValue && maps[key] && maps[key].has(itemValue)) {
           enrichedItem[`${key}_name`] = maps[key].get(itemValue);
         } else if (itemValue) {
-          enrichedItem[`${key}_name`] = itemValue; // Fallback om id inte finns i map
+          // Fallback: om det inte finns någon match, använd ID:t som det är (bättre än inget).
+          enrichedItem[`${key}_name`] = itemValue;
         }
       }
       return enrichedItem;
@@ -138,7 +195,7 @@ export function useExplorerStore() {
     return filteredAndSortedResults.value.slice(start, end);
   });
   
-  watch([searchTerm, categoryFilters, numericFilters], () => {
+  watch([searchTerm, categoryFilters, numericFilters, dataType], () => {
     if (currentPage.value !== 1) {
       currentPage.value = 1;
     }
@@ -146,29 +203,15 @@ export function useExplorerStore() {
 
   // --- Publika API:et för storen ---
   return {
-    // State
-    isLoading,
-    error,
-    dataType,
-    searchTerm,
-    categoryFilters,
-    numericFilters,
-    sortKey,
-    sortOrder,
-    currentPage,
-    itemsPerPage,
-    pickupClassifications,
+    isLoading, error, dataType, searchTerm, categoryFilters, numericFilters,
+    sortKey, sortOrder, currentPage, itemsPerPage, pickupClassifications,
     tonearmClassifications,
     
-    // Getters
     paginatedResults,
     totalResultsCount: computed(() => filteredResults.value.length),
 
-    // Actions
-    initialize,
-    resetFilters,
-    setDataType,
-    updateNumericFilter,
+    initialize, resetFilters, setDataType, updateNumericFilter,
+    setSortKey, nextPage, prevPage, exportToCSV
   };
 }
 // src/entities/data-explorer/model/explorerStore.js
