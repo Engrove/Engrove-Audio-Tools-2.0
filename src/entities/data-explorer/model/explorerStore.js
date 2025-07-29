@@ -16,18 +16,12 @@ import { fetchExplorerData } from '../api/fetchExplorerData.js';
 import { applyFilters, applySorting } from '../lib/filters.js';
 
 // --- Privata "Lookup Maps" ---
-// Dessa skapas en gång när datan laddas för snabb uppslagning av läsbara namn.
 let pickupClassificationMaps = {};
 let tonearmClassificationMaps = {};
 
-/**
- * Hjälpfunktion för att skapa uppslagstabeller från klassificeringsdata.
- * @param {Object} classifications - Klassificeringsobjektet från JSON.
- * @returns {Object} Ett objekt där nycklarna är klassificerings-ID:n (t.ex. 'compliance_level')
- *                   och värdena är Maps för snabb uppslagning av namn.
- */
 function createLookupMaps(classifications) {
   const maps = {};
+  if (!classifications) return maps;
   for (const key in classifications) {
     const map = new Map();
     if (classifications[key] && classifications[key].categories) {
@@ -48,17 +42,11 @@ export function useExplorerStore() {
   
   // --- Metoder (Actions) ---
 
-  /**
-   * Initialiserar storen genom att hämta all nödvändig data.
-   * Denna funktion ska anropas en gång när komponenten monteras.
-   */
   async function initialize() {
-    // Undvik att hämta data flera gånger om den redan finns.
     if (allPickups.value.length > 0) {
       isLoading.value = false;
       return;
     }
-
     try {
       isLoading.value = true;
       error.value = null;
@@ -69,7 +57,6 @@ export function useExplorerStore() {
       pickupClassifications.value = data.pickupClassifications;
       tonearmClassifications.value = data.tonearmClassifications;
 
-      // Skapa de privata uppslagstabellerna
       pickupClassificationMaps = createLookupMaps(data.pickupClassifications);
       tonearmClassificationMaps = createLookupMaps(data.tonearmClassifications);
 
@@ -80,52 +67,84 @@ export function useExplorerStore() {
     }
   }
 
+  /**
+   * Återställer alla filter till sina ursprungliga värden.
+   */
+  function resetFilters() {
+    searchTerm.value = '';
+    categoryFilters.value = {};
+    numericFilters.value = {};
+    sortKey.value = 'manufacturer';
+    sortOrder.value = 'asc';
+    currentPage.value = 1;
+  }
+
+  /**
+   * Sätter vilken typ av data som ska visas och återställer filter.
+   * @param {'tonearms' | 'cartridges'} newDataType - Den nya datatypen.
+   */
+  function setDataType(newDataType) {
+    if (dataType.value !== newDataType) {
+      dataType.value = newDataType;
+      // Återställ alla filter vid byte av datatyp för en ren start.
+      resetFilters();
+    }
+  }
+
+  /**
+   * Uppdaterar ett numeriskt filter.
+   * @param {string} key - Nyckeln för filtret.
+   * @param {{min: number|null, max: number|null}} value - Det nya intervallvärdet.
+   */
+  function updateNumericFilter(key, value) {
+    numericFilters.value[key] = value;
+  }
+
+
   // --- Beräknade Egenskaper (Computed Properties) ---
 
-  // Väljer den aktuella datamängden baserat på `dataType`.
   const currentItems = computed(() => {
     return dataType.value === 'tonearms' ? allTonearms.value : allPickups.value;
   });
 
-  // Berikar den aktuella datamängden med läsbara namn från klassificeringarna.
   const enrichedItems = computed(() => {
     const maps = dataType.value === 'tonearms' ? tonearmClassificationMaps : pickupClassificationMaps;
     
     return currentItems.value.map(item => {
       const enrichedItem = { ...item };
       for (const key in maps) {
-        if (item[key] && maps[key].has(item[key])) {
-          // Lägg till en ny egenskap med det läsbara namnet.
-          enrichedItem[`${key}_name`] = maps[key].get(item[key]);
+        const itemValue = item[key];
+        if (itemValue && maps[key] && maps[key].has(itemValue)) {
+          enrichedItem[`${key}_name`] = maps[key].get(itemValue);
+        } else if (itemValue) {
+          enrichedItem[`${key}_name`] = itemValue; // Fallback om id inte finns i map
         }
       }
       return enrichedItem;
     });
   });
 
-  // Applicerar först filter och sökning på den berikade datan.
   const filteredResults = computed(() => {
     return applyFilters(enrichedItems.value, searchTerm.value, categoryFilters.value, numericFilters.value);
   });
   
-  // Applicerar sedan sortering på det filtrerade resultatet.
   const filteredAndSortedResults = computed(() => {
     return applySorting(filteredResults.value, sortKey.value, sortOrder.value);
   });
 
-  // Hanterar paginering av det sorterade och filtrerade resultatet.
   const paginatedResults = computed(() => {
     const start = (currentPage.value - 1) * itemsPerPage.value;
     const end = start + itemsPerPage.value;
     return filteredAndSortedResults.value.slice(start, end);
   });
   
-  // Återställer pagineringen när filter eller sökterm ändras.
-  watch([searchTerm, categoryFilters, numericFilters, dataType], () => {
-    currentPage.value = 1;
-  });
+  watch([searchTerm, categoryFilters, numericFilters], () => {
+    if (currentPage.value !== 1) {
+      currentPage.value = 1;
+    }
+  }, { deep: true });
 
-  // Returnerar enbart den publika API:n för storen.
+  // --- Publika API:et för storen ---
   return {
     // State
     isLoading,
@@ -138,6 +157,8 @@ export function useExplorerStore() {
     sortOrder,
     currentPage,
     itemsPerPage,
+    pickupClassifications,
+    tonearmClassifications,
     
     // Getters
     paginatedResults,
@@ -145,6 +166,9 @@ export function useExplorerStore() {
 
     // Actions
     initialize,
+    resetFilters,
+    setDataType,
+    updateNumericFilter,
   };
 }
 // src/entities/data-explorer/model/explorerStore.js
