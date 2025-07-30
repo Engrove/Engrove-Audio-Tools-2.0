@@ -55,6 +55,7 @@
 
 <script setup>
 import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useExplorerStore } from '../../../entities/data-explorer/model/explorerStore.js';
 import BaseTable from '../../../shared/ui/BaseTable.vue';
 import BaseButton from '../../../shared/ui/BaseButton.vue';
@@ -64,6 +65,11 @@ const emit = defineEmits(['item-selected']);
 
 // --- STORE INTEGRATION ---
 const store = useExplorerStore();
+
+// Destrukturera actions direkt från storen.
+const { setSortKey, nextPage, prevPage, exportToCSV } = store;
+
+// Destrukturera state och getters med storeToRefs för att behålla reaktiviteten.
 const {
   dataType,
   searchTerm,
@@ -72,14 +78,10 @@ const {
   totalResultsCount,
   paginatedResults,
   currentPage,
-  itemsPerPage,
   sortKey,
   sortOrder,
-  setSortKey,
-  nextPage,
-  prevPage,
-  exportToCSV
-} = store;
+  totalPages,
+} = storeToRefs(store);
 
 
 // --- COMPUTED PROPERTIES ---
@@ -116,7 +118,6 @@ const isPristine = computed(() => {
 });
 
 // Beräkningar för paginering
-const totalPages = computed(() => Math.ceil(totalResultsCount.value / itemsPerPage.value));
 const canGoPrev = computed(() => currentPage.value > 1);
 const canGoNext = computed(() => currentPage.value < totalPages.value);
 
