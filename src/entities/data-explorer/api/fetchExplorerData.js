@@ -1,65 +1,59 @@
 // src/entities/data-explorer/api/fetchExplorerData.js
-/**
- * @file fetchExplorerData.js
- * @description Denna API-funktion ansvarar för att hämta all nödvändig data
- * för Data Explorer-modulen från de statiska JSON-filerna.
- * Denna korrigerade version använder absoluta sökvägar för att säkerställa
- * att filerna hittas oavsett vilken sida användaren befinner sig på.
- */
-
-// KORRIGERING: Sökvägarna måste vara absoluta från webbplatsens rot.
-// De pekar nu korrekt till /public/data/-mappen som serveras.
-const PICKUPS_URL = '/data/pickups-data.json';
-const TONEARMS_URL = '/data/tonearms-data.json';
-const PICKUP_CLASSIFICATIONS_URL = '/data/pickups-classifications.json';
-const TONEARM_CLASSIFICATIONS_URL = '/data/tonearms-classifications.json';
+// Denna fil centraliserar all datainhämtning för Data Explorer-modulen.
+// Den exporterar en enda funktion som hämtar all nödvändig data parallellt
+// och returnerar den i ett strukturerat format.
 
 /**
- * Hämtar och parsar en enskild JSON-fil.
- * @param {string} url - Sökvägen till JSON-filen.
- * @returns {Promise<Object>} - Ett löfte som resolverar med den parsade JSON-datan.
- * @throws {Error} - Kastar ett fel om nätverksanropet eller parsningen misslyckas.
+ * Hämtar all nödvändig data för Data Explorer (pickups, tonarmar och deras klassifikationer).
+ * Använder absoluta sökvägar för att garantera korrekta anrop oavsett SPA-routing.
+ * 
+ * @returns {Promise<Object>} Ett löfte som resolverar med ett objekt innehållande all data.
+ * @throws {Error} Kastar ett fel om någon av nätverksförfrågningarna misslyckas.
  */
-const fetchJSON = async (url) => {
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Network response was not ok for ${url}`);
-  }
-  return response.json();
-};
+export async function fetchAllExplorerData() {
+  // Definierar de absoluta sökvägarna till alla nödvändiga JSON-filer.
+  // Detta är avgörande för att undvika routing-fel i en SPA.
+  const dataUrls = [
+    '/data/pickups-data.json',
+    '/data/pickups-classifications.json',
+    '/data/tonearms-data.json',
+    '/data/tonearms-classifications.json'
+  ];
 
-/**
- * Asynkron funktion som hämtar alla databaser och klassificeringar som
- * Data Explorer är beroende av. Använder Promise.all för att köra
- * anropen parallellt för maximal effektivitet.
- *
- * @returns {Promise<Object>} Ett objekt som innehåller all hämtad data.
- * @throws {Error} Kastar ett fel om något av de individuella anropen misslyckas.
- */
-export async function fetchExplorerData() {
   try {
-    const [
-      pickupsData,
-      tonearmsData,
-      pickupClassifications,
-      tonearmClassifications,
-    ] = await Promise.all([
-      fetchJSON(PICKUPS_URL),
-      fetchJSON(TONEARMS_URL),
-      fetchJSON(PICKUP_CLASSIFICATIONS_URL),
-      fetchJSON(TONEARM_CLASSIFICATIONS_URL),
-    ]);
+    // Använder Promise.all för att göra alla fetch-anrop parallellt för maximal effektivitet.
+    const responses = await Promise.all(
+      dataUrls.map(url => fetch(url))
+    );
 
-    // Returnerar ett prydligt objekt med all data
-    return {
-      pickupsData,
-      tonearmsData,
+    // Kontrollerar att alla svar från servern är OK (status 200-299).
+    // Om något svar inte är ok, kastas ett fel som avbryter hela processen.
+    for (const response of responses) {
+      if (!response.ok) {
+        throw new Error(`Failed to fetch ${response.url}: ${response.statusText}`);
+      }
+    }
+
+    // När alla svar är verifierade som OK, parsas JSON-datan från varje svar, även detta parallellt.
+    const [
+      pickups,
       pickupClassifications,
-      tonearmClassifications,
+      tonearms,
+      tonearmClassifications
+    ] = await Promise.all(responses.map(res => res.json()));
+
+    // Returnerar ett välorganiserat objekt med all hämtad data.
+    return {
+      pickups,
+      pickupClassifications,
+      tonearms,
+      tonearmClassifications
     };
+
   } catch (error) {
-    console.error('Failed to fetch explorer data:', error);
-    // Skickar felet vidare så att anropande kod (Pinia store) kan hantera det.
+    // Fångar upp eventuella fel som kan uppstå under nätverksanrop eller JSON-parsning.
+    console.error("Data Explorer API Error:", error);
+    // Kastar felet vidare så att den anropande funktionen (i Pinia store) kan hantera det.
     throw new Error('Could not load the component databases.');
   }
 }
