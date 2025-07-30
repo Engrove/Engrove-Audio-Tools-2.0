@@ -18,7 +18,8 @@ export async function fetchExplorerData() {
     const responses = await Promise.all([
       fetch('/data/pickups-data.json'),
       fetch('/data/pickups-classifications.json'),
-      fetch('/data/tonearms-data.json'),
+      // KORRIGERING: Filnamnet är nu i singularis för att matcha repositoryt.
+      fetch('/data/tonearm-data.json'), 
       fetch('/data/tonearms-classifications.json')
     ]);
 
