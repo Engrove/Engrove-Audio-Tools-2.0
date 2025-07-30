@@ -1,60 +1,57 @@
 // src/entities/data-explorer/api/fetchExplorerData.js
-// Denna fil centraliserar all datainhämtning för Data Explorer-modulen.
-// Den exporterar en enda funktion som hämtar all nödvändig data parallellt
-// och returnerar den i ett strukturerat format.
+/**
+ * Denna fil är en dedikerad API-modul för Data Explorer-entiteten.
+ * Dess enda ansvar är att hämta all nödvändig data från de statiska JSON-filerna.
+ * Genom att centralisera datainhämtningen här säkerställer vi att korrekta,
+ * absoluta sökvägar används och att felhanteringen är robust och konsekvent.
+ */
 
 /**
- * Hämtar all nödvändig data för Data Explorer (pickups, tonarmar och deras klassifikationer).
- * Använder absoluta sökvägar för att garantera korrekta anrop oavsett SPA-routing.
- * 
- * @returns {Promise<Object>} Ett löfte som resolverar med ett objekt innehållande all data.
- * @throws {Error} Kastar ett fel om någon av nätverksförfrågningarna misslyckas.
+ * Hämtar all nödvändig data för Data Explorer-modulen parallellt.
+ * Använder absoluta sökvägar för att undvika SPA-routing-problem.
+ * @returns {Promise<Object>} Ett promise som resolverar till ett objekt innehållande all data.
+ * @throws {Error} Kastar ett fel om någon av nätverksbegärandena misslyckas.
  */
-export async function fetchAllExplorerData() {
-  // Definierar de absoluta sökvägarna till alla nödvändiga JSON-filer.
-  // Detta är avgörande för att undvika routing-fel i en SPA.
-  const dataUrls = [
-    '/data/pickups-data.json',
-    '/data/pickups-classifications.json',
-    '/data/tonearms-data.json',
-    '/data/tonearms-classifications.json'
-  ];
-
+export async function fetchExplorerData() {
   try {
-    // Använder Promise.all för att göra alla fetch-anrop parallellt för maximal effektivitet.
-    const responses = await Promise.all(
-      dataUrls.map(url => fetch(url))
-    );
+    // Använder Promise.all för att starta alla fetch-anrop samtidigt för maximal prestanda.
+    const responses = await Promise.all([
+      fetch('/data/pickups-data.json'),
+      fetch('/data/pickups-classifications.json'),
+      fetch('/data/tonearms-data.json'),
+      fetch('/data/tonearms-classifications.json')
+    ]);
 
-    // Kontrollerar att alla svar från servern är OK (status 200-299).
-    // Om något svar inte är ok, kastas ett fel som avbryter hela processen.
+    // Kontrollerar varje svar individuellt för att säkerställa att de lyckades (status 200-299).
     for (const response of responses) {
       if (!response.ok) {
-        throw new Error(`Failed to fetch ${response.url}: ${response.statusText}`);
+        // Om ett svar misslyckades, kasta ett specifikt fel.
+        throw new Error(`Failed to fetch data from ${response.url}: ${response.status} ${response.statusText}`);
       }
     }
 
-    // När alla svar är verifierade som OK, parsas JSON-datan från varje svar, även detta parallellt.
+    // Om alla svar är ok, konvertera dem från JSON till JavaScript-objekt, också parallellt.
     const [
-      pickups,
+      pickupsData,
       pickupClassifications,
-      tonearms,
+      tonearmsData,
       tonearmClassifications
     ] = await Promise.all(responses.map(res => res.json()));
 
-    // Returnerar ett välorganiserat objekt med all hämtad data.
+    // Returnera ett prydligt strukturerat objekt med all data.
     return {
-      pickups,
+      pickupsData,
       pickupClassifications,
-      tonearms,
+      tonearmsData,
       tonearmClassifications
     };
 
   } catch (error) {
-    // Fångar upp eventuella fel som kan uppstå under nätverksanrop eller JSON-parsning.
-    console.error("Data Explorer API Error:", error);
-    // Kastar felet vidare så att den anropande funktionen (i Pinia store) kan hantera det.
-    throw new Error('Could not load the component databases.');
+    // Logga det specifika felet till konsolen för felsökning.
+    console.error('Data Explorer API Error:', error);
+    // Kasta om felet så att den anropande funktionen (i Pinia-storen) kan fånga det
+    // och uppdatera applikationens error-state.
+    throw error;
   }
 }
 // src/entities/data-explorer/api/fetchExplorerData.js
