@@ -1,55 +1,66 @@
 // src/entities/data-explorer/api/fetchExplorerData.js
 /**
- * Denna fil ansvarar för all datainhämtning för Data Explorer-modulen.
- * Den exporterar en enda funktion som hämtar alla nödvändiga JSON-filer
- * från den publika /data/-mappen.
+ * @file fetchExplorerData.js
+ * @description Denna API-funktion ansvarar för att hämta all nödvändig data
+ * för Data Explorer-modulen från de statiska JSON-filerna.
+ * Denna korrigerade version använder absoluta sökvägar för att säkerställa
+ * att filerna hittas oavsett vilken sida användaren befinner sig på.
  */
+
+// KORRIGERING: Sökvägarna måste vara absoluta från webbplatsens rot.
+// De pekar nu korrekt till /public/data/-mappen som serveras.
+const PICKUPS_URL = '/data/pickups-data.json';
+const TONEARMS_URL = '/data/tonearms-data.json';
+const PICKUP_CLASSIFICATIONS_URL = '/data/pickups-classifications.json';
+const TONEARM_CLASSIFICATIONS_URL = '/data/tonearms-classifications.json';
 
 /**
- * Hämtar all data som krävs för Data Explorer.
- * Detta inkluderar listor över produkter (pickuper, tonarmar) och deras
- * respektive klassificeringar som används för att bygga filter.
- * Använder Promise.all för att hämta filerna parallellt för bättre prestanda.
+ * Hämtar och parsar en enskild JSON-fil.
+ * @param {string} url - Sökvägen till JSON-filen.
+ * @returns {Promise<Object>} - Ett löfte som resolverar med den parsade JSON-datan.
+ * @throws {Error} - Kastar ett fel om nätverksanropet eller parsningen misslyckas.
+ */
+const fetchJSON = async (url) => {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Network response was not ok for ${url}`);
+  }
+  return response.json();
+};
+
+/**
+ * Asynkron funktion som hämtar alla databaser och klassificeringar som
+ * Data Explorer är beroende av. Använder Promise.all för att köra
+ * anropen parallellt för maximal effektivitet.
  *
- * @returns {Promise<Object>} Ett löfte som resolverar till ett objekt innehållande all data.
- * @throws {Error} Kastar ett fel om någon av nätverksförfrågningarna misslyckas.
+ * @returns {Promise<Object>} Ett objekt som innehåller all hämtad data.
+ * @throws {Error} Kastar ett fel om något av de individuella anropen misslyckas.
  */
 export async function fetchExplorerData() {
-  // Array med sökvägar till de JSON-filer som ska hämtas.
-  // Notera användningen av den nya, standardiserade namnkonventionen.
-  const dataUrls = [
-    '/data/pickups-data.json',
-    '/data/tonearms-data.json',
-    '/data/pickups-classifications.json',
-    '/data/tonearms-classifications.json',
-  ];
-
   try {
-    // Utför alla fetch-anrop parallellt.
-    const responses = await Promise.all(dataUrls.map(url => fetch(url)));
+    const [
+      pickupsData,
+      tonearmsData,
+      pickupClassifications,
+      tonearmClassifications,
+    ] = await Promise.all([
+      fetchJSON(PICKUPS_URL),
+      fetchJSON(TONEARMS_URL),
+      fetchJSON(PICKUP_CLASSIFICATIONS_URL),
+      fetchJSON(TONEARM_CLASSIFICATIONS_URL),
+    ]);
 
-    // Kontrollera att alla anrop lyckades. Om inte, kasta ett fel.
-    for (const response of responses) {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status} for URL: ${response.url}`);
-      }
-    }
-
-    // Konvertera alla lyckade svar till JSON.
-    const jsonData = await Promise.all(responses.map(res => res.json()));
-
-    // Returnera ett strukturerat objekt med den hämtade datan.
+    // Returnerar ett prydligt objekt med all data
     return {
-      pickups: jsonData[0],
-      tonearms: jsonData[1],
-      pickupClassifications: jsonData[2],
-      tonearmClassifications: jsonData[3],
+      pickupsData,
+      tonearmsData,
+      pickupClassifications,
+      tonearmClassifications,
     };
   } catch (error) {
-    // Logga det ursprungliga felet till konsolen för felsökning.
-    console.error("Failed to fetch explorer data:", error);
-    // Kasta ett nytt, mer informativt fel som kan fångas upp av anropande kod (t.ex. en Pinia store).
-    throw new Error("Could not load the component databases. Please try refreshing the page.");
+    console.error('Failed to fetch explorer data:', error);
+    // Skickar felet vidare så att anropande kod (Pinia store) kan hantera det.
+    throw new Error('Could not load the component databases.');
   }
 }
 // src/entities/data-explorer/api/fetchExplorerData.js
