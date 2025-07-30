@@ -52,8 +52,10 @@ export function useExplorerStore() {
       error.value = null;
       const data = await fetchExplorerData();
       
-      allPickups.value = data.pickups;
-      allTonearms.value = data.tonearms;
+      // KORRIGERING: Använder de korrekta nycklarna från fetch-resultatet.
+      // Det ska vara `pickupsData` och `tonearmsData`.
+      allPickups.value = data.pickupsData;
+      allTonearms.value = data.tonearmsData;
       pickupClassifications.value = data.pickupClassifications;
       tonearmClassifications.value = data.tonearmClassifications;
 
@@ -163,6 +165,7 @@ export function useExplorerStore() {
   });
 
   const enrichedItems = computed(() => {
+    if (!currentItems.value) return []; // Säkerhetskontroll
     const maps = dataType.value === 'tonearms' ? tonearmClassificationMaps : pickupClassificationMaps;
     
     return currentItems.value.map(item => {
