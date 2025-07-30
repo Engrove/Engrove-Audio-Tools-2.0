@@ -67,6 +67,7 @@
 
 <script setup>
 import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useExplorerStore } from '../../../entities/data-explorer/model/explorerStore.js';
 import BaseButton from '../../../shared/ui/BaseButton.vue';
 import BaseInput from '../../../shared/ui/BaseInput.vue';
@@ -76,17 +77,18 @@ import RangeFilter from '../../../shared/ui/RangeFilter.vue';
 // --- STORE INTEGRATION ---
 const store = useExplorerStore();
 
-// Exponera state och metoder som template behöver, med "destructuring"
+// Destrukturera actions direkt från storen.
+const { setDataType, resetFilters } = store;
+
+// Destrukturera state och getters med storeToRefs för att behålla reaktiviteten.
 const {
   dataType,
   searchTerm,
   categoryFilters,
   numericFilters,
-  setDataType, // Dessa metoder kommer vi skapa i storen härnäst
-  resetFilters,
   pickupClassifications,
   tonearmClassifications,
-} = store;
+} = storeToRefs(store);
 
 
 // --- DYNAMISK FILTERGENERERING ---
@@ -172,6 +174,12 @@ h3 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5rem;
+}
+
+.filter-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .reset-button {
