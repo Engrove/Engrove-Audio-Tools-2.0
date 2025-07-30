@@ -1,0 +1,13 @@
+# public/_redirects
+#
+# Denna fil konfigurerar omdirigeringar och SPA-routing för Cloudflare Pages.
+# Den ersätter _routes.json för att ge en mer fundamental och robust hantering.
+#
+# Regeln nedan är en "SPA-fallback". Den säger åt Cloudflare att för alla
+# förfrågningar som INTE matchar en existerande fil (som /data/pickups-data.json),
+# ska servern istället returnera /index.html med statuskoden 200.
+# Detta gör att Vue Router kan ta över och hantera routingen på klientsidan.
+# Cloudflare är tillräckligt smart för att först kontrollera om en statisk fil
+# existerar på sökvägen innan denna regel appliceras.
+
+/*    /index.html   200
