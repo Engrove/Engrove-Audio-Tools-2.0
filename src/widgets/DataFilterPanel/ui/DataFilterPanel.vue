@@ -4,6 +4,12 @@
   Den är en "smart" komponent som använder explorerStore för att hantera
   sitt tillstånd och bygger upp sitt gränssnitt med hjälp av agnostiska
   "Base"-komponenter från /shared/ui.
+
+  ÄNDRING (Problem 0.2):
+  - `mapClassificationsToFilters` har uppdaterats så att det första alternativet
+    i varje dropdown nu visar filtrets namn (t.ex. "Bearing Type") istället
+    för "All...". Detta gör filtren självdokumenterande utan att kräva
+    externa etiketter, vilket sparar vertikalt utrymme.
 -->
 <template>
   <aside class="filter-panel">
@@ -103,9 +109,10 @@ function mapClassificationsToFilters(classifications) {
   if (!classifications) return [];
   return Object.entries(classifications).map(([key, value]) => ({
     key: key,
-    label: value.name,
+    label: value.name, // Behålls för eventuell framtida användning (t.ex. tooltips)
     options: [
-      { value: undefined, label: `All ${value.name}` },
+      // ÄNDRING 0.2: Det första alternativet är nu en platshållare/etikett.
+      { value: undefined, label: value.name },
       ...value.categories.map(cat => ({ value: cat.id, label: cat.name }))
     ]
   }));
