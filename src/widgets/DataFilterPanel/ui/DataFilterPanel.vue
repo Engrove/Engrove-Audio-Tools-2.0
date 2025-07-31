@@ -10,6 +10,8 @@
     i varje dropdown nu visar filtrets namn (t.ex. "Bearing Type") istället
     för "All...". Detta gör filtren självdokumenterande utan att kräva
     externa etiketter, vilket sparar vertikalt utrymme.
+  - KORRIGERING: Lade till en `v-if` för att säkerställa att kategorifiltren
+    inte försöker renderas innan deras asynkrona data har laddats.
 -->
 <template>
   <aside class="filter-panel">
@@ -47,12 +49,16 @@
       </div>
 
       <!-- Dynamiskt genererade kategorifilter -->
-      <div v-for="filter in availableFilters" :key="filter.key" class="control-group">
-        <BaseSelect
-          v-model="categoryFilters[filter.key]"
-          :options="filter.options"
-        />
-      </div>
+      <!-- KORRIGERING: Använder en template-tagg med v-if för att säkerställa att -->
+      <!-- filtren bara renderas när `availableFilters` har innehåll. -->
+      <template v-if="availableFilters && availableFilters.length > 0">
+        <div v-for="filter in availableFilters" :key="filter.key" class="control-group">
+          <BaseSelect
+            v-model="categoryFilters[filter.key]"
+            :options="filter.options"
+          />
+        </div>
+      </template>
 
       <!-- Dynamiskt genererade numeriska filter -->
       <div v-for="filter in availableNumericFilters" :key="filter.key" class="control-group">
@@ -106,7 +112,7 @@ const {
  * @returns {Array<Object>} En array av filterkonfigurationsobjekt.
  */
 function mapClassificationsToFilters(classifications) {
-  if (!classifications) return [];
+  if (!classifications || Object.keys(classifications).length === 0) return [];
   return Object.entries(classifications).map(([key, value]) => ({
     key: key,
     label: value.name, // Behålls för eventuell framtida användning (t.ex. tooltips)
