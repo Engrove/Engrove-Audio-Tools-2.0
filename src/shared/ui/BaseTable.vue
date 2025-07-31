@@ -56,15 +56,6 @@
 </template>
 
 <script setup>
-// --- PROPS & EMITS ---
-
-/**
- * @props {Array} headers - Konfiguration för tabellens kolumner.
- *   Exempel: [{ key: 'name', label: 'Name', sortable: true }]
- * @props {Array} items - Datan som ska visas i tabellen. Varje objekt måste ha en unik 'id'.
- * @props {String} sortKey - Nyckeln för den kolumn som för närvarande är sorterad.
- * @props {String} sortOrder - Sorteringsordningen ('asc' eller 'desc').
- */
 const props = defineProps({
   headers: {
     type: Array,
@@ -85,37 +76,18 @@ const props = defineProps({
   },
 });
 
-/**
- * @emits sort - Utlöses när en sorterbar kolumnrubrik klickas. Skickar med kolumnens nyckel.
- * @emits row-click - Utlöses när en rad i tabellen klickas. Skickar med hela radens item-objekt.
- */
 const emit = defineEmits(['sort', 'row-click']);
 
-
-// --- FUNKTIONER ---
-
-/**
- * Skickar en 'sort'-händelse när en sorterbar rubrik klickas.
- * @param {string} key - Nyckeln för kolumnen som ska sorteras.
- */
 const emitSort = (key) => {
   emit('sort', key);
 };
 
-/**
- * Formaterar värdet för en cell. Hanterar null/undefined och
- * specifika formateringsregler.
- * @param {Object} item - Hela objektet för den aktuella raden.
- * @param {string} key - Nyckeln för det specifika värdet i objektet.
- * @returns {string|number} - Det formaterade värdet.
- */
 const formatValue = (item, key) => {
   const value = item[key];
   if (value === null || value === undefined) {
     return '–';
   }
   
-  // Exempel på specifik formatering, kan expanderas vid behov.
   if (typeof value === 'string') {
     return value.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   }
@@ -123,11 +95,6 @@ const formatValue = (item, key) => {
   return value;
 };
 
-/**
- * Ställer in aria-sort attributet för tillgänglighet.
- * @param {Object} header - Header-objektet.
- * @returns {string|null} - Värdet för aria-sort.
- */
 const getAriaSort = (header) => {
   if (!header.sortable) {
     return null;
@@ -266,10 +233,11 @@ tbody tr:last-child td {
 }
 
 /* ========================================================================== */
-/* TEMA-ÖVERSTYRNING FÖR KOMPAKT LÄGE                                         */
+/* TEMA-ÖVERSTYRNING FÖR KOMPAKT LÄGE (REVIDERAD)                             */
 /* ========================================================================== */
 :global(.compact-theme) th,
 :global(.compact-theme) td {
+  /* Minskad padding för tätare rader */
   padding: 8px 12px;
 }
 
