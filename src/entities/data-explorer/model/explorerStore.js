@@ -3,41 +3,34 @@
 // Den ansvarar för att hämta, filtrera, sortera och paginera data för både
 // tonarmar och pickuper.
 //
-// ÄNDRINGAR (Problem 0.1 & 0.2):
-// 1. `dataType` är nu förvald till 'tonearms' för en tydlig startvy.
-// 2. `filteredResults`-gettern har uppdaterats för att korrekt ignorera
-//    kategorifilter som inte har ett aktivt val (dvs. värdet är `undefined`),
-//    vilket löser en bugg där "All..."-alternativet filtrerade bort all data.
+// FELSÖKNING:
+// - Importerar och använder loggerStore för att spåra initialize-processen.
 
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 import { fetchExplorerData } from '../api/fetchExplorerData.js';
+import { useLoggerStore } from '../../logger/model/loggerStore.js';
 
 export const useExplorerStore = defineStore('explorer', () => {
-  // --- STATE ---
-  // All rådata och UI-tillstånd lagras här som reaktiva referenser.
+  // Felsökning: Hämta en instans av loggerStore.
+  const logger = useLoggerStore();
 
+  // --- STATE ---
   const allData = ref({ pickups: [], tonearms: [] });
   const pickupClassifications = ref({});
   const tonearmClassifications = ref({});
   const isLoading = ref(true);
   const error = ref(null);
-
-  // ÄNDRING 0.1: 'tonearms' är nu standard för en tydlig initialvy.
   const dataType = ref('tonearms');
-
   const searchTerm = ref('');
   const categoryFilters = ref({});
   const numericFilters = ref({});
-
   const sortKey = ref('manufacturer');
   const sortOrder = ref('asc');
   const currentPage = ref(1);
   const itemsPerPage = ref(15);
 
   // --- GETTERS (Computed Properties) ---
-  // Beräknade egenskaper som härleder state från den grundläggande datan.
-
   const allItems = computed(() => {
     return dataType.value === 'tonearms' ? allData.value.tonearms : allData.value.pickups;
   });
@@ -46,23 +39,19 @@ export const useExplorerStore = defineStore('explorer', () => {
     if (!allItems.value) return [];
 
     return allItems.value.filter(item => {
-      // Sökfilter (matchar mot tillverkare och modell)
       const searchLower = searchTerm.value.toLowerCase();
       const searchMatch = searchLower === '' ||
         item.manufacturer?.toLowerCase().includes(searchLower) ||
         item.model?.toLowerCase().includes(searchLower);
 
-      // ÄNDRING 0.2: Kategorifilter (ignorerar filter med `undefined` värde)
       const categoryMatch = Object.keys(categoryFilters.value).every(key => {
         const filterValue = categoryFilters.value[key];
-        // Om inget värde är valt för detta filter (undefined), räknas det som en match.
         if (filterValue === undefined || filterValue === null) {
           return true;
         }
         return item[key] === filterValue;
       });
 
-      // Numeriskt filter (intervall)
       const numericMatch = Object.keys(numericFilters.value).every(key => {
         const range = numericFilters.value[key];
         const itemValue = item[key];
@@ -105,23 +94,33 @@ export const useExplorerStore = defineStore('explorer', () => {
   });
 
   // --- ACTIONS ---
-  // Funktioner som kan anropas för att ändra på state.
-
   async function initialize() {
+    logger.addLog('initialize() called.', 'explorerStore');
     isLoading.value = true;
     error.value = null;
     try {
       const data = await fetchExplorerData();
+      logger.addLog('fetchExplorerData() completed successfully.', 'explorerStore', data);
+
       allData.value = {
         pickups: data.pickupsData,
         tonearms: data.tonearmsData,
       };
       pickupClassifications.value = data.pickupsClassifications;
       tonearmClassifications.value = data.tonearmsClassifications;
+      
+      logger.addLog('State has been populated with fetched data.', 'explorerStore', {
+        tonearmsCount: allData.value.tonearms.length,
+        pickupsCount: allData.value.pickups.length,
+        tonearmClassificationsKeys: Object.keys(tonearmClassifications.value),
+      });
+
     } catch (e) {
       error.value = e.message || 'An unknown error occurred.';
+      logger.addLog('An error occurred during initialize().', 'explorerStore', e);
     } finally {
       isLoading.value = false;
+      logger.addLog('isLoading set to false.', 'explorerStore');
     }
   }
 
@@ -162,7 +161,6 @@ export const useExplorerStore = defineStore('explorer', () => {
   }
 
   function exportToCSV() {
-    // CSV export logic remains unchanged
     const itemsToExport = sortedResults.value;
     if (itemsToExport.length === 0) return;
 
@@ -185,9 +183,7 @@ export const useExplorerStore = defineStore('explorer', () => {
     document.body.removeChild(link);
   }
 
-  // Exponerar all state, getters och actions som ska användas av komponenterna.
   return {
-    // State
     allData,
     pickupClassifications,
     tonearmClassifications,
@@ -201,14 +197,12 @@ export const useExplorerStore = defineStore('explorer', () => {
     sortOrder,
     currentPage,
     itemsPerPage,
-    // Getters
     allItems,
     filteredResults,
     sortedResults,
     totalResultsCount,
     totalPages,
     paginatedResults,
-    // Actions
     initialize,
     setDataType,
     resetFilters,
