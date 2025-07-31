@@ -8,9 +8,17 @@
 // - Samlar loggmeddelanden från hela appen.
 // - Tidsstämplar varje meddelande.
 // - Håller automatiskt logghistoriken begränsad till 300 rader.
+// - Är helt inaktiv i produktionsläge för att spara minne och prestanda.
 
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
+
+// --- GLOBAL DEBUG FLAGGA ---
+// Denna konstant styr all loggningsfunktionalitet.
+// `import.meta.env.DEV` är en Vite-specifik miljövariabel som är `true`
+// när man kör `npm run dev` och `false` vid `npm run build`.
+// Detta säkerställer att loggning är helt avstängd i produktion.
+const IS_DEBUG_MODE = import.meta.env.DEV;
 
 // Definierar den maximala storleken på logg-bufferten.
 const MAX_LOG_ENTRIES = 300;
@@ -25,11 +33,18 @@ export const useLoggerStore = defineStore('logger', () => {
   /**
    * Lägger till ett nytt loggmeddelande i storen.
    * Om loggen överskrider MAX_LOG_ENTRIES, tas det äldsta meddelandet bort.
+   * Funktionen gör ingenting om IS_DEBUG_MODE är false.
    * @param {string} message - Det huvudsakliga loggmeddelandet.
    * @param {string} [context='Global'] - Kontexten där loggen skapades (t.ex. 'explorerStore', 'DataFilterPanel').
    * @param {any} [data=null] - Valfri extra data (t.ex. ett objekt) som ska loggas. Konverteras till en JSON-sträng.
    */
   function addLog(message, context = 'Global', data = null) {
+    // Om vi inte är i felsökningsläge, avbryt omedelbart.
+    // Detta förhindrar att logg-arrayen fylls på i onödan.
+    if (!IS_DEBUG_MODE) {
+      return;
+    }
+
     // Skapa ett tidsstämplat loggobjekt.
     const newLogEntry = {
       timestamp: new Date().toISOString(),
@@ -52,18 +67,23 @@ export const useLoggerStore = defineStore('logger', () => {
    * Rensar alla meddelanden från loggen.
    */
   function clearLogs() {
+    if (!IS_DEBUG_MODE) {
+      return;
+    }
     logs.value = [];
     addLog('Log cleared.', 'Logger');
   }
 
-  // Initialiserar loggen med ett startmeddelande.
+  // Initialiserar loggen med ett startmeddelande (endast i debug-läge).
   addLog('Logger initialized.', 'System');
 
   // Exponerar state och actions för användning i andra delar av appen.
+  // Exporterar även flaggan så att andra delar av UI:t (t.ex. knappen) kan använda den.
   return {
     logs,
     addLog,
     clearLogs,
+    IS_DEBUG_MODE,
   };
 });
 // src/entities/logger/model/loggerStore.js
