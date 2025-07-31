@@ -4,11 +4,6 @@
   Den är en "smart" komponent som använder explorerStore för att hantera
   sitt tillstånd och bygger upp sitt gränssnitt med hjälp av agnostiska
   "Base"-komponenter från /shared/ui.
-
-  FELSÖKNING:
-  - Ändrat värdet för platshållar-alternativet från `undefined` till en tom
-    sträng `''`. Detta ger Vues `v-for`-loop i BaseSelect en giltig och
-    unik `:key`, vilket löser renderingsbuggen.
 -->
 <template>
   <aside class="filter-panel">
@@ -82,7 +77,6 @@ import BaseInput from '../../../shared/ui/BaseInput.vue';
 import BaseSelect from '../../../shared/ui/BaseSelect.vue';
 import RangeFilter from '../../../shared/ui/RangeFilter.vue';
 
-// --- STORE INTEGRATION ---
 const store = useExplorerStore();
 const logger = useLoggerStore();
 
@@ -97,17 +91,12 @@ const {
   tonearmClassifications,
 } = storeToRefs(store);
 
-
-// --- DYNAMISK FILTERGENERERING ---
-
 function mapClassificationsToFilters(classifications) {
   if (!classifications || Object.keys(classifications).length === 0) return [];
   return Object.entries(classifications).map(([key, value]) => ({
     key: key,
     label: value.name,
     options: [
-      // KORRIGERING: Använder en tom sträng '' som värde för platshållaren.
-      // Detta ger en giltig, unik key för Vues v-for loop.
       { value: '', label: value.name },
       ...value.categories.map(cat => ({ value: cat.id, label: cat.name }))
     ]
@@ -116,23 +105,10 @@ function mapClassificationsToFilters(classifications) {
 
 const availableFilters = computed(() => {
   logger.addLog('`availableFilters` computed property is running.', 'DataFilterPanel');
-  
   const currentClassifications = dataType.value === 'tonearms' ? tonearmClassifications.value : pickupClassifications.value;
-  
-  logger.addLog(
-    `Current classifications for dataType '${dataType.value}'`,
-    'DataFilterPanel',
-    currentClassifications
-  );
-
+  logger.addLog(`Current classifications for dataType '${dataType.value}'`, 'DataFilterPanel', currentClassifications);
   const result = mapClassificationsToFilters(currentClassifications);
-  
-  logger.addLog(
-    `mapClassificationsToFilters returned ${result.length} filters.`,
-    'DataFilterPanel',
-    result
-  );
-
+  logger.addLog(`mapClassificationsToFilters returned ${result.length} filters.`, 'DataFilterPanel', result);
   return result;
 });
 
@@ -159,7 +135,7 @@ const availableNumericFilters = computed(() => {
   border-radius: 12px;
   border: 1px solid var(--color-border-primary);
   position: sticky;
-  top: 88px; /* Höjd för header + lite marginal */
+  top: 88px;
   align-self: start;
   display: flex;
   flex-direction: column;
@@ -205,7 +181,6 @@ h3 {
   margin-top: 1rem;
 }
 
-/* Responsivitet */
 @media (max-width: 900px) {
   .filter-panel {
     position: static;
@@ -214,11 +189,11 @@ h3 {
 }
 
 /* ========================================================================== */
-/* TEMA-ÖVERSTYRNING FÖR KOMPAKT LÄGE                                         */
+/* TEMA-ÖVERSTYRNING FÖR KOMPAKT LÄGE (REVIDERAD)                             */
 /* ========================================================================== */
 :global(.compact-theme) .filter-panel {
   padding: 1rem;
-  gap: 1rem;
+  gap: 1rem; /* Minskad huvud-gap */
 }
 
 :global(.compact-theme) h3 {
@@ -227,7 +202,7 @@ h3 {
 }
 
 :global(.compact-theme) .filter-controls {
-  gap: 1rem;
+  gap: 1rem; /* Minskad gap mellan filtergrupper */
 }
 
 :global(.compact-theme) .reset-button {
