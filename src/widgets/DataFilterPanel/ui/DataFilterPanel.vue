@@ -194,5 +194,30 @@ h3 {
     top: auto;
   }
 }
+
+/* ========================================================================== */
+/* TEMA-ÖVERSTYRNING FÖR KOMPAKT LÄGE                                         */
+/* ========================================================================== */
+:global(.compact-theme) .filter-panel {
+  padding: 1rem;
+  gap: 1rem;
+}
+
+:global(.compact-theme) h3 {
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+:global(.compact-theme) .filter-controls {
+  gap: 1rem;
+}
+
+:global(.compact-theme) .reset-button {
+  margin-top: 0.5rem;
+}
+
+:global(.compact-theme) .control-label {
+  margin-bottom: 0.25rem;
+}
 </style>
 <!-- src/widgets/DataFilterPanel/ui/DataFilterPanel.vue -->
