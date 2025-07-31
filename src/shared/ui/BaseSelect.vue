@@ -167,5 +167,21 @@ const wrapperClasses = computed(() => (
   /* I ljust läge ska bakgrunden förbli primär-ytan, inte sekundär, enligt spec. */
   background-color: var(--color-surface-primary);
 }
+
+/* ========================================================================== */
+/* TEMA-ÖVERSTYRNING FÖR KOMPAKT LÄGE                                         */
+/* ========================================================================== */
+:global(.compact-theme) .base-select-wrapper {
+  border-radius: 6px;
+}
+
+:global(.compact-theme) .base-select {
+  padding: 0.5rem 2.25rem 0.5rem 0.75rem; /* Minskad padding */
+}
+
+:global(.compact-theme) .base-select-wrapper:focus-within:not(.is-disabled) .base-select {
+  /* Justerar focus-padding för att matcha den nya standard-paddingen */
+  padding: calc(0.5rem - 1px) calc(2.25rem - 1px) calc(0.5rem - 1px) calc(0.75rem - 1px);
+}
 </style>
 <!-- src/shared/ui/BaseSelect.vue -->
