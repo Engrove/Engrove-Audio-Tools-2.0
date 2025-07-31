@@ -5,13 +5,9 @@
   sitt tillstånd och bygger upp sitt gränssnitt med hjälp av agnostiska
   "Base"-komponenter från /shared/ui.
 
-  ÄNDRING (Problem 0.2):
-  - `mapClassificationsToFilters` har uppdaterats så att det första alternativet
-    i varje dropdown nu visar filtrets namn (t.ex. "Bearing Type") istället
-    för "All...". Detta gör filtren självdokumenterande utan att kräva
-    externa etiketter, vilket sparar vertikalt utrymme.
-  - KORRIGERING: Lade till en `v-if` för att säkerställa att kategorifiltren
-    inte försöker renderas innan deras asynkrona data har laddats.
+  FELSÖKNING:
+  - Importerar och använder loggerStore för att spåra den beräknade egenskapen
+    `availableFilters` och se vilken data den har tillgång till och när.
 -->
 <template>
   <aside class="filter-panel">
@@ -49,8 +45,6 @@
       </div>
 
       <!-- Dynamiskt genererade kategorifilter -->
-      <!-- KORRIGERING: Använder en template-tagg med v-if för att säkerställa att -->
-      <!-- filtren bara renderas när `availableFilters` har innehåll. -->
       <template v-if="availableFilters && availableFilters.length > 0">
         <div v-for="filter in availableFilters" :key="filter.key" class="control-group">
           <BaseSelect
@@ -81,6 +75,7 @@
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useExplorerStore } from '../../../entities/data-explorer/model/explorerStore.js';
+import { useLoggerStore } from '../../../entities/logger/model/loggerStore.js'; // Importera logger
 import BaseButton from '../../../shared/ui/BaseButton.vue';
 import BaseInput from '../../../shared/ui/BaseInput.vue';
 import BaseSelect from '../../../shared/ui/BaseSelect.vue';
@@ -88,6 +83,7 @@ import RangeFilter from '../../../shared/ui/RangeFilter.vue';
 
 // --- STORE INTEGRATION ---
 const store = useExplorerStore();
+const logger = useLoggerStore(); // Hämta instans av logger
 
 // Destrukturera actions direkt från storen.
 const { setDataType, resetFilters } = store;
@@ -105,32 +101,40 @@ const {
 
 // --- DYNAMISK FILTERGENERERING ---
 
-/**
- * Hjälpfunktion för att omvandla klassificeringsdata till ett format
- * som BaseSelect-komponenten kan använda.
- * @param {Object} classifications - Klassificeringsobjektet.
- * @returns {Array<Object>} En array av filterkonfigurationsobjekt.
- */
 function mapClassificationsToFilters(classifications) {
   if (!classifications || Object.keys(classifications).length === 0) return [];
   return Object.entries(classifications).map(([key, value]) => ({
     key: key,
-    label: value.name, // Behålls för eventuell framtida användning (t.ex. tooltips)
+    label: value.name,
     options: [
-      // ÄNDRING 0.2: Det första alternativet är nu en platshållare/etikett.
       { value: undefined, label: value.name },
       ...value.categories.map(cat => ({ value: cat.id, label: cat.name }))
     ]
   }));
 }
 
-// Beräknar vilka filter som ska visas baserat på vald datatyp.
 const availableFilters = computed(() => {
+  logger.addLog('`availableFilters` computed property is running.', 'DataFilterPanel');
+  
   const currentClassifications = dataType.value === 'tonearms' ? tonearmClassifications.value : pickupClassifications.value;
-  return mapClassificationsToFilters(currentClassifications);
+  
+  logger.addLog(
+    `Current classifications for dataType '${dataType.value}'`,
+    'DataFilterPanel',
+    currentClassifications
+  );
+
+  const result = mapClassificationsToFilters(currentClassifications);
+  
+  logger.addLog(
+    `mapClassificationsToFilters returned ${result.length} filters.`,
+    'DataFilterPanel',
+    result
+  );
+
+  return result;
 });
 
-// Hårdkodad konfiguration för numeriska filter (kan göras mer dynamisk i framtiden).
 const availableNumericFilters = computed(() => {
   if (dataType.value === 'tonearms') {
     return [
