@@ -3,6 +3,11 @@
   Detta är sidkomponenten för "Data Explorer". Dess primära ansvar är att
   arrangera layouten för de olika widgetarna och att initiera datainhämtningen
   när sidan laddas. Den hanterar även state för modal-fönstret.
+
+  FELRÄTTNING (Regression från Steg 11):
+  - Importerar och använder `storeToRefs` från Pinia för att säkerställa att
+    state-variabler som `isLoading`, `error`, och `dataType` förblir reaktiva.
+    Detta löser buggen där sidan fastnade permanent i laddningsläget.
 -->
 <template>
   <div class="page-container">
@@ -42,6 +47,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useHead } from '@unhead/vue';
+import { storeToRefs } from 'pinia'; // KORRIGERING: Importera storeToRefs
 import { useExplorerStore } from '../../entities/data-explorer/model/explorerStore.js';
 import DataFilterPanel from '../../widgets/DataFilterPanel/ui/DataFilterPanel.vue';
 import ResultsDisplay from '../../widgets/ResultsDisplay/ui/ResultsDisplay.vue';
@@ -63,8 +69,9 @@ useHead({
 
 // --- STORE INTEGRATION ---
 const store = useExplorerStore();
-// Hämta endast de state-variabler och getters som denna sidkomponent behöver.
-const { isLoading, error, dataType } = store;
+// KORRIGERING: Använd storeToRefs för att extrahera reaktiva variabler.
+// Detta säkerställer att komponenten uppdateras när värdena i storen ändras.
+const { isLoading, error, dataType } = storeToRefs(store);
 
 
 // --- MODAL STATE & LOGIC ---
