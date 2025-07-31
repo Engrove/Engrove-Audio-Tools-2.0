@@ -9,19 +9,12 @@
 // - Tidsstämplar varje meddelande.
 // - Håller automatiskt logghistoriken begränsad till 300 rader.
 // - Är helt inaktiv i produktionsläge för att spara minne och prestanda.
-//
-// ÄNDRING:
-// - Läser nu den explicita miljövariabeln `VITE_DEBUG_MODE` från en .env-fil.
-//   Detta är en mer robust metod än att förlita sig på `import.meta.env.DEV`.
+// - Skriver ut formaterade meddelanden till webbläsarens konsol i debug-läge.
 
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 
 // --- GLOBAL DEBUG FLAGGA ---
-// Denna konstant styr all loggningsfunktionalitet.
-// `import.meta.env.VITE_DEBUG_MODE` läses från `.env.development`-filen.
-// Jämförelsen med strängen 'true' är viktig eftersom miljövariabler
-// alltid är strängar.
 export const IS_DEBUG_MODE = import.meta.env.VITE_DEBUG_MODE === 'true';
 
 // Definierar den maximala storleken på logg-bufferten.
@@ -29,42 +22,50 @@ const MAX_LOG_ENTRIES = 300;
 
 export const useLoggerStore = defineStore('logger', () => {
   // --- STATE ---
-  // En reaktiv array som kommer att innehålla alla våra loggobjekt.
   const logs = ref([]);
 
   // --- ACTIONS ---
 
   /**
-   * Lägger till ett nytt loggmeddelande i storen.
-   * Om loggen överskrider MAX_LOG_ENTRIES, tas det äldsta meddelandet bort.
+   * Lägger till ett nytt loggmeddelande i storen och skriver till konsolen.
    * Funktionen gör ingenting om IS_DEBUG_MODE är false.
    * @param {string} message - Det huvudsakliga loggmeddelandet.
-   * @param {string} [context='Global'] - Kontexten där loggen skapades (t.ex. 'explorerStore', 'DataFilterPanel').
-   * @param {any} [data=null] - Valfri extra data (t.ex. ett objekt) som ska loggas. Konverteras till en JSON-sträng.
+   * @param {string} [context='Global'] - Kontexten där loggen skapades.
+   * @param {any} [data=null] - Valfri extra data som ska loggas.
    */
   function addLog(message, context = 'Global', data = null) {
-    // Om vi inte är i felsökningsläge, avbryt omedelbart.
-    // Detta förhindrar att logg-arrayen fylls på i onödan.
     if (!IS_DEBUG_MODE) {
       return;
     }
 
-    // Skapa ett tidsstämplat loggobjekt.
+    // 1. Skapa det interna loggobjektet för debug.html
     const newLogEntry = {
       timestamp: new Date().toISOString(),
       message: message,
       context: context,
-      // Om data finns, formatera det som en läsbar JSON-sträng.
       data: data ? JSON.stringify(data, null, 2) : null,
     };
 
-    // Lägg till det nya meddelandet i början av arrayen.
     logs.value.unshift(newLogEntry);
-
-    // Om arrayen blir för stor, ta bort det sista (äldsta) elementet.
     if (logs.value.length > MAX_LOG_ENTRIES) {
       logs.value.pop();
     }
+
+    // 2. Skriv ut till webbläsarens F12-konsol
+    const groupTitle = `%c[Engrove Inspector | ${context}]%c ${message}`;
+    const titleStyle = 'color: #82AAFF; font-weight: bold;';
+    const messageStyle = 'color: #E0E0E0;';
+
+    // Använder en hopfälld grupp för att hålla konsolen ren.
+    console.groupCollapsed(groupTitle, titleStyle, messageStyle);
+    console.log(`Timestamp: ${newLogEntry.timestamp}`);
+    
+    // Om det finns extra data, logga det som ett interaktivt objekt.
+    if (data) {
+      console.log('Data:', data);
+    }
+    
+    console.groupEnd();
   }
 
   /**
@@ -81,7 +82,6 @@ export const useLoggerStore = defineStore('logger', () => {
   // Initialiserar loggen med ett startmeddelande (endast i debug-läge).
   addLog('Logger initialized.', 'System');
 
-  // Exponerar state och actions för användning i andra delar av appen.
   return {
     logs,
     addLog,
