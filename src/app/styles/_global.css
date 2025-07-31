@@ -83,6 +83,19 @@ select {
   font-family: inherit; /* Ärver typsnittet från body */
 }
 
+/*
+ * KORRIGERING FÖR DROPDOWN-LISTOR (<select>)
+ * Webbläsare renderar <option>-element i en system-native UI-komponent
+ * som oftast har en ljus bakgrund. För att säkerställa läsbarhet i både
+ * ljust och mörkt tema, tvingar vi här textfärgen för alla <option>
+ * att vara mörk. Detta påverkar endast den utfällda listan, inte det
+ * stängda <select>-elementet.
+*/
+option {
+  color: rgba(0, 0, 0, 0.87); /* Använder en mörk färg istället för 'initial' för bättre förutsägbarhet */
+  background-color: #FFFFFF; /* Sätts för de webbläsare som respekterar det */
+}
+
 /* ========================================================================== */
 /* HJÄLPKLASS FÖR MOBILMENY                                                    */
 /* Denna klass appliceras på <body>-elementet via JavaScript när mobilmenyn   */
