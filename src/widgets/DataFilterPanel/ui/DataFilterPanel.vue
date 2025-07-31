@@ -6,8 +6,9 @@
   "Base"-komponenter från /shared/ui.
 
   FELSÖKNING:
-  - Importerar och använder loggerStore för att spåra den beräknade egenskapen
-    `availableFilters` och se vilken data den har tillgång till och när.
+  - Ändrat värdet för platshållar-alternativet från `undefined` till en tom
+    sträng `''`. Detta ger Vues `v-for`-loop i BaseSelect en giltig och
+    unik `:key`, vilket löser renderingsbuggen.
 -->
 <template>
   <aside class="filter-panel">
@@ -75,7 +76,7 @@
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useExplorerStore } from '../../../entities/data-explorer/model/explorerStore.js';
-import { useLoggerStore } from '../../../entities/logger/model/loggerStore.js'; // Importera logger
+import { useLoggerStore } from '../../../entities/logger/model/loggerStore.js';
 import BaseButton from '../../../shared/ui/BaseButton.vue';
 import BaseInput from '../../../shared/ui/BaseInput.vue';
 import BaseSelect from '../../../shared/ui/BaseSelect.vue';
@@ -83,12 +84,10 @@ import RangeFilter from '../../../shared/ui/RangeFilter.vue';
 
 // --- STORE INTEGRATION ---
 const store = useExplorerStore();
-const logger = useLoggerStore(); // Hämta instans av logger
+const logger = useLoggerStore();
 
-// Destrukturera actions direkt från storen.
 const { setDataType, resetFilters } = store;
 
-// Destrukturera state och getters med storeToRefs för att behålla reaktiviteten.
 const {
   dataType,
   searchTerm,
@@ -107,7 +106,9 @@ function mapClassificationsToFilters(classifications) {
     key: key,
     label: value.name,
     options: [
-      { value: undefined, label: value.name },
+      // KORRIGERING: Använder en tom sträng '' som värde för platshållaren.
+      // Detta ger en giltig, unik key för Vues v-for loop.
+      { value: '', label: value.name },
       ...value.categories.map(cat => ({ value: cat.id, label: cat.name }))
     ]
   }));
