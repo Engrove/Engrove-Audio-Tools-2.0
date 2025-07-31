@@ -43,6 +43,8 @@
       <!-- Dynamiskt genererade kategorifilter -->
       <template v-if="availableFilters && availableFilters.length > 0">
         <div v-for="filter in availableFilters" :key="filter.key" class="control-group">
+          <!-- FELRÄTTNING: V-for-loopen måste ha ett unikt och giltigt :key-attribut. -->
+          <!-- Vi använder filter.key som är garanterat unikt. -->
           <BaseSelect
             v-model="categoryFilters[filter.key]"
             :options="filter.options"
@@ -91,6 +93,11 @@ const {
   tonearmClassifications,
 } = storeToRefs(store);
 
+/**
+ * Mappar klassificeringsdata till ett format som BaseSelect-komponenten kan använda.
+ * @param {Object} classifications - Objektet med klassificeringsdata.
+ * @returns {Array} En array av filterobjekt.
+ */
 function mapClassificationsToFilters(classifications) {
   if (!classifications || Object.keys(classifications).length === 0) return [];
   return Object.entries(classifications).map(([key, value]) => ({
@@ -98,7 +105,12 @@ function mapClassificationsToFilters(classifications) {
     label: value.name,
     options: [
       { value: '', label: value.name },
-      ...value.categories.map(cat => ({ value: cat.id, label: cat.name }))
+      ...value.categories.map(cat => ({
+        value: cat.id,
+        // BUGGFIX: Använd cat.name om det finns, annars falla tillbaka till cat.id.
+        // Detta hanterar inkonsekvensen i pickups-classifications.json där 'tags' saknar 'name'.
+        label: cat.name ? cat.name : cat.id
+      }))
     ]
   }));
 }
