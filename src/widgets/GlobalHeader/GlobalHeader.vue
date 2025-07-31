@@ -26,7 +26,7 @@
         <!-- Höger sektion: Knappar och kontroller -->
         <div class="header-right">
           <!-- Felsökningsknapp, visas ENDAST i utvecklingsläge -->
-          <a v-if="loggerStore.IS_DEBUG_MODE" href="/debug.html" target="_blank" rel="noopener noreferrer">
+          <a v-if="IS_DEBUG_MODE" href="/debug.html" target="_blank" rel="noopener noreferrer">
             <BaseButton variant="secondary" class="debug-button">Debug</BaseButton>
           </a>
 
@@ -53,18 +53,21 @@
 <script setup>
 import { RouterLink } from 'vue-router';
 import { useMobileMenu } from '../../features/mobile-menu-toggle/model/useMobileMenu.js';
-import { useLoggerStore } from '../../entities/logger/model/loggerStore.js'; // Importerar logger-storen
+// Importerar nu konstanten direkt för en mer robust kontroll.
+import { IS_DEBUG_MODE } from '../../entities/logger/model/loggerStore.js';
 import Logo from '../../shared/ui/Logo.vue';
 import MobileMenuToggle from '../../features/mobile-menu-toggle/ui/MobileMenuToggle.vue';
 import MobileNavMenu from '../MobileNavMenu/MobileNavMenu.vue';
 import ThemeToggle from '../../features/theme-toggle/ui/ThemeToggle.vue';
 import DensityToggle from '../../features/density-toggle/ui/DensityToggle.vue';
+import BaseButton from '../../shared/ui/BaseButton.vue';
+
+// FELSÖKNING: Logga värdet av IS_DEBUG_MODE direkt när komponenten skapas.
+console.log(`[GlobalHeader] IS_DEBUG_MODE is: ${IS_DEBUG_MODE}`);
 
 // Hämtar meny-tillståndet för att styra visningen av mobilmenyn
 const { isMenuOpen } = useMobileMenu();
 
-// Hämtar logger-storen för att komma åt IS_DEBUG_MODE-flaggan
-const loggerStore = useLoggerStore();
 </script>
 
 <style scoped>
@@ -171,9 +174,13 @@ const loggerStore = useLoggerStore();
 @media (max-width: 900px) {
   .header-nav-desktop,
   .theme-toggle-desktop,
-  .density-toggle-desktop,
-  .debug-button {
+  .density-toggle-desktop {
     display: none; /* Dölj desktop-navigering och alla kontroller */
+  }
+  
+  /* Dölj debug-knappen även på mobil för att spara utrymme */
+  .header-right a[href="/debug.html"] {
+    display: none;
   }
 
   .mobile-menu-toggle-button {
