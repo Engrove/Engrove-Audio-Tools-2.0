@@ -1,58 +1,56 @@
 // src/entities/data-explorer/api/fetchExplorerData.js
-/**
- * Denna fil är en dedikerad API-modul för Data Explorer-entiteten.
- * Dess enda ansvar är att hämta all nödvändig data från de statiska JSON-filerna.
- * Genom att centralisera datainhämtningen här säkerställer vi att korrekta,
- * absoluta sökvägar används och att felhanteringen är robust och konsekvent.
- */
+// Denna modul ansvarar för all datainhämtning för Data Explorer.
+// Den hämtar alla nödvändiga JSON-filer parallellt för maximal effektivitet.
+//
+// FELRÄTTNING (Regression från Steg 11):
+// - Sökvägen för tonarmsdata har korrigerats från 'tonearms-data.json' (plural)
+//   tillbaka till 'tonearm-data.json' (singular) för att exakt matcha det
+//   faktiska filnamnet i /public/data-mappen. Detta löser det underliggande
+//   404-felet som orsakade kraschen i explorerStore.
 
 /**
- * Hämtar all nödvändig data för Data Explorer-modulen parallellt.
- * Använder absoluta sökvägar för att undvika SPA-routing-problem.
- * @returns {Promise<Object>} Ett promise som resolverar till ett objekt innehållande all data.
- * @throws {Error} Kastar ett fel om någon av nätverksbegärandena misslyckas.
+ * Hämtar all nödvändig data för Data Explorer från de statiska JSON-filerna.
+ * Använder Promise.all för att köra nätverksanropen parallellt.
+ * @returns {Promise<Object>} Ett objekt som innehåller all data.
  */
 export async function fetchExplorerData() {
-  try {
-    // Använder Promise.all för att starta alla fetch-anrop samtidigt för maximal prestanda.
-    const responses = await Promise.all([
-      fetch('/data/pickups-data.json'),
-      fetch('/data/pickups-classifications.json'),
-      // KORRIGERING: Filnamnet är nu i singularis för att matcha repositoryt.
-      fetch('/data/tonearm-data.json'), 
-      fetch('/data/tonearms-classifications.json')
-    ]);
-
-    // Kontrollerar varje svar individuellt för att säkerställa att de lyckades (status 200-299).
-    for (const response of responses) {
-      if (!response.ok) {
-        // Om ett svar misslyckades, kasta ett specifikt fel.
-        throw new Error(`Failed to fetch data from ${response.url}: ${response.status} ${response.statusText}`);
-      }
+  // Funktion för att förenkla fetch-anrop och JSON-parsning.
+  const fetchData = async (url) => {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
     }
+    return response.json();
+  };
 
-    // Om alla svar är ok, konvertera dem från JSON till JavaScript-objekt, också parallellt.
-    const [
-      pickupsData,
-      pickupClassifications,
-      tonearmsData,
-      tonearmClassifications
-    ] = await Promise.all(responses.map(res => res.json()));
+  // Definierar sökvägarna till alla datafiler.
+  const paths = {
+    pickupsData: '/data/pickups-data.json',
+    pickupsClassifications: '/data/pickups-classifications.json',
+    // KORRIGERING: Använder 'tonearm-data.json' (singular)
+    tonearmsData: '/data/tonearm-data.json',
+    tonearmsClassifications: '/data/tonearms-classifications.json',
+  };
 
-    // Returnera ett prydligt strukturerat objekt med all data.
-    return {
-      pickupsData,
-      pickupClassifications,
-      tonearmsData,
-      tonearmClassifications
-    };
+  // Utför alla fetch-anrop parallellt.
+  const [
+    pickupsData,
+    pickupsClassifications,
+    tonearmsData,
+    tonearmsClassifications,
+  ] = await Promise.all([
+    fetchData(paths.pickupsData),
+    fetchData(paths.pickupsClassifications),
+    fetchData(paths.tonearmsData),
+    fetchData(paths.tonearmsClassifications),
+  ]);
 
-  } catch (error) {
-    // Logga det specifika felet till konsolen för felsökning.
-    console.error('Data Explorer API Error:', error);
-    // Kasta om felet så att den anropande funktionen (i Pinia-storen) kan fånga det
-    // och uppdatera applikationens error-state.
-    throw error;
-  }
+  // Returnerar ett samlat objekt med all data.
+  return {
+    pickupsData,
+    pickupsClassifications,
+    tonearmsData,
+    tonearmsClassifications,
+  };
 }
 // src/entities/data-explorer/api/fetchExplorerData.js
