@@ -1,7 +1,8 @@
 <!-- src/widgets/GlobalHeader/GlobalHeader.vue -->
 <!-- Denna widget är den primära, globala headern för hela applikationen. -->
 <!-- Den är nu fullt responsiv och inkluderar den fungerande temaväxlaren. -->
-<!-- Den har nu uppdaterats för att även inkludera densitetsväxlaren. -->
+<!-- Den har nu uppdaterats för att även inkludera densitetsväxlaren och -->
+<!-- en villkorlig felsökningsknapp. -->
 
 <template>
   <div>
@@ -18,13 +19,17 @@
           <!-- TODO: Lägg till länk för Alignment Calculator här -->
           <!-- TODO: Lägg till länk för Compliance Estimator här -->
           
-          <!-- NY LÄNK TILL DATA EXPLORER -->
           <router-link to="/data-explorer" class="nav-link">Data Explorer</router-link>
 
         </nav>
 
         <!-- Höger sektion: Knappar och kontroller -->
         <div class="header-right">
+          <!-- Felsökningsknapp, visas ENDAST i utvecklingsläge -->
+          <a v-if="loggerStore.IS_DEBUG_MODE" href="/debug.html" target="_blank" rel="noopener noreferrer">
+            <BaseButton variant="secondary" class="debug-button">Debug</BaseButton>
+          </a>
+
           <!-- Densitetsväxlaren, visas endast på desktop. -->
           <DensityToggle class="density-toggle-desktop" />
 
@@ -48,14 +53,18 @@
 <script setup>
 import { RouterLink } from 'vue-router';
 import { useMobileMenu } from '../../features/mobile-menu-toggle/model/useMobileMenu.js';
+import { useLoggerStore } from '../../entities/logger/model/loggerStore.js'; // Importerar logger-storen
 import Logo from '../../shared/ui/Logo.vue';
 import MobileMenuToggle from '../../features/mobile-menu-toggle/ui/MobileMenuToggle.vue';
 import MobileNavMenu from '../MobileNavMenu/MobileNavMenu.vue';
 import ThemeToggle from '../../features/theme-toggle/ui/ThemeToggle.vue';
-import DensityToggle from '../../features/density-toggle/ui/DensityToggle.vue'; // Importerar den nya komponenten
+import DensityToggle from '../../features/density-toggle/ui/DensityToggle.vue';
 
 // Hämtar meny-tillståndet för att styra visningen av mobilmenyn
 const { isMenuOpen } = useMobileMenu();
+
+// Hämtar logger-storen för att komma åt IS_DEBUG_MODE-flaggan
+const loggerStore = useLoggerStore();
 </script>
 
 <style scoped>
@@ -136,6 +145,19 @@ const { isMenuOpen } = useMobileMenu();
   gap: 0.75rem;
 }
 
+.debug-button {
+  /* Lite extra styling för att göra den mindre framträdande */
+  padding: 0.4rem 0.8rem;
+  font-size: var(--font-size-small);
+  border-color: var(--color-status-error);
+  color: var(--color-status-error);
+}
+
+.debug-button:hover {
+    background-color: var(--color-status-error);
+    color: var(--color-text-high-emphasis);
+}
+
 /* Initialt döljs hamburgar-knappen på större skärmar */
 .mobile-menu-toggle-button {
   display: none;
@@ -149,7 +171,8 @@ const { isMenuOpen } = useMobileMenu();
 @media (max-width: 900px) {
   .header-nav-desktop,
   .theme-toggle-desktop,
-  .density-toggle-desktop {
+  .density-toggle-desktop,
+  .debug-button {
     display: none; /* Dölj desktop-navigering och alla kontroller */
   }
 
