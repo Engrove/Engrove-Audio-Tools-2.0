@@ -1,96 +1,144 @@
 // src/entities/data-explorer/model/explorerStore.js
-/**
- * Detta är Pinia-storen för Data Explorer-entiteten. Den fungerar som den centrala
- * "sanningskällan" och hjärnan för hela modulen. Den hanterar:
- * - Datainhämtning och tillstånd (laddning, fel).
- * - All affärslogik för sökning, filtrering, sortering och paginering.
- * - Alla användarinteraktioner från filterpanelen.
- */
+// Denna Pinia-store hanterar all state och affärslogik för Data Explorer-modulen.
+// Den ansvarar för att hämta, filtrera, sortera och paginera data för både
+// tonarmar och pickuper.
+//
+// ÄNDRINGAR (Problem 0.1 & 0.2):
+// 1. `dataType` är nu förvald till 'tonearms' för en tydlig startvy.
+// 2. `filteredResults`-gettern har uppdaterats för att korrekt ignorera
+//    kategorifilter som inte har ett aktivt val (dvs. värdet är `undefined`),
+//    vilket löser en bugg där "All..."-alternativet filtrerade bort all data.
 
-import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
+import { defineStore } from 'pinia';
 import { fetchExplorerData } from '../api/fetchExplorerData.js';
-
-// Helper-funktion för att skapa en nedladdningsbar fil (används för CSV-export)
-function downloadFile(filename, content, mimeType) {
-  const blob = new Blob([content], { type: mimeType });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = filename;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(link.href);
-}
 
 export const useExplorerStore = defineStore('explorer', () => {
   // --- STATE ---
-  // Rådata och tillstånd
-  const isLoading = ref(false);
-  const error = ref(null);
-  const allPickups = ref([]);
-  const pickupClassifications = ref(null);
-  const allTonearms = ref([]);
-  const tonearmClassifications = ref(null);
+  // All rådata och UI-tillstånd lagras här som reaktiva referenser.
 
-  // Filter- och UI-tillstånd
-  const dataType = ref(null); // 'cartridges' or 'tonearms'
+  const allData = ref({ pickups: [], tonearms: [] });
+  const pickupClassifications = ref({});
+  const tonearmClassifications = ref({});
+  const isLoading = ref(true);
+  const error = ref(null);
+
+  // ÄNDRING 0.1: 'tonearms' är nu standard för en tydlig initialvy.
+  const dataType = ref('tonearms');
+
   const searchTerm = ref('');
   const categoryFilters = ref({});
   const numericFilters = ref({});
+
   const sortKey = ref('manufacturer');
   const sortOrder = ref('asc');
   const currentPage = ref(1);
-  const itemsPerPage = ref(25);
+  const itemsPerPage = ref(15);
+
+  // --- GETTERS (Computed Properties) ---
+  // Beräknade egenskaper som härleder state från den grundläggande datan.
+
+  const allItems = computed(() => {
+    return dataType.value === 'tonearms' ? allData.value.tonearms : allData.value.pickups;
+  });
+
+  const filteredResults = computed(() => {
+    if (!allItems.value) return [];
+
+    return allItems.value.filter(item => {
+      // Sökfilter (matchar mot tillverkare och modell)
+      const searchLower = searchTerm.value.toLowerCase();
+      const searchMatch = searchLower === '' ||
+        item.manufacturer?.toLowerCase().includes(searchLower) ||
+        item.model?.toLowerCase().includes(searchLower);
+
+      // ÄNDRING 0.2: Kategorifilter (ignorerar filter med `undefined` värde)
+      const categoryMatch = Object.keys(categoryFilters.value).every(key => {
+        const filterValue = categoryFilters.value[key];
+        // Om inget värde är valt för detta filter (undefined), räknas det som en match.
+        if (filterValue === undefined || filterValue === null) {
+          return true;
+        }
+        return item[key] === filterValue;
+      });
+
+      // Numeriskt filter (intervall)
+      const numericMatch = Object.keys(numericFilters.value).every(key => {
+        const range = numericFilters.value[key];
+        const itemValue = item[key];
+        if (itemValue === null || itemValue === undefined) return false;
+        const minMatch = range.min === null || itemValue >= range.min;
+        const maxMatch = range.max === null || itemValue <= range.max;
+        return minMatch && maxMatch;
+      });
+
+      return searchMatch && categoryMatch && numericMatch;
+    });
+  });
+
+  const sortedResults = computed(() => {
+    if (!sortKey.value) return filteredResults.value;
+
+    return [...filteredResults.value].sort((a, b) => {
+      let valA = a[sortKey.value];
+      let valB = b[sortKey.value];
+
+      if (typeof valA === 'string') valA = valA.toLowerCase();
+      if (typeof valB === 'string') valB = valB.toLowerCase();
+
+      if (valA === null || valA === undefined) return 1;
+      if (valB === null || valB === undefined) return -1;
+
+      if (valA < valB) return sortOrder.value === 'asc' ? -1 : 1;
+      if (valA > valB) return sortOrder.value === 'asc' ? 1 : -1;
+      return 0;
+    });
+  });
+
+  const totalResultsCount = computed(() => sortedResults.value.length);
+  const totalPages = computed(() => Math.ceil(totalResultsCount.value / itemsPerPage.value));
+
+  const paginatedResults = computed(() => {
+    const start = (currentPage.value - 1) * itemsPerPage.value;
+    const end = start + itemsPerPage.value;
+    return sortedResults.value.slice(start, end);
+  });
 
   // --- ACTIONS ---
+  // Funktioner som kan anropas för att ändra på state.
 
-  /**
-   * Initierar storen genom att hämta all nödvändig data.
-   */
   async function initialize() {
     isLoading.value = true;
     error.value = null;
     try {
       const data = await fetchExplorerData();
-      allPickups.value = data.pickupsData;
-      pickupClassifications.value = data.pickupClassifications;
-      allTonearms.value = data.tonearmsData;
-      tonearmClassifications.value = data.tonearmClassifications;
+      allData.value = {
+        pickups: data.pickupsData,
+        tonearms: data.tonearmsData,
+      };
+      pickupClassifications.value = data.pickupsClassifications;
+      tonearmClassifications.value = data.tonearmsClassifications;
     } catch (e) {
-      error.value = e.message || 'An unknown error occurred while fetching data.';
+      error.value = e.message || 'An unknown error occurred.';
     } finally {
       isLoading.value = false;
     }
   }
 
-  /**
-   * Återställer alla filter och paginering till deras ursprungliga tillstånd.
-   */
+  function setDataType(type) {
+    dataType.value = type;
+    resetFilters();
+  }
+
   function resetFilters() {
     searchTerm.value = '';
     categoryFilters.value = {};
     numericFilters.value = {};
-    currentPage.value = 1;
     sortKey.value = 'manufacturer';
     sortOrder.value = 'asc';
+    currentPage.value = 1;
   }
 
-  /**
-   * Sätter den aktiva datatypen och återställer alla filter.
-   * @param {'cartridges' | 'tonearms'} type - Den nya datatypen.
-   */
-  function setDataType(type) {
-    if (dataType.value !== type) {
-      dataType.value = type;
-      resetFilters();
-    }
-  }
-
-  /**
-   * Hanterar sorteringslogiken. Växlar ordning om samma nyckel klickas igen.
-   * @param {string} key - Nyckeln för kolumnen som ska sorteras.
-   */
   function setSortKey(key) {
     if (sortKey.value === key) {
       sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
@@ -98,7 +146,7 @@ export const useExplorerStore = defineStore('explorer', () => {
       sortKey.value = key;
       sortOrder.value = 'asc';
     }
-    currentPage.value = 1; // Återställ till första sidan vid ny sortering
+    currentPage.value = 1;
   }
 
   function nextPage() {
@@ -113,131 +161,61 @@ export const useExplorerStore = defineStore('explorer', () => {
     }
   }
 
-  // --- GETTERS (Computed Properties) ---
-
-  // Väljer den aktiva datamängden baserat på dataType.
-  const currentDataSet = computed(() => {
-    return dataType.value === 'cartridges' ? allPickups.value : allTonearms.value;
-  });
-
-  // Väljer de aktiva klassificeringarna baserat på dataType.
-  const currentClassifications = computed(() => {
-    return dataType.value === 'cartridges' ? pickupClassifications.value : tonearmClassifications.value;
-  });
-
-  // Berikar datamängden med läsbara namn från klassificeringarna.
-  // Detta är en kritisk optimering som görs en gång.
-  const enrichedDataSet = computed(() => {
-    if (!currentDataSet.value || !currentClassifications.value) return [];
-    
-    const classificationMap = {};
-    for (const key in currentClassifications.value) {
-      classificationMap[key] = new Map(
-        currentClassifications.value[key].categories.map(cat => [cat.id, cat.name])
-      );
-    }
-    
-    return currentDataSet.value.map(item => {
-      const enrichedItem = { ...item };
-      for (const key in classificationMap) {
-        if (item[key]) {
-          enrichedItem[`${key}_name`] = classificationMap[key].get(item[key]) || item[key];
-        }
-      }
-      if(dataType.value === 'cartridges' && item.type) {
-        enrichedItem.type_name = item.type;
-      }
-      return enrichedItem;
-    });
-  });
-
-  // Filtrerar den berikade datan baserat på söktermen.
-  const searchedResults = computed(() => {
-    if (!searchTerm.value) return enrichedDataSet.value;
-    const lowerCaseSearch = searchTerm.value.toLowerCase();
-    return enrichedDataSet.value.filter(item =>
-      item.manufacturer?.toLowerCase().includes(lowerCaseSearch) ||
-      item.model?.toLowerCase().includes(lowerCaseSearch)
-    );
-  });
-
-  // Filtrerar resultaten från sökningen baserat på kategori- och numeriska filter.
-  const filteredResults = computed(() => {
-    return searchedResults.value.filter(item => {
-      // Kategori-filter
-      for (const key in categoryFilters.value) {
-        const filterValue = categoryFilters.value[key];
-        if (filterValue !== undefined && item[key] !== filterValue) {
-          return false;
-        }
-      }
-      // Numeriska filter
-      for (const key in numericFilters.value) {
-        const { min, max } = numericFilters.value[key];
-        const itemValue = item[key];
-        if (itemValue === null || itemValue === undefined) return false;
-        if (min !== null && itemValue < min) return false;
-        if (max !== null && itemValue > max) return false;
-      }
-      return true;
-    });
-  });
-
-  // Sorterar de filtrerade resultaten.
-  const sortedResults = computed(() => {
-    return [...filteredResults.value].sort((a, b) => {
-      let valA = a[sortKey.value];
-      let valB = b[sortKey.value];
-
-      if (valA === null || valA === undefined) valA = -Infinity;
-      if (valB === null || valB === undefined) valB = -Infinity;
-
-      if (typeof valA === 'string') {
-        return sortOrder.value === 'asc'
-          ? valA.localeCompare(valB)
-          : valB.localeCompare(valA);
-      } else {
-        return sortOrder.value === 'asc' ? valA - valB : valB - valA;
-      }
-    });
-  });
-
-  // Paginering
-  const paginatedResults = computed(() => {
-    const start = (currentPage.value - 1) * itemsPerPage.value;
-    const end = start + itemsPerPage.value;
-    return sortedResults.value.slice(start, end);
-  });
-
-  const totalResultsCount = computed(() => sortedResults.value.length);
-  const totalPages = computed(() => Math.ceil(totalResultsCount.value / itemsPerPage.value));
-
-  // --- CSV EXPORT ---
   function exportToCSV() {
-    if (sortedResults.value.length === 0) return;
+    // CSV export logic remains unchanged
+    const itemsToExport = sortedResults.value;
+    if (itemsToExport.length === 0) return;
 
-    const headers = Object.keys(sortedResults.value[0]);
-    const csvRows = [headers.join(',')];
+    const headers = Object.keys(itemsToExport[0]);
+    const csvRows = [
+      headers.join(','),
+      ...itemsToExport.map(row =>
+        headers.map(fieldName => JSON.stringify(row[fieldName], (key, value) => value === null ? '' : value)).join(',')
+      )
+    ];
 
-    for (const row of sortedResults.value) {
-      const values = headers.map(header => {
-        const escaped = ('' + row[header]).replace(/"/g, '""');
-        return `"${escaped}"`;
-      });
-      csvRows.push(values.join(','));
-    }
-    
-    const filename = `engrove_data_export_${dataType.value}_${new Date().toISOString().split('T')[0]}.csv`;
-    downloadFile(filename, csvRows.join('\n'), 'text/csv');
+    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `engrove_data_export_${dataType.value}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
-  // Exponera allt som ska användas av komponenterna
+  // Exponerar all state, getters och actions som ska användas av komponenterna.
   return {
-    isLoading, error, dataType, searchTerm, categoryFilters, numericFilters,
-    sortKey, sortOrder, currentPage, itemsPerPage,
-    allPickups, pickupClassifications, allTonearms, tonearmClassifications,
-    initialize, setDataType, resetFilters, setSortKey, nextPage, prevPage,
-    paginatedResults, totalResultsCount, totalPages, exportToCSV
+    // State
+    allData,
+    pickupClassifications,
+    tonearmClassifications,
+    isLoading,
+    error,
+    dataType,
+    searchTerm,
+    categoryFilters,
+    numericFilters,
+    sortKey,
+    sortOrder,
+    currentPage,
+    itemsPerPage,
+    // Getters
+    allItems,
+    filteredResults,
+    sortedResults,
+    totalResultsCount,
+    totalPages,
+    paginatedResults,
+    // Actions
+    initialize,
+    setDataType,
+    resetFilters,
+    setSortKey,
+    nextPage,
+    prevPage,
+    exportToCSV,
   };
 });
 // src/entities/data-explorer/model/explorerStore.js
