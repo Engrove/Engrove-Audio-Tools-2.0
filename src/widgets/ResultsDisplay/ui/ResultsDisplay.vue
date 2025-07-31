@@ -183,5 +183,20 @@ const canGoNext = computed(() => currentPage.value < totalPages.value);
   font-weight: var(--font-weight-medium);
   margin: 0;
 }
+
+/* ========================================================================== */
+/* TEMA-ÖVERSTYRNING FÖR KOMPAKT LÄGE                                         */
+/* ========================================================================== */
+:global(.compact-theme) .results-header {
+  margin-bottom: 1rem;
+}
+
+:global(.compact-theme) .pagination-controls {
+  margin-bottom: 1rem;
+}
+
+:global(.compact-theme) .pagination-controls.bottom {
+  margin-top: 1rem;
+}
 </style>
 <!-- src/widgets/ResultsDisplay/ui/ResultsDisplay.vue -->
