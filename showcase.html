@@ -3,6 +3,7 @@
 <!-- Den ligger i projektets rot och agerar som en källkods-ingång för Vite. -->
 <!-- Vite kommer att bygga denna fil och injicera de korrekta, hashade CSS/JS-länkarna. -->
 <!DOCTYPE html>
+<!-- Klassen för tema och densitet kommer att appliceras här av Vue -->
 <html lang="sv">
 <head>
     <meta charset="UTF-8">
@@ -19,6 +20,13 @@
             transition: background-color 0.3s, color 0.3s;
             background-color: var(--color-surface-primary);
             color: var(--color-text-medium-emphasis);
+        }
+
+        .controls-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
         }
 
         .info-box {
@@ -117,7 +125,10 @@
 
     <div id="showcase-app">
         <h1>Engrove UI Component Showcase</h1>
-        <base-button variant="secondary" @click="toggleTheme">Växla till {{ otherTheme }} tema</base-button>
+        <div class="controls-bar">
+            <base-button variant="secondary" @click="themeStore.toggleTheme()">Växla till {{ otherTheme }} tema</base-button>
+            <density-toggle></density-toggle>
+        </div>
 
         <div class="info-box">
             <p>Detta är en levande, interaktiv verkstad för alla grundläggande UI-komponenter i <code>/src/shared/ui</code> och interaktiva features.</p>
