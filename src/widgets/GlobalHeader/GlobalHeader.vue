@@ -1,6 +1,7 @@
 <!-- src/widgets/GlobalHeader/GlobalHeader.vue -->
 <!-- Denna widget är den primära, globala headern för hela applikationen. -->
 <!-- Den är nu fullt responsiv och inkluderar den fungerande temaväxlaren. -->
+<!-- Den har nu uppdaterats för att även inkludera densitetsväxlaren. -->
 
 <template>
   <div>
@@ -24,6 +25,9 @@
 
         <!-- Höger sektion: Knappar och kontroller -->
         <div class="header-right">
+          <!-- Densitetsväxlaren, visas endast på desktop. -->
+          <DensityToggle class="density-toggle-desktop" />
+
           <!-- Den fungerande temaväxlaren, visas endast på desktop. -->
           <ThemeToggle class="theme-toggle-desktop" />
           
@@ -48,6 +52,7 @@ import Logo from '../../shared/ui/Logo.vue';
 import MobileMenuToggle from '../../features/mobile-menu-toggle/ui/MobileMenuToggle.vue';
 import MobileNavMenu from '../MobileNavMenu/MobileNavMenu.vue';
 import ThemeToggle from '../../features/theme-toggle/ui/ThemeToggle.vue';
+import DensityToggle from '../../features/density-toggle/ui/DensityToggle.vue'; // Importerar den nya komponenten
 
 // Hämtar meny-tillståndet för att styra visningen av mobilmenyn
 const { isMenuOpen } = useMobileMenu();
@@ -84,6 +89,8 @@ const { isMenuOpen } = useMobileMenu();
 .header-nav-desktop {
   display: flex;
   gap: 2rem;
+  margin-left: auto; /* Skjuter navigeringen åt vänster */
+  padding-right: 2rem; /* Ger utrymme till kontrollerna */
 }
 
 .nav-link {
@@ -126,7 +133,7 @@ const { isMenuOpen } = useMobileMenu();
 .header-right {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
 /* Initialt döljs hamburgar-knappen på större skärmar */
@@ -139,14 +146,19 @@ const { isMenuOpen } = useMobileMenu();
 /* ========================================================================== */
 
 /* Brytpunkt för när mobil-layouten ska aktiveras (t.ex. surfplattor och mindre) */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .header-nav-desktop,
-  .theme-toggle-desktop {
-    display: none; /* Dölj desktop-navigering och temaknapp */
+  .theme-toggle-desktop,
+  .density-toggle-desktop {
+    display: none; /* Dölj desktop-navigering och alla kontroller */
   }
 
   .mobile-menu-toggle-button {
     display: flex; /* Visa hamburgar-knappen */
+  }
+  
+  .header-left {
+    margin-right: auto; /* Säkerställer att loggan stannar till vänster */
   }
 
   .header-container {
