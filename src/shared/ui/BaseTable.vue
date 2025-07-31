@@ -264,5 +264,19 @@ tbody tr:last-child td {
     color: var(--color-text-high-emphasis);
   }
 }
+
+/* ========================================================================== */
+/* TEMA-ÖVERSTYRNING FÖR KOMPAKT LÄGE                                         */
+/* ========================================================================== */
+:global(.compact-theme) th,
+:global(.compact-theme) td {
+  padding: 8px 12px;
+}
+
+@media (max-width: 768px) {
+  :global(.compact-theme) td::before {
+    left: 12px; /* Matchar den nya horisontella paddingen */
+  }
+}
 </style>
 <!-- src/shared/ui/BaseTable.vue -->
