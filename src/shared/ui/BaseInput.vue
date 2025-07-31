@@ -94,13 +94,23 @@ defineEmits(['update:modelValue']);
 
 /* ========================================================================== */
 /* TEMA-ÖVERSTYRNING FÖR LJUST LÄGE                                           */
-/* Denna :global-selektor är nödvändig för att applicera överstyrningar       */
-/* baserat på .light-theme-klassen på ett förälderelement (<html> eller <body>)*/
-/* från ett scoped style-block.                                               */
 /* ========================================================================== */
 :global(.light-theme) .base-input:focus {
   background-color: var(--color-surface-primary);
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* ========================================================================== */
+/* TEMA-ÖVERSTYRNING FÖR KOMPAKT LÄGE                                         */
+/* ========================================================================== */
+:global(.compact-theme) .base-input {
+  padding: 0.5rem 0.75rem; /* Minskad padding */
+  border-radius: 6px; /* Minskad border-radius */
+}
+
+:global(.compact-theme) .base-input:focus {
+  /* Justerar focus-padding för att matcha den nya standard-paddingen */
+  padding: calc(0.5rem - 1px) calc(0.75rem - 1px);
 }
 </style>
 <!-- src/shared/ui/BaseInput.vue -->
