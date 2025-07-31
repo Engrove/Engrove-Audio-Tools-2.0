@@ -95,10 +95,7 @@
     "cu_dynamic_10hz": null,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": null,
-    "sources": [
-      "Ortofon Official Website",
-      "Various online reviews and forums"
-    ],
+    "sources": [],
     "manufacturer": "Ortofon",
     "type": "Moving Coil",
     "stylus_type": "Nude Fine Line",
@@ -119,21 +116,19 @@
     "notes_en": "Known for its excellent transient response and ability to convey micro-details.",
     "stylus_family": "Line-Contact",
     "cantilever_class": "Standard",
-    "compliance_level": null,
+    "compliance_level": "medium",
     "tags": [
       "Detailed",
       "Transparent",
       "Smooth",
       "Refined",
-      "Engaging",
-      "Dynamic",
-      "Musical"
+      "Dynamic"
     ],
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-27 13:34:05",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:23"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-07-31 09:32:05"
   },
   {
     "id": 4,

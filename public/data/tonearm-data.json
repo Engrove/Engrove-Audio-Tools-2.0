@@ -2,43 +2,6 @@
   {
     "id": 1,
     "manufacturer": "Graham",
-    "model": "Phantom B-44 (sme)",
-    "rectype": "A",
-    "effective_length_mm": null,
-    "pivot_to_spindle_mm": null,
-    "overhang_mm": null,
-    "offset_angle_deg": null,
-    "effective_mass_g": null,
-    "arm_shape": null,
-    "arm_material": null,
-    "bearing_type": null,
-    "headshell_connector": null,
-    "cartridge_weight_range_g": "5-18 g",
-    "stylus_pressure_range_g": null,
-    "vta_adjustment": null,
-    "azimuth_adjustment": "false",
-    "internal_wiring_material": null,
-    "detachable_cable": null,
-    "external_cable_capacitance_pf": null,
-    "alignment_geometry": null,
-    "null_points_mm": [],
-    "tracking_method": "pivoting",
-    "notes": null,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/tonearm_database.php"
-      }
-    ],
-    "edit_history": [],
-    "created_by": "AI",
-    "create_stamp": "2025-07-20 09:46:06",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
-  },
-  {
-    "id": 2,
-    "manufacturer": "Graham",
     "model": "Robin",
     "rectype": "A",
     "effective_length_mm": null,
@@ -74,7 +37,7 @@
     "update_stamp": "2025-07-28 05:56:12"
   },
   {
-    "id": 3,
+    "id": 2,
     "manufacturer": "Triplanar",
     "model": "Triplanar I",
     "rectype": "A",
@@ -109,7 +72,7 @@
     "update_stamp": null
   },
   {
-    "id": 4,
+    "id": 3,
     "manufacturer": "Triplanar",
     "model": "Triplanar VII",
     "rectype": "A",
@@ -144,7 +107,7 @@
     "update_stamp": null
   },
   {
-    "id": 5,
+    "id": 4,
     "manufacturer": "Schröder",
     "model": "TP-1",
     "rectype": "A",
@@ -177,5 +140,40 @@
     "create_stamp": "2023-10-27T10:00:00Z",
     "updated_by": "AI",
     "update_stamp": "2025-07-29 07:39:14"
+  },
+  {
+    "id": 5,
+    "manufacturer": "Jelco",
+    "model": "TK-370",
+    "rectype": "A",
+    "effective_length_mm": 222,
+    "pivot_to_spindle_mm": null,
+    "overhang_mm": 15,
+    "offset_angle_deg": 23,
+    "effective_mass_g": 12,
+    "arm_shape": "s_shape",
+    "arm_material": "aluminum",
+    "bearing_type": "gimbal",
+    "headshell_connector": "sme_universal",
+    "cartridge_weight_range_g": "4-12",
+    "stylus_pressure_range_g": null,
+    "vta_adjustment": "threaded_collar",
+    "azimuth_adjustment": "true",
+    "internal_wiring_material": "copper",
+    "detachable_cable": "din_5_pin",
+    "external_cable_capacitance_pf": null,
+    "alignment_geometry": "manufacturer_specific",
+    "null_points_mm": null,
+    "tracking_method": "pivoting",
+    "notes": "High quality, well-regarded tonearm known for its build quality and performance.",
+    "sources": [
+      "Jelco manufacturer specifications (archived online)",
+      "Various online forums and reviews"
+    ],
+    "edit_history": [],
+    "created_by": "AI",
+    "create_stamp": "2025-07-30 12:45:28",
+    "updated_by": null,
+    "update_stamp": null
   }
 ]
