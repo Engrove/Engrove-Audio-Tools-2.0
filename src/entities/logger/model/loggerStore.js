@@ -11,21 +11,26 @@
 // - Är helt inaktiv i produktionsläge för att spara minne och prestanda.
 // - Skriver ut formaterade meddelanden till webbläsarens konsol i debug-läge.
 //
-// ÄNDRING:
-// - Läser nu den explicita miljövariabeln `VITE_FORCE_DEBUG` som sätts i
-//   Cloudflare Pages bygginställningar. Detta är den mest robusta metoden
-//   för att styra felsökningsläget i produktionsmiljön.
+// ÄNDRING (Felsökning):
+// - Miljövariabler via Vite/Cloudflare fungerar inte tillförlitligt.
+//   Flaggan är nu hårdkodad för att garantera att felsökningsläget är aktivt.
 
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 
 // --- GLOBAL DEBUG FLAGGA ---
-// Denna konstant styr all loggningsfunktionalitet.
-// `import.meta.env.VITE_FORCE_DEBUG` läses från miljövariabeln som sätts
-// i Cloudflare (eller en lokal .env-fil).
-// Jämförelsen med strängen 'true' är viktig eftersom miljövariabler
-// alltid är strängar.
-export const IS_DEBUG_MODE = import.meta.env.VITE_FORCE_DEBUG === 'true';
+//
+// ==========================================================================
+// === VIKTIGT FÖR RELEASE ==================================================
+// ==========================================================================
+//
+// Denna flagga är hårdkodad till `true` för att möjliggöra felsökning.
+// Innan en slutgiltig produktionsrelease måste detta värde
+// manuellt ändras till `false`.
+//
+export const IS_DEBUG_MODE = true;
+//
+// ==========================================================================
 
 // Definierar den maximala storleken på logg-bufferten.
 const MAX_LOG_ENTRIES = 300;
