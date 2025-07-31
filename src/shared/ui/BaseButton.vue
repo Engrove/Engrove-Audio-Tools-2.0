@@ -15,8 +15,6 @@
 import { computed } from 'vue';
 
 // Definierar komponentens props (API)
-// variant: styr knappens utseende ('primary' eller 'secondary')
-// disabled: inaktiverar knappen
 const props = defineProps({
   variant: {
     type: String,
@@ -32,8 +30,6 @@ const props = defineProps({
 // Beräknar en array av CSS-klasser baserat på props
 const buttonClasses = computed(() => [
   'base-button',
-  // Om props.variant är 'primary', lägg till klassen 'base-button--primary'.
-  // Om props.variant är något annat (dvs 'secondary'), lägg till klassen 'base-button--secondary'.
   props.variant === 'primary' ? 'base-button--primary' : 'base-button--secondary'
 ]);
 </script>
@@ -50,25 +46,23 @@ const buttonClasses = computed(() => [
   font-weight: var(--font-weight-medium);
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  border: 1px solid transparent; /* Grund-border för att undvika layout-hopp */
-  user-select: none; /* Förhindrar textmarkering vid klick */
+  border: 1px solid transparent;
+  user-select: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  line-height: 1; /* Säkerställer vertikal centrering av text */
+  line-height: 1;
 }
 
 .base-button:focus-visible {
-  /* Använder outline för fokus för att inte påverka layouten. */
-  /* :focus-visible säkerställer att detta bara visas vid tangentbordsnavigering. */
   outline-offset: 2px;
   outline: 2px solid var(--color-interactive-accent);
 }
 
 .base-button:disabled {
   cursor: not-allowed;
-  box-shadow: none; /* Nollställ skugga för alla inaktiverade knappar */
-  transform: none; /* Nollställ eventuella transformationer */
+  box-shadow: none;
+  transform: none;
 }
 
 /* ========================================================================== */
@@ -76,8 +70,7 @@ const buttonClasses = computed(() => [
 /* ========================================================================== */
 .base-button--primary {
   background-color: var(--color-interactive-accent);
-  /* I mörkt tema ska texten vara --color-text-high-emphasis, men i ljust ska den vara --color-surface-primary (vit) */
-  color: #FFFFFF; /* Hårdkodad till vit för högsta kontrast mot accent-färgen i båda teman */
+  color: #FFFFFF;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
@@ -128,11 +121,12 @@ const buttonClasses = computed(() => [
 }
 
 /* ========================================================================== */
-/* TEMA-ÖVERSTYRNING FÖR KOMPAKT LÄGE                                         */
+/* TEMA-ÖVERSTYRNING FÖR KOMPAKT LÄGE (REVIDERAD)                             */
 /* ========================================================================== */
 :global(.compact-theme) .base-button {
-  padding: 0.5rem 1.25rem; /* Minskad padding för ett tätare gränssnitt */
-  border-radius: 6px; /* Något mindre rundning för att matcha den mindre storleken */
+  /* Mer aggressiv minskning för ett tätare gränssnitt */
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
 }
 </style>
 <!-- src/shared/ui/BaseButton.vue -->
