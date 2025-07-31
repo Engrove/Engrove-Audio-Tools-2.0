@@ -1,9 +1,10 @@
 <!-- src/App.vue -->
 <!-- Detta är applikationens rotkomponent. Den fungerar som den huvudsakliga layout-behållaren, -->
 <!-- renderar olika sidor via Vue Router, och inkluderar nu även den globala sidfoten. -->
+<!-- Den har uppdaterats för att hantera både färgtema och densitetstema. -->
 
 <template>
-  <div id="app-container" :class="themeClass">
+  <div id="app-container" :class="containerClasses">
     <!-- Den globala headern är en permanent del av layouten. -->
     <GlobalHeader />
 
@@ -25,18 +26,31 @@
 import { computed } from 'vue';
 import { RouterView } from 'vue-router';
 import { useThemeStore } from './features/theme-toggle/model/themeStore.js';
+import { useSettingsStore } from './entities/settings/model/settingsStore.js'; // Importerar den nya storen
 import GlobalHeader from './widgets/GlobalHeader/GlobalHeader.vue';
-import GlobalFooter from './widgets/GlobalFooter/GlobalFooter.vue'; // Importerar den nya sidfoten
+import GlobalFooter from './widgets/GlobalFooter/GlobalFooter.vue';
 
-// Hämtar en instans av vår theme store.
+// Hämtar instanser av våra stores.
 const themeStore = useThemeStore();
+const settingsStore = useSettingsStore();
 
-// Skapar en beräknad egenskap som returnerar CSS-klassen för temat.
-const themeClass = computed(() => (
-  // Om isDarkTheme är sant, returnera en tom sträng (eftersom mörkt tema är standard).
-  // Om isDarkTheme är falskt, returnera 'light-theme'.
-  themeStore.isDarkTheme ? '' : 'light-theme'
-));
+// Skapar en beräknad egenskap som returnerar en array av CSS-klasser.
+// Detta kombinerar logiken för både färgtema och densitetstema.
+const containerClasses = computed(() => {
+  const classes = [];
+  
+  // Om isDarkTheme är falskt, lägg till 'light-theme'.
+  if (!themeStore.isDarkTheme) {
+    classes.push('light-theme');
+  }
+
+  // Om isCompact är sant, lägg till 'compact-theme'.
+  if (settingsStore.isCompact) {
+    classes.push('compact-theme');
+  }
+
+  return classes;
+});
 </script>
 
 <style scoped>
