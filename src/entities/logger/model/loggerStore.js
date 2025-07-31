@@ -11,19 +11,18 @@
 // - Är helt inaktiv i produktionsläge för att spara minne och prestanda.
 //
 // ÄNDRING:
-// - Exporterar nu `IS_DEBUG_MODE` som en namngiven konstant för att
-//   möjliggöra direktimport i komponenter. Detta är en mer robust metod
-//   för villkorlig rendering än att förlita sig på store-instansen.
+// - Läser nu den explicita miljövariabeln `VITE_DEBUG_MODE` från en .env-fil.
+//   Detta är en mer robust metod än att förlita sig på `import.meta.env.DEV`.
 
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 
 // --- GLOBAL DEBUG FLAGGA ---
 // Denna konstant styr all loggningsfunktionalitet.
-// `import.meta.env.DEV` är en Vite-specifik miljövariabel som är `true`
-// när man kör `npm run dev` och `false` vid `npm run build`.
-// Detta säkerställer att loggning är helt avstängd i produktion.
-export const IS_DEBUG_MODE = import.meta.env.DEV;
+// `import.meta.env.VITE_DEBUG_MODE` läses från `.env.development`-filen.
+// Jämförelsen med strängen 'true' är viktig eftersom miljövariabler
+// alltid är strängar.
+export const IS_DEBUG_MODE = import.meta.env.VITE_DEBUG_MODE === 'true';
 
 // Definierar den maximala storleken på logg-bufferten.
 const MAX_LOG_ENTRIES = 300;
