@@ -9,6 +9,11 @@
 // - Tidsstämplar varje meddelande.
 // - Håller automatiskt logghistoriken begränsad till 300 rader.
 // - Är helt inaktiv i produktionsläge för att spara minne och prestanda.
+//
+// ÄNDRING:
+// - Exporterar nu `IS_DEBUG_MODE` som en namngiven konstant för att
+//   möjliggöra direktimport i komponenter. Detta är en mer robust metod
+//   för villkorlig rendering än att förlita sig på store-instansen.
 
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
@@ -18,7 +23,7 @@ import { defineStore } from 'pinia';
 // `import.meta.env.DEV` är en Vite-specifik miljövariabel som är `true`
 // när man kör `npm run dev` och `false` vid `npm run build`.
 // Detta säkerställer att loggning är helt avstängd i produktion.
-const IS_DEBUG_MODE = import.meta.env.DEV;
+export const IS_DEBUG_MODE = import.meta.env.DEV;
 
 // Definierar den maximala storleken på logg-bufferten.
 const MAX_LOG_ENTRIES = 300;
@@ -78,12 +83,10 @@ export const useLoggerStore = defineStore('logger', () => {
   addLog('Logger initialized.', 'System');
 
   // Exponerar state och actions för användning i andra delar av appen.
-  // Exporterar även flaggan så att andra delar av UI:t (t.ex. knappen) kan använda den.
   return {
     logs,
     addLog,
     clearLogs,
-    IS_DEBUG_MODE,
   };
 });
 // src/entities/logger/model/loggerStore.js
