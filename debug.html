@@ -1,0 +1,110 @@
+<!-- debug.html -->
+<!--
+  Detta är en fristående felsökningssida, "Engrove Inspector".
+  Den fungerar som en egen liten Vue-applikation för att visa loggar
+  från loggerStore, helt isolerat från huvudapplikationen.
+  Denna fil kommer att läggas till som en extra ingångspunkt i vite.config.js.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engrove Inspector - Debug Log</title>
+    <style>
+        /* Minimala stilar för läsbarhet */
+        :root {
+            --bg-color: #121212;
+            --text-color: #E0E0E0;
+            --border-color: #3C3C3C;
+            --header-bg: #1E1E1E;
+            --pre-bg: #2A2A2A;
+            --context-color: #82AAFF;
+            --timestamp-color: #58A6FF;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+        #debug-app {
+            padding: 1rem;
+        }
+        .log-header {
+            background-color: var(--header-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .log-header h1 {
+            margin: 0 0 0.5rem 0;
+        }
+        .log-controls button {
+            background-color: var(--border-color);
+            color: var(--text-color);
+            border: 1px solid var(--pre-bg);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .log-list {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+        .log-entry {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        .entry-header {
+            background-color: var(--header-bg);
+            padding: 0.5rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+        }
+        .entry-context {
+            font-weight: bold;
+            color: var(--context-color);
+        }
+        .entry-timestamp {
+            font-family: monospace;
+            color: var(--timestamp-color);
+        }
+        .entry-message {
+            padding: 1rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .entry-data {
+            padding: 1rem;
+            background-color: var(--pre-bg);
+            border-top: 1px solid var(--border-color);
+        }
+        .entry-data pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+    <!-- Denna div kommer att agera monteringspunkt för vår Vue-app -->
+    <div id="debug-app"></div>
+
+    <!--
+      Importerar Vue och vår debug-applikations motor.
+      `type="module"` är nödvändigt för att Vite ska kunna hantera detta korrekt.
+    -->
+    <script type="module" src="/src/debug.js"></script>
+</body>
+</html>
+<!-- debug.html -->
