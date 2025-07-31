@@ -5,6 +5,8 @@
 //
 // FELSÖKNING:
 // - Importerar och använder loggerStore för att spåra initialize-processen.
+// - Loggningsanropet har gjorts mer robust med en null-kontroll för att
+//   förhindra krascher om en datakälla saknas.
 
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
@@ -112,7 +114,10 @@ export const useExplorerStore = defineStore('explorer', () => {
       logger.addLog('State has been populated with fetched data.', 'explorerStore', {
         tonearmsCount: allData.value.tonearms.length,
         pickupsCount: allData.value.pickups.length,
-        tonearmClassificationsKeys: Object.keys(tonearmClassifications.value),
+        // KORRIGERING: Lade till en null-kontroll för att förhindra krasch.
+        // Om tonearmClassifications.value är null/undefined, logga 'N/A'.
+        // Om tonearmClassifications.value har ett värde, logga dess nycklar.
+        tonearmClassificationsKeys: tonearmClassifications.value ? Object.keys(tonearmClassifications.value) : 'N/A',
       });
 
     } catch (e) {
