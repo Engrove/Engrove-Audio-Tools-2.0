@@ -3,6 +3,9 @@
 /* Den använder de design-tokens som definierats i _tokens.css för att */
 /* säkerställa en konsekvent visuell bas enligt Global UI-Standard. */
 
+/* Importerar de nya, centraliserade komponent-överstyrningarna */
+@import '_components.css';
+
 /* ========================================================================== */
 /* GRUNDLÄGGANDE STILAR OCH ÅTERSTÄLLNING                                      */
 /* ========================================================================== */
