@@ -119,14 +119,5 @@ const buttonClasses = computed(() => [
   color: var(--color-text-low-emphasis);
   border-color: var(--color-border-primary);
 }
-
-/* ========================================================================== */
-/* TEMA-ÖVERSTYRNING FÖR KOMPAKT LÄGE (REVIDERAD)                             */
-/* ========================================================================== */
-:global(.compact-theme) .base-button {
-  /* Mer aggressiv minskning för ett tätare gränssnitt */
-  padding: 0.4rem 1rem;
-  border-radius: 6px;
-}
 </style>
 <!-- src/shared/ui/BaseButton.vue -->
