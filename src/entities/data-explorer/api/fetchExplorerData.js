@@ -9,7 +9,7 @@
  *    `tonearmsClassifications` (plural) i returobjektet. Detta är nu korrigerat.
  *    Nyckeln i returobjektet är `tonearmsClassifications` (plural) för att matcha
  *    API-kontraktet, och värdet är den korrekta variabeln.
- * 2. Använder absolut sökväg för import av loggerStore.
+ * 2. Använder absolut sökväg för import av loggerStore för att lösa byggfel.
  */
 
 import { useLoggerStore } from '@/entities/logger/model/loggerStore.js';
@@ -47,7 +47,7 @@ export async function fetchExplorerData() {
       pickups: pickupsData.length,
       tonearms: tonearmsData.length,
       pickupClassificationsKeys: Object.keys(pickupClassifications),
-      tonearmsClassificationsKeys: Object.keys(tonearmsClassifications)
+      tonearmsClassificationsKeys: Object.keys(tonearmClassifications)
     });
 
     // KORRIGERING: Nyckeln (plural) måste matcha värdet från den existerande variabeln (singular).
