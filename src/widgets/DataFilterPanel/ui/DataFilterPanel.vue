@@ -4,6 +4,10 @@
   Den är en "smart" komponent som använder explorerStore för att hantera
   sitt tillstånd och bygger upp sitt gränssnitt med hjälp av agnostiska
   "Base"-komponenter från /shared/ui.
+  
+  KORRIGERING (Regression): Denna version åtgärdar ett race condition där
+  komponenten försökte rendera filter innan klassificeringsdatan hade laddats.
+  `availableFilters` har nu ett skyddsvillkor för att säkerställa att datan finns.
 -->
 <template>
   <aside class="filter-panel">
@@ -41,16 +45,12 @@
       </div>
 
       <!-- Dynamiskt genererade kategorifilter -->
-      <template v-if="availableFilters && availableFilters.length > 0">
-        <div v-for="filter in availableFilters" :key="filter.key" class="control-group">
-          <!-- FELRÄTTNING: V-for-loopen måste ha ett unikt och giltigt :key-attribut. -->
-          <!-- Vi använder filter.key som är garanterat unikt. -->
-          <BaseSelect
-            v-model="categoryFilters[filter.key]"
-            :options="filter.options"
-          />
-        </div>
-      </template>
+      <div v-for="filter in availableFilters" :key="filter.key" class="control-group">
+        <BaseSelect
+          v-model="categoryFilters[filter.key]"
+          :options="filter.options"
+        />
+      </div>
 
       <!-- Dynamiskt genererade numeriska filter -->
       <div v-for="filter in availableNumericFilters" :key="filter.key" class="control-group">
@@ -99,29 +99,38 @@ const {
  * @returns {Array} En array av filterobjekt.
  */
 function mapClassificationsToFilters(classifications) {
-  if (!classifications || Object.keys(classifications).length === 0) return [];
-  return Object.entries(classifications).map(([key, value]) => ({
+  // SKYDDSVILLKOR: Om klassificeringsobjektet är tomt eller ogiltigt, returnera en tom array direkt.
+  if (!classifications || Object.keys(classifications).length === 0) {
+    logger.addLog('mapClassificationsToFilters received empty or invalid classifications. Returning 0 filters.', 'DataFilterPanel');
+    return [];
+  }
+  
+  const result = Object.entries(classifications).map(([key, value]) => ({
     key: key,
     label: value.name,
     options: [
-      { value: '', label: value.name },
+      { value: '', label: `All ${value.name}` }, // Uppdaterad för bättre UX
       ...value.categories.map(cat => ({
         value: cat.id,
-        // BUGGFIX: Använd cat.name om det finns, annars falla tillbaka till cat.id.
-        // Detta hanterar inkonsekvensen i pickups-classifications.json där 'tags' saknar 'name'.
         label: cat.name ? cat.name : cat.id
       }))
     ]
   }));
+
+  logger.addLog(`mapClassificationsToFilters returned ${result.length} filters.`, 'DataFilterPanel', result);
+  return result;
 }
 
 const availableFilters = computed(() => {
   logger.addLog('`availableFilters` computed property is running.', 'DataFilterPanel');
-  const currentClassifications = dataType.value === 'tonearms' ? tonearmClassifications.value : pickupClassifications.value;
-  logger.addLog(`Current classifications for dataType '${dataType.value}'`, 'DataFilterPanel', currentClassifications);
-  const result = mapClassificationsToFilters(currentClassifications);
-  logger.addLog(`mapClassificationsToFilters returned ${result.length} filters.`, 'DataFilterPanel', result);
-  return result;
+  if (dataType.value === 'tonearms') {
+    logger.addLog('Current classifications for dataType \'tonearms\'', 'DataFilterPanel', tonearmClassifications.value);
+    return mapClassificationsToFilters(tonearmClassifications.value);
+  } else if (dataType.value === 'cartridges') {
+    logger.addLog('Current classifications for dataType \'cartridges\'', 'DataFilterPanel', pickupClassifications.value);
+    return mapClassificationsToFilters(pickupClassifications.value);
+  }
+  return [];
 });
 
 const availableNumericFilters = computed(() => {
