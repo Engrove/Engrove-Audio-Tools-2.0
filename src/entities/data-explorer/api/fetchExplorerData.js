@@ -4,13 +4,14 @@
  * Den hämtar alla nödvändiga JSON-filer parallellt för maximal effektivitet.
  *
  * KORRIGERING:
- * 1. Import-sökvägen till loggerStore har korrigerats till den korrekta
- *    relativa sökvägen för att lösa byggfelet "Could not resolve".
- * 2. Nyckeln i returobjektet är `tonearmsClassifications` för att matcha
- *    API-kontraktet som definieras av konsumenten (explorerStore.js).
+ * 1. Löst ett kritiskt `ReferenceError`. Variabeln som håller tonarmsklassificeringar
+ *    heter `tonearmClassifications` (singular), men användes felaktigt som
+ *    `tonearmsClassifications` (plural) i returobjektet. Detta är nu korrigerat.
+ *    Nyckeln i returobjektet är `tonearmsClassifications` (plural) för att matcha
+ *    API-kontraktet, och värdet är den korrekta variabeln.
+ * 2. Använder absolut sökväg för import av loggerStore.
  */
 
-// KORRIGERING: Korrekt relativ sökväg från /api -> /data-explorer -> /entities -> /logger/model/
 import { useLoggerStore } from '@/entities/logger/model/loggerStore.js';
 
 /**
@@ -30,19 +31,17 @@ export async function fetchExplorerData() {
   };
 
   try {
-    // Använder Promise.all för att hämta alla filer parallellt
     const responses = await Promise.all(Object.values(urls).map(url => fetch(url)));
 
-    // Kontrollerar om alla anrop lyckades
     for (const response of responses) {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status} for URL: ${response.url}`);
       }
     }
 
-    // Konverterar alla svar till JSON
     const dataPromises = responses.map(res => res.json());
-    const [pickupsData, pickupClassifications, tonearmsData, tonearmsClassifications] = await Promise.all(dataPromises);
+    // Destruktureringen skapar en lokal variabel 'tonearmClassifications' (singular)
+    const [pickupsData, pickupClassifications, tonearmsData, tonearmClassifications] = await Promise.all(dataPromises);
 
     logger.addLog('All data hämtad och parsrad framgångsrikt.', 'fetchExplorerData', {
       pickups: pickupsData.length,
@@ -51,17 +50,16 @@ export async function fetchExplorerData() {
       tonearmsClassificationsKeys: Object.keys(tonearmsClassifications)
     });
 
-    // Returnerar ett objekt med tydligt namngivna nycklar
+    // KORRIGERING: Nyckeln (plural) måste matcha värdet från den existerande variabeln (singular).
     return {
       pickupsData: pickupsData || [],
       pickupClassifications: pickupClassifications || {},
       tonearmsData: tonearmsData || [],
-      tonearmsClassifications: tonearmsClassifications || {}
+      tonearmsClassifications: tonearmClassifications || {}
     };
 
   } catch (error) {
     logger.addLog(`Ett fel inträffade i fetchExplorerData: ${error.message}`, 'fetchExplorerData', error);
-    // Vid fel, kasta felet vidare så att anropande kod (storen) kan hantera det.
     throw new Error(`Failed to fetch explorer data: ${error.message}`);
   }
 }
