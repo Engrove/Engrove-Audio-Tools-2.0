@@ -179,6 +179,12 @@ toolkitSection.value?.scrollIntoView({ behavior: 'smooth' });
 .hero-title {
   font-size: clamp(2rem, 5vw, 3.5rem);
   margin-bottom: 1.5rem;
+  /* KORRIGERING: Relativt radavstånd förhindrar överlappning */
+  line-height: 1.2;
+  /* KORRIGERING: Begränsar bredden för bättre radbrytning */
+  max-width: 25ch;
+  margin-left: auto;
+  margin-right: auto;
 }
 .hero-subtitle {
   font-size: clamp(1rem, 2vw, 1.25rem);
@@ -247,4 +253,4 @@ toolkitSection.value?.scrollIntoView({ behavior: 'smooth' });
   }
 }
 </style>
-<!-- src/pages/home/HomePage.vue -->
+<!-- src/pages/home/HomePage.vue -->```
