@@ -5,12 +5,11 @@
   Content-Type: application/json
   Cache-Control: public, max-age=0, must-revalidate
 
-# NY REGEL för byggda assets (JS/CSS).
-# Instruera webbläsaren att cacha dessa filer under lång tid (ett år),
-# eftersom de har unika hash-namn. Detta är en standard "best practice".
-# Det viktiga är att detta signalerar till Cloudflare att dessa filer är
-# "immutable" (oföränderliga), vilket kan påverka hur deras cache hanteras.
+# NY, AGGRESSIV REGEL för byggda assets (JS/CSS).
+# Vi behandlar applikationsfilerna på exakt samma sätt som datafilerna
+# för att tvinga Cloudflare att alltid omvalidera dem. Detta är
+# mindre performant men en mycket starkare åtgärd för att lösa det
+# ihållande cachningsproblemet med en föråldrad JS-fil.
 /assets/*
-  Cache-Control: public, max-age=31536000, immutable
-
+  Cache-Control: public, max-age=0, must-revalidate
 # public/_headers
