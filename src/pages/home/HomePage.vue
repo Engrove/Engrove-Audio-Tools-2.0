@@ -173,7 +173,7 @@ toolkitSection.value?.scrollIntoView({ behavior: 'smooth' });
   background-image: url('/images/bg_white.webp');
 }
 .hero-section.light-theme::before {
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.4), var(--color-surface-primary));
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), var(--color-surface-primary));
 }
 
 .hero-title {
