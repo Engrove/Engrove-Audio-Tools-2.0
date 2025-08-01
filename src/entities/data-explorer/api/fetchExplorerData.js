@@ -1,62 +1,52 @@
 // src/entities/data-explorer/api/fetchExplorerData.js
-// This file centralizes all data fetching for the Data Explorer module.
-// It fetches the main data files and their corresponding classification files in parallel.
-// UPDATED: Implements cache busting to ensure the latest data is always fetched on a new deployment.
-
-// --- CACHE BUSTING ---
-// A unique timestamp is generated each time the app is loaded.
-// This is appended to the fetch URLs to bypass browser and CDN caches,
-// ensuring users always get the latest version of the data files after a new build.
-const cacheBuster = new Date().getTime();
-
 /**
- * Fetches a JSON file from the specified path with a cache-busting parameter.
- * Throws an error if the network response is not ok.
- * @param {string} path - The path to the JSON file (e.g., '/data/pickups-data.json').
- * @returns {Promise<Object>} A promise that resolves to the parsed JSON data.
+ * Denna fil ansvarar för all datainhämtning för Data Explorer.
+ * Den hämtar alla nödvändiga JSON-filer parallellt för maximal effektivitet.
+ *
+ * KORRIGERING: Denna version säkerställer att alla URL:er exakt matchar
+ * filnamnen i /public/data och att nycklarna i det returnerade objektet
+ * är konsekvent pluraliserade för att matcha hur explorerStore förväntar sig dem.
  */
-const fetchData = async (path) => {
-  // Append the cache buster query parameter to the path.
-  const urlWithCacheBuster = `${path}?v=${cacheBuster}`;
-  const response = await fetch(urlWithCacheBuster);
-  if (!response.ok) {
-    throw new Error(`Network response was not ok for ${path}: ${response.statusText}`);
-  }
-  return response.json();
-};
 
-/**
- * Fetches all necessary data for the Data Explorer.
- * This function runs all fetch operations in parallel for maximum efficiency.
- * @returns {Promise<Object>} A promise that resolves to an object containing all fetched data.
- */
-export const fetchExplorerData = async () => {
+export async function fetchExplorerData() {
   try {
-    // Using Promise.all to fetch all data sources concurrently.
-    const [
-      pickupsData,
-      pickupsClassifications,
-      tonearmsData,
-      tonearmsClassifications,
-    ] = await Promise.all([
-      fetchData('/data/pickups-data.json'),
-      fetchData('/data/pickups-classifications.json'),
-      fetchData('/data/tonearm-data.json'),
-      fetchData('/data/tonearms-classifications.json'),
-    ]);
+    // Standardisera alla filnamn till plural där det är logiskt.
+    // Detta måste exakt matcha filsystemet.
+    const urls = [
+      '/data/pickups-data.json',           // plural
+      '/data/pickups-classifications.json',// plural
+      '/data/tonearm-data.json',           // singular (som i filsystemet)
+      '/data/tonearms-classifications.json' // plural
+    ];
 
-    // Return a single object containing all the fetched data.
+    const responses = await Promise.all(
+      urls.map(url => fetch(url))
+    );
+
+    // Kontrollera att alla anrop lyckades
+    for (const response of responses) {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status} for url: ${response.url}`);
+      }
+    }
+
+    const data = await Promise.all(
+      responses.map(response => response.json())
+    );
+
+    // Returnera ett objekt med konsekventa, pluraliserade nycklar
+    // som explorerStore förväntar sig.
     return {
-      pickupsData,
-      pickupsClassifications,
-      tonearmsData,
-      tonearmsClassifications,
+      pickups: data[0],
+      pickupClassifications: data[1],
+      tonearms: data[2],
+      tonearmsClassifications: data[3], // Använder pluralform
     };
+
   } catch (error) {
-    console.error('Failed to fetch explorer data:', error);
-    // Re-throw the error so the calling store (explorerStore) can handle it
-    // and update its state accordingly (e.g., setting an error message).
+    console.error("Error fetching explorer data:", error);
+    // Kasta om felet så att anropande kod (store) kan hantera det.
     throw error;
   }
-};
+}
 // src/entities/data-explorer/api/fetchExplorerData.js
