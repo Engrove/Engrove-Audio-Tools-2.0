@@ -16,5 +16,10 @@
 /* KOMPONENT-ÖVERSTYRNINGAR FÖR TEMAN                                         */
 /* ========================================================================== */
 
-/* Fylls på med regler från BaseButton, BaseInput, etc. */
+/* --- BaseButton.vue --- */
+.compact-theme .base-button {
+  /* Aggressiv minskning för ett tätare gränssnitt */
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+}
 /* src/app/styles/_components.css */
