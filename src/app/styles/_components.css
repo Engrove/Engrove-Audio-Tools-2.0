@@ -34,4 +34,19 @@
   /* Justerar focus-padding för att matcha den nya standard-paddingen */
   padding: calc(0.4rem - 1px) calc(0.75rem - 1px);
 }
+
+/* --- BaseSelect.vue --- */
+.compact-theme .base-select-wrapper {
+  border-radius: 6px;
+}
+
+.compact-theme .base-select {
+  /* Minskad padding för ett lägre fält */
+  padding: 0.4rem 2.25rem 0.4rem 0.75rem;
+}
+
+.compact-theme .base-select-wrapper:focus-within:not(.is-disabled) .base-select {
+  /* Justerar focus-padding för att matcha den nya standard-paddingen */
+  padding: calc(0.4rem - 1px) calc(2.25rem - 1px) calc(0.4rem - 1px) calc(0.75rem - 1px);
+}
 /* src/app/styles/_components.css */
