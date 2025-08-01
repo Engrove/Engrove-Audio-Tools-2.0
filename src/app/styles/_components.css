@@ -1,0 +1,20 @@
+/* src/app/styles/_components.css */
+/*
+  Denna centrala fil innehåller alla komponent-specifika CSS-regler
+  som överstyr standardutseendet för globala teman, såsom .compact-theme.
+
+  Genom att samla dessa regler här blir det enklare att underhålla och
+  justera applikationens olika densitetslägen utan att behöva modifiera
+  enskilda Vue-komponenter.
+
+  Struktur:
+  - Varje komponent som behöver tema-specifika justeringar får sin egen
+    sektion i denna fil.
+*/
+
+/* ========================================================================== */
+/* KOMPONENT-ÖVERSTYRNINGAR FÖR TEMAN                                         */
+/* ========================================================================== */
+
+/* Fylls på med regler från BaseButton, BaseInput, etc. */
+/* src/app/styles/_components.css */
