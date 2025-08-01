@@ -1,0 +1,25 @@
+# public/_headers
+#
+# Denna fil definierar anpassade HTTP-huvuden för Cloudflare Pages.
+# Syftet är att lösa ett cachnings/routing-problem där anrop till /data/*
+# felaktigt kan returnera index.html istället för den faktiska JSON-filen.
+#
+# /data/*
+#   - Denna regel gäller för alla filer och undermappar inuti /public/data.
+#
+# Content-Type: application/json
+#   - Tvingar Cloudflare att alltid servera dessa filer med rätt MIME-typ.
+#   - Detta är den primära lösningen för att förhindra att webbläsaren
+#     försöker tolka HTML som JSON, vilket orsakar ett SyntaxError.
+#
+# Cache-Control: public, max-age=0, must-revalidate
+#   - En modern cache-strategi som fungerar bra med vår "cache-busting"-metod.
+#   - public: Tillåter Cloudflares CDN att cacha filen.
+#   - max-age=0: Talar om för webbläsaren att filen i dess lokala cache är "gammal" omedelbart.
+#   - must-revalidate: Tvingar webbläsaren att fråga Cloudflare om det finns en ny version.
+#     När vi använder vår ?v=<timestamp> parameter, kommer Cloudflare att se det som
+#     en ny fil och servera den färska versionen.
+
+/data/*
+  Content-Type: application/json
+  Cache-Control: public, max-age=0, must-revalidate
