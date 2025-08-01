@@ -1,3 +1,4 @@
+// package.json
 {
   "name": "engrove-audio-toolkit-2.0",
   "private": true,
@@ -5,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build --force",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -20,3 +21,4 @@
     "vite": "^5.4.19"
   }
 }
+// package.json
