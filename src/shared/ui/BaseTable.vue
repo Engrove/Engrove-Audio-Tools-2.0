@@ -5,6 +5,14 @@
   godtycklig data. Komponenten är fullt responsiv och anpassar sig till en
   "stackable"-layout på mindre skärmar. Den hanterar sortering och radklick
   via events.
+
+  KORRIGERING (Alter Ego):
+  - `formatValue`-funktionen har refaktorerats för att vara mer intelligent.
+  - Den applicerar inte längre en generell versaliseringsregel på all text.
+  - Egennamn som 'manufacturer' och 'model' lämnas nu orörda.
+  - Formatering (ersätta '_' och versalisera första bokstaven) appliceras
+    endast på specifika, kända klassificeringsnycklar för att undvika
+    felaktig formatering av namn som "Schröder".
 -->
 <template>
   <div class="base-table-container">
@@ -41,6 +49,8 @@
           @click="$emit('row-click', item)"
           class="clickable-row"
           tabindex="0"
+          @keydown.enter="$emit('row-click', item)"
+          @keydown.space.prevent="$emit('row-click', item)"
         >
           <td
             v-for="header in headers"
@@ -78,20 +88,33 @@ const props = defineProps({
 
 const emit = defineEmits(['sort', 'row-click']);
 
+// Lista över nycklar som innehåller ID:n och bör formateras.
+const keysToFormat = [
+  'type_name', 'stylus_family_name', 'bearing_type_name', 
+  'arm_shape_name', 'arm_material_name'
+];
+
 const emitSort = (key) => {
   emit('sort', key);
 };
 
 const formatValue = (item, key) => {
   const value = item[key];
+
   if (value === null || value === undefined) {
     return '–';
   }
   
-  if (typeof value === 'string') {
-    return value.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  // Om värdet är en sträng och nyckeln finns i vår formateringslista,
+  // applicera den specifika transformeringslogiken.
+  if (typeof value === 'string' && keysToFormat.includes(key)) {
+    // Ersätt understreck och versalisera första bokstaven i varje ord.
+    const formatted = value.replace(/_/g, ' ');
+    return formatted.replace(/\b\w/g, l => l.toUpperCase());
   }
 
+  // För alla andra värden (inklusive 'manufacturer' och 'model'),
+  // returnera dem oförändrade.
   return value;
 };
 
