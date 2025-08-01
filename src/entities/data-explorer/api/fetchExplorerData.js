@@ -2,13 +2,16 @@
 /**
  * Denna API-modul är ansvarig för all datainhämtning för Data Explorer-funktionen.
  * Den hämtar alla nödvändiga JSON-filer parallellt för maximal effektivitet.
- * 
- * KORRIGERING: Nyckeln i returobjektet har ändrats från `tonearmClassifications` till
- * `tonearmsClassifications` för att exakt matcha API-kontraktet som definieras av
- * konsumenten (explorerStore.js). Detta åtgärdar felet där tonarmsfilter inte laddades.
+ *
+ * KORRIGERING:
+ * 1. Import-sökvägen till loggerStore har korrigerats till den korrekta
+ *    relativa sökvägen för att lösa byggfelet "Could not resolve".
+ * 2. Nyckeln i returobjektet är `tonearmsClassifications` för att matcha
+ *    API-kontraktet som definieras av konsumenten (explorerStore.js).
  */
 
-import { useLoggerStore } from '../model/loggerStore.js';
+// KORRIGERING: Korrekt relativ sökväg från /api -> /data-explorer -> /entities -> /logger/model/
+import { useLoggerStore } from '@/entities/logger/model/loggerStore.js';
 
 /**
  * Hämtar all data som krävs för Data Explorer-modulen.
@@ -22,8 +25,8 @@ export async function fetchExplorerData() {
   const urls = {
     pickupsData: '/data/pickups-data.json',
     pickupClassifications: '/data/pickups-classifications.json',
-    tonearmsData: '/data/tonearm-data.json', // Korrekt singularform för datafil
-    tonearmsClassifications: '/data/tonearms-classifications.json' // Korrekt pluralform för klassificeringsfil
+    tonearmsData: '/data/tonearm-data.json',
+    tonearmsClassifications: '/data/tonearms-classifications.json'
   };
 
   try {
@@ -39,22 +42,21 @@ export async function fetchExplorerData() {
 
     // Konverterar alla svar till JSON
     const dataPromises = responses.map(res => res.json());
-    const [pickupsData, pickupClassifications, tonearmsData, tonearmClassifications] = await Promise.all(dataPromises);
+    const [pickupsData, pickupClassifications, tonearmsData, tonearmsClassifications] = await Promise.all(dataPromises);
 
     logger.addLog('All data hämtad och parsrad framgångsrikt.', 'fetchExplorerData', {
       pickups: pickupsData.length,
       tonearms: tonearmsData.length,
       pickupClassificationsKeys: Object.keys(pickupClassifications),
-      tonearmsClassificationsKeys: Object.keys(tonearmClassifications)
+      tonearmsClassificationsKeys: Object.keys(tonearmsClassifications)
     });
 
     // Returnerar ett objekt med tydligt namngivna nycklar
-    // KORRIGERING: Nyckeln 'tonearmClassifications' är nu 'tonearmsClassifications'
     return {
       pickupsData: pickupsData || [],
       pickupClassifications: pickupClassifications || {},
       tonearmsData: tonearmsData || [],
-      tonearmsClassifications: tonearmClassifications || {}
+      tonearmsClassifications: tonearmsClassifications || {}
     };
 
   } catch (error) {
