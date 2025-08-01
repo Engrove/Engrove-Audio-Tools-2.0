@@ -148,22 +148,5 @@ const wrapperClasses = computed(() => (
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
   background-color: var(--color-surface-primary);
 }
-
-/* ========================================================================== */
-/* TEMA-ÖVERSTYRNING FÖR KOMPAKT LÄGE (REVIDERAD)                             */
-/* ========================================================================== */
-:global(.compact-theme) .base-select-wrapper {
-  border-radius: 6px;
-}
-
-:global(.compact-theme) .base-select {
-  /* Minskad padding för ett lägre fält */
-  padding: 0.4rem 2.25rem 0.4rem 0.75rem;
-}
-
-:global(.compact-theme) .base-select-wrapper:focus-within:not(.is-disabled) .base-select {
-  /* Justerar focus-padding för att matcha den nya standard-paddingen */
-  padding: calc(0.4rem - 1px) calc(2.25rem - 1px) calc(0.4rem - 1px) calc(0.75rem - 1px);
-}
 </style>
 <!-- src/shared/ui/BaseSelect.vue -->
