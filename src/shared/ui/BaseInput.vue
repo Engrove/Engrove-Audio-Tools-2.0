@@ -81,19 +81,5 @@ defineEmits(['update:modelValue']);
   background-color: var(--color-surface-primary);
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
-
-/* ========================================================================== */
-/* TEMA-ÖVERSTYRNING FÖR KOMPAKT LÄGE (REVIDERAD)                             */
-/* ========================================================================== */
-:global(.compact-theme) .base-input {
-  /* Signifikant minskad padding för ett mycket lägre fält */
-  padding: 0.4rem 0.75rem;
-  border-radius: 6px;
-}
-
-:global(.compact-theme) .base-input:focus {
-  /* Justerar focus-padding för att matcha den nya standard-paddingen */
-  padding: calc(0.4rem - 1px) calc(0.75rem - 1px);
-}
 </style>
 <!-- src/shared/ui/BaseInput.vue -->
