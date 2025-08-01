@@ -2,19 +2,24 @@
 /**
  * Denna Pinia-store är hjärnan i Data Explorer-modulen.
  * Den hanterar all state, inklusive datainhämtning, filtrering, sortering,
- * paginering och CSV-export. Denna version har uppdaterats för att använda
- * en transformeringsfunktion som berikar rådatan vid laddning.
+ * paginering och CSV-export.
+ *
+ * KORRIGERING:
+ * - Nycklarna som används för att destrukturera data från `fetchExplorerData` har
+ *   korrigerats för att exakt matcha det API-kontrakt som producenten levererar.
+ *   Detta löser felet där både data och klassificeringar inte laddades korrekt.
+ * - Import-sökvägar har refaktorerats till absoluta sökvägar.
  */
 import { defineStore } from 'pinia';
-import { fetchExplorerData } from '../api/fetchExplorerData.js';
-import { transformAndClassifyData } from '../lib/transformer.js';
+import { fetchExplorerData } from '@/entities/data-explorer/api/fetchExplorerData.js';
+import { transformAndClassifyData } from '@/entities/data-explorer/lib/transformer.js';
 
 export const useExplorerStore = defineStore('explorer', {
   // State: Definierar all reaktiv data för modulen.
   state: () => ({
     dataType: 'tonearms', // 'tonearms' or 'cartridges'
     
-    // Rådata och klassificeringar som hämtas från API
+    // Berikad data och klassificeringar som hämtas från API
     pickupsData: [],
     tonearmsData: [],
     pickupClassifications: {},
@@ -135,12 +140,12 @@ export const useExplorerStore = defineStore('explorer', {
       try {
         const data = await fetchExplorerData();
         
-        // NY LOGIK: Transformera datan innan den lagras i state.
-        this.pickupsData = transformAndClassifyData(data.pickups, data.pickupClassifications);
-        this.tonearmsData = transformAndClassifyData(data.tonearms, data.tonearmClassifications);
+        // KORRIGERING: Använder korrekta nycklar från `data`-objektet.
+        this.pickupsData = transformAndClassifyData(data.pickupsData, data.pickupClassifications);
+        this.tonearmsData = transformAndClassifyData(data.tonearmsData, data.tonearmsClassifications);
         
         this.pickupClassifications = data.pickupClassifications;
-        this.tonearmClassifications = data.tonearmClassifications;
+        this.tonearmClassifications = data.tonearmsClassifications;
 
       } catch (err) {
         this.error = 'Failed to load component data. Please try again later.';
