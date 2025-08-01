@@ -22,4 +22,16 @@
   padding: 0.4rem 1rem;
   border-radius: 6px;
 }
+
+/* --- BaseInput.vue --- */
+.compact-theme .base-input {
+  /* Signifikant minskad padding för ett mycket lägre fält */
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+}
+
+.compact-theme .base-input:focus {
+  /* Justerar focus-padding för att matcha den nya standard-paddingen */
+  padding: calc(0.4rem - 1px) calc(0.75rem - 1px);
+}
 /* src/app/styles/_components.css */
