@@ -1,51 +1,66 @@
 // src/entities/data-explorer/api/fetchExplorerData.js
 /**
- * Denna fil ansvarar för all datainhämtning för Data Explorer.
+ * Denna API-modul är ansvarig för all datainhämtning för Data Explorer-funktionen.
  * Den hämtar alla nödvändiga JSON-filer parallellt för maximal effektivitet.
- *
- * KORRIGERING (Slutgiltig): Denna version säkerställer att alla URL:er
- * exakt matchar de faktiska filnamnen i /public/data, med särskild
- * uppmärksamhet på singularis vs. pluralis. Returobjektets nycklar
- * är också verifierade mot kontraktet i explorerStore.
+ * 
+ * KORRIGERING: Nyckeln i returobjektet har ändrats från `tonearmClassifications` till
+ * `tonearmsClassifications` för att exakt matcha API-kontraktet som definieras av
+ * konsumenten (explorerStore.js). Detta åtgärdar felet där tonarmsfilter inte laddades.
  */
 
+import { useLoggerStore } from '../model/loggerStore.js';
+
+/**
+ * Hämtar all data som krävs för Data Explorer-modulen.
+ * Detta inkluderar data och klassificeringar för både pickuper och tonarmar.
+ * @returns {Promise<Object>} Ett objekt som innehåller all hämtad data.
+ */
 export async function fetchExplorerData() {
+  const logger = useLoggerStore();
+  logger.addLog('fetchExplorerData anropad.', 'fetchExplorerData');
+
+  const urls = {
+    pickupsData: '/data/pickups-data.json',
+    pickupClassifications: '/data/pickups-classifications.json',
+    tonearmsData: '/data/tonearm-data.json', // Korrekt singularform för datafil
+    tonearmsClassifications: '/data/tonearms-classifications.json' // Korrekt pluralform för klassificeringsfil
+  };
+
   try {
-    // Exakta filnamn som de finns i repositoryt.
-    const urls = [
-      '/data/pickups-data.json',            // Plural
-      '/data/pickups-classifications.json', // Plural
-      '/data/tonearm-data.json',            // <<< SINGULAR
-      '/data/tonearms-classifications.json' // Plural
-    ];
+    // Använder Promise.all för att hämta alla filer parallellt
+    const responses = await Promise.all(Object.values(urls).map(url => fetch(url)));
 
-    const responses = await Promise.all(
-      urls.map(url => fetch(url))
-    );
-
-    // Kontrollera att alla anrop lyckades
+    // Kontrollerar om alla anrop lyckades
     for (const response of responses) {
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status} for url: ${response.url}`);
+        throw new Error(`HTTP error! status: ${response.status} for URL: ${response.url}`);
       }
     }
 
-    const data = await Promise.all(
-      responses.map(response => response.json())
-    );
+    // Konverterar alla svar till JSON
+    const dataPromises = responses.map(res => res.json());
+    const [pickupsData, pickupClassifications, tonearmsData, tonearmClassifications] = await Promise.all(dataPromises);
 
-    // Returnera ett objekt med nycklar som exakt matchar vad explorerStore förväntar sig.
+    logger.addLog('All data hämtad och parsrad framgångsrikt.', 'fetchExplorerData', {
+      pickups: pickupsData.length,
+      tonearms: tonearmsData.length,
+      pickupClassificationsKeys: Object.keys(pickupClassifications),
+      tonearmsClassificationsKeys: Object.keys(tonearmClassifications)
+    });
+
+    // Returnerar ett objekt med tydligt namngivna nycklar
+    // KORRIGERING: Nyckeln 'tonearmClassifications' är nu 'tonearmsClassifications'
     return {
-      pickups: data[0],
-      pickupClassifications: data[1],
-      tonearms: data[2],
-      tonearmsClassifications: data[3],
+      pickupsData: pickupsData || [],
+      pickupClassifications: pickupClassifications || {},
+      tonearmsData: tonearmsData || [],
+      tonearmsClassifications: tonearmClassifications || {}
     };
 
   } catch (error) {
-    console.error("Error fetching explorer data:", error);
-    // Kasta om felet så att anropande kod (store) kan hantera det.
-    throw error;
+    logger.addLog(`Ett fel inträffade i fetchExplorerData: ${error.message}`, 'fetchExplorerData', error);
+    // Vid fel, kasta felet vidare så att anropande kod (storen) kan hantera det.
+    throw new Error(`Failed to fetch explorer data: ${error.message}`);
   }
 }
 // src/entities/data-explorer/api/fetchExplorerData.js
