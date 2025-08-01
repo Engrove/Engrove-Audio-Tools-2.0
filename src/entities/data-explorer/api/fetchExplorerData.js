@@ -3,20 +3,20 @@
  * Denna fil ansvarar för all datainhämtning för Data Explorer.
  * Den hämtar alla nödvändiga JSON-filer parallellt för maximal effektivitet.
  *
- * KORRIGERING: Denna version säkerställer att alla URL:er exakt matchar
- * filnamnen i /public/data och att nycklarna i det returnerade objektet
- * är konsekvent pluraliserade för att matcha hur explorerStore förväntar sig dem.
+ * KORRIGERING (Slutgiltig): Denna version säkerställer att alla URL:er
+ * exakt matchar de faktiska filnamnen i /public/data, med särskild
+ * uppmärksamhet på singularis vs. pluralis. Returobjektets nycklar
+ * är också verifierade mot kontraktet i explorerStore.
  */
 
 export async function fetchExplorerData() {
   try {
-    // Standardisera alla filnamn till plural där det är logiskt.
-    // Detta måste exakt matcha filsystemet.
+    // Exakta filnamn som de finns i repositoryt.
     const urls = [
-      '/data/pickups-data.json',           // plural
-      '/data/pickups-classifications.json',// plural
-      '/data/tonearm-data.json',           // singular (som i filsystemet)
-      '/data/tonearms-classifications.json' // plural
+      '/data/pickups-data.json',            // Plural
+      '/data/pickups-classifications.json', // Plural
+      '/data/tonearm-data.json',            // <<< SINGULAR
+      '/data/tonearms-classifications.json' // Plural
     ];
 
     const responses = await Promise.all(
@@ -34,13 +34,12 @@ export async function fetchExplorerData() {
       responses.map(response => response.json())
     );
 
-    // Returnera ett objekt med konsekventa, pluraliserade nycklar
-    // som explorerStore förväntar sig.
+    // Returnera ett objekt med nycklar som exakt matchar vad explorerStore förväntar sig.
     return {
       pickups: data[0],
       pickupClassifications: data[1],
       tonearms: data[2],
-      tonearmsClassifications: data[3], // Använder pluralform
+      tonearmsClassifications: data[3],
     };
 
   } catch (error) {
