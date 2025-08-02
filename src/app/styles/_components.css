@@ -49,4 +49,16 @@
   /* Justerar focus-padding för att matcha den nya standard-paddingen */
   padding: calc(0.4rem - 1px) calc(2.25rem - 1px) calc(0.4rem - 1px) calc(0.75rem - 1px);
 }
+
+/* --- BaseTable.vue --- */
+.compact-theme th,
+.compact-theme td {
+  /* Minskad padding för tätare rader */
+  padding: 8px 12px;
+}
+
+.compact-theme .base-table-container td::before {
+  /* Justerar positioneringen av den responsiva etiketten */
+  left: 12px;
+}
 /* src/app/styles/_components.css */
