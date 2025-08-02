@@ -2,8 +2,8 @@
 <!--
   Detta är en grundläggande, agnostisk och återanvändbar tabellkomponent.
   Den är en del av det centrala UI-biblioteket och är designad för att visa
-  godtycklig data. Komponenten är fullt responsiv och anpassar sig till en
-  "stackable"-layout på mindre skärmar. Den hanterar sortering och radklick
+  godtycklig data. Komponenten är fullt responsiv och anpassar sig nu till en
+  "fixed-column scroll"-layout på mindre skärmar. Den hanterar sortering och radklick
   via events.
 
   KORRIGERING (Alter Ego):
@@ -216,42 +216,31 @@ tbody tr:last-child td {
   font-family: var(--font-family-primary);
 }
 
-/* Responsiv "Stackable" layout för mindre skärmar */
+/* Responsiv "Fixed-Column Scroll" layout för mindre skärmar */
 @media (max-width: 768px) {
-  thead {
-    display: none;
+  /* Gör den första kolumnen (både header och data) "sticky" */
+  th:first-child,
+  td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    
+    /*
+      Sätt en solid bakgrundsfärg för att dölja innehållet som scrollar under.
+      Vi använder --color-surface-secondary för datakolumnen för att matcha radens färg
+      och --color-surface-tertiary för header-kolumnen för att matcha headerns färg.
+    */
+    background-color: var(--color-surface-secondary);
   }
 
-  tr {
-    display: block;
-    border-bottom: 2px solid var(--color-border-primary);
-  }
-  
-  tr:last-child {
-      border-bottom: none;
+  th:first-child {
+    background-color: var(--color-surface-tertiary);
   }
 
-  td {
-    display: block;
-    text-align: right;
-    padding-left: 50%;
-    position: relative;
-    border-bottom: 1px solid var(--color-border-primary);
-  }
-  
-  td:last-child {
-      border-bottom: none;
-  }
-
-  td::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 15px;
-    width: calc(50% - 30px);
-    text-align: left;
-    font-weight: var(--font-weight-medium);
-    font-family: var(--font-family-primary);
-    color: var(--color-text-high-emphasis);
+  /* Lägg till en subtil skugga för att visuellt indikera att mer innehåll finns till höger */
+  th:first-child,
+  td:first-child {
+    box-shadow: inset -4px 0 4px -4px rgba(0, 0, 0, 0.2);
   }
 }
 </style>
