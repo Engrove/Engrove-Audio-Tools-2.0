@@ -4,6 +4,12 @@
   i Data Explorer, inklusive rubrik, tabell och pagineringskontroller.
   Den hämtar all sin data från explorerStore och använder Base-komponenter
   för att bygga sitt gränssnitt.
+
+  KORRIGERING (Steg 18):
+  - Lade till `overflow-x: auto;` på `.results-area`. Detta är en kritisk
+    fix som förhindrar att den breda BaseTable-komponenten "spräcker" den
+    överordnade sidlayouten på mobila enheter. Detta säkerställer att
+    DataExplorerPage's responsiva grid kan kollapsa till en kolumn som avsett.
 -->
 <template>
   <main class="results-area">
@@ -126,6 +132,7 @@ const canGoNext = computed(() => currentPage.value < totalPages.value);
 <style scoped>
 .results-area {
   min-height: 500px; /* Förhindrar layout-hopp vid laddning */
+  overflow-x: auto; /* KORRIGERING: Fångar upp tabellens bredd och förhindrar att den spräcker sidlayouten. */
 }
 
 .results-header {
