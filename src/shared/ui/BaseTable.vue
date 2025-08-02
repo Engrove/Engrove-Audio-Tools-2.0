@@ -6,6 +6,11 @@
   "fixed-column scroll"-layout på mindre skärmar. Den hanterar sortering och radklick
   via events.
 
+  UPPDATERING (Steg 2):
+  - Lade till en ny metod `getCellClass` och motsvarande CSS för att visuellt
+    färgkoda specifika datavärden (t.ex. hög/låg compliance), vilket ökar
+    tydligheten i datatabellen.
+
   KORRIGERING (Alter Ego):
   - `formatValue`-funktionen har refaktorerats för att vara mer intelligent.
   - Den applicerar inte längre en generell versaliseringsregel på all text.
@@ -56,6 +61,7 @@
             v-for="header in headers"
             :key="`${item.id}-${header.key}`"
             :data-label="header.label"
+            :class="getCellClass(header.key, item)"
           >
             {{ formatValue(item, header.key) }}
           </td>
@@ -96,6 +102,34 @@ const keysToFormat = [
 
 const emitSort = (key) => {
   emit('sort', key);
+};
+
+/**
+ * Returnerar en CSS-klass för en cell baserat på dess nyckel och värde.
+ * Används för visuell datakonditionering.
+ * @param {string} key - Kolumnens nyckel.
+ * @param {Object} item - Hela dataobjektet för raden.
+ * @returns {string|null} CSS-klassen som ska appliceras, eller null.
+ */
+const getCellClass = (key, item) => {
+  const value = item[key];
+  if (value === null || value === undefined) {
+    return null;
+  }
+
+  switch (key) {
+    case 'cu_dynamic_10hz':
+      if (value < 12) return 'value--low';
+      if (value > 20) return 'value--high';
+      break;
+    case 'effective_mass_g':
+      if (value < 10) return 'value--low';
+      if (value > 20) return 'value--high';
+      break;
+    default:
+      return null;
+  }
+  return null;
 };
 
 const formatValue = (item, key) => {
@@ -214,6 +248,15 @@ tbody tr:last-child td {
   padding: 3rem;
   font-style: italic;
   font-family: var(--font-family-primary);
+}
+
+/* Styling för datakonditionering */
+.value--low {
+  color: var(--color-graph-series-4); /* Amber/Yellow */
+}
+
+.value--high {
+  color: var(--color-status-error); /* Red */
 }
 
 /* Responsiv "Fixed-Column Scroll" layout för mindre skärmar */
