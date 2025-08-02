@@ -61,4 +61,27 @@
   /* Justerar positioneringen av den responsiva etiketten */
   left: 12px;
 }
+
+/* --- DataFilterPanel.vue --- */
+.compact-theme .filter-panel {
+  padding: 1rem;
+  gap: 1rem; /* Minskad huvud-gap */
+}
+
+.compact-theme .filter-panel h3 {
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.compact-theme .filter-panel .filter-controls {
+  gap: 1rem; /* Minskad gap mellan filtergrupper */
+}
+
+.compact-theme .filter-panel .reset-button {
+  margin-top: 0.5rem;
+}
+
+.compact-theme .filter-panel .control-label {
+  margin-bottom: 0.25rem;
+}
 /* src/app/styles/_components.css */
