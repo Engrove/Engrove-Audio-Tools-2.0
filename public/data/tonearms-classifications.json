@@ -108,8 +108,8 @@
     "name": "Azimuth Adjustment",
     "description": "The method for rotating the cartridge to be perpendicular to the record.",
     "categories": [
-        { "id": "true", "name": "Adjustable", "description": "The tonearm has a built-in mechanism for azimuth adjustment." },
-        { "id": "false", "name": "Fixed", "description": "The tonearm's azimuth is fixed and cannot be adjusted." }
+        { "id": true, "name": "Adjustable", "description": "The tonearm has a built-in mechanism for azimuth adjustment." },
+        { "id": false, "name": "Fixed", "description": "The tonearm's azimuth is fixed and cannot be adjusted." }
     ]
   },
   "internal_wiring_material": {
