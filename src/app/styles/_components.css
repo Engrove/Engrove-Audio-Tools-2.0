@@ -74,7 +74,8 @@
 }
 
 .compact-theme .filter-panel .filter-controls {
-  gap: 1rem; /* Minskad gap mellan filtergrupper */
+  /* Minskad gap mellan filtergrupper för att halvera avståndet */
+  gap: 0.75rem;
 }
 
 .compact-theme .filter-panel .reset-button {
