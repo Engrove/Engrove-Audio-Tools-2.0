@@ -1,0 +1,167 @@
+{
+  "cartridges": [],
+  "tonearms": [
+    {
+      "key": "bearing_type",
+      "name": "Bearing Type",
+      "options": [
+        {
+          "value": "",
+          "label": "All Bearing Type"
+        },
+        {
+          "value": "damped_unipivot",
+          "label": "Damped Unipivot"
+        },
+        {
+          "value": "dual_pivot",
+          "label": "Dual-Pivot"
+        },
+        {
+          "value": "gimbal",
+          "label": "Gimbal"
+        },
+        {
+          "value": "knife_edge",
+          "label": "Knife-Edge"
+        },
+        {
+          "value": "magnetic",
+          "label": "Magnetic"
+        },
+        {
+          "value": "tangential_mechanical",
+          "label": "Tangential (Mechanical)"
+        },
+        {
+          "value": "unipivot",
+          "label": "Unipivot"
+        },
+        {
+          "value": "v_block",
+          "label": "V-Block"
+        }
+      ]
+    },
+    {
+      "key": "arm_material",
+      "name": "Armtube Material",
+      "options": [
+        {
+          "value": "",
+          "label": "All Armtube Material"
+        },
+        {
+          "value": "acrylic",
+          "label": "Acrylic"
+        },
+        {
+          "value": "aluminum",
+          "label": "Aluminum"
+        },
+        {
+          "value": "carbon_fibre",
+          "label": "Carbon Fibre"
+        },
+        {
+          "value": "composite",
+          "label": "Composite"
+        },
+        {
+          "value": "magnesium",
+          "label": "Magnesium"
+        },
+        {
+          "value": "resin",
+          "label": "Resin / 3D-Printed"
+        },
+        {
+          "value": "stainless_steel",
+          "label": "Stainless Steel"
+        },
+        {
+          "value": "titanium",
+          "label": "Titanium"
+        },
+        {
+          "value": "wood",
+          "label": "Wood"
+        }
+      ]
+    },
+    {
+      "key": "arm_shape",
+      "name": "Armtube Shape",
+      "options": [
+        {
+          "value": "",
+          "label": "All Armtube Shape"
+        },
+        {
+          "value": "j_shape",
+          "label": "J-Shape"
+        },
+        {
+          "value": "s_shape",
+          "label": "S-Shape"
+        },
+        {
+          "value": "straight",
+          "label": "Straight"
+        }
+      ]
+    },
+    {
+      "key": "headshell_connector",
+      "name": "Headshell Type",
+      "options": [
+        {
+          "value": "",
+          "label": "All Headshell Type"
+        },
+        {
+          "value": "integrated",
+          "label": "Integrated"
+        },
+        {
+          "value": "p_mount_t4p",
+          "label": "P-Mount / T4P"
+        },
+        {
+          "value": "proprietary",
+          "label": "Proprietary"
+        },
+        {
+          "value": "sme_universal",
+          "label": "SME / Universal"
+        }
+      ]
+    },
+    {
+      "key": "tracking_method",
+      "name": "Tracking Method",
+      "options": [
+        {
+          "value": "",
+          "label": "All Tracking Method"
+        },
+        {
+          "value": "pivoting",
+          "label": "Pivoting"
+        },
+        {
+          "value": "tangential_air_bearing",
+          "label": "Tangential (Air Bearing)"
+        },
+        {
+          "value": "tangential_mechanical",
+          "label": "Tangential (Mechanical)"
+        },
+        {
+          "value": "tangential_pivot",
+          "label": "Tangential (Pivoting/Thales)"
+        }
+      ]
+    }
+  ]
+}
