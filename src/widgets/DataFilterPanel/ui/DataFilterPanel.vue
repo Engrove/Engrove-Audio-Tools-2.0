@@ -5,9 +5,8 @@
   sitt tillstånd och bygger upp sitt gränssnitt med hjälp av agnostiska
   "Base"-komponenter från /shared/ui.
   
-  KORRIGERING (Regression): Denna version åtgärdar ett race condition där
-  komponenten försökte rendera filter innan klassificeringsdatan hade laddats.
-  `availableFilters` har nu ett skyddsvillkor för att säkerställa att datan finns.
+  UPPDRAG 20: Refaktorerad för att ta bort all lokal filterlogik och istället
+  konsumera den färdiga filterstrukturen från explorerStore.
 -->
 <template>
   <aside class="filter-panel">
@@ -45,6 +44,7 @@
       </div>
 
       <!-- Dynamiskt genererade kategorifilter -->
+      <!-- Denna loop itererar nu över den färdiga datastrukturen från storen -->
       <div v-for="filter in availableFilters" :key="filter.key" class="control-group">
         <BaseSelect
           v-model="categoryFilters[filter.key]"
@@ -72,67 +72,27 @@
 <script setup>
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useExplorerStore } from '../../../entities/data-explorer/model/explorerStore.js';
-import { useLoggerStore } from '../../../entities/logger/model/loggerStore.js';
-import BaseButton from '../../../shared/ui/BaseButton.vue';
-import BaseInput from '../../../shared/ui/BaseInput.vue';
-import BaseSelect from '../../../shared/ui/BaseSelect.vue';
-import RangeFilter from '../../../shared/ui/RangeFilter.vue';
+import { useExplorerStore } from '@/entities/data-explorer/model/explorerStore.js';
+import BaseButton from '@/shared/ui/BaseButton.vue';
+import BaseInput from '@/shared/ui/BaseInput.vue';
+import BaseSelect from '@/shared/ui/BaseSelect.vue';
+import RangeFilter from '@/shared/ui/RangeFilter.vue';
 
 const store = useExplorerStore();
-const logger = useLoggerStore();
 
+// Hämta actions direkt från storen
 const { setDataType, resetFilters } = store;
 
+// Hämta state och getters med storeToRefs för att behålla reaktiviteten
 const {
   dataType,
   searchTerm,
   categoryFilters,
   numericFilters,
-  pickupClassifications,
-  tonearmClassifications,
+  availableFilters, // Använder nu den nya, enkla gettern
 } = storeToRefs(store);
 
-/**
- * Mappar klassificeringsdata till ett format som BaseSelect-komponenten kan använda.
- * @param {Object} classifications - Objektet med klassificeringsdata.
- * @returns {Array} En array av filterobjekt.
- */
-function mapClassificationsToFilters(classifications) {
-  // SKYDDSVILLKOR: Om klassificeringsobjektet är tomt eller ogiltigt, returnera en tom array direkt.
-  if (!classifications || Object.keys(classifications).length === 0) {
-    logger.addLog('mapClassificationsToFilters received empty or invalid classifications. Returning 0 filters.', 'DataFilterPanel');
-    return [];
-  }
-  
-  const result = Object.entries(classifications).map(([key, value]) => ({
-    key: key,
-    label: value.name,
-    options: [
-      { value: '', label: `All ${value.name}` }, // Uppdaterad för bättre UX
-      ...value.categories.map(cat => ({
-        value: cat.id,
-        label: cat.name ? cat.name : cat.id
-      }))
-    ]
-  }));
-
-  logger.addLog(`mapClassificationsToFilters returned ${result.length} filters.`, 'DataFilterPanel', result);
-  return result;
-}
-
-const availableFilters = computed(() => {
-  logger.addLog('`availableFilters` computed property is running.', 'DataFilterPanel');
-  if (dataType.value === 'tonearms') {
-    logger.addLog('Current classifications for dataType \'tonearms\'', 'DataFilterPanel', tonearmClassifications.value);
-    return mapClassificationsToFilters(tonearmClassifications.value);
-  } else if (dataType.value === 'cartridges') {
-    logger.addLog('Current classifications for dataType \'cartridges\'', 'DataFilterPanel', pickupClassifications.value);
-    return mapClassificationsToFilters(pickupClassifications.value);
-  }
-  return [];
-});
-
+// Denna computed property definierar de numeriska filtren som ska visas
 const availableNumericFilters = computed(() => {
   if (dataType.value === 'tonearms') {
     return [
@@ -209,4 +169,4 @@ h3 {
   }
 }
 </style>
-<!-- src/widgets/DataFilterPanel/ui/DataFilterPanel.vue -->```
+<!-- src/widgets/DataFilterPanel/ui/DataFilterPanel.vue -->
