@@ -4,6 +4,9 @@
   tonarm eller pickup, presenterad i en modal. Den är designad för att vara
   återanvändbar över hela applikationen. Den tar emot ett dataobjekt och
   visar enbart de fält som är relevanta och publika.
+
+  UPPDRAG 20: Uppdaterad för att peka på de nya `_name`-fälten för att visa
+  de översatta värdena i modalen.
 -->
 <template>
   <!-- v-model:isOpen binder till BaseModal för att styra dess synlighet -->
@@ -11,7 +14,7 @@
     <template #header>
       <!-- Visar en dynamisk rubrik om ett item finns, annars en fallback -->
       <span v-if="item">{{ item.manufacturer }} {{ item.model }}</span>
-      <span v-else>Item Details</span>
+      <span velse>Item Details</span>
     </template>
     
     <template #default>
@@ -40,7 +43,7 @@
 
 <script setup>
 import { computed, watch } from 'vue';
-import BaseModal from '../../../shared/ui/BaseModal.vue';
+import BaseModal from '@/shared/ui/BaseModal.vue';
 
 // --- PROPS & EMITS ---
 const props = defineProps({
@@ -69,7 +72,7 @@ const isModalOpen = computed({
 // --- DATADEFINITIONER ---
 
 // Vitlista över alla fält som FÅR visas, uppdelat per datatyp.
-// Detta förhindrar att känslig metadata som 'sources', 'rectype' etc. visas.
+// REFAKTORERAD: Pekar nu på de berikade `_name`-fälten.
 const allFields = {
   cartridges: [
     { key: 'type_name', label: 'Type' },
@@ -178,4 +181,4 @@ function formatValue(item, key) {
   color: var(--color-text-medium-emphasis);
 }
 </style>
-<!-- src/features/item-details/ui/ItemDetailModal.vue -->
+<!-- src/features/item-details/ui/ItemDetailModal.vue -->```
