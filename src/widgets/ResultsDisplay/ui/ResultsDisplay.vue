@@ -5,11 +5,8 @@
   Den hämtar all sin data från explorerStore och använder Base-komponenter
   för att bygga sitt gränssnitt.
 
-  KORRIGERING (Steg 18):
-  - Lade till `overflow-x: auto;` på `.results-area`. Detta är en kritisk
-    fix som förhindrar att den breda BaseTable-komponenten "spräcker" den
-    överordnade sidlayouten på mobila enheter. Detta säkerställer att
-    DataExplorerPage's responsiva grid kan kollapsa till en kolumn som avsett.
+  UPPDRAG 20: Uppdaterad för att peka på de nya `_name`-fälten för att visa
+  de översatta värdena i tabellen.
 -->
 <template>
   <main class="results-area">
@@ -62,9 +59,9 @@
 <script setup>
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useExplorerStore } from '../../../entities/data-explorer/model/explorerStore.js';
-import BaseTable from '../../../shared/ui/BaseTable.vue';
-import BaseButton from '../../../shared/ui/BaseButton.vue';
+import { useExplorerStore } from '@/entities/data-explorer/model/explorerStore.js';
+import BaseTable from '@/shared/ui/BaseTable.vue';
+import BaseButton from '@/shared/ui/BaseButton.vue';
 
 // --- PROPS & EMITS ---
 const emit = defineEmits(['item-selected']);
@@ -93,6 +90,7 @@ const {
 // --- COMPUTED PROPERTIES ---
 
 // Headers för tabellen, baserat på vald datatyp.
+// REFAKTORERAD: Pekar nu på de berikade `_name`-fälten.
 const currentHeaders = computed(() => {
   if (dataType.value === 'cartridges') {
     return [
@@ -119,7 +117,7 @@ const currentHeaders = computed(() => {
 const isPristine = computed(() => {
   return totalResultsCount.value === 0 &&
          searchTerm.value === '' &&
-         Object.values(categoryFilters.value).every(v => v === undefined) &&
+         Object.values(categoryFilters.value).every(v => v === undefined || v === '') &&
          Object.values(numericFilters.value).every(v => v.min === null && v.max === null);
 });
 
@@ -132,7 +130,7 @@ const canGoNext = computed(() => currentPage.value < totalPages.value);
 <style scoped>
 .results-area {
   min-height: 500px; /* Förhindrar layout-hopp vid laddning */
-  overflow-x: auto; /* KORRIGERING: Fångar upp tabellens bredd och förhindrar att den spräcker sidlayouten. */
+  overflow-x: auto; /* Fångar upp tabellens bredd och förhindrar att den spräcker sidlayouten. */
 }
 
 .results-header {
