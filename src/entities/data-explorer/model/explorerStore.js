@@ -1,35 +1,29 @@
 // src/entities/data-explorer/model/explorerStore.js
-// Denna Pinia-store hanterar all state och logik för Data Explorer-modulen.
-// UPPDRAG 20: Genomgår en stor refaktorisering för att använda de nya centraliserade
-// datafilerna för filter och översättningar.
+// Kärnan för Data Explorer. Hanterar state, filtrering, sortering och datainhämtning.
+// UPPDRAG 20: Omfattande refaktorisering för att använda de nya centraliserade datafilerna.
 
 import { defineStore } from 'pinia';
-import { ref, computed, watch } from 'vue';
-import { fetchExplorerData } from '../api/fetchExplorerData.js';
-import { useLoggerStore } from '../../../entities/logger/model/loggerStore.js';
+import { ref, computed } from 'vue';
+import { fetchExplorerData } from '@/entities/data-explorer/api/fetchExplorerData.js';
+import { useLoggerStore } from '@/entities/logger/model/loggerStore.js';
 
 export const useExplorerStore = defineStore('explorer', () => {
-  const logger = useLoggerStore();
-
-  // --- STATE ---
-
-  // Laddnings- och felhantering
-  const isLoading = ref(false);
+  // === STATE ===
+  const isLoading = ref(true);
   const error = ref(null);
-  const isInitialized = ref(false);
+  const dataType = ref(null); // 'cartridges' or 'tonearms'
 
-  // Rådata och klassificeringar
+  // Rådata
   const allPickups = ref([]);
   const allTonearms = ref([]);
   const pickupClassifications = ref({});
   const tonearmClassifications = ref({});
 
-  // NYTT STATE: Centraliserade kartor för filter och översättningar
+  // NYTT STATE: Centraliserade kartor
   const filtersMap = ref({});
   const translationMap = ref({});
 
-  // Filter- och sökparametrar
-  const dataType = ref('cartridges'); // 'cartridges' or 'tonearms'
+  // Filter-state
   const searchTerm = ref('');
   const categoryFilters = ref({});
   const numericFilters = ref({
@@ -39,33 +33,31 @@ export const useExplorerStore = defineStore('explorer', () => {
     effective_length_mm: { min: null, max: null },
   });
 
-  // Sortering och paginering
+  // Sortering & Paginering
   const sortKey = ref('manufacturer');
   const sortOrder = ref('asc');
   const currentPage = ref(1);
   const itemsPerPage = ref(20);
 
-  // --- ACTIONS ---
+  // === ACTIONS ===
 
   /**
-   * Privat funktion för att normalisera och översätta rådata.
-   * Använder translationMap för att skapa nya `_name`-fält för visning.
-   * @param {Array} data - Array med rådata (pickups eller tonearms).
+   * Privat funktion för att berika rådata med översatta namn.
+   * Använder translationMap för att skapa nya _name-fält.
+   * @param {Array} data - Array med rådataobjekt.
    * @param {string} type - 'pickups' eller 'tonearms'.
    * @returns {Array} Den berikade data-arrayen.
    */
   const _normalizeAndTranslateData = (data, type) => {
-    if (!translationMap.value[type]) return data;
-
-    const typeTranslations = translationMap.value[type];
-
+    const typeMap = translationMap.value[type] || {};
     return data.map(item => {
       const newItem = { ...item };
-      for (const key in typeTranslations) {
-        if (item[key]) {
-          const value = item[key];
-          // Skapa ett nytt fält, t.ex. type_name, baserat på översättningen.
-          newItem[`${key}_name`] = typeTranslations[key][value] || value;
+      for (const key in typeMap) {
+        const value = item[key];
+        if (value !== null && value !== undefined) {
+          // Skapa ett nytt fält, t.ex. type_name
+          // Faller tillbaka till originalvärdet om ingen översättning finns.
+          newItem[`${key}_name`] = typeMap[key][value] || value;
         } else {
           newItem[`${key}_name`] = null;
         }
@@ -75,21 +67,18 @@ export const useExplorerStore = defineStore('explorer', () => {
   };
 
   /**
-   * Sätter den aktiva datatypen och återställer alla filter.
-   * @param {'cartridges' | 'tonearms'} type - Den nya datatypen.
+   * Sätter den aktuella datan som ska visas och återställer filter.
+   * @param {string} type - 'cartridges' or 'tonearms'
    */
   const setDataType = (type) => {
     if (dataType.value !== type) {
       dataType.value = type;
       resetFilters();
-      // Sätt en standard sorteringsnyckel baserat på den nya datatypen
-      sortKey.value = 'manufacturer';
-      sortOrder.value = 'asc';
     }
   };
 
   /**
-   * Återställer alla filterparametrar till sina ursprungsvärden.
+   * Återställer alla filter till sina ursprungsvärden.
    */
   const resetFilters = () => {
     searchTerm.value = '';
@@ -104,7 +93,7 @@ export const useExplorerStore = defineStore('explorer', () => {
   };
 
   /**
-   * Sätter sorteringsnyckel och ordning.
+   * Hanterar sorteringslogik.
    * @param {string} key - Nyckeln att sortera efter.
    */
   const setSortKey = (key) => {
@@ -119,36 +108,35 @@ export const useExplorerStore = defineStore('explorer', () => {
 
   /**
    * Initierar storen genom att hämta all nödvändig data.
-   * Körs bara en gång.
    */
   const initialize = async () => {
-    if (isInitialized.value) return;
-
+    const logger = useLoggerStore();
     isLoading.value = true;
     error.value = null;
-    logger.addLog('ExplorerStore: Initializing and fetching data...', 'explorerStore');
-
     try {
       const data = await fetchExplorerData();
       
       // Lagra de nya kartorna i state
       filtersMap.value = data.filtersMap;
       translationMap.value = data.translationMap;
-      logger.addLog('ExplorerStore: Translation and Filter maps loaded.', 'explorerStore', { filters: Object.keys(data.filtersMap), translations: Object.keys(data.translationMap) });
 
-      // Normalisera och översätt rådatan innan den lagras
+      // Berika rådatan med de översatta namnen
       allPickups.value = _normalizeAndTranslateData(data.pickupsData, 'pickups');
       allTonearms.value = _normalizeAndTranslateData(data.tonearmsData, 'tonearms');
-      logger.addLog('ExplorerStore: Raw data normalized and translated.', 'explorerStore');
-
+      
       pickupClassifications.value = data.pickupsClassifications;
       tonearmClassifications.value = data.tonearmsClassifications;
 
-      isInitialized.value = true;
-      logger.addLog('ExplorerStore: Initialization complete.', 'explorerStore');
+      logger.addLog('Explorer store initialized successfully.', 'ExplorerStore', {
+        pickupCount: allPickups.value.length,
+        tonearmCount: allTonearms.value.length,
+        filtersLoaded: !!filtersMap.value,
+        translationsLoaded: !!translationMap.value
+      });
+
     } catch (e) {
-      error.value = e.message || 'An unknown error occurred.';
-      logger.addLog(`ExplorerStore: Initialization failed: ${error.value}`, 'explorerStore');
+      error.value = 'Could not load component database. Please try again later.';
+      logger.addLog(`Failed to initialize explorer store: ${e.message}`, 'ExplorerStore', e);
     } finally {
       isLoading.value = false;
     }
@@ -166,24 +154,26 @@ export const useExplorerStore = defineStore('explorer', () => {
     }
   };
 
-  // --- GETTERS ---
+  // === GETTERS ===
 
-  /**
-   * REFAKTORERAD: Returnerar nu direkt den färdiga filterstrukturen från state.
-   */
-  const availableFilters = computed(() => {
-    const key = dataType.value === 'cartridges' ? 'cartridges' : 'tonearms';
-    return filtersMap.value[key] || [];
-  });
-
-  const currentDataset = computed(() => {
+  const currentData = computed(() => {
     return dataType.value === 'cartridges' ? allPickups.value : allTonearms.value;
   });
 
-  const filteredResults = computed(() => {
-    let results = [...currentDataset.value];
+  /**
+   * REFAKTORERAD: Returnerar nu direkt den för-genererade filterlistan från state.
+   */
+  const availableFilters = computed(() => {
+    if (!dataType.value || !filtersMap.value) return [];
+    return filtersMap.value[dataType.value === 'cartridges' ? 'cartridges' : 'tonearms'] || [];
+  });
 
-    // 1. Sökfilter (text)
+  const filteredResults = computed(() => {
+    if (!currentData.value) return [];
+
+    let results = [...currentData.value];
+
+    // 1. Sökfilter
     if (searchTerm.value) {
       const lowerCaseSearch = searchTerm.value.toLowerCase();
       results = results.filter(item =>
@@ -192,116 +182,59 @@ export const useExplorerStore = defineStore('explorer', () => {
       );
     }
 
-    // 2. Kategorifilter (dropdowns)
-    Object.entries(categoryFilters.value).forEach(([key, value]) => {
+    // 2. Kategorifilter
+    for (const [key, value] of Object.entries(categoryFilters.value)) {
       if (value) {
         results = results.filter(item => item[key] === value);
       }
-    });
+    }
 
-    // 3. Numeriska filter (intervall)
-    Object.entries(numericFilters.value).forEach(([key, range]) => {
+    // 3. Numeriska filter
+    for (const [key, range] of Object.entries(numericFilters.value)) {
       if (range.min !== null) {
         results = results.filter(item => item[key] >= range.min);
       }
       if (range.max !== null) {
         results = results.filter(item => item[key] <= range.max);
       }
-    });
+    }
 
-    return results;
-  });
-
-  const sortedResults = computed(() => {
-    const results = [...filteredResults.value];
-    const key = sortKey.value;
-    const order = sortOrder.value;
-
+    // 4. Sortering
     results.sort((a, b) => {
-      let valA = a[key];
-      let valB = b[key];
+      const valA = a[sortKey.value];
+      const valB = b[sortKey.value];
 
-      if (typeof valA === 'string') valA = valA.toLowerCase();
-      if (typeof valB === 'string') valB = valB.toLowerCase();
+      if (valA === null || valA === undefined) return 1;
+      if (valB === null || valB === undefined) return -1;
 
-      if (valA < valB) return order === 'asc' ? -1 : 1;
-      if (valA > valB) return order === 'asc' ? 1 : -1;
-      return 0;
+      if (typeof valA === 'string') {
+        return sortOrder.value === 'asc'
+          ? valA.localeCompare(valB)
+          : valB.localeCompare(valA);
+      } else {
+        return sortOrder.value === 'asc' ? valA - valB : valB - valA;
+      }
     });
 
     return results;
   });
 
-  const totalResultsCount = computed(() => sortedResults.value.length);
+  const totalResultsCount = computed(() => filteredResults.value.length);
   const totalPages = computed(() => Math.ceil(totalResultsCount.value / itemsPerPage.value));
 
   const paginatedResults = computed(() => {
     const start = (currentPage.value - 1) * itemsPerPage.value;
     const end = start + itemsPerPage.value;
-    return sortedResults.value.slice(start, end);
+    return filteredResults.value.slice(start, end);
   });
 
-  // Återställ till sida 1 om filtrering/sortering gör nuvarande sida ogiltig
-  watch([sortedResults], () => {
-    if (currentPage.value > totalPages.value) {
-      currentPage.value = Math.max(1, totalPages.value);
-    }
-  });
-
-  // Funktion för CSV-export (oförändrad)
-  const exportToCSV = () => {
-    const items = sortedResults.value;
-    if (items.length === 0) return;
-
-    const headers = Object.keys(items[0]);
-    const csvRows = [headers.join(',')];
-
-    for (const item of items) {
-      const values = headers.map(header => {
-        const escaped = ('' + item[header]).replace(/"/g, '\\"');
-        return `"${escaped}"`;
-      });
-      csvRows.push(values.join(','));
-    }
-
-    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.setAttribute('hidden', '');
-    a.setAttribute('href', url);
-    a.setAttribute('download', `${dataType.value}_export.csv`);
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  };
-
+  // Exporterar allt som behövs av UI-komponenterna
   return {
-    // State & Getters
-    isLoading,
-    error,
-    dataType,
-    searchTerm,
-    categoryFilters,
-    numericFilters,
-    sortKey,
-    sortOrder,
-    currentPage,
-    itemsPerPage,
-    availableFilters,
-    totalResultsCount,
-    paginatedResults,
-    totalPages,
-    pickupClassifications, // Exponeras fortfarande för DataFilterPanel
-    tonearmClassifications, // Exponeras fortfarande för DataFilterPanel
-
-    // Actions
-    initialize,
-    setDataType,
-    resetFilters,
-    setSortKey,
-    nextPage,
-    prevPage,
-    exportToCSV,
+    isLoading, error, dataType, searchTerm, categoryFilters, numericFilters,
+    sortKey, sortOrder, currentPage, itemsPerPage,
+    totalResultsCount, totalPages, paginatedResults,
+    availableFilters, pickupClassifications, tonearmClassifications,
+    initialize, setDataType, resetFilters, setSortKey, nextPage, prevPage,
   };
 });
 // src/entities/data-explorer/model/explorerStore.js
