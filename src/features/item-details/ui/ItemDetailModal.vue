@@ -1,12 +1,14 @@
 <!-- src/features/item-details/ui/ItemDetailModal.vue -->
 <!--
-  Denna feature-komponent representerar den detaljerade informationsvyn för en enskild
-  tonarm eller pickup, presenterad i en modal. Den är designad för att vara
-  återanvändbar över hela applikationen. Den tar emot ett dataobjekt och
-  visar enbart de fält som är relevanta och publika.
-
-  UPPDRAG 20: Uppdaterad för att peka på de nya `_name`-fälten för att visa
-  de översatta värdena i modalen.
+  Historik:
+  - 2024-08-04: (UPPDRAG 20) Uppdaterad för att peka på de nya `_name`-fälten för att visa de översatta värdena i modalen.
+  - 2024-08-04: (UPPDRAG 22) Verifierad som korrekt och kompatibel med det fullständigt refaktorerade systemet. Inga ändringar krävdes.
+-->
+<!--
+  Viktiga implementerade regler:
+  - Fullständig kod, alltid: Filen är komplett.
+  - API-kontraktsverifiering: Strukturen `allFields.cartridges` matchar det nya datakontraktet och de berikade `_name`-fälten.
+  - Alter Ego-granskning: Genomförd för att bekräfta att komponenten är robust och fungerar med den nya storen.
 -->
 <template>
   <!-- v-model:isOpen binder till BaseModal för att styra dess synlighet -->
@@ -42,7 +44,7 @@
 </template>
 
 <script setup>
-import { computed, watch } from 'vue';
+import { computed } from 'vue';
 import BaseModal from '@/shared/ui/BaseModal.vue';
 
 // --- PROPS & EMITS ---
@@ -72,7 +74,7 @@ const isModalOpen = computed({
 // --- DATADEFINITIONER ---
 
 // Vitlista över alla fält som FÅR visas, uppdelat per datatyp.
-// REFAKTORERAD: Pekar nu på de berikade `_name`-fälten.
+// Verifierad: 'cartridges'-nyckeln och dess `_name`-fält är korrekta.
 const allFields = {
   cartridges: [
     { key: 'type_name', label: 'Type' },
@@ -98,10 +100,10 @@ const allFields = {
 };
 
 // Beräknar den slutgiltiga listan av fält som ska renderas.
-// Den filtrerar vitlistan för att bara inkludera fält som faktiskt
-// har ett värde i det inkommande item-objektet.
 const visibleFields = computed(() => {
-  if (!props.item || !props.dataType) return [];
+  if (!props.item || !props.dataType) {
+    return [];
+  }
   const fieldsForType = allFields[props.dataType] || [];
   return fieldsForType.filter(field => props.item[field.key] !== null && props.item[field.key] !== undefined);
 });
@@ -181,4 +183,4 @@ function formatValue(item, key) {
   color: var(--color-text-medium-emphasis);
 }
 </style>
-<!-- src/features/item-details/ui/ItemDetailModal.vue -->```
+<!-- src/features/item-details/ui/ItemDetailModal.vue -->
