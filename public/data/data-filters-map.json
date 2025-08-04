@@ -1,5 +1,186 @@
 {
-  "cartridges": [],
+  "cartridges": [
+    {
+      "key": "compliance_level",
+      "name": "Compliance Level",
+      "options": [
+        {
+          "value": "",
+          "label": "All Compliance Level"
+        },
+        {
+          "value": "high",
+          "label": "High Compliance"
+        },
+        {
+          "value": "low",
+          "label": "Low Compliance"
+        },
+        {
+          "value": "medium",
+          "label": "Medium Compliance"
+        },
+        {
+          "value": "very-high",
+          "label": "Very High Compliance"
+        }
+      ]
+    },
+    {
+      "key": "stylus_family",
+      "name": "Stylus Family",
+      "options": [
+        {
+          "value": "",
+          "label": "All Stylus Family"
+        },
+        {
+          "value": "Advanced Line-Contact",
+          "label": "Advanced Line-Contact / Micro-Ridge"
+        },
+        {
+          "value": "Conical",
+          "label": "Conical / Spherical"
+        },
+        {
+          "value": "Elliptical",
+          "label": "Elliptical"
+        },
+        {
+          "value": "Line-Contact",
+          "label": "Line-Contact"
+        },
+        {
+          "value": "Nude Elliptical",
+          "label": "Nude Elliptical"
+        }
+      ]
+    },
+    {
+      "key": "cantilever_class",
+      "name": "Cantilever Class",
+      "options": [
+        {
+          "value": "",
+          "label": "All Cantilever Class"
+        },
+        {
+          "value": "Aluminum",
+          "label": "Aluminum"
+        },
+        {
+          "value": "Exotic/High-Performance",
+          "label": "Exotic / High-Performance"
+        },
+        {
+          "value": "Standard",
+          "label": "Standard Materials"
+        }
+      ]
+    },
+    {
+      "key": "tags",
+      "name": "Sonic Character Tags",
+      "options": [
+        {
+          "value": "",
+          "label": "All Sonic Character Tags"
+        },
+        {
+          "value": "Agile",
+          "label": "Agile"
+        },
+        {
+          "value": "Airy Highs",
+          "label": "Airy Highs"
+        },
+        {
+          "value": "Analytical",
+          "label": "Analytical"
+        },
+        {
+          "value": "Bright",
+          "label": "Bright"
+        },
+        {
+          "value": "Clean",
+          "label": "Clean"
+        },
+        {
+          "value": "Clear",
+          "label": "Clear"
+        },
+        {
+          "value": "DJ",
+          "label": "DJ"
+        },
+        {
+          "value": "Detailed",
+          "label": "Detailed"
+        },
+        {
+          "value": "Durable",
+          "label": "Durable"
+        },
+        {
+          "value": "Dynamic",
+          "label": "Dynamic"
+        },
+        {
+          "value": "Engaging",
+          "label": "Engaging"
+        },
+        {
+          "value": "Forgiving",
+          "label": "Forgiving"
+        },
+        {
+          "value": "Good Bass",
+          "label": "Good Bass"
+        },
+        {
+          "value": "Good Midrange",
+          "label": "Good Midrange"
+        },
+        {
+          "value": "Musical",
+          "label": "Musical"
+        },
+        {
+          "value": "Neutral",
+          "label": "Neutral"
+        },
+        {
+          "value": "Precise",
+          "label": "Precise"
+        },
+        {
+          "value": "Punchy",
+          "label": "Punchy"
+        },
+        {
+          "value": "Refined",
+          "label": "Refined"
+        },
+        {
+          "value": "Rich",
+          "label": "Rich"
+        },
+        {
+          "value": "Smooth",
+          "label": "Smooth"
+        },
+        {
+          "value": "Transparent",
+          "label": "Transparent"
+        },
+        {
+          "value": "Warm",
+          "label": "Warm"
+        }
+      ]
+    }
+  ],
   "tonearms": [
     {
       "key": "bearing_type",

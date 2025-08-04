@@ -93,29 +93,98 @@
     "name": "Sonic Character Tags",
     "description": "A standardized vocabulary of subjective terms used to describe the sonic character of a cartridge.",
     "categories": [
-      {"id": "Warm", "description": "Emphasizes lower midrange and mid-bass, often described as rich, full-bodied, and pleasant."},
-      {"id": "Neutral", "description": "Aims for accuracy and balance across the frequency spectrum, without obvious colorations."},
-      {"id": "Bright", "description": "Emphasizes the upper midrange and treble, can sound very clear and open, but may become harsh in some systems."},
-      {"id": "Detailed", "description": "Excels at resolving fine, low-level information in the recording."},
-      {"id": "Analytical", "description": "A highly detailed sound that prioritizes accuracy over musicality; can sometimes sound clinical or sterile."},
-      {"id": "Musical", "description": "A quality where the overall presentation is cohesive and emotionally engaging, even if not perfectly accurate."},
-      {"id": "Forgiving", "description": "Tends to smooth over flaws in recordings or surface noise, often associated with warmer cartridges."},
-      {"id": "Dynamic", "description": "Excellent at reproducing the difference between loud and soft passages, sounds lively and energetic."},
-      {"id": "Good Bass", "description": "Delivers a powerful, weighty, or well-defined bass response."},
-      {"id": "Good Midrange", "description": "Excels at reproducing vocals and instruments in the middle frequencies with texture and realism."},
-      {"id": "Airy Highs", "description": "The high frequencies are extended, clear, and have a sense of space and openness."},
-      {"id": "Punchy", "description": "A strong and impactful presentation, particularly in the bass and mid-bass."},
-      {"id": "Engaging", "description": "A lively, rhythmic, and fun presentation that draws the listener into the music."},
-      {"id": "Smooth", "description": "A relaxed and non-fatiguing sound, without harshness or sharp edges."},
-      {"id": "Refined", "description": "A sophisticated and nuanced presentation, often associated with high-end cartridges."},
-      {"id": "Clean", "description": "A sound free from audible distortion or muddiness."},
-      {"id": "Clear", "description": "Similar to clean, but emphasizes transparency and the ability to hear 'through' to the recording."},
-      {"id": "Precise", "description": "Excellent imaging and focus; instruments are clearly defined in the soundstage."},
-      {"id": "Transparent", "description": "A feeling of nothing being between the listener and the original recording."},
-      {"id": "Rich", "description": "Full of tonal color and texture, often associated with a strong midrange."},
-      {"id": "Agile", "description": "A fast, nimble sound that handles complex rhythms with ease."},
-      {"id": "DJ", "description": "Designed for durability and high output for DJ use, not primarily for audiophile listening."},
-      {"id": "Durable", "description": "Built to withstand heavy use, often a feature of DJ or broadcast cartridges."}
+      {
+        "id": "Warm",
+        "description": "Emphasizes lower midrange and mid-bass, often described as rich, full-bodied, and pleasant."
+      },
+      {
+        "id": "Neutral",
+        "description": "Aims for accuracy and balance across the frequency spectrum, without obvious colorations."
+      },
+      {
+        "id": "Bright",
+        "description": "Emphasizes the upper midrange and treble, can sound very clear and open, but may become harsh in some systems."
+      },
+      {
+        "id": "Detailed",
+        "description": "Excels at resolving fine, low-level information in the recording."
+      },
+      {
+        "id": "Analytical",
+        "description": "A highly detailed sound that prioritizes accuracy over musicality; can sometimes sound clinical or sterile."
+      },
+      {
+        "id": "Musical",
+        "description": "A quality where the overall presentation is cohesive and emotionally engaging, even if not perfectly accurate."
+      },
+      {
+        "id": "Forgiving",
+        "description": "Tends to smooth over flaws in recordings or surface noise, often associated with warmer cartridges."
+      },
+      {
+        "id": "Dynamic",
+        "description": "Excellent at reproducing the difference between loud and soft passages, sounds lively and energetic."
+      },
+      {
+        "id": "Good Bass",
+        "description": "Delivers a powerful, weighty, or well-defined bass response."
+      },
+      {
+        "id": "Good Midrange",
+        "description": "Excels at reproducing vocals and instruments in the middle frequencies with texture and realism."
+      },
+      {
+        "id": "Airy Highs",
+        "description": "The high frequencies are extended, clear, and have a sense of space and openness."
+      },
+      {
+        "id": "Punchy",
+        "description": "A strong and impactful presentation, particularly in the bass and mid-bass."
+      },
+      {
+        "id": "Engaging",
+        "description": "A lively, rhythmic, and fun presentation that draws the listener into the music."
+      },
+      {
+        "id": "Smooth",
+        "description": "A relaxed and non-fatiguing sound, without harshness or sharp edges."
+      },
+      {
+        "id": "Refined",
+        "description": "A sophisticated and nuanced presentation, often associated with high-end cartridges."
+      },
+      {
+        "id": "Clean",
+        "description": "A sound free from audible distortion or muddiness."
+      },
+      {
+        "id": "Clear",
+        "description": "Similar to clean, but emphasizes transparency and the ability to hear 'through' to the recording."
+      },
+      {
+        "id": "Precise",
+        "description": "Excellent imaging and focus; instruments are clearly defined in the soundstage."
+      },
+      {
+        "id": "Transparent",
+        "description": "A feeling of nothing being between the listener and the original recording."
+      },
+      {
+        "id": "Rich",
+        "description": "Full of tonal color and texture, often associated with a strong midrange."
+      },
+      {
+        "id": "Agile",
+        "description": "A fast, nimble sound that handles complex rhythms with ease."
+      },
+      {
+        "id": "DJ",
+        "description": "Designed for durability and high output for DJ use, not primarily for audiophile listening."
+      },
+      {
+        "id": "Durable",
+        "description": "Built to withstand heavy use, often a feature of DJ or broadcast cartridges."
+      }
     ]
   }
 }

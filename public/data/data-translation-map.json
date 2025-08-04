@@ -1,24 +1,6 @@
 {
-  "pickups": {
-    "type": {
-      "MM": "Moving Magnet",
-      "MC": "Moving Coil",
-      "MI": "Moving Iron",
-      "Strain Gauge": "Strain Gauge",
-      "High Output Moving Coil": "Moving Coil (High Output)",
-      "Moving Coil": "Moving Coil",
-      "Moving Magnet": "Moving Magnet",
-      "Moving Iron": "Moving Iron",
-      "Ceramic": "Ceramic",
-      "Induced Magnet": "Moving Iron",
-      "Variable Reluctance": "Moving Iron",
-      "Crystal": "Crystal",
-      "Dynamic Coil": "Dynamic Coil",
-      "Electret Condenser": "Electret Condenser",
-      "Condensor": "Electret Condenser",
-      "Ribbon": "Ribbon",
-      "Photoelectric": "Photoelectric"
-    },
+  "cartridges": {
+    "type": {},
     "compliance_level": {
       "high": "High Compliance",
       "low": "Low Compliance",
@@ -36,6 +18,31 @@
       "Standard": "Standard Materials",
       "Exotic/High-Performance": "Exotic / High-Performance",
       "Aluminum": "Aluminum"
+    },
+    "tags": {
+      "Neutral": "Neutral",
+      "Detailed": "Detailed",
+      "Analytical": "Analytical",
+      "Punchy": "Punchy",
+      "Warm": "Warm",
+      "Engaging": "Engaging",
+      "Good Bass": "Good Bass",
+      "Dynamic": "Dynamic",
+      "Good Midrange": "Good Midrange",
+      "Musical": "Musical",
+      "Airy Highs": "Airy Highs",
+      "Forgiving": "Forgiving",
+      "Agile": "Agile",
+      "Smooth": "Smooth",
+      "Refined": "Refined",
+      "Precise": "Precise",
+      "Bright": "Bright",
+      "Transparent": "Transparent",
+      "Clear": "Clear",
+      "Clean": "Clean",
+      "Rich": "Rich",
+      "DJ": "DJ",
+      "Durable": "Durable"
     }
   },
   "tonearms": {
