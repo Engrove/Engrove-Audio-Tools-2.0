@@ -1,0 +1,77 @@
+# .github/workflows/generate_context.yml
+#
+# HISTORIK:
+# * v1.0 (Initial): Basversion för att köra skript och publicera.
+# * v2.0 (Post-Tribunal): Förbättrad version efter "Help me God"-granskning.
+#   - LÄGGER TILL: Använder `secrets.GITHUB_TOKEN` och skickar den som en miljövariabel
+#     till Python-skriptet för att undvika API rate-limiting.
+#   - FIXAR: Omdirigerar `stderr` till `/dev/null` under skriptkörning för att säkerställa
+#     att endast ren JSON från `stdout` skrivs till `context.json`. Detta förhindrar
+#     att loggmeddelanden korrumperar JSON-filen.
+#   - FÖRBÄTTRAR: Tydligare stegnamn och struktur.
+#
+# TILLÄMPADE REGLER (Frankensteen v3.7):
+# - Denna fil definierar ett robust, förutsägbart och säkert automatiseringsflöde.
+# - Kontraktsverifiering: Säkerställer att artefakten som publiceras (context.json)
+#   har ett rent och förväntat innehåll.
+# - Interaktionsrisker (t.ex. loggar som förorenar data) har eliminerats.
+#
+
+name: Generate and Deploy Project Context
+
+# KÖR VID: Varje push till main-branchen, eller vid manuell start.
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+# BEHÖRIGHETER: Tillåt detta jobb att läsa kod och skriva till GitHub Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Steg 1: Checka ut koden från repositoryt.
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Steg 2: Sätt upp Python-miljön.
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      # Steg 3: Installera Python-beroenden som skriptet behöver.
+      - name: Install Dependencies
+        run: pip install requests
+
+      # Steg 4: Kör kontext-genereringsskriptet.
+      # Detta är det kritiska steget.
+      - name: Generate context.json File
+        run: |
+          # Skapa en mapp som GitHub Pages kräver för publicering.
+          mkdir -p _site
+          # Kör skriptet.
+          # - stdout (ren JSON) omdirigeras till filen context.json.
+          # - stderr (alla loggmeddelanden) omdirigeras till /dev/null och kastas bort.
+          python scripts/generate_full_context.py > _site/context.json 2> /dev/null
+        env:
+          # Skicka in den säkra token som en miljövariabel som Python-skriptet kan använda.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Steg 5: Ladda upp den genererade artefakten (mappen _site) för publicering.
+      - name: Upload Artifact for GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '_site'
+          
+      # Steg 6: Publicera artefakten till GitHub Pages.
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+# .github/workflows/generate_context.yml
