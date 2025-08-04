@@ -1,0 +1,180 @@
+# scripts/generate_full_context.py
+#
+# HISTORIK:
+# * v1.0 (Initial): Basversion för att hämta filstruktur och kommentarer.
+# * v2.0 (Post-Tribunal): Kraftigt omskriven efter "Help me God"-granskning.
+#   - LÄGGER TILL: Hantering av GITHUB_TOKEN för att undvika rate limiting.
+#   - LÄGGER TILL: Extrahering av filberoenden (imports/requires) för rikare kontext.
+#   - FIXAR: Separerar loggutdata (stderr) från dataoutput (stdout) för att förhindra korrupt JSON.
+#   - FÖRBÄTTRAR: Robust felhantering runt alla nätverksanrop.
+#   - REFAKTORISERAR: Koden är uppdelad i tydligare funktioner.
+#
+# TILLÄMPADE REGLER (Frankensteen v3.7):
+# - Denna fil följer principerna om "Explicit Alltid" och robust felhantering.
+# - Alla nätverksanrop är inkapslade i try-except-block.
+# - Dataflöden (stdout) och loggflöden (stderr) är strikt separerade.
+# - Koden har refaktoriserats för läsbarhet och underhållbarhet.
+#
+
+import requests
+import re
+import json
+import os
+import sys
+
+# --- Konfiguration ---
+REPO = "Engrove/Engrove-Audio-Tools-2.0"
+BRANCH = "main"
+AI_TEXT_MD_PATH = "AI_TEXT.md"
+
+# --- Reguljära uttryck för analys ---
+
+# Kommentarer (samma som tidigare)
+COMMENT_PATTERNS = [
+    re.compile(r'//.*'), re.compile(r'/\*[\s\S]*?\*/'),
+    re.compile(r'<!--[\s\S]*?-->'), re.compile(r'#.*'),
+]
+
+# Beroenden (importer/requires)
+# Hanterar: import ... from '...', require('...'), import ..., from ... import ...
+DEP_PATTERNS = [
+    re.compile(r'^\s*import(?:.*?from)?\s*[\'"]([^\'"]+)[\'"]', re.MULTILINE), # JS/TS/Vue: import ... from '...'
+    re.compile(r'require\([\'"]([^\'"]+)[\'"]\)', re.MULTILINE),             # JS/TS: require('...')
+    re.compile(r'^\s*(?:from|import)\s+([a-zA-Z0-9_.]+)', re.MULTILINE),    # Python: from X import Y, import X
+]
+
+# --- Hjälpfunktioner ---
+
+def log_message(level, message):
+    """Skriver loggmeddelanden till stderr för att inte förorena stdout."""
+    print(f"[{level}] {message}", file=sys.stderr)
+
+def sanitize_comment(comment_text):
+    """Rensar bort inledande kommentarsyntax från en extraherad kommentar."""
+    return re.sub(r'^[/*\->#;"\s]+|<!--|-->', '', comment_text).strip()
+
+def extract_from_content(content, patterns):
+    """En generell funktion för att extrahera text baserat på en lista av regex-mönster."""
+    matches = set()
+    for pattern in patterns:
+        found = pattern.findall(content)
+        for match in found:
+            # Vissa mönster kan returnera tuples (t.ex. för 'eller'-grupper), vi tar första icke-tomma träffen.
+            if isinstance(match, tuple):
+                proper_match = next((m for m in match if m), None)
+                if proper_match:
+                    matches.add(proper_match)
+            elif match:
+                matches.add(match)
+    return sorted(list(matches))
+
+# --- Kärnfunktioner för datahämtning ---
+
+def get_session_headers():
+    """Skapar headers för API-anrop. Använder GITHUB_TOKEN om det finns."""
+    token = os.getenv('GITHUB_TOKEN')
+    headers = {
+        'User-Agent': 'Python-Context-Generator/2.0',
+        'Accept': 'application/vnd.github.v3+json'
+    }
+    if token:
+        log_message("INFO", "GITHUB_TOKEN hittades. Använder autentiserade anrop.")
+        headers['Authorization'] = f"token {token}"
+    else:
+        log_message("WARN", "Ingen GITHUB_TOKEN hittades. Anropen är anonyma och har strikt rate limit.")
+    return headers
+
+def get_api_data(url, headers):
+    """Gör ett säkert anrop till GitHub API och returnerar JSON-data."""
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        log_message("ERROR", f"Kunde inte hämta data från API {url}: {e}")
+        return None
+
+def get_raw_file_content(path, headers):
+    """Hämtar råtextinnehåll från en specifik fil i repot."""
+    url = f"https://raw.githubusercontent.com/{REPO}/{BRANCH}/{path}"
+    try:
+        response = requests.get(url, headers={'User-Agent': headers['User-Agent']}) # Raw-url behöver inte all auth-info
+        response.raise_for_status()
+        return response.text
+    except requests.exceptions.RequestException:
+        log_message("WARN", f"Kunde inte läsa filen: {path}")
+        return None
+
+# --- Huvudlogik ---
+
+def main():
+    """Orkestrerar hela processen och skriver den slutgiltiga JSON-datan till stdout."""
+    log_message("INFO", f"Startar generering av kontext för {REPO} på branchen {BRANCH}.")
+    
+    headers = get_session_headers()
+
+    # Hämta grundläggande repo-information och hela filträdet
+    repo_info = get_api_data(f"https://api.github.com/repos/{REPO}", headers)
+    tree_info = get_api_data(f"https://api.github.com/repos/{REPO}/git/trees/{BRANCH}?recursive=1", headers)
+
+    if not repo_info or not tree_info or 'tree' not in tree_info:
+        log_message("FATAL", "Kunde inte hämta grundläggande repository-data. Avbryter.")
+        sys.exit(1)
+
+    file_structure = {}
+    file_list = [item for item in tree_info['tree'] if item['type'] == 'blob']
+    log_message("INFO", f"Hittade {len(file_list)} filer att analysera.")
+
+    for i, item in enumerate(file_list):
+        path = item['path']
+        log_message("INFO", f"Bearbetar ({i+1}/{len(file_list)}): {path}")
+
+        content = get_raw_file_content(path, headers)
+        if content is None:
+            continue
+
+        # Bygg upp trädstrukturen i JSON
+        path_parts = path.split('/')
+        current_level = file_structure
+        for part in path_parts[:-1]:
+            current_level = current_level.setdefault(part, {})
+        
+        # Extrahera all metadata
+        comments = [sanitize_comment(c) for c in extract_from_content(content, COMMENT_PATTERNS)]
+        dependencies = extract_from_content(content, DEP_PATTERNS)
+        file_extension = path.split('.')[-1] if '.' in path else ''
+
+        # Lägg till filobjektet i trädet
+        current_level[path_parts[-1]] = {
+            "type": "file",
+            "path": path,
+            "size_bytes": item.get('size'),
+            "file_extension": file_extension,
+            "comments": comments,
+            "dependencies": dependencies,
+        }
+
+    # Hämta den statiska AI-kontexten
+    ai_static_context = get_raw_file_content(AI_TEXT_MD_PATH, headers)
+
+    # Montera ihop den slutgiltiga JSON-datan
+    final_context = {
+        "project_overview": {
+            "repository": REPO,
+            "description": repo_info.get('description'),
+            "primary_language": repo_info.get('language'),
+            "last_updated_at": repo_info.get('pushed_at'),
+            "url": repo_info.get('html_url')
+        },
+        "ai_static_context": ai_static_context,
+        "file_structure": file_structure
+    }
+    
+    # Skriv den slutgiltiga, rena JSON-datan till stdout
+    print(json.dumps(final_context, indent=2, ensure_ascii=False), file=sys.stdout)
+    log_message("INFO", "Kontextgenerering slutförd. Resultat skickat till stdout.")
+
+if __name__ == "__main__":
+    main()
+
+# scripts/generate_full_context.py
