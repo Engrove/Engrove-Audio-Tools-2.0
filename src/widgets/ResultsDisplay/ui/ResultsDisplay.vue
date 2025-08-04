@@ -1,12 +1,14 @@
 <!-- src/widgets/ResultsDisplay/ui/ResultsDisplay.vue -->
 <!--
-  Denna widget-komponent ansvarar för att rendera hela resultatsektionen
-  i Data Explorer, inklusive rubrik, tabell och pagineringskontroller.
-  Den hämtar all sin data från explorerStore och använder Base-komponenter
-  för att bygga sitt gränssnitt.
-
-  UPPDRAG 20: Uppdaterad för att peka på de nya `_name`-fälten för att visa
-  de översatta värdena i tabellen.
+  Historik:
+  - 2024-08-04: (UPPDRAG 20) Uppdaterad för att peka på de nya `_name`-fälten för tabellvisning.
+  - 2024-08-04: (UPPDRAG 22) Helt refaktorerad för att ta bort lokal logik för tabell-headers och istället konsumera dem från storen.
+-->
+<!--
+  Viktiga implementerade regler:
+  - Fullständig kod, alltid: Filen är komplett.
+  - Obligatorisk Refaktorisering: Lokal UI-logik (headers) har tagits bort. Komponenten är nu en "dummare" presentationskomponent.
+  - Alter Ego-granskning: Verifierat att komponenten korrekt binder till de nya centraliserade getters och actions från storen.
 -->
 <template>
   <main class="results-area">
@@ -19,7 +21,7 @@
     <!-- Huvudinnehållet när filter är aktiva eller sökning gjorts -->
     <div v-else>
       <div class="results-header">
-        <h3>Found {{ totalResultsCount }} {{ dataType }}</h3>
+        <h3>Found {{ totalResultsCount }} {{ dataType === 'cartridges' ? 'cartridges' : 'tonearms' }}</h3>
         <BaseButton 
           variant="primary"
           @click="exportToCSV" 
@@ -36,7 +38,7 @@
         <BaseButton variant="secondary" @click="nextPage" :disabled="!canGoNext">Next ›</BaseButton>
       </div>
 
-      <!-- Resultattabell -->
+      <!-- Resultattabell som styrs från storen -->
       <BaseTable
         :items="paginatedResults"
         :headers="currentHeaders"
@@ -84,41 +86,24 @@ const {
   sortKey,
   sortOrder,
   totalPages,
+  currentHeaders, // NY: Importerad från store
 } = storeToRefs(store);
 
 
 // --- COMPUTED PROPERTIES ---
 
-// Headers för tabellen, baserat på vald datatyp.
-// REFAKTORERAD: Pekar nu på de berikade `_name`-fälten.
-const currentHeaders = computed(() => {
-  if (dataType.value === 'cartridges') {
-    return [
-      { key: 'manufacturer', label: 'Manufacturer', sortable: true },
-      { key: 'model', label: 'Model', sortable: true },
-      { key: 'type_name', label: 'Type', sortable: true },
-      { key: 'cu_dynamic_10hz', label: 'Compliance @ 10Hz', sortable: true },
-      { key: 'weight_g', label: 'Weight (g)', sortable: true },
-      { key: 'stylus_family_name', label: 'Stylus', sortable: true }
-    ];
-  } else { // tonearms
-    return [
-      { key: 'manufacturer', label: 'Manufacturer', sortable: true },
-      { key: 'model', label: 'Model', sortable: true },
-      { key: 'effective_mass_g', label: 'Effective Mass (g)', sortable: true },
-      { key: 'effective_length_mm', label: 'Length (mm)', sortable: true },
-      { key: 'bearing_type_name', label: 'Bearing', sortable: true },
-      { key: 'arm_shape_name', label: 'Shape', sortable: true }
-    ];
-  }
-});
+// BORTTAGEN: Den lokala computed propertyn `currentHeaders` har raderats.
+// Logiken finns nu centraliserad i explorerStore.
 
 // Avgör om filterpanelen är i sitt "ursprungliga" tillstånd.
 const isPristine = computed(() => {
-  return totalResultsCount.value === 0 &&
-         searchTerm.value === '' &&
-         Object.values(categoryFilters.value).every(v => v === undefined || v === '') &&
-         Object.values(numericFilters.value).every(v => v.min === null && v.max === null);
+  const isSearchTermEmpty = searchTerm.value === '';
+  const areCategoriesEmpty = Object.values(categoryFilters.value).every(v => v === undefined || v === '');
+  const areNumericsEmpty = Object.values(numericFilters.value).every(v => v.min === null && v.max === null);
+
+  // Pristine är när INGEN sökning har gjorts OCH inga resultat finns.
+  // Detta förhindrar att platshållaren visas när man återställer filter men det fortfarande finns resultat.
+  return totalResultsCount.value === 0 && isSearchTermEmpty && areCategoriesEmpty && areNumericsEmpty;
 });
 
 // Beräkningar för paginering
@@ -143,6 +128,8 @@ const canGoNext = computed(() => currentPage.value < totalPages.value);
 .results-header h3 {
   margin: 0;
   color: var(--color-text-high-emphasis);
+  /* Gör texten okänslig för markering för att undvika textval vid dubbelklick. */
+  user-select: none;
 }
 
 .pagination-controls {
@@ -163,6 +150,7 @@ const canGoNext = computed(() => currentPage.value < totalPages.value);
   color: var(--color-text-medium-emphasis);
   font-weight: var(--font-weight-medium);
   font-family: var(--font-family-monospace);
+  user-select: none;
 }
 
 .results-placeholder {
