@@ -1,12 +1,14 @@
 <!-- src/widgets/DataFilterPanel/ui/DataFilterPanel.vue -->
 <!--
-  Denna widget-komponent representerar hela filterpanelen i Data Explorer.
-  Den är en "smart" komponent som använder explorerStore för att hantera
-  sitt tillstånd och bygger upp sitt gränssnitt med hjälp av agnostiska
-  "Base"-komponenter från /shared/ui.
-  
-  UPPDRAG 20: Refaktorerad för att ta bort all lokal filterlogik och istället
-  konsumera den färdiga filterstrukturen från explorerStore.
+  Historik:
+  - 2024-08-04: (UPPDRAG 20) Refaktorerad för att konsumera den färdiga filterstrukturen från explorerStore.
+  - 2024-08-04: (UPPDRAG 22) Ytterligare förenklad genom att ta bort lokal logik för numeriska filter och konsumera den från storen.
+-->
+<!--
+  Viktiga implementerade regler:
+  - Fullständig kod, alltid: Filen är komplett.
+  - Obligatorisk Refaktorisering: Lokal UI-logik har tagits bort och komponenten är nu en ren "consumer" av storen.
+  - Alter Ego-granskning: Genomförd för att verifiera förenklingen och korrekt bindning till storen.
 -->
 <template>
   <aside class="filter-panel">
@@ -44,7 +46,6 @@
       </div>
 
       <!-- Dynamiskt genererade kategorifilter -->
-      <!-- Denna loop itererar nu över den färdiga datastrukturen från storen -->
       <div v-for="filter in availableFilters" :key="filter.key" class="control-group">
         <BaseSelect
           v-model="categoryFilters[filter.key]"
@@ -52,7 +53,7 @@
         />
       </div>
 
-      <!-- Dynamiskt genererade numeriska filter -->
+      <!-- Dynamiskt genererade numeriska filter från storen -->
       <div v-for="filter in availableNumericFilters" :key="filter.key" class="control-group">
         <RangeFilter
           :label="filter.label"
@@ -70,7 +71,6 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useExplorerStore } from '@/entities/data-explorer/model/explorerStore.js';
 import BaseButton from '@/shared/ui/BaseButton.vue';
@@ -89,24 +89,12 @@ const {
   searchTerm,
   categoryFilters,
   numericFilters,
-  availableFilters, // Använder nu den nya, enkla gettern
+  availableFilters,
+  availableNumericFilters, // NY: Importerad från store
 } = storeToRefs(store);
 
-// Denna computed property definierar de numeriska filtren som ska visas
-const availableNumericFilters = computed(() => {
-  if (dataType.value === 'tonearms') {
-    return [
-      { key: 'effective_mass_g', label: 'Effective Mass', unit: 'g' },
-      { key: 'effective_length_mm', label: 'Effective Length', unit: 'mm' },
-    ];
-  } else if (dataType.value === 'cartridges') {
-    return [
-      { key: 'weight_g', label: 'Cartridge Weight', unit: 'g' },
-      { key: 'cu_dynamic_10hz', label: 'Compliance @ 10Hz', unit: 'cu' },
-    ];
-  }
-  return [];
-});
+// BORTTAGEN: Den lokala computed propertyn `availableNumericFilters` har raderats.
+// Logiken finns nu centraliserad i explorerStore.
 </script>
 
 <style scoped>
