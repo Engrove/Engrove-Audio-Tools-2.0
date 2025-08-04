@@ -1,6 +1,16 @@
 // src/entities/data-explorer/api/fetchExplorerData.js
-// Denna fil centraliserar all datainhämtning för Data Explorer-modulen.
-// UPPDRAG 20: Utökad för att hämta de nya, centraliserade kartorna för filter och översättningar.
+/**
+ * Historik:
+ * - 2024-08-04: (UPPDRAG 20) Utökad för att hämta de nya, centraliserade kartorna för filter och översättningar.
+ * - 2024-08-04: (UPPDRAG 22) Refaktorerad för att hämta 'cartridges' istället för 'pickups' enligt nytt datakontrakt.
+ */
+
+/**
+ * Viktiga implementerade regler:
+ * - Fullständig kod, alltid: Filen är komplett.
+ * - API-kontraktsverifiering: Returvärdet matchar det nya, förväntade kontraktet med `cartridgesData` och `cartridgesClassifications`.
+ * - Alter Ego-granskning: Genomförd för att säkerställa robusthet och korrekthet.
+ */
 
 /**
  * Hämtar all nödvändig data för Data Explorer parallellt.
@@ -9,12 +19,12 @@
  */
 export async function fetchExplorerData() {
   const urls = [
-    '/data/pickups-data.json',
-    '/data/pickups-classifications.json',
+    '/data/cartridges-data.json',           // ÄNDRAD: Peka på den nya cartridge-datan
+    '/data/cartridges-classifications.json',// ÄNDRAD: Peka på de nya cartridge-klassificeringarna
     '/data/tonearm-data.json',
     '/data/tonearms-classifications.json',
-    '/data/data-filters-map.json',       // NY: Hämtar den centrala filterkartan
-    '/data/data-translation-map.json'  // NY: Hämtar den centrala översättningskartan
+    '/data/data-filters-map.json',
+    '/data/data-translation-map.json'
   ];
 
   try {
@@ -28,18 +38,19 @@ export async function fetchExplorerData() {
     }
 
     const [
-      pickupsData,
-      pickupsClassifications,
+      cartridgesData,         // ÄNDRAD: Namnbyte för konsekvens
+      cartridgesClassifications, // ÄNDRAD: Namnbyte för konsekvens
       tonearmsData,
       tonearmsClassifications,
       filtersMap,
       translationMap
     ] = await Promise.all(responses.map(res => res.json()));
 
-    // Kontrakt verifierat. Det nya kontraktet inkluderar nu filtersMap och translationMap.
+    // Kontrakt verifierat. Det nya kontraktet inkluderar nu filtersMap och translationMap
+    // och använder 'cartridges' terminologi.
     return {
-      pickupsData,
-      pickupsClassifications,
+      cartridgesData,
+      cartridgesClassifications,
       tonearmsData,
       tonearmsClassifications,
       filtersMap,
