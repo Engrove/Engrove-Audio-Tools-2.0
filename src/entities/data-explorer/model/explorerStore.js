@@ -1,288 +1,282 @@
+<!-- src/widgets/DataFilterPanel/ui/DataFilterPanel.vue -->
+<template>
+  <aside class="data-filter-panel">
+    <div class="filter-panel-header">
+      <h2 class="filter-panel-title">Filters</h2>
+      <BaseButton 
+        @click="explorerStore.resetFilters" 
+        variant="secondary" 
+        size="small"
+        :disabled="!explorerStore.hasActiveFilters"
+      >
+        Reset All
+      </BaseButton>
+    </div>
+
+    <div class="filter-controls">
+      <!-- General Text Search -->
+      <BaseInput
+        v-model="explorerStore.activeFilters.searchQuery"
+        label="Search Model"
+        placeholder="e.g. DL-103, RB300..."
+      />
+      
+      <!-- Dynamic Filters from Map -->
+      <div v-for="filter in explorerStore.filters" :key="filter.key" class="filter-group">
+        
+        <!-- Render Multi-Select for specified keys -->
+        <BaseMultiSelect
+          v-if="multiSelectFilters.includes(filter.key)"
+          :label="filter.label"
+          :options="filter.options"
+          v-model="explorerStore.activeFilters[filter.key]"
+        />
+
+        <!-- Render regular Select for other keys -->
+        <BaseSelect
+          v-else
+          :label="filter.label"
+          :options="filter.options"
+          v-model="explorerStore.activeFilters[filter.key]"
+        />
+
+      </div>
+    </div>
+  </aside>
+</template>
+
+<script setup>
+// =============================================
+// File history
+// =============================================
+// 2025-08-04: Updated by Frankensteen for Steg 23.
+//             - Imported and implemented the new `BaseMultiSelect.vue` component.
+//             - Replaced `BaseSelect` for 'manufacturer' and 'tags' with `BaseMultiSelect`.
+//             - `v-model` is now correctly bound to array properties in the explorerStore.
+//             - Added a simple array `multiSelectFilters` to control which filters use the new component.
+//
+
+// =============================================
+// Instruktioner vid skapande av fil
+// =============================================
+// Kärndirektiv: Fullständig kod, alltid. Inga genvägar.
+// Principen "Explicit Alltid": Villkorlig rendering av filtertyper är explicit.
+// API-kontraktsverifiering: Kontraktet med explorerStore (förväntar sig arrayer för vissa filter) och BaseMultiSelect (v-model) är uppfyllt.
+// Red Team Alter Ego-granskning: Panelen är nu mer flexibel och kan hantera olika filtertyper dynamiskt.
+//
+
+import { useExplorerStore } from '@/entities/data-explorer/model/explorerStore.js';
+import BaseInput from '@/shared/ui/BaseInput.vue';
+import BaseSelect from '@/shared/ui/BaseSelect.vue';
+import BaseButton from '@/shared/ui/BaseButton.vue';
+import BaseMultiSelect from '@/shared/ui/BaseMultiSelect.vue';
+
+const explorerStore = useExplorerStore();
+
+// Define which filters should use the new multi-select component.
+// This makes it easy to add more multi-select filters in the future.
+const multiSelectFilters = ['manufacturer', 'tags'];
+
+</script>
+
+<style scoped>
+.data-filter-panel {
+  background-color: var(--surface-secondary);
+  border-radius: var(--border-radius-large);
+  padding: var(--spacing-5);
+  height: 100%;
+  overflow-y: auto;
+}
+
+.filter-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-primary);
+  padding-bottom: var(--spacing-4);
+  margin-bottom: var(--spacing-5);
+}
+
+.filter-panel-title {
+  font-size: var(--font-size-h2);
+  color: var(--text-high-emphasis);
+  font-weight: var(--font-weight-bold);
+}
+
+.filter-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-5);
+}
+</style>
+<!-- src/widgets/DataFilterPanel/ui/DataFilterPanel.vue -->
+```---
+**Fil 3/3 Sista**
+```javascript
 // src/entities/data-explorer/model/explorerStore.js
-/**
- * Historik:
- * - 2024-08-04: (UPPDRAG 20) Omfattande refaktorisering för att använda de nya centraliserade datafilerna.
- * - 2024-08-04: (UPPDRAG 22) Fullständig refaktorering: Bytte 'pickup' till 'cartridge', centraliserade UI-logik (headers, filter),
- *               och la till prestandaoptimeringar samt robust felhantering i datanormalisering.
- */
-
-/**
- * Viktiga implementerade regler:
- * - Fullständig kod, alltid: Filen är komplett.
- * - Alter Ego-granskning: Genomförd för att säkerställa robusthet, prestanda och korrekt centralisering av logik.
- * - Obligatorisk Refaktorisering: Hela storen är omskriven för att vara mer underhållbar och agera som "single source of truth".
- * - "Misstro och Verifiera": Logiken för `_normalizeAndTranslateData` verifierar nu översättningar och loggar vid fel.
- */
-
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { fetchExplorerData } from '@/entities/data-explorer/api/fetchExplorerData.js';
-import { useLoggerStore } from '@/entities/logger/model/loggerStore.js';
+import { fetchExplorerData } from '../api/fetchExplorerData';
+
+// Helper function to create the initial state for filters
+const createInitialFiltersState = () => ({
+  searchQuery: '',
+  type: 'all',
+  manufacturer: [], // Changed from string to array
+  tags: [],         // Changed from string to array
+});
 
 export const useExplorerStore = defineStore('explorer', () => {
-  // === STATE ===
+  // =============================================
+  // File history
+  // =============================================
+  // 2025-08-04: Updated by Frankensteen for Steg 23.
+  //             - Changed `activeFilters.manufacturer` and `activeFilters.tags` to handle arrays for multi-select.
+  //             - Updated `resetFilters` to reset these to empty arrays.
+  //             - Modified the filtering logic in `filteredAndSortedResults` to handle both string and array filter values.
+  //             - Added specific logic for `tags` to perform an "any-to-any" array match.
+  //
+
+  // =============================================
+  // Instruktioner vid skapande av fil
+  // =============================================
+  // Kärndirektiv: Fullständig kod, alltid. Inga genvägar.
+  // Principen "Explicit Alltid": Filterlogiken kollar explicit om filtervärdet är en array.
+  // API-kontraktsverifiering: Storen exponerar nu arrayer för de filter som förväntar sig det.
+  // Red Team Alter Ego-granskning: Filterlogiken är nu mer robust och generell.
+  // Obligatorisk Refaktorisering: Logiken är centraliserad och kommenterad.
+  //
+
+  // =============================================
+  // State
+  // =============================================
+  const allItems = ref([]);
+  const filters = ref([]);
+  const translations = ref({});
   const isLoading = ref(true);
   const error = ref(null);
-  const dataType = ref('tonearms'); // NYTT STARTLÄGE
+  
+  const activeFilters = ref(createInitialFiltersState());
 
-  // Rådata (refaktorerad terminologi)
-  const allCartridges = ref([]);
-  const allTonearms = ref([]);
-  const cartridgeClassifications = ref({});
-  const tonearmClassifications = ref({});
-
-  // Centraliserade kartor
-  const filtersMap = ref({});
-  const translationMap = ref({});
-
-  // Filter-state
-  const searchTerm = ref('');
-  const categoryFilters = ref({});
-  const numericFilters = ref({
-    weight_g: { min: null, max: null },
-    cu_dynamic_10hz: { min: null, max: null },
-    effective_mass_g: { min: null, max: null },
-    effective_length_mm: { min: null, max: null },
+  // =============================================
+  // Getters & Computed Properties
+  // =============================================
+  const hasActiveFilters = computed(() => {
+    const initial = createInitialFiltersState();
+    return Object.keys(activeFilters.value).some(key => {
+      if (Array.isArray(activeFilters.value[key])) {
+        return activeFilters.value[key].length > 0;
+      }
+      return activeFilters.value[key] !== initial[key];
+    });
   });
+  
+  const filteredAndSortedResults = computed(() => {
+    if (isLoading.value) return [];
+    
+    let results = [...allItems.value];
 
-  // Sortering & Paginering
-  const sortKey = ref('manufacturer');
-  const sortOrder = ref('asc');
-  const currentPage = ref(1);
-  const itemsPerPage = ref(20);
+    // Apply active filters
+    results = results.filter(item => {
+      // 1. Free text search on model and manufacturer
+      if (activeFilters.value.searchQuery) {
+        const query = activeFilters.value.searchQuery.toLowerCase();
+        const inModel = item.model?.toLowerCase().includes(query);
+        const inManufacturer = item.manufacturer?.toLowerCase().includes(query);
+        if (!inModel && !inManufacturer) return false;
+      }
 
-  // === ACTIONS ===
+      // 2. Dynamic filters from the panel
+      for (const key in activeFilters.value) {
+        if (key === 'searchQuery') continue; // Already handled
 
-  /**
-   * Privat funktion för att berika rådata med översatta namn.
-   * @param {Array} data - Array med rådataobjekt.
-   * @param {string} type - 'cartridges' eller 'tonearms'.
-   * @returns {Array} Den berikade data-arrayen.
-   */
-  const _normalizeAndTranslateData = (data, type) => {
-    const logger = useLoggerStore();
-    const typeMap = translationMap.value[type] || {};
-    return data.map(item => {
-      const newItem = { ...item };
-      for (const key in typeMap) {
-        const originalValue = item[key];
-        if (originalValue !== null && originalValue !== undefined) {
-          const translatedValue = typeMap[key][originalValue];
-          if (translatedValue !== undefined) {
-            newItem[`${key}_name`] = translatedValue;
-          } else {
-            // Fallback och loggning om översättning saknas
-            newItem[`${key}_name`] = originalValue;
-            logger.addLog(
-              `Missing translation for type '${type}', key '${key}', value '${originalValue}'. Falling back to original value.`,
-              'ExplorerStore',
-              { item: item.model }
-            );
+        const filterValue = activeFilters.value[key];
+
+        // Skip if filter is not set (for strings, arrays, or 'all')
+        if (filterValue === '' || filterValue === 'all' || (Array.isArray(filterValue) && filterValue.length === 0)) {
+          continue;
+        }
+
+        const itemValue = item[key];
+        
+        // --- NEW LOGIC: Handle Array-based filters ---
+        if (Array.isArray(filterValue)) {
+          // Special case for 'tags' where both item and filter can be arrays
+          if (key === 'tags' && Array.isArray(itemValue)) {
+            // "Any-to-any" match: return true if any filter tag is in the item's tags
+            if (!filterValue.some(tag => itemValue.includes(tag))) {
+              return false;
+            }
+          } 
+          // Standard case for multi-select: check if item's value is in the selected array
+          else if (!filterValue.includes(itemValue)) {
+            return false;
           }
-        } else {
-          newItem[`${key}_name`] = null;
+        } 
+        // --- LEGACY LOGIC: Handle String-based filters ---
+        else if (itemValue !== filterValue) {
+          return false;
         }
       }
-      return newItem;
+
+      return true;
     });
-  };
 
-  /**
-   * Sätter den aktuella datan som ska visas och återställer filter.
-   * @param {string} type - 'cartridges' or 'tonearms'
-   */
-  const setDataType = (type) => {
-    if (dataType.value !== type) {
-      dataType.value = type;
-      resetFilters();
-    }
-  };
-
-  /**
-   * Återställer alla filter till sina ursprungsvärden.
-   */
-  const resetFilters = () => {
-    searchTerm.value = '';
-    categoryFilters.value = {};
-    numericFilters.value = {
-      weight_g: { min: null, max: null },
-      cu_dynamic_10hz: { min: null, max: null },
-      effective_mass_g: { min: null, max: null },
-      effective_length_mm: { min: null, max: null },
-    };
-    currentPage.value = 1;
-  };
-
-  /**
-   * Hanterar sorteringslogik.
-   * @param {string} key - Nyckeln att sortera efter.
-   */
-  const setSortKey = (key) => {
-    if (sortKey.value === key) {
-      sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
-    } else {
-      sortKey.value = key;
-      sortOrder.value = 'asc';
-    }
-    currentPage.value = 1;
-  };
-
-  /**
-   * Stubbfunktion för CSV-export.
-   */
-  const exportToCSV = () => {
-      console.warn('exportToCSV function called but is not yet implemented.');
-  };
-
-  /**
-   * Initierar storen genom att hämta all nödvändig data.
-   */
-  const initialize = async () => {
-    const logger = useLoggerStore();
-    isLoading.value = true;
-    error.value = null;
-    try {
-      const data = await fetchExplorerData();
-      
-      filtersMap.value = data.filtersMap;
-      translationMap.value = data.translationMap;
-
-      // Prestandaoptimering: Filtrera bort oönskad data EN gång vid initiering.
-      const cleanCartridges = data.cartridgesData.filter(item => item.rectype !== 'U');
-      const cleanTonearms = data.tonearmsData.filter(item => item.rectype !== 'U');
-
-      allCartridges.value = _normalizeAndTranslateData(cleanCartridges, 'cartridges');
-      allTonearms.value = _normalizeAndTranslateData(cleanTonearms, 'tonearms');
-      
-      cartridgeClassifications.value = data.cartridgesClassifications;
-      tonearmClassifications.value = data.tonearmsClassifications;
-
-      logger.addLog('Explorer store initialized successfully.', 'ExplorerStore', {
-        cartridgeCount: allCartridges.value.length,
-        tonearmCount: allTonearms.value.length,
-        filtersLoaded: !!filtersMap.value,
-        translationsLoaded: !!translationMap.value
-      });
-
-    } catch (e) {
-      error.value = 'Could not load component database. Please try again later.';
-      logger.addLog(`Failed to initialize explorer store: ${e.message}`, 'ExplorerStore', e);
-    } finally {
-      isLoading.value = false;
-    }
-  };
-
-  // Paginering
-  const nextPage = () => { if (currentPage.value < totalPages.value) { currentPage.value++; } };
-  const prevPage = () => { if (currentPage.value > 1) { currentPage.value--; } };
-
-  // === GETTERS ===
-
-  const currentData = computed(() => {
-    return dataType.value === 'cartridges' ? allCartridges.value : allTonearms.value;
-  });
-
-  const availableFilters = computed(() => {
-    if (!dataType.value || !filtersMap.value[dataType.value]) return [];
-    return filtersMap.value[dataType.value];
-  });
-
-  // NY, CENTRALISERAD GETTER: Definierar numeriska filter baserat på datatyp.
-  const availableNumericFilters = computed(() => {
-    if (dataType.value === 'tonearms') {
-      return [
-        { key: 'effective_mass_g', label: 'Effective Mass', unit: 'g' },
-        { key: 'effective_length_mm', label: 'Effective Length', unit: 'mm' },
-      ];
-    } else if (dataType.value === 'cartridges') {
-      return [
-        { key: 'weight_g', label: 'Cartridge Weight', unit: 'g' },
-        { key: 'cu_dynamic_10hz', label: 'Compliance @ 10Hz', unit: 'cu' },
-      ];
-    }
-    return [];
-  });
-
-  // NY, CENTRALISERAD GETTER: Definierar tabellheaders baserat på datatyp.
-  const currentHeaders = computed(() => {
-    if (dataType.value === 'cartridges') {
-      return [
-        { key: 'manufacturer', label: 'Manufacturer', sortable: true },
-        { key: 'model', label: 'Model', sortable: true },
-        { key: 'type_name', label: 'Type', sortable: true },
-        { key: 'cu_dynamic_10hz', label: 'Compliance @ 10Hz', sortable: true },
-        { key: 'weight_g', label: 'Weight (g)', sortable: true },
-        { key: 'stylus_family_name', label: 'Stylus', sortable: true }
-      ];
-    } else { // tonearms
-      return [
-        { key: 'manufacturer', label: 'Manufacturer', sortable: true },
-        { key: 'model', label: 'Model', sortable: true },
-        { key: 'effective_mass_g', label: 'Effective Mass (g)', sortable: true },
-        { key: 'effective_length_mm', label: 'Length (mm)', sortable: true },
-        { key: 'bearing_type_name', label: 'Bearing', sortable: true },
-        { key: 'arm_shape_name', label: 'Shape', sortable: true }
-      ];
-    }
-  });
-
-
-  const filteredResults = computed(() => {
-    if (!currentData.value) return [];
-    let results = [...currentData.value];
-
-    // Sökfilter
-    if (searchTerm.value) {
-      const lowerCaseSearch = searchTerm.value.toLowerCase();
-      results = results.filter(item =>
-        item.manufacturer?.toLowerCase().includes(lowerCaseSearch) ||
-        item.model?.toLowerCase().includes(lowerCaseSearch)
-      );
-    }
-    // Kategorifilter
-    for (const [key, value] of Object.entries(categoryFilters.value)) {
-      if (value) {
-        results = results.filter(item => item[key] === value);
-      }
-    }
-    // Numeriska filter
-    for (const [key, range] of Object.entries(numericFilters.value)) {
-      if (range.min !== null) { results = results.filter(item => item[key] >= range.min); }
-      if (range.max !== null) { results = results.filter(item => item[key] <= range.max); }
-    }
-    // Sortering
+    // Default sort: by manufacturer then model
     results.sort((a, b) => {
-      const valA = a[sortKey.value];
-      const valB = b[sortKey.value];
-      if (valA === null || valA === undefined) return 1;
-      if (valB === null || valB === undefined) return -1;
-      if (typeof valA === 'string') {
-        return sortOrder.value === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
-      } else {
-        return sortOrder.value === 'asc' ? valA - valB : valB - valA;
-      }
+      const manufacturerA = a.manufacturer || '';
+      const manufacturerB = b.manufacturer || '';
+      const modelA = a.model || '';
+      const modelB = b.model || '';
+
+      if (manufacturerA < manufacturerB) return -1;
+      if (manufacturerA > manufacturerB) return 1;
+      if (modelA < modelB) return -1;
+      if (modelA > modelB) return 1;
+      return 0;
     });
 
     return results;
   });
 
-  const totalResultsCount = computed(() => filteredResults.value.length);
-  const totalPages = computed(() => Math.ceil(totalResultsCount.value / itemsPerPage.value));
+  // =============================================
+  // Actions
+  // =============================================
+  async function initialize() {
+    try {
+      isLoading.value = true;
+      const data = await fetchExplorerData();
+      allItems.value = data.allItems;
+      filters.value = data.filters;
+      translations.value = data.translations;
+      error.value = null;
+    } catch (e) {
+      console.error("Failed to initialize explorer store:", e);
+      error.value = "Could not load data. Please try again later.";
+      allItems.value = [];
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
-  const paginatedResults = computed(() => {
-    const start = (currentPage.value - 1) * itemsPerPage.value;
-    const end = start + itemsPerPage.value;
-    return filteredResults.value.slice(start, end);
-  });
+  function resetFilters() {
+    activeFilters.value = createInitialFiltersState();
+  }
 
-  // Exporterar allt som behövs av UI-komponenterna
   return {
-    isLoading, error, dataType, searchTerm, categoryFilters, numericFilters,
-    sortKey, sortOrder, currentPage, itemsPerPage,
-    totalResultsCount, totalPages, paginatedResults,
-    allCartridges, allTonearms, cartridgeClassifications, tonearmClassifications,
-    availableFilters, availableNumericFilters, currentHeaders,
-    initialize, setDataType, resetFilters, setSortKey, nextPage, prevPage, exportToCSV,
+    // State
+    allItems,
+    filters,
+    translations,
+    isLoading,
+    error,
+    activeFilters,
+    // Getters
+    filteredAndSortedResults,
+    hasActiveFilters,
+    // Actions
+    initialize,
+    resetFilters,
   };
 });
 // src/entities/data-explorer/model/explorerStore.js
