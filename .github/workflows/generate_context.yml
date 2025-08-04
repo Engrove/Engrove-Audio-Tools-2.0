@@ -15,7 +15,7 @@
 # - Kontraktsverifiering: Säkerställer att artefakten som publiceras (context.json)
 #   har ett rent och förväntat innehåll.
 # - Interaktionsrisker (t.ex. loggar som förorenar data) har eliminerats.
-#
+# Run 2
 
 name: Generate and Deploy Project Context
 
