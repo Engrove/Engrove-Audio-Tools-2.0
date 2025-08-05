@@ -224,7 +224,7 @@ Ett nytt försök att lösa felet med statisk dataladdning på Cloudflare Pages,
 **Detaljerade Genomförda Åtgärder:**
 
 * **Försök till Åtgärd av Cloudflare Pages Routing-problem (wrangler.toml):**  
-  * **Fil:** wrangler.toml \- Modifierades för att inkludera en \[\[pages.functions\]\]-sektion med route och exclude-regler (/data/\*), med avsikt att explicit definiera SPA-routingbeteende och undantag för statiska filer på Cloudflare Pages.  
+  * **Fil:** wrangler.toml \- Modifierades för att inkludera en \[\[pages.functions\]\]-sektion med route och exclude-regler (/data/*), med avsikt att explicit definiera SPA-routingbeteende och undantag för statiska filer på Cloudflare Pages.  
   * **Resultat:** Byggprocessen slutfördes framgångsrikt, men Cloudflare Pages utfärdade en varning om oväntade fält i wrangler.toml. Det kritiska körtidsfelet (SyntaxError: Unexpected token '\<', vilket indikerar att HTML serveras istället för JSON) kvarstod på den driftsatta webbplatsen, vilket visar att routingkonfigurationen fortfarande är felaktig för hämtning av statiska datafiler.
 
 ---
@@ -486,7 +486,7 @@ En kritisk refaktorisering av hela projektets databehandlingskedja har genomför
 * **Strategisk Omarbetning av Datapipeline:** En analys av filterdatan avslöjade dataintegritetsproblem, vilket ledde till en fullständig omarbetning av databehandlingskedjan.  
   * **Fil:** public/data/data-aliases.json \- En ny, statisk "fallback"-fil skapades för att hantera manuella översättningar och normalisering av icke-standardiserade data.  
   * **Fil:** prepare\_data.py \- Genomgick en omfattande uppgradering för att:  
-    1. Använda både \*-classifications.json och data-aliases.json för att bygga en komplett översättningskarta.  
+    1. Använda både *-classifications.json och data-aliases.json för att bygga en komplett översättningskarta.  
     2. Generera en ny, central data-translation-map.json som blir den enda sanningskällan för all textvisning i frontend.  
     3. Generera en ny data-filters-map.json baserad på den rena, översatta datan.  
     4. Implementera transparent rapportering av alla datanormaliseringar och varningar vid varje körning.  
@@ -583,13 +583,6 @@ En fullständig, arkitektonisk refaktorisering av hela Data Explorer-modulen har
    * **Fil:** src/features/item-details/ui/ItemDetailModal.vue \- Verifierades som fullt kompatibel med det nya datakontraktet utan kodändringar. Dess interna logik matchar redan de nya \_name-fälten.  
    * **Resultat:** UI-lagret har förenklats avsevärt. Komponenterna är nu 'presentationskomponenter' som styrs helt av det centrala datalagret, vilket minskar risken för buggar och förenklar underhåll.
 
----
-
-**Nuvarande Projektstatus:**  
-Projektet är i ett exceptionellt stabilt, bevisat korrekt och arkitektoniskt sunt tillstånd. Både databehandlingskedjan och frontend-applikationen är fullt synkroniserade. "Operation: Återställning" är slutförd och projektet är redo för nästa fas av funktionsutveckling på en solid grund.
-
-**Statusrapport: Steg 22.1 (Planeringssession) | 04.08.2025**
-
 **Övergripande Sammanfattning:**  
 En grundlig strategisk planeringssession genomfördes för att definiera nästa utvecklingsfas ("Fas 3") för Data Explorer. Ett nytt, mer effektivt arbetsflöde som använder direktåtkomst till GitHub via commit-hashar etablerades. Ett komplett, detaljerat "Projektfil-Manifest" skapades för att fungera som en levande teknisk blueprint för hela projektet.
 
@@ -600,7 +593,35 @@ En grundlig strategisk planeringssession genomfördes för att definiera nästa 
 * **Definition av Data Explorer Fas 3:** En detaljerad, trestegsplan har utarbetats för att avsevärt förbättra Data Explorer. Planen inkluderar en total omarbetning av detaljmodalen, införandet av flervalsfilter och implementationen av en "jämför korg"-funktion.
 
 ---
+### Steg 23.1: Data Explorer Master/Detail & Jämförelsefunktion | 2025-08-05
 
+**Övergripande Sammanfattning:**
+Genomförde en omfattande uppgradering av Data Explorer-modulen, vilket transformerade den från en enkel listvy till ett avancerat verktyg för analys och jämförelse. Arbetet inkluderade en total omskrivning av detaljvisningen, införandet av avancerad flervalsfiltrering, och implementationen av en komplett "Jämför Korg"-funktion. Ett kritiskt fel i min kodgenereringsprocess identifierades och korrigerades, vilket ledde till ett skärpt protokoll för filverifiering.
+
+---
+
+**Detaljerade Genomförda Åtgärder:**
+
+*   **Omarbetning av Detaljvy:** Ersatte den gamla detaljmodalen med en ny, `multi-zon`-komponent som på ett strukturerat och logiskt sätt presenterar tekniska data, i linje med `Global UI-Standard`.
+    *   **Fil:** `src/features/item-details/ui/ItemDetailModal.vue` - Helt omskriven för att gruppera data och förbereda för framtida synergianalys.
+
+*   **Implementation av Avancerad Filtrering:** Införde möjligheten att filtrera på flera värden samtidigt (t.ex. flera tillverkare) genom en ny, återanvändbar flervalskomponent.
+    *   **Fil:** `src/shared/ui/BaseMultiSelect.vue` - Ny, agnostisk komponent för flerval med `v-model`-stöd.
+    *   **Fil:** `src/widgets/DataFilterPanel/ui/DataFilterPanel.vue` - Uppdaterad för att använda `BaseMultiSelect`.
+    *   **Fil:** `src/entities/data-explorer/model/explorerStore.js` - Modifierad för att hantera array-baserade filter och logik för tagg-matchning.
+
+*   **Implementation av "Jämför Korg":** Skapade ett komplett flöde för att välja, hantera och jämföra upp till fem objekt sida-vid-sida.
+    *   **Fil:** `src/entities/comparison/model/comparisonStore.js` - Ny Pinia-store för att hantera tillståndet för valda objekt.
+    *   **Fil:** `src/shared/ui/BaseTable.vue` - Korrekt sammanslagen för att inkludera en urvalskolumn med kryssrutor, med bibehållen avancerad funktionalitet.
+    *   **Fil:** `src/widgets/ComparisonTray/ui/ComparisonTray.vue` - Ny widget som visar valda objekt och jämförelseåtgärder.
+    *   **Fil:** `src/features/comparison-modal/ui/ComparisonModal.vue` - Ny modal som innehåller den centrala logiken för att transponera och visa jämförelsedata.
+    *   **Fil:** `src/pages/data-explorer/DataExplorerPage.vue` - Uppdaterad för att agera dirigent och koppla samman all ny funktionalitet.
+
+---
+
+**Nuvarande Projektstatus:**
+Data Explorer-modulen är nu funktionellt komplett enligt specifikationen för Fas 3. Projektet är stabilt och redo för nästa utvecklingscykel. Protokollen för AI-interaktion har skärpts för att säkerställa högre tillförlitlighet i framtida kodgenerering.
+---
 **Nuvarande Projektstatus:**  
 Projektet är i ett stabilt och väl-dokumenterat tillstånd. Denna session har producerat en detaljerad och verifierad teknisk roadmap samt förbättrat de interna arbetsprocesserna. Nästa session (Steg 23.1) kommer att fokusera på att implementera den fastställda planen.
 
@@ -610,23 +631,22 @@ Statusrapport: Steg 23.2 | 5.8.2025
 
 En fullständig och systematisk konvertering av projektets samtliga styrande och tekniska dokument till ett standardiserat Markdown-format har genomförts. Samtidigt har AI Context Builder-verktyget fått en betydande UX-förbättring i form av en "Select Core Docs"-knapp för att effektivisera uppstarten av nya AI-sessioner.
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
 
 Detaljerade Genomförda Åtgärder:
 
-\* UX-förbättring av AI Context Builder: En ny genvägsknapp implementerades för att förenkla valet av grundläggande kontextfiler.
+* UX-förbättring av AI Context Builder: En ny genvägsknapp implementerades för att förenkla valet av grundläggande kontextfiler.
 
-   \* Fil: \`scripts/wrap\_json\_in\_html.py\` \- Uppdaterades med en ny knapp och tillhörande JavaScript-logik som automatiskt väljer en fördefinierad uppsättning av sju kritiska styrdokument och konfigurationsfiler.
+   * Fil: \`scripts/wrap\_json\_in\_html.py\` \- Uppdaterades med en ny knapp och tillhörande JavaScript-logik som automatiskt väljer en fördefinierad uppsättning av sju kritiska styrdokument och konfigurationsfiler.
 
-   \* Resultat: Risken för att glömma viktiga filer vid start av en ny session har minimerats, och arbetsflödet har effektiviserats.
+   * Resultat: Risken för att glömma viktiga filer vid start av en ny session har minimerats, och arbetsflödet har effektiviserats.
 
-\* Konvertering och Formalisering av Projektdokumentation: En serie av ostrukturerade text- och loggfiler har konverterats till ett enhetligt och läsbart Markdown-format och placerats i \`/docs\`-mappen.
+* Konvertering och Formalisering av Projektdokumentation: En serie av ostrukturerade text- och loggfiler har konverterats till ett enhetligt och läsbart Markdown-format och placerats i \`/docs\`-mappen.
 
-   \* Filer: \`Global\_UI-Standard\_för\_Engrove-plattformen.md\`, \`Mappstruktur\_och\_Arbetsflöde.md\`, \`Teknisk\_Beskrivning\_Engrove\_Audio\_Toolkit.md\`, \`Databehandlingskedja\_för\_Engrove\_Audio\_Toolkit.md\`, \`AR\_Protractor\_Teknisk\_Analys.md\`, \`AR\_Protractor\_Kodspecifikation\_Bilaga.md\`, \`AR\_Protractor\_Kamerakalibrering.md\`, \`Wow\_Effekten\_och\_UX\_Strategi.md\`, \`Interaktiva\_Animationer\_för\_Verktygskort.md\` \- Samtliga filer har skapats, strukturerats om med korrekt Markdown-syntax och försetts med en standardiserad fil-header.
+   * Filer: \`Global\_UI-Standard\_för\_Engrove-plattformen.md\`, \`Mappstruktur\_och\_Arbetsflöde.md\`, \`Teknisk\_Beskrivning\_Engrove\_Audio\_Toolkit.md\`, \`Databehandlingskedja\_för\_Engrove\_Audio\_Toolkit.md\`, \`AR\_Protractor\_Teknisk\_Analys.md\`, \`AR\_Protractor\_Kodspecifikation\_Bilaga.md\`, \`AR\_Protractor\_Kamerakalibrering.md\`, \`Wow\_Effekten\_och\_UX\_Strategi.md\`, \`Interaktiva\_Animationer\_för\_Verktygskort.md\` \- Samtliga filer har skapats, strukturerats om med korrekt Markdown-syntax och försetts med en standardiserad fil-header.
 
-   \* Fil: \`Gemini\_Chatthistorik.txt\` & \`ByggLogg.txt\` \- Formaliserades med standard-headers och deras fullständiga innehåll bevarades intakt.
+   * Fil: \`Gemini\_Chatthistorik.txt\` & \`ByggLogg.txt\` \- Formaliserades med standard-headers och deras fullständiga innehåll bevarades intakt.
 
-   \* Resultat: Projektets samtliga styrande dokument är nu centraliserade, korrekt formaterade och lättillgängliga, vilket avsevärt förbättrar projektets långsiktiga underhållbarhet.
+   * Resultat: Projektets samtliga styrande dokument är nu centraliserade, korrekt formaterade och lättillgängliga, vilket avsevärt förbättrar projektets långsiktiga underhållbarhet.
 
 ---
 
@@ -636,41 +656,41 @@ Projektet är i ett exceptionellt väl-dokumenterat och stabilt tillstånd. Båd
 
 Statusrapport: Steg 23.3 | 05.08.2025
 
-\*\*Övergripande Sammanfattning:\*\*
+**Övergripande Sammanfattning:**
 
 Verktyget "AI Context Builder" har genomgått en betydande funktionell expansion för att förbättra och automatisera arbetsflödet. Implementationen följdes av en iterativ felsöknings- och förfiningscykel baserad på användarfeedback, vilket resulterade i ett mer robust och intelligent verktyg. Ett nytt protokoll för att standardisera datautbytet med verktyget har också etablerats.
 
-\*\*Detaljerade Genomförda Åtgärder:\*\*
+**Detaljerade Genomförda Åtgärder:**
 
-\*\*Funktionsexpansion av AI Context Builder:\*\* Fyra nya huvudfunktioner implementerades för att öka verktygets interaktivitet och nytta.
+**Funktionsexpansion av AI Context Builder:** Fyra nya huvudfunktioner implementerades för att öka verktygets interaktivitet och nytta.
 
-\*   \*\*Fil:\*\* \`scripts/wrap\_json\_in\_html.py\` \- HTML-strukturen utökades med en modal för filförhandsgranskning och en \`\<textarea\>\` för JSON-instruktioner. JavaScript-logiken skrevs om för att inkludera dynamiska SVG-ikoner, en \`fetch\`-baserad förhandsgranskning av filer (text och bild), och en event-lyssnare för att hantera JSON-input.
+*   **Fil:** \`scripts/wrap\_json\_in\_html.py\` \- HTML-strukturen utökades med en modal för filförhandsgranskning och en \`\<textarea\>\` för JSON-instruktioner. JavaScript-logiken skrevs om för att inkludera dynamiska SVG-ikoner, en \`fetch\`-baserad förhandsgranskning av filer (text och bild), och en event-lyssnare för att hantera JSON-input.
 
-\*   \*\*Resultat:\*\* Verktyget är nu kapabelt att förhandsgranska filer direkt i gränssnittet och ta emot maskinläsbara instruktioner.
+*   **Resultat:** Verktyget är nu kapabelt att förhandsgranska filer direkt i gränssnittet och ta emot maskinläsbara instruktioner.
 
-\*\*Felrättning av Byggprocess:\*\* Ett kritiskt byggfel som uppstod efter den första implementationen identifierades och åtgärdades.
+**Felrättning av Byggprocess:** Ett kritiskt byggfel som uppstod efter den första implementationen identifierades och åtgärdades.
 
-\*   \*\*Fil:\*\* \`scripts/wrap\_json\_in\_html.py\` \- Ett syntaxfel korrigerades där JavaScript-kommentarer (\`//\`) felaktigt hade använts i en Python-fil. Dessa ersattes med korrekta Python-kommentarer (\`\#\`).
+*   **Fil:** \`scripts/wrap\_json\_in\_html.py\` \- Ett syntaxfel korrigerades där JavaScript-kommentarer (\`//\`) felaktigt hade använts i en Python-fil. Dessa ersattes med korrekta Python-kommentarer (\`\#\`).
 
-\*   \*\*Resultat:\*\* Byggprocessen i GitHub Actions slutförs nu framgångsrikt utan syntaxfel.
+*   **Resultat:** Byggprocessen i GitHub Actions slutförs nu framgångsrikt utan syntaxfel.
 
-\*\*Förfining av JSON-driven Filmarkering:\*\* Funktionen för automatisk filmarkering gjordes mer intelligent och användarvänlig baserat på specifik feedback.
+**Förfining av JSON-driven Filmarkering:** Funktionen för automatisk filmarkering gjordes mer intelligent och användarvänlig baserat på specifik feedback.
 
-\*   \*\*Fil:\*\* \`scripts/wrap\_json\_in\_html.py\` \- JavaScript-funktionen \`handleInstructionInput\` skrevs om helt för att implementera tre nya regler: 1\) befintliga val rensas inte (additiv logik), 2\) matchningen är skiftlägesokänslig, och 3\) matchningen sker på slutet av filsökvägen för att tillåta partiella sökvägar.
+*   **Fil:** \`scripts/wrap\_json\_in\_html.py\` \- JavaScript-funktionen \`handleInstructionInput\` skrevs om helt för att implementera tre nya regler: 1\) befintliga val rensas inte (additiv logik), 2\) matchningen är skiftlägesokänslig, och 3\) matchningen sker på slutet av filsökvägen för att tillåta partiella sökvägar.
 
-\*   \*\*Resultat:\*\* Funktionen är nu betydligt mer flexibel och robust, vilket förenklar skapandet av instruktions-JSON.
+*   **Resultat:** Funktionen är nu betydligt mer flexibel och robust, vilket förenklar skapandet av instruktions-JSON.
 
-\*\*Etablering av Nytt Protokoll:\*\* Ett nytt standardiserat format för instruktions-JSON definierades.
+**Etablering av Nytt Protokoll:** Ett nytt standardiserat format för instruktions-JSON definierades.
 
-\*   \*\*Fil:\*\* \`AI.md\` (målfil) \- Ett nytt protokoll, "EXTRA PROTOKOLL: 'KONTEXT-JSON FÖR NÄSTA SESSION' (Version 1.0)", skapades för att definiera den exakta JSON-strukturen som verktyget förväntar sig.
+*   **Fil:** \`AI.md\` (målfil) \- Ett nytt protokoll, "EXTRA PROTOKOLL: 'KONTEXT-JSON FÖR NÄSTA SESSION' (Version 1.0)", skapades för att definiera den exakta JSON-strukturen som verktyget förväntar sig.
 
-\*   \*\*Resultat:\*\* En formell standard har etablerats, vilket säkerställer konsekvens och förutsägbarhet i framtida brainstorming- och överlämningssessioner.
+*   **Resultat:** En formell standard har etablerats, vilket säkerställer konsekvens och förutsägbarhet i framtida brainstorming- och överlämningssessioner.
 
-\*\*Ouppklarade fel och brister:\*\*
+**Ouppklarade fel och brister:**
 
 Inga kända fel kvarstår från denna session.
 
-\*\*Nuvarande Projektstatus:\*\*
+**Nuvarande Projektstatus:**
 
 Projektets kringverktyg har genomgått en betydande uppgradering och är nu stabila. Hela systemet är redo för nästa planerade utvecklingssteg.
 
