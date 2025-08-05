@@ -19,7 +19,7 @@
 
 ## 1. Syfte
 
-Filen `manufacturers.json` agerar som en central och auktoritativ kunskapsbas för skriptet `ai_new.py`. Dess primära syfte är att lagra en verifierad, officiell URL för varje unik tillverkare av pickuper och tonarmar som finns i systemets databaser (`pickup_data.json`, `tonearm_data.json`).
+Filen `manufacturers.json` agerar som en central och auktoritativ kunskapsbas för skriptet `ai_[version].py`. Dess primära syfte är att lagra en verifierad, officiell URL för varje unik tillverkare av pickuper och tonarmar som finns i systemets databaser (`pickup_data.json`, `tonearm_data.json`).
 
 Genom att underhålla denna "golden record"-lista säkerställer skriptet att AI:n, vid databerikning, alltid utgår från den mest pålitliga källan (tillverkarens officiella hemsida), vilket minimerar risken för att felaktig eller föråldrad information hämtas från mindre tillförlitliga källor som forum eller inofficiella wikis.
 
@@ -50,7 +50,7 @@ Filen är en JSON-array (`[]`) där varje element är ett JSON-objekt (`{}`) som
 
 ## 3. Automatisk Berikningsprocess
 
-Filen är designad för att skapas och underhållas automatiskt av `ai_new.py` genom en process som körs i början av varje körning.
+Filen är designad för att skapas och underhållas automatiskt av `ai_[version].py` genom en process som körs i början av varje körning.
 
 1.  **Identifiering av Saknade Tillverkare:**
     *   Skriptet skannar först igenom `pickup_data.json` och `tonearm_data.json` för att skapa en komplett lista över alla unika tillverkarnamn.
@@ -81,4 +81,4 @@ Filen är designad för att skapas och underhållas automatiskt av `ai_new.py` g
 }
 ```
 
-Vid nästa körning kommer `ai_new.py` automatiskt att upptäcka denna nya post och påbörja processen för att hitta den officiella URL:en.
+Vid nästa körning kommer `ai_[version].py` automatiskt att upptäcka denna nya post och påbörja processen för att hitta den officiella URL:en.
