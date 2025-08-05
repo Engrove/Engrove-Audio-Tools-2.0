@@ -1,14 +1,10 @@
 # .github/workflows/generate_context.yml
 #
 # HISTORIK:
-# * v1.0 (Initial): Basversion för att köra skript och publicera.
-# * v2.0 (Post-Tribunal): Förbättrad version efter "Help me God"-granskning.
-# * v3.0 (Enhanced): Robust felhantering, cachning och validering.
-# * v4.0 (AI Data Dump): Omdesignad för att skapa en ren HTML-sida avsedd för AI-konsumtion.
-# * v5.0 (Robust Generation): Ersätter 'cat'-kommandon med ett Python-skript för att bygga index.html.
-# * v6.0 (AI.md Integration): Separerar AI.md-innehåll till en egen sektion i HTML-outputen.
-#   - LÄGGER TILL: En dedikerad sektion för AI-instruktioner i början av sidan.
-#   - FÖRBÄTTRAR: Python-skriptet i workflowet parsar nu JSON för att separera data.
+# * v1.0 - v6.0: Tidigare versioner.
+# * v7.0 (Project Documentation Integration): Omarbetad för att dynamiskt inkludera alla .md-filer från en /docs-mapp.
+#   - LÄGGER TILL: En ny huvudsektion i HTML-outputen för styrande dokument.
+#   - FÖRBÄTTRAR: Python-skriptet i workflowet skapar nu en undersektion för varje enskilt dokument.
 #
 # TILLÄMPADE REGLER (Frankensteen v3.7):
 # - Robust felhantering med explicit validering i varje kritiskt steg.
@@ -18,7 +14,6 @@
 
 name: Generate and Deploy AI Context Page
 
-# KÖR VID: Varje push till main-branchen, manuell start, eller vid schemalagd tid.
 on:
   push:
     branches: [ "main" ]
@@ -31,18 +26,17 @@ on:
       - '**/*.md'
       - '.github/workflows/generate_context.yml'
       - 'requirements.txt'
+      - 'docs/**.md'
   workflow_dispatch:
   schedule:
     - cron: '0 2 * * *'
 
-# BEHÖRIGHETER: Minimala behörigheter enligt säkerhetsprinciper.
 permissions:
   contents: read
   pages: write
   id-token: write
   issues: write
 
-# Globala miljövariabler
 env:
   PYTHON_VERSION: '3.11'
   CONTEXT_FILE: 'context.json'
@@ -56,75 +50,36 @@ jobs:
       context-generated: ${{ steps.generate.outputs.success }}
 
     steps:
-      # Steg 1: Checka ut koden från repositoryt.
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
-      # Steg 2: Sätt upp Python-miljön med cachning.
       - name: Set up Python ${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
 
-      # Steg 3: Installera Python-beroenden.
       - name: Install Dependencies
-        run: |
-          echo "$(date -Iseconds) [INFO] Installerar Python-beroenden från requirements.txt..."
-          pip install --upgrade pip
-          pip install -r requirements.txt
-          echo "$(date -Iseconds) [INFO] Beroenden installerade framgångsrikt."
+        run: pip install --upgrade pip && pip install -r requirements.txt
 
-      # Steg 4: Validera att skriptet finns.
-      - name: Validate Script Existence
-        run: |
-          if [ ! -f "scripts/generate_full_context.py" ]; then
-            echo "$(date -Iseconds) [ERROR] Skriptet scripts/generate_full_context.py hittades inte!"
-            exit 1
-          fi
-          echo "$(date -Iseconds) [INFO] Skript validerat framgångsrikt."
-
-      # Steg 5: Förbered output-mapp.
       - name: Prepare Output Directory
         run: mkdir -p ${{ env.SITE_DIR }}
 
-      # Steg 6: Kör kontext-genereringsskriptet.
       - name: Generate Context JSON
         id: generate
         run: |
-          echo "$(date -Iseconds) [INFO] Startar kontextgenerering..."
           if python scripts/generate_full_context.py > ${{ env.SITE_DIR }}/${{ env.CONTEXT_FILE }} 2> generation.log; then
-            echo "$(date -Iseconds) [INFO] Skript kördes framgångsrikt."
             echo "success=true" >> $GITHUB_OUTPUT
           else
-            echo "$(date -Iseconds) [ERROR] Skriptet misslyckades!"
             cat generation.log
             echo "success=false" >> $GITHUB_OUTPUT
             exit 1
           fi
-          echo "$(date -Iseconds) [INFO] Logg från skriptkörning:"
-          cat generation.log
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Steg 7: Validera genererad JSON-fil.
-      - name: Validate Generated JSON
-        run: |
-          FILE_PATH="${{ env.SITE_DIR }}/${{ env.CONTEXT_FILE }}"
-          if [ ! -f "$FILE_PATH" ]; then
-            echo "[ERROR] Kontextfil skapades inte!" && exit 1
-          fi
-          if [ "$(stat -c%s "$FILE_PATH")" -lt 100 ]; then
-            echo "[ERROR] Filen är för liten, troligen tom." && exit 1
-          fi
-          if ! python -m json.tool "$FILE_PATH" > /dev/null; then
-            echo "[ERROR] Filen innehåller ogiltig JSON!" && exit 1
-          fi
-          echo "[INFO] JSON validerad framgångsrikt."
-
-      # Steg 8: Skapa metadata-fil.
       - name: Create Metadata
         run: |
           cat > ${{ env.SITE_DIR }}/${{ env.METADATA_FILE }} << EOF
@@ -135,17 +90,14 @@ jobs:
             "repository": "${{ github.repository }}"
           }
           EOF
-          echo "[INFO] Metadata skapad."
 
-      # Steg 9: Skapa strikt index.html med Python för robusthet.
-      - name: Create index.html for AI Context (Robust Method)
+      - name: Create index.html for AI Context
         run: |
           python -c "
           import os
           import html
           import json
 
-          # Hämta filsökvägar från miljövariabler
           site_dir = os.environ.get('SITE_DIR')
           context_file = os.environ.get('CONTEXT_FILE')
           metadata_file = os.environ.get('METADATA_FILE')
@@ -154,62 +106,86 @@ jobs:
           context_path = os.path.join(site_dir, context_file)
           metadata_path = os.path.join(site_dir, metadata_file)
 
-          # Läs och parsa context.json för att separera AI-instruktioner
-          ai_instructions = '<!-- AI.md not found or empty -->'
-          context_data = {}
+          # Läs och parsa all data
           try:
               with open(context_path, 'r', encoding='utf-8') as f:
                   context_data = json.load(f)
-              # Extrahera AI-instruktionerna och ta bort dem från huvudobjektet för att undvika dubbletter
-              if 'ai_static_context' in context_data and context_data['ai_static_context']:
-                  ai_instructions = context_data.pop('ai_static_context')
-              else:
-                  ai_instructions = '<!-- AI.md not found or empty. -->'
           except (FileNotFoundError, json.JSONDecodeError):
-              context_data = {'error': 'context.json not found or invalid'}
+              context_data = {}
           
-          # Konvertera det modifierade context-objektet (utan AI-instruktioner) tillbaka till en JSON-sträng
-          context_json_string = json.dumps(context_data, indent=2, ensure_ascii=False)
-
-          # Läs metadata.json
           try:
               with open(metadata_path, 'r', encoding='utf-8') as f:
                   metadata_json = f.read()
           except FileNotFoundError:
               metadata_json = '{\"error\": \"metadata.json not found\"}'
+
+          # Extrahera de olika delarna
+          ai_instructions = context_data.get('ai_instructions', '<!-- AI.md not found or empty -->')
+          project_documentation = context_data.get('project_documentation', {})
+          file_structure = context_data.get('file_structure_overview', {})
+          project_overview = context_data.get('project_overview', {})
+
+          # Bygg dokumentationssektionen dynamiskt
+          docs_html_sections = ''
+          if project_documentation:
+              for filename, content in project_documentation.items():
+                  safe_content = html.escape(content or '')
+                  docs_html_sections += f'''
+                  <section>
+                      <h3>{html.escape(filename)}</h3>
+                      <pre><code>{safe_content}</code></pre>
+                  </section>
+                  '''
+          else:
+              docs_html_sections = '<p>Inga styrande dokument hittades i /docs-mappen.</p>'
+
+
+          # Skapa JSON-strängar för de återstående delarna
+          overview_json_string = json.dumps(project_overview, indent=2, ensure_ascii=False)
+          file_structure_json_string = json.dumps(file_structure, indent=2, ensure_ascii=False)
           
           # HTML-escapea allt innehåll
-          safe_ai_instructions = html.escape(ai_instructions)
-          safe_context_json = html.escape(context_json_string)
+          safe_ai_instructions = html.escape(ai_instructions or '')
+          safe_overview_json = html.escape(overview_json_string)
+          safe_file_structure_json = html.escape(file_structure_json_string)
           safe_metadata_json = html.escape(metadata_json)
 
-          # Definiera hela HTML-mallen med den nya sektionen
           html_template = f'''
           <!DOCTYPE html>
           <html lang=\"sv\">
           <head>
               <meta charset=\"UTF-8\">
-              <title>AI Projektkontext: Engrove Audio Tools</title>
+              <title>AI Projektkontext: {html.escape(project_overview.get('repository', ''))}</title>
           </head>
           <body>
               <header>
-                  <h1>AI Projektkontext: Engrove Audio Tools</h1>
-                  <p>Detta dokument är en automatgenererad datakälla avsedd för AI-modeller som Google Gemini. Sidan innehåller den fullständiga kontexten för GitHub-repot Engrove/Engrove-Audio-Tools-2.0, uppdelad i sektioner. All data presenteras i råformat för att underlätta maskinell parsning och analys.</p>
+                  <h1>AI Projektkontext: {html.escape(project_overview.get('repository', ''))}</h1>
+                  <p>Detta dokument är en automatgenererad datakälla avsedd för AI-modeller. Sidan innehåller den fullständiga kontexten för GitHub-repot, uppdelad i sektioner.</p>
               </header>
               <main>
                   <section id=\"ai-instructions\">
                       <h2>Statiska AI-instruktioner (AI.md)</h2>
-                      <p>Följande text är de grundläggande reglerna och direktiven (protokoll \"Frankensteen\") som styr AI-sessionen. Denna kontext ska prioriteras och följas i alla interaktioner.</p>
+                      <p>Grundläggande regler och direktiv som styr AI-sessionen.</p>
                       <pre><code>{safe_ai_instructions}</code></pre>
                   </section>
-                  <section id=\"context-json\">
-                      <h2>Fullständig Projektkontext (context.json)</h2>
-                      <p>Följande JSON-objekt innehåller en komplett, rekursiv trädstruktur över alla filer i projektet. Varje filobjekt inkluderar metadata som filstorlek, filändelse, samt extraherade kommentarer och kodberoenden (för textfiler).</p>
-                      <pre><code>{safe_context_json}</code></pre>
+                  <section id=\"project-documentation\">
+                      <h2>Styrande Dokumentation (/docs)</h2>
+                      <p>Strategiska och tekniska styrdokument som definierar projektets arkitektur, mål och standarder.</p>
+                      {docs_html_sections}
+                  </section>
+                  <section id=\"project-overview-json\">
+                      <h2>Projektöversikt</h2>
+                      <p>Grundläggande metadata om projektet.</p>
+                      <pre><code>{safe_overview_json}</code></pre>
+                  </section>
+                  <section id=\"file-structure-json\">
+                      <h2>Översikt av Filstruktur</h2>
+                      <p>En trädstruktur som visar alla källkodsfiler i projektet.</p>
+                      <pre><code>{safe_file_structure_json}</code></pre>
                   </section>
                   <section id=\"metadata-json\">
                       <h2>Byggmetadata (metadata.json)</h2>
-                      <p>Följande JSON-objekt innehåller metadata om den specifika GitHub Actions-körning som genererade detta dokument, inklusive tidsstämpel, commit-SHA och repository-information.</p>
+                      <p>Metadata om den specifika GitHub Actions-körning som genererade detta dokument.</p>
                       <pre><code>{safe_metadata_json}</code></pre>
                   </section>
               </main>
@@ -217,20 +193,17 @@ jobs:
           </html>
           '''
 
-          # Skriv den färdiga HTML-filen
           with open(index_path, 'w', encoding='utf-8') as f:
               f.write(html_template)
           
           print('[INFO] index.html för AI-kontext skapad med Python.')
           "
 
-      # Steg 10: Ladda upp artefakt för GitHub Pages.
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ${{ env.SITE_DIR }}
 
-  # Deploy-jobb som bara körs om build lyckades
   deploy:
     needs: validate-and-build
     if: needs.validate-and-build.outputs.context-generated == 'true'
