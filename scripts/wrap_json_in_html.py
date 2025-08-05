@@ -212,6 +212,7 @@ def create_interactive_html(output_html_path):
         const CORE_DOC_PATHS = [
             'docs/AI_Collaboration_Standard.md',
             'docs/Global_UI-Standard_Komponentspecifikation.md',
+            'docs/ByggLogg_instruktion.md',
             'AI.md',
             'package.json',
             'vite.config.js',
