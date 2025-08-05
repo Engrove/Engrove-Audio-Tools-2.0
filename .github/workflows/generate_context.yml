@@ -137,7 +137,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Steg 8: Validera genererad JSON-fil.
+# Steg 8: Validera genererad JSON-fil.
       - name: Validate Generated JSON
         id: validate
         run: |
@@ -169,32 +169,32 @@ jobs:
           
           # Validera JSON-struktur (grundläggande)
           cat > validate_json.py << 'EOF'
-import json, sys
-try:
-    with open('${{ env.SITE_DIR }}/${{ env.CONTEXT_FILE }}', 'r', encoding='utf-8') as f:
-        data = json.load(f)
-    
-    required_keys = ['project_overview', 'file_structure']
-    missing_keys = [key for key in required_keys if key not in data]
-    
-    if missing_keys:
-        print(f'[ERROR] Saknade nycklar i JSON: {missing_keys}')
-        sys.exit(1)
-    
-    if not isinstance(data['file_structure'], dict):
-        print('[ERROR] file_structure ska vara ett objekt')
-        sys.exit(1)
-        
-    print(f'[INFO] JSON-struktur validerad. Filstruktur innehåller {len(data["file_structure"])} objekt.')
-    
-except Exception as e:
-    print(f'[ERROR] JSON-validering misslyckades: {e}')
-    sys.exit(1)
-EOF
+          import json, sys
+          try:
+              with open('${{ env.SITE_DIR }}/${{ env.CONTEXT_FILE }}', 'r', encoding='utf-8') as f:
+                  data = json.load(f)
+              
+              required_keys = ['project_overview', 'file_structure']
+              missing_keys = [key for key in required_keys if key not in data]
+              
+              if missing_keys:
+                  print(f'[ERROR] Saknade nycklar i JSON: {missing_keys}')
+                  sys.exit(1)
+              
+              if not isinstance(data['file_structure'], dict):
+                  print('[ERROR] file_structure ska vara ett objekt')
+                  sys.exit(1)
+                  
+              print(f'[INFO] JSON-struktur validerad. Filstruktur innehåller {len(data["file_structure"])} objekt.')
+              
+          except Exception as e:
+              print(f'[ERROR] JSON-validering misslyckades: {e}')
+              sys.exit(1)
+          EOF
           python validate_json.py
           
           echo "$(date -Iseconds) [INFO] JSON validerad framgångsrikt ($file_size bytes)."
-
+          
       # Steg 9: Skapa metadata-fil för debugging.
       - name: Create Metadata
         run: |
