@@ -8,14 +8,16 @@
 #   - FIXAR: Separerar loggutdata (stderr) från dataoutput (stdout) för att förhindra korrupt JSON.
 #   - FÖRBÄTTRAR: Robust felhantering runt alla nätverksanrop.
 #   - REFAKTORISERAR: Koden är uppdelad i tydligare funktioner.
+# * v3.0 (Binary File Handling):
+#   - LÄGGER TILL: En lista med binära filändelser för att undvika att läsa deras innehåll.
+#   - FIXAR: Skriptet försöker inte längre extrahera kommentarer/beroenden från binära filer.
+#   - FÖRBÄTTRAR: JSON-output för binära filer är nu ren och innehåller en "is_binary": true flagga.
 #
 # TILLÄMPADE REGLER (Frankensteen v3.7):
 # - Denna fil följer principerna om "Explicit Alltid" och robust felhantering.
 # - Alla nätverksanrop är inkapslade i try-except-block.
 # - Dataflöden (stdout) och loggflöden (stderr) är strikt separerade.
 # - Koden har refaktoriserats för läsbarhet och underhållbarhet.
-#
-# Trigger workflow - test comment
 
 import requests
 import re
@@ -28,20 +30,32 @@ REPO = "Engrove/Engrove-Audio-Tools-2.0"
 BRANCH = "main"
 AI_TEXT_MD_PATH = "AI_TEXT.md"
 
-# --- Reguljära uttryck för analys ---
+# Lista över filändelser som ska behandlas som binära och vars innehåll inte ska läsas.
+BINARY_EXTENSIONS = {
+    # Bilder
+    'png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'ico', 'bmp', 'tiff',
+    # Typsnitt
+    'woff', 'woff2', 'eot', 'ttf', 'otf',
+    # Arkiv
+    'zip', 'gz', 'tar', 'rar', '7z',
+    # Dokument
+    'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx',
+    # Ljud & Video
+    'mp3', 'wav', 'ogg', 'mp4', 'mov', 'avi', 'mkv',
+    # Andra
+    'pyc', 'pyd', 'so', 'dll', 'exe', 'bin', 'dat'
+}
 
-# Kommentarer (samma som tidigare)
+
+# --- Reguljära uttryck för analys ---
 COMMENT_PATTERNS = [
     re.compile(r'//.*'), re.compile(r'/\*[\s\S]*?\*/'),
     re.compile(r'<!--[\s\S]*?-->'), re.compile(r'#.*'),
 ]
-
-# Beroenden (importer/requires)
-# Hanterar: import ... from '...', require('...'), import ..., from ... import ...
 DEP_PATTERNS = [
-    re.compile(r'^\s*import(?:.*?from)?\s*[\'"]([^\'"]+)[\'"]', re.MULTILINE), # JS/TS/Vue: import ... from '...'
-    re.compile(r'require\([\'"]([^\'"]+)[\'"]\)', re.MULTILINE),             # JS/TS: require('...')
-    re.compile(r'^\s*(?:from|import)\s+([a-zA-Z0-9_.]+)', re.MULTILINE),    # Python: from X import Y, import X
+    re.compile(r'^\s*import(?:.*?from)?\s*[\'"]([^\'"]+)[\'"]', re.MULTILINE),
+    re.compile(r'require\([\'"]([^\'"]+)[\'"]\)', re.MULTILINE),
+    re.compile(r'^\s*(?:from|import)\s+([a-zA-Z0-9_.]+)', re.MULTILINE),
 ]
 
 # --- Hjälpfunktioner ---
@@ -60,7 +74,6 @@ def extract_from_content(content, patterns):
     for pattern in patterns:
         found = pattern.findall(content)
         for match in found:
-            # Vissa mönster kan returnera tuples (t.ex. för 'eller'-grupper), vi tar första icke-tomma träffen.
             if isinstance(match, tuple):
                 proper_match = next((m for m in match if m), None)
                 if proper_match:
@@ -75,7 +88,7 @@ def get_session_headers():
     """Skapar headers för API-anrop. Använder GITHUB_TOKEN om det finns."""
     token = os.getenv('GITHUB_TOKEN')
     headers = {
-        'User-Agent': 'Python-Context-Generator/2.0',
+        'User-Agent': 'Python-Context-Generator/3.0',
         'Accept': 'application/vnd.github.v3+json'
     }
     if token:
@@ -99,9 +112,10 @@ def get_raw_file_content(path, headers):
     """Hämtar råtextinnehåll från en specifik fil i repot."""
     url = f"https://raw.githubusercontent.com/{REPO}/{BRANCH}/{path}"
     try:
-        response = requests.get(url, headers={'User-Agent': headers['User-Agent']}) # Raw-url behöver inte all auth-info
+        response = requests.get(url, headers={'User-Agent': headers['User-Agent']})
         response.raise_for_status()
-        return response.text
+        # Försök att avkoda som UTF-8, men fall tillbaka om det misslyckas
+        return response.content.decode('utf-8', 'ignore')
     except requests.exceptions.RequestException:
         log_message("WARN", f"Kunde inte läsa filen: {path}")
         return None
@@ -114,7 +128,6 @@ def main():
     
     headers = get_session_headers()
 
-    # Hämta grundläggande repo-information och hela filträdet
     repo_info = get_api_data(f"https://api.github.com/repos/{REPO}", headers)
     tree_info = get_api_data(f"https://api.github.com/repos/{REPO}/git/trees/{BRANCH}?recursive=1", headers)
 
@@ -129,10 +142,9 @@ def main():
     for i, item in enumerate(file_list):
         path = item['path']
         log_message("INFO", f"Bearbetar ({i+1}/{len(file_list)}): {path}")
-
-        content = get_raw_file_content(path, headers)
-        if content is None:
-            continue
+        
+        file_extension = path.split('.')[-1].lower() if '.' in path else ''
+        is_binary = file_extension in BINARY_EXTENSIONS
 
         # Bygg upp trädstrukturen i JSON
         path_parts = path.split('/')
@@ -140,25 +152,28 @@ def main():
         for part in path_parts[:-1]:
             current_level = current_level.setdefault(part, {})
         
-        # Extrahera all metadata
-        comments = [sanitize_comment(c) for c in extract_from_content(content, COMMENT_PATTERNS)]
-        dependencies = extract_from_content(content, DEP_PATTERNS)
-        file_extension = path.split('.')[-1] if '.' in path else ''
-
-        # Lägg till filobjektet i trädet
-        current_level[path_parts[-1]] = {
+        file_data = {
             "type": "file",
             "path": path,
             "size_bytes": item.get('size'),
             "file_extension": file_extension,
-            "comments": comments,
-            "dependencies": dependencies,
+            "is_binary": is_binary,
+            "comments": [],
+            "dependencies": []
         }
 
-    # Hämta den statiska AI-kontexten
+        if not is_binary:
+            content = get_raw_file_content(path, headers)
+            if content:
+                file_data["comments"] = [sanitize_comment(c) for c in extract_from_content(content, COMMENT_PATTERNS)]
+                file_data["dependencies"] = extract_from_content(content, DEP_PATTERNS)
+        else:
+            log_message("INFO", f"Hoppar över innehållsläsning för binär fil: {path}")
+
+        current_level[path_parts[-1]] = file_data
+
     ai_static_context = get_raw_file_content(AI_TEXT_MD_PATH, headers)
 
-    # Montera ihop den slutgiltiga JSON-datan
     final_context = {
         "project_overview": {
             "repository": REPO,
@@ -171,11 +186,8 @@ def main():
         "file_structure": file_structure
     }
     
-    # Skriv den slutgiltiga, rena JSON-datan till stdout
     print(json.dumps(final_context, indent=2, ensure_ascii=False), file=sys.stdout)
     log_message("INFO", "Kontextgenerering slutförd. Resultat skickat till stdout.")
 
 if __name__ == "__main__":
     main()
-
-# scripts/generate_full_context.py
