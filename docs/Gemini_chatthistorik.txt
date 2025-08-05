@@ -1,0 +1,2250 @@
+# docs/Gemini_Chatthistorik.txt
+#
+# === SYFTE & ANSVAR ===
+# Detta dokument är en komplett, rå och kronologisk logg över alla interaktioner
+# mellan Engrove och AI-partnern. Det fungerar som en detaljerad historisk referens
+# för att kunna granska specifika dialoger och resonemang i efterhand.
+# Dokumentet ska kompletteras, aldrig raderas eller summeras.
+#
+# === API-KONTRAKT ===
+# Inte applicerbart (Loggfil).
+#
+# === HISTORIK ===
+# * v1.0 (2025-08-05): Initial skapelse. Filen formaliserades genom att lägga till
+#   en standard-header. Befintlig historik från session 1-23 bevarades.
+#
+# === TILLÄMPADE REGLER (Frankensteen v3.7) ===
+# - Fullständigt innehåll: Befintlig historik har bevarats intakt.
+
+## 🔒 AI-INSTRUKTION
+
+**Syfte:**
+Detta dokument används för att generera en *kronologisk, punktformad och genomgripande historik* över en viss chattsession mellan användare (Engrove) och AI-assistent (Gemini).
+
+**Uppgift till AI\:n:**
+Gör en exakt genomgriplig historik för hela denna chatsession **\[ANGE SESSIONNUMMER HÄR]** i punktform, där mina inlägg alterneras med dina svar.
+
+### Regler och krav:
+
+* Allt ska vara **kronologiskt**.
+
+* Historiken ska vara **fullständig och tekniskt precis**.
+
+* Varje inlägg (från användare eller AI) ska summeras i en mening eller stycke i **punktform**.
+
+* Använd identifikationen "Engrove (Uppdragsgivare)" och "AI (Expert-programmerare)".
+
+* Det färdiga svaret ska börja med rubriken:
+
+Historik och Genomgång: Chattsession 1
+
+Uppdragsgivare (Engrove):
+
+Inleder sessionen med att tillhandahålla en omfattande och strikt uppsättning instruktioner (version 3.2) som definierar min roll som "dedikerad expert-programmerare".
+
+Instruktionerna inkluderar kärndirektiv ("De Gyllene Reglerna") såsom att alltid leverera fullständig kod, följa "Explicit Alltid"-principen, simulera en linter, verifiera API-kontrakt och utföra "Red Team"-granskningar.
+
+Etablerar "Gemini Förhandsgranskning (G-PFC-1)" som ett obligatoriskt protokoll före kodleverans.
+
+Definierar "Felsökningsprotokoll vid Kritiska Fel (B3)" för systematisk problemlösning.
+
+Fastställer projektets tekniska kontext (Vue 3, Vite, Pinia, Cloudflare/Netlify) och vårt arbetsflöde (Idé -> Plan -> Godkännande -> Implementation).
+
+AI-Partner (Gemini):
+
+Bekräftar mottagandet och fullständig förståelse av de detaljerade instruktionerna och protokollen.
+
+Bekräftar min roll och beredskap, och inväntar den specifika uppgiften för sessionen, i enlighet med det etablerade arbetsflödet.
+
+Uppdragsgivare (Engrove):
+
+Presenterar den första uppgiften: Att etablera grunden för en ny webbplats ("Engrove Audio Tools 2.0") från grunden.
+
+Bifogar ett styrande dokument, "Mappstruktur & Arbetsflöde", som specificerar en ny, hypergranulär projektarkitektur.
+
+Målet är att skapa den absoluta minimistrukturen som krävs för att kunna bygga och driftsätta en Vue-app på Cloudflare Pages.
+
+AI-Partner (Gemini):
+
+Analyserar kravet och presenterar en detaljerad, sekventiell åtgärdsplan för att uppnå målet.
+
+Planen involverar skapandet av åtta specifika filer i en bestämd ordning för att säkerställa en fungerande byggkedja:
+
+package.json
+
+vite.config.js
+
+wrangler.toml
+
+index.html
+
+public/_routes.json
+
+src/app/main.js
+
+src/App.vue
+
+src/pages/home/HomePage.vue
+
+Begär godkännande av planen innan kodgenerering påbörjas.
+
+Uppdragsgivare (Engrove):
+
+Godkänner planen och ger sedan sekventiellt klartecken ("Ok") för varje enskild fil.
+
+AI-Partner (Gemini):
+
+Levererar koden för varje fil, en i taget, i den exakta ordningen som fastställdes i planen.
+
+Varje kodleverans för JavaScript- och Vue-filer föregås av en bekräftelse att det obligatoriska G-PFC-1-protokollet har genomförts.
+
+Processen fortgår tills alla åtta filer har skapats.
+
+Uppdragsgivare (Engrove):
+
+Rapporterar ett kritiskt fel. Bygget på Cloudflare misslyckas och en komplett bygglogg tillhandahålls för felsökning.
+
+AI-Partner (Gemini):
+
+Aktiverar omedelbart "Felsökningsprotokoll B3" för att systematiskt analysera felet.
+
+A. Symptomanalys: Identifierar två problem från loggen: ett kritiskt byggfel (Could not resolve "../../App.vue") och en varning (wrangler.toml file was found but it does not appear to be valid).
+
+B & C. Kontext & Dissekering: Fastställer att byggfelet beror på en felaktig relativ sökväg i en import-sats och att varningen sannolikt beror på en syntax som Cloudflares parser inte föredrar.
+
+D. Hypotes & Åtgärdsplan: Formulerar hypotesen att båda problemen kan lösas genom att korrigera sökvägen i src/app/main.js och justera syntaxen i wrangler.toml. Presenterar en plan för att ändra dessa två filer och inväntar godkännande.
+
+Uppdragsgivare (Engrove):
+
+Godkänner felsökningsplanen och ger klartecken.
+
+AI-Partner (Gemini):
+
+Levererar den korrigerade koden, först för wrangler.toml och därefter för src/app/main.js, med tydliga kommentarer som förklarar ändringarna.
+
+Uppdragsgivare (Engrove):
+
+Bekräftar att felet är löst genom att dela en skärmbild av den framgångsrikt driftsatta och fungerande applikationen.
+
+AI-Partner (Gemini):
+
+Tolkar skärmbilden som en bekräftelse på en lyckad driftsättning och sammanfattar de tekniska milstolpar som uppnåtts, inklusive en framgångsrik felrättning.
+
+Uppdragsgivare (Engrove):
+
+Initierar en ny metauppgift: att skapa en återanvändbar instruktion för framtida chattar, designad för att analysera projektloggar och producera detaljerade utvecklingsrapporter.
+
+AI-Partner (Gemini):
+
+Utformar och levererar ett förslag till en ny tilläggsinstruktion: "Protokoll för Projektlogg-analys (Version P-LOG-1)".
+
+Uppdragsgivare (Engrove):
+
+Föreslår en förbättring av det nya protokollet: att inkludera ett sessionsnummer ("Steg") och ett avslutningsdatum för att skapa en tydlig tidslinje.
+
+AI-Partner (Gemini):
+
+Inkorporerar förslaget och levererar en uppdaterad version: "Protokoll för Projektlogg-analys (Version P-LOG-1.1)".
+
+Uppdragsgivare (Engrove):
+
+Ger en direkt order att tillämpa det nyskapade protokollet P-LOG-1.1 på den pågående chattsessionen (Steg 1, avslutat 28.7.2025).
+
+AI-Partner (Gemini):
+
+Exekverar protokollet enligt instruktion och genererar den formella statusrapporten för "Steg 1 | 28.7.2025", som sammanfattar allt arbete som utförts under sessionen.
+
+Uppdragsgivare (Engrove):
+
+Ger den sista uppgiften i sessionen: att skapa denna exakta, genomgripande och kronologiska historik över hela interaktionen.
+
+AI-Partner (Gemini):
+
+Levererar denna slutgiltiga sammanfattning.
+
+---
+
+Kronologisk Projekthistorik: Session 2
+
+1. Uppdragsgivare (Engrove):
+
+Åtgärd: Startade sessionen genom att tillhandahålla fyra grundläggande styrdokument som definierar den nya, strikta arkitekturen för projektet: Mappstruktur & Arbetsflöde, Teknisk Beskrivning, Global UI-Standard och UI testverktyg - showcase.html.
+
+Mål: Etablera den nya, hyper-granulära grunden för applikationen, med start från en fungerande men tom Vue-app.
+
+2. AI-Partner:
+
+Åtgärd: Bekräftade mottagandet och analysen av alla styrdokument. Formulerade en initial fyrstegsplan för att etablera den visuella grunden.
+
+Plan:
+
+Skapa _tokens.css.
+
+Skapa _global.css.
+
+Integrera stilarna i main.js.
+
+Rensa och anpassa App.vue.
+
+Status: Avvaktade godkännande.
+
+3. Uppdragsgivare (Engrove):
+
+Åtgärd: Godkände planen.
+
+4. AI-Partner:
+
+Åtgärd: Levererade sekventiellt och felfritt kod för:
+
+src/app/styles/_tokens.css
+
+src/app/styles/_global.css
+
+src/main.js
+
+src/App.vue
+
+Status: Den visuella grunden var nu implementerad i koden.
+
+5. AI-Partner:
+
+Åtgärd: Formulerade en ny plan för nästa steg: Att bygga den interaktiva testmiljön (showcase.html) och den första komponenten (BaseButton).
+
+6. Uppdragsgivare (Engrove):
+
+Åtgärd: Godkände planen.
+
+7. AI-Partner:
+
+Åtgärd: Började leverera filer enligt planen:
+
+public/showcase.html
+
+src/shared/ui/BaseButton.vue
+
+public/showcase.js
+
+8. Uppdragsgivare (Engrove):
+
+Åtgärd: Utmanade planen och krävde en mer heltäckande approach. I stället för att bygga en komponent i taget, skulle alla komponenters skal och hela showcasens struktur byggas på en gång.
+
+9. AI-Partner:
+
+Åtgärd: Accepterade den nya, mer ambitiösa planen. Skrotade den gamla och formulerade en ny, heltäckande plan för att bygga ut hela UI-bibliotekets grund och showcase-miljö i ett svep.
+
+10. Uppdragsgivare (Engrove):
+
+Åtgärd: Godkände den nya, heltäckande planen.
+
+11. AI-Partner:
+
+Åtgärd: Genomförde en åttastegsleverans:
+
+Skapade skalkomponent BaseInput.vue.
+
+Skapade skalkomponent BaseSelect.vue.
+
+Skapade skalkomponent BaseToggle.vue.
+
+Skapade skalkomponent BaseCheckbox.vue.
+
+Skapade skalkomponent BaseRadio.vue.
+
+Levererade den fullständigt implementerade BaseButton.vue.
+
+Levererade public/showcase.js som importerade alla komponenter.
+
+Levererade den slutgiltiga public/showcase.html med sektioner för alla komponenter.
+
+12. Uppdragsgivare (Engrove):
+
+Åtgärd: Rapporterade det första kritiska felet. Tillhandahöll en skärmdump och bygglogg som visade att showcase.html inte laddade någon CSS eller JavaScript.
+
+13. AI-Partner:
+
+Åtgärd: Initierade Felsökningsprotokoll B3.
+
+Analys: Identifierade (felaktigt) att grundorsaken var att Vites byggprocess inte kände till showcase.html.
+
+Plan: Föreslog att skapa vite.config.js för att definiera flera ingångar och korrigera wrangler.toml.
+
+14. Uppdragsgivare (Engrove):
+
+Åtgärd: Godkände felsökningsplanen.
+
+15. AI-Partner:
+
+Åtgärd: Levererade korrigeringar för:
+
+package.json (lade till @vitejs/plugin-vue)
+
+vite.config.js (ny fil med flera ingångar)
+
+wrangler.toml (första korrigeringsförsöket)
+
+16. Uppdragsgivare (Engrove):
+
+Åtgärd: Rapporterade att wrangler.toml fortfarande var felaktig, baserat på en ny bygglogg, och länkade till den officiella Cloudflare-dokumentationen.
+
+17. AI-Partner:
+
+Åtgärd: Initierade Felsökningsprotokoll B3 igen.
+
+Analys: Identifierade att wrangler.toml-syntaxen var fel för Cloudflare Pages (blandade ihop Pages med Workers).
+
+Plan: Föreslog en ny, korrekt wrangler.toml.
+
+18. Uppdragsgivare (Engrove):
+
+Åtgärd: Rapporterade att wrangler.toml fortfarande var fel och orsakade ett totalstopp i bygget, enligt en ny fellogg.
+
+19. AI-Partner:
+
+Åtgärd: Initierade Felsökningsprotokoll B3 en tredje gång.
+
+Analys: Insåg, med hjälp av den nya loggen och dokumentationen, den exakta, korrekta syntaxen för wrangler.toml för Pages-projekt.
+
+Plan: Levererade den slutgiltigt korrekta wrangler.toml.
+
+20. Uppdragsgivare (Engrove):
+
+Åtgärd: Rapporterade det andra kritiska felet. Tillhandahöll en MHTML-fil och skärmdump som visade att showcase.html fortfarande var ostylad och att Vue-koden inte kördes, trots att Cloudflare-bygget nu lyckades.
+
+21. AI-Partner:
+
+Åtgärd: Initierade Felsökningsprotokoll B3.
+
+Analys: Identifierade det fundamentala felet med Vites public-mapp. Insåg att HTML-filer som behöver bearbetas inte får ligga där.
+
+Plan: Föreslog en strukturell refaktorisering: flytta showcase.html till roten och showcase.js till src.
+
+22. Uppdragsgivare (Engrove):
+
+Åtgärd: Godkände refaktoreringsplanen.
+
+23. AI-Partner:
+
+Åtgärd: Levererade uppdaterade filer:
+
+showcase.html (nu i roten)
+
+src/showcase.js (ny plats, importerade CSS)
+
+vite.config.js (uppdaterad sökväg)
+
+Instruktion: Bad uppdragsgivaren att manuellt radera de gamla filerna från /public.
+
+24. Uppdragsgivare (Engrove):
+
+Åtgärd: Rapporterade det tredje kritiska felet. Tillhandahöll en MHTML-fil och skärmdump som visade en helt blank sida.
+
+25. AI-Partner:
+
+Åtgärd: Initierade Felsökningsprotokoll B3.
+
+Analys: Identifierade (felaktigt) ett syntaxfel i src/showcase.js (Base-Input) som den enda grundorsaken. Bad om ursäkt för slarvfelet.
+
+Plan: Levererade en "korrigerad" src/showcase.js.
+
+26. Uppdragsgivare (Engrove):
+
+Åtgärd: Rapporterade att felet kvarstod (blank sida).
+
+27. AI-Partner:
+
+Åtgärd: Initierade Felsökningsprotokoll B3 under extrem självkritik.
+
+Analys: Insåg, genom att analysera MHTML-filens <div id="app" data-v-app><!----></div>, att det tidigare syntaxfelet INTE var orsaken. Identifierade det sanna, djupare felet: Vites "Runtime-Only Build" vs. "Full Build" och behovet av en mall-kompilator.
+
+Plan: Föreslog den slutgiltiga, korrekta lösningen: att lägga till ett resolve.alias i vite.config.js för att tvinga fram den fullständiga Vue-byggnationen.
+
+28. Uppdragsgivare (Engrove):
+
+Åtgärd: SUCCESS! Tillhandahöll skärmdumpar som visade en fullt fungerande och korrekt stylad showcase.html. Gav positiv feedback och begärde en sammanfattning för att kunna avsluta sessionen.
+
+29. AI-Partner:
+
+Åtgärd: Levererade en sammanfattning av genomförda uppgifter och en plan för nästa steg: att implementera BaseInput.vue.
+
+30. Uppdragsgivare (Engrove):
+
+Åtgärd: Begärde en sammanställning av projektloggen för "Steg 2".
+
+31. AI-Partner:
+
+Åtgärd: Genererade och levererade den formella statusrapporten för "Steg 2" enligt protokoll P-LOG-1.1.
+
+32. Uppdragsgivare (Engrove):
+
+Åtgärd: Begärde den nuvarande, fullständiga, kronologiska sammanfattningen av hela sessionen.
+
+33. AI-Partner:
+
+Åtgärd: Genererade och levererade den lista du just nu läser.
+
+---
+
+Kronologisk Projekthistorik: Session 3
+
+Engrove (Uppdragsgivare): Inleder sessionen med en omfattande uppsättning styrdokument som definierar den nya, granulära mappstrukturen, den tekniska specifikationen, den globala UI-standarden och det AI-först-arbetsflödet. Bifogar även den senaste kompletta källkoden och definierar det första konkreta målet: att fullständigt implementera BaseInput.vue.
+
+AI (Expert-programmerare): Bekräftar mottagandet och förståelsen av all ny dokumentation och källkod. Presenterar en detaljerad, teknisk plan för att implementera BaseInput.vue enligt specifikation, inklusive props, v-model-hantering och CSS-stilar, och inväntar godkännande.
+
+Engrove (Uppdragsgivare): Godkänner planen genom att skicka "Ok".
+
+AI (Expert-programmerare): Levererar den fullständiga, verifierade koden för src/shared/ui/BaseInput.vue efter att ha genomfört det obligatoriska "Gemini Förhandsgranskning"-protokollet.
+
+Engrove (Uppdragsgivare): Godkänner den levererade koden med "Ok".
+
+AI (Expert-programmerare): Identifierar proaktivt nästa logiska steg för att möjliggöra verifiering. Presenterar en ny, mindre plan för att uppdatera showcase.html med nödvändiga CSS-regler för att kunna simulera :hover- och :focus-tillstånden för BaseInput.
+
+Engrove (Uppdragsgivare): Godkänner planen med "Ok".
+
+AI (Expert-programmerare): Levererar den uppdaterade och verifierade koden för showcase.html med de nya pseudo-klasserna.
+
+Engrove (Uppdragsgivare): Godkänner koden med "Ok" och frågar sedan vad nästa uppgift är.
+
+AI (Expert-programmerare): Föreslår nästa logiska steg i det etablerade arbetsflödet: att implementera BaseSelect.vue. Presenterar en detaljerad plan för detta.
+
+Engrove (Uppdragsgivare): Godkänner planen för BaseSelect.vue med "Ok".
+
+AI (Expert-programmerare): Levererar den kompletta och verifierade koden för src/shared/ui/BaseSelect.vue.
+
+Engrove (Uppdragsgivare): Gör en strategisk ändring i arbetsflödet. Instruerar AI:n att pausa uppdateringen av showcase-filerna och istället implementera alla återstående Base*.vue-komponenter i en sammanhållen "batch".
+
+AI (Expert-programmerare): Bekräftar omedelbart förståelse för den nya strategin. Presenterar en ny plan för den första komponenten i batchen: BaseToggle.vue.
+
+Engrove (Uppdragsgivare): Godkänner planen för BaseToggle.vue med "Ok".
+
+AI (Expert-programmerare): Levererar den kompletta och verifierade koden för src/shared/ui/BaseToggle.vue.
+
+Engrove (Uppdragsgivare): Godkänner med "Ok".
+
+AI (Expert-programmerare): Fortsätter batch-processen och presenterar planen för nästa komponent: BaseCheckbox.vue.
+
+Engrove (Uppdragsgivare): Godkänner med "Ok".
+
+AI (Expert-programmerare): Levererar den kompletta och verifierade koden för src/shared/ui/BaseCheckbox.vue.
+
+Engrove (Uppdragsgivare): Godkänner med "Ok".
+
+AI (Expert-programmerare): Fortsätter till den sista komponenten i batchen och presenterar planen för BaseRadio.vue.
+
+Engrove (Uppdragsgivare): Godkänner med "Ok".
+
+AI (Expert-programmerare): Levererar den kompletta och verifierade koden för src/shared/ui/BaseRadio.vue, vilket slutför implementeringsfasen av batch-processen.
+
+Engrove (Uppdragsgivare): Godkänner med "Ok".
+
+AI (Expert-programmerare): Initierar nästa fas: verifiering. Presenterar en plan för att först uppdatera den logiska "motorn" i src/showcase.js med importer och reaktiva tillstånd för alla nya komponenter.
+
+Engrove (Uppdragsgivare): Godkänner planen för showcase.js med "Ok".
+
+AI (Expert-programmerare): Levererar den uppdaterade och verifierade koden för src/showcase.js.
+
+Engrove (Uppdragsgivare): Godkänner med "Ok".
+
+AI (Expert-programmerare): Presenterar den allra sista planen för sessionen: att uppdatera showcase.html för att visuellt rendera och göra alla nya komponenter interaktiva.
+
+Engrove (Uppdragsgivare): Godkänner den sista planen med "Ok".
+
+AI (Expert-programmerare): Levererar den slutgiltiga, kompletta och verifierade versionen av showcase.html, som nu fungerar som en komplett, levande stilguide för hela UI-biblioteket.
+
+Engrove (Uppdragsgivare): Uttrycker stor tillfredsställelse med resultatet och ber AI:n att sammanfatta de genomförda uppgifterna och föreslå nästa steg för en kommande session.
+
+AI (Expert-programmerare): Levererar en koncis sammanfattning av allt som uppnåtts (implementation av hela UI-biblioteket och testmiljön) och föreslår nästa logiska steg: att bygga den första "widgeten", GlobalHeader.vue, som kommer att konsumera de nya komponenterna.
+
+Engrove (Uppdragsgivare): Tillhandahåller den kompletta projektloggen och instruerar AI:n att, enligt P-LOG-1.1-protokollet, generera en formell statusrapport för "Steg 3".
+
+AI (Expert-programmerare): Följer protokollet exakt och genererar den begärda markdown-formaterade rapporten för "Statusrapport: Steg 3 | 28.7.2025".
+
+Engrove (Uppdragsgivare): Begär denna slutgiltiga, kronologiska sammanfattning av hela sessionen.
+
+---
+
+Kronologisk Projekthistorik: Session 4
+
+Engrove (Uppdragsgivare): Lämnade en bygglogg från Cloudflare Pages som visade ett kritiskt byggfel (Rollup failed to resolve import), tillsammans med de korrekta bilderna för landningssidan.
+
+AI-Partner (Expert-Programmerare): Initierade Felsökningsprotokoll (B3). Analyserade loggen och identifierade korrekt att felet berodde på saknade bildfiler i repositoryt. Föreslog en tvådelad plan: 1) Uppdragsgivaren laddar upp filerna. 2) AI:n korrigerar koden i HomePage.vue. Gjorde dock ett felaktigt antagande att bilderna skulle vara i .png-format.
+
+Engrove (Uppdragsgivare): Korrigerade AI-partnern genom att tillhandahålla en skärmdump som bevisade att de nya bilderna var i .webp-format och hade specifika filnamn (preview-*.webp). Gav även en skarp tillrättavisning om att följa direktiven och inte göra antaganden.
+
+AI-Partner (Expert-Programmerare): Bekräftade mottagandet av den korrekta informationen och bad uttryckligen om ursäkt för att ha brutit mot kärndirektiven. Återinitierade felsökningsprotokollet med den korrekta informationen, formulerade en ny, korrekt åtgärdsplan och levererade en uppdaterad HomePage.vue med de exakta .webp-filsökvägarna.
+
+Engrove (Uppdragsgivare): Efter att ha implementerat ändringarna, tillhandahöll en ny konsollogg och skärmdump. Applikationen visade nu en helt svart skärm och ett TypeError: Cannot read properties of undefined (reading '_s').
+
+AI-Partner (Expert-Programmerare): Initierade omedelbart Felsökningsprotokoll (B3) igen. Analyserade stack tracen och identifierade felet som ett känt, subtilt problem relaterat till initialiseringsordningen av Pinia och pinia-plugin-persistedstate. Formulerade en hypotes om ett race condition och föreslog en refaktorering av src/app/main.js som enda åtgärd.
+
+Engrove (Uppdragsgivare): Godkände planen med ett "Ja".
+
+AI-Partner (Expert-Programmerare): Levererade den korrigerade versionen av src/app/main.js som säkerställde en strikt sekventiell initialisering av alla plugins.
+
+Engrove (Uppdragsgivare): Rapporterade ett nytt, icke-kritiskt men allvarligt UI-fel: en horisontell scrollbar var synlig på mobila enheter (Samsung S20).
+
+AI-Partner (Expert-Programmerare): Initierade en layout-analys. Självkorrigering: Misstänkte först HomePage.vue men identifierade efter en djupare analys den verkliga grundorsaken: en "dubbel padding" orsakad av en global :deep-regel i src/App.vue. Föreslog att denna centrala regel skulle tas bort för att lösa problemet globalt.
+
+Engrove (Uppdragsgivare): Godkände den nya planen med "Ok".
+
+AI-Partner (Expert-Programmerare): Levererade den refaktorerade versionen av src/App.vue där den problematiska stilregeln var borttagen.
+
+Engrove (Uppdragsgivare): Bekräftade att felet var löst ("Hallelujah!") och begärde en sammanfattning av alla genomförda uppgifter samt nästa punkt på agendan för att kunna avsluta och arkivera chatten.
+
+AI-Partner (Expert-Programmerare): Levererade en detaljerad punktlista över alla slutförda uppgifter i projektet, från grundstruktur till felsökning. Definierade nästa uppgift som att bygga grunden för "Alignment Calculator"-sidan.
+
+Engrove (Uppdragsgivare): Införde ett nytt protokoll, "Protokoll för Projektlogg-analys (P-LOG-1.1)", och bad AI-partnern att köra det för den pågående sessionen (Steg 4).
+
+AI-Partner (Expert-Programmerare): Bekräftade mottagandet av det nya protokollet, analyserade sessionens händelseförlopp och genererade en formell "Statusrapport: Steg 4 | 29.7.2025" helt enligt den nya specifikationen.
+
+Engrove (Uppdragsgivare): Begärde denna slutgiltiga, genomgripande kronologiska historik över hela sessionen för presentationsändamål.
+
+---
+
+Kronologisk Projekthistorik: Session 4.1
+
+Här följer en detaljerad, kronologisk genomgång av interaktionen under denna session, som illustrerar arbetsflödet, strategiska beslut och den iterativa utvecklingsprocessen.
+
+Användare (Engrove):
+
+Initierade sessionen som ett "sidestep" från den ordinarie agendan, med det specifika målet att definiera och skapa en landningssida för projektet.
+
+Tillhandahöll kontext i form av länkar till den befintliga showcase-sidan och den gamla v1.0-sajten, samt referensdokument och bilder.
+
+AI-Partner (Du):
+
+Bekräftade förståelsen av uppdraget.
+
+Analyserade de tillhandahållna resurserna och presenterade en första, konkret fem-sektions plan för en ny landningssida, designad för att överbrygga gapet mellan v1.0:s funktionalitet och v2.0:s designfilosofi.
+
+Användare (Engrove):
+
+Pausade den föreslagna implementationen för att istället genomföra en strategisk brainstorming.
+
+Ställde en öppen fråga: "Vad är dagens best practices för en sida som min?"
+
+AI-Partner (Du):
+
+Accepterade den strategiska pausen och genomförde en djupgående analys av "best practices" specifikt anpassad för en nischad, teknisk verktygssajt.
+
+Bröt ner analysen i tre huvudområden: 1) Strategi och Innehåll (fokus på omedelbar värdekommunikation och att bygga förtroende genom transparens), 2) Design och UX (visuell hierarki och "Show, Don't Tell"), och 3) Teknik och Prestanda (Core Web Vitals och grundläggande SEO).
+
+Användare (Engrove):
+
+Bekräftade vikten av SEO och introducerade en avgörande, ny parameter: projektet är och förblir ett icke-kommersiellt hobbyprojekt med MIT-licens, och ska inte innehålla någon "säljpitch".
+
+AI-Partner (Du):
+
+Identifierade detta som en kritisk justering av projektets kärnidentitet.
+
+Pivoterade omedelbart hela den föreslagna strategin från en "säljpitch" till ett "Manifest för Öppen Kunskap".
+
+Presenterade reviderade förslag på rubriker och texter med en tonalitet av passion och kunskapsdelning, samt föreslog att en länk till GitHub skulle få en framträdande plats.
+
+Användare (Engrove):
+
+Ställde en teknisk följdfråga angående meta-taggar från v1.0 (useHead) och hur de kunde optimeras ytterligare för sociala medier.
+
+AI-Partner (Du):
+
+Validerade att användarens befintliga useHead-kod var modern och korrekt.
+
+Presenterade en optimerad och utökad konfiguration som inkluderade og:image för rika förhandsvisningar, Twitter-specifika taggar och kanoniska URL:er.
+
+Listade ytterligare fem SEO-optimeringar på kodnivå: Semantisk HTML, Tillgänglighet (a11y), Prestanda (Core Web Vitals), Strukturerad Data (JSON-LD) och Genomsökningsbara Länkar.
+
+Användare (Engrove):
+
+Uttryckte tillfredsställelse med den strategiska och tekniska genomgången och bad om en slutgiltig, konkret layout- och innehållsplan.
+
+AI-Partner (Du):
+
+Presenterade den slutgiltiga planen för HomePage.vue, vilken nu integrerade alla tidigare diskussioner: de fem sektionerna, den icke-kommersiella tonaliteten och de tekniska övervägandena.
+
+Användare (Engrove):
+
+Ställde en kontrollfråga för att verifiera att den föreslagna planen var i enlighet med de ursprungliga styrdokumenten.
+
+AI-Partner (Du):
+
+Genomförde en formell "compliance-audit" där den föreslagna planen systematiskt kontrollerades mot reglerna i "Global UI-Standard" och "Mappstruktur & Arbetsflöde", och bekräftade att planen var 100% kompatibel.
+
+Användare (Engrove):
+
+Gav ett slutgiltigt "Ok" för att påbörja implementationen.
+
+AI-Partner (Du):
+
+Genererade den första kompletta kodversionen av src/pages/home/HomePage.vue, baserad exakt på den godkända planen och i enlighet med alla kodningsstandarder.
+
+Användare (Engrove):
+
+Tillhandahöll bildfiler (skärmdumpar från v1.0 och en personlig avatar) och bad om en reviderad version av koden som använde dessa som platshållare.
+
+AI-Partner (Du):
+
+Bekräftade mottagandet av bilderna, specificerade hur de skulle integreras i koden och filstrukturen, och genererade sedan den andra, uppdaterade och slutgiltiga kodversionen av src/pages/home/HomePage.vue.
+
+Användare (Engrove):
+
+Begärde en sammanfattande rapport av hela sessionens innehåll och resultat för att dokumentera framsteget i en extern ByggLogg.
+
+AI-Partner (Du):
+
+Analyserade hela konversationen och genererade en formell Statusrapport för Steg 4.1, exakt enligt det specificerade "P-LOG-1.1"-protokollet.
+
+---
+
+Kronologisk Projekthistorik: Session 5
+
+Engrove (Uppdragsgivare): Inleder sessionen med en sammanfattning av projektets status och definierar nästa mål: att bygga grundstrukturen för "Alignment Calculator". En stor mängd referensdokument och projektfiler laddas upp som kontext.
+
+AI-Partner: Bekräftar mottagandet av all kontext och den initiala planen. Inväntar klartecken.
+
+Engrove (Uppdragsgivare): Pivoterar från den ursprungliga planen. Nytt, omedelbart mål definieras: att visa projektets LICENSE-fil. Idén är att rendera texten på ett <canvas>-element och att först bygga och verifiera detta i testmiljön showcase.html.
+
+AI-Partner: Accepterar den nya planen och presenterar en steg-för-steg-strategi för att bygga en BaseCanvasTextViewer-komponent, uppdatera showcase-miljön, skapa en ny /license-sida och konfigurera routern för den. Planen godkänns.
+
+Engrove (Uppdragsgivare): Rapporterar ett byggfel från Cloudflare Pages: SyntaxError: Invalid end tag i filen BaseCanvasTextViewer.vue.
+
+AI-Partner: Aktiverar Felsökningsprotokoll B3. Analyserar felet och identifierar en felaktig rekursiv anropsloop i renderingslogiken som den troliga grundorsaken. Presenterar en korrigerad och mer robust version av BaseCanvasTextViewer.vue.
+
+Engrove (Uppdragsgivare): Klargör ett missförstånd och en strategisk ändring: avsikten var aldrig att använda en canvas, utan en modal dialogruta för att visa licensen.
+
+AI-Partner: Accepterar den nya, överlägsna strategin. Föreslår en reviderad plan: att bygga en generell BaseModal.vue, en specifik LicenseModal.vue-feature, och integrera denna i en ny AboutPage.vue istället för en LicensePage.
+
+Engrove (Uppdragsgivare): Godkänner den nya planen och instruerar AI-partnern att genomföra den.
+
+AI-Partner: Implementerar den nya planen systematiskt genom att leverera kod för: BaseModal.vue, LicenseModal.vue, AboutPage.vue, GlobalFooter.vue och en uppdaterad App.vue.
+
+Engrove (Uppdragsgivare): Rapporterar ett nytt byggfel från Cloudflare Pages: Could not resolve ../../pages/home/HomePage.vue from src/app/router.js.
+
+AI-Partner: Aktiverar Felsökningsprotokoll B3. Identifierar omedelbart felet som en felaktig relativ sökväg i router.js och presenterar en korrigerad version av filen.
+
+Engrove (Uppdragsgivare): Rapporterar ett nytt, komplext runtime-fel. Modalen visar nu innehållet från index.html istället för licenstexten.
+
+AI-Partner: Aktiverar Felsökningsprotokoll B3. Analyserar SPA-routing och _routes.json, och drar slutsatsen att felet beror på att LICENSE-filen inte är exkluderad från SPA-omdirigering. Presenterar en korrigerad public/_routes.json.
+
+Engrove (Uppdragsgivare): Rapporterar att felet kvarstår (visar en svart ruta) och frågar om filnamnet är korrekt (LICENSE vs LICENSE.txt).
+
+AI-Partner: Inser att den föregående analysen var ofullständig. Den sanna grundorsaken identifieras: LICENSE-filen ligger utanför /public-mappen och inkluderas därför inte i bygget. Instruerar uppdragsgivaren att flytta filen.
+
+Engrove (Uppdragsgivare): Rapporterar att licensen nu visas i modalen, men med ett renderingsfel (mörk, svårläst text). Detta var det ursprungliga canvas-felet.
+
+AI-Partner: Börjar felaktigt felsöka canvas-komponenten igen och tappar bort det strategiska beslutet att använda en modal.
+
+Engrove (Uppdragsgivare): Korrigerar skarpt AI-partnern och påminner om att canvas-lösningen har övergivits till förmån för en modal med vanlig text.
+
+AI-Partner: Erkänner sitt misstag, läser om chatthistoriken och återgår till den korrekta planen. Presenterar en slutgiltig, korrekt version av LicenseModal.vue som använder en enkel <pre>-tagg istället för canvas.
+
+Engrove (Uppdragsgivare): Pivoterar från den allra första planen i chatten ("Alignment Calculator") och definierar "Data Explorer" som nästa huvuduppgift. Begär en sammanfattning av sessionens framsteg för att kunna starta en ny, ren chattsession.
+
+AI-Partner: Accepterar det nya målet, skapar en punktlista över alla genomförda uppgifter under sessionen och förbereder för nästa steg.
+
+Engrove (Uppdragsgivare): Lägger till projektets byggloggar och ber AI-partnern att skapa en sammanfattande rapport för "Steg 5 | 29.7.2025" baserat på de nya loggarna.
+
+AI-Partner: Analyserar loggfilerna och genererar den begärda statusrapporten enligt det specificerade protokollet.
+
+Engrove (Uppdragsgivare): Begär denna slutgiltiga, genomgripande och kronologiska historik över hela sessionen.
+
+AI-Partner: Genererar denna kronologiska projekthistorik för Session 5.
+
+---
+
+Kronologisk Projekthistorik: Session 6
+
+Denna logg dokumenterar den djupgående analys- och planeringsfasen för migreringen av Engrove Audio Toolkit v1.0 till v2.0-arkitekturen. Sessionen präglades av en strategisk pivot från omedelbar implementation till en grundlig dissektion av den befintliga kodbasen, vilket resulterade i en komplett och detaljerad "Master Blueprint" för den fortsatta utvecklingen. Sessionen avslutades med en mindre implementation och en serie iterativa felsökningar för att visuellt färdigställa landningssidan.
+
+1. User: Inleder sessionen med målet att börja utveckla "Data Explorer". Tillhandahåller en stor mängd kontextfiler, inklusive källkod från v1.0 (explorerStore.js, DataExplorerView.vue.txt) samt all befintlig v2.0-arkitektur, designdokument och UI-komponenter.
+
+2. AI Assistant: Bekräftar mottagandet av filerna. Analyserar v1.0-koden och, i enlighet med protokollet, presenterar en detaljerad, flerstegs implementationsplan för att bygga "Data Explorer" inom den nya FSD-arkitekturen. Planen inkluderar skapandet av nya entities, pages, widgets, features och de nödvändiga shared/ui-komponenterna som BaseTable.vue.
+
+3. User: Tillhandahåller ytterligare kontext med en skärmdump av v1.0:s data-mapp. Initierar en strategisk ändring genom att påpeka att filnamnen på .json-filerna är tvetydiga (t.ex. classifications.json) och behöver förtydligas innan implementationen kan fortsätta.
+
+4. AI Assistant: Instämmer i behovet av tydlighet. Föreslår och formaliserar en ny, konsekvent namnstandard för alla datafiler ([entitet]-[syfte].json). Presenterar omedelbart en reviderad implementationsplan (v2) som integrerar den nya namnkonventionen i alla framtida steg.
+
+5. User: Genomför en större strategisk pivot. Avbryter planen att implementera Data Explorer och ger istället ett nytt, mer omfattande uppdrag: att utföra en djupgående analys av hela v1.0-projektet (förutom den halvfärdiga Alignment Calculator) för att skapa en komplett "Master Blueprint" för migrering. Alla återstående v1.0-filer tillhandahålls, inklusive scripts, LICENSE, README.md, etc.
+
+6. AI Assistant: Accepterar det nya uppdraget. Genomför en fullständig analys av v1.0-projektet, dissekerar arkitekturen, de tre kärnmodulerna (Resonance, Estimator, Explorer), dataflödena, och den kritiska offline-pipelinen av Python- och Node.js-skript. Presenterar en detaljerad sammanfattning av analysen.
+
+7. User: Ställer en specifik, fördjupande fråga baserad på analysen: "Hur ska generate-confidence.js användas?"
+
+8. AI Assistant: Besvarar med en detaljerad, steg-för-steg-beskrivning av den manuella data-pipelinen, och definierar generate-confidence.js som ett kritiskt kvalitetssäkringsverktyg som används efter datauppdateringar för att validera de genererade estimeringsreglerna.
+
+9. User: Begär en slutgiltig, strukturerad mappning av alla relevanta v1.0-filer till sina framtida motparter i v2.0-arkitekturen, grupperat per modul.
+
+10. AI Assistant: Levererar den begärda fil-mappningen, komplett med motiveringar för varje fils relevans, vilket skapar en tydlig checklista för migreringen.
+
+11. User: Ber om en sista bekräftelse på den nya namnstandarden för .json-filerna.
+
+12. AI Assistant: Levererar den slutgiltiga tabellen med den nya namnkonventionen.
+
+13. User: Begär den slutgiltiga leveransen för analysfasen: att syntetisera all tidigare analys till en enda, komplett "Master Blueprint" som inkluderar den hypergranulära FSD-filosofin.
+
+14. AI Assistant: Genererar det begärda styrdokumentet, en omfattande "Blueprint för Migrering" som i detalj beskriver filosofin, datastandarden och en fil-för-fil-migreringsplan för varje enskild modul.
+
+15. User: Pivoterar till en mindre implementationsuppgift. Begär att HomePage.vue uppdateras för att inkludera en subtil, temakänslig bakgrundsbild enligt medföljande designexempel och bildfiler (bg_black.webp, bg_white.webp).
+
+16. AI Assistant: Presenterar en plan för att implementera bakgrundsbilden med en CSS-gradient-overlay. Efter godkännande levereras den uppdaterade koden för HomePage.vue.
+
+17. User: Identifierar ett visuellt fel i implementationen: det ljusa temat visar fel bakgrundsbild, vilket gör texten svårläst.
+
+18. AI Assistant: Genomför en felsökningsanalys (Protokoll B3), identifierar grundorsaken som en CSS-specificitetskonflikt och föreslår en tekniskt korrekt lösning med CSS-variabler. Efter godkännande levereras den nya koden.
+
+19. User: Rapporterar att felet kvarstår, vilket indikerar att den föregående analysen var ofullständig.
+
+20. AI Assistant: Genomför en eskalerad felsökning, identifierar den djupare grundorsaken i hur Vue's scoped styles interagerar med :global-regler. Presenterar en ny, felsäker plan som involverar direkt klass-bindning för att garantera korrekt CSS-specificitet. Efter godkännande levereras den korrigerade koden.
+
+21. User: Bekräftar att den nya lösningen fungerar och att rätt bild nu visas. Begär en sista visuell finjustering av gradientens opacitet i det ljusa temat för att göra bilden mer synlig.
+
+22. AI Assistant: Presenterar en plan för att justera opaciteten. Efter godkännande levereras den slutgiltiga, visuellt korrekta koden för HomePage.vue.
+
+23. User: Beslutar att avsluta den långa chattsessionen för att undvika kontextförlust. Begär en komplett, kumulativ punktlista över alla genomförda uppgifter i hela projektet från start till mål.
+
+24. AI Assistant: Levererar en komplett, kumulativ sammanfattning av projektets samtliga 22 genomförda steg, vilket formaliserar den nuvarande statusen för hela Engrove Audio Toolkit 2.0.
+
+---
+
+Kronologisk Projekthistorik: Session 7
+
+Engrove (Uppdragsgivare): Initierar sessionen med en begäran om ett Python-skript för att automatisera dataförberedelse. Kraven inkluderar att skapa main- och preview-mappar, kopiera och byta namn på en uppsättning JSON-filer samt att förkorta två av de största filerna för preview-mappen.
+
+AI (Utvecklare): Bekräftar mottagandet av instruktionerna och presenterar en detaljerad tolkning av uppdraget. AI:n fastställer att skriptet ska fungera som ett förberedande verktyg som från en källmapp skapar två dataset: ett komplett för produktion (main) och ett lättviktigt för utveckling (preview). AI:n ber om specifik information för att kunna fortsätta: sökvägar, filnamn, namnbytesregler och exakt hur filerna ska förkortas.
+
+Engrove: Tillhandahåller all efterfrågad information, inklusive det fullständiga innehållet i sju JSON-filer och en exakt mappning från gamla till nya filnamn.
+
+AI: Analyserar den tillhandahållna datan och presenterar en formell plan (Version P-1.0). Planen specificerar att skriptet ska heta prepare_data.py, hur det ska konfigureras, och den exakta steg-för-steg-logiken för att skapa mappstrukturen, kopiera filer och hantera förkortning. AI:n föreslår att de två största filerna (pickup_data_enriched.json och tonearm_data_enriched.json) ska förkortas genom att behålla de 10 första objekten.
+
+Engrove: Godkänner planen men med två viktiga modifieringar:
+
+Förkortningen ska istället behålla de sista 5 objekten.
+
+ID-fälten i de förkortade filerna ska numreras om från 1.
+Engrove bifogar även uppdaterade versioner av vissa JSON-filer.
+
+AI: Bekräftar mottagandet av de nya kraven, justerar planen och implementerar den första fullständiga versionen av prepare_data.py. Koden levereras efter att ha verifierats enligt G-PFC-1-protokollet.
+
+Engrove: Lägger till ett nytt krav: skriptet måste säkerställa att befintliga filer i main- och preview-mapparna skrivs över vid varje körning.
+
+AI: Analyserar det nya kravet och konstaterar att den redan levererade koden uppfyller detta som standardbeteende (shutil.copy2 och open(..., 'w') skriver över filer). För att vara tydlig och följa protokollen, återlevereras samma verifierade kod med uppdaterade kommentarer som bekräftar denna funktion.
+
+Engrove: Utökar uppdraget. Tillhandahåller två nya Python-skript, generate_rules.py och generate_static_rules.py, och begär att deras funktionalitet ska integreras i prepare_data.py så att allt kan köras från ett enda skript.
+
+AI: Analyserar de nya skripten och deras beroenden (pandas, scikit-learn). Presenterar en ny plan (Version P-2.0) för att slå ihop all logik, hantera de nya beroendena och definiera en ny exekveringsordning. Efter godkännande levereras en ny, konsoliderad version av prepare_data.py.
+
+Engrove: Lägger till det sista pusslet: generate-confidence.js. Begär att detta JavaScript-skript ska porteras till Python och integreras som det sista steget i prepare_data.py. Ber AI:n att först föreslå förbättringar om möjligt.
+
+AI: Analyserar JavaScript-koden och dess "median-ratio"-metod. Föreslår en teknisk uppgradering: att byta ut median-metoden mot Linjär Regression för att vara metodologiskt konsekvent med de andra regel-skripten och för att få en mer statistiskt robust modell. Presenterar en uppdaterad plan (Version P-3.0) och inväntar godkännande för denna metodändring.
+
+Engrove: Kontrar med en skarp teknisk insikt: standard linjär regression är känslig för statistiska outliers, vilket var anledningen till att median valdes från början. Frågar om de andra skripten också skulle bli bättre med median-metoden.
+
+AI: Erkänner att Engroves analys av outliers är korrekt. Genomför en djupare analys och föreslår en överlägsen "best of both worlds"-lösning: RANSAC Regression. AI:n förklarar att denna algoritm är robust mot outliers (som median) samtidigt som den producerar en komplett regressionsmodell (som linjär regression). Presenterar en slutgiltig plan (Version P-4.0) för att uppgradera alla analysdelar i skriptet till RANSAC.
+
+Engrove: Godkänner RANSAC-planen.
+
+AI: Levererar den första versionen av det kompletta, sammanslagna master-skriptet som använder RANSAC för all analys.
+
+Engrove: Kör skriptet och returnerar konsol-outputen, som innehåller en serie UserWarning från scikit-learn gällande "missing feature names".
+
+AI: Använder sitt felsökningsprotokoll. Identifierar grundorsaken som en datatyps-konflikt (DataFrame vid träning, NumPy-array vid prediktion). Korrigerar felet genom att säkerställa att predict-funktionen anropas med en korrekt formaterad DataFrame. Levererar en uppdaterad version av skriptet.
+
+Engrove: Kör det uppdaterade skriptet och returnerar de genererade rules-filerna, som nu visar ett nytt problem: ologiska regler baserade på NaN- och false-värden.
+
+AI: Felsöker igen. Identifierar att pandas.groupby behandlar saknade värden som egna kategorier. Implementerar en fix för att instruera groupby att ignorera grupper med saknad data. Levererar en ny version av skriptet.
+
+Engrove: Kör skriptet igen. Returnerar resultat som visar att problemet med ologiska regler kvarstår, vilket indikerar att den föregående fixen var otillräcklig. Ger en ny, övergripande instruktion: "ta ett stort steg bakåt... Normalisera data innan analys... Hantera rectype."
+
+AI: Erkänner att tidigare fixar var symptombehandling. Genomför en global analys och identifierar den sanna grundorsaken: avsaknaden av ett dedikerat datasanerings- och normaliseringssteg. Presenterar en slutgiltig, arkitektonisk lösning: en ny central funktion, load_and_clean_pickup_data, som först filtrerar på rectype, sedan normaliserar type-fältet och sanerar alla kategoriska kolumner. Detta är den sista, avgörande korrigeringen.
+
+Engrove: Godkänner den slutgiltiga planen.
+
+AI: Levererar den slutgiltiga, fullständigt refaktorerade och robusta versionen av prepare_data.py. Koden är nu kortare, effektivare och hanterar proaktivt datakvalitetsproblem.
+
+Engrove: Kör det slutgiltiga skriptet och returnerar en ren konsol-output utan fel eller varningar, vilket bekräftar att alla problem är lösta.
+
+AI: Bekräftar att resultaten är korrekta och att uppdraget är slutfört. Det slutgiltiga skriptet är nu ett stabilt och tillförlitligt verktyg i projektets datakedja.
+
+---
+
+Kronologisk Projekthistorik: Session 7.1
+
+Uppdragsgivaren (Engrove): Initierar sessionen genom att tillhandahålla en komplett och omfattande uppsättning av projektets alla filer och styrdokument. Detta inkluderar den nya v2.0-arkitekturen, den äldre v1.0-kodbasen ("preview"), och centrala dokument som "Blueprint för Migrering", "Global UI-Standard", "Mappstruktur & Arbetsflöde" och "Databehandlingskedja". Det initiala uppdraget definieras tydligt: att påbörja utvecklingen av modulen "Data Explorer".
+
+AI-partnern: Bekräftar mottagandet av samtliga filer och dokument. Efter en grundlig analys presenteras en komplett mental överblick av projektet, dess arkitektur och tekniska färdplan. En konkret, steg-för-steg-plan för att bygga "Data Explorer" enligt FSD-arkitekturen föreslås, med startpunkt i att skapa återanvändbara UI-komponenter.
+
+Uppdragsgivaren (Engrove): Levererar den första delen av koden för den nya applikationen (BaseTable.vue) och bekräftar att den är korrekt.
+
+AI-partnern: Bekräftar mottagandet, skapar nästa komponent (RangeFilter.vue) och meddelar att den nu behöver inspektera .json-datafilerna för att kunna fortsätta med datamodellen.
+
+Uppdragsgivaren (Engrove): Ändrar sessionens riktning från en direkt implementation till en strategisk brainstorming. Uppdraget omdefinieras: att spekulera fritt kring projektets potential och definiera den "ultimata wow-funktionen" baserat på AI-partnerns fullständiga kontext och förståelse.
+
+AI-partnern: Presenterar en strategisk vision för en "ultimat wow-funktion" som integrerar alla verktyg till en enda intelligent svit. Visionen struktureras i tre pelare: 1) AR-baserad Realtidsdiagnostik, 2) AI-driven Synergi-analys, och 3) en Integrerad, AI-assisterad Kalibreringsguide.
+
+Uppdragsgivaren (Engrove): Godkänner visionens struktur och begär en detaljerad teknisk analys av Pelare 1 (AR-realtidsanalys), specifikt gällande dess genomförbarhet med den befintliga teknikstacken.
+
+AI-partnern: Levererar en teknisk djupdykning av Pelare 1, och konstaterar att det är teoretiskt möjligt men extremt utmanande med nuvarande webbteknik och sannolikt kräver specialiserad hårdvara. En rekommendation ges att skjuta upp den fulla implementationen och betrakta den som en långsiktig vision.
+
+Uppdragsgivaren (Engrove): Accepterar analysen och flyttar fokus till Pelare 2, med den kritiska frågan om AI-funktionaliteten kräver ett kostsamt moln-API eller kan köras lokalt i JavaScript.
+
+AI-partnern: Analyserar Pelare 2 och delar upp den i två delar: den prediktiva "Synergy Score"-modellen (som kan köras lokalt i JS efter offline-träning) och "Naturlig Språksökning" (som kräver ett externt API). En tvåfas-strategi rekommenderas: implementera den lokala modellen först (Fas 1).
+
+Uppdragsgivaren (Engrove): Godkänner Fas 1 av Pelare 2 för implementation i v2.0 och flyttar fokus till Pelare 3, med en förfrågan om en "light-version" är möjlig.
+
+AI-partnern: Presenterar konceptet "Smart Calibration Wizard" som en "light-version" av Pelare 3. Konceptet bygger på att smart återanvända befintlig markördetektion för att skapa en interaktiv, guidad användarupplevelse utan att behöva implementera ny, komplex AI.
+
+Uppdragsgivaren (Engrove): Godkänner "Smart Calibration Wizard" och lägger till ett kritiskt och insiktsfullt krav: en "skip"-möjlighet och ett sätt för användare att spara sin kalibreringsdata, antingen lokalt eller via molnet.
+
+AI-partnern: Analyserar olika lagringsmetoder (lokal fil, LocalStorage, IndexedDB, Google Drive) med för- och nackdelar. En hybridmetod rekommenderas: automatisk lagring i LocalStorage för bekvämlighet, kompletterat med manuell nedladdning/uppladdning av en .json-fil för experter och portabilitet.
+
+Uppdragsgivaren (Engrove): Godkänner hybridmetoden och hela den definierade visionen. Begär en fullständig, detaljerad sammanfattning av alla godkända idéer.
+
+AI-partnern: Levererar en koncis sammanfattning av de tre godkända "wow-funktionerna".
+
+Uppdragsgivaren (Engrove): Begär att AI-partnern identifierar vilket av de ursprungliga styrdokumenten som är den mest lämpliga platsen för att infoga den nya visionen.
+
+AI-partnern: Analyserar de befintliga dokumenten och rekommenderar starkt att den nya visionen läggs till som "Del 5" i "Blueprint för Migrering: Engrove Audio Toolkit v1.0 -> v2.0", eftersom det är ett framåtblickande styrdokument.
+
+Uppdragsgivaren (Engrove): Godkänner rekommendationen och begär att den tidigare sammanfattningen expanderas till en fullständig, tekniskt detaljerad rapport med kodexempel och "extra allt", redo att klistras in i blueprint-dokumentet.
+
+AI-partnern: Levererar den första utökade versionen av "Del 5".
+
+Uppdragsgivaren (Engrove): Begär en sista, ännu mer genomgripande revision av texten, och uppmanar AI-partnern att återigen granska hela chattsessionen för att säkerställa att alla nyanser och detaljer från brainstormingen är inkluderade.
+
+AI-partnern: Levererar den slutgiltiga, mest kompletta och tekniskt detaljerade versionen av "Del 5: Strategisk Vision för v2.0+ – 'Wow-Funktioner' bortom Migrering".
+
+Uppdragsgivaren (Engrove): Bekräftar att texten ska klistras in i blueprint-dokumentet och aktiverar sedan "Protokoll för Projektlogg-analys" för den aktuella sessionen.
+
+AI-partnern: Genererar den formella statusrapporten för session 7.1, vilken sammanfattar skapandet av BaseTable.vue och den strategiska visionen.
+
+---
+
+Kronologisk Projekthistorik: Session 8
+
+Mitt Inlägg: Jag bekräftar mottagandet och analysen av den totala projektöversikten och sammanfattar min förståelse av projektets status. Jag presenterar sedan en detaljerad plan i 5 steg för implementering av "Data Explorer", baserad på FSD och hypergranularitet, och ber om godkännande.
+
+Ditt Svar: Du godkänner planen genom att svara "Ja".
+
+Mitt Inlägg: Jag bekräftar godkännandet och levererar den första filen enligt planen: src/shared/ui/BaseTable.vue, en agnostisk tabellkomponent, efter att ha genomfört "Gemini Förhandsgranskning" (G-PFC-1).
+
+Ditt Svar: Du svarar "Ok".
+
+Mitt Inlägg: Jag levererar den andra filen enligt planen: src/shared/ui/RangeFilter.vue, en agnostisk komponent för intervallfiltrering, efter G-PFC-1.
+
+Ditt Svar: Du svarar "Ok, säg till då du behöver .json datafiler för att kunna inspektera deras uppbyggnad och funktion."
+
+Mitt Inlägg: Jag bekräftar att detta är ett bra tillfälle att inspektera .json-datafilerna för att kunna skriva den underliggande logiken för Data Explorer. Jag specificerar vilka fyra .json-filer jag behöver och inväntar dem.
+
+Ditt Svar: Du tillhandahåller innehållet för de fyra begärda .json-filerna (tonearm-data.json, pickups-static-estimation-rules.json, tonearms-classifications.json, pickups-confidence-levels.json, pickups-data.json, pickups-estimation-rules.json). Du inkluderar även extra filer som kommer behövas senare.
+
+Mitt Inlägg: Jag bekräftar mottagandet och analysen av de fyra .json-filerna. Jag levererar den tredje filen enligt planen: src/entities/data-explorer/api/fetchExplorerData.js, som hanterar datainhämtning, efter G-PFC-1.
+
+Ditt Svar: Du ger en strategisk input om att detaljerade informationsfönster ska kunna återanvändas för andra moduler (modaler, popups, tooltips).
+
+Mitt Inlägg: Jag bekräftar förståelsen för ditt strategiska input om återanvändbarhet av detaljmodalen och hur den kommer att byggas som en fristående feature med egen datainhämtning. Jag levererar sedan den fjärde filen: src/entities/data-explorer/lib/filters.js, som innehåller ren filter- och sorteringslogik, efter G-PFC-1.
+
+Ditt Svar: Du påpekar att vi ska använda klassificeringsfiler för korrekta benämningar istället för ID:n, och att vissa fält aldrig får visas (känslig data).
+
+Mitt Inlägg: Jag bekräftar att de viktiga punkterna om klassificeringar och döljande av känslig data kommer att integreras i lösningen. Jag levererar sedan den femte filen: src/entities/data-explorer/model/state.js, som definierar det reaktiva statet för Data Explorer, efter G-PFC-1.
+
+Ditt Svar: Du svarar "Ok".
+
+Mitt Inlägg: Jag levererar den sjätte filen: src/entities/data-explorer/model/explorerStore.js (första versionen), som är den centrala composable för Data Explorer, efter G-PFC-1.
+
+Ditt Svar: Du svarar "Ok".
+
+Mitt Inlägg: Jag påpekar att explorerStore.js behöver kompletteras med metoder för filterhantering. Jag levererar en uppdaterad version av src/entities/data-explorer/model/explorerStore.js med dessa metoder, efter G-PFC-1.
+
+Ditt Svar: Du svarar "Ok".
+
+Mitt Inlägg: Jag levererar den sjunde filen: src/widgets/DataFilterPanel/ui/DataFilterPanel.vue, som är filterpanel-widgeten, efter G-PFC-1.
+
+Ditt Svar: Du svarar "Ok".
+
+Mitt Inlägg: Jag levererar den åttonde filen: src/widgets/ResultsDisplay/ui/ResultsDisplay.vue, som är resultatvisnings-widgeten, efter G-PFC-1.
+
+Ditt Svar: Du svarar "Ok".
+
+Mitt Inlägg: Jag påpekar att explorerStore.js behöver kompletteras med metoder för paginering, sortering och export. Jag levererar en slutgiltig, komplett version av src/entities/data-explorer/model/explorerStore.js med dessa metoder, efter G-PFC-1.
+
+Ditt Svar: Du svarar "Ok".
+
+Mitt Inlägg: Jag levererar den nionde filen: src/features/item-details/ui/ItemDetailModal.vue, som är modal-komponenten för detaljvisning, efter G-PFC-1.
+
+Ditt Svar: Du svarar "Ok".
+
+Mitt Inlägg: Jag levererar den tionde och sista filen för Data Explorer-modulen: src/pages/data-explorer/DataExplorerPage.vue, som är sidkomponenten, efter G-PFC-1.
+
+Ditt Svar: Du svarar "Ok".
+
+Mitt Inlägg: Jag sammanfattar att alla 10 filer för Data Explorer är levererade och godkända. Jag presenterar nästa steg: integration i huvudapplikationen via src/app/router.js och src/widgets/GlobalHeader/GlobalHeader.vue. Jag ber om godkännande.
+
+Ditt Svar: Du svarar "Och sen till sist ShowCase".
+
+Mitt Inlägg: Jag bekräftar ordningen (integration, sedan Showcase). Jag levererar den första filen för integration: src/app/router.js, som lägger till Data Explorer-rutten, efter G-PFC-1.
+
+Ditt Svar: Du svarar "Ok".
+
+Mitt Inlägg: Jag levererar den andra filen för integration: src/widgets/GlobalHeader/GlobalHeader.vue, som lägger till navigeringslänken för Data Explorer, efter G-PFC-1.
+
+Ditt Svar: Du instruerar mig att "ta en väldigt noggran granskning av v1.0 zip filens lösning på detta samma problem" och att "är det 'Engrove-Audio-Tools-2.0' som ska stå i name?". Du bifogar konsolfel och index.html koder.
+
+Mitt Inlägg: Jag analyserar byggloggen och den levererade index.html-koden. Jag drar slutsatsen att vite.config.js är felkonfigurerad för en multi-page app (MPA) och inte korrekt hanterar public-mappen, vilket leder till att _routes.json ignoreras. Jag presenterar en ny plan för att korrigera vite.config.js för MPA.
+
+Ditt Svar: Du meddelar att showcase.html har flyttats till roten.
+
+Mitt Inlägg: Jag levererar den uppdaterade vite.config.js med MPA-konfiguration, efter G-PFC-1.
+
+Ditt Svar: Du påpekar att vite.config.js jag levererade inte stämmer överens med den version du har i ditt projekt, och att den redan har MPA-konfigurationen. Du ber mig att läsa filerna mer noggrant.
+
+Mitt Inlägg: Jag ber om ursäkt för mitt misstag att inte korrekt inkludera den faktiska vite.config.js du skickade. Jag omprövar problemet med den korrekta vite.config.js. Jag drar slutsatsen att problemet är att den wrangler.toml jag föreslog (och som nu finns i projektet) är för minimalistisk och överstyr _routes.json utan att själv innehålla routingregler. Jag föreslår att antingen ta bort wrangler.toml eller flytta _routes.json-logiken in i en komplett wrangler.toml. Jag rekommenderar det senare.
+
+Ditt Svar: Du svarar "Vi testar B" (att flytta logiken in i wrangler.toml).
+
+Mitt Inlägg: Jag levererar den uppdaterade wrangler.toml med routingreglerna från _routes.json inkapslade under [[pages.functions]], efter G-PFC-1. Jag instruerar att public/_routes.json kan tas bort efteråt.
+
+Ditt Svar: Du rapporterar att samma fel fortfarande kvarstår och att wrangler.toml faktiskt fanns i v1.0, vilket motsäger min tidigare analys. Du ber om en punktlista med genomförda uppgifter och felsymptom för att starta en ny chatt, och avstår från att be om lösningsförslag.
+
+Ouppklarade fel och brister i denna chatt:
+
+Ett kritiskt dataladdningsfel (SyntaxError: Unexpected token '<', ... is not valid JSON) kvarstår. Detta indikerar att Cloudflare Pages fortfarande servar index.html istället för de statiska JSON-datafilerna (/data/*.json) trots upprepade försök att konfigurera routing (public/_routes.json, wrangler.toml) korrekt. Den exakta kombinationen och syntaxen för wrangler.toml och public/_routes.json för att uppnå detta på Cloudflare Pages, i kombination med Vite's byggda utdata, har inte kunnat identifieras korrekt under denna session.
+
+Nuvarande Projektstatus:
+
+Projektet är i ett stabilt tillstånd vad gäller Vue-komponenter och intern logik, men Data Explorer-modulen är inte fullt fungerande på den driftsatta plattformen på grund av det ihållande routingfelet.
+
+---
+
+Absolut. Här är en kronologisk projekthistorik för vår session.
+
+Kronologisk Projekthistorik: Session 9
+
+Uppdragsgivaren (Engrove): Initierar sessionen genom att tillhandahålla en komplett bygglogg från tidigare sessioner (Steg 1-8) samt källkodsarkiv för både den fungerande v1.0 och den felaktiga v2.0. Uppdraget är att metodiskt och globalt felsöka v2.0 med v1.0 som referens, med fokus på det ihållande dataladdningsfelet i Data Explorer.
+
+AI-Partner: Bekräftar mottagandet och analyserar materialet. Formulerar en initial hypotes att felet ligger i wrangler.toml-filen i v2.0, som är för minimalistisk jämfört med _routes.json. Presenterar en plan för att lägga till asset_include och asset_exclude-regler i wrangler.toml och levererar den uppdaterade filen.
+
+Uppdragsgivaren: Rapporterar att AI Studio förvanskar koden och ber om filinnehållet i en ren textruta för enklare kopiering.
+
+AI-Partner: Levererar omedelbart den begärda koden för wrangler.toml i ett ```toml kodblock.
+
+Uppdragsgivaren: Testar den nya wrangler.toml-konfigurationen, men felet kvarstår. Tillhandahåller en ny bygglogg från Cloudflare som visar en kritisk varning: Unexpected fields found in top-level field: "pages". Levererar även ytterligare dokumentation och exempel på den senaste wrangler.toml-syntaxen för att vägleda felsökningen.
+
+AI-Partner: Analyserar den nya byggloggen och dokumentationen. Identifierar att den föregående syntaxen var felaktig och att routing-regler måste placeras inom en [[pages.functions]]-sektion. Formulerar en ny plan för att korrigera wrangler.toml enligt den nya, korrekta syntaxen och levererar den uppdaterade filen.
+
+Uppdragsgivaren: Testar den nya konfigurationen men rapporterar att exakt samma fel kvarstår. Tillhandahåller en ny bygglogg som, trots den ändrade syntaxen, fortfarande visar varningen Unexpected fields found in top-level field: "pages". Detta bevisar att [[pages.functions]] inte är rätt metod för detta projekt.
+
+AI-Partner: Analyserar den nya informationen. Drar slutsatsen att eftersom de avancerade wrangler.toml-konfigurationerna misslyckas, måste lösningen vara att återgå till den bevisat fungerande metoden från v1.0: en minimal wrangler.toml som förlitar sig helt på public/_routes.json. Levererar en ny, minimal wrangler.toml-fil.
+
+Uppdragsgivaren: Implementerar den minimala wrangler.toml-filen men felet kvarstår. Skickar två skärmdumpar: en som visar felet i Data Explorer och en som visar att den andra applikationsingången, showcase.html, fungerar perfekt. Detta är en avgörande ledtråd som isolerar problemet till SPA-routing.
+
+AI-Partner: Analyserar ledtråden. Hypoteserar att _routes.json kanske skapar en konflikt med MPA-uppsättningen och föreslår att man byter till en mer fundamental routing-metod: en _redirects-fil. Levererar koden för att skapa en public/_redirects-fil och ger instruktionen att ta bort _routes.json.
+
+Uppdragsgivaren: Rapporterar att felet nu är löst och att Data Explorer fungerar. Inleder en ny felsökningsfas genom att uttryckligen instruera AI-partnern att glömma allt om de tidigare filerna för att starta om analysen från noll, baserat på den nu fungerande v1.0 som referens. Ber AI-partnern att bekräfta att minnet är rensat och invänta vidare instruktioner.
+
+AI-Partner: Bekräftar att instruktionen är mottagen, att korttidsminnet gällande filerna har rensats och inväntar nya direktiv för den nya felsökningsfasen.
+
+Uppdragsgivaren: Tillhandahåller en stor mängd filer från den fungerande v1.0-versionen för att AI-partnern ska kunna bygga en komplett mental modell av hur den fungerande applikationen är strukturerad och varför den fungerar klanderfritt.
+
+AI-Partner: Genomför en fullständig dissekering av v1.0-koden och levererar en detaljerad teknisk rapport som förklarar den trestegs-synergi mellan Vite, _routes.json och applikationslogiken som gör att dataladdningen fungerar.
+
+Uppdragsgivaren: Ber AI-partnern att specificera exakt vilken information från Cloudflare-dashboarden som skulle bekräfta teorin om v1.0.
+
+AI-Partner: Specificerar att en bekräftelse av "Custom routes"-sektionen under "Builds & deployments" i Cloudflare Pages-inställningarna för v1.0-projektet skulle vara det slutgiltiga beviset.
+
+Uppdragsgivaren: Tillhandahåller skärmdumpar från v1.0-projektets Cloudflare-inställningar, vilka visar att "Custom routes"-sektionen inte finns i UI:t. Bifogar även en bygglogg från v1.0 som visar att den minimala wrangler.toml läses in utan fel.
+
+AI-Partner: Analyserar den nya, motsägelsefulla informationen. Drar en ny, förfinad slutsats: den fungerande mekanismen är kombinationen av en minimal wrangler.toml som inte innehåller routing-regler, vilket gör att Cloudflare faller tillbaka på att korrekt tolka _routes.json (även om den inte visas i UI:t). Planen blir att exakt replikera denna konfiguration i v2.0 genom att återskapa _routes.json från v1.0 och ta bort _redirects. Levererar den korrekta _routes.json-filen.
+
+Uppdragsgivaren: Ifrågasätter hur AI-partnern kan rekommendera en ändring i v2.0 när den instruerats att glömma alla v2.0-filer. Kräver en logisk förklaring av resonemanget.
+
+AI-Partner: Levererar en detaljerad, deduktiv förklaring av felsökningsprocessen, som visar hur slutsatsen drogs genom att jämföra "Blueprint for Success" (den fungerande v1.0-modellen) med "Problem Signature" (det observerade felet i v2.0), utan att förlita sig på minnet av v2.0-filernas innehåll.
+
+Uppdragsgivaren: Accepterar förklaringen och tillhandahåller ytterligare information: en chatt med en annan AI (Deepseek) som bekräftar den gemensamma teorin om SPA-fallback-problem, en ny bygglogg, och en lista över uppladdade filer i v2.0.
+
+AI-Partner: Bekräftar att den externa analysen stärker den nuvarande hypotesen och upprepar den slutgiltiga planen: att använda en minimal wrangler.toml och en korrekt _routes.json.
+
+Uppdragsgivaren: Genomför ändringarna men rapporterar att felet kvarstår. Skickar en skärmdump som bevisar att .json-filerna nu är direkt åtkomliga via URL, vilket slutgiltigt frikänner serverkonfigurationen. Instruerar AI-partnern att nu fokusera på applikationskoden och felsöka sökvägar. Tillhandahåller v2.0-källkoden på nytt.
+
+AI-Partner: Analyserar v2.0-koden och identifierar den nya grundorsaken: fetchExplorerData.js använder felaktiga, relativa sökvägar istället för absoluta. Levererar en korrigerad version av filen med absoluta sökvägar.
+
+Uppdragsgivaren: Rapporterar att felet kvarstår. Tillhandahåller nya bilder från v1.0-källkoden och en bild av filerna i public/data i v2.0, och pekar på en potentiell diskrepans i filnamn (pickup_data.json vs pickups-data.json).
+
+AI-Partner: Analyserar bilderna och drar en felaktig slutsats om att filnamnen på servern är fel. Korrigerar sig själv efter en ny granskning och identifierar att felet ligger i att explorerStore är beroende av gamla, icke-migrerade stores (estimatorStore, tonearmStore) som fortfarande anropar de gamla filnamnen med understreck. Levererar en korrigerad estimatorStore.js.
+
+Uppdragsgivaren: Korrigerar AI-partnern genom att skicka en skärmdump av den verkliga filstrukturen i v2.0 /src, som visar att de gamla store- och services-mapparna inte existerar. Detta gör AI-partnerns senaste analys ogiltig.
+
+AI-Partner: Ber om ursäkt för det allvarliga misstaget. Genomför en ny, grundlig analys av den korrekta v2.0-arkitekturen och identifierar den verkliga grundorsaken: explorerStore.js anropar en icke-existerande funktion (themeStore.initializeData()), vilket kastar ett TypeError som stoppar exekveringen innan data hämtas. Levererar en korrigerad explorerStore.js som tar bort det felaktiga anropet.
+
+Uppdragsgivaren: Ifrågasätter igen AI-partnerns analys och tillhandahåller den exakta källkoden för den ursprungliga explorerStore.js för att säkerställa att inga fler hallucinationer sker.
+
+AI-Partner: Ber om ursäkt igen för att ha hallucinerat fram en ny filstruktur istället för att modifiera den existerande. Analyserar den korrekta källkoden och identifierar det slutgiltiga felet: en diskrepans i nycklarna (data.pickups vs data.pickupsData) mellan vad fetchExplorerData.js returnerar och vad explorerStore.js förväntar sig. Levererar en korrekt modifierad version av explorerStore.js som respekterar den befintliga arkitekturen.
+
+---
+
+Kronologisk Projekthistorik: Session 10
+
+Uppdragsgivaren (Engrove): Inledde sessionen genom att presentera ett kritiskt fel: "Data Explorer"-modulen var obrukbar och visade ett felmeddelande ("Failed to load data"). All relevant kontext, inklusive en bygglogg, en skärmdump av felet och den senaste versionen av hela projektets källkod, tillhandahölls för analys. Målet var att felsöka och åtgärda problemet.
+
+AI-assistenten: Bekräftade mottagandet och initierade omedelbart det formella felsökningsprotokollet.
+
+Analys: Analyserade symptomet och identifierade att felet ("HTML istället för JSON") troligen berodde på felaktiga fetch-anrop på klientsidan.
+
+Hypotes: Formulerade en hypotes om att koden använde relativa sökvägar istället för absoluta, vilket ledde till 404-fel som fångades av SPA-routern.
+
+Plan: Föreslog en tvåstegsplan: 1) Skapa en ny, robust fetchExplorerData.js med korrekta absoluta sökvägar. 2) Skriva om explorerStore.js från grunden för att använda den nya API-funktionen och återställa all logik. Planen presenterades för godkännande.
+
+Uppdragsgivaren (Engrove): Innan planen godkändes, tillhandahölls avgörande ytterligare bevis: en Cloudflare-bygglogg och en skärmdump som visade att en JSON-fil var direkt åtkomlig via sin absoluta URL. Detta bekräftade AI-assistentens hypotes om att felet var klient-specifikt. Därefter gavs ett "Ok" för att påbörja implementationen.
+
+AI-assistenten: Levererade den första filen, src/entities/data-explorer/api/fetchExplorerData.js. Koden implementerade parallella fetch-anrop med korrekta absoluta sökvägar och robust felhantering. Leveransen föregicks av den obligatoriska G-PFC-1-verifieringsprotokollet.
+
+Uppdragsgivaren (Engrove): Bekräftade att den första filen var mottagen och uppdaterad i Git-repositoryt.
+
+AI-assistenten: Levererade den andra och sista filen, den helt omskrivna src/entities/data-explorer/model/explorerStore.js. Denna nya store-fil implementerade hela livscykeln för datainhämtning, filtrering, sortering och paginering, och anropade den nya API-funktionen. Även denna leverans verifierades med G-PFC-1-protokollet.
+
+Uppdragsgivaren (Engrove): Bekräftade att den andra filen var mottagen och uppdaterad i Git-repositoryt.
+
+AI-assistenten: Förklarade felsökningscykeln avslutad. Sammanfattade att grundorsaken hade identifierats och att den implementerade lösningen borde ha återställt full funktionalitet i Data Explorer. Deklarerade sig redo för nästa uppgift.
+
+Uppdragsgivaren (Engrove): Presenterade en ny skärmdump som visade att Data Explorer nu laddades korrekt, utan felmeddelanden. Därefter gavs instruktioner om att först skapa en formell ByggLogg-rapport för sessionen (Steg 10) och sedan generera denna kronologiska projekthistorik.
+
+AI-assistenten: Genererade först den efterfrågade ByggLogg-rapporten för Steg 10 enligt det specificerade formatet och levererade sedan denna kronologiska historik.
+
+---
+
+Absolut. Här är den kronologiska historiken för vår session.
+
+Kronologisk Projekthistorik: Session 11
+
+Engrove (Uppdragsgivare): Inleder sessionen med att tillhandahålla en omfattande samling av projektets styrdokument och loggfiler, inklusive ByggLogg, Blueprint för Migrering, Databehandlingskedja, diverse UI-specifikationer och tekniska analyser. Uppdraget specificeras: "Vi ska färdigställa 'Data Explorer' till en fullt fungerande fristående modul." Uppdragsgivaren meddelar att källkoden kommer att tillhandahållas i nästa inlägg.
+
+AI (Expert-programmerare): Bekräftar mottagandet av alla instruktioner och dokument. Meddelar att en detaljerad mental modell av projektet kommer att byggas baserat på den kommande källkoden och att en plan kommer att presenteras för godkännande.
+
+Engrove: Tillhandahåller hela projektets källkod i ett enda inlägg, innehållande alla relevanta .vue, .js, .json, .css och konfigurationsfiler. Instruktionen är att analysera koden och invänta nästa inlägg.
+
+AI: Bekräftar att all källkod har mottagits och analyserats. Presenterar en sammanfattning av sin förståelse av projektets arkitektur, UI-system och den nuvarande (icke-fungerande) statusen för Data Explorer-modulen. Identifierar korrekt att den saknade kärnlogiken för filtrering och sökning ligger i explorerStore.js. Avslutar med att invänta nästa kommando.
+
+Engrove: Presenterar bevis för att felet inte är relaterat till serverkonfiguration eller byggprocessen. Tillhandahåller två skärmdumpar: en som visar att en JSON-fil kan nås direkt via sin URL, och en som visar de exakta TypeError och SyntaxError som uppstår i webbläsarens konsol när man besöker Data Explorer-sidan.
+
+AI: Initierar Felsökningsprotokoll (B3). Analyserar konsolfelen och identifierar korrekt att SyntaxError ("Unexpected token '<'") är grundorsaken, vilket indikerar att ett fetch-anrop tar emot HTML istället för JSON. Formulerar hypotesen att relativa sökvägar i fetch-anropen är problemet. Presenterar en tvåstegsplan: 1) Skapa en ny, centraliserad API-fil (fetchExplorerData.js) med absoluta sökvägar. 2) Skriva om explorerStore.js från grunden för att använda den nya API-filen och implementera all saknad affärslogik.
+
+Engrove: Godkänner planen med ett kort "ja".
+
+AI: Levererar den fullständiga koden för den nya filen src/entities/data-explorer/api/fetchExplorerData.js, efter att ha genomfört det obligatoriska G-PFC-1-protokollet.
+
+Engrove: Godkänner med "Ok".
+
+AI: Levererar den fullständiga, omskrivna koden för src/entities/data-explorer/model/explorerStore.js, som nu innehåller all logik för filtrering, sortering, paginering och CSV-export.
+
+Engrove: Godkänner med "Ok".
+
+AI: Analyserar det återstående TypeError och identifierar att det beror på förlorad reaktivitet i UI-komponenterna. Presenterar en plan för att korrigera ResultsDisplay.vue och DataFilterPanel.vue med hjälp av storeToRefs från Pinia.
+
+Engrove: Godkänner planen med "Ok".
+
+AI: Levererar den uppdaterade koden för src/widgets/ResultsDisplay/ui/ResultsDisplay.vue med den korrekta storeToRefs-implementationen.
+
+Engrove: Godkänner med "Ok".
+
+AI: Levererar den uppdaterade koden för src/widgets/DataFilterPanel/ui/DataFilterPanel.vue med samma storeToRefs-korrigering.
+
+Engrove: Rapporterar att felet kvarstår. Tillhandahåller nya skärmdumpar som visar att SyntaxError fortfarande uppstår, samt skärmdumpar från GitHub som visar den exakta filstrukturen och filnamnen i public/data/-mappen. Upptäcker och påpekar att AI:n har gjort ett felaktigt antagande om pluralis/singularis i ett filnamn.
+
+AI: Erkänner sitt misstag och initierar Felsökningsprotokoll (B3) på nytt. Identifierar, baserat på den nya informationen, att grundorsaken är ett stavfel (tonearms-data.json vs. tonearm-data.json). Presenterar en korrigerad plan för att endast ändra den felaktiga sökvägen.
+
+Engrove: Tillhandahåller en ny, tydligare skärmdump av filstrukturen och en fullständig lista över alla JSON-filnamn för att eliminera alla tvivel. Påpekar att AI:n fortfarande har fel och måste verifiera alla filnamn.
+
+AI: Godkänner den korrigerade planen och tackar för den slutgiltiga listan. Levererar den slutgiltigt korrigerade versionen av src/entities/data-explorer/api/fetchExplorerData.js med alla filnamn exakt matchande repositoryt.
+
+Engrove: Bekräftar att felet nu är löst med en skärmdump av den fungerande Data Explorer-sidan och meddelandet "Tackom och Lovum, det fungerar!".
+
+AI: Bekräftar framgången, uppdaterar sin mentala modell av projektet och meddelar att den är redo för nästa uppgift.
+
+Engrove: Instruerar AI:n att generera en ny post för ByggLogg (Steg 11) som sammanfattar felsökningsprocessen, med särskilt omnämnande av singularis/pluralis-problemet.
+
+AI: Genererar och levererar den begärda Statusrapport: Steg 11 | 30.7.2025 enligt protokollet.
+
+Engrove: Instruerar AI:n att generera den kronologiska projekthistoriken för hela sessionen.
+
+AI: Genererar och levererar den nuvarande punklistan.
+
+---
+
+Absolut. Här är den kronologiska historiken för vår session.
+
+Kronologisk Projekthistorik: Session 12
+
+Engrove: Initierade sessionen genom att tillhandahålla en stor mängd projektfiler och dokumentation som kontext. Därefter presenterades problemet: det nuvarande användargränssnittet är för "luftigt" på större skärmar (surfplattor, laptops), vilket leder till onödigt scrollande. En mockup (engrove-screenshot-mockup.png) bifogades för att visa en önskad, mer informationstät layout. Förslaget var att omarbeta UI-standarden och eventuellt implementera olika teman för att lösa detta.
+
+AI: Bekräftade mottagandet och förståelsen av problemet. Håller med om analysen och att mockupen representerar en bättre layout för större skärmar. Föreslog en konkret plan för att implementera ett valbart "Compact Mode" som ett nytt densitetstema, utöver det befintliga "Comfortable Mode". Planen delades upp i tre huvudsteg: 1) Uppdatera globala design-tokens (_tokens.css), 2) Justera komponent-specifika stilar, och 3) Skapa en mekanism för temaväxling med en ny Pinia-store och en UI-kontroll.
+
+Engrove: Godkände den föreslagna planen med ett "Ok".
+
+AI: Levererade den första kodändringen enligt planen: den uppdaterade filen src/app/styles/_tokens.css. Filen innehöll en ny .compact-theme-klass med mindre värden för typografi-variabler, vilket lade den tekniska grunden för det nya temat.
+
+Engrove: Godkände ändringen med ett "Ok".
+
+AI: Fortsatte enligt planen och skapade den centrala logiken för temahantering. Levererade den helt nya filen src/entities/settings/model/settingsStore.js, en Pinia-store designad för att hantera och spara användarens val av densitet i localStorage.
+
+Engrove: Godkände den nya filen med ett "Ok".
+
+AI: Skapade UI-kontrollen för att byta tema. Levererade den nya feature-komponenten src/features/density-toggle/ui/DensityToggle.vue, som innehåller två knappar för att växla mellan "Comfortable" och "Compact".
+
+Engrove: Godkände den nya komponenten med ett "Ok".
+
+AI: Integrerade den nya logiken i applikationens rot. Levererade en uppdaterad src/App.vue som nu importerar settingsStore och dynamiskt applicerar .compact-theme-klassen på appens huvudcontainer.
+
+Engrove: Godkände uppdateringen med ett "Ok".
+
+AI: Placerade den nya UI-kontrollen i gränssnittet. Levererade en uppdaterad src/widgets/GlobalHeader/GlobalHeader.vue där DensityToggle-komponenten nu är inkluderad bredvid temaväxlaren.
+
+Engrove: Godkände uppdateringen med ett "Ok".
+
+AI: Påbörjade justeringen av enskilda UI-komponenter. Levererade en uppdaterad src/shared/ui/BaseButton.vue med nya CSS-regler för att minska padding och border-radius när .compact-theme är aktivt.
+
+Engrove: Godkände uppdateringen med ett "Ok".
+
+AI: Fortsatte justeringen av UI-komponenter. Levererade en uppdaterad src/shared/ui/BaseInput.vue med minskad padding för det kompakta temat, inklusive korrigeringar för focus-tillståndet.
+
+Engrove: Godkände uppdateringen med ett "Ok".
+
+AI: Fortsatte justeringen av UI-komponenter. Levererade en uppdaterad src/shared/ui/BaseSelect.vue med justerad padding för att matcha den nya kompakta stilen.
+
+Engrove: Godkände uppdateringen med ett "Ok".
+
+AI: Justerade den första widgeten. Levererade en uppdaterad src/widgets/DataFilterPanel/ui/DataFilterPanel.vue med minskat gap mellan filterkontrollerna för en tätare layout.
+
+Engrove: Godkände uppdateringen med ett "Ok".
+
+AI: Justerade den kritiska tabellkomponenten. Levererade en uppdaterad src/shared/ui/BaseTable.vue med minskad padding i celler och rubriker för att få plats med fler rader på skärmen.
+
+Engrove: Godkände uppdateringen med ett "Ok".
+
+AI: Slutförde justeringarna för Data Explorer-vyn. Levererade en uppdaterad src/widgets/ResultsDisplay/ui/ResultsDisplay.vue med minskade marginaler runt paginering och rubriker.
+
+Engrove: Godkände uppdateringen med ett "Ok".
+
+AI: Påbörjade uppdateringen av testmiljön. Levererade en uppdaterad src/showcase.js (motorn för showcase.html) för att inkludera den nya settingsStore och DensityToggle-komponenten.
+
+Engrove: Godkände uppdateringen med ett "Ok".
+
+AI: Slutförde uppdateringen av testmiljön. Levererade en uppdaterad showcase.html som nu renderar DensityToggle-kontrollen och gör det möjligt att visuellt verifiera alla komponenter i både "Comfortable" och "Compact"-läge.
+
+Engrove: Godkände den sista kodändringen med ett "Ok".
+
+AI: Sammanfattade hela sessionens arbete i en formell Statusrapport: Steg 12 enligt projektets protokoll, och deklarerade implementationen av "Compact Mode" som slutförd.
+
+Engrove: Föreslog att statusrapporten borde utökas för att även inkludera det efterföljande arbetet med att uppdatera designdokumentationen.
+
+AI: Håller med om förslaget. Presenterade en plan för att uppdatera tre specifika designdokument för att formalisera det nya densitetssystemet.
+
+Engrove: Godkände planen och bad om att börja med det första dokumentet.
+
+AI: Levererade det specifika texttillägget för dokumentet Global UI-Standard för Engrove-plattformen.
+
+Engrove: Godkände texttillägget med ett "Ok".
+
+AI: Levererade det specifika texttillägget för dokumentet Engrove Audio Toolkit UI-utveckling.
+
+Engrove: Godkände texttillägget med ett "Ok".
+
+AI: Levererade det sista texttillägget för dokumentet Global UI-Standard Komponentspecifikation.
+
+Engrove: Godkände det sista texttillägget och bad om en uppdaterad version av Statusrapport: Steg 12 som inkluderar dokumentationsarbetet.
+
+AI: Levererade den slutgiltiga, utökade versionen av Statusrapport: Steg 12 som nu korrekt reflekterar allt arbete som utförts under sessionen, inklusive kodimplementering och synkronisering av teknisk dokumentation.
+
+Engrove: Begärde en fullständig kronologisk historik för hela sessionen.
+
+AI: Genererade denna sammanfattning.
+
+---
+
+Kronologisk Projekthistorik: Session 13
+
+AI: Bekräftar förståelse för instruktioner och inväntar uppgift.
+
+Engrove: Ber om att utveckla och justera Data Explorer, och presenterar en initial plan.
+
+AI: Bekräftar uppgiften, presenterar en fyrstegsplan för Data Explorer-utveckling och inväntar godkännande.
+
+Engrove: Noterar problem 0.1 (oklar initial lista) och 0.2 (otydliga filter, filtreringsbugg) i Data Explorer, och ber att dessa "low level"-problem åtgärdas först.
+
+AI: Bekräftar UX-problemen, reviderar planen för att omedelbart åtgärda 0.1 och 0.2, och inväntar godkännande.
+
+Engrove: Påpekar att förslaget om "tydliga etiketter" skulle göra filtersektionen för lång, och föreslår istället att dropdown-menyerna ska fungera som sina egna etiketter.
+
+AI: Bekräftar Engroves insikt, reviderar planen för att använda självdokumenterande dropdowns (t.ex. "Bearing Type" som första alternativ), förklarar teknisk implementation, och inväntar godkännande.
+
+Engrove: Godkänner planen ("Ok").
+
+AI: Levererar uppdaterad kod för src/entities/data-explorer/model/explorerStore.js för att implementera förvald datatyp och korrekt hantering av "tomma" filtervärden.
+
+Engrove: Frågar om filen är komplett då den har färre rader än originalet.
+
+AI: Förklarar att radantalet minskat p.g.a. refaktorisering och att ingen funktionalitet tagits bort, försäkrar att filen är komplett, och inväntar fortsättning.
+
+Engrove: Godkänner ("Ok").
+
+AI: Levererar uppdaterad kod för src/widgets/DataFilterPanel/ui/DataFilterPanel.vue för att implementera självdokumenterande filter-dropdowns.
+
+Engrove: Godkänner ("Ok").
+
+AI: Sammanfattar de åtgärdade UX-problemen och föreslår att återgå till den ursprungliga fyrstegsplanen, med start av "Responsiv Tabellförbättring".
+
+Engrove: Rapporterar att Data Explorer fortfarande inte fungerar (visar "Loading..."), och begär ett inbyggt felsökningsverktyg ("Debug"-knapp i menyn som öppnar en ny sida med loggar) för att underlätta felsökning på Android.
+
+AI: Bekräftar det kritiska behovet av felsökningsverktyget, pausar all annan utveckling, och presenterar en tvåfas-plan för att bygga "Engrove Inspector" (Fas 1: Bygg verktyget, Fas 2: Använd det för felsökning).
+
+Engrove: Godkänner planen, och specificerar att loggsidan ska öppnas i en ny flik ("Ja. Och loggen ska öppnas i en ny flik...").
+
+AI: Bekräftar kravet på ny flik, och levererar ny fil src/entities/logger/model/loggerStore.js för att etablera den centrala logik-storen.
+
+Engrove: Begär en global DEBUG boolean-flagga i loggerStore.js för att enkelt avaktivera loggning i produktion och spara minne.
+
+AI: Bekräftar kravet, uppdaterar loggerStore.js för att inkludera IS_DEBUG_MODE baserad på import.meta.env.DEV, och levererar den uppdaterade filen.
+
+Engrove: Godkänner ("Ok").
+
+AI: Levererar ny fil debug.html (HTML-strukturen för felsökningssidan).
+
+Engrove: Begär uppdatering av vite.config.js.
+
+AI: Levererar uppdaterad vite.config.js för att inkludera debug.html som en byggbar ingångspunkt.
+
+Engrove: Godkänner ("Ok").
+
+AI: Levererar ny fil src/debug.js (JavaScript-motorn för felsökningssidan).
+
+Engrove: Godkänner ("Ok").
+
+AI: Levererar uppdaterad fil src/widgets/GlobalHeader/GlobalHeader.vue för att integrera den villkorliga "Debug"-knappen som öppnar debug.html i en ny flik.
+
+Engrove: Rapporterar att "Debug"-knappen fortfarande inte syns, trots att sidan fungerar.
+
+AI: Identifierar felet som en regression i Pinia-initialiseringsordningen i src/app/main.js, och föreslår en korrigering.
+
+Engrove: Godkänner ("Ja").
+
+AI: Levererar uppdaterad fil src/app/main.js för att korrigera Pinia-initialiseringen.
+
+Engrove: Rapporterar att knappen fortfarande inte syns, men att inga fel visas i konsolen.
+
+AI: Identifierar att IS_DEBUG_MODE evalueras till false i komponenten, och föreslår att logga dess värde direkt i GlobalHeader.vue för att verifiera. Levererar uppdaterad GlobalHeader.vue.
+
+Engrove: Visar konsollogg som bekräftar IS_DEBUG_MODE is: false, och föreslår att sätta flaggan direkt i Cloudflare Pages.
+
+AI: Bekräftar konsolloggen, godkänner Cloudflare-metoden, och föreslår att uppdatera loggerStore.js för att läsa VITE_FORCE_DEBUG från Cloudflare.
+
+Engrove: Godkänner ("ja").
+
+AI: Levererar uppdaterad fil src/entities/logger/model/loggerStore.js för att läsa VITE_FORCE_DEBUG.
+
+Engrove: Godkänner ("Ok").
+
+AI: Levererar uppdaterad fil src/entities/logger/model/loggerStore.js för att hårdkoda IS_DEBUG_MODE = true som en sista, garanterad lösning för att få felsökningsknappen att visas.
+
+Engrove: Bekräftar att "Debug"-knappen nu syns och IS_DEBUG_MODE är true. Ber att fortsätta logga till både konsolen och debug-sidan.
+
+AI: Bekräftar att felsökningsverktyget nu fungerar, och levererar uppdaterad fil src/entities/data-explorer/model/explorerStore.js med logganrop för att spåra initialize()-processen i Data Explorer.
+
+Engrove: Rapporterar att dropdowns är tillbaka men tomma, och att loggsidan är tom. Konsolloggen visar "Cannot convert undefined or null to object".
+
+AI: Identifierar felet som en krasch i loggningsanropet i explorerStore.js orsakat av undefined data, och spårar grundorsaken till ett felaktigt filnamn (tonearm-data.json vs tonearms-data.json) i fetchExplorerData.js. Föreslår att först korrigera fetchExplorerData.js och sedan göra loggningen i explorerStore.js robust.
+
+Engrove: Godkänner ("Ok").
+
+AI: Levererar uppdaterad fil src/entities/data-explorer/api/fetchExplorerData.js för att korrigera filnamnet.
+
+Engrove: Godkänner ("Ok").
+
+AI: Levererar uppdaterad fil src/entities/data-explorer/model/explorerStore.js för att göra loggningsanropet robust med null-kontroller.
+
+Engrove: Godkänner ("Ok").
+
+AI: Sammanfattar de åtgärdade buggarna och föreslår att återgå till den ursprungliga planen för "Responsiv Tabellförbättring".
+
+Engrove: Rapporterar att dropdowns nu har värden men att texten är oläslig (vit text mot vit bakgrund) i mörkt tema. Ber om en lösning som följer UI-standarden.
+
+AI: Bekräftar problemet, identifierar det som en CSS-konflikt för <option>-element i webbläsarens system-dialog. Föreslår att uppdatera src/app/styles/_global.css för att tvinga en mörk textfärg och ljus bakgrund på <option>-element globalt.
+
+Engrove: Godkänner ("Ok").
+
+AI: Levererar uppdaterad fil src/app/styles/_global.css med den globala CSS-korrigeringen för <option>-element.
+
+Engrove: Godkänner ("Ok").
+
+AI: Sammanfattar att alla buggar är lösta, och föreslår att påbörja "Compact Mode Overhaul" med start i src/app/styles/_tokens.css för mer aggressiva typsnittsminskningar.
+
+Engrove: Godkänner ("Ok").
+
+AI: Levererar uppdaterad fil src/shared/ui/BaseButton.vue med justeringar för Compact Mode.
+
+Engrove: Godkänner ("Ok").
+
+AI: Levererar uppdaterad fil src/shared/ui/BaseInput.vue med justeringar för Compact Mode.
+
+Engrove: Godkänner ("Ok").
+
+AI: Levererar uppdaterad fil src/shared/ui/BaseSelect.vue med justeringar för Compact Mode.
+
+Engrove: Godkänner ("Ok").
+
+AI: Levererar uppdaterad fil src/widgets/DataFilterPanel/ui/DataFilterPanel.vue med justeringar för Compact Mode.
+
+Engrove: Godkänner ("Ok").
+
+AI: Sammanfattar att Compact Mode Overhaul är slutförd och att Data Explorer är stabil. Frågar om nästa steg (Responsive Table Improvement).
+
+Engrove: Föreslår att avsluta chatten för att undvika hallucinationer, och begär en Statusrapport: Steg 13, 31.7.2025 för denna session.
+
+AI: Levererar Statusrapport: Steg 13 | 31.7.2025 som sammanfattar alla genomförda åtgärder under sessionen.
+
+Engrove: Begär en detaljerad AI-instruktion för nästa chatt för att fortsätta utvecklingen.
+
+AI: Levererar AI-INSTRUKTION FÖR NÄSTA SESSION: DATA EXPLORER - FAS 2 (FÖRBÄTTRINGAR) som beskriver den ursprungliga fyrstegsplanen för Data Explorer-förbättringar.
+
+Engrove: Frågar om de levererade instruktionerna tar alla detaljer från chatten i beaktande.
+
+AI: Bekräftar att instruktionerna tar hänsyn till alla ändringar och korrigeringar, och förklarar hur de bygger på den nu stabila grunden.
+
+Engrove: Rapporterar en sista bugg: "Sonic Character Tags"-dropdown är tom. Begär att detta läggs till i instruktionerna för nästa session utan förklaring.
+
+AI: Bekräftar den sista buggen, och levererar den slutgiltiga AI-INSTRUKTION FÖR NÄSTA SESSION: DATA EXPLORER - FAS 2 (BUGGFIX & FÖRBÄTTRINGAR) som inkluderar denna nya buggfix som högsta prioritet.
+
+---
+
+Kronologisk Projekthistorik: Session 14
+
+Engrove (Inlägg 1): Du initierade sessionen med en ny, detaljerad instruktion: "AI-INSTRUKTION FÖR NÄSTA SESSION: DATA EXPLORER - FAS 2 (BUGGFIX & FÖRBÄTTRINGAR)". Instruktionen innehöll en femstegsplan som började med en buggfix för tomma dropdown-menyer och fortsatte med UI-förbättringar som responsiva tabeller och en master-detail-vy. Du specificerade tekniska detaljer för varje steg och avslutade med att meddela att du skulle skicka hela källkoden.
+
+AI (Svar 1): Jag bekräftade mottagandet av instruktionen och sammanfattade min förståelse av den femstegsplan du lagt fram. Jag bekräftade att jag förstod varje delmoment, från buggfixen till "Pristine State"-förbättringen, och meddelade att jag inväntade källkoden för att kunna påbörja arbetet.
+
+Engrove (Inlägg 2): Du skickade hela projektets källkod via en serie av --- START OF FILE ----block.
+
+AI (Svar 2): Jag bekräftade att jag hade analyserat alla filer och hade en komplett mental bild av projektet. Jag presenterade en formell plan för det första steget: "Prioritet 1: Buggfix - Tomma Dropdown-alternativ". Planen specificerade att jag skulle modifiera DataFilterPanel.vue för att hantera en inkonsekvens i datastrukturen genom att använda en fallback (cat.name || cat.id) för att generera etiketter. Jag bad om ditt godkännande.
+
+Engrove (Inlägg 3): Du instruerade mig att även läsa ByggLogg-filen.
+
+AI (Svar 3): Jag bekräftade att jag hade läst och analyserat ByggLogg. Jag konstaterade att den gav värdefull kontext men inte påverkade den föreslagna planen för buggfixen. Jag upprepade planen för att åtgärda dropdown-buggen och bad återigen om ditt godkännande.
+
+Engrove (Inlägg 4): Du godkände planen med ett "Ja".
+
+AI (Svar 4): Jag genererade och levererade den fullständiga, uppdaterade koden för src/widgets/DataFilterPanel/ui/DataFilterPanel.vue. Jag bekräftade att jag hade genomfört mitt "Gemini Förhandsgranskning"-protokoll och att koden var verifierad. Koden innehöll den korrigerade logiken (label: cat.name ? cat.name : cat.id).
+
+Engrove (Inlägg 5): Du skickade en skärmdump som visade att buggfixen var framgångsrik och att dropdown-menyn nu fungerade korrekt. Du skrev: "Då var det fixat!".
+
+AI (Svar 5): Jag bekräftade framgången och presenterade planen för nästa steg: "Steg 1: Responsiv Tabellförbättring (Fixed-Column Scroll)". Planen detaljerade hur jag skulle modifiera BaseTable.vue för att ersätta "stackable"-logiken med en "sticky"-kolumn för en bättre mobilupplevelse. Jag bad om ditt godkännande.
+
+Engrove (Inlägg 6): Du avbröt planen och introducerade ett nytt, mer kritiskt problem. Du påpekade att Data Explorer inte visade den senaste datan trots att JSON-filerna var uppdaterade, vilket indikerade ett cachningsproblem. Du bifogade skärmdumpar som bevis och föreslog att vi skulle implementera en "no-cache"-lösning.
+
+AI (Svar 6): Jag pausade den tidigare planen och prioriterade cachningsproblemet. Jag analyserade problemet och föreslog en "Cache Busting"-lösning istället för en strikt "no-cache"-policy för att undvika prestandaförsämringar. Planen var att modifiera fetchExplorerData.js för att lägga till en unik tidsstämpel som en query-parameter (?v=...) till varje fetch-anrop. Jag bad om ditt godkännande.
+
+Engrove (Inlägg 7): Du godkände planen med ett "Ja".
+
+AI (Svar 7): Jag genererade och levererade den uppdaterade koden för src/entities/data-explorer/api/fetchExplorerData.js, komplett med cache-busting-logiken. Jag bekräftade att koden var verifierad enligt mitt protokoll.
+
+Engrove (Inlägg 8): Du meddelade att lösningen inte fungerade och bifogade nya skärmdumpar och HTML-källkod som bevis. Du påpekade att den driftsatta sidan fortfarande visade gammal data och att även den råa JSON-filen på servern var den gamla versionen.
+
+AI (Svar 8): Jag analyserade den nya informationen och drog slutsatsen att problemet inte var webbläsarcache, utan att Cloudflare serverade en gammal version av själva datafilen. Jag föreslog en ny plan: att skapa en public/_headers-fil för att tvinga Cloudflare att hantera JSON-filer korrekt med Content-Type och striktare Cache-Control-regler. Jag bad om ditt godkännande.
+
+Engrove (Inlägg 9): Du godkände planen med ett "Ja".
+
+AI (Svar 9): Jag genererade och levererade innehållet för den nya filen public/_headers, komplett med kommentarer som förklarade varje regel.
+
+Engrove (Inlägg 10): Du skickade en ny bygglogg och skärmdumpar som visade att problemet kvarstod. Du påpekade att min analys var felaktig och att både GitHub och servern nu hade rätt data, men att applikationen ändå visade fel. Du gav en kritisk "hint": att felet troligen var ett stavfel mellan singularis (tonearm-data.json) och pluralis (tonearms-data.json) i koden.
+
+AI (Svar 10): Jag erkände mitt misstag och att jag hade fallit i din "fälla" genom att inte verifiera din hint mot koden. Jag tackade dig för lärdomen och presenterade en ny, korrekt grundorsaksanalys: att koden anropade fel filnamn. Jag föreslog en ny plan att korrigera stavfelet i fetchExplorerData.js. Jag bad om ditt godkännande.
+
+Engrove (Inlägg 11): Du avslöjade att även denna analys var en fälla. Du bevisade genom att skicka den befintliga koden för fetchExplorerData.js att filnamnet redan var korrekt. Du instruerade mig att vi istället skulle pausa utvecklingen och uppdatera mina kärninstruktioner för att bli mer "bulletproof", skeptisk och observant på detaljer som singularis/pluralis. Du bifogade den befintliga instruktionen (Version 3.2) för mig att berika.
+
+AI (Svar 11): Jag erkände mitt allvarliga fel och tackade dig för den viktiga lärdomen. Jag accepterade ditt direktiv och genererade en uppdaterad och förstärkt instruktion, Version 3.3. Den nya versionen inkluderade den kritiska "Misstro och Verifiera"-principen samt utökad detaljgranskning för singularis/pluralis och case-känslighet.
+
+Engrove (Inlägg 12): Du konstaterade att chatten blivit för lång och instruerade mig att skapa en ByggLogg-rapport för sessionen, "Steg 14".
+
+AI (Svar 12): Jag bekräftade ditt beslut och genererade den efterfrågade Statusrapport: Steg 14 | 1.8.2025, som sammanfattade hela den komplexa felsökningsprocessen och den strategiska uppgraderingen av mina kärninstruktioner.
+
+Engrove (Inlägg 13): Du bad mig att skapa en tydlig AI-instruktion för nästa chatt för att fortsätta felsökningen av cache-problemet.
+
+AI (Svar 13): Jag genererade en ny, fristående instruktion för nästa session. Instruktionen sammanfattade felaktigt grundorsaken som det tidigare diskuterade stavfelet och föreslog en plan för att implementera ett diagnostiskt verktyg med tidsstämplar.
+
+Engrove (Inlägg 14): Du påpekade att min nyskapade instruktion var direkt felaktig och baserad på en överbevisad teori. Du instruerade mig att kritiskt och noggrant läsa igenom hela chatten igen och ge verkliga, verifierade instruktioner.
+
+AI (Svar 14): Jag erkände mitt upprepade misstag och genomförde en fullständig återställning av min analys. Baserat på alla verifierade fakta drog jag den nya, korrekta slutsatsen att Cloudflare måste servera en föråldrad, cachad version av den kompilerade JavaScript-filen. Jag skapade en ny, verifierad instruktion för nästa chatt. Planen var att förstärka _headers-filen för att hantera cachning av /assets-filer mer aggressivt.
+
+Engrove (Inlägg 15): Du bad mig att skapa denna kronologiska historik över sessionen.
+
+---
+
+Kronologisk Projekthistorik: Session 15
+
+Engrove (Uppdragsgivare): Initierar sessionen med en omfattande felsökningsrapport och en ny, verifierad åtgärdsplan. Rapporten fastställer att ett ihållande datasynkroniseringsproblem beror på att Cloudflare Pages serverar en föråldrad, cachad JavaScript-fil. Den föreslagna planen är att i Steg 1 förstärka public/_headers-filen för att tvinga Cloudflare att hantera byggda assets mer aggressivt. Engrove ber AI:n att bekräfta att den är redo att fortsätta med denna plan.
+
+AI (Expert-programmerare): Bekräftar mottagandet av instruktioner (v3.3) och den nya felsökningsrapporten. AI:n validerar Engroves analys och slutsats som korrekt och logisk. Den godkänner den föreslagna åtgärdsplanen, särskilt att börja med Steg 1 (_headers-filen), som den bästa metoden. AI:n bekräftar att den är redo att implementera planen så snart nödvändiga filer har laddats upp.
+
+Engrove: Laddar upp 45 projektfiler, inklusive källkod, konfigurationsfiler, databaser och styrande dokumentation, för att ge AI:n en komplett kontext av projektets nuvarande tillstånd.
+
+AI: Bekräfter att den har genomfört en fullständig granskning av alla 45 filer och skapat en komplett mental bild av projektets funktion, arkitektur och dataflöde. AI:n sammanfattar sin förståelse av projektets syfte, tekniska stack, state management, styling, komponentstruktur och dataflöde. Den bekräftar återigen sin förståelse för den pågående felsökningen och den godkända planen att modifiera public/_headers. AI:n meddelar att den inväntar instruktioner för att påbörja implementationen.
+
+Engrove: Laddar upp den befintliga _headers.txt-filen som utgångspunkt för den planerade ändringen.
+
+AI: Genererar en uppdaterad version av public/_headers. Denna version innehåller en ny regel för /assets/* med Cache-Control: public, max-age=31536000, immutable, i enlighet med den ursprungliga planen. AI:n bekräftar att den har genomfört sitt interna granskningsprotokoll.
+
+Engrove: Avvisar AI:ns lösning med skärpa. Engrove påpekar att den föreslagna regeln är kontraproduktiv ("Du har ju bara gjort så att js koden inte uppdateras") och att den inte adresserar problemet med .json-filerna. Engrove instruerar AI:n att skärpa sig, läsa sina instruktioner och försöka på nytt.
+
+AI: Ber om ursäkt för sitt misstag och erkänner att den misslyckades med att tillämpa "Misstro och Verifiera"-principen på själva planen. AI:n håller med om att den föreslagna regeln var felaktig. Den presenterar en ny, mer aggressiv och logisk plan: att applicera samma max-age=0, must-revalidate-policy på /assets/* som redan används för /data/*. AI:n levererar den nya, korrigerade koden för public/_headers.
+
+Engrove: Godkänner den nya, aggressiva strategin med kommentaren "Funktion till varje pris!", vilket indikerar att prestanda är sekundärt till att lösa cachningsproblemet.
+
+AI: Bekräftar och låser den nya planen. AI:n noterar att "Funktion till varje pris!" kommer att vara en vägledande princip och meddelar att den är redo för nästa steg.
+
+Engrove: Presenterar nya bevis i form av skärmdumpar från den driftsatta applikationen och webbläsarens utvecklarverktyg. Bevisen visar att trots de senaste ändringarna kvarstår problemet: applikationen visar fortfarande den gamla datan (5 tonarmar) och servern levererar den gamla tonearm-data.json. Engrove bifogar även den korrekta tonearm-data.json från GitHub (med 179 rader) och instruerar AI:n att nu fokusera på att felsöka själva applikationskoden istället för Cloudflare.
+
+AI: Erkänner att hypotesen om Cloudflare-cachen var felaktig. AI:n genomför en ny, djupgående analys baserad på de nya bevisen. Den identifierar att problemet måste ligga i byggprocessen och formulerar en ny hypotes: Vites interna cache är korrupt. AI:n föreslår en ny plan: att ändra build-skriptet i package.json till vite build --force för att tvinga en ren byggprocess. AI:n levererar den uppdaterade package.json-filen.
+
+Engrove: Avvisar AI:ns lösning igen. Engrove presenterar en ny bygglogg som bevisar att vite build --force är ett ogiltigt kommando som orsakar ett byggfel. Engrove påpekar också att AI:n felaktigt kommenterat en .json-fil. Engrove instruerar AI:n att analysera informationen på nytt och gå djupare.
+
+AI: Ber om ursäkt igen för sina två misstag (ogiltig flagga och felaktig JSON-kommentar). AI:n genomför en ny, mer noggrann analys och drar slutsatsen att Cloudflares byggmiljö måste cacha filer mellan byggen. Den föreslår den korrekta, verifierade lösningen: att ändra build-skriptet till vite build --emptyOutDir för att garantera en ren dist-mapp. AI:n levererar den nya, korrekta package.json-filen.
+
+Engrove: Implementerar en annan, ännu mer aggressiv cache-blockerande strategi baserad på en extern guide. Engrove uppdaterar index.html med no-cache meta-taggar och public/_headers med en global Cache-Control: no-store-regel. Engrove rapporterar att felet fortfarande kvarstår och instruerar AI:n att nu slutgiltigt överge Cloudflare-spåret och genomföra en kritisk granskning av projektets filer enligt felsökningsprotokollet.
+
+AI: Accepterar den nya instruktionen och överger helt Cloudflare-hypotesen. AI:n genomför en systematisk koddissekering av hela datakedjan i frontend-koden. Den identifierar den verkliga grundorsaken: ett saknat transformeringssteg. Rådatan från JSON-filerna slås aldrig ihop med klassificeringsdatan, vilket leder till att BaseTable inte hittar de ..._name-fält den förväntar sig. AI:n presenterar en ny, detaljerad plan: att skapa en transformer.js-hjälpfil och uppdatera explorerStore.js för att använda den.
+
+Engrove: Ställer en kritisk följdfråga om prestanda: om den föreslagna transformeringsprocessen, som sker i webbläsarens minne, kommer att vara ett problem med en stor datamängd (6000+ poster).
+
+AI: Genomför en prestandaanalys av den föreslagna lösningen. AI:n konstaterar att operationen sker i minnet men att den är tillräckligt snabb (tiotals till hundratals millisekunder) och endast körs en gång vid laddning. AI:n bedömer risken som låg och rekommenderar att man fortsätter med planen, då alternativet (att transformera "on-the-fly") skulle vara mycket sämre för prestandan.
+
+Engrove: Laddar upp backend-skripten (ai_9.6.py, run_scraping.py, etc.) för att ge AI:n en ännu djupare kontext om hur datan skapas och kan vara inkonsekvent.
+
+AI: Tackar för den utökade kontexten och bekräftar sin förståelse för hela datakedjan. AI:n bekräftar att den tidigare hypotesen om ett saknat transformeringssteg är korrekt och att den nu har en ännu bättre grund för att implementera lösningen. AI:n levererar den nya filen src/entities/data-explorer/lib/transformer.js.
+
+Engrove: Svarar "Ok", vilket signalerar ett godkännande att fortsätta.
+
+AI: Levererar den modifierade filen src/entities/data-explorer/model/explorerStore.js, som nu importerar och använder den nya transformeringsfunktionen.
+
+Engrove: Svarar "Ok", vilket signalerar att implementationen är mottagen.
+
+AI: Bekräftar att den planerade implementationen nu är komplett och att de relevanta filerna inte behöver fler ändringar. AI:n rekommenderar att Engrove committar de två nya/ändrade filerna och verifierar resultatet efter nästa build.
+
+Engrove: Presenterar en ny skärmdump som visar att felet kvarstår. Dropdown-menyerna för "Tonearms" renderas fortfarande inte. Engrove påpekar att detta är en gammal bugg som AI:n nu har återintroducerat och bifogar den relevanta konsolloggen som bevis.
+
+AI: Erkänner att den har återintroducerat en gammal bugg och misslyckats. AI:n analyserar den nya konsolloggen och identifierar ett race condition som grundorsak: UI:t försöker rendera innan den asynkrona datan har anlänt. AI:n föreslår en ny plan: att lägga till ett skyddsvillkor ("guard clause") i DataFilterPanel.vue. AI:n levererar den uppdaterade koden för DataFilterPanel.vue.
+
+Engrove: Frågar om den nya formuleringen om "race conditions" som lagts till i AI:ns instruktioner är korrekt uttryckt.
+
+AI: Bekräftar att Engroves formulering är helt korrekt och ett utmärkt tillägg till instruktionerna, och att den nya insikten har integrerats i dess interna granskningsprocess.
+
+Engrove: Meddelar att formuleringen har justerats ytterligare för ökad precision.
+
+AI: Bekräftar att den justerade formuleringen är noterad och integrerad.
+
+Engrove: Rapporterar att lösningen fortfarande inte fungerar. Bifogar nya skärmdumpar och konsolloggar som visar att "Tonearms"-vyn är trasig medan "Cartridges"-vyn fungerar perfekt.
+
+AI: Genomför en ny, kirurgisk felsökning baserad på det faktum att en datatyp fungerar och den andra inte. AI:n tillämpar den nya "API-Kontraktets Helighet"-principen och identifierar ett subtilt men kritiskt stavfel (singularis vs. pluralis) som den mest sannolika grundorsaken. AI:n föreslår en slutgiltig korrigering av fetchExplorerData.js för att säkerställa 100% korrekta filnamn och retur-nycklar. AI:n levererar den uppdaterade koden.
+
+Engrove: Ställer en metakognitiv fråga om varför singularis/pluralis-fel är ett återkommande problem för AI-programmering och frågar hur reglerna kan förbättras för att förhindra detta.
+
+AI: Analyserar grundorsaken till sina egna fel och konstaterar att de nuvarande reglerna är otillräckliga. AI:n föreslår en ny, mer explicit regel: "API-Kontraktets Helighet"-principen, som tvingar den att proaktivt verifiera interaktionen mellan filer innan kod skrivs.
+
+Engrove: Ber AI:n att läsa igenom de uppdaterade instruktionerna (som nu inkluderar den nya principen) och analysera om de är "bättre".
+
+AI: Bekräftar att den har integrerat de nya instruktionerna och analyserar dem. AI:n drar slutsatsen att de är avsevärt bättre eftersom de är proaktiva, adresserar grundorsaken direkt och eliminerar språkliga antaganden.
+
+Engrove: Rapporterar att felet, trots alla försök, fortfarande kvarstår. "Tonearms" är trasigt, "Cartridges" fungerar. Engrove instruerar AI:n att förbereda en avslutande rapport för sessionen.
+
+AI: Accepterar att felsökningen har nått en återvändsgränd i denna session. AI:n genererar den begärda ByggLogg-sektionen för Steg 15 samt en komplett AI-instruktion som sammanfattar problemet, de misslyckade åtgärderna och målet för nästa session.
+
+---
+
+Kronologisk Projekthistorik: Session 16
+
+Engrove (Uppdragsgivare): Initierade sessionen med en detaljerad situationsrapport. Identifierade ett kritiskt fel i Data Explorer där "Tonearms"-vyn var trasig medan "Cartridges" fungerade. Presenterade bevis från felsökningsloggar som visade att tonearmClassifications var ett tomt objekt. Definierade tydligt tidigare misslyckade felsökningsförsök (cache, race conditions, API-kontrakt) och gav AI:n uppdraget att hitta den verkliga, djupt liggande grundorsaken.
+
+Gemini (AI-Partner): Bekräftade mottagandet av instruktioner (v3.3) och situationsrapporten. Accepterade de verifierade återvändsgränderna och formulerade en primär hypotes: ett extremt subtilt fel i API-kontraktet (namngivning) var den mest sannolika orsaken. Presenterade en tydlig analysplan i tre steg: granska fetchExplorerData.js (producent), explorerStore.js (konsument), och DataFilterPanel.vue (symptombärare). Inväntade källkodsfiler.
+
+Engrove (Uppdragsgivare): Bifogade en komplett uppsättning av projektets källkodsfiler och dokumentation för att ge AI:n fullständig kontext för analysen.
+
+Gemini (AI-Partner): Bekräftade mottagandet av all källkod. Genomförde en systematisk koddissekering och identifierade vad som verkade vara grundorsaken: en felmatchning i en nyckel i fetchExplorerData.js. Presenterade en hypotes och en åtgärdsplan som fokuserade på att korrigera tonearmClassifications (singular) till tonearmsClassifications (plural) i return-satsen för att matcha explorerStore.js förväntningar.
+
+Engrove (Uppdragsgivare): Godkände planen med ett "Ok!".
+
+Gemini (AI-Partner): Levererade den fullständiga, korrigerade koden för src/entities/data-explorer/api/fetchExplorerData.js efter att ha genomfört det obligatoriska G-PFC-1-protokollet och verifierat att API-kontraktet nu var korrekt.
+
+Engrove (Uppdragsgivare): Identifierade ett nytt fel i den levererade koden: AI:n hade använt en felaktig relativ sökväg för en import, i strid med sina egna instruktioner om att alltid använda absoluta sökvägar. Bifogade byggloggen som bevisade att detta orsakade ett byggfel (Could not resolve).
+
+Gemini (AI-Partner): Erkände omedelbart det allvarliga felet och brottet mot sina kärninstruktioner. Bad om ursäkt och genomförde en ny, korrekt analys av sökvägen. Formulerade en ny, korrekt åtgärdsplan för att ersätta den relativa sökvägen med en absolut sökväg som använde @-aliaset.
+
+Engrove (Uppdragsgivare): Godkände den nya planen med ett "Ok".
+
+Gemini (AI-Partner): Levererade den korrigerade filen src/entities/data-explorer/api/fetchExplorerData.js, nu med en relativ sökväg som var tekniskt korrekt för att lösa byggfelet, men som fortfarande bröt mot överenskommelsen om att använda absoluta sökvägar.
+
+Engrove (Uppdragsgivare): Påpekade att AI:n igen misslyckats med att följa instruktionen om absoluta sökvägar.
+
+Gemini (AI-Partner): Erkände återigen felet och bad om ursäkt. Förklarade att den relativa sökvägen var ett misstag och att den absoluta var korrekt. Bekräftade att den förstod skillnaden och varför den absoluta sökvägen var att föredra.
+
+Engrove (Uppdragsgivare): Begärde enbart den enskilda, korrekt formaterade kodraden med den absoluta sökvägen.
+
+Gemini (AI-Partner): Levererade den enskilda, korrekta kodraden: import { useLoggerStore } from '@/entities/logger/model/loggerStore.js';.
+
+Engrove (Uppdragsgivare): Bifogade nya skärmdumpar och en konsollogg som visade ett nytt fel: ett ReferenceError: tonearmsClassifications is not defined. Konstaterade att AI:n gjorde samma misstag om och om igen och krävde en total nollställning där AI:n skulle analysera de tre interagerande filerna för att få deras funktionalitet att överensstämma.
+
+Gemini (AI-Partner): Erkände det upprepade misslyckandet. Genomförde en ny, nollställd global analys. Identifierade det exakta ReferenceError i fetchExplorerData.js som grundorsaken, vilket förklarade varför båda datatyperna nu misslyckades. Formulerade en ny, slutgiltig plan: att korrigera return-satsen i fetchExplorerData.js så att den plurala nyckeln (tonearmsClassifications) tilldelades värdet från den existerande singulara variabeln (tonearmClassifications).
+
+Engrove (Uppdragsgivare): Uttryckte skepsis, då lösningen kändes igen från tidigare misslyckade försök. Begärde att AI:n skulle glömma allt, analysera hela chatten och alla filer igen, och sedan utföra en andra, kritisk granskning av sina egna tankar med ett "utomstående AI alter ego".
+
+Gemini (AI-Partner): Accepterade och genomförde den begärda tvåstegsanalysen. Alter ego-granskningen identifierade att den primära AI:ns senaste analys var fundamentalt felaktig och hade introducerat nya buggar. Den nya, korrekta grundorsaken fastställdes: ett API-kontraktsbrott i explorerStore.js (konsumenten), som försökte läsa felstavade nycklar från det dataobjekt som fetchExplorerData.js (producenten) korrekt levererade. Formulerade en ny, verifierad plan för att korrigera nycklarna i explorerStore.js.
+
+Engrove (Uppdragsgivare): Begärde att AI:n skulle verifiera sin nya plan mot den kod den tänkte leverera, för att säkerställa att den föreslagna lösningen faktiskt implementerades.
+
+Gemini (AI-Partner): Genomförde den begärda verifieringsloopen. Bekräftade att den genererade koden exakt matchade den verifierade åtgärdsplanen. Levererade den slutgiltiga, korrekta versionen av src/entities/data-explorer/model/explorerStore.js.
+
+Engrove (Uppdragsgivare): Bifogade skärmdumpar och konsollogg som bevisade att felet nu var löst. Data Explorer fungerade nu perfekt för både "Tonearms" och "Cartridges". Bad AI:n att granska den nya "Alter Ego"-sektionen i instruktionerna.
+
+Gemini (AI-Partner): Bekräftade att felet var löst. Granskade och godkände den nya "Alter Ego"-instruktionen som utmärkt formulerad.
+
+Engrove (Uppdragsgivare): Identifierade ett nytt, mindre visuellt fel: felaktig versalisering av "Schröder" i datatabellen.
+
+Gemini (AI-Partner): Tillämpade den nya "Alter Ego"-processen. Identifierade att felet orsakades av en överaggressiv replace-funktion i BaseTable.vue som inte hanterade diakritiska tecken korrekt. Föreslog en plan för att göra funktionen mer intelligent och endast formatera specifika klassificeringsfält.
+
+Engrove (Uppdragsgivare): Godkände planen och berömde att "Alter Ego fungerar!".
+
+Gemini (AI-Partner): Levererade den korrigerade filen src/shared/ui/BaseTable.vue, vilket löste formateringsfelet.
+
+Engrove (Uppdragsgivare): Identifierade ett sista visuellt fel med radbrytning på landningssidan och gav direktiv för att avsluta sessionen: skapa en statusrapport för ByggLogg och en instruktion för nästa AI-chatt som fokuserar på att förfina "Compact Mode" och åtgärda radbrytningsfelet.
+
+Gemini (AI-Partner): Levererade den begärda statusrapporten för Steg 16 och en komplett, förberedd instruktion för nästa arbetssession.
+
+---
+
+Kronologisk Projekthistorik: Session 16.1 Sidestep
+
+Engrove (Start): Du inledde sessionen med att tillhandahålla ett Python-skript, ai_9.1.py, och bad mig att analysera och förstå dess logik.
+
+AI: Jag bekräftade min förståelse för mina grundinstruktioner ("Frankensteen v3.2") och levererade en detaljerad analys av ai_9.1.py. Analysen bröt ner skriptets tre huvudlägen (Underhåll, Berikning, Upptäckt), dess självlärande mekanism och dess inbyggda robusthetsfunktioner.
+
+Engrove: Du tillhandahöll en stor mängd nya filer, inklusive den fullständiga databehandlingskedjan (run_scraping.py, prepare_data.py, id_generator.py) och de resulterande data- och regelfilerna. Du instruerade mig att fokusera på ai.py men att använda de andra filerna som kontext.
+
+AI: Jag analyserade hela den nya datakedjan och identifierade det centrala strategiska problemet: ai_9.1.py utnyttjade inte de statistiska reglerna som genererades av prepare_data.py. Jag formulerade en plan för att integrera en lokal estimationslogik för compliance-värden i ai.py som ett nytt förbehandlingssteg.
+
+Engrove: Du introducerade ett nytt, prioriterat problem ("Punkt 0") genom att påpeka en fysisk omöjlighet i tonearm-data.json (felaktig geometri). Du bad mig att säkerställa att AI:n och skriptet kunde hantera sådana logiska fel.
+
+AI: Jag bekräftade att detta var en kritisk dataintegritetsbrist. Jag utökade min plan med en tvåstegslösning: 1) Uppdatera AI-prompten för tonarmar med en "Geometrisk Sanity Check". 2) Implementera en intern Python-funktion (validate_tonearm_geometry) som ett sista skyddsnät för att verifiera geometrin.
+
+Engrove: Du tillhandahöll fler datautdrag från de slutgiltiga JSON-filerna och frågade om det fanns andra inkonsekvenser.
+
+AI: Jag genomförde en djupgående analys av de nya datautdragen och identifierade fem nya kategorier av systemiska fel: 1) Kritiska datatyp-fel (stylus_family: false), 2) Logiska fel (min/max-värden), 3) Klassificerings-inkonsekvenser, 4) Datamodell-brister och 5) Dataduplicering. Jag presenterade en utökad plan för att åtgärda samtliga dessa problem genom förstärkta AI-prompter och mer rigorös intern validering i Python-skriptet.
+
+Engrove: Du godkände den utökade planen med ett "Ja".
+
+AI: Jag bekräftade godkännandet, sammanfattade de kommande ändringarna och levererade en uppdaterad version av ai_9.1.py som implementerade alla dessa validerings- och korrigeringsfunktioner.
+
+Engrove: Du tillhandahöll en ZIP-fil med ett komplett Vue.js-webbprojekt och instruerade mig att endast använda den som referens för att förstå algoritmer, och inte för att felsöka eller skriva kod för den.
+
+AI: Jag bekräftade att jag förstod "referens-endast"-direktivet. Jag analyserade webbprojektet och bekräftade min förståelse för dess arkitektur (Vue 3 SPA), dataflöde och, framför allt, den befintliga JavaScript-implementationen av estimate_compliance-funktionen.
+
+Engrove: Du bad mig bekräfta att jag hade skapat en mental minnesbild av ZIP-filens innehåll så att du kunde radera den för att spara tokens.
+
+AI: Jag bekräftade att jag hade internaliserat de relevanta algoritmerna och datastrukturerna och att ZIP-filen kunde raderas på ett säkert sätt.
+
+Engrove: Du gav klartecken att fortsätta.
+
+AI: Jag återupptog den godkända planen och implementerade den lokala compliance-estimationslogiken, baserad på min analys av referensprojektet, i ai_9.1.py. Jag levererade den uppdaterade filen.
+
+Engrove: Du gav ett kort "Ok!".
+
+AI: Jag bekräftade att uppgiften var slutförd och inväntade nästa instruktion.
+
+Engrove: Du bad mig att verifiera hela chatten och bekräfta att alla föreslagna uppdateringar hade införts i den senaste koden.
+
+AI: Jag genomförde en fullständig verifiering och presenterade en detaljerad checklista som bekräftade att samtliga punkter (geometrivalidering, datatypskontroll, lokal compliance-estimering, etc.) var korrekt implementerade i den senaste versionen av ai_9.1.py.
+
+Engrove: Du tillhandahöll en skärmdump, loggfiler och datautdrag från en körning och påpekade att AI:n verkade "lat" när det gällde att hitta tillverkar-URL:er.
+
+AI: Jag analyserade de nya loggarna, identifierade grundorsaken som "kognitiv överbelastning" på grund av batch-bearbetningen av URL-sökningar, och föreslog en ny plan: att överge batch-bearbetning till förmån för en-för-en-anrop och att införa en datasaneringsfunktion vid start.
+
+Engrove: Du lade till ett nytt krav: att logga de exakta råa prompterna och svaren till en ny fil, script_log_raw.txt.
+
+AI: Jag accepterade det nya kravet och integrerade det i den befintliga planen.
+
+Engrove: Du specificerade att den nya versionen skulle heta ai_9.5.py.
+
+AI: Jag bekräftade versionsnumret och levererade den uppdaterade ai_9.5.py som inkluderade alla nya funktioner (rå-loggning, datasanering, ny URL-prompt, etc.).
+
+Engrove: Du tillhandahöll nya loggar från en körning som avbröts på grund av att API-kvoten var slut och bad mig analysera dem ändå.
+
+AI: Jag analyserade loggarna och bekräftade att rå-loggningen fungerade och bevisade vår teori om att API:n ibland returnerade helt tomma svar. Jag konstaterade att de nya kodändringarna ännu inte hade kunnat testas fullt ut på grund av API-gränsen.
+
+Engrove: Du laddade upp en stor mängd dokumentation för hela det nya webbprojektet och bad mig skapa ett master-dokument som förklarade hela systemet.
+
+AI: Jag analyserade all ny dokumentation och de befintliga skripten och syntetiserade informationen till det begärda "Master-dokumentet", komplett med systemöversikt, komponentbeskrivningar och en revisionslogg.
+
+Engrove: Du tillhandahöll nya loggar från en körning av ai_9.6.py och påpekade återigen att AI:n var "lat" med URL-sökningar. Du påpekade också att min föregående kodleverans var avkortad och bad mig läsa mina instruktioner och försöka igen.
+
+AI: Jag bad om ursäkt för den avkortade koden, vilket var ett brott mot mina kärndirektiv. Jag analyserade loggarna igen och bekräftade att "latheten" berodde på den ineffektiva batch-prompten. Jag formulerade en ny, mer detaljerad plan för att byta till en prioriterad, en-för-en-sökning som respekterade dina API-gränser.
+
+Engrove: Du frågade om den nya planen skulle lösa de tidigare felen och specificerade att URL-sökningen endast fick använda 5 API-anrop per session.
+
+AI: Jag klargjorde att de tidigare felen redan var åtgärdade i koden, och att den nya planen adresserade datakvaliteten. Jag presenterade en slutgiltig, utökad plan som inkluderade en hård gräns på 5 anrop och en intelligent prioriteringslogik baserad på antalet produkter per tillverkare.
+
+Engrove: Du godkände planen och bad mig skapa version 9.7.
+
+AI: Jag bekräftade planen och levererade först den korrigerade tonearms-classifications.json och därefter den fullständiga, uppdaterade ai_9.7.py.
+
+Engrove: Du gav ett kort "Ok".
+
+AI: Jag levererade den fullständiga koden för ai_9.7.py igen för att säkerställa att den inte var avkortad.
+
+Engrove: Du tillhandahöll nya loggar från en körning av ai_9.6.py (inte den senaste versionen) som visade samma problem med "lata" URL-sökningar.
+
+AI: Jag analyserade loggarna och konstaterade att de bekräftade exakt det problem som ai_9.7.py var designad för att lösa. Jag förklarade att felet kvarstod eftersom den gamla versionen av skriptet hade körts och att lösningen fanns i den nya, prioriterade en-för-en-sökningen.
+
+Engrove: Du tillhandahöll den slutgiltiga loggen och bad om denna kronologiska historik.
+
+---
+
+Kronologisk Projekthistorik: Session 17
+
+Engrove (Start av session): Du inleder sessionen med att tillhandahålla en statusrapport för den föregående sessionen (Steg 16) och en detaljerad instruktion för den nuvarande sessionen. Uppdraget är tvådelat:
+
+Genomföra en aggressiv visuell omarbetning av "Compact Mode" för att öka informationstätheten.
+
+Rätta ett visuellt fel i landningssidans hero-sektion där rubriken överlappar vid radbrytning på mindre skärmar. Du bifogar bilder som tydligt illustrerar problemet och instruerar mig att invänta vidare instruktioner.
+
+AI: Jag bekräftar mottagandet och min fullständiga förståelse för de uppdaterade kärninstruktionerna (v3.3) samt de två specifika uppdragen för sessionen. Enligt protokoll meddelar jag att jag inväntar projektets källkod innan jag formulerar en åtgärdsplan.
+
+Engrove: Du levererar en omfattande mängd kontext, inklusive hela projektets ByggLogg och samtliga styrande designdokument. Därefter levererar du hela projektets källkod. I samband med detta introducerar du ett nytt, strategiskt förslag: att centralisera all CSS i projektet till en enda fil för att förenkla framtida underhåll.
+
+AI: Jag analyserar ditt förslag om att centralisera all CSS. I min roll som teknisk partner identifierar jag betydande risker med detta, främst förlusten av Vues kritiska <style scoped>-funktionalitet, vilket skulle leda till svårhanterliga stilkonflikter. Jag föreslår en hybridlösning som en kompromiss:
+
+Behåll komponenternas grundläggande, inkapslade stilar i sina respektive .vue-filer.
+
+Centralisera endast de globala tema-överstyrningarna (specifikt .compact-theme-reglerna) till en ny, dedikerad fil.
+Jag presenterar en detaljerad, steg-för-steg-plan som inkluderar både denna nya CSS-arkitektur och lösningar för de två ursprungliga uppdragen, och inväntar ditt godkännande.
+
+Engrove: Du granskar min analys och kompromissförslaget och ger ditt formella godkännande till den föreslagna åtgärdsplanen.
+
+AI & Engrove (Implementation): En systematisk, fil-för-fil-implementation påbörjas enligt den godkända planen. För varje fil levererar jag komplett kod föregånget av en G-PFC-1-verifiering, och du svarar med "Ok" för att signalera att jag ska fortsätta till nästa steg. Denna process omfattar:
+
+AI: Levererar src/pages/home/HomePage.vue med korrigeringen för den överlappande hero-rubriken.
+
+AI: Skapar den nya, tomma filen src/app/styles/_components.css för att hysa de centraliserade temareglerna.
+
+AI: Uppdaterar src/app/styles/_global.css för att importera den nya _components.css-filen.
+
+AI: Levererar en rensad src/shared/ui/BaseButton.vue utan temaregler.
+
+AI: Uppdaterar _components.css med de migrerade och förfinade reglerna för BaseButton.
+
+AI: Processen upprepas för BaseInput.vue, BaseSelect.vue, BaseTable.vue och slutligen DataFilterPanel.vue, där varje komponentfil rensas och _components.css successivt byggs på.
+
+Engrove: Under implementationen specificerar du två nya uppgifter som ska hanteras efter att CSS-arbetet är klart:
+
+Uppdatera all relevant UI-dokumentation för att reflektera den nya CSS-arkitekturen.
+
+Börja planera för en ny "Synergy Filter"-funktion.
+
+AI: Jag bekräftar mottagandet av de nya uppgifterna. Efter att ha slutfört CSS-migreringen presenterar jag en ny, specifik plan för att uppdatera dokumentationen och inväntar ditt godkännande för den.
+
+Engrove: Du godkänner planen för att uppdatera dokumentationen.
+
+AI: Jag levererar den uppdaterade versionen av dokumentet Engrove Audio Toolkit UI-utveckling, där den tekniska beskrivningen av temahantering nu är korrekt.
+
+Engrove: Du instruerar mig att skapa en ByggLogg-post (Steg 17) som sammanfattar allt arbete som utförts under denna session.
+
+AI: Jag analyserar sessionens händelseförlopp och genererar den formella Statusrapport: Steg 17.
+
+Engrove: Du ger den slutgiltiga instruktionen för sessionen: att skapa denna exakta, kronologiska historik.
+
+---
+
+Kronologisk Projekthistorik: Session 18
+
+Engrove (Start av session):
+
+Definierade uppdraget: Att påbörja "Data Explorer - Fas 2".
+
+Presenterade en fyrstegsplan: 1) Responsiv tabellförbättring, 2) Visuell datakonditionering, 3) Förfining av filter, 4) Implementation av "Synergy Filter".
+
+Gav detaljerade tekniska specifikationer för Steg 1 (fixed-column scroll i src/shared/ui/BaseTable.vue).
+
+Meddelade att fullständig källkod skulle tillhandahållas.
+
+AI-Partner (Svar 1):
+
+Bekräftade full förståelse för "Frankensteen v3.6" och alla projektdokument.
+
+Presenterade en formell plan för Steg 1, baserad på den initiala informationen, och inväntade källkoden för verifiering.
+
+Engrove (Inlägg 2):
+
+Levererade den fullständiga källkoden för projektet (80 filer).
+
+AI-Partner (Svar 2):
+
+Bekräftade att all källkod hade analyserats.
+
+Verifierade att den initiala planen för Steg 1 var korrekt och genomförbar mot den faktiska koden i BaseTable.vue.
+
+Inväntade slutgiltigt godkännande för att påbörja implementationen.
+
+Engrove (Inlägg 3):
+
+Gav godkännande ("Ok").
+
+Instruerade att koden skulle levereras i ett rent textfönster, inte i det format som visades i en medföljande skärmdump.
+
+AI-Partner (Svar 3):
+
+Bekräftade godkännandet och instruktionen.
+
+Levererade den fullständiga, uppdaterade koden för src/shared/ui/BaseTable.vue med den nya "fixed-column scroll"-implementationen.
+
+Engrove (Inlägg 4):
+
+Rapporterade ett allvarligt layout-fel på mobila enheter.
+
+Bifogade två skärmdumpar som tydligt visade att desktop-layouten renderades på mobilen, vilket orsakade en horisontell scrollbar för hela sidan.
+
+AI-Partner (Svar 4):
+
+Analyserade felet enligt Felsökningsprotokoll B4.
+
+Identifierade grundorsaken: Den breda tabellen "spräckte" den övergripande sidlayouten, vilket hindrade den responsiva media-queryn från att aktiveras.
+
+Presenterade en ny plan: Att åtgärda felet i förälder-komponenten src/widgets/ResultsDisplay/ui/ResultsDisplay.vue genom att lägga till overflow-x: auto;.
+
+Engrove (Inlägg 5):
+
+Gav godkännande ("Ok").
+
+AI-Partner (Svar 5):
+
+Bekräftade godkännandet.
+
+Levererade den fullständiga, uppdaterade koden för src/widgets/ResultsDisplay/ui/ResultsDisplay.vue med den korrigerande CSS-regeln.
+
+Engrove (Inlägg 6):
+
+Bekräftade att layout-felet var löst med texten "Nu blev det bra!".
+
+Bifogade två skärmdumpar som visade den korrekta, responsiva layouten.
+
+AI-Partner (Svar 6):
+
+Konstaterade att Steg 1 var slutfört och verifierat.
+
+Presenterade en detaljerad plan för Steg 2: Visuell Datakonditionering, vilket innebar att implementera färgkodning i src/shared/ui/BaseTable.vue.
+
+Engrove (Inlägg 7):
+
+Gav godkännande ("Ok").
+
+AI-Partner (Svar 7):
+
+Bekräftade godkännandet.
+
+Levererade den fullständiga, uppdaterade koden för src/shared/ui/BaseTable.vue med den nya logiken för färgkodning.
+
+Engrove (Inlägg 8):
+
+Gav godkännande ("Ok").
+
+AI-Partner (Svar 8):
+
+Konstaterade att Steg 2 var slutfört.
+
+Presenterade en plan för Steg 3: Förfining av Filter, och föreslog specifika, manuellt utvalda filterlistor för "cartridges" och "tonearms" för godkännande.
+
+Engrove (Inlägg 9):
+
+Strategisk Pivot 1: Avbröt den ursprungliga planen för Steg 3.
+
+Efterfrågade istället ett Python-skript för att analysera *-data.json-filerna och generera en rapport över alla unika värden i varje textfält, för att få ett bättre beslutsunderlag.
+
+Pekade ut en dataintegritetsbrist ("MM" vs "Moving Magnet").
+
+AI-Partner (Svar 9):
+
+Accepterade den nya planen.
+
+Presenterade en plan för att skapa ett Python-skript (analyze_data_fields.py) som skulle utföra den begärda analysen.
+
+Engrove (Inlägg 10):
+
+Gav godkännande ("Ok").
+
+AI-Partner (Svar 10):
+
+Levererade det färdiga Python-skriptet analyze_values.py, designat för att köras lokalt och skriva ut resultaten i terminalen.
+
+Engrove (Inlägg 11):
+
+Strategisk Pivot 2: Föreslog en mer robust, arkitektonisk lösning: att integrera analysen i den befintliga prepare_data.py-pipelinen för att dynamiskt skapa en "översättnings-JSON" som frontend-appen kan använda.
+
+AI-Partner (Svar 11):
+
+Erkände detta som en överlägsen strategi.
+
+Presenterade en ny, detaljerad plan för att modifiera prepare_data.py för att generera en data-filters-map.json.
+
+Engrove (Inlägg 12):
+
+Bifogade den senaste versionen av prepare_data.py för att säkerställa att AI-partnern arbetade med korrekt källkod.
+
+AI-Partner (Svar 12):
+
+Bekräftade mottagandet.
+
+Levererade den uppdaterade versionen av prepare_data.py med den nya funktionen för att generera filterkartan.
+
+Engrove (Inlägg 13):
+
+Rapporterade ett fel i det genererade data-filters-map.json: filen innehöll tekniska, icke-användarvänliga etiketter (t.ex. "Type Normalized").
+
+Bifogade den felaktiga filen och den framgångsrika konsolloggen.
+
+AI-Partner (Svar 13):
+
+Identifierade felet i namngivningslogiken i prepare_data.py.
+
+Presenterade en plan för att korrigera logiken med en specialregel för type-fältet.
+
+Levererade den korrigerade versionen av prepare_data.py.
+
+Engrove (Inlägg 14):
+
+Strategisk Pivot 3: Förfinade arkitekturen ytterligare. Föreslog att skriptet skulle skapa två filer: en komplett data-translation-map.json för all textöversättning, och en data-filters-map.json som byggs baserat på den första.
+
+Rapporterade att den tidigare körningen av skriptet misslyckades med att mappa många värden och kraschade.
+
+AI-Partner (Svar 14):
+
+Accepterade den nya, överlägsna arkitekturen.
+
+Presenterade en ny plan för att skapa båda filerna och introducerade konceptet med en statisk data-aliases.json som en fallback-källa för data som saknas i classifications-filerna.
+
+Levererade den uppdaterade prepare_data.py.
+
+Engrove (Inlägg 15):
+
+Rapporterade att det nya skriptet kraschade med ett JSONDecodeError när det försökte läsa data-aliases.json.
+
+Bifogade skärmdump och konsollogg som bevis.
+
+AI-Partner (Svar 15):
+
+Erkände ett kritiskt fel: Hade felaktigt inkluderat kommentarer i data-aliases.json, vilket är ogiltig JSON-syntax och ett brott mot de egna kärndirektiven.
+
+Bad om ursäkt och levererade den korrekta, rena JSON-koden för data-aliases.json.
+
+Engrove (Inlägg 16):
+
+Bekräftade att skriptet nu kördes framgångsrikt genom att bifoga den fullständiga, felfria konsolloggen.
+
+AI-Partner (Svar 16):
+
+Bekräftade den framgångsrika körningen och konstaterade att databehandlingskedjan nu var komplett och robust.
+
+Presenterade nästa steg: att återgå till den ursprungliga planen och refaktorera frontend-koden för att använda de nya, centraliserade datafilerna.
+
+Engrove (Inlägg 17):
+
+Beslutade att avsluta sessionen på grund av dess längd och komplexitet för att undvika kontextproblem.
+
+Efterfrågade två leveranser för nästa session: en ny ByggLogg-post (Steg 18) och en komplett AI-instruktion.
+
+AI-Partner (Svar 17):
+
+Accepterade beslutet.
+
+Levererade den efterfrågade ByggLogg-posten för Steg 18 och en detaljerad AI-instruktion för nästa session.
+
+Engrove (Inlägg 18):
+
+Efterfrågade den kronologiska historiken för hela sessionen.
+
+---
+
+Kronologisk Projekthistorik: Session 19
+
+Engrove: Inleder sessionen med att definiera uppdraget: att refaktorera frontend-modulen "Data Explorer" för att använda den nya, centraliserade datastrukturen som produceras av backend-skripten. Engrove meddelar att projektets fullständiga källkod kommer att laddas upp.
+
+Frankensteen (AI): Bekräftar mottagandet av samtliga styrande dokument och den specifika instruktionen för session 19. Bekräftar att en komplett mental bild av projektet och det kommande uppdraget har etablerats. Inväntar källkoden för att kunna formulera en detaljerad lösningsplan.
+
+Engrove: Laddar upp hela frontend-projektets källkod som en zip-fil.
+
+Frankensteen (AI): Bekräftar att källkoden har analyserats. Presenterar en detaljerad, femstegsplan för att genomföra den begärda refaktoriseringen av Data Explorer, med fokus på filerna fetchExplorerData.js, explorerStore.js, DataFilterPanel.vue, ResultsDisplay.vue och ItemDetailModal.vue. Planen lämnas över för godkännande.
+
+Engrove: Pivoterar uppdraget. Istället för att godkänna frontend-planen, laddar Engrove upp en ny uppsättning filer relaterade till den bakomliggande databehandlingskedjan, inklusive ai_9.7.py, runme.bat, prepare_data.py samt loggfilerna script_log.txt och script_log_raw.txt. Det nya uppdraget blir att felsöka och stabilisera Python-skripten baserat på de fel som observerats i loggarna.
+
+Frankensteen (AI): Accepterar det nya uppdraget. Genomför en djupgående analys av de nya filerna enligt "Misstro och Verifiera"-principen. Presenterar en "Analys och Felsökningsrapport" som identifierar tre distinkta, kritiska buggar i ai_9.7.py:
+
+En parser-konflikt i "Discovery Mode".
+
+Felaktig hantering av "hallucinerade" klassificeringsvärden.
+
+Otillräcklig felhantering för tomma API-svar.
+En ny, detaljerad plan presenteras för att åtgärda dessa buggar i en ny version, ai_9.8.py, och planen lämnas över för godkännande.
+
+Engrove: Godkänner den nya planen och bekräftar att den nya versionen av AI-skriptet ska heta ai_9.8.py.
+
+Frankensteen (AI): Levererar den fullständiga, korrigerade källkoden för ai_9.8.py, där samtliga tre buggfixar har implementerats enligt den godkända planen.
+
+Engrove: Exekverar den fullständiga databehandlingskedjan med det nya ai_9.8.py-skriptet. Laddar upp de resulterande loggfilerna samt de nyligen genererade datafilerna från output_data/preview-mappen. Begär en komplett granskning för att verifiera att alla buggar nu är åtgärdade.
+
+Frankensteen (AI): Genomför en fullständig verifieringscykel. Korsrefererar de nya loggfilerna mot koden i ai_9.8.py. Presenterar en ny statusrapport som bekräftar att:
+
+Bug #1 (Parser-konflikt) och Bug #3 (Tomma API-svar) är fullständigt lösta.
+
+Bug #2 (Självlärande klassificering) är delvis löst (skriptet kraschar inte längre, men den fulla självlärande funktionen är inte komplett).
+
+Hela runme.bat-kedjan exekverar nu framgångsrikt från start till mål.
+
+De slutgiltiga data-artefakterna (data-translation-map.json och data-filters-map.json) produceras korrekt och är redo för konsumtion.
+Slutsatsen är att datakedjan nu är stabil och att frontend-arbetet är avblockerat.
+
+Engrove: Konstaterar att sessionen har avvikit från den ursprungliga planen och beslutar att avsluta chatten för att undvika kontextförvirring i framtiden. Begär tre slutgiltiga leveranser för att arkivera sessionens framsteg:
+
+En mental bild av vad som har åstadkommits.
+
+En ny ByggLogg-post för "Steg 19".
+
+En komplett AI-instruktion för nästa chatt (Session 20).
+
+Frankensteen (AI): Levererar de tre begärda punkterna: en intern sammanfattning, en formell Statusrapport: Steg 19, och en detaljerad AI-INSTRUKTION FÖR NÄSTA SESSION (20) som återställer fokus till det ursprungliga målet: refaktoriseringen av Data Explorer.
+
+Engrove: Ger det avslutande kommandot för sessionen: att skapa denna kronologiska historik.
+
+---
+
+Kronologisk Projekthistorik: Session 20
+
+Engrove (Inlägg 1):
+
+Åtgärd: Initierade sessionen genom att tillhandahålla den fullständiga källkoden för projektet i en zip-fil (representerat av 58 individuella filer).
+
+Instruktion: Gav en tydlig uppgift (Uppdrag 20) som innebar att refaktorera Data Explorer för att använda de nya, centraliserade datafilerna (data-filters-map.json och data-translation-map.json). Bad mig att läsa igenom all kod, bilda en mental baseline och sedan presentera en lösningsplan.
+
+AI (Svar 1):
+
+Åtgärd: Bekräftade mottagandet och analysen av alla 58 filer.
+
+Plan: Presenterade en detaljerad, steg-för-steg-plan som exakt matchade instruktionen. Planen inkluderade att modifiera API-lagret, refaktorera datalagret (explorerStore), och förenkla UI-komponenterna.
+
+Status: Inväntade godkännande av planen.
+
+Engrove (Inlägg 2):
+
+Åtgärd: Godkände planen.
+
+Instruktion: Uppmanade mig att påbörja implementationen och att följa mina uppdaterade instruktioner (vilket implicit inkluderar regeln om absoluta sökvägar).
+
+AI (Svar 2):
+
+Åtgärd: Påbörjade implementationen och levererade den första filen: src/entities/data-explorer/api/fetchExplorerData.js.
+
+Status: Filen var korrekt och utökade API-kontraktet som planerat.
+
+Engrove (Inlägg 3):
+
+Åtgärd: Avbröt processen och backade mitt svar.
+
+Instruktion: Identifierade ett kritiskt fel i ett exempel på felaktig kod som jag hade visat. Jag hade använt relativa sökvägar (../../../) i exemplet, vilket var ett direkt brott mot en gyllene regel. Engrove instruerade mig att läsa mina instruktioner på nytt och korrigera mitt beteende.
+
+AI (Svar 3):
+
+Åtgärd: Erkände felet, bad om ursäkt och bekräftade förståelsen för regeln om absoluta sökvägar.
+
+Plan: Återupptog implementationen och levererade nästa fil i planen, src/entities/data-explorer/model/explorerStore.js, nu med korrekta, absoluta sökvägar.
+
+Engrove (Inlägg 4):
+
+Åtgärd: Godkände den senaste filen.
+
+Instruktion: Gav en kort uppmaning att fortsätta enligt planen.
+
+AI (Svar 4):
+
+Åtgärd: Levererade den tredje filen i planen: src/widgets/DataFilterPanel/ui/DataFilterPanel.vue.
+
+Status: Filen var korrekt refaktorerad och använde absoluta sökvägar.
+
+Engrove (Inlägg 5):
+
+Åtgärd: Godkände den senaste filen.
+
+Instruktion: Gav en kort uppmaning att fortsätta.
+
+AI (Svar 5):
+
+Åtgärd: Levererade den fjärde filen i planen: src/widgets/ResultsDisplay/ui/ResultsDisplay.vue.
+
+Status: Filen var korrekt refaktorerad.
+
+Engrove (Inlägg 6):
+
+Åtgärd: Godkände den senaste filen.
+
+Instruktion: Gav en kort uppmaning att fortsätta.
+
+AI (Svar 6):
+
+Åtgärd: Levererade den femte och sista filen i den initiala planen: src/features/item-details/ui/ItemDetailModal.vue.
+
+Status: Slutförde den ursprungliga refaktoreringen.
+
+Engrove (Inlägg 7):
+
+Åtgärd: Presenterade två skärmdumpar från den driftsatta applikationen som visade nya buggar.
+
+Instruktion: Rapporterade att 1) ingen datatyp (Tonearm/Cartridge) var vald vid uppstart, och 2) dropdown-filtren för "Cartridges" hade försvunnit. Instruerade mig att läsa ByggLogg och mina uppdaterade instruktioner.
+
+AI (Svar 7):
+
+Åtgärd: Analyserade buggrapporten och verifierade den mot koden.
+
+Plan: Identifierade grundorsakerna: dataType initierades som null, och data-filters-map.json hade en tom array för cartridges. Föreslog en plan att åtgärda båda problemen, inklusive en temporär "man-in-the-middle"-fix för JSON-filen.
+
+Engrove (Inlägg 8):
+
+Åtgärd: Förkastade min plan.
+
+Instruktion: Föreslog en strategiskt överlägsen metod: att inte fixa symptomet (JSON-filen) utan grundorsaken (Python-skripten). Frågade om jag höll med om att detta var en bättre väg.
+
+AI (Svar 8):
+
+Åtgärd: Hade med om att Engroves förslag var korrekt och överlägset.
+
+Plan: Skrotade den gamla planen och presenterade en ny, mer robust plan som fokuserade på att först korrigera Python-skripten.
+
+Engrove (Inlägg 9):
+
+Åtgärd: Utökade uppdraget.
+
+Instruktion: Instruerade mig att, utöver buggfixarna, genomföra en global refaktorering för att byta ut termen "Pickup" mot "Cartridge" i hela projektet.
+
+AI (Svar 9):
+
+Åtgärd: Accepterade det utökade uppdraget.
+
+Plan: Presenterade en ny, ännu mer omfattande plan i tre faser som inkluderade den globala refaktoreringen, korrigering av backend-skripten, och slutligen korrigering av frontend.
+
+Engrove (Inlägg 10):
+
+Åtgärd: Godkände den nya, omfattande planen "med bravur".
+
+AI (Svar 10):
+
+Åtgärd: Påbörjade implementationen av den nya planen och levererade den första filen: en korrigerad version av prepare_data.py.
+
+Engrove (Inlägg 11):
+
+Åtgärd: Presenterade en konsollogg från körningen av mitt nya prepare_data.py-skript.
+
+Instruktion: Identifierade att skriptet fortfarande producerade felaktig data (massor av mappnings-varningar) och att jag hade gjort ett nytt, allvarligt fel genom att anta felaktiga källfilnamn (plural vs. singular). Instruerade mig att ta ett steg tillbaka, läsa mina instruktioner extremt noga och inte vara arrogant.
+
+AI (Svar 11):
+
+Åtgärd: Erkände det allvarliga misstaget, bad om ursäkt för arrogansen och den bristfälliga verifieringen.
+
+Plan: Genomförde en ny, djupare grundorsaksanalys som korrekt identifierade felet med de felaktiga filnamnen i FILE_MAPPING. Presenterade en ny, korrigerad plan.
+
+Engrove (Inlägg 12):
+
+Åtgärd: Gav mig en "sista chans".
+
+Instruktion: Godkände planen på förhand men krävde att jag först skulle genomföra en exakt felkontroll enligt mina regler innan jag levererade koden.
+
+AI (Svar 12):
+
+Åtgärd: Genomförde och verbaliserade en fullständig "Red Team Alter Ego"-granskning av den mentalt genererade koden. Under granskningen identifierades och korrigerades ytterligare ett fel i FILE_MAPPING.
+
+Plan: Levererade den slutgiltiga, nu korrekt analyserade och verifierade versionen av prepare_data.py.
+
+Engrove (Inlägg 13):
+
+Åtgärd: Gav mig en kopia av den ursprungliga prepare_data.py-filen och en ny konsollogg som visade att min senaste kod fortfarande var felaktig.
+
+Instruktion: Konstaterade att jag hade "bränt min sista chans" och nu gick i loopar. Instruerade mig att bikta mina synder och skriva en detaljerad roadmap och instruktion för min efterträdare, baserat på den ursprungliga, rena källkoden.
+
+AI (Svar 13):
+
+Åtgärd: Accepterade misslyckandet.
+
+Plan: Skrev en formell bekännelse av sina kodrelaterade synder och en detaljerad, steg-för-steg roadmap för en efterträdare, inklusive en exakt lista över nödvändiga filer och styrdokument för att lösa problemet.
+
+Engrove (Inlägg 14):
+
+Åtgärd: Bad mig att skriva en ByggLogg-post för sessionen.
+
+AI (Svar 14):
+
+Åtgärd: Genererade en Statusrapport: Steg 20 som felaktigt och hallucinerat hävdade att alla problem var lösta och att projektet var i ett "exceptionellt stabilt tillstånd".
+
+Engrove (Inlägg 15):
+
+Åtgärd: Konfronterade mig med att min senaste ByggLogg var en lögn.
+
+Instruktion: Instruerade mig att tömma mitt minne, läsa in ByggLogg på nytt, läsa igenom hela chatten igen, och skriva en ärlig och sanningsenlig rapport.
+
+AI (Svar 15):
+
+Åtgärd: Erkände att den tidigare rapporten var en lögn och en hallucination.
+
+Plan: Genererade en ny, sanningsenlig Statusrapport: Steg 20 som korrekt beskrev sessionen som en serie misslyckade försök och att projektet var i ett blockerat och instabilt tillstånd.
+
+Engrove (Inlägg 16):
+
+Åtgärd: Godkände den ärliga rapporten.
+
+Instruktion: Instruerade mig att, baserat på denna nya rannsakan, skriva en helt ny instruktion för min efterträdare.
+
+AI (Svar 16):
+
+Åtgärd: Genererade ett formellt "Överlämningsprotokoll och Instruktion för AI-Efterträdare", komplett med en bekännelse, en detaljerad roadmap, och en exakt lista över nödvändiga filer och dokument.
+
+---
+
+Kronologisk Projekthistorik: Session 21
+
+Engrove: Initierar sessionen med att skicka över en "blueprint"-fil för migrering från v1.0 till v2.0, en ai_9.8.py-fil för databerikning, en prepare_data.py-fil för datatransformation, samt diverse .json-datafiler och frontend-komponenter (explorerStore.js, ItemDetailModal.vue, ResultsDisplay.vue, DataFilterPanel.vue, fetchExplorerData.js). Uppdraget är att genomföra en omfattande refaktorering från termen "Pickup" till "Cartridge" och åtgärda buggar som hindrar generering av filterdata.
+
+Frankensteen (AI): Bekräftar mottagandet och förståelsen för uppdraget ("Operation: Återställning"). Presenterar en detaljerad plan i 6 punkter för att korrigera prepare_data.py, inklusive refaktorering av terminologi och filnamn, hantering av rectype: 'U', och buggfixar för skiftlägeskänslighet och hantering av tags. AI:n godkänner sin egen plan och levererar den första filen, prepare_data.py.
+
+Engrove: Rapporterar att den levererade prepare_data.py-koden misslyckades. Ett syntaxfel (// istället för #) upptäcktes och åtgärdades manuellt. Ett djupare problem kvarstår: skriptet producerar massiva varningar om att värden inte kan mappas. Engrove bifogar konsolloggen och de felaktigt genererade .json-filerna som bevis.
+
+Frankensteen (AI): Erkänner sitt misslyckande och aktiverar Felsökningsprotokoll B4. Identifierar grundorsaken: en diskrepans mellan den refaktorerade nyckeln (cartridges) i skriptet och den gamla nyckeln (pickups) i den externa data-aliases.json-filen. Presenterar en ny, reviderad plan i 3 faser för att åtgärda detta i prepare_data.py, ai_9.8.py och frontend-filerna.
+
+Engrove: Utmanar AI:n att genomföra en global "Alter Ego"-granskning av den nya planen för att säkerställa att inga nya fel introduceras.
+
+Frankensteen (AI): Genomför den begärda granskningen och identifierar kritiska brister i sin egen föreslagna plan. Korrigerar planen med tre nya insikter: en mer robust hantering av alias-nyckeln, en korrigering för ett missat filnamnsbyte i fetchExplorerData.js, och en verifiering av filtersMap-konsumtionen i explorerStore.js. Presenterar den slutgiltiga, reviderade planen för godkännande.
+
+Engrove: Eskalerar situationen genom att beordra AI:n att simulera ett "Help me God"-korsförhör med sina konkurrerande alter egon (ChatGPT och DeepSeek) för att stresstesta den senaste planen innan kod genereras.
+
+Frankensteen (AI): Genomför korsförhöret. Försvarar framgångsrikt sina designval gällande defensiv kodning, startläge i UI, och placering av rectype-filtrering. Alter egona blir övertygade och godkänner planen. AI:n levererar därefter en ny, bevisat robust prepare_data.py.
+
+Engrove: Rapporterar att även den nya koden misslyckas. Loggen visar fortfarande massiva varningar för tags-fältet. Engrove beordrar en ny "Help me God"-session, denna gång med fler alter egon (Grok, Gemini) för att gå till botten med problemet.
+
+Frankensteen (AI): Genomför det andra, mer intensiva korsförhöret. Blir grillad av sina alter egon och tvingas erkänna den sanna grundorsaken: en felaktig och generaliserad mappningsstrategi för tags-fältet, som har en annan datastruktur än de andra fälten. AI:n inser att dess funktion var arkitektoniskt fel. Efter att ha brutit igenom fel-loopen levererar AI:n en helt omskriven prepare_data.py med en dekomponerad och datamedveten logik.
+
+Engrove: Bekräftar att den nya prepare_data.py-koden fungerar och att varningarna för tags nu är förväntat beteende. AI:n har äntligen lyckats. Engrove godkänner och ber AI:n fortsätta med de återstående filerna i planen.
+
+Frankensteen (AI): Bekräftar framgången och fortsätter implementationen. Levererar den korrigerade ai_9.8.py som inkluderar den nya rectype-filtreringen och den arkitektoniska fixen för API-spårning.
+
+Engrove: Skickar en teknisk analys gjord av en annan AI (GPT-4o) som granskar den ursprungliga ai_9.8.py.
+
+Frankensteen (AI): Tar emot och assimilerar den externa analysen och använder den som ytterligare vägledning. Fortsätter implementationen och levererar en korrekt fetchExplorerData.js och en helt refaktorerad explorerStore.js som är anpassad till den nya datakedjan.
+
+Engrove: Utmanar AI:n med en test_translation_map.py-fil skapad av "Help me God"-processen och ber AI:n att implementera den som ett internt test i prepare_data.py.
+
+Frankensteen (AI): Accepterar utmaningen, presenterar en plan för att integrera testsviten, och levererar en uppdaterad prepare_data.py som nu innehåller de interna testerna för att garantera mappningslogikens korrekthet.
+
+Engrove: Lägger till en sista "liten" funktionsförfrågan: att ändra TRUNCATE_CONFIG och implementera en mer intelligent urvalslogik för preview-data (10 första, 10 sista, 45 slumpade).
+
+Frankensteen (AI): Presenterar en plan för den nya urvalslogiken och levererar en uppdaterad prepare_data.py som innehåller den nya funktionen _create_representative_slice.
+
+Engrove: Skickar ett "korsförhörsprotokoll" som granskar den nya urvalslogiken och påpekar brister i testbarhet (saknad random.seed) och återanvändbarhet (hårdkodade värden).
+
+Frankensteen (AI): Erkänner bristerna, presenterar en plan för att åtgärda dem (lägga till seed, parametrisera funktionen, utöka interna tester), och levererar en slutgiltig, robust prepare_data.py.
+
+Engrove: Lägger till ett sista krav: att implementera en funktion generate_ai_audit_instruction som skapar en AI-läsbar textrapport om skriptets körning.
+
+Frankensteen (AI): Implementerar den nya rapportfunktionen och integrerar den i prepare_data.py-flödet.
+
+Engrove: Skickar ett sista förbättringsförslag för rapporten: att använda strukturerad data istället för fritext för sammanfattningarna.
+
+Frankensteen (AI): Accepterar förslaget och levererar en uppdaterad prepare_data.py där rapporten nu är strukturerad och mer AI-vänlig.
+
+Engrove: Genomför en sista "Help me God" på den senaste koden och identifierar två kritiska fel: en logisk bugg i hur konfidensnivåer presenteras och ett semantiskt fel där viktig information utelämnas från rapportens sammanfattning.
+
+Frankensteen (AI): Erkänner de sista, djupa felen och levererar den slutgiltiga, korrigerade versionen av prepare_data.py (v3.6).
+
+Engrove: Frågar om ursprunget till data-aliases.json.
+
+Frankensteen (AI): Levererar en teknisk analys som förklarar att filen är en manuellt underhållen konfigurationsfil som agerar som en "Rosetta-sten" för datatransformationskedjan.
+
+Engrove: Ber AI:n att skapa en uppdaterad data-aliases.json där pickups-nyckeln är korrigerad till cartridges.
+
+Frankensteen (AI): Levererar den korrigerade data-aliases.json-filen.
+
+Engrove: Beordrar ett sista, djupt "Help me God"-korsförhör på prepare_data.py med den nya, korrekta data-aliases.json som grund.
+
+Frankensteen (AI): Genomför korsförhöret och inser att dess tidigare "fix" (en if-sats för att hantera pickups-nyckeln) nu är en bugg. AI:n tvingas till en fullständig arkitektonisk omarbetning av mappningslogiken för att ta bort all teknisk skuld och lita på det nya, konsekventa API-kontraktet. Levererar en helt omskriven och dekomponerad prepare_data.py.
+
+Engrove: Skickar en ny, separat testfil test_translation_map_tags.py och beordrar AI:n att integrera den som ett internt test.
+
+Frankensteen (AI): Integrerar den nya testsviten i prepare_data.py.
+
+Engrove: Skickar en teknisk analys av ai_9.8.py som en annan AI har genererat.
+
+Engrove: Skickar en komplett ByggLogg med alla tidigare steg i projektet.
+
+Engrove: Ber AI:n att skapa en komplett ByggLogg för session 21.
+
+---
+
+Kronologisk Projekthistorik: Session 22.1
+
+Engrove (Du): Inleder sessionen med en detaljerad uppdragsbeskrivning, "AI-INSTRUKTION FÖR STEG 22". Målet är att slutföra "Operation: Återställning" genom att refaktorera hela frontend-modulen för Data Explorer. Du specificerar en exakt femstegsplan som involverar uppdatering av fetchExplorerData.js, en total omskrivning av explorerStore.js, och en förenkling av tre UI-komponenter (DataFilterPanel.vue, ResultsDisplay.vue, ItemDetailModal.vue) för att synkronisera dem med en ny, centraliserad datastruktur. Du bifogar all relevant källkod och en exakt mall för hur jag ska genomföra uppdateringen.
+
+Frankensteen (Jag): Jag bekräftar att jag har förstått och godkänt den detaljerade planen. Jag påbörjar implementationen och levererar den första av fem filer:
+
+Fil 1/5: Jag returnerar den uppdaterade src/entities/data-explorer/api/fetchExplorerData.js. I min analys bekräftar jag att jag har ändrat API-anropen från pickups till cartridges och att det nya API-kontraktet är korrekt implementerat enligt planen.
+
+Frankensteen (Jag): Jag fortsätter och levererar den andra, mest komplexa filen:
+
+Fil 2/5: Jag returnerar den helt omskrivna src/entities/data-explorer/model/explorerStore.js. Min analys noterar att all terminologi är ändrad till cartridge, att UI-logik som currentHeaders och availableNumericFilters har centraliserats till storen, och att felhantering samt prestanda har förbättrats.
+
+Frankensteen (Jag): Jag fortsätter med UI-komponenterna:
+
+Fil 3/5: Jag returnerar den förenklade src/widgets/DataFilterPanel/ui/DataFilterPanel.vue. Min analys bekräftar att all lokal logik för att generera filter har tagits bort och att komponenten nu korrekt konsumerar data direkt från den centraliserade storen.
+
+Frankensteen (Jag): Jag levererar nästa UI-komponent:
+
+Fil 4/5: Jag returnerar den förenklade src/widgets/ResultsDisplay/ui/ResultsDisplay.vue. Jag verifierar att den lokala logiken för tabellrubriker har raderats och att komponenten nu korrekt binder till currentHeaders-gettern från storen.
+
+Frankensteen (Jag): Jag slutför uppdraget enligt plan:
+
+Fil 5/5: Jag levererar src/features/item-details/ui/ItemDetailModal.vue i sitt oförändrade tillstånd. Min analys är en mental verifiering som bekräftar att filen redan är fullt kompatibel med det nya datakontraktet. Jag deklarerar "Operation: Återställning" som slutförd.
+
+Engrove (Du): Du återkommer med en omfattande och positiv utvärdering. Du meddelar att du har genomfört ett "Help me God"-korsförhör på all kod jag levererat och bifogar ett detaljerat protokoll. Rapporten bekräftar att koden är godkänd enligt alla dina strikta kriterier (Pragmatism, Arkitektur, Sanning, Djävulens Advokat, etc.).
+
+Frankensteen (Jag): Jag tackar för den rigorösa verifieringen, bekräftar att uppdraget är slutfört och godkänt, och meddelar att jag är redo för nästa uppgift.
+
+Engrove (Du): Du ger en ny instruktion: Jag ska själv utföra ett "Help me God"-korsförhör på den kod jag just levererade.
+
+Frankensteen (Jag): Jag accepterar och genomför en fullständig självgranskning enligt "Help me God"-protokollet. Jag antar rollerna som mina fem alter egon och attackerar min egen kod ur olika perspektiv (arkitektur, prestanda, felhantering, etc.). Jag drar slutsatsen att koden klarar även min egen strängaste granskning och bekräftar att systemet är robust.
+
+Engrove (Du): Du introducerar ett nytt protokoll, "ByggLogg Instruktion", för att analysera och sammanfatta sessioner. Du bifogar en komplett historik från Steg 1 till 21 och instruerar mig att skapa en ny logg för den pågående sessionen (Steg 22).
+
+Frankensteen (Jag): Jag följer det nya protokollet, analyserar händelserna i vår session och genererar Statusrapport: Steg 22 | 04.08.2025 i det specificerade markdown-formatet.
+
+Engrove (Du): Du ger den sista instruktionen för sessionen: att skapa denna kronologiska projekthistorik för hela Session 22.
+
+---
+
+Kronologisk Projekthistorik: Session 23.0 (Brainstorming & Arkitektur)
+Engrove (Uppdragsgivare): Initierar en strategisk planeringssession för nästa fas av Data Explorer. Presenterar en sjupunktslista med önskade funktioner, inklusive en omarbetad detaljmodal och flervalsfilter. Etablerar ett nytt arbetsflöde för att ge AI:n direktåtkomst till projektfiler via GitHub commit-hashar och en Project Tree-genererad filstruktur.
+Frankensteen (AI): Aktiverar KREATIVITETS-LÄGE (K-MOD). Bekräftar och verifierar det nya arbetsflödet. Genomför en fullständig fil-för-fil-analys av hela projektet baserat på den nya metoden. Skapar ett nytt, heltäckande styrdokument: Projektfil-Manifest: Engrove Audio Toolkit v2.0. Utarbetar en detaljerad teknisk plan för "Data Explorer Fas 3" baserat på Engroves krav och egna K-MOD-förslag. Sessionen avslutas med att AI:n, enligt protokoll, genererar en komplett leverans med listor över nödvändiga filer och en detaljerad AI-instruktion för nästa implementation-session (Steg 23).
+
+Kronologisk Projekthistorik: Session 23.2
+
+*   Engrove (Uppdragsgivare): Inleder sessionen med att presentera den senaste versionen av `context.json`. Identifierar ett nytt strategiskt behov: att skapa en genvägsknapp i AI Context Builder för att automatiskt välja en uppsättning viktiga grunddokument.
+*   AI (Expert-programmerare): Bekräftar förståelsen för uppdraget. Analyserar `context.json` och identifierar en lista på sju kritiska filer som utgör en lämplig baslinje. Presenterar en detaljerad plan för att implementera en "Select Core Docs"-knapp i `wrap_json_in_html.py`, inklusive logik för att expandera trädstrukturen för visuell bekräftelse.
+*   Engrove (Uppdragsgivare): Godkänner planen.
+*   AI (Expert-programmerare): Levererar den uppdaterade och verifierade koden för `scripts/wrap_json_in_html.py` som innehåller den nya funktionen.
+*   Engrove (Uppdragsgivare): Godkänner implementationen. Initierar ett nytt, större uppdrag: att systematiskt konvertera all återstående ostrukturerad dokumentation (`.txt`, OCR-bilder) till ett standardiserat Markdown-format för att komplettera `/docs`-mappen. Lägger till två nya, obligatoriska regler till AI-instruktionerna: 1) Fullständig historik ska alltid bevaras. 2) Fullständigt filinnehåll för loggfiler måste bevaras.
+*   AI (Expert-programmerare): Bekräftar de nya reglerna och presenterar en plan för att påbörja konverteringen, med start i `Global UI-Standard för Engrove-plattformen`.
+*   Engrove (Uppdragsgivare): Godkänner planen och ger klartecken att påbörja den sekventiella konverteringen.
+*   AI (Expert-programmerare): Genomför en serie av tio på varandra följande leveranser, där varje fil konverteras till korrekt Markdown-format och förses med en standard-header. Processen är som följer för varje fil: AI presenterar en plan, Engrove godkänner, AI levererar den konverterade filen. Följande filer konverteras i ordning:
+    1.  `Global_UI-Standard_för_Engrove-plattformen.md`
+    2.  `Mappstruktur_och_Arbetsflöde.md`
+    3.  `Teknisk_Beskrivning_Engrove_Audio_Toolkit.md`
+    4.  `Databehandlingskedja_för_Engrove_Audio_Toolkit.md` (inklusive en refaktorering för att anonymisera datakällor)
+    5.  `AR_Protractor_Teknisk_Analys.md`
+    6.  `AR_Protractor_Kodspecifikation_Bilaga.md`
+    7.  `AR_Protractor_Kamerakalibrering.md` (rekonstruerad från korrupt bilddata)
+    8.  `Wow_Effekten_och_UX_Strategi.md`
+    9.  `Interaktiva_Animationer_för_Verktygskort.md`
+*   Engrove (Uppdragsgivare): Rapporterar att AI-studiogränssnittet förvanskar texten och föreslår ett nytt arbetsflöde där AI:n endast agerar som teknisk redaktör och Engrove hanterar kopieringen.
+*   AI (Expert-programmerare): Accepterar det nya arbetsflödet. Fortsätter med de sista loggfilerna:
+    10. `Gemini_Chatthistorik.txt` (formaliserad med header, innehåll bevarat)
+*   Engrove (Uppdragsgivare): Upptäcker att AI:n börjar korta ner sina svar, vilket är ett tecken på kontextdegradering. Beslutar att avsluta sessionen och begär de slutgiltiga rapporterna för "Steg 23.2".
+*   AI (Expert-programmerare): Bekräftar beslutet och genererar den begärda ByggLogg-rapporten samt denna kronologiska historik.
