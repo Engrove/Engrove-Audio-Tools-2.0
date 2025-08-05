@@ -22,8 +22,7 @@
       @close="isModalVisible = false"
     />
     <ComparisonTray @compare="showComparisonModal = true" />
-    <!-- Placeholder for the final component -->
-    <!-- <ComparisonModal :show="showComparisonModal" @close="showComparisonModal = false" /> -->
+    <ComparisonModal :show="showComparisonModal" @close="showComparisonModal = false" />
   </div>
 </template>
 
@@ -35,7 +34,7 @@
 //             - Integrated `comparisonStore` and `ComparisonTray`.
 //             - Implemented the logic to pass selection props and handle events from `BaseTable`.
 //             - Added logic for "select all visible" functionality.
-//             - Now acts as the central conductor for all explorer interactions.
+//             - Final update: Imported and implemented `ComparisonModal`.
 //
 
 // =============================================
@@ -54,7 +53,7 @@ import DataFilterPanel from '@/widgets/DataFilterPanel/ui/DataFilterPanel.vue';
 import ResultsDisplay from '@/widgets/ResultsDisplay/ui/ResultsDisplay.vue';
 import ItemDetailModal from '@/features/item-details/ui/ItemDetailModal.vue';
 import ComparisonTray from '@/widgets/ComparisonTray/ui/ComparisonTray.vue';
-// import ComparisonModal from '@/features/comparison-modal/ui/ComparisonModal.vue';
+import ComparisonModal from '@/features/comparison-modal/ui/ComparisonModal.vue';
 
 // =============================================
 // Store Initialization
@@ -67,7 +66,7 @@ const comparisonStore = useComparisonStore();
 // =============================================
 const selectedItem = ref(null);
 const isModalVisible = ref(false);
-const showComparisonModal = ref(false); // For the next step
+const showComparisonModal = ref(false);
 const sortKey = ref('manufacturer');
 const sortOrder = ref('asc'); // 'asc' or 'desc'
 
