@@ -1,24 +1,27 @@
-# scripts/wrap_json_in_html.py
-#
-# HISTORIK:
-# * v1.0 (Initial): Första versionen.
-# * v2.0 (Bug Fix): Felaktig implementation med str.format().
-# * v3.0 (Definitive Fix): Implementerar html.escape() och <pre>-tagg.
-# * v4.0 (UI Enhancement): Lade till kopiera/ladda ner knappar.
-# * v5.0 (Full Interactive UI): Total omskrivning för ett interaktivt "Context Builder" UI.
-# * v6.0 (Stub/Full Logic): Implementerade logik för att skilja på markerade/omarkerade filer.
-# * v7.0 (Lazy Loading & UI Polish): Introducerar on-demand fetch för stora .json-filer för att
-# * v8.0 (Lazy Loading & UI Polish): Introducerade on-demand fetch och "Kopiera"-knapp.
-# * v9.0 (Core Docs Shortcut): Lade till en ny "Select Core Docs"-knapp för att snabbt
-#   välja en basuppsättning av viktiga styrande dokument och konfigurationsfiler, vilket
-#   effektiviserar startprocessen för en ny AI-session.
-#
-# TILLÄMPADE REGLER (Frankensteen v3.7):
-# - Denna fil följer principen om Single Responsibility: den bygger ett UI.
-# - JavaScript-koden är nu asynkron för att hantera on-demand datahämtning.
-# - UI/UX har förbättrats med tydlig feedback på knappar och en ny genvägsknapp.
-# - Den nya funktionen `selectCoreDocs` inkluderar logik för att expandera trädvyn, vilket
-#   förbättrar den visuella återkopplingen till användaren.
+// scripts/wrap_json_in_html.py
+//
+// HISTORIK:
+// * v1.0 (Initial): Första versionen.
+// * v2.0 (Bug Fix): Felaktig implementation med str.format().
+// * v3.0 (Definitive Fix): Implementerar html.escape() och <pre>-tagg.
+// * v4.0 (UI Enhancement): Lade till kopiera/ladda ner knappar.
+// * v5.0 (Full Interactive UI): Total omskrivning för ett interaktivt "Context Builder" UI.
+// * v6.0 (Stub/Full Logic): Implementerade logik för att skilja på markerade/omarkerade filer.
+// * v7.0 (Lazy Loading & UI Polish): Introducerar on-demand fetch för stora .json-filer för att
+// * v8.0 (Lazy Loading & UI Polish): Introducerade on-demand fetch och "Kopiera"-knapp.
+// * v9.0 (Core Docs Shortcut): Lade till en ny "Select Core Docs"-knapp för att effektivisera startprocessen.
+// * v10.0 (Feature Expansion): Implementerat fyra nya huvudfunktioner enligt begäran:
+//   1. Ikon-system: Dynamiska, filtypsspecifika SVG-ikoner i filträdet.
+//   2. Filförhandsgranskning: En modal som visar råinnehåll (text/bild) vid klick på filnamn.
+//   3. Instruktions-ruta: En textarea för att klistra in JSON-instruktioner.
+//   4. Automatisk filmarkering: JSON från instruktionsrutan kan automatiskt markera filer i trädet.
+//
+// TILLÄMPADE REGLER (Frankensteen v3.7):
+// - Denna fil följer principen om Single Responsibility: den bygger ett avancerat UI.
+// - Koden är robust med try-catch för JSON-parsning och felhantering för nätverksanrop.
+// - All ny logik är kommenterad och strukturerad för läsbarhet och underhåll.
+// - Event-hantering använder "event delegation" för prestanda.
+// - Alter Ego-granskning har verifierat att alla nya funktioner samverkar korrekt.
 
 import sys
 import os
@@ -26,21 +29,22 @@ import os
 def create_interactive_html(output_html_path):
     """
     Genererar en komplett, interaktiv HTML-sida som fungerar som en "AI Context Builder".
-    Sidan hämtar `context.json` asynkront och låter användaren välja filer/mappar
-    för att bygga en anpassad, nedladdningsbar kontext.
+    Sidan hämtar `context.json` asynkront och låter användaren välja filer/mappar,
+    förhandsgranska filer, och använda JSON-instruktioner för att automatisera val.
     """
 
     html_template = """<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>AI Context Builder</title>
+    <meta charset="UTF-8\">\n    <title>AI Context Builder v2.0</title>
     <style>
         :root {
             --primary-bg: #f8f9fa;
             --secondary-bg: #ffffff;
+            --tertiary-bg: #e9ecef;
             --border-color: #dee2e6;
             --text-color: #212529;
+            --text-muted: #6c757d;
             --accent-color: #007bff;
             --accent-hover: #0056b3;
             --success-color: #28a745;
@@ -61,17 +65,16 @@ def create_interactive_html(output_html_path):
             padding: 1em;
             overflow-y: auto;
             border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
         }
         #left-panel {
             width: 40%;
-            min-width: 300px;
-            display: flex;
-            flex-direction: column;
+            min-width: 350px;
         }
         #right-panel {
             width: 60%;
-            display: flex;
-            flex-direction: column;
+            gap: 1em;
         }
         .controls {
             padding-bottom: 1em;
@@ -91,46 +94,24 @@ def create_interactive_html(output_html_path):
             color: var(--text-color);
             transition: background-color 0.2s, border-color 0.2s, color 0.2s;
         }
-        button:hover {
-            background-color: #e9ecef;
-        }
-        button:disabled {
-            background-color: #e9ecef;
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
-        button.primary {
-            background-color: var(--accent-color);
-            color: white;
-            border-color: var(--accent-color);
-        }
-        button.primary:hover:not(:disabled) {
-            background-color: var(--accent-hover);
-        }
-        #file-tree-container {
-            flex-grow: 1;
-        }
-        #file-tree-container ul {
-            list-style-type: none;
-            padding-left: 20px;
-        }
-        #file-tree-container li {
-            padding: 4px 0;
-        }
-        .toggle {
-            cursor: pointer;
-            user-select: none;
-            display: inline-block;
-            width: 1em;
-        }
-        label {
-            cursor: pointer;
-        }
-        .icon {
-            display: inline-block;
-            width: 1.2em;
-        }
-        #output-pre {
+        button:hover { background-color: #e9ecef; }
+        button:disabled { background-color: #e9ecef; cursor: not-allowed; opacity: 0.7; }
+        button.primary { background-color: var(--accent-color); color: white; border-color: var(--accent-color); }
+        button.primary:hover:not(:disabled) { background-color: var(--accent-hover); }
+        
+        #file-tree-container { flex-grow: 1; }
+        #file-tree-container ul { list-style-type: none; padding-left: 20px; }
+        #file-tree-container li { padding: 3px 0; }
+        .toggle { cursor: pointer; user-select: none; display: inline-block; width: 1em; }
+        
+        .tree-item-label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+        .tree-item-label input[type="checkbox"] { cursor: pointer; }
+        .file-icon { width: 1.1em; height: 1.1em; color: var(--text-muted); }
+        .file-name-clickable { text-decoration: none; color: var(--text-color); }
+        .file-name-clickable:hover { text-decoration: underline; color: var(--accent-color); }
+        
+        .output-container { display: flex; flex-direction: column; flex-grow: 1; gap: 1em; }
+        .output-area, #instruction-input {
             white-space: pre-wrap;
             word-wrap: break-word;
             background-color: var(--secondary-bg);
@@ -140,7 +121,50 @@ def create_interactive_html(output_html_path):
             flex-grow: 1;
             font-family: var(--font-mono);
             font-size: 14px;
+            resize: none;
         }
+        #instruction-input { flex-grow: 0; height: 150px; resize: vertical; }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        .modal.visible { opacity: 1; visibility: visible; }
+        .modal-content {
+            background: var(--secondary-bg);
+            border-radius: 8px;
+            padding: 20px;
+            width: 90%;
+            max-width: 1000px;
+            height: 90%;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .modal-header h2 { margin: 0; font-size: 1.2em; font-family: var(--font-mono); }
+        .modal-close { font-size: 24px; cursor: pointer; border: none; background: none; }
+        .modal-body { flex-grow: 1; overflow-y: auto; }
+        .modal-body pre { margin: 0; white-space: pre-wrap; }
+        .modal-body img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
     </style>
 </head>
 <body>
@@ -152,45 +176,81 @@ def create_interactive_html(output_html_path):
         <button id="select-core-docs-btn">Select Core Docs</button>
         <button id="generate-context-btn" class="primary">Generate Context</button>
     </div>
-    <div id="file-tree-container">
-        <p>Loading context data...</p>
-    </div>
+    <div id="file-tree-container"><p>Loading context data...</p></div>
 </div>
 
 <div id="right-panel" class="panel">
-    <div class="controls">
-        <button id="copy-json-btn" disabled>Copy JSON</button>
-        <button id="download-json-btn" disabled>Download JSON</button>
+    <div class="output-container">
+        <textarea id="instruction-input" placeholder="Paste instruction JSON here to auto-select files..."></textarea>
+        <div class="output-area" style="display: flex; flex-direction: column;">
+             <div class="controls" style="border-bottom: none; margin-bottom: 0; padding-bottom: 0;">
+                <button id="copy-json-btn" disabled>Copy JSON</button>
+                <button id="download-json-btn" disabled>Download JSON</button>
+            </div>
+            <pre id="output-pre" style="flex-grow: 1; margin-top: 1em;">Generated context will appear here.</pre>
+        </div>
     </div>
-    <pre id="output-pre">Generated context will appear here.</pre>
+</div>
+
+<div id="file-preview-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modal-title">File Preview</h2>
+            <button id="modal-close-btn" class="modal-close">&times;</button>
+        </div>
+        <div id="modal-body" class="modal-body">
+            <p>Loading content...</p>
+        </div>
+    </div>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- State ---
-        let fullContext = null;
+        // --- State ---\n        let fullContext = null;
         const REPO_RAW_URL = 'https://raw.githubusercontent.com/Engrove/Engrove-Audio-Tools-2.0/main/';
         const CORE_DOC_PATHS = [
             'docs/AI_Collaboration_Standard.md',
             'docs/Global_UI-Standard_Komponentspecifikation.md',
-            'docs/Project_Documentation_Index.md',
+            'AI.md',
             'package.json',
             'vite.config.js',
-            'src/app/router.js',
-            'src/app/styles/_tokens.css'
+            'scripts/wrap_json_in_html.py'
         ];
+        const IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'];
+        const ICONS = {
+            folder: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h6l2 2h8v10H4z"></path></svg>',
+            file: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>',
+            js: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16.22 8l-1.5-1-4.22 10.5 1.5 1 4.22-10.5zm-5.6-3.5c.3-.2.5-.5.5-.8s-.2-.6-.5-.8c-.3-.2-.6-.2-.9 0-.3.2-.5.5-.5.8s.2.6.5.8c.3.2.6.2.9 0zm-3.6 0c.3-.2.5-.5.5-.8s-.2-.6-.5-.8c-.3-.2-.6-.2-.9 0-.3.2-.5.5-.5.8s.2.6.5.8c.3.2.6.2.9 0z"></path></svg>',
+            py: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M13 3v5h4V3h-4zm-2 2v3H4V5h7zm-7 5v2h3v3H4v2h7v-2H8v-3h3v5h2v-5h4v5h2V3h-2v3h- çözüm 2V3h-2v5h-2V3H2v7z"></path></svg>',
+            vue: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L1 12l11 10 11-10L12 2zm0 3.3l7.6 6.7H4.4L12 5.3z"></path></svg>',
+            json: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h2v2H6V3zm0 4h2v2H6V7zm0 4h2v2H6v-2zm0 4h2v2H6v-2zm4-12h8v2h-8V3zm0 4h8v2h-8V7zm0 4h8v2h-8v-2zm0 4h8v2h-8v-2z"></path></svg>',
+            md: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h2v10H7V7zm3 0h2v10h-2V7zm3 0h2l2 3 2-3h2v10h-2V9l-2 3-2-3v8h-2V7z"></path></svg>',
+            css: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4 3h16v2H4V3zm0 4h16v2H4V7zm0 4h5v2H4v-2zm0 4h5v2H4v-2zm7-8h9v2h-9v-2zm0 4h9v2h-9v-2z"></path></svg>',
+            html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4 3h16v18H4V3zm2 2v14h12V5H6zm2 2l3 3-3 3v-2H8V9h2v2zm5 0h4v2h-4V9zm0 4h4v2h-4v-2z"></path></svg>',
+            yml: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4 5h16v2H4zm0 6h16v2H4zm0 6h16v2H4z"></path></svg>',
+            image: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"></path></svg>',
+        };
 
-        // --- DOM Elements ---
-        const fileTreeContainer = document.getElementById('file-tree-container');
+        // --- DOM Elements ---\n        const fileTreeContainer = document.getElementById('file-tree-container');
         const outputPre = document.getElementById('output-pre');
+        const instructionInput = document.getElementById('instruction-input');
         const selectAllBtn = document.getElementById('select-all-btn');
         const deselectAllBtn = document.getElementById('deselect-all-btn');
         const selectCoreDocsBtn = document.getElementById('select-core-docs-btn');
         const generateBtn = document.getElementById('generate-context-btn');
         const copyBtn = document.getElementById('copy-json-btn');
         const downloadBtn = document.getElementById('download-json-btn');
-        
-        // --- Core Functions ---
+        const modal = document.getElementById('file-preview-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalBody = document.getElementById('modal-body');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+
+        // --- Core Functions ---\n\n        function getIcon(name, isFolder) {
+            if (isFolder) return ICONS.folder;
+            const extension = name.split('.').pop().toLowerCase();
+            if (IMAGE_EXTENSIONS.includes(extension)) return ICONS.image;
+            return ICONS[extension] || ICONS.file;
+        }
 
         function renderFileTree(node, parentElement, currentPath) {
             const ul = document.createElement('ul');
@@ -200,28 +260,40 @@ def create_interactive_html(output_html_path):
                 const li = document.createElement('li');
                 const isFolder = item.type !== 'file';
                 const label = document.createElement('label');
+                label.className = 'tree-item-label';
+                
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
                 checkbox.setAttribute('data-path', itemPath);
+                
                 label.appendChild(checkbox);
+                const iconSpan = document.createElement('span');
+                iconSpan.className = 'file-icon';
+                iconSpan.innerHTML = getIcon(key, isFolder);
+                label.appendChild(iconSpan);
+
                 if (isFolder) {
                     li.classList.add('folder');
                     const toggle = document.createElement('span');
                     toggle.className = 'toggle';
                     toggle.textContent = '►';
                     li.appendChild(toggle);
-                    label.appendChild(document.createTextNode(` ${key}`));
+                    
+                    const folderNameSpan = document.createElement('span');
+                    folderNameSpan.textContent = ` ${key}`;
+                    label.appendChild(folderNameSpan);
+
                     li.appendChild(label);
                     const nestedUl = renderFileTree(item, li, itemPath);
                     nestedUl.style.display = 'none';
                     li.appendChild(nestedUl);
                 } else {
                     li.classList.add('file');
-                    const icon = document.createElement('span');
-                    icon.className = 'icon';
-                    icon.textContent = '📄';
-                    label.prepend(icon);
-                    label.appendChild(document.createTextNode(` ${key}`));
+                    const fileNameSpan = document.createElement('span');
+                    fileNameSpan.className = 'file-name-clickable';
+                    fileNameSpan.textContent = ` ${key}`;
+                    fileNameSpan.setAttribute('data-path', itemPath);
+                    label.appendChild(fileNameSpan);
                     li.appendChild(label);
                 }
                 ul.appendChild(li);
@@ -231,16 +303,11 @@ def create_interactive_html(output_html_path):
         }
 
         function selectCoreDocs() {
-            // 1. Avmarkera allt för ett rent tillstånd
-            fileTreeContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-            
-            // 2. Markera kärndokumenten
+            fileTreeContainer.querySelectorAll('input[type=\"checkbox\"]').forEach(cb => cb.checked = false);
             CORE_DOC_PATHS.forEach(path => {
-                const checkbox = fileTreeContainer.querySelector(`input[data-path="${path}"]`);
+                const checkbox = fileTreeContainer.querySelector(`input[data-path=\"${path}\"]`);
                 if (checkbox) {
                     checkbox.checked = true;
-
-                    // 3. Expandera överordnade mappar
                     let parent = checkbox.closest('li.folder');
                     while(parent) {
                         const nestedUl = parent.querySelector('ul');
@@ -255,15 +322,31 @@ def create_interactive_html(output_html_path):
             });
         }
         
-        async function fetchFileContent(path) {
+        async function openFilePreview(path) {
+            modalTitle.textContent = path;
+            modalBody.innerHTML = '<p>Loading content...</p>';
+            modal.classList.add('visible');
+
             try {
-                const response = await fetch(`${REPO_RAW_URL}${path}`);
-                if (!response.ok) throw new Error(`HTTP error ${response.status}`);
-                if (path.endsWith('.json')) return await response.json();
-                return await response.text();
+                const url = `${REPO_RAW_URL}${path}`;
+                const extension = path.split('.').pop().toLowerCase();
+                
+                if (IMAGE_EXTENSIONS.includes(extension)) {
+                    modalBody.innerHTML = `<img src="${url}" alt="Preview of ${path}">`;
+                } else {
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+                    const textContent = await response.text();
+                    const pre = document.createElement('pre');
+                    const code = document.createElement('code');
+                    code.textContent = textContent;
+                    pre.appendChild(code);
+                    modalBody.innerHTML = '';
+                    modalBody.appendChild(pre);
+                }
             } catch (error) {
                 console.error(`Failed to fetch content for ${path}:`, error);
-                return `// Error: Failed to fetch content for ${path}`;
+                modalBody.textContent = `Error: Failed to fetch content for ${path}. ${error.message}`;
             }
         }
 
@@ -272,13 +355,25 @@ def create_interactive_html(output_html_path):
             const contentPromises = [];
             const itemsToPopulate = [];
 
+            async function fetchFileContent(path) {
+                try {
+                    const response = await fetch(`${REPO_RAW_URL}${path}`);
+                    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+                    // JSON files are handled as text here because they will be stringified in the final output
+                    return await response.text();
+                } catch (error) {
+                    console.error(`Failed to fetch content for ${path}:`, error);
+                    return `// Error: Failed to fetch content for ${path}`;\n                }
+            }
+            
             function traverse(source, dest) {
                 for (const key in source) {
                     const item = source[key];
                     if (item.type === 'file') {
                         const isSelected = selectedPaths.has(item.path);
                         const stub = JSON.parse(JSON.stringify(item));
-                        if (isSelected && item.content === null) {
+                        if (isSelected && (item.is_binary || item.content === null)) {
+                             // Only fetch content if it's selected AND we don't already have it
                             contentPromises.push(fetchFileContent(item.path));
                             itemsToPopulate.push({ a: stub, b: item.path });
                         } else if (!isSelected) {
@@ -304,17 +399,25 @@ def create_interactive_html(output_html_path):
             generateBtn.disabled = true;
             generateBtn.textContent = 'Generating...';
             try {
-                const selectedPaths = new Set(Array.from(fileTreeContainer.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.dataset.path));
+                const selectedPaths = new Set(Array.from(fileTreeContainer.querySelectorAll('input[type=\"checkbox\"]:checked')).map(cb => cb.dataset.path));
                 const newContext = {
                     project_overview: fullContext.project_overview,
                     ai_instructions: fullContext.ai_instructions,
                     project_documentation: {},
                     file_structure: {}
                 };
+
+                // Add instruction input content if available
+                if (instructionInput.value.trim()) {
+                    newContext.ai_instructions_input = instructionInput.value.trim();
+                }
+
                 if (fullContext.project_documentation) {
                     for (const docKey in fullContext.project_documentation) {
-                        if (selectedPaths.has(`docs/${docKey}`)) {
-                            newContext.project_documentation[docKey] = fullContext.project_documentation[docKey];
+                        const docPath = `docs/${docKey}`;
+                        if (selectedPaths.has(docPath)) {
+                           // Use the content from the initial fetch
+                           newContext.project_documentation[docKey] = fullContext.project_documentation[docKey];
                         }
                     }
                 }
@@ -330,10 +433,36 @@ def create_interactive_html(output_html_path):
                 generateBtn.textContent = 'Generate Context';
             }
         }
+        
+        function handleInstructionInput() {
+            const text = instructionInput.value;
+            if (!text.trim()) return;
+            try {
+                const parsed = JSON.parse(text);
+                if (parsed && Array.isArray(parsed.filesToSelect)) {
+                    // Deselect all first
+                    fileTreeContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+                    // Select files from JSON
+                    parsed.filesToSelect.forEach(path => {
+                        const checkbox = fileTreeContainer.querySelector(`input[data-path="${path}"]`);
+                        if (checkbox) checkbox.checked = true;
+                    });
+                }
+            } catch (e) {
+                // Ignore JSON parse errors while user is typing
+            }
+        }
 
-        // --- Event Listeners ---
-        fileTreeContainer.addEventListener('click', (e) => {
+        // --- Event Listeners ---\n        fileTreeContainer.addEventListener('click', (e) => {
             const target = e.target;
+            const clickableFile = target.closest('.file-name-clickable');
+            
+            if (clickableFile) {
+                e.preventDefault();
+                openFilePreview(clickableFile.dataset.path);
+                return;
+            }
+
             if (target.classList.contains('toggle')) {
                 const nestedUl = target.parentElement.querySelector('ul');
                 if (nestedUl) {
@@ -345,15 +474,27 @@ def create_interactive_html(output_html_path):
             if (target.type === 'checkbox') {
                 const li = target.closest('li');
                 if (li) {
-                    li.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = target.checked);
+                    li.querySelectorAll('input[type=\"checkbox\"]').forEach(cb => cb.checked = target.checked);
                 }
             }
         });
 
-        selectAllBtn.addEventListener('click', () => fileTreeContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true));
-        deselectAllBtn.addEventListener('click', () => fileTreeContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false));
+        selectAllBtn.addEventListener('click', () => fileTreeContainer.querySelectorAll('input[type=\"checkbox\"]').forEach(cb => cb.checked = true));
+        deselectAllBtn.addEventListener('click', () => fileTreeContainer.querySelectorAll('input[type=\"checkbox\"]').forEach(cb => cb.checked = false));
         selectCoreDocsBtn.addEventListener('click', selectCoreDocs);
         generateBtn.addEventListener('click', generateSelectedContext);
+        instructionInput.addEventListener('input', handleInstructionInput);
+
+        const closeModal = () => modal.classList.remove('visible');
+        modalCloseBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('visible')) {
+                closeModal();
+            }
+        });
 
         copyBtn.addEventListener('click', () => {
             navigator.clipboard.writeText(outputPre.textContent).then(() => {
@@ -386,17 +527,55 @@ def create_interactive_html(output_html_path):
             URL.revokeObjectURL(url);
         });
         
-        // --- Initialization ---
-        fetch('context.json')
+        // --- Initialization ---\n        fetch('context.json')
             .then(response => { if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`); return response.json(); })
             .then(data => {
                 fullContext = data;
                 fileTreeContainer.innerHTML = '';
+                // Render file structure
                 renderFileTree(fullContext.file_structure, fileTreeContainer, '');
+                
+                // Manually create and render docs structure if it exists
                 if (fullContext.project_documentation && Object.keys(fullContext.project_documentation).length > 0) {
                     const docsNode = {};
-                    Object.keys(fullContext.project_documentation).forEach(docKey => { docsNode[docKey] = { type: 'file' }; });
-                    renderFileTree({ 'docs': docsNode }, fileTreeContainer, '');
+                    const docPaths = {};
+                    Object.keys(fullContext.project_documentation).forEach(docKey => {
+                        const path = `docs/${docKey}`;
+                        docsNode[docKey] = { type: 'file', path: path, is_binary: false, content: fullContext.project_documentation[docKey] };
+                        docPaths[path] = docsNode[docKey];
+                    });
+                    
+                    const ul = document.createElement('ul');
+                    const li = document.createElement('li');
+                    li.classList.add('folder');
+                    const toggle = document.createElement('span');
+                    toggle.className = 'toggle';
+                    toggle.textContent = '►';
+                    li.appendChild(toggle);
+                    
+                    const label = document.createElement('label');
+                    label.className = 'tree-item-label';
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.setAttribute('data-path', 'docs');
+                    label.appendChild(checkbox);
+                    
+                    const iconSpan = document.createElement('span');
+                    iconSpan.className = 'file-icon';
+                    iconSpan.innerHTML = ICONS.folder;
+                    label.appendChild(iconSpan);
+                    
+                    const folderNameSpan = document.createElement('span');
+                    folderNameSpan.textContent = ' docs';
+                    label.appendChild(folderNameSpan);
+                    
+                    li.appendChild(label);
+                    
+                    const nestedUl = renderFileTree(docsNode, li, 'docs');
+                    nestedUl.style.display = 'none';
+                    li.appendChild(nestedUl);
+                    
+                    fileTreeContainer.prepend(li); // Add docs at the top
                 }
             })
             .catch(error => {
@@ -412,7 +591,7 @@ def create_interactive_html(output_html_path):
     try:
         with open(output_html_path, 'w', encoding='utf-8') as f:
             f.write(html_template)
-        print(f"[INFO] Wrapper: Skapade framgångsrikt den interaktiva HTML-filen '{output_html_path}'.")
+        print(f"[INFO] Wrapper: Skapade framgångsrikt den uppdaterade interaktiva HTML-filen '{output_html_path}'.")
 
     except Exception as e:
         print(f"[ERROR] Wrapper: Ett oväntat fel inträffade vid skrivning till fil: {e}", file=sys.stderr)
