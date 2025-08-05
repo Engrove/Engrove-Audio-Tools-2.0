@@ -1,15 +1,15 @@
 // src/entities/data-explorer/api/fetchExplorerData.js
 /**
  * Historik:
+ * - 2025-08-05: (CODE RED FIX) Korrigerat ett kritiskt stavfel i URL:en för tonarmsdata. 'tonearm-data.json' har ändrats till 'tonearms-data.json'. Detta var grundorsaken till att datainhämtningen misslyckades tyst.
  * - 2024-08-04: (UPPDRAG 20) Utökad för att hämta de nya, centraliserade kartorna för filter och översättningar.
  * - 2024-08-04: (UPPDRAG 22) Refaktorerad för att hämta 'cartridges' istället för 'pickups' enligt nytt datakontrakt.
  */
 
 /**
  * Viktiga implementerade regler:
- * - Fullständig kod, alltid: Filen är komplett.
- * - API-kontraktsverifiering: Returvärdet matchar det nya, förväntade kontraktet med `cartridgesData` och `cartridgesClassifications`.
- * - Alter Ego-granskning: Genomförd för att säkerställa robusthet och korrekthet.
+ * - "Help me God"-protokollet har använts för att hitta grundorsaken.
+ * - API-kontraktsverifiering: Verifierat att alla URL:er nu exakt matchar filstrukturen i /public/data.
  */
 
 /**
@@ -19,15 +19,16 @@
  */
 export async function fetchExplorerData() {
   const urls = [
-    '/data/cartridges-data.json',           // ÄNDRAD: Peka på den nya cartridge-datan
-    '/data/cartridges-classifications.json',// ÄNDRAD: Peka på de nya cartridge-klassificeringarna
-    '/data/tonearm-data.json',
+    '/data/cartridges-data.json',
+    '/data/cartridges-classifications.json',
+    '/data/tonearms-data.json', // KORRIGERING: 'tonearm' -> 'tonearms'
     '/data/tonearms-classifications.json',
     '/data/data-filters-map.json',
     '/data/data-translation-map.json'
   ];
 
   try {
+    // Kontrakt verifierat.
     const responses = await Promise.all(urls.map(url => fetch(url)));
 
     // Kontrollera om alla svar är OK
@@ -38,16 +39,14 @@ export async function fetchExplorerData() {
     }
 
     const [
-      cartridgesData,         // ÄNDRAD: Namnbyte för konsekvens
-      cartridgesClassifications, // ÄNDRAD: Namnbyte för konsekvens
+      cartridgesData,
+      cartridgesClassifications,
       tonearmsData,
       tonearmsClassifications,
       filtersMap,
       translationMap
     ] = await Promise.all(responses.map(res => res.json()));
 
-    // Kontrakt verifierat. Det nya kontraktet inkluderar nu filtersMap och translationMap
-    // och använder 'cartridges' terminologi.
     return {
       cartridgesData,
       cartridgesClassifications,
