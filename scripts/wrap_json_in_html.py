@@ -4,10 +4,8 @@
 # * v1.0 - v4.0: Tidigare versioner för att visa statisk JSON.
 # * v5.0 (Context Builder): Total omarbetning. Genererar en interaktiv, fristående
 #   webbapplikation för att bygga anpassade AI-kontexter.
-#   - Implementerar den av "Help me God"-tribunalen godkända arkitekturen.
-#   - Frikopplar UI från data genom att asynkront hämta `context.json`.
-#   - Renderar en dynamisk, interaktiv fil-trädvy med checkboxar.
-#   - Bygger ett nytt, anpassat JSON-objekt baserat på användarens val.
+# * v5.1 (Syntax Fix): Korrigerat ett kritiskt JavaScript-syntaxfel där felaktiga
+#   dubbla klammerparenteser (${{...}}) användes i template literals.
 #
 # TILLÄMPADE REGLER (Frankensteen v3.7):
 # - Denna fil följer principen om Single Responsibility (dess enda ansvar är att
@@ -174,14 +172,14 @@ def generate_builder_html(output_html_path):
             try {{
                 const response = await fetch('context.json');
                 if (!response.ok) {{
-                    throw new Error(`HTTP error! status: ${{response.status}}`);
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }}
                 fullContext = await response.json();
                 statusEl.classList.add('hidden');
                 fileTreeContainer.classList.remove('hidden');
                 renderFileTree();
             }} catch (e) {{
-                statusEl.textContent = `Failed to load context.json: ${{e.message}}`;
+                statusEl.textContent = `Failed to load context.json: ${e.message}`;
                 statusEl.style.color = '#ff8a8a';
             }}
         }}
@@ -225,7 +223,7 @@ def generate_builder_html(output_html_path):
 
             const childrenUl = document.createElement('ul');
             for (const key in obj) {{
-                const path = `${{rootKey}}.${{key}}`;
+                const path = `${rootKey}.${key}`;
                 childrenUl.appendChild(createTreeElement(key, obj[key], path));
             }}
             li.appendChild(childrenUl);
@@ -268,7 +266,7 @@ def generate_builder_html(output_html_path):
                 const childrenUl = document.createElement('ul');
                 childrenUl.classList.add('hidden'); // Start collapsed
                 for (const key in node) {{
-                    childrenUl.appendChild(createTreeElement(key, node[key], `${{path}}.${{key}}`));
+                    childrenUl.appendChild(createTreeElement(key, node[key], `${path}.${key}`));
                 }}
                 li.appendChild(childrenUl);
 
