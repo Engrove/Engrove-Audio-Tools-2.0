@@ -1,25 +1,3 @@
-<!-----
-
-
-
-Conversion time: 0.252 seconds.
-
-
-Using this Markdown file:
-
-1. Paste this output into your source file.
-2. See the notes and action items below regarding this conversion run.
-3. Check the rendered output (headings, lists, code blocks, tables) for proper
-   formatting and use a linkchecker before you publish this page.
-
-Conversion notes:
-
-* Docs to Markdown version 1.0β44
-* Tue Aug 05 2025 02:58:26 GMT-0700 (PDT)
-* Source doc: ByggLogg Instruktion
------>
-
-
 **Viktigt!** *Alla enskilda rapporter levereras i markdown-format av dej i sina egna textrutor för enkel kopiering.*
 
  \
