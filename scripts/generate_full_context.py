@@ -11,6 +11,9 @@
 # * v8.0 (Content Inclusion): Lade till nyckeln "content" för varje filobjekt.
 # * v9.0 (JSON Size Fix): Behandlar .json-filer som "opak" data för att undvika att läsa in
 #   stora (GB+) filer i minnet under byggprocessen. Innehållet hämtas istället on-demand i front-end.
+# * v10.0 (Order Fix): Helt omskriven `extract_from_content`-funktion. Använder nu `re.finditer`
+#   och sorterar matchningar baserat på deras startindex i filen. Detta korrigerar den
+#   kritiska buggen där kommentarer och beroenden listades i fel (alfabetisk) ordning.
 #
 # TILLÄMPADE REGLER (Frankensteen v3.7):
 # - Denna fil följer principerna om "Explicit Alltid" och robust felhantering.
@@ -62,18 +65,41 @@ def sanitize_comment(comment_text):
     return re.sub(r'^[/*\->#;"\s]+|<!--|-->', '', comment_text).strip()
 
 def extract_from_content(content, patterns):
-    """En generell funktion för att extrahera text baserat på en lista av regex-mönster."""
-    matches = set()
+    """
+    En generell och ordningsbevarande funktion för att extrahera text.
+    Använder re.finditer för att fånga positionen för varje matchning,
+    sorterar dem och returnerar sedan texten i korrekt ordning.
+    """
+    all_matches = []
     for pattern in patterns:
-        found = pattern.findall(content)
-        for match in found:
-            if isinstance(match, tuple):
-                proper_match = next((m for m in match if m), None)
-                if proper_match:
-                    matches.add(proper_match)
-            elif match:
-                matches.add(match)
-    return sorted(list(matches))
+        for match in re.finditer(pattern, content):
+            # För mönster som DEP_PATTERNS kan `match.groups()` innehålla `None`.
+            # Vi vill ha den första giltiga gruppen.
+            # För COMMENT_PATTERNS är `match.group(0)` hela matchningen.
+            if pattern in DEP_PATTERNS:
+                # Extrahera den första icke-None gruppen från tuple
+                match_text = next((g for g in match.groups() if g is not None), None)
+            else: # COMMENT_PATTERNS
+                match_text = match.group(0)
+
+            if match_text:
+                 all_matches.append((match.start(), match_text))
+
+    # Sortera alla funna matchningar baserat på deras startposition
+    all_matches.sort(key=lambda x: x[0])
+
+    # Returnera enbart den matchade texten, nu i korrekt ordning
+    # Använd en uppsättning för att filtrera bort exakta dubbletter som kan uppstå
+    # från överlappande regex-mönster, men bevara ordningen.
+    seen = set()
+    ordered_unique_matches = []
+    for _, text in all_matches:
+        if text not in seen:
+            seen.add(text)
+            ordered_unique_matches.append(text)
+            
+    return ordered_unique_matches
+
 
 # --- Kärnfunktioner för datahämtning ---
 
@@ -81,7 +107,7 @@ def get_session_headers():
     """Skapar headers för API-anrop. Använder GITHUB_TOKEN om det finns."""
     token = os.getenv('GITHUB_TOKEN')
     headers = {
-        'User-Agent': 'Python-Context-Generator/9.0',
+        'User-Agent': 'Python-Context-Generator/10.0',
         'Accept': 'application/vnd.github.v3+json'
     }
     if token:
