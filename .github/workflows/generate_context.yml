@@ -3,8 +3,7 @@
 # HISTORIK:
 # * v1.0 - v6.0: Tidigare versioner.
 # * v7.0 (Project Documentation Integration): Omarbetad för att dynamiskt inkludera alla .md-filer från en /docs-mapp.
-#   - LÄGGER TILL: En ny huvudsektion i HTML-outputen för styrande dokument.
-#   - FÖRBÄTTRAR: Python-skriptet i workflowet skapar nu en undersektion för varje enskilt dokument.
+# * v8.0 (Bug Fix): Korrigerat en felaktig JSON-nyckel som gjorde att filstrukturen inte visades.
 #
 # TILLÄMPADE REGLER (Frankensteen v3.7):
 # - Robust felhantering med explicit validering i varje kritiskt steg.
@@ -122,13 +121,13 @@ jobs:
           # Extrahera de olika delarna
           ai_instructions = context_data.get('ai_instructions', '<!-- AI.md not found or empty -->')
           project_documentation = context_data.get('project_documentation', {})
-          file_structure = context_data.get('file_structure_overview', {})
+          file_structure = context_data.get('file_structure', {}) # KORRIGERAD NYCKEL HÄR
           project_overview = context_data.get('project_overview', {})
 
           # Bygg dokumentationssektionen dynamiskt
           docs_html_sections = ''
           if project_documentation:
-              for filename, content in project_documentation.items():
+              for filename, content in sorted(project_documentation.items()):
                   safe_content = html.escape(content or '')
                   docs_html_sections += f'''
                   <section>
@@ -179,8 +178,8 @@ jobs:
                       <pre><code>{safe_overview_json}</code></pre>
                   </section>
                   <section id=\"file-structure-json\">
-                      <h2>Översikt av Filstruktur</h2>
-                      <p>En trädstruktur som visar alla källkodsfiler i projektet.</p>
+                      <h2>Filstruktur</h2>
+                      <p>En trädstruktur som visar alla källkodsfiler i projektet, inklusive extraherade kommentarer och beroenden.</p>
                       <pre><code>{safe_file_structure_json}</code></pre>
                   </section>
                   <section id=\"metadata-json\">
