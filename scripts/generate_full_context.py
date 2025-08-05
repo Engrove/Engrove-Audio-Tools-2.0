@@ -8,8 +8,9 @@
 # * v5.0 (Project Documentation): Lade till dynamisk inläsning av alla .md-filer från en /docs-mapp.
 # * v6.0 (Restoration & Synthesis): Återställde all förlorad funktionalitet och syntetiserade den.
 # * v7.0 (Help me God Audit): Ändrat 'ignore' till 'replace' i decode för ökad robusthet.
-# * v8.0 (Content Inclusion): Lade till nyckeln "content" för varje filobjekt. Detta är en
-#   kritisk ändring för att möjliggöra den nya stub/fullständig-logiken i UI-verktyget.
+# * v8.0 (Content Inclusion): Lade till nyckeln "content" för varje filobjekt.
+# * v9.0 (JSON Size Fix): Behandlar .json-filer som "opak" data för att undvika att läsa in
+#   stora (GB+) filer i minnet under byggprocessen. Innehållet hämtas istället on-demand i front-end.
 #
 # TILLÄMPADE REGLER (Frankensteen v3.7):
 # - Denna fil följer principerna om "Explicit Alltid" och robust felhantering.
@@ -80,7 +81,7 @@ def get_session_headers():
     """Skapar headers för API-anrop. Använder GITHUB_TOKEN om det finns."""
     token = os.getenv('GITHUB_TOKEN')
     headers = {
-        'User-Agent': 'Python-Context-Generator/8.0',
+        'User-Agent': 'Python-Context-Generator/9.0',
         'Accept': 'application/vnd.github.v3+json'
     }
     if token:
@@ -106,7 +107,6 @@ def get_raw_file_content(path, headers):
     try:
         response = requests.get(url, headers={'User-Agent': headers['User-Agent']})
         response.raise_for_status()
-        # KORRIGERING: 'replace' är säkrare än 'ignore' för att upptäcka encoding-fel.
         return response.content.decode('utf-8', 'replace')
     except requests.exceptions.RequestException:
         log_message("WARN", f"Kunde inte läsa filen: {path}")
@@ -127,7 +127,6 @@ def main():
         log_message("FATAL", "Kunde inte hämta grundläggande repository-data. Avbryter.")
         sys.exit(1)
 
-    # Hämta alla styrande dokument från /docs-mappen
     project_documentation = {}
     doc_files = [item for item in tree_info['tree'] if item['path'].startswith(DOCS_PATH + '/') and item['path'].endswith('.md')]
     if doc_files:
@@ -140,7 +139,6 @@ def main():
     else:
         log_message("WARN", f"Inga .md-filer hittades i mappen '{DOCS_PATH}'.")
 
-    # Analysera filstrukturen (exkluderar docs-mappen nu)
     file_structure = {}
     file_list = [item for item in tree_info['tree'] if item['type'] == 'blob' and not item['path'].startswith(DOCS_PATH + '/')]
     log_message("INFO", f"Hittade {len(file_list)} källkodsfiler att analysera.")
@@ -154,6 +152,7 @@ def main():
         
         file_extension = path.split('.')[-1].lower() if '.' in path else ''
         is_binary = file_extension in BINARY_EXTENSIONS
+        is_json = file_extension == 'json'
 
         path_parts = path.split('/')
         current_level = file_structure
@@ -165,20 +164,22 @@ def main():
             "path": path,
             "size_bytes": item.get('size'),
             "file_extension": file_extension,
-            "is_binary": is_binary,
+            "is_binary": is_binary or is_json,
             "comments": [],
             "dependencies": [],
-            "content": None # Initiera som null
+            "content": None
         }
 
-        if not is_binary:
+        if is_json:
+            log_message("INFO", f"Hoppar över innehållsläsning för JSON-datafil: {path}")
+        elif is_binary:
+            log_message("INFO", f"Hoppar över innehållsläsning för binär fil: {path}")
+        else:
             content = get_raw_file_content(path, headers)
             if content:
                 file_data["comments"] = [sanitize_comment(c) for c in extract_from_content(content, COMMENT_PATTERNS)]
                 file_data["dependencies"] = extract_from_content(content, DEP_PATTERNS)
-                file_data["content"] = content # ** NYCKELÄNDRING: Inkludera filinnehållet **
-        else:
-            log_message("INFO", f"Hoppar över innehållsläsning för binär fil: {path}")
+                file_data["content"] = content
 
         current_level[path_parts[-1]] = file_data
 
