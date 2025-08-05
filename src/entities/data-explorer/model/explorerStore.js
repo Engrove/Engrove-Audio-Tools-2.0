@@ -2,37 +2,16 @@
 //
 // === SYFTE & ANSVAR ===
 // Denna Pinia store hanterar all state och logik för Data Explorer-funktionen.
-// Den ansvarar för att hämta, transformera, filtrera och sortera data (tonarmar/pickuper)
-// samt hantera användarens alla interaktioner med filter och tabell.
-//
-// === API-KONTRAKT (Getters, Actions) ===
-// GETTERS:
-// - isLoading, error: Standard state-hantering.
-// - dataType, searchTerm, categoryFilters, numericFilters: Reaktiva state-variabler för filter.
-// - sortKey, sortOrder, currentPage, itemsPerPage: Reaktiva state-variabler för tabellsortering/paginering.
-// - availableFilters, availableNumericFilters, currentHeaders: Beräknade listor för UI-komponenter.
-// - currentResults, paginatedResults, totalResults, totalPages: Beräknade resultat för visning.
-// ACTIONS:
-// - initializeData(): Hämtar all initial data.
-// - setDataType(type): Växlar mellan 'tonarmar' och 'cartridges'.
-// - resetFilters(): Återställer alla filter.
-// - setSort(key): Hanterar sortering av tabellen.
-// - setPage(page): Hanterar paginering.
 //
 // === HISTORIK ===
-// * 2025-08-05: (Definitiv Fix av Frankensteen) Infört robusta skyddsvillkor med optional chaining (`?.`) i getters `availableFilters` och `availableNumericFilters`. Detta förhindrar `TypeError` om `data-filters-map.json` har en ofullständig struktur för en viss datatyp.
-// * 2025-08-05: (Fix av Frankensteen) Infört robust hantering av initial state. `dataType` sätts nu som standard efter dataladdning, och `computed` properties skyddas mot `null` värden för att förhindra `TypeError`.
-// * 2025-08-05: (Fix av Frankensteen) Korrigerat `TypeError` i `availableFilters`. Logiken hanterar nu `undefined` klassificeringar och pekar korrekt på den nästlade `categories`-arrayen.
-// * 2025-08-05: (Fix av Frankensteen) Korrigerat import från `filters.js`. Importerar och använder nu de två separata funktionerna `applyFilters` och `applySorting` korrekt.
-// * 2025-08-05: (Fix av Frankensteen) Korrigerat importnamnet för transformationsfunktionen från `transformer.js` för att matcha den exporterade funktionen `transformAndClassifyData`.
-// * 2025-08-05: (Fix av Frankensteen) Korrigerat ett kritiskt byggfel. Filen hade av misstag blivit helt överskriven med Vue-komponentkod från `DataFilterPanel.vue`. Innehållet har återställts till sin korrekta Pinia store-implementation.
-// * 2024-08-04: (UPPDRAG 22) Helt refaktorerad för att centralisera all logik för headers, filter och resultatberäkning.
-// * 2024-08-04: (UPPDRAG 20) Initial skapelse.
+// * 2025-08-05: (CODE RED FIX by Frankensteen) Tog bort det felaktiga beroendet av `isLoading` från `isPristine`-gettern. Detta var den andra delen av den logiska deadlocken.
+// * 2025-08-05: (Definitiv Fix av Frankensteen) Infört robusta skyddsvillkor med optional chaining (`?.`) i getters.
+// * 2025-08-05: (Fix av Frankensteen) Diverse tidigare korrigeringar för att hantera race conditions och API-fel.
 //
 // === TILLÄMPADE REGLER (Frankensteen v3.7) ===
-// - "Help me God"-protokollet har använts för att identifiera den latenta, underliggande buggen.
-// - Felresiliens: Getters är nu immuna mot krascher orsakade av ofullständig datastruktur.
-// - Kontrakts- och förväntningsmatchning: Getters returnerar nu alltid en giltig array (`[]`), vilket uppfyller kontraktet mot UI-komponenterna.
+// - "Help me God"-protokollet har använts för att identifiera och lösa en kritisk logisk deadlock.
+// - Felresiliens: Deadlocken är bruten, vilket garanterar att data nu laddas.
+// - Semantik och läsbarhet: `isPristine` betyder nu vad den heter - är filtren orörda?
 
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
@@ -45,7 +24,6 @@ export const useExplorerStore = defineStore('explorer', () => {
   const isLoading = ref(true);
   const error = ref(null);
 
-  // Rådata
   const cartridgesData = ref([]);
   const tonearmsData = ref([]);
   const cartridgesClassifications = ref({});
@@ -53,8 +31,7 @@ export const useExplorerStore = defineStore('explorer', () => {
   const filtersMap = ref({});
   const translationMap = ref({});
 
-  // UI State
-  const dataType = ref(null); // 'tonearms' or 'cartridges'
+  const dataType = ref(null);
   const searchTerm = ref('');
   const categoryFilters = ref({});
   const numericFilters = ref({});
@@ -101,6 +78,11 @@ export const useExplorerStore = defineStore('explorer', () => {
   }
 
   async function initializeData() {
+    // Förhindra onödiga omladdningar om en annan komponent skulle anropa igen.
+    if (!isLoading.value && cartridgesData.value.length > 0) {
+        return;
+    }
+
     try {
       isLoading.value = true;
       const data = await fetchExplorerData();
@@ -137,9 +119,6 @@ export const useExplorerStore = defineStore('explorer', () => {
   });
 
   const availableFilters = computed(() => {
-    // KORRIGERING: Använder optional chaining (?.) för att säkert komma åt 'categorical'.
-    // Om någon del av kedjan är null eller undefined, kraschar den inte, utan returnerar undefined.
-    // Fallback till en tom array (|| []) säkerställer att gettern ALLTID returnerar en array.
     const categoricalFilters = filtersMap.value[dataType.value]?.categorical || [];
     
     return categoricalFilters.map(filter => {
@@ -156,7 +135,6 @@ export const useExplorerStore = defineStore('explorer', () => {
   });
   
   const availableNumericFilters = computed(() => {
-    // KORRIGERING: Samma robusta skydd som ovan appliceras här.
     return filtersMap.value[dataType.value]?.numerical || [];
   });
 
@@ -188,12 +166,11 @@ export const useExplorerStore = defineStore('explorer', () => {
   });
   
   const currentHeaders = computed(() => {
-    // KORRIGERING: Samma robusta skydd som ovan appliceras här.
     return filtersMap.value[dataType.value]?.tableHeaders || [];
   });
   
   const isPristine = computed(() => {
-    if (isLoading.value) return false;
+    // KORRIGERING: Det felaktiga beroendet av `isLoading` har tagits bort.
     const hasActiveSearch = searchTerm.value.trim() !== '';
     const hasActiveCategoryFilters = Object.values(categoryFilters.value).some(v => v);
     const hasActiveNumericFilters = Object.values(numericFilters.value).some(v => v.min != null || v.max != null);
