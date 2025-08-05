@@ -1,9 +1,9 @@
 # .github/workflows/generate_context.yml
 #
 # HISTORIK:
-# * v1.0 - v6.0: Tidigare versioner.
-# * v7.0 (Project Documentation Integration): Omarbetad för att dynamiskt inkludera alla .md-filer från en /docs-mapp.
-# * v8.0 (Bug Fix): Korrigerat en felaktig JSON-nyckel som gjorde att filstrukturen inte visades.
+# * v1.0 - v8.0: Tidigare versioner.
+# * v9.0 (Help me God Audit): Total refaktorisering. Publicerar nu rå JSON istället för HTML
+#   för att säkerställa att AI-modeller kan processa datan direkt och robust.
 #
 # TILLÄMPADE REGLER (Frankensteen v3.7):
 # - Robust felhantering med explicit validering i varje kritiskt steg.
@@ -11,7 +11,7 @@
 # - Säkerhet genom minimala behörigheter och säker tokenhantering.
 # - Observabilitet genom strukturerad loggning.
 
-name: Generate and Deploy AI Context Page
+name: Generate and Deploy AI Context Data
 
 on:
   push:
@@ -34,7 +34,6 @@ permissions:
   contents: read
   pages: write
   id-token: write
-  issues: write
 
 env:
   PYTHON_VERSION: '3.11'
@@ -71,7 +70,9 @@ jobs:
         run: |
           if python scripts/generate_full_context.py > ${{ env.SITE_DIR }}/${{ env.CONTEXT_FILE }} 2> generation.log; then
             echo "success=true" >> $GITHUB_OUTPUT
+            echo "[INFO] context.json genererades framgångsrikt."
           else
+            echo "[ERROR] Misslyckades med att generera context.json. Se logg nedan:"
             cat generation.log
             echo "success=false" >> $GITHUB_OUTPUT
             exit 1
@@ -80,6 +81,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Metadata
+        if: steps.generate.outputs.success == 'true'
         run: |
           cat > ${{ env.SITE_DIR }}/${{ env.METADATA_FILE }} << EOF
           {
@@ -89,116 +91,10 @@ jobs:
             "repository": "${{ github.repository }}"
           }
           EOF
-
-      - name: Create index.html for AI Context
-        run: |
-          python -c "
-          import os
-          import html
-          import json
-
-          site_dir = os.environ.get('SITE_DIR')
-          context_file = os.environ.get('CONTEXT_FILE')
-          metadata_file = os.environ.get('METADATA_FILE')
-
-          index_path = os.path.join(site_dir, 'index.html')
-          context_path = os.path.join(site_dir, context_file)
-          metadata_path = os.path.join(site_dir, metadata_file)
-
-          # Läs och parsa all data
-          try:
-              with open(context_path, 'r', encoding='utf-8') as f:
-                  context_data = json.load(f)
-          except (FileNotFoundError, json.JSONDecodeError):
-              context_data = {}
-          
-          try:
-              with open(metadata_path, 'r', encoding='utf-8') as f:
-                  metadata_json = f.read()
-          except FileNotFoundError:
-              metadata_json = '{\"error\": \"metadata.json not found\"}'
-
-          # Extrahera de olika delarna
-          ai_instructions = context_data.get('ai_instructions', '<!-- AI.md not found or empty -->')
-          project_documentation = context_data.get('project_documentation', {})
-          file_structure = context_data.get('file_structure', {}) # KORRIGERAD NYCKEL HÄR
-          project_overview = context_data.get('project_overview', {})
-
-          # Bygg dokumentationssektionen dynamiskt
-          docs_html_sections = ''
-          if project_documentation:
-              for filename, content in sorted(project_documentation.items()):
-                  safe_content = html.escape(content or '')
-                  docs_html_sections += f'''
-                  <section>
-                      <h3>{html.escape(filename)}</h3>
-                      <pre><code>{safe_content}</code></pre>
-                  </section>
-                  '''
-          else:
-              docs_html_sections = '<p>Inga styrande dokument hittades i /docs-mappen.</p>'
-
-
-          # Skapa JSON-strängar för de återstående delarna
-          overview_json_string = json.dumps(project_overview, indent=2, ensure_ascii=False)
-          file_structure_json_string = json.dumps(file_structure, indent=2, ensure_ascii=False)
-          
-          # HTML-escapea allt innehåll
-          safe_ai_instructions = html.escape(ai_instructions or '')
-          safe_overview_json = html.escape(overview_json_string)
-          safe_file_structure_json = html.escape(file_structure_json_string)
-          safe_metadata_json = html.escape(metadata_json)
-
-          html_template = f'''
-          <!DOCTYPE html>
-          <html lang=\"sv\">
-          <head>
-              <meta charset=\"UTF-8\">
-              <title>AI Projektkontext: {html.escape(project_overview.get('repository', ''))}</title>
-          </head>
-          <body>
-              <header>
-                  <h1>AI Projektkontext: {html.escape(project_overview.get('repository', ''))}</h1>
-                  <p>Detta dokument är en automatgenererad datakälla avsedd för AI-modeller. Sidan innehåller den fullständiga kontexten för GitHub-repot, uppdelad i sektioner.</p>
-              </header>
-              <main>
-                  <section id=\"ai-instructions\">
-                      <h2>Statiska AI-instruktioner (AI.md)</h2>
-                      <p>Grundläggande regler och direktiv som styr AI-sessionen.</p>
-                      <pre><code>{safe_ai_instructions}</code></pre>
-                  </section>
-                  <section id=\"project-documentation\">
-                      <h2>Styrande Dokumentation (/docs)</h2>
-                      <p>Strategiska och tekniska styrdokument som definierar projektets arkitektur, mål och standarder.</p>
-                      {docs_html_sections}
-                  </section>
-                  <section id=\"project-overview-json\">
-                      <h2>Projektöversikt</h2>
-                      <p>Grundläggande metadata om projektet.</p>
-                      <pre><code>{safe_overview_json}</code></pre>
-                  </section>
-                  <section id=\"file-structure-json\">
-                      <h2>Filstruktur</h2>
-                      <p>En trädstruktur som visar alla källkodsfiler i projektet, inklusive extraherade kommentarer och beroenden.</p>
-                      <pre><code>{safe_file_structure_json}</code></pre>
-                  </section>
-                  <section id=\"metadata-json\">
-                      <h2>Byggmetadata (metadata.json)</h2>
-                      <p>Metadata om den specifika GitHub Actions-körning som genererade detta dokument.</p>
-                      <pre><code>{safe_metadata_json}</code></pre>
-                  </section>
-              </main>
-          </body>
-          </html>
-          '''
-
-          with open(index_path, 'w', encoding='utf-8') as f:
-              f.write(html_template)
-          
-          print('[INFO] index.html för AI-kontext skapad med Python.')
-          "
+          echo "[INFO] metadata.json skapad."
 
       - name: Upload Pages Artifact
+        if: steps.generate.outputs.success == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ${{ env.SITE_DIR }}
