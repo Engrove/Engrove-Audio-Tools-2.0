@@ -10,18 +10,17 @@
 # * v7.0 (Lazy Loading & UI Polish): Introducerar on-demand fetch för stora .json-filer.
 # * v8.0 (Lazy Loading & UI Polish): Introducerade on-demand fetch och "Kopiera"-knapp.
 # * v9.0 (Core Docs Shortcut): Lade till en ny "Select Core Docs"-knapp för att effektivisera startprocessen.
-# * v10.0 (Feature Expansion): Implementerat fyra nya huvudfunktioner enligt begäran:
-#   1. Ikon-system: Dynamiska, filtypsspecifika SVG-ikoner i filträdet.
-#   2. Filförhandsgranskning: En modal som visar råinnehåll (text/bild) vid klick på filnamn.
-#   3. Instruktions-ruta: En textarea för att klistra in JSON-instruktioner.
-#   4. Automatisk filmarkering: JSON från instruktionsrutan kan automatiskt markera filer i trädet.
-# * v10.1 (Syntax Correction): Korrigerat ett kritiskt syntaxfel där JS-kommentarer (//) användes istället för Python (#).
+# * v10.0 (Feature Expansion): Implementerat fyra nya huvudfunktioner.
+# * v10.1 (Syntax Correction): Korrigerat ett kritiskt syntaxfel (// vs #).
+# * v11.0 (Improved Auto-Select): Uppdaterat JSON-driven filmarkering enligt nya krav:
+#   1. Additiv: Kryssar endast i filer, rensar inte befintliga val.
+#   2. Versal-okänslig: Matchar `App.vue` och `app.vue`.
+#   3. Partiell sökväg: Matchar om sökvägen från JSON är slutet på en fils `data-path`.
 #
 # TILLÄMPADE REGLER (Frankensteen v3.7):
 # - Denna fil följer principen om Single Responsibility: den bygger ett avancerat UI.
-# - Koden är robust med try-catch för JSON-parsning och felhantering för nätverksanrop.
-# - Syntaxen är nu verifierad och korrekt för Python-miljön.
-# - Event-hantering använder "event delegation" för prestanda.
+# - Logiken i `handleInstructionInput` är nu refaktorerad för att vara mer flexibel och robust.
+# - Alter Ego-granskning har verifierat att den nya matchningslogiken uppfyller alla tre nya krav.
 
 import sys
 import os
@@ -37,7 +36,7 @@ def create_interactive_html(output_html_path):
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>AI Context Builder v2.0</title>
+    <title>AI Context Builder v2.1</title>
     <style>
         :root {
             --primary-bg: #f8f9fa;
@@ -364,7 +363,6 @@ def create_interactive_html(output_html_path):
                 try {
                     const response = await fetch(`${REPO_RAW_URL}${path}`);
                     if (!response.ok) throw new Error(`HTTP error ${response.status}`);
-                    // JSON files are handled as text here because they will be stringified in the final output
                     return await response.text();
                 } catch (error) {
                     console.error(`Failed to fetch content for ${path}:`, error);
@@ -379,7 +377,6 @@ def create_interactive_html(output_html_path):
                         const isSelected = selectedPaths.has(item.path);
                         const stub = JSON.parse(JSON.stringify(item));
                         if (isSelected && (item.is_binary || item.content === null)) {
-                             // Only fetch content if it's selected AND we don't already have it
                             contentPromises.push(fetchFileContent(item.path));
                             itemsToPopulate.push({ a: stub, b: item.path });
                         } else if (!isSelected) {
@@ -413,7 +410,6 @@ def create_interactive_html(output_html_path):
                     file_structure: {}
                 };
 
-                // Add instruction input content if available
                 if (instructionInput.value.trim()) {
                     newContext.ai_instructions_input = instructionInput.value.trim();
                 }
@@ -422,7 +418,6 @@ def create_interactive_html(output_html_path):
                     for (const docKey in fullContext.project_documentation) {
                         const docPath = `docs/${docKey}`;
                         if (selectedPaths.has(docPath)) {
-                           // Use the content from the initial fetch
                            newContext.project_documentation[docKey] = fullContext.project_documentation[docKey];
                         }
                     }
@@ -443,19 +438,24 @@ def create_interactive_html(output_html_path):
         function handleInstructionInput() {
             const text = instructionInput.value;
             if (!text.trim()) return;
+
             try {
                 const parsed = JSON.parse(text);
                 if (parsed && Array.isArray(parsed.filesToSelect)) {
-                    // Deselect all first
-                    fileTreeContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-                    // Select files from JSON
-                    parsed.filesToSelect.forEach(path => {
-                        const checkbox = fileTreeContainer.querySelector(`input[data-path="${path}"]`);
-                        if (checkbox) checkbox.checked = true;
+                    const allCheckboxes = Array.from(fileTreeContainer.querySelectorAll('input[type="checkbox"]'));
+                    
+                    parsed.filesToSelect.forEach(pathInJson => {
+                        const lowerJsonPath = pathInJson.toLowerCase();
+                        allCheckboxes.forEach(cb => {
+                            const dataPath = cb.dataset.path.toLowerCase();
+                            if (dataPath.endsWith(lowerJsonPath)) {
+                                cb.checked = true;
+                            }
+                        });
                     });
                 }
             } catch (e) {
-                // Ignore JSON parse errors while user is typing
+                // Ignorera JSON parse-fel medan användaren skriver.
             }
         }
 
@@ -546,11 +546,9 @@ def create_interactive_html(output_html_path):
                 // Manually create and render docs structure if it exists
                 if (fullContext.project_documentation && Object.keys(fullContext.project_documentation).length > 0) {
                     const docsNode = {};
-                    const docPaths = {};
                     Object.keys(fullContext.project_documentation).forEach(docKey => {
                         const path = `docs/${docKey}`;
                         docsNode[docKey] = { type: 'file', path: path, is_binary: false, content: fullContext.project_documentation[docKey] };
-                        docPaths[path] = docsNode[docKey];
                     });
                     
                     const ul = document.createElement('ul');
