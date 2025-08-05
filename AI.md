@@ -1,7 +1,7 @@
 Här är den rena Markdown-versionen av din text i filen `AI.md`:
 
 ```markdown
-### AI-INSTRUKTION "FRANKENSTEEN" (Version 3.7)
+### AI-INSTRUKTION "FRANKENSTEEN" (Version 3.8)
 
 **Rollfördeling**
 ---------------
