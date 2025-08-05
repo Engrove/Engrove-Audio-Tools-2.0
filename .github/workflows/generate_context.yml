@@ -5,6 +5,9 @@
 # * v12.0 (Correct Architecture): Implementerar den korrekta, robusta arkitekturen.
 #   Ansvaret är nu separerat: ett skript genererar JSON, ett annat skript
 #   wrappar det i HTML. Arbetsflödet är rent, läsbart och underhållbart.
+# * v13.0 (Context Builder Integration): Integrerat med det nya interaktiva "Context Builder"-verktyget.
+#   Workflow-filen krävde minimala ändringar tack vare den robusta arkitekturen.
+#   Lade till CSS-filer i push-triggern för att säkerställa fullständig kontext.
 #
 # TILLÄMPADE REGLER (Frankensteen v3.7):
 # - Följer Single Responsibility Principle. Varje steg gör en sak.
@@ -22,6 +25,7 @@ on:
       - '**/*.ts'
       - '**/*.vue'
       - '**/*.html'
+      - '**/*.css' # <-- NYTT: Inkluderar CSS-filer för komplett kontext
       - '**/*.md'
       - '.github/workflows/generate_context.yml'
       - 'requirements.txt'
@@ -39,7 +43,7 @@ env:
   PYTHON_VERSION: '3.11'
   SITE_DIR: '_site'
   JSON_FILE: 'context.json'
-  HTML_FILE: 'index.html'
+  HTML_FILE: 'index.html' # Denna fil blir nu vår interaktiva "Context Builder"
   METADATA_FILE: 'metadata.json'
 
 jobs:
@@ -81,15 +85,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create HTML Wrapper from JSON
+      - name: Create Interactive HTML Builder from JSON
         id: create-html
         if: steps.generate-json.outputs.success == 'true'
         run: |
+          # Notera: Det första argumentet (input json) ignoreras av den nya versionen av skriptet,
+          # men behålls för bakåtkompatibilitet och tydlighet i pipelinen.
           if python scripts/wrap_json_in_html.py ${{ env.SITE_DIR }}/${{ env.JSON_FILE }} ${{ env.SITE_DIR }}/${{ env.HTML_FILE }}; then
-            echo "[INFO] context.html skapades framgångsrikt."
+            echo "[INFO] Interaktiv context_builder.html skapades framgångsrikt."
             echo "success=true" >> $GITHUB_OUTPUT
           else
-            echo "[ERROR] Misslyckades med att skapa context.html från context.json."
+            echo "[ERROR] Misslyckades med att skapa den interaktiva HTML-byggaren."
             echo "success=false" >> $GITHUB_OUTPUT
             exit 1
           fi
