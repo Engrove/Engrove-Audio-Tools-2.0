@@ -8,13 +8,17 @@
 # * v5.0 (Full Interactive UI): Total omskrivning för ett interaktivt "Context Builder" UI.
 # * v6.0 (Stub/Full Logic): Implementerade logik för att skilja på markerade/omarkerade filer.
 # * v7.0 (Lazy Loading & UI Polish): Introducerar on-demand fetch för stora .json-filer för att
-#   undvika minnesproblem i byggsteget. Lade till en "Kopiera"-knapp för genererad kontext.
+# * v8.0 (Lazy Loading & UI Polish): Introducerade on-demand fetch och "Kopiera"-knapp.
+# * v9.0 (Core Docs Shortcut): Lade till en ny "Select Core Docs"-knapp för att snabbt
+#   välja en basuppsättning av viktiga styrande dokument och konfigurationsfiler, vilket
+#   effektiviserar startprocessen för en ny AI-session.
 #
 # TILLÄMPADE REGLER (Frankensteen v3.7):
 # - Denna fil följer principen om Single Responsibility: den bygger ett UI.
-# - JavaScript-koden är nu asynkron för att hantera on-demand datahämtning (lazy loading).
-# - Använder moderna webb-API:er (`fetch`, `Promise.all`, `navigator.clipboard`) för en robust lösning.
-# - UI/UX har förbättrats med tydlig feedback på knappar (laddning, kopierat, fel).
+# - JavaScript-koden är nu asynkron för att hantera on-demand datahämtning.
+# - UI/UX har förbättrats med tydlig feedback på knappar och en ny genvägsknapp.
+# - Den nya funktionen `selectCoreDocs` inkluderar logik för att expandera trädvyn, vilket
+#   förbättrar den visuella återkopplingen till användaren.
 
 import sys
 import os
@@ -145,6 +149,7 @@ def create_interactive_html(output_html_path):
     <div class="controls">
         <button id="select-all-btn">Select All</button>
         <button id="deselect-all-btn">Deselect All</button>
+        <button id="select-core-docs-btn">Select Core Docs</button>
         <button id="generate-context-btn" class="primary">Generate Context</button>
     </div>
     <div id="file-tree-container">
@@ -165,12 +170,22 @@ def create_interactive_html(output_html_path):
         // --- State ---
         let fullContext = null;
         const REPO_RAW_URL = 'https://raw.githubusercontent.com/Engrove/Engrove-Audio-Tools-2.0/main/';
+        const CORE_DOC_PATHS = [
+            'docs/AI_Collaboration_Standard.md',
+            'docs/Global_UI-Standard_Komponentspecifikation.md',
+            'docs/Project_Documentation_Index.md',
+            'package.json',
+            'vite.config.js',
+            'src/app/router.js',
+            'src/app/styles/_tokens.css'
+        ];
 
         // --- DOM Elements ---
         const fileTreeContainer = document.getElementById('file-tree-container');
         const outputPre = document.getElementById('output-pre');
         const selectAllBtn = document.getElementById('select-all-btn');
         const deselectAllBtn = document.getElementById('deselect-all-btn');
+        const selectCoreDocsBtn = document.getElementById('select-core-docs-btn');
         const generateBtn = document.getElementById('generate-context-btn');
         const copyBtn = document.getElementById('copy-json-btn');
         const downloadBtn = document.getElementById('download-json-btn');
@@ -214,19 +229,38 @@ def create_interactive_html(output_html_path):
             parentElement.appendChild(ul);
             return ul;
         }
+
+        function selectCoreDocs() {
+            // 1. Avmarkera allt för ett rent tillstånd
+            fileTreeContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            
+            // 2. Markera kärndokumenten
+            CORE_DOC_PATHS.forEach(path => {
+                const checkbox = fileTreeContainer.querySelector(`input[data-path="${path}"]`);
+                if (checkbox) {
+                    checkbox.checked = true;
+
+                    // 3. Expandera överordnade mappar
+                    let parent = checkbox.closest('li.folder');
+                    while(parent) {
+                        const nestedUl = parent.querySelector('ul');
+                        const toggle = parent.querySelector('.toggle');
+                        if (nestedUl && toggle) {
+                            nestedUl.style.display = 'block';
+                            toggle.textContent = '▼';
+                        }
+                        parent = parent.parentElement.closest('li.folder');
+                    }
+                }
+            });
+        }
         
         async function fetchFileContent(path) {
             try {
                 const response = await fetch(`${REPO_RAW_URL}${path}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error ${response.status}`);
-                }
-                // Om det är en JSON-fil, försök att parsa den. Annars, returnera som text.
-                if (path.endsWith('.json')) {
-                    return await response.json();
-                } else {
-                    return await response.text();
-                }
+                if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+                if (path.endsWith('.json')) return await response.json();
+                return await response.text();
             } catch (error) {
                 console.error(`Failed to fetch content for ${path}:`, error);
                 return `// Error: Failed to fetch content for ${path}`;
@@ -244,9 +278,7 @@ def create_interactive_html(output_html_path):
                     if (item.type === 'file') {
                         const isSelected = selectedPaths.has(item.path);
                         const stub = JSON.parse(JSON.stringify(item));
-                        
                         if (isSelected && item.content === null) {
-                            // On-demand fetch
                             contentPromises.push(fetchFileContent(item.path));
                             itemsToPopulate.push({ a: stub, b: item.path });
                         } else if (!isSelected) {
@@ -254,30 +286,23 @@ def create_interactive_html(output_html_path):
                         }
                         dest[key] = stub;
                     } else {
-                        // Directory
                         dest[key] = {};
                         traverse(item, dest[key]);
                     }
                 }
             }
-
             traverse(sourceNode, newNode);
-            
             const fetchedContents = await Promise.all(contentPromises);
-
             itemsToPopulate.forEach((item, index) => {
                 item.a.content = fetchedContents[index];
             });
-
             return newNode;
         }
 
         async function generateSelectedContext() {
             if (!fullContext) return;
-
             generateBtn.disabled = true;
             generateBtn.textContent = 'Generating...';
-
             try {
                 const selectedPaths = new Set(Array.from(fileTreeContainer.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.dataset.path));
                 const newContext = {
@@ -286,7 +311,6 @@ def create_interactive_html(output_html_path):
                     project_documentation: {},
                     file_structure: {}
                 };
-
                 if (fullContext.project_documentation) {
                     for (const docKey in fullContext.project_documentation) {
                         if (selectedPaths.has(`docs/${docKey}`)) {
@@ -294,13 +318,10 @@ def create_interactive_html(output_html_path):
                         }
                     }
                 }
-                
                 newContext.file_structure = await buildNewContextStructure(fullContext.file_structure, selectedPaths);
-                
                 outputPre.textContent = JSON.stringify(newContext, null, 2);
                 copyBtn.disabled = false;
                 downloadBtn.disabled = false;
-
             } catch (error) {
                 outputPre.textContent = `An error occurred during context generation: ${error.message}`;
                 console.error(error);
@@ -311,7 +332,6 @@ def create_interactive_html(output_html_path):
         }
 
         // --- Event Listeners ---
-
         fileTreeContainer.addEventListener('click', (e) => {
             const target = e.target;
             if (target.classList.contains('toggle')) {
@@ -332,6 +352,7 @@ def create_interactive_html(output_html_path):
 
         selectAllBtn.addEventListener('click', () => fileTreeContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true));
         deselectAllBtn.addEventListener('click', () => fileTreeContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false));
+        selectCoreDocsBtn.addEventListener('click', selectCoreDocs);
         generateBtn.addEventListener('click', generateSelectedContext);
 
         copyBtn.addEventListener('click', () => {
@@ -366,7 +387,6 @@ def create_interactive_html(output_html_path):
         });
         
         // --- Initialization ---
-
         fetch('context.json')
             .then(response => { if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`); return response.json(); })
             .then(data => {
