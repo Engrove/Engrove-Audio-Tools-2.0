@@ -62,4 +62,4 @@ if __name__ == "__main__":
     input_file = sys.argv[1]
     output_file = sys.argv[2]
     
-    wrap_json_in_html(input_file, output_file)```
+    wrap_json_in_html(input_file, output_file)
