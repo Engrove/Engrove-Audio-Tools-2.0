@@ -3,15 +3,9 @@
 # HISTORIK:
 # * v1.0 (Initial): Basversion för att hämta filstruktur och kommentarer.
 # * v2.0 (Post-Tribunal): Kraftigt omskriven efter "Help me God"-granskning.
-#   - LÄGGER TILL: Hantering av GITHUB_TOKEN för att undvika rate limiting.
-#   - LÄGGER TILL: Extrahering av filberoenden (imports/requires) för rikare kontext.
-#   - FIXAR: Separerar loggutdata (stderr) från dataoutput (stdout) för att förhindra korrupt JSON.
-#   - FÖRBÄTTRAR: Robust felhantering runt alla nätverksanrop.
-#   - REFAKTORISERAR: Koden är uppdelad i tydligare funktioner.
-# * v3.0 (Binary File Handling):
-#   - LÄGGER TILL: En lista med binära filändelser för att undvika att läsa deras innehåll.
-#   - FIXAR: Skriptet försöker inte längre extrahera kommentarer/beroenden från binära filer.
-#   - FÖRBÄTTRAR: JSON-output för binära filer är nu ren och innehåller en "is_binary": true flagga.
+# * v3.0 (Binary File Handling): Lade till hantering av binära filer.
+# * v4.0 (AI.md Integration): Lade till stöd för att hämta en extern AI-instruktionsfil.
+#   - ÄNDRING: Letar nu efter AI.md istället för AI_TEXT.md.
 #
 # TILLÄMPADE REGLER (Frankensteen v3.7):
 # - Denna fil följer principerna om "Explicit Alltid" och robust felhantering.
@@ -28,24 +22,17 @@ import sys
 # --- Konfiguration ---
 REPO = "Engrove/Engrove-Audio-Tools-2.0"
 BRANCH = "main"
-AI_TEXT_MD_PATH = "AI_TEXT.md"
+AI_MD_PATH = "AI.md"  # Ändrad för att matcha din förfrågan
 
 # Lista över filändelser som ska behandlas som binära och vars innehåll inte ska läsas.
 BINARY_EXTENSIONS = {
-    # Bilder
     'png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'ico', 'bmp', 'tiff',
-    # Typsnitt
     'woff', 'woff2', 'eot', 'ttf', 'otf',
-    # Arkiv
     'zip', 'gz', 'tar', 'rar', '7z',
-    # Dokument
     'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx',
-    # Ljud & Video
     'mp3', 'wav', 'ogg', 'mp4', 'mov', 'avi', 'mkv',
-    # Andra
     'pyc', 'pyd', 'so', 'dll', 'exe', 'bin', 'dat'
 }
-
 
 # --- Reguljära uttryck för analys ---
 COMMENT_PATTERNS = [
@@ -88,7 +75,7 @@ def get_session_headers():
     """Skapar headers för API-anrop. Använder GITHUB_TOKEN om det finns."""
     token = os.getenv('GITHUB_TOKEN')
     headers = {
-        'User-Agent': 'Python-Context-Generator/3.0',
+        'User-Agent': 'Python-Context-Generator/4.0',
         'Accept': 'application/vnd.github.v3+json'
     }
     if token:
@@ -114,7 +101,6 @@ def get_raw_file_content(path, headers):
     try:
         response = requests.get(url, headers={'User-Agent': headers['User-Agent']})
         response.raise_for_status()
-        # Försök att avkoda som UTF-8, men fall tillbaka om det misslyckas
         return response.content.decode('utf-8', 'ignore')
     except requests.exceptions.RequestException:
         log_message("WARN", f"Kunde inte läsa filen: {path}")
@@ -146,7 +132,6 @@ def main():
         file_extension = path.split('.')[-1].lower() if '.' in path else ''
         is_binary = file_extension in BINARY_EXTENSIONS
 
-        # Bygg upp trädstrukturen i JSON
         path_parts = path.split('/')
         current_level = file_structure
         for part in path_parts[:-1]:
@@ -172,7 +157,7 @@ def main():
 
         current_level[path_parts[-1]] = file_data
 
-    ai_static_context = get_raw_file_content(AI_TEXT_MD_PATH, headers)
+    ai_static_context = get_raw_file_content(AI_MD_PATH, headers)
 
     final_context = {
         "project_overview": {
