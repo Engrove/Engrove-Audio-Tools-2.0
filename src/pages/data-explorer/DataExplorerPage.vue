@@ -1,13 +1,22 @@
 <!-- src/pages/data-explorer/DataExplorerPage.vue -->
 <template>
   <div class="data-explorer-container">
-    <div v-if="isLoading" class="loading-placeholder">
+    <!-- 1. Laddningsläge -->
+    <div v-if="isLoading" class="placeholder-wrapper">
       <p>Loading data...</p>
     </div>
+    
+    <!-- 2. Felläge -->
+    <div v-else-if="error" class="placeholder-wrapper error">
+      <p>Failed to load data.</p>
+      <p class="error-details">{{ error }}</p>
+      <BaseButton @click="explorerStore.initializeData()">Try Again</BaseButton>
+    </div>
+
+    <!-- 3. Normalläge -->
     <div v-else class="data-explorer-page">
       <DataFilterPanel />
 
-      <!-- Platshållare när inga filter har applicerats -->
       <div v-if="isPristine" class="results-placeholder-wrapper">
         <div class="results-placeholder">
           <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M20 17.58A5 5 0 0 0 15 8l-6.4 6.4a5 5 0 1 0 7.8 7.8L20 17.58z"></path></svg>
@@ -50,12 +59,12 @@
 // =============================================
 // File history
 // =============================================
-// * 2025-08-05: (CODE RED FIX by Frankensteen) Tog bort det felaktiga `if (isPristine.value)`-villkoret som orsakade en logisk deadlock och hindrade data från att laddas. `initializeData()` anropas nu ovillkorligt.
-// * 2025-08-05: (Fix by Frankensteen) Total omstrukturering. Lade till `v-if` på `isLoading` för att definitivt lösa race condition-felet.
+// * 2025-08-05: (CODE RED FIX by Frankensteen) Lade till ett `v-else-if="error"` block för att visa ett felmeddelande om dataladdningen misslyckas. Detta gör UI:t robust och informativt.
+// * 2025-08-05: Tog bort deadlock-villkor från onMounted.
 //
 // === TILLÄMPADE REGLER (Frankensteen v3.7) ===
-// - "Help me God"-protokollet har använts för att identifiera och lösa en kritisk logisk deadlock.
-// - Felresiliens: Deadlocken är bruten, vilket garanterar att data nu laddas.
+// - "Help me God"-protokollet har använts för att hitta grundorsaken.
+// - Felresiliens: UI:t hanterar nu tre tillstånd korrekt: laddning, fel och framgång.
 
 import { ref, onMounted, computed } from 'vue';
 import { storeToRefs } from 'pinia';
@@ -65,15 +74,14 @@ import DataFilterPanel from '@/widgets/DataFilterPanel/ui/DataFilterPanel.vue';
 import ResultsDisplay from '@/widgets/ResultsDisplay/ui/ResultsDisplay.vue';
 import ItemDetailModal from '@/features/item-details/ui/ItemDetailModal.vue';
 import ComparisonModal from '@/features/comparison-modal/ui/ComparisonModal.vue';
+import BaseButton from '@/shared/ui/BaseButton.vue';
 
-// =============================================
-// Store Initialization
-// =============================================
 const explorerStore = useExplorerStore();
 const comparisonStore = useComparisonStore();
 
 const { 
   isLoading, 
+  error,
   dataType,
   paginatedResults, 
   currentHeaders,
@@ -85,25 +93,14 @@ const {
   isPristine
 } = storeToRefs(explorerStore);
 
-// =============================================
-// Local State
-// =============================================
 const selectedItem = ref(null);
 const isModalVisible = ref(false);
 const showComparisonModal = ref(false);
 
-// =============================================
-// Lifecycle Hooks
-// =============================================
 onMounted(() => {
-  // KORRIGERING: Det felaktiga villkoret har tagits bort.
-  // Anropet MÅSTE ske ovillkorligt för att bryta deadlocken.
   explorerStore.initializeData();
 });
 
-// =============================================
-// Computed Properties for Selection
-// =============================================
 const isItemSelected = (item) => {
   return comparisonStore.isSelected(item.id);
 };
@@ -115,9 +112,6 @@ const allVisibleSelected = computed(() => {
   return paginatedResults.value.every(item => comparisonStore.isSelected(item.id));
 });
 
-// =============================================
-// Event Handlers
-// =============================================
 function handleRowClick(item) {
   selectedItem.value = item;
   isModalVisible.value = true;
@@ -153,13 +147,26 @@ function handleSelectAllVisible() {
   box-sizing: border-box;
 }
 
-.loading-placeholder {
+.placeholder-wrapper {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100%;
   font-size: var(--font-size-h3);
   color: var(--color-text-medium-emphasis);
+  text-align: center;
+}
+
+.placeholder-wrapper.error {
+  color: var(--color-text-danger);
+}
+
+.error-details {
+  font-size: var(--font-size-body);
+  color: var(--color-text-low-emphasis);
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .data-explorer-page {
