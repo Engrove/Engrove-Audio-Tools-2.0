@@ -8,6 +8,7 @@
 # * v5.0 (Project Documentation): Lade till dynamisk inläsning av alla .md-filer från en /docs-mapp.
 # * v6.0 (Restoration & Synthesis): Återställde all förlorad funktionalitet (kommentarer, beroenden, etc.)
 #   och syntetiserade den med de senaste funktionerna till en enda, komplett och korrekt version.
+# * v7.0 (Help me God Audit): Ändrat 'ignore' till 'replace' i decode för ökad robusthet.
 #
 # TILLÄMPADE REGLER (Frankensteen v3.7):
 # - Denna fil följer principerna om "Explicit Alltid" och robust felhantering.
@@ -78,7 +79,7 @@ def get_session_headers():
     """Skapar headers för API-anrop. Använder GITHUB_TOKEN om det finns."""
     token = os.getenv('GITHUB_TOKEN')
     headers = {
-        'User-Agent': 'Python-Context-Generator/6.0',
+        'User-Agent': 'Python-Context-Generator/7.0',
         'Accept': 'application/vnd.github.v3+json'
     }
     if token:
@@ -104,7 +105,8 @@ def get_raw_file_content(path, headers):
     try:
         response = requests.get(url, headers={'User-Agent': headers['User-Agent']})
         response.raise_for_status()
-        return response.content.decode('utf-8', 'ignore')
+        # KORRIGERING: 'replace' är säkrare än 'ignore' för att upptäcka encoding-fel.
+        return response.content.decode('utf-8', 'replace')
     except requests.exceptions.RequestException:
         log_message("WARN", f"Kunde inte läsa filen: {path}")
         return None
