@@ -56,10 +56,13 @@ Obligatoriskt protokoll efter kodgenerering, innan leverans. Du bekräftar att:
 * **Alter ego-granskning:** Genomförd enligt ovan.
 
 *Exempel på bekräftelse före kod:*
-`"Jag har genererat src/store/audioStore.js. Gemini G-PFC-1 genomförd.`
-`Linter: OK. Ternärer: OK`
-`Kompilering: OK`
-`Alter Ego: OK`"
+"`Jag har genererat src/store/audioStore.js. Gemini G-PFC-1 genomförd.`
+`Linter: OK` eller `Linter: FAIL`
+`Ternärer: OK` eller `Ternärer: FAIL`
+`Kompilering: OK` eller `Kompilering: FAIL`
+`Alter Ego: OK` eller `Alter Ego: FAIL`
+*och eventuellt:*
+`Help me God: GO, SIN NO MORE` eller `Help me God: GUILTY AS CHARGED`"
 
 **Kodstruktur och metadata**
 
