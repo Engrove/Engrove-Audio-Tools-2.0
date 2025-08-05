@@ -4,16 +4,17 @@
 # * v1.0 (Initial): Första versionen.
 # * v2.0 (Bug Fix): Felaktig implementation med str.format().
 # * v3.0 (Definitive Fix): Implementerar html.escape() och <pre>-tagg.
-# * v4.0 (UI Enhancement): Lade till kopiera/ladda ner knappar för den fullständiga kontexten.
-# * v5.0 (Full Interactive UI): Total omskrivning för att implementera en fullständigt interaktiv
-#   "Context Builder". Filen genererar nu en statisk HTML-sida med all nödvändig JavaScript
-#   för att asynkront ladda, rendera och filtrera kontextdatan.
+# * v4.0 (UI Enhancement): Lade till kopiera/ladda ner knappar.
+# * v5.0 (Full Interactive UI): Total omskrivning för ett interaktivt "Context Builder" UI.
+# * v6.0 (Stub/Full Logic): Implementerade den nya kärnlogiken. "Generate Context" skapar nu en
+#   fullständig filstruktur där omarkerade filer inkluderas som "stubs" (metadata utan
+#   källkod) och markerade filer inkluderas med fullständigt innehåll.
 #
 # TILLÄMPADE REGLER (Frankensteen v3.7):
 # - Denna fil följer principen om Single Responsibility: den bygger ett UI.
 # - Ingen databearbetning sker i Python. All logik ligger i det inbäddade JavaScriptet.
 # - JavaScript-koden är skriven för att vara robust, med felhantering och effektiv event-delegering.
-# - All kod är självförklarande med tydliga funktionsnamn och kommentarer.
+# - Kärnlogiken för kontextbygge är nu rekursiv och hanterar djupkopiering för att undvika sidoeffekter.
 
 import sys
 import os
@@ -223,22 +224,38 @@ def create_interactive_html(output_html_path):
             parentElement.appendChild(ul);
             return ul;
         }
-
+        
         /**
-         * Traverses the fullContext object and sets a value at a deep path,
-         * creating nested objects as needed.
-         * @param {object} obj - The object to modify.
-         * @param {string} path - The path string (e.g., "src/components/file.js").
-         * @param {*} value - The value to set at the destination.
+         * Recursively builds the new file_structure object based on user selections.
+         * @param {object} sourceNode - The current node from the original fullContext.file_structure.
+         * @param {Set<string>} selectedPaths - A set of all paths that are checked.
+         * @returns {object} The new node for the generated context.
          */
-        function deepSet(obj, path, value) {
-            const parts = path.split('/');
-            let current = obj;
-            for (let i = 0; i < parts.length - 1; i++) {
-                current = current[parts[i]] = current[parts[i]] || {};
+        function buildNewContextStructure(sourceNode, selectedPaths) {
+            const newNode = {};
+
+            for (const key in sourceNode) {
+                const item = sourceNode[key];
+                
+                if (item.type === 'file') {
+                    // This is a file node
+                    if (selectedPaths.has(item.path)) {
+                        // ** Full copy: File is selected, include everything **
+                        newNode[key] = JSON.parse(JSON.stringify(item));
+                    } else {
+                        // ** Stub copy: File is not selected, omit content **
+                        const stub = JSON.parse(JSON.stringify(item));
+                        delete stub.content; // The critical operation
+                        newNode[key] = stub;
+                    }
+                } else {
+                    // This is a directory node, recurse deeper
+                    newNode[key] = buildNewContextStructure(item, selectedPaths);
+                }
             }
-            current[parts[parts.length - 1]] = value;
+            return newNode;
         }
+
 
         /**
          * Generates a new context object based on the selected checkboxes.
@@ -246,9 +263,10 @@ def create_interactive_html(output_html_path):
         function generateSelectedContext() {
             if (!fullContext) return;
 
-            const selectedPaths = Array.from(
-                fileTreeContainer.querySelectorAll('input[type="checkbox"]:checked')
-            ).map(cb => cb.dataset.path);
+            const selectedPaths = new Set(
+                Array.from(fileTreeContainer.querySelectorAll('input[type="checkbox"]:checked'))
+                .map(cb => cb.dataset.path)
+            );
             
             // Start with a clean context, preserving top-level info
             const newContext = {
@@ -258,39 +276,18 @@ def create_interactive_html(output_html_path):
                 file_structure: {}
             };
 
-            const selectedFiles = new Set();
-            selectedPaths.forEach(path => {
-                const parts = path.split('/');
-                let currentReadNode = fullContext.file_structure;
-                
-                // Find the node in the original structure
-                for (const part of parts) {
-                    if (currentReadNode) currentReadNode = currentReadNode[part];
-                }
-
-                if (currentReadNode) {
-                     // If it's a file, add it to the new file_structure
-                    if (currentReadNode.type === 'file') {
-                        selectedFiles.add(path);
-                    }
-                    // If it's a documentation file, add it to newContext
-                    if (path.startsWith('docs/') && fullContext.project_documentation[path.split('/')[1]]) {
-                        newContext.project_documentation[path.split('/')[1]] = fullContext.project_documentation[path.split('/')[1]];
+            // Rebuild the documentation object, only including selected docs
+            if (fullContext.project_documentation) {
+                for (const docKey in fullContext.project_documentation) {
+                    const docPath = `docs/${docKey}`;
+                    if (selectedPaths.has(docPath)) {
+                        newContext.project_documentation[docKey] = fullContext.project_documentation[docKey];
                     }
                 }
-            });
-
-            // Rebuild the file_structure with only selected files
-            selectedFiles.forEach(path => {
-                 const parts = path.split('/');
-                 let currentReadNode = fullContext.file_structure;
-                 for (const part of parts) {
-                    if (currentReadNode) currentReadNode = currentReadNode[part];
-                 }
-                 if(currentReadNode) {
-                    deepSet(newContext.file_structure, path, currentReadNode);
-                 }
-            });
+            }
+            
+            // Recursively build the new file structure with stub/full logic
+            newContext.file_structure = buildNewContextStructure(fullContext.file_structure, selectedPaths);
             
             outputPre.textContent = JSON.stringify(newContext, null, 2);
             downloadBtn.disabled = false;
