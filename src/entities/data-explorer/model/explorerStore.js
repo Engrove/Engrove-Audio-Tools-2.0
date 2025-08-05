@@ -20,6 +20,7 @@
 // - setPage(page): Hanterar paginering.
 //
 // === HISTORIK ===
+// * 2025-08-05: (Fix av Frankensteen) Korrigerat import från `filters.js`. Importerar och använder nu de två separata funktionerna `applyFilters` och `applySorting` korrekt.
 // * 2025-08-05: (Fix av Frankensteen) Korrigerat importnamnet för transformationsfunktionen från `transformer.js` för att matcha den exporterade funktionen `transformAndClassifyData`.
 // * 2025-08-05: (Fix av Frankensteen) Korrigerat ett kritiskt byggfel. Filen hade av misstag blivit helt överskriven med Vue-komponentkod från `DataFilterPanel.vue`. Innehållet har återställts till sin korrekta Pinia store-implementation.
 // * 2024-08-04: (UPPDRAG 22) Helt refaktorerad för att centralisera all logik för headers, filter och resultatberäkning.
@@ -28,14 +29,13 @@
 // === TILLÄMPADE REGLER (Frankensteen v3.7) ===
 // - Fullständig kod, alltid: Filen är komplett och återställd.
 // - Obligatorisk Refaktorisering: Den korrekta, refaktorerade Pinia-logiken har återinförts.
-// - Syntax- och Linter-simulering: All HTML-syntax har tagits bort. Filen innehåller nu endast giltig JavaScript.
-// - API-kontraktsverifiering: Kontraktet som definieras ovan är nu korrekt implementerat av storen.
+// - API-kontraktsverifiering: Kontraktet med `filters.js` och `transformer.js` är nu uppfyllt.
 
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { fetchExplorerData } from '../api/fetchExplorerData.js';
-import { transformAndClassifyData } from '../lib/transformer.js'; // Korrigerad import
-import { filterAndSortItems } from '../lib/filters.js';
+import { transformAndClassifyData } from '../lib/transformer.js';
+import { applyFilters, applySorting } from '../lib/filters.js'; // Korrigerad import
 
 export const useExplorerStore = defineStore('explorer', () => {
   // --- State ---
@@ -143,20 +143,21 @@ export const useExplorerStore = defineStore('explorer', () => {
 
   const currentTransformedData = computed(() => {
     if (!dataType.value) return [];
-    // Korrigerat funktionsanrop
     return transformAndClassifyData(currentRawData.value, currentClassifications.value);
   });
   
   const currentResults = computed(() => {
     if (!dataType.value) return [];
-    return filterAndSortItems(
+    
+    // Korrigerad logik: applicera filter först, sedan sortering
+    const filtered = applyFilters(
       currentTransformedData.value,
       searchTerm.value,
       categoryFilters.value,
-      numericFilters.value,
-      sortKey.value,
-      sortOrder.value
+      numericFilters.value
     );
+    
+    return applySorting(filtered, sortKey.value, sortOrder.value);
   });
 
   const totalResults = computed(() => currentResults.value.length);
