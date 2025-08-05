@@ -14,12 +14,13 @@
 // - currentResults, paginatedResults, totalResults, totalPages: Beräknade resultat för visning.
 // ACTIONS:
 // - initializeData(): Hämtar all initial data.
-// - setDataType(type): Växlar mellan 'tonearms' och 'cartridges'.
+// - setDataType(type): Växlar mellan 'tonarmar' och 'cartridges'.
 // - resetFilters(): Återställer alla filter.
 // - setSort(key): Hanterar sortering av tabellen.
 // - setPage(page): Hanterar paginering.
 //
 // === HISTORIK ===
+// * 2025-08-05: (Fix av Frankensteen) Infört robust hantering av initial state. `dataType` sätts nu som standard efter dataladdning, och `computed` properties skyddas mot `null` värden för att förhindra `TypeError`.
 // * 2025-08-05: (Fix av Frankensteen) Korrigerat `TypeError` i `availableFilters`. Logiken hanterar nu `undefined` klassificeringar och pekar korrekt på den nästlade `categories`-arrayen.
 // * 2025-08-05: (Fix av Frankensteen) Korrigerat import från `filters.js`. Importerar och använder nu de två separata funktionerna `applyFilters` och `applySorting` korrekt.
 // * 2025-08-05: (Fix av Frankensteen) Korrigerat importnamnet för transformationsfunktionen från `transformer.js` för att matcha den exporterade funktionen `transformAndClassifyData`.
@@ -29,8 +30,8 @@
 //
 // === TILLÄMPADE REGLER (Frankensteen v3.7) ===
 // - Fullständig kod, alltid: Filen är komplett.
-// - Red Team Alter Ego-granskning: Den kritiska "TypeError" har analyserats och en robust lösning har implementerats.
-// - Felresiliens: `availableFilters` är nu motståndskraftig mot race conditions och ofullständig data.
+// - Red Team Alter Ego-granskning: Grundorsaken till `TypeError` (race condition vid initiering) har identifierats och åtgärdats.
+// - Felresiliens: Alla `computed` är nu motståndskraftiga mot `null` state under initialisering.
 
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
@@ -108,6 +109,12 @@ export const useExplorerStore = defineStore('explorer', () => {
       filtersMap.value = data.filtersMap;
       translationMap.value = data.translationMap;
 
+      // KORRIGERING: Sätt ett standardvärde efter att datan har laddats
+      // för att undvika att appen startar i ett tomt tillstånd.
+      if (!dataType.value) {
+        dataType.value = 'cartridges';
+      }
+
       error.value = null;
     } catch (e) {
       console.error('Failed to initialize explorer store:', e);
@@ -119,10 +126,14 @@ export const useExplorerStore = defineStore('explorer', () => {
 
   // --- Getters (Computed) ---
   const currentRawData = computed(() => {
+    // KORRIGERING: Skyddsvillkor
+    if (!dataType.value) return [];
     return dataType.value === 'tonearms' ? tonearmsData.value : cartridgesData.value;
   });
 
   const currentClassifications = computed(() => {
+    // KORRIGERING: Skyddsvillkor
+    if (!dataType.value) return {};
     return dataType.value === 'tonearms' ? tonearmsClassifications.value : cartridgesClassifications.value;
   });
 
@@ -130,14 +141,12 @@ export const useExplorerStore = defineStore('explorer', () => {
     if (!dataType.value || !filtersMap.value[dataType.value]) return [];
     
     return filtersMap.value[dataType.value].categorical.map(filter => {
-      // KORRIGERING: Hämta klassificeringsgruppen och säkerställ att den existerar.
       const classificationGroup = currentClassifications.value[filter.key];
       
       return {
         ...filter,
         options: [
           { value: '', text: `Any ${filter.label}` },
-          // KORRIGERING: Sprid den nästlade 'categories'-arrayen och ha en fallback.
           ...(classificationGroup ? classificationGroup.categories : [])
         ]
       };
@@ -150,11 +159,13 @@ export const useExplorerStore = defineStore('explorer', () => {
   });
 
   const currentTransformedData = computed(() => {
+    // KORRIGERING: Skyddsvillkor
     if (!dataType.value) return [];
     return transformAndClassifyData(currentRawData.value, currentClassifications.value);
   });
   
   const currentResults = computed(() => {
+    // KORRIGERING: Skyddsvillkor
     if (!dataType.value) return [];
     
     const filtered = applyFilters(
