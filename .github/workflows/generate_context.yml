@@ -71,7 +71,7 @@ jobs:
       - name: Generate and Wrap Context Data
         id: generate
         run: |
-          # Steg 1: Generera den råa JSON-datan och kontrollera att skriptet lyckas.
+          # Steg 1: Generera den råa JSON-datan
           if ! python scripts/generate_full_context.py > ${{ env.SITE_DIR }}/${{ env.CONTEXT_FILE_JSON }} 2> generation.log; then
             echo "[ERROR] Python-skriptet för kontextgenerering misslyckades. Se logg nedan:"
             cat generation.log
@@ -80,27 +80,26 @@ jobs:
           fi
           echo "[INFO] Rå context.json genererades framgångsrikt."
 
-          # Steg 2: Använd en "here document" (<<'EOF') för att säkert skicka ett Python-skript
-          # via stdin. Detta är den robusta metoden som undviker alla syntaxproblem.
-          python - <<'EOF'
+          # Steg 2: Omsluta JSON i HTML med korrekt Python-indrag
+          python - "${{ env.SITE_DIR }}" "${{ env.CONTEXT_FILE_JSON }}" "${{ env.CONTEXT_FILE_HTML }}" <<'EOF'
 import sys
+import json
 from pathlib import Path
 
-# Hämta miljövariabler som skickats från shellen
-site_dir_str = sys.argv[1]
-json_filename = sys.argv[2]
-html_filename = sys.argv[3]
+# Hämta argument
+site_dir = Path(sys.argv[1])
+json_file = sys.argv[2]
+html_file = sys.argv[3]
 
-site_dir = Path(site_dir_str)
-json_path = site_dir / json_filename
-html_path = site_dir / html_filename
+json_path = site_dir / json_file
+html_path = site_dir / html_file
 
 html_template = """<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>AI Context Data</title>
-    <style>body {{ font-family: monospace; white-space: pre; word-wrap: break-word; }}</style>
+    <style>body { font-family: monospace; white-space: pre; word-wrap: break-word; }</style>
 </head>
 <body>
 {json_content}
@@ -108,17 +107,21 @@ html_template = """<!DOCTYPE html>
 </html>"""
 
 try:
-    json_content = json_path.read_text(encoding='utf-8')
-    # Innehållet placeras direkt i body. CSS-regeln 'white-space: pre'
-    # ser till att formateringen (inklusive radbrytningar) bevaras.
-    final_html = html_template.format(json_content=json_content)
-    html_path.write_text(final_html, encoding='utf-8')
-    print(f'[INFO] Omslutning av JSON i {html_path} lyckades.')
+    # Läs JSON-filen
+    with open(json_path, 'r', encoding='utf-8') as f:
+        json_content = f.read()
+    
+    # Skapa HTML-fil
+    with open(html_path, 'w', encoding='utf-8') as f:
+        f.write(html_template.format(json_content=json_content))
+    
+    print(f'[INFO] Omslutning av JSON i HTML lyckades: {html_path}')
 except Exception as e:
     print(f'[ERROR] Misslyckades att omsluta JSON i HTML: {e}', file=sys.stderr)
     sys.exit(1)
 EOF
-          # Slutgiltig kontroll och sätt output för nästa jobb.
+
+          # Slutgiltig kontroll
           if [ -f "${{ env.SITE_DIR }}/${{ env.CONTEXT_FILE_HTML }}" ]; then
             echo "[INFO] context.html skapad. Byggsteget lyckades."
             echo "success=true" >> $GITHUB_OUTPUT
