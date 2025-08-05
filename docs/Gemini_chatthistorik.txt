@@ -2248,3 +2248,23 @@ Kronologisk Projekthistorik: Session 23.2
     10. `Gemini_Chatthistorik.txt` (formaliserad med header, innehåll bevarat)
 *   Engrove (Uppdragsgivare): Upptäcker att AI:n börjar korta ner sina svar, vilket är ett tecken på kontextdegradering. Beslutar att avsluta sessionen och begär de slutgiltiga rapporterna för "Steg 23.2".
 *   AI (Expert-programmerare): Bekräftar beslutet och genererar den begärda ByggLogg-rapporten samt denna kronologiska historik.
+
+---
+
+Kronologisk Projekthistorik: Session 23.3
+
+*   **Engrove (Uppdragsgivare):** Inleder sessionen med att ge direktiv om att vidareutveckla AI Context Builder. Presenterar fyra specifika krav: 1) En textruta för JSON-instruktioner. 2) Automatisk ikryssning av filer baserat på JSON-innehåll. 3) Förbättrade, filtypsspecifika ikoner. 4) En modal för att förhandsgranska filinnehåll.
+*   **AI (Expert-programmerare):** Bekräftar förståelsen för kraven. Analyserar den befintliga koden och presenterar en detaljerad, fyrstegsplan för att implementera samtliga funktioner genom att modifiera ett enda skript: `scripts/wrap_json_in_html.py`.
+*   **Engrove (Uppdragsgivare):** Godkänner planen.
+*   **AI (Expert-programmerare):** Levererar den uppdaterade och verifierade koden för `scripts/wrap_json_in_html.py` som innehåller alla fyra nya funktioner.
+*   **Engrove (Uppdragsgivare):** Rapporterar ett kritiskt byggfel. Bifogar en komplett bygglogg från GitHub Actions som visar ett `SyntaxError: invalid syntax` i den nyligen levererade filen.
+*   **AI (Expert-programmerare):** Initierar felsökningsprotokoll. Identifierar omedelbart grundorsaken: ett grundläggande misstag där JavaScript-kommentarer (`//`) använts i en Python-fil. Ber om ursäkt för slarvfelet och levererar en korrigerad version av `scripts/wrap_json_in_html.py` med korrekt syntax (`#`).
+*   **Engrove (Uppdragsgivare):** Ber om ett exempel på en JSON-fil för att kunna testa den nya funktionen för automatisk ikryssning.
+*   **AI (Expert-programmerare):** Levererar ett exempel på en JSON-struktur med en `filesToSelect`-nyckel.
+*   **Engrove (Uppdragsgivare):** Bekräftar att funktionen fungerar men ger tre punkter med förbättringsfeedback: 1) Filnamnsmatchningen ska vara skiftlägesokänslig. 2) Partiella sökvägar (t.ex. `App.vue`) ska fungera. 3) Funktionen ska vara additiv och inte avmarkera redan valda filer.
+*   **AI (Expert-programmerare):** Bekräftar förståelsen för de nya kraven. Presenterar en reviderad plan för att skriva om matchningslogiken i JavaScript för att uppfylla alla tre punkter.
+*   **Engrove (Uppdragsgivare):** Godkänner den reviderade planen.
+*   **AI (Expert-programmerare):** Levererar den slutgiltiga, uppdaterade versionen av `scripts/wrap_json_in_html.py` med den nya, mer robusta matchningslogiken.
+*   **Engrove (Uppdragsgivare):** Initierar ett nytt metauppdrag: att skapa ett nytt "EXTRA PROTOKOLL" för `AI.md`-instruktionen som formellt definierar hur JSON-strukturen för den nya funktionen ska se ut.
+*   **AI (Expert-programmerare):** Accepterar uppdraget och levererar ett färdigformaterat Markdown-block, "EXTRA PROTOKOLL: 'KONTEXT-JSON FÖR NÄSTA SESSION' (Version 1.0)", redo att klistras in i instruktionsfilen.
+*   **Engrove (Uppdragsgivare):** Ger det avslutande kommandot för sessionen: att läsa in den befintliga `Gemini_chatthistorik.txt` och generera en ny ByggLogg-post (Steg 23.3) samt denna kronologiska historik.
