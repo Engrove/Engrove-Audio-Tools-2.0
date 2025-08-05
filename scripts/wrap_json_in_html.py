@@ -27,7 +27,7 @@ def generate_builder_html(output_html_path):
     <meta charset="UTF-8">
     <title>AI Context Builder</title>
     <style>
-        :root {{
+        :root {
             --bg-color: #1e1e1e;
             --text-color: #e0e0e0;
             --primary-color: #58a6ff;
@@ -36,8 +36,8 @@ def generate_builder_html(output_html_path):
             --surface-hover: #3c3c3c;
             --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             --font-mono: "JetBrains Mono", "SF Mono", "Consolas", "Liberation Mono", "Menlo", monospace;
-        }}
-        body {{
+        }
+        body {
             margin: 0;
             font-family: var(--font-main);
             background-color: var(--bg-color);
@@ -45,21 +45,21 @@ def generate_builder_html(output_html_path):
             display: flex;
             height: 100vh;
             overflow: hidden;
-        }}
-        .sidebar {{
+        }
+        .sidebar {
             width: 40%;
             min-width: 300px;
             max-width: 600px;
             display: flex;
             flex-direction: column;
             border-right: 1px solid var(--border-color);
-        }}
-        .main-content {{
+        }
+        .main-content {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-        }}
-        .controls, .output-controls {{
+        }
+        .controls, .output-controls {
             padding: 12px;
             background-color: var(--surface-color);
             border-bottom: 1px solid var(--border-color);
@@ -67,8 +67,8 @@ def generate_builder_html(output_html_path):
             flex-wrap: wrap;
             gap: 10px;
             flex-shrink: 0;
-        }}
-        button {{
+        }
+        button {
             font-size: 14px;
             padding: 8px 16px;
             border-radius: 6px;
@@ -77,44 +77,44 @@ def generate_builder_html(output_html_path):
             background-color: var(--surface-hover);
             color: var(--text-color);
             transition: background-color 0.2s;
-        }}
-        button:hover {{ background-color: #4a4a4a; }}
-        button:active {{ background-color: #5a5a5a; }}
-        button.primary {{
+        }
+        button:hover { background-color: #4a4a4a; }
+        button:active { background-color: #5a5a5a; }
+        button.primary {
             background-color: var(--primary-color);
             color: var(--bg-color);
             font-weight: bold;
-        }}
-        button.primary:hover {{ background-color: #82baff; }}
-        #file-tree-container {{
+        }
+        button.primary:hover { background-color: #82baff; }
+        #file-tree-container {
             overflow-y: auto;
             flex-grow: 1;
             padding: 10px;
-        }}
-        #file-tree ul {{
+        }
+        #file-tree ul {
             list-style: none;
             padding-left: 20px;
             margin: 0;
-        }}
-        #file-tree li {{ margin: 4px 0; }}
-        #file-tree label {{
+        }
+        #file-tree li { margin: 4px 0; }
+        #file-tree label {
             cursor: pointer;
             display: flex;
             align-items: center;
-        }}
-        #file-tree label:hover {{ background-color: rgba(255, 255, 255, 0.05); }}
-        .folder-toggle {{
+        }
+        #file-tree label:hover { background-color: rgba(255, 255, 255, 0.05); }
+        .folder-toggle {
             cursor: pointer;
             margin-right: 5px;
             width: 1em;
             display: inline-block;
-        }}
-        .file-icon {{ margin-right: 5px; width: 1em; display: inline-block; opacity: 0.6; }}
-        #output-container {{
+        }
+        .file-icon { margin-right: 5px; width: 1em; display: inline-block; opacity: 0.6; }
+        #output-container {
             flex-grow: 1;
             position: relative;
-        }}
-        #output-pre {{
+        }
+        #output-pre {
             position: absolute;
             top: 0;
             left: 0;
@@ -129,9 +129,9 @@ def generate_builder_html(output_html_path):
             overflow-y: auto;
             border: none;
             color: var(--text-color);
-        }}
-        .status {{ padding: 10px; font-style: italic; color: #aaa; }}
-        .hidden {{ display: none; }}
+        }
+        .status { padding: 10px; font-style: italic; color: #aaa; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
@@ -158,7 +158,7 @@ def generate_builder_html(output_html_path):
 </main>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {{
+    document.addEventListener('DOMContentLoaded', () => {
         // Global state
         let fullContext = null;
 
@@ -168,24 +168,24 @@ def generate_builder_html(output_html_path):
         const outputPre = document.getElementById('output-pre');
         
         // --- 1. Data Fetching ---
-        async function fetchContext() {{
-            try {{
+        async function fetchContext() {
+            try {
                 const response = await fetch('context.json');
-                if (!response.ok) {{
+                if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
-                }}
+                }
                 fullContext = await response.json();
                 statusEl.classList.add('hidden');
                 fileTreeContainer.classList.remove('hidden');
                 renderFileTree();
-            }} catch (e) {{
+            } catch (e) {
                 statusEl.textContent = `Failed to load context.json: ${e.message}`;
                 statusEl.style.color = '#ff8a8a';
-            }}
-        }}
+            }
+        }
 
         // --- 2. UI Rendering ---
-        function renderFileTree() {{
+        function renderFileTree() {
             const treeRoot = document.createElement('ul');
             
             // First, add docs
@@ -198,9 +198,9 @@ def generate_builder_html(output_html_path):
             
             fileTreeContainer.innerHTML = '';
             fileTreeContainer.appendChild(treeRoot);
-        }}
+        }
         
-        function createNode(rootKey, obj, displayName) {{
+        function createNode(rootKey, obj, displayName) {
             const li = document.createElement('li');
             const isRootFolder = true;
 
@@ -222,28 +222,28 @@ def generate_builder_html(output_html_path):
             li.appendChild(label);
 
             const childrenUl = document.createElement('ul');
-            for (const key in obj) {{
+            for (const key in obj) {
                 const path = `${rootKey}.${key}`;
                 childrenUl.appendChild(createTreeElement(key, obj[key], path));
-            }}
+            }
             li.appendChild(childrenUl);
             
-            toggle.addEventListener('click', (e) => {{
+            toggle.addEventListener('click', (e) => {
                 e.stopPropagation();
                 childrenUl.classList.toggle('hidden');
                 toggle.textContent = childrenUl.classList.contains('hidden') ? '►' : '▼';
-            }});
+            });
 
-            checkbox.addEventListener('change', (e) => {{
-                childrenUl.querySelectorAll('input[type="checkbox"]').forEach(child => {{
+            checkbox.addEventListener('change', (e) => {
+                childrenUl.querySelectorAll('input[type="checkbox"]').forEach(child => {
                     child.checked = e.target.checked;
-                }});
-            }});
+                });
+            });
 
             return li;
-        }}
+        }
 
-        function createTreeElement(name, node, path) {{
+        function createTreeElement(name, node, path) {
             const li = document.createElement('li');
             const label = document.createElement('label');
             const checkbox = document.createElement('input');
@@ -252,12 +252,12 @@ def generate_builder_html(output_html_path):
             
             label.appendChild(checkbox);
 
-            if (node.type === 'file') {{
+            if (node.type === 'file') {
                 const icon = document.createElement('span');
                 icon.className = 'file-icon';
                 icon.textContent = '📄';
                 label.appendChild(icon);
-            }} else {{ // It's a folder (nested object)
+            } else { // It's a folder (nested object)
                 const toggle = document.createElement('span');
                 toggle.className = 'folder-toggle';
                 toggle.textContent = '►'; // Start collapsed
@@ -265,23 +265,23 @@ def generate_builder_html(output_html_path):
 
                 const childrenUl = document.createElement('ul');
                 childrenUl.classList.add('hidden'); // Start collapsed
-                for (const key in node) {{
+                for (const key in node) {
                     childrenUl.appendChild(createTreeElement(key, node[key], `${path}.${key}`));
-                }}
+                }
                 li.appendChild(childrenUl);
 
-                toggle.addEventListener('click', (e) => {{
+                toggle.addEventListener('click', (e) => {
                     e.stopPropagation();
                     childrenUl.classList.toggle('hidden');
                     toggle.textContent = childrenUl.classList.contains('hidden') ? '►' : '▼';
-                }});
+                });
                 
-                checkbox.addEventListener('change', (e) => {{
-                    childrenUl.querySelectorAll('input[type="checkbox"]').forEach(child => {{
+                checkbox.addEventListener('change', (e) => {
+                    childrenUl.querySelectorAll('input[type="checkbox"]').forEach(child => {
                         child.checked = e.target.checked;
-                    }});
-                }});
-            }}
+                    });
+                });
+            }
             
             const nameSpan = document.createElement('span');
             nameSpan.textContent = name;
@@ -289,87 +289,87 @@ def generate_builder_html(output_html_path):
             li.appendChild(label);
 
             return li;
-        }}
+        }
         
         // --- 3. Context Generation Logic ---
-        function generateSelectedContext() {{
-            if (!fullContext) {{
+        function generateSelectedContext() {
+            if (!fullContext) {
                 outputPre.textContent = 'Error: Full context not loaded.';
                 return;
-            }}
+            }
 
             const selectedPaths = Array.from(fileTreeContainer.querySelectorAll('input[type="checkbox"]:checked'))
                 .map(cb => cb.dataset.path);
 
-            const newContext = {{
+            const newContext = {
                 project_overview: fullContext.project_overview,
                 ai_instructions: fullContext.ai_instructions,
-                project_documentation: {{}},
-                file_structure: {{}}
-            }};
+                project_documentation: {}},
+                file_structure: {}}
+            };
 
-            for (const path of selectedPaths) {{
+            for (const path of selectedPaths) {
                 const parts = path.split('.');
                 const rootKey = parts[0];
                 
-                if (rootKey === 'project_documentation' && parts.length > 1) {{
+                if (rootKey === 'project_documentation' && parts.length > 1) {
                     const docKey = parts[1];
-                    if (fullContext.project_documentation[docKey]) {{
+                    if (fullContext.project_documentation[docKey]) {
                        newContext.project_documentation[docKey] = fullContext.project_documentation[docKey];
-                    }}
-                }}
+                    }
+                }
 
-                if (rootKey === 'file_structure' && parts.length > 1) {{
+                if (rootKey === 'file_structure' && parts.length > 1) {
                     const filePathParts = parts.slice(1);
                     let sourcePointer = fullContext.file_structure;
                     let destPointer = newContext.file_structure;
 
-                    for (let i = 0; i < filePathParts.length; i++) {{
+                    for (let i = 0; i < filePathParts.length; i++) {
                         const part = filePathParts[i];
                         if (!sourcePointer[part]) break; // Path is invalid, skip
 
-                        if (i === filePathParts.length - 1) {{ // It's the file/end node
+                        if (i === filePathParts.length - 1) { // It's the file/end node
                             destPointer[part] = sourcePointer[part];
-                        }} else {{
-                            if (!destPointer[part]) {{
-                                destPointer[part] = {{}};
-                            }}
+                        } else {
+                            if (!destPointer[part]) {
+                                destPointer[part] = {}};
+                            }
                             destPointer = destPointer[part];
                             sourcePointer = sourcePointer[part];
-                        }}
-                    }}
-                }}
-            }}
+                        }
+                    }
+                }
+            }
             
             outputPre.textContent = JSON.stringify(newContext, null, 2);
-        }}
+        }
 
         // --- 4. Event Listeners ---
         document.getElementById('generate-btn').addEventListener('click', generateSelectedContext);
         
-        document.getElementById('select-all-btn').addEventListener('click', () => {{
+        document.getElementById('select-all-btn').addEventListener('click', () => {
             fileTreeContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
-        }});
+        });
         
-        document.getElementById('deselect-all-btn').addEventListener('click', () => {{
+        document.getElementById('deselect-all-btn').addEventListener('click', () => {
             fileTreeContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-        }});
+        });
         
-        document.getElementById('copy-btn').addEventListener('click', function() {{
+        document.getElementById('copy-btn').addEventListener('click', function() {
             const button = this;
-            navigator.clipboard.writeText(outputPre.textContent).then(() => {{
+            navigator.clipboard.writeText(outputPre.textContent).then(() => {
                 button.textContent = 'Copied!';
-                setTimeout(() => {{ button.textContent = 'Copy to Clipboard'; }}, 2000);
-            }}, (err) => {{
+                setTimeout(() => { button.textContent = 'Copy to Clipboard'; }, 2000);
+            }, (err) => {
                 button.textContent = 'Failed!';
                 console.error('Copy failed', err);
-                setTimeout(() => {{ button.textContent = 'Copy to Clipboard'; }}, 2000);
-            }});
-        }});
+                setTimeout(() => { button.textContent = 'Copy to Clipboard'; }, 2000);
+            });
+        });
 
         // --- 5. Initialisation ---
         fetchContext();
-    }});
+    });
 </script>
 </body>
 </html>"""
