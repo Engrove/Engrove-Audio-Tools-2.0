@@ -1,18 +1,3 @@
-# .github/workflows/generate_context.yml
-#
-# HISTORIK:
-# * v1.0 - v9.0: Tidigare versioner.
-# * v10.0 (Post-Tribunal Revision): Felaktig implementering med `python -c`.
-# * v11.0 (Syntax Correction): Korrigerat YAML-syntaxfelet genom att ersätta den bräckliga
-#   `python -c`-metoden med en robust "here document" (`python - <<'EOF'`). Detta separerar
-#   YAML/shell-syntax från Python-syntaxen och garanterar korrekta indrag.
-#
-# TILLÄMPADE REGLER (Frankensteen v3.7):
-# - Robust felhantering med explicit validering i varje kritiskt steg.
-# - Prestanda-optimering genom cachning.
-# - Säkerhet genom minimala behörigheter och säker tokenhantering.
-# - Observabilitet genom strukturerad loggning.
-
 name: Generate and Deploy AI Context Data
 
 on:
@@ -110,11 +95,11 @@ try:
     # Läs JSON-filen
     with open(json_path, 'r', encoding='utf-8') as f:
         json_content = f.read()
-    
+
     # Skapa HTML-fil
     with open(html_path, 'w', encoding='utf-8') as f:
         f.write(html_template.format(json_content=json_content))
-    
+
     print(f'[INFO] Omslutning av JSON i HTML lyckades: {html_path}')
 except Exception as e:
     print(f'[ERROR] Misslyckades att omsluta JSON i HTML: {e}', file=sys.stderr)
@@ -130,13 +115,11 @@ EOF
             echo "success=false" >> $GITHUB_OUTPUT
             exit 1
           fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Metadata
         if: steps.generate.outputs.success == 'true'
         run: |
-          cat > ${{ env.SITE_DIR }}/${{ env.METADATA_FILE }} << EOF
+          cat > ${{ env.SITE_DIR }}/${{ env.METADATA_FILE }} <<EOF
           {
             "generated_at": "$(date -Iseconds)",
             "workflow_run_id": "${{ github.run_id }}",
