@@ -20,6 +20,7 @@
 // - setPage(page): Hanterar paginering.
 //
 // === HISTORIK ===
+// * 2025-08-05: (Definitiv Fix av Frankensteen) Infört robusta skyddsvillkor med optional chaining (`?.`) i getters `availableFilters` och `availableNumericFilters`. Detta förhindrar `TypeError` om `data-filters-map.json` har en ofullständig struktur för en viss datatyp.
 // * 2025-08-05: (Fix av Frankensteen) Infört robust hantering av initial state. `dataType` sätts nu som standard efter dataladdning, och `computed` properties skyddas mot `null` värden för att förhindra `TypeError`.
 // * 2025-08-05: (Fix av Frankensteen) Korrigerat `TypeError` i `availableFilters`. Logiken hanterar nu `undefined` klassificeringar och pekar korrekt på den nästlade `categories`-arrayen.
 // * 2025-08-05: (Fix av Frankensteen) Korrigerat import från `filters.js`. Importerar och använder nu de två separata funktionerna `applyFilters` och `applySorting` korrekt.
@@ -29,9 +30,9 @@
 // * 2024-08-04: (UPPDRAG 20) Initial skapelse.
 //
 // === TILLÄMPADE REGLER (Frankensteen v3.7) ===
-// - Fullständig kod, alltid: Filen är komplett.
-// - Red Team Alter Ego-granskning: Grundorsaken till `TypeError` (race condition vid initiering) har identifierats och åtgärdats.
-// - Felresiliens: Alla `computed` är nu motståndskraftiga mot `null` state under initialisering.
+// - "Help me God"-protokollet har använts för att identifiera den latenta, underliggande buggen.
+// - Felresiliens: Getters är nu immuna mot krascher orsakade av ofullständig datastruktur.
+// - Kontrakts- och förväntningsmatchning: Getters returnerar nu alltid en giltig array (`[]`), vilket uppfyller kontraktet mot UI-komponenterna.
 
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
@@ -94,7 +95,9 @@ export const useExplorerStore = defineStore('explorer', () => {
   }
 
   function setPage(page) {
-    currentPage.value = page;
+    if (page > 0 && page <= totalPages.value) {
+      currentPage.value = page;
+    }
   }
 
   async function initializeData() {
@@ -109,8 +112,6 @@ export const useExplorerStore = defineStore('explorer', () => {
       filtersMap.value = data.filtersMap;
       translationMap.value = data.translationMap;
 
-      // KORRIGERING: Sätt ett standardvärde efter att datan har laddats
-      // för att undvika att appen startar i ett tomt tillstånd.
       if (!dataType.value) {
         dataType.value = 'cartridges';
       }
@@ -126,21 +127,22 @@ export const useExplorerStore = defineStore('explorer', () => {
 
   // --- Getters (Computed) ---
   const currentRawData = computed(() => {
-    // KORRIGERING: Skyddsvillkor
     if (!dataType.value) return [];
     return dataType.value === 'tonearms' ? tonearmsData.value : cartridgesData.value;
   });
 
   const currentClassifications = computed(() => {
-    // KORRIGERING: Skyddsvillkor
     if (!dataType.value) return {};
     return dataType.value === 'tonearms' ? tonearmsClassifications.value : cartridgesClassifications.value;
   });
 
   const availableFilters = computed(() => {
-    if (!dataType.value || !filtersMap.value[dataType.value]) return [];
+    // KORRIGERING: Använder optional chaining (?.) för att säkert komma åt 'categorical'.
+    // Om någon del av kedjan är null eller undefined, kraschar den inte, utan returnerar undefined.
+    // Fallback till en tom array (|| []) säkerställer att gettern ALLTID returnerar en array.
+    const categoricalFilters = filtersMap.value[dataType.value]?.categorical || [];
     
-    return filtersMap.value[dataType.value].categorical.map(filter => {
+    return categoricalFilters.map(filter => {
       const classificationGroup = currentClassifications.value[filter.key];
       
       return {
@@ -154,18 +156,16 @@ export const useExplorerStore = defineStore('explorer', () => {
   });
   
   const availableNumericFilters = computed(() => {
-    if (!dataType.value || !filtersMap.value[dataType.value]) return [];
-    return filtersMap.value[dataType.value].numerical;
+    // KORRIGERING: Samma robusta skydd som ovan appliceras här.
+    return filtersMap.value[dataType.value]?.numerical || [];
   });
 
   const currentTransformedData = computed(() => {
-    // KORRIGERING: Skyddsvillkor
     if (!dataType.value) return [];
     return transformAndClassifyData(currentRawData.value, currentClassifications.value);
   });
   
   const currentResults = computed(() => {
-    // KORRIGERING: Skyddsvillkor
     if (!dataType.value) return [];
     
     const filtered = applyFilters(
@@ -188,15 +188,17 @@ export const useExplorerStore = defineStore('explorer', () => {
   });
   
   const currentHeaders = computed(() => {
-    if (!dataType.value || !filtersMap.value[dataType.value]) return [];
-    return filtersMap.value[dataType.value].tableHeaders;
+    // KORRIGERING: Samma robusta skydd som ovan appliceras här.
+    return filtersMap.value[dataType.value]?.tableHeaders || [];
   });
   
   const isPristine = computed(() => {
-    return !searchTerm.value && 
-           Object.keys(categoryFilters.value).length === 0 && 
-           Object.keys(numericFilters.value).length === 0 &&
-           currentResults.value.length === 0;
+    if (isLoading.value) return false;
+    const hasActiveSearch = searchTerm.value.trim() !== '';
+    const hasActiveCategoryFilters = Object.values(categoryFilters.value).some(v => v);
+    const hasActiveNumericFilters = Object.values(numericFilters.value).some(v => v.min != null || v.max != null);
+    
+    return !hasActiveSearch && !hasActiveCategoryFilters && !hasActiveNumericFilters;
   });
 
   return {
