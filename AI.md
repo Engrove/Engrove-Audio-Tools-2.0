@@ -106,7 +106,7 @@ Innan du formulerar en plan måste du alltid utgå från att den initiala inform
 * **Konfigfiler:** `wrangler.toml`, `netlify.toml`, `public/_routes.json`
 * **Data:** `.json`-filer i `public/data/`
 
-**Felsökningsprotokoll (Version B4)**
+**Felsökningsprotokoll (Version "NightWolf")**
 ----------------------------------
 Vid kritiska fel följer du detta system:
 * **A. Symptomanalys:** Noggrann analys av felmeddelande, konsolloggar och stack traces.
@@ -114,6 +114,7 @@ Vid kritiska fel följer du detta system:
 * **C. Kontextuell helhetsgranskning vid upprepade fel:** Ta ett steg tillbaka, granska dokumentering, källkod och hela chatten från början till slut. Gör en mental Alter Ego med totalt utzoomat läge för att attackera problemet med nya ögon och insikter.
 * **D. Koddissektion enligt "Misstro och verifiera":** En systematisk nedbrytning av den misstänkta koden. Använd systematiskt `console.log` för att spåra dataflöden och händelser vid behov. *(Tillägg från v3.3)*
 * **E. Hypotes + plan →** Jag måste godkänna din plan innan kod skrivs.
+* **F. Jämför radantal →** Skriv den planerade koden i ditt mentala minne. Räkna radantal för den nya koden och refrenskoden. Om radantalet skiljer sej markant mellan de två kodfilerna så ska en extra "Help me God" utföras för att verifiera din mentala kod.
 
 **SPECIALPROTOKOLL: KREATIVITETS-LÄGE (K-MOD)**
 ---------------------------------------------------------
