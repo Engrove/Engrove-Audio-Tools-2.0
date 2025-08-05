@@ -2,8 +2,10 @@
 #
 # HISTORIK:
 # * v1.0 - v8.0: Tidigare versioner.
-# * v9.0 (Help me God Audit): Total refaktorisering. Publicerar nu rå JSON istället för HTML
-#   för att säkerställa att AI-modeller kan processa datan direkt och robust.
+# * v9.0 (Help me God Audit): Total refaktorisering. Publicerade rå JSON.
+# * v10.0 (Post-Tribunal Revision): Omsluter nu JSON-output i en statisk HTML-fil (`context.html`)
+#   för att säkerställa kompatibilitet med AI-verktyg som läser `text/html`.
+#   Använder ett robust inline Python-skript för att skapa HTML-filen på ett säkert sätt.
 #
 # TILLÄMPADE REGLER (Frankensteen v3.7):
 # - Robust felhantering med explicit validering i varje kritiskt steg.
@@ -37,7 +39,8 @@ permissions:
 
 env:
   PYTHON_VERSION: '3.11'
-  CONTEXT_FILE: 'context.json'
+  CONTEXT_FILE_JSON: 'context.json'
+  CONTEXT_FILE_HTML: 'context.html'
   METADATA_FILE: 'metadata.json'
   SITE_DIR: '_site'
 
@@ -65,15 +68,60 @@ jobs:
       - name: Prepare Output Directory
         run: mkdir -p ${{ env.SITE_DIR }}
 
-      - name: Generate Context JSON
+      - name: Generate and Wrap Context Data
         id: generate
         run: |
-          if python scripts/generate_full_context.py > ${{ env.SITE_DIR }}/${{ env.CONTEXT_FILE }} 2> generation.log; then
-            echo "success=true" >> $GITHUB_OUTPUT
-            echo "[INFO] context.json genererades framgångsrikt."
-          else
-            echo "[ERROR] Misslyckades med att generera context.json. Se logg nedan:"
+          # Steg 1: Generera den råa JSON-datan och kontrollera att skriptet lyckas.
+          if ! python scripts/generate_full_context.py > ${{ env.SITE_DIR }}/${{ env.CONTEXT_FILE_JSON }} 2> generation.log; then
+            echo "[ERROR] Python-skriptet för kontextgenerering misslyckades. Se logg nedan:"
             cat generation.log
+            echo "success=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          echo "[INFO] Rå context.json genererades framgångsrikt."
+
+          # Steg 2: Använd ett robust Python-skript för att wrappa JSON i HTML.
+          # Detta undviker problem med specialtecken som enkla 'echo'-kommandon skulle ha.
+          python -c "
+import cgi
+from pathlib import Path
+
+site_dir = Path('${{ env.SITE_DIR }}')
+json_path = site_dir / '${{ env.CONTEXT_FILE_JSON }}'
+html_path = site_dir / '${{ env.CONTEXT_FILE_HTML }}'
+
+html_template = f'''<!DOCTYPE html>
+<html lang=\"en\">
+<head>
+    <meta charset=\"UTF-8\">
+    <title>AI Context Data</title>
+    <style>body {{ font-family: monospace; white-space: pre; word-wrap: break-word; }}</style>
+</head>
+<body>
+{{json_content}}
+</body>
+</html>'''
+
+try:
+    json_content = json_path.read_text(encoding='utf-8')
+    # Vi behöver inte escape:a HTML eftersom JSON placeras i en <body>-tagg med
+    # CSS 'white-space: pre', vilket behandlar innehållet som förformaterad text.
+    # Detta är säkrare och renare än att använda en <pre>-tagg som skulle kunna
+    # krocka om JSON-datan innehöll strängen '</pre>'.
+    final_html = html_template.format(json_content=json_content)
+    html_path.write_text(final_html, encoding='utf-8')
+    print(f'[INFO] Omslutning av JSON i {html_path} lyckades.')
+    
+except Exception as e:
+    print(f'[ERROR] Misslyckades att omsluta JSON i HTML: {e}')
+    exit(1)
+          "
+          # Steg 3: Slutgiltig kontroll och sätt output för nästa jobb.
+          if [ -f "${{ env.SITE_DIR }}/${{ env.CONTEXT_FILE_HTML }}" ]; then
+            echo "[INFO] context.html skapad. Byggsteget lyckades."
+            echo "success=true" >> $GITHUB_OUTPUT
+          else
+            echo "[ERROR] context.html skapades inte. Byggsteget misslyckades."
             echo "success=false" >> $GITHUB_OUTPUT
             exit 1
           fi
