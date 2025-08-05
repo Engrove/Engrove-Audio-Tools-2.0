@@ -304,8 +304,8 @@ def generate_builder_html(output_html_path):
             const newContext = {
                 project_overview: fullContext.project_overview,
                 ai_instructions: fullContext.ai_instructions,
-                project_documentation: {}},
-                file_structure: {}}
+                project_documentation: {},
+                file_structure: {}
             };
 
             for (const path of selectedPaths) {
@@ -332,7 +332,7 @@ def generate_builder_html(output_html_path):
                             destPointer[part] = sourcePointer[part];
                         } else {
                             if (!destPointer[part]) {
-                                destPointer[part] = {}};
+                                destPointer[part] = {};
                             }
                             destPointer = destPointer[part];
                             sourcePointer = sourcePointer[part];
