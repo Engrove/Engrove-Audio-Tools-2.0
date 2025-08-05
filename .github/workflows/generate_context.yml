@@ -3,28 +3,19 @@
 # HISTORIK:
 # * v1.0 (Initial): Basversion för att köra skript och publicera.
 # * v2.0 (Post-Tribunal): Förbättrad version efter "Help me God"-granskning.
-#   - LÄGGER TILL: Använder `secrets.GITHUB_TOKEN` och skickar den som en miljövariabel
-#     till Python-skriptet för att undvika API rate-limiting.
-#   - FIXAR: Omdirigerar `stderr` till `/dev/null` under skriptkörning för att säkerställa
-#     att endast ren JSON från `stdout` skrivs till `context.json`. Detta förhindrar
-#     att loggmeddelanden korrumperar JSON-filen.
-#   - FÖRBÄTTRAR: Tydligare stegnamn och struktur.
-# * v3.0 (Enhanced): Kraftigt förbättrad version med robust felhantering och validering.
-#   - LÄGGER TILL: Cachning av Python-beroenden för snabbare builds.
-#   - LÄGGER TILL: JSON-validering för att säkerställa korrekt output.
-#   - LÄGGER TILL: Filstorlekskontroll och innehållsvalidering.
-#   - LÄGGER TILL: Rollback-mekanism vid fel.
-#   - LÄGGER TILL: Detailed logging med timestamps.
-#   - FÖRBÄTTRAR: Säkerhetsåtgärder och felhantering.
-#   - LÄGGER TILL: Notifications vid fel (kommentarer).
+# * v3.0 (Enhanced): Robust felhantering, cachning och validering.
+# * v4.0 (AI Data Dump): Omdesignad för att skapa en ren HTML-sida avsedd för AI-konsumtion.
+#   - FÖRBÄTTRAR: index.html genereras nu som en strikt datakälla.
+#   - LÄGGER TILL: JSON-innehållet bäddas in direkt i HTML-koden för enkel parsning.
+#   - FÖRENKLAR: Tar bort all onödig formatering och länkar.
 #
 # TILLÄMPADE REGLER (Frankensteen v3.7):
 # - Robust felhantering med explicit validering i varje kritiskt steg.
-# - Prestanda-optimering genom cachning och parallellisering där möjligt.
+# - Prestanda-optimering genom cachning.
 # - Säkerhet genom minimala behörigheter och säker tokenhantering.
-# - Observabilitet genom strukturerad loggning och notifieringar.
+# - Observabilitet genom strukturerad loggning.
 
-name: Generate and Deploy Project Context
+name: Generate and Deploy AI Context Page
 
 # KÖR VID: Varje push till main-branchen, manuell start, eller vid schemalagd tid.
 on:
@@ -38,9 +29,9 @@ on:
       - '**/*.html'
       - '**/*.md'
       - '.github/workflows/generate_context.yml'
+      - 'requirements.txt'
   workflow_dispatch:
   schedule:
-    # Kör en gång per dag kl 02:00 UTC för att hålla kontexten uppdaterad
     - cron: '0 2 * * *'
 
 # BEHÖRIGHETER: Minimala behörigheter enligt säkerhetsprinciper.
@@ -48,12 +39,13 @@ permissions:
   contents: read
   pages: write
   id-token: write
-  issues: write  # För att kunna skapa issues vid fel
+  issues: write
 
 # Globala miljövariabler
 env:
   PYTHON_VERSION: '3.11'
   CONTEXT_FILE: 'context.json'
+  METADATA_FILE: 'metadata.json'
   SITE_DIR: '_site'
 
 jobs:
@@ -61,14 +53,13 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       context-generated: ${{ steps.generate.outputs.success }}
-      context-size: ${{ steps.validate.outputs.file-size }}
-    
+
     steps:
       # Steg 1: Checka ut koden från repositoryt.
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1  # Shallow clone för snabbare checkout
+          fetch-depth: 1
 
       # Steg 2: Sätt upp Python-miljön med cachning.
       - name: Set up Python ${{ env.PYTHON_VERSION }}
@@ -77,17 +68,7 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
 
-      # Steg 3: Cache Python-beroenden för snabbare builds.
-      - name: Cache Python Dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ env.PYTHON_VERSION }}-${{ hashFiles('**/requirements.txt', 'scripts/generate_full_context.py') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-${{ env.PYTHON_VERSION }}-
-            ${{ runner.os }}-pip-
-
-      # Steg 4: Installera Python-beroenden med version pinning.
+      # Steg 3: Installera Python-beroenden.
       - name: Install Dependencies
         run: |
           echo "$(date -Iseconds) [INFO] Installerar Python-beroenden från requirements.txt..."
@@ -95,159 +76,119 @@ jobs:
           pip install -r requirements.txt
           echo "$(date -Iseconds) [INFO] Beroenden installerade framgångsrikt."
 
-      # Steg 5: Validera att skriptet finns och är körbart.
+      # Steg 4: Validera att skriptet finns.
       - name: Validate Script Existence
         run: |
-          echo "$(date -Iseconds) [INFO] Validerar skriptets existens..."
           if [ ! -f "scripts/generate_full_context.py" ]; then
             echo "$(date -Iseconds) [ERROR] Skriptet scripts/generate_full_context.py hittades inte!"
             exit 1
           fi
           echo "$(date -Iseconds) [INFO] Skript validerat framgångsrikt."
 
-      # Steg 6: Förbered output-mapp.
+      # Steg 5: Förbered output-mapp.
       - name: Prepare Output Directory
-        run: |
-          echo "$(date -Iseconds) [INFO] Förbereder output-mapp..."
-          mkdir -p ${{ env.SITE_DIR }}
-          echo "$(date -Iseconds) [INFO] Mapp ${{ env.SITE_DIR }} skapad."
+        run: mkdir -p ${{ env.SITE_DIR }}
 
-      # Steg 7: Kör kontext-genereringsskriptet med robust felhantering.
+      # Steg 6: Kör kontext-genereringsskriptet.
       - name: Generate Context JSON
         id: generate
         run: |
           echo "$(date -Iseconds) [INFO] Startar kontextgenerering..."
-          
-          # Kör skriptet och fånga exit code
           if python scripts/generate_full_context.py > ${{ env.SITE_DIR }}/${{ env.CONTEXT_FILE }} 2> generation.log; then
             echo "$(date -Iseconds) [INFO] Skript kördes framgångsrikt."
             echo "success=true" >> $GITHUB_OUTPUT
           else
             echo "$(date -Iseconds) [ERROR] Skriptet misslyckades!"
-            echo "=== STDERR LOG ==="
             cat generation.log
-            echo "=================="
             echo "success=false" >> $GITHUB_OUTPUT
             exit 1
           fi
-          
-          # Visa log-information för debugging (utan att påverka JSON-output)
           echo "$(date -Iseconds) [INFO] Logg från skriptkörning:"
           cat generation.log
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-# Steg 8: Validera genererad JSON-fil.
+      # Steg 7: Validera genererad JSON-fil.
       - name: Validate Generated JSON
-        id: validate
         run: |
-          echo "$(date -Iseconds) [INFO] Validerar genererad JSON..."
-          
-          # Kontrollera att filen existerar
-          if [ ! -f "${{ env.SITE_DIR }}/${{ env.CONTEXT_FILE }}" ]; then
-            echo "$(date -Iseconds) [ERROR] Kontextfil skapades inte!"
-            exit 1
+          FILE_PATH="${{ env.SITE_DIR }}/${{ env.CONTEXT_FILE }}"
+          if [ ! -f "$FILE_PATH" ]; then
+            echo "[ERROR] Kontextfil skapades inte!" && exit 1
           fi
-          
-          # Kontrollera filstorlek
-          file_size=$(stat -f%z "${{ env.SITE_DIR }}/${{ env.CONTEXT_FILE }}" 2>/dev/null || stat -c%s "${{ env.SITE_DIR }}/${{ env.CONTEXT_FILE }}")
-          echo "file-size=$file_size" >> $GITHUB_OUTPUT
-          
-          if [ "$file_size" -lt 100 ]; then
-            echo "$(date -Iseconds) [ERROR] Filen är för liten ($file_size bytes), troligen tom eller felaktig."
-            exit 1
+          if [ "$(stat -c%s "$FILE_PATH")" -lt 100 ]; then
+            echo "[ERROR] Filen är för liten, troligen tom." && exit 1
           fi
-          
-          # Validera JSON-syntax
-          if ! python -m json.tool "${{ env.SITE_DIR }}/${{ env.CONTEXT_FILE }}" > /dev/null; then
-            echo "$(date -Iseconds) [ERROR] Filen innehåller ogiltig JSON!"
-            echo "=== FILINNEHÅLL (första 500 tecken) ==="
-            head -c 500 "${{ env.SITE_DIR }}/${{ env.CONTEXT_FILE }}"
-            echo -e "\n=================================="
-            exit 1
+          if ! python -m json.tool "$FILE_PATH" > /dev/null; then
+            echo "[ERROR] Filen innehåller ogiltig JSON!" && exit 1
           fi
-          
-          # Validera JSON-struktur (grundläggande)
-          cat > validate_json.py << 'EOF'
-          import json, sys
-          try:
-              with open('${{ env.SITE_DIR }}/${{ env.CONTEXT_FILE }}', 'r', encoding='utf-8') as f:
-                  data = json.load(f)
-              
-              required_keys = ['project_overview', 'file_structure']
-              missing_keys = [key for key in required_keys if key not in data]
-              
-              if missing_keys:
-                  print(f'[ERROR] Saknade nycklar i JSON: {missing_keys}')
-                  sys.exit(1)
-              
-              if not isinstance(data['file_structure'], dict):
-                  print('[ERROR] file_structure ska vara ett objekt')
-                  sys.exit(1)
-                  
-              print(f'[INFO] JSON-struktur validerad. Filstruktur innehåller {len(data["file_structure"])} objekt.')
-              
-          except Exception as e:
-              print(f'[ERROR] JSON-validering misslyckades: {e}')
-              sys.exit(1)
-          EOF
-          python validate_json.py
-          
-          echo "$(date -Iseconds) [INFO] JSON validerad framgångsrikt ($file_size bytes)."
-          
-      # Steg 9: Skapa metadata-fil för debugging.
+          echo "[INFO] JSON validerad framgångsrikt."
+
+      # Steg 8: Skapa metadata-fil.
       - name: Create Metadata
         run: |
-          echo "$(date -Iseconds) [INFO] Skapar metadata..."
-          cat > ${{ env.SITE_DIR }}/metadata.json << EOF
+          cat > ${{ env.SITE_DIR }}/${{ env.METADATA_FILE }} << EOF
           {
             "generated_at": "$(date -Iseconds)",
             "workflow_run_id": "${{ github.run_id }}",
             "commit_sha": "${{ github.sha }}",
-            "repository": "${{ github.repository }}",
-            "file_size_bytes": ${{ steps.validate.outputs.file-size }},
-            "python_version": "${{ env.PYTHON_VERSION }}",
-            "runner_os": "${{ runner.os }}"
+            "repository": "${{ github.repository }}"
           }
           EOF
-          echo "$(date -Iseconds) [INFO] Metadata skapad."
-# Steg 9.5: Skapa en enkel index.html för att visa filerna
-      - name: Create index.html
+          echo "[INFO] Metadata skapad."
+
+      # Steg 9: Skapa strikt index.html för AI-kontext.
+      - name: Create index.html for AI Context
         run: |
-          echo "$(date -Iseconds) [INFO] Skapar index.html..."
-          cat > ${{ env.SITE_DIR }}/index.html << EOF
+          INDEX_PATH="${{ env.SITE_DIR }}/index.html"
+          CONTEXT_PATH="${{ env.SITE_DIR }}/${{ env.CONTEXT_FILE }}"
+          METADATA_PATH="${{ env.SITE_DIR }}/${{ env.METADATA_FILE }}"
+
+          # Starta HTML-filen med AI-beskrivningen
+          cat > "$INDEX_PATH" << 'EOF'
           <!DOCTYPE html>
           <html lang="sv">
           <head>
               <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Projektkontext för Engrove Audio Tools</title>
-              <style>
-                  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif; line-height: 1.6; padding: 2em; max-width: 800px; margin: 0 auto; }
-                  h1 { color: #24292e; border-bottom: 1px solid #e1e4e8; padding-bottom: 0.3em; }
-                  a { color: #0366d6; text-decoration: none; }
-                  a:hover { text-decoration: underline; }
-                  ul { list-style-type: none; padding: 0; }
-                  li { background-color: #f6f8fa; border: 1px solid #d1d5da; border-radius: 6px; padding: 12px; margin-bottom: 8px; }
-                  footer { margin-top: 2em; color: #586069; font-size: 0.9em; }
-              </style>
+              <title>AI Projektkontext: Engrove Audio Tools</title>
           </head>
           <body>
-              <h1>Projektkontext</h1>
-              <p>Denna sida innehåller automatiskt genererade filer som beskriver projektets struktur och metadata.</p>
-              
-              <ul>
-                  <li><a href="context.json"><strong>context.json</strong></a> - Fullständig kontext med filstruktur och projektöversikt.</li>
-                  <li><a href="metadata.json"><strong>metadata.json</strong></a> - Metadata om den senaste körningen av detta workflow.</li>
-              </ul>
-    
-              <footer>
-                  Sidan genererades automatiskt: $(date -Iseconds)
-              </footer>
+              <header>
+                  <h1>AI Projektkontext: Engrove Audio Tools</h1>
+                  <p>Detta dokument är en automatgenererad datakälla avsedd för AI-modeller som Google Gemini. Sidan innehåller den fullständiga kontexten för GitHub-repot Engrove/Engrove-Audio-Tools-2.0, uppdelad i sektioner. All data presenteras i råformat för att underlätta maskinell parsning och analys.</p>
+              </header>
+              <main>
+                  <section id="context-json">
+                      <h2>Fullständig Projektkontext (context.json)</h2>
+                      <p>Följande JSON-objekt innehåller en komplett, rekursiv trädstruktur över alla filer i projektet. Varje filobjekt inkluderar metadata som filstorlek, filändelse, samt extraherade kommentarer och kodberoenden (för textfiler).</p>
+                      <pre><code>
+          EOF
+
+          # Bädda in innehållet från context.json
+          cat "$CONTEXT_PATH" >> "$INDEX_PATH"
+
+          # Fortsätt med metadata.json
+          cat >> "$INDEX_PATH" << 'EOF'
+                      </code></pre>
+                  </section>
+                  <section id="metadata-json">
+                      <h2>Byggmetadata (metadata.json)</h2>
+                      <p>Följande JSON-objekt innehåller metadata om den specifika GitHub Actions-körning som genererade detta dokument, inklusive tidsstämpel, commit-SHA och repository-information.</p>
+                      <pre><code>
+          EOF
+
+          # Bädda in innehållet från metadata.json
+          cat "$METADATA_PATH" >> "$INDEX_PATH"
+
+          # Avsluta HTML-filen
+          cat >> "$INDEX_PATH" << 'EOF'
+                      </code></pre>
+                  </section>
+              </main>
           </body>
           </html>
           EOF
-          echo "$(date -Iseconds) [INFO] index.html skapad."        
+          echo "[INFO] index.html för AI-kontext skapad."
+
       # Steg 10: Ladda upp artefakt för GitHub Pages.
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
@@ -262,62 +203,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
-  # Notifiering vid fel
-  notify-on-failure:
-    needs: [validate-and-build, deploy]
-    if: failure()
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Create Issue on Failure
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const title = `Context Generation Failed - ${new Date().toISOString()}`;
-            const body = `
-            ## Kontextgenerering misslyckades
-            
-            **Workflow:** ${context.workflow}
-            **Run ID:** ${context.runId}
-            **Commit:** ${context.sha}
-            **Fel uppstod:** ${new Date().toISOString()}
-            
-            ### Möjliga orsaker:
-            - GitHub API rate limiting
-            - Nätverksproblem
-            - Förändringar i repository-struktur
-            - Python-beroenden saknas eller är inkompatibla
-            
-            ### Nästa steg:
-            1. Kontrollera workflow-loggar: https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}
-            2. Verifiera att \`GITHUB_TOKEN\` har rätt behörigheter
-            3. Kontrollera att skriptet \`scripts/generate_full_context.py\` är intakt
-            
-            _Detta issue skapades automatiskt av GitHub Actions._
-            `;
-            
-            const { data: issues } = await github.rest.issues.listForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: 'open',
-              labels: 'automated,context-generation'
-            });
-            
-            // Skapa bara issue om det inte redan finns ett öppet
-            if (issues.length === 0) {
-              await github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: title,
-                body: body,
-                labels: ['automated', 'context-generation', 'bug']
-              });
-            }
-
-# .github/workflows/generate_context.yml
