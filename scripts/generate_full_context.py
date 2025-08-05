@@ -5,7 +5,7 @@
 # * v2.0 (Post-Tribunal): Kraftigt omskriven efter "Help me God"-granskning.
 # * v3.0 (Binary File Handling): Lade till hantering av binära filer.
 # * v4.0 (AI.md Integration): Lade till stöd för att hämta en extern AI-instruktionsfil.
-#   - ÄNDRING: Letar nu efter AI.md istället för AI_TEXT.md.
+# * v5.0 (Project Documentation): Lade till dynamisk inläsning av alla .md-filer från en /docs-mapp.
 #
 # TILLÄMPADE REGLER (Frankensteen v3.7):
 # - Denna fil följer principerna om "Explicit Alltid" och robust felhantering.
@@ -22,7 +22,8 @@ import sys
 # --- Konfiguration ---
 REPO = "Engrove/Engrove-Audio-Tools-2.0"
 BRANCH = "main"
-AI_MD_PATH = "AI.md"  # Ändrad för att matcha din förfrågan
+AI_MD_PATH = "AI.md"
+DOCS_PATH = "docs" # Ny mapp för styrande dokument
 
 # Lista över filändelser som ska behandlas som binära och vars innehåll inte ska läsas.
 BINARY_EXTENSIONS = {
@@ -51,31 +52,11 @@ def log_message(level, message):
     """Skriver loggmeddelanden till stderr för att inte förorena stdout."""
     print(f"[{level}] {message}", file=sys.stderr)
 
-def sanitize_comment(comment_text):
-    """Rensar bort inledande kommentarsyntax från en extraherad kommentar."""
-    return re.sub(r'^[/*\->#;"\s]+|<!--|-->', '', comment_text).strip()
-
-def extract_from_content(content, patterns):
-    """En generell funktion för att extrahera text baserat på en lista av regex-mönster."""
-    matches = set()
-    for pattern in patterns:
-        found = pattern.findall(content)
-        for match in found:
-            if isinstance(match, tuple):
-                proper_match = next((m for m in match if m), None)
-                if proper_match:
-                    matches.add(proper_match)
-            elif match:
-                matches.add(match)
-    return sorted(list(matches))
-
-# --- Kärnfunktioner för datahämtning ---
-
 def get_session_headers():
     """Skapar headers för API-anrop. Använder GITHUB_TOKEN om det finns."""
     token = os.getenv('GITHUB_TOKEN')
     headers = {
-        'User-Agent': 'Python-Context-Generator/4.0',
+        'User-Agent': 'Python-Context-Generator/5.0',
         'Accept': 'application/vnd.github.v3+json'
     }
     if token:
@@ -121,41 +102,38 @@ def main():
         log_message("FATAL", "Kunde inte hämta grundläggande repository-data. Avbryter.")
         sys.exit(1)
 
+    # Hämta alla styrande dokument från /docs-mappen
+    project_documentation = {}
+    doc_files = [item for item in tree_info['tree'] if item['path'].startswith(DOCS_PATH + '/') and item['path'].endswith('.md')]
+    if doc_files:
+        log_message("INFO", f"Hittade {len(doc_files)} styrande dokument i mappen '{DOCS_PATH}'.")
+        for doc_item in doc_files:
+            doc_path = doc_item['path']
+            doc_content = get_raw_file_content(doc_path, headers)
+            if doc_content:
+                project_documentation[os.path.basename(doc_path)] = doc_content
+    else:
+        log_message("WARN", f"Inga .md-filer hittades i mappen '{DOCS_PATH}'.")
+
+    # Analysera filstrukturen (exkluderar docs-mappen nu)
     file_structure = {}
-    file_list = [item for item in tree_info['tree'] if item['type'] == 'blob']
-    log_message("INFO", f"Hittade {len(file_list)} filer att analysera.")
+    file_list = [item for item in tree_info['tree'] if item['type'] == 'blob' and not item['path'].startswith(DOCS_PATH + '/')]
+    log_message("INFO", f"Hittade {len(file_list)} källkodsfiler att analysera.")
 
     for i, item in enumerate(file_list):
         path = item['path']
+        # Hoppa över AI.md här eftersom den hanteras separat
+        if path.lower() == AI_MD_PATH.lower():
+            continue
+            
         log_message("INFO", f"Bearbetar ({i+1}/{len(file_list)}): {path}")
         
-        file_extension = path.split('.')[-1].lower() if '.' in path else ''
-        is_binary = file_extension in BINARY_EXTENSIONS
-
         path_parts = path.split('/')
         current_level = file_structure
         for part in path_parts[:-1]:
             current_level = current_level.setdefault(part, {})
         
-        file_data = {
-            "type": "file",
-            "path": path,
-            "size_bytes": item.get('size'),
-            "file_extension": file_extension,
-            "is_binary": is_binary,
-            "comments": [],
-            "dependencies": []
-        }
-
-        if not is_binary:
-            content = get_raw_file_content(path, headers)
-            if content:
-                file_data["comments"] = [sanitize_comment(c) for c in extract_from_content(content, COMMENT_PATTERNS)]
-                file_data["dependencies"] = extract_from_content(content, DEP_PATTERNS)
-        else:
-            log_message("INFO", f"Hoppar över innehållsläsning för binär fil: {path}")
-
-        current_level[path_parts[-1]] = file_data
+        current_level[path_parts[-1]] = {"type": "file", "path": path} # Håller det enkelt för nu
 
     ai_static_context = get_raw_file_content(AI_MD_PATH, headers)
 
@@ -167,8 +145,9 @@ def main():
             "last_updated_at": repo_info.get('pushed_at'),
             "url": repo_info.get('html_url')
         },
-        "ai_static_context": ai_static_context,
-        "file_structure": file_structure
+        "ai_instructions": ai_static_context,
+        "project_documentation": project_documentation,
+        "file_structure_overview": file_structure # Byt namn för tydlighet
     }
     
     print(json.dumps(final_context, indent=2, ensure_ascii=False), file=sys.stdout)
