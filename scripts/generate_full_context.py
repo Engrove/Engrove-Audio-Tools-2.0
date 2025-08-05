@@ -2,10 +2,12 @@
 #
 # HISTORIK:
 # * v1.0 (Initial): Basversion för att hämta filstruktur och kommentarer.
-# * v2.0 (Post-Tribunal): Kraftigt omskriven efter "Help me God"-granskning.
-# * v3.0 (Binary File Handling): Lade till hantering av binära filer.
+# * v2.0 (Post-Tribunal): Kraftigt omskriven med GITHUB_TOKEN, beroende-extrahering och robust felhantering.
+# * v3.0 (Binary File Handling): Lade till hantering av binära filer för att undvika korrupt data.
 # * v4.0 (AI.md Integration): Lade till stöd för att hämta en extern AI-instruktionsfil.
 # * v5.0 (Project Documentation): Lade till dynamisk inläsning av alla .md-filer från en /docs-mapp.
+# * v6.0 (Restoration & Synthesis): Återställde all förlorad funktionalitet (kommentarer, beroenden, etc.)
+#   och syntetiserade den med de senaste funktionerna till en enda, komplett och korrekt version.
 #
 # TILLÄMPADE REGLER (Frankensteen v3.7):
 # - Denna fil följer principerna om "Explicit Alltid" och robust felhantering.
@@ -23,9 +25,9 @@ import sys
 REPO = "Engrove/Engrove-Audio-Tools-2.0"
 BRANCH = "main"
 AI_MD_PATH = "AI.md"
-DOCS_PATH = "docs" # Ny mapp för styrande dokument
+DOCS_PATH = "docs"
 
-# Lista över filändelser som ska behandlas som binära och vars innehåll inte ska läsas.
+# Lista över filändelser som ska behandlas som binära.
 BINARY_EXTENSIONS = {
     'png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'ico', 'bmp', 'tiff',
     'woff', 'woff2', 'eot', 'ttf', 'otf',
@@ -52,11 +54,31 @@ def log_message(level, message):
     """Skriver loggmeddelanden till stderr för att inte förorena stdout."""
     print(f"[{level}] {message}", file=sys.stderr)
 
+def sanitize_comment(comment_text):
+    """Rensar bort inledande kommentarsyntax från en extraherad kommentar."""
+    return re.sub(r'^[/*\->#;"\s]+|<!--|-->', '', comment_text).strip()
+
+def extract_from_content(content, patterns):
+    """En generell funktion för att extrahera text baserat på en lista av regex-mönster."""
+    matches = set()
+    for pattern in patterns:
+        found = pattern.findall(content)
+        for match in found:
+            if isinstance(match, tuple):
+                proper_match = next((m for m in match if m), None)
+                if proper_match:
+                    matches.add(proper_match)
+            elif match:
+                matches.add(match)
+    return sorted(list(matches))
+
+# --- Kärnfunktioner för datahämtning ---
+
 def get_session_headers():
     """Skapar headers för API-anrop. Använder GITHUB_TOKEN om det finns."""
     token = os.getenv('GITHUB_TOKEN')
     headers = {
-        'User-Agent': 'Python-Context-Generator/5.0',
+        'User-Agent': 'Python-Context-Generator/6.0',
         'Accept': 'application/vnd.github.v3+json'
     }
     if token:
@@ -122,20 +144,40 @@ def main():
 
     for i, item in enumerate(file_list):
         path = item['path']
-        # Hoppa över AI.md här eftersom den hanteras separat
         if path.lower() == AI_MD_PATH.lower():
             continue
             
         log_message("INFO", f"Bearbetar ({i+1}/{len(file_list)}): {path}")
         
+        file_extension = path.split('.')[-1].lower() if '.' in path else ''
+        is_binary = file_extension in BINARY_EXTENSIONS
+
         path_parts = path.split('/')
         current_level = file_structure
         for part in path_parts[:-1]:
             current_level = current_level.setdefault(part, {})
         
-        current_level[path_parts[-1]] = {"type": "file", "path": path} # Håller det enkelt för nu
+        file_data = {
+            "type": "file",
+            "path": path,
+            "size_bytes": item.get('size'),
+            "file_extension": file_extension,
+            "is_binary": is_binary,
+            "comments": [],
+            "dependencies": []
+        }
 
-    ai_static_context = get_raw_file_content(AI_MD_PATH, headers)
+        if not is_binary:
+            content = get_raw_file_content(path, headers)
+            if content:
+                file_data["comments"] = [sanitize_comment(c) for c in extract_from_content(content, COMMENT_PATTERNS)]
+                file_data["dependencies"] = extract_from_content(content, DEP_PATTERNS)
+        else:
+            log_message("INFO", f"Hoppar över innehållsläsning för binär fil: {path}")
+
+        current_level[path_parts[-1]] = file_data
+
+    ai_instructions = get_raw_file_content(AI_MD_PATH, headers)
 
     final_context = {
         "project_overview": {
@@ -145,9 +187,9 @@ def main():
             "last_updated_at": repo_info.get('pushed_at'),
             "url": repo_info.get('html_url')
         },
-        "ai_instructions": ai_static_context,
+        "ai_instructions": ai_instructions,
         "project_documentation": project_documentation,
-        "file_structure_overview": file_structure # Byt namn för tydlighet
+        "file_structure": file_structure
     }
     
     print(json.dumps(final_context, indent=2, ensure_ascii=False), file=sys.stdout)
