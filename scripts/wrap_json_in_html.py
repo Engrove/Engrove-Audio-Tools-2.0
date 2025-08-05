@@ -16,11 +16,13 @@
 #   1. Additiv: Kryssar endast i filer, rensar inte befintliga val.
 #   2. Versal-okänslig: Matchar `App.vue` och `app.vue`.
 #   3. Partiell sökväg: Matchar om sökvägen från JSON är slutet på en fils `data-path`.
+# * v12.0 (Modal Copy/Download): Lade till knappar för kopiering och nedladdning i filförhandsgranskningsmodalen.
 #
 # TILLÄMPADE REGLER (Frankensteen v3.7):
 # - Denna fil följer principen om Single Responsibility: den bygger ett avancerat UI.
 # - Logiken i `handleInstructionInput` är nu refaktorerad för att vara mer flexibel och robust.
 # - Alter Ego-granskning har verifierat att den nya matchningslogiken uppfyller alla tre nya krav.
+# - Explicit Alltid: Hantering av bild- vs textfiler för kopiering/nedladdning är tydlig.
 
 import sys
 import os
@@ -196,7 +198,11 @@ def create_interactive_html(output_html_path):
     <div class="modal-content">
         <div class="modal-header">
             <h2 id="modal-title">File Preview</h2>
-            <button id="modal-close-btn" class="modal-close">&times;</button>
+            <div class="modal-actions" style="display: flex; gap: 10px;">
+                <button id="modal-copy-btn" disabled>Copy</button>
+                <button id="modal-download-btn" disabled>Download</button>
+                <button id="modal-close-btn" class="modal-close">&times;</button>
+            </div>
         </div>
         <div id="modal-body" class="modal-body">
             <p>Loading content...</p>
@@ -247,6 +253,13 @@ def create_interactive_html(output_html_path):
         const modalTitle = document.getElementById('modal-title');
         const modalBody = document.getElementById('modal-body');
         const modalCloseBtn = document.getElementById('modal-close-btn');
+        // New: Modal-specific action buttons
+        const modalCopyBtn = document.getElementById('modal-copy-btn');
+        const modalDownloadBtn = document.getElementById('modal-download-btn');
+
+        // --- State for modal content ---
+        let currentFileContent = '';
+        let currentFilePath = '';
 
         // --- Core Functions ---
 
@@ -331,6 +344,11 @@ def create_interactive_html(output_html_path):
             modalTitle.textContent = path;
             modalBody.innerHTML = '<p>Loading content...</p>';
             modal.classList.add('visible');
+            modalCopyBtn.disabled = true; // Disable until content is loaded and type is known
+            modalDownloadBtn.disabled = true; // Disable until content is loaded
+
+            currentFileContent = ''; // Clear previous content
+            currentFilePath = path; // Set current file path
 
             try {
                 const url = `${REPO_RAW_URL}${path}`;
@@ -338,20 +356,30 @@ def create_interactive_html(output_html_path):
                 
                 if (IMAGE_EXTENSIONS.includes(extension)) {
                     modalBody.innerHTML = `<img src="${url}" alt="Preview of ${path}">`;
+                    currentFileContent = url; // Store URL for image download
+                    modalCopyBtn.disabled = true; // Cannot copy image content as text
+                    modalDownloadBtn.disabled = false; // Can download image
                 } else {
                     const response = await fetch(url);
                     if (!response.ok) throw new Error(`HTTP error ${response.status}`);
                     const textContent = await response.text();
+                    currentFileContent = textContent; // Store text content
+                    
                     const pre = document.createElement('pre');
                     const code = document.createElement('code');
                     code.textContent = textContent;
                     pre.appendChild(code);
                     modalBody.innerHTML = '';
                     modalBody.appendChild(pre);
+                    modalCopyBtn.disabled = false; // Can copy text content
+                    modalDownloadBtn.disabled = false; // Can download text file
                 }
             } catch (error) {
                 console.error(`Failed to fetch content for ${path}:`, error);
                 modalBody.textContent = `Error: Failed to fetch content for ${path}. ${error.message}`;
+                currentFileContent = ''; // Clear content on error
+                modalCopyBtn.disabled = true;
+                modalDownloadBtn.disabled = true;
             }
         }
 
@@ -460,6 +488,62 @@ def create_interactive_html(output_html_path):
             }
         }
 
+        function copyFileContent() {
+            if (currentFileContent) {
+                navigator.clipboard.writeText(currentFileContent).then(() => {
+                    const originalText = modalCopyBtn.textContent;
+                    modalCopyBtn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        modalCopyBtn.textContent = originalText;
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                    alert('Failed to copy content.');
+                });
+            }
+        }
+
+        function downloadFileContent() {
+            if (!currentFileContent || !currentFilePath) return;
+
+            let fileName = currentFilePath.split('/').pop();
+            let mimeType = 'application/octet-stream'; // Default for binary or unknown
+            const extension = fileName.split('.').pop().toLowerCase();
+
+            // Determine MIME type
+            if (IMAGE_EXTENSIONS.includes(extension)) {
+                mimeType = `image/${extension === 'jpg' ? 'jpeg' : extension}`;
+                // For images, currentFileContent is a URL, so we can just open it or download it directly
+                const a = document.createElement('a');
+                a.href = currentFileContent; // This is the URL of the image
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                return;
+            } else {
+                // For text content, create a Blob
+                if (extension === 'json') mimeType = 'application/json';
+                else if (extension === 'js') mimeType = 'application/javascript';
+                else if (extension === 'py') mimeType = 'text/x-python';
+                else if (extension === 'md') mimeType = 'text/markdown';
+                else if (extension === 'css') mimeType = 'text/css';
+                else if (extension === 'html') mimeType = 'text/html';
+                else if (extension === 'vue') mimeType = 'text/plain'; // Vue files are typically text
+                
+                const blob = new Blob([currentFileContent], { type: mimeType });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url); // Clean up the URL object
+            }
+        }
+
+
         // --- Event Listeners ---
         fileTreeContainer.addEventListener('click', (e) => {
             const target = e.target;
@@ -504,6 +588,11 @@ def create_interactive_html(output_html_path):
             }
         });
 
+        // New: Modal action button listeners
+        modalCopyBtn.addEventListener('click', copyFileContent);
+        modalDownloadBtn.addEventListener('click', downloadFileContent);
+
+
         copyBtn.addEventListener('click', () => {
             navigator.clipboard.writeText(outputPre.textContent).then(() => {
                 const originalText = copyBtn.textContent;
@@ -541,10 +630,10 @@ def create_interactive_html(output_html_path):
             .then(data => {
                 fullContext = data;
                 fileTreeContainer.innerHTML = '';
-                // Render file structure
+                # Render file structure
                 renderFileTree(fullContext.file_structure, fileTreeContainer, '');
                 
-                // Manually create and render docs structure if it exists
+                # Manually create and render docs structure if it exists
                 if (fullContext.project_documentation && Object.keys(fullContext.project_documentation).length > 0) {
                     const docsNode = {};
                     Object.keys(fullContext.project_documentation).forEach(docKey => {
@@ -582,7 +671,7 @@ def create_interactive_html(output_html_path):
                     nestedUl.style.display = 'none';
                     li.appendChild(nestedUl);
                     
-                    fileTreeContainer.prepend(li); // Add docs at the top
+                    fileTreeContainer.prepend(li); # Add docs at the top
                 }
             })
             .catch(error => {
