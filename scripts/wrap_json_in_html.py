@@ -3,161 +3,405 @@
 # HISTORIK:
 # * v1.0 (Initial): Första versionen.
 # * v2.0 (Bug Fix): Felaktig implementation med str.format().
-# * v3.0 (Definitive Fix): Implementerar html.escape() för att korrekt hantera
-#   specialtecken (<, >, &). Omsluter innehållet i en <pre>-tagg.
-# * v4.0 (UI Enhancement): Lade till två knappar ("Kopiera", "Ladda ner") och
-#   inbäddad JavaScript för att förbättra användarvänligheten.
-#   - "Ladda ner JSON" använder en data-URI för att skapa en nedladdningsbar fil direkt i webbläsaren.
-#   - "Kopiera till urklipp" använder navigator.clipboard API för ett modernt och säkert sätt att kopiera.
+# * v3.0 (Definitive Fix): Implementerar html.escape() och <pre>-tagg.
+# * v4.0 (UI Enhancement): Lade till kopiera/ladda ner knappar för den fullständiga kontexten.
+# * v5.0 (Full Interactive UI): Total omskrivning för att implementera en fullständigt interaktiv
+#   "Context Builder". Filen genererar nu en statisk HTML-sida med all nödvändig JavaScript
+#   för att asynkront ladda, rendera och filtrera kontextdatan.
 #
 # TILLÄMPADE REGLER (Frankensteen v3.7):
-# - Denna fil följer principen om Single Responsibility.
-# - Använder standardbibliotek (`html`, `urllib.parse`) för robust hantering.
-# - Robust felhantering med try-except och tydliga felmeddelanden till stderr.
+# - Denna fil följer principen om Single Responsibility: den bygger ett UI.
+# - Ingen databearbetning sker i Python. All logik ligger i det inbäddade JavaScriptet.
+# - JavaScript-koden är skriven för att vara robust, med felhantering och effektiv event-delegering.
+# - All kod är självförklarande med tydliga funktionsnamn och kommentarer.
 
 import sys
-import html
-import urllib.parse
+import os
 
-def wrap_json_in_html(input_json_path, output_html_path):
+def create_interactive_html(output_html_path):
     """
-    Läser en JSON-fil, bäddar in den på två sätt i en HTML-sida:
-    1. HTML-escapad för säker visning i en <pre>-tagg.
-    2. Som en rå data-URI för en nedladdningsknapp.
-    Sidan innehåller knappar för att kopiera den visade datan och ladda ner den råa JSON-filen.
+    Genererar en komplett, interaktiv HTML-sida som fungerar som en "AI Context Builder".
+    Sidan hämtar `context.json` asynkront och låter användaren välja filer/mappar
+    för att bygga en anpassad, nedladdningsbar kontext.
     """
 
     html_template = """<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>AI Context Data</title>
+    <title>AI Context Builder</title>
     <style>
-        body {{
+        :root {
+            --primary-bg: #f8f9fa;
+            --secondary-bg: #ffffff;
+            --border-color: #dee2e6;
+            --text-color: #212529;
+            --accent-color: #007bff;
+            --accent-hover: #0056b3;
+            --danger-color: #dc3545;
+            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: "JetBrains Mono", "SF Mono", "Consolas", "Liberation Mono", "Menlo", monospace;
+        }
+        body {
+            font-family: var(--font-main);
+            background-color: var(--primary-bg);
+            color: var(--text-color);
             margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
-        }}
-        .controls {{
-            position: sticky;
-            top: 0;
-            background: #ffffff;
-            padding: 12px 1em;
-            border-bottom: 1px solid #ddd;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .panel {
+            padding: 1em;
+            overflow-y: auto;
+            border-right: 1px solid var(--border-color);
+        }
+        #left-panel {
+            width: 40%;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+        #right-panel {
+            width: 60%;
+            display: flex;
+            flex-direction: column;
+        }
+        .controls {
+            padding-bottom: 1em;
+            margin-bottom: 1em;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             gap: 10px;
-            z-index: 10;
-        }}
-        button, .download-btn {{
+            flex-wrap: wrap;
+        }
+        button {
             font-size: 14px;
             padding: 8px 16px;
             border-radius: 6px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--border-color);
             cursor: pointer;
-            background-color: #fff;
-            color: #333;
-            text-decoration: none;
-            display: inline-block;
+            background-color: var(--secondary-bg);
+            color: var(--text-color);
             transition: background-color 0.2s, border-color 0.2s;
-        }}
-        button:hover, .download-btn:hover {{
-            background-color: #f0f0f0;
-            border-color: #bbb;
-        }}
-        button:active, .download-btn:active {{
-            background-color: #e0e0e0;
-        }}
-        pre {{
-            margin: 1em;
-            font-family: "JetBrains Mono", "SF Mono", "Consolas", "Liberation Mono", "Menlo", monospace;
+        }
+        button:hover {
+            background-color: #e9ecef;
+        }
+        button:disabled {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        button.primary {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+        button.primary:hover {
+            background-color: var(--accent-hover);
+        }
+        #file-tree-container {
+            flex-grow: 1;
+        }
+        #file-tree-container ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        #file-tree-container li {
+            padding: 4px 0;
+        }
+        .toggle {
+            cursor: pointer;
+            user-select: none;
+            display: inline-block;
+            width: 1em;
+        }
+        label {
+            cursor: pointer;
+        }
+        .icon {
+            display: inline-block;
+            width: 1.2em;
+        }
+        #output-pre {
             white-space: pre-wrap;
             word-wrap: break-word;
-            background-color: #fff;
-            padding: 1em;
+            background-color: var(--secondary-bg);
+            border: 1px solid var(--border-color);
             border-radius: 6px;
-            border: 1px solid #ddd;
-        }}
+            padding: 1em;
+            flex-grow: 1;
+            font-family: var(--font-mono);
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
 
-<div class="controls">
-    <button id="copy-btn">Copy to Clipboard</button>
-    <a id="download-btn" class="download-btn" href="{data_uri}" download="context.json">Download JSON</a>
+<div id="left-panel" class="panel">
+    <div class="controls">
+        <button id="select-all-btn">Select All</button>
+        <button id="deselect-all-btn">Deselect All</button>
+        <button id="generate-context-btn" class="primary">Generate Context</button>
+    </div>
+    <div id="file-tree-container">
+        <p>Loading context data...</p>
+    </div>
 </div>
 
-<pre id="context-pre">{escaped_content}</pre>
+<div id="right-panel" class="panel">
+    <div class="controls">
+        <button id="download-json-btn" disabled>Download Generated JSON</button>
+    </div>
+    <pre id="output-pre">Generated context will appear here.</pre>
+</div>
 
 <script>
-    document.getElementById('copy-btn').addEventListener('click', function() {{
-        const preElement = document.getElementById('context-pre');
-        const button = this;
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- State ---
+        let fullContext = null;
 
-        // Använder det moderna och säkra Clipboard API
-        navigator.clipboard.writeText(preElement.textContent).then(function() {{
-            button.textContent = 'Copied!';
-            button.style.backgroundColor = '#d4edda'; // Grön feedback
-            button.style.borderColor = '#c3e6cb';
-            setTimeout(function() {{
-                button.textContent = 'Copy to Clipboard';
-                button.style.backgroundColor = '';
-                button.style.borderColor = '';
-            }}, 2000);
-        }}, function(err) {{
-            button.textContent = 'Failed to copy';
-            button.style.backgroundColor = '#f8d7da'; // Röd feedback
-            button.style.borderColor = '#f5c6cb';
-            console.error('Could not copy text: ', err);
-            setTimeout(function() {{
-                button.textContent = 'Copy to Clipboard';
-                button.style.backgroundColor = '';
-                button.style.borderColor = '';
-            }}, 3000);
-        }});
-    }});
+        // --- DOM Elements ---
+        const fileTreeContainer = document.getElementById('file-tree-container');
+        const outputPre = document.getElementById('output-pre');
+        const selectAllBtn = document.getElementById('select-all-btn');
+        const deselectAllBtn = document.getElementById('deselect-all-btn');
+        const generateBtn = document.getElementById('generate-context-btn');
+        const downloadBtn = document.getElementById('download-json-btn');
+        
+        // --- Core Functions ---
+
+        /**
+         * Recursively renders the file tree structure into the DOM.
+         * @param {object} node - The current node in the file_structure object.
+         * @param {HTMLElement} parentElement - The DOM element to append children to.
+         * @param {string} currentPath - The accumulated path to the current node.
+         */
+        function renderFileTree(node, parentElement, currentPath) {
+            const ul = document.createElement('ul');
+            
+            Object.keys(node).sort().forEach(key => {
+                const item = node[key];
+                const itemPath = currentPath ? `${currentPath}/${key}` : key;
+                const li = document.createElement('li');
+
+                const isFolder = item.type !== 'file';
+
+                const label = document.createElement('label');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.setAttribute('data-path', itemPath);
+                
+                label.appendChild(checkbox);
+
+                if (isFolder) {
+                    li.classList.add('folder');
+                    const toggle = document.createElement('span');
+                    toggle.className = 'toggle';
+                    toggle.textContent = '►'; // Collapsed by default
+                    li.appendChild(toggle);
+                    
+                    label.appendChild(document.createTextNode(` ${key}`));
+                    li.appendChild(label);
+
+                    const nestedUl = renderFileTree(item, li, itemPath);
+                    nestedUl.style.display = 'none'; // Initially collapsed
+                    li.appendChild(nestedUl);
+
+                } else { // It's a file
+                    li.classList.add('file');
+                    const icon = document.createElement('span');
+                    icon.className = 'icon';
+                    icon.textContent = '📄';
+                    label.prepend(icon);
+                    label.appendChild(document.createTextNode(` ${key}`));
+                    li.appendChild(label);
+                }
+                ul.appendChild(li);
+            });
+            parentElement.appendChild(ul);
+            return ul;
+        }
+
+        /**
+         * Traverses the fullContext object and sets a value at a deep path,
+         * creating nested objects as needed.
+         * @param {object} obj - The object to modify.
+         * @param {string} path - The path string (e.g., "src/components/file.js").
+         * @param {*} value - The value to set at the destination.
+         */
+        function deepSet(obj, path, value) {
+            const parts = path.split('/');
+            let current = obj;
+            for (let i = 0; i < parts.length - 1; i++) {
+                current = current[parts[i]] = current[parts[i]] || {};
+            }
+            current[parts[parts.length - 1]] = value;
+        }
+
+        /**
+         * Generates a new context object based on the selected checkboxes.
+         */
+        function generateSelectedContext() {
+            if (!fullContext) return;
+
+            const selectedPaths = Array.from(
+                fileTreeContainer.querySelectorAll('input[type="checkbox"]:checked')
+            ).map(cb => cb.dataset.path);
+            
+            // Start with a clean context, preserving top-level info
+            const newContext = {
+                project_overview: fullContext.project_overview,
+                ai_instructions: fullContext.ai_instructions,
+                project_documentation: {},
+                file_structure: {}
+            };
+
+            const selectedFiles = new Set();
+            selectedPaths.forEach(path => {
+                const parts = path.split('/');
+                let currentReadNode = fullContext.file_structure;
+                
+                // Find the node in the original structure
+                for (const part of parts) {
+                    if (currentReadNode) currentReadNode = currentReadNode[part];
+                }
+
+                if (currentReadNode) {
+                     // If it's a file, add it to the new file_structure
+                    if (currentReadNode.type === 'file') {
+                        selectedFiles.add(path);
+                    }
+                    // If it's a documentation file, add it to newContext
+                    if (path.startsWith('docs/') && fullContext.project_documentation[path.split('/')[1]]) {
+                        newContext.project_documentation[path.split('/')[1]] = fullContext.project_documentation[path.split('/')[1]];
+                    }
+                }
+            });
+
+            // Rebuild the file_structure with only selected files
+            selectedFiles.forEach(path => {
+                 const parts = path.split('/');
+                 let currentReadNode = fullContext.file_structure;
+                 for (const part of parts) {
+                    if (currentReadNode) currentReadNode = currentReadNode[part];
+                 }
+                 if(currentReadNode) {
+                    deepSet(newContext.file_structure, path, currentReadNode);
+                 }
+            });
+            
+            outputPre.textContent = JSON.stringify(newContext, null, 2);
+            downloadBtn.disabled = false;
+        }
+
+        // --- Event Listeners ---
+
+        fileTreeContainer.addEventListener('click', (e) => {
+            const target = e.target;
+
+            // Handle folder expand/collapse
+            if (target.classList.contains('toggle')) {
+                const nestedUl = target.parentElement.querySelector('ul');
+                if (nestedUl) {
+                    const isCollapsed = nestedUl.style.display === 'none';
+                    nestedUl.style.display = isCollapsed ? 'block' : 'none';
+                    target.textContent = isCollapsed ? '▼' : '►';
+                }
+            }
+
+            // Handle hierarchical checkbox selection
+            if (target.type === 'checkbox') {
+                const li = target.closest('li');
+                if (li) {
+                    const nestedCheckboxes = li.querySelectorAll('input[type="checkbox"]');
+                    nestedCheckboxes.forEach(cb => cb.checked = target.checked);
+                }
+            }
+        });
+
+        selectAllBtn.addEventListener('click', () => {
+            fileTreeContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
+        });
+
+        deselectAllBtn.addEventListener('click', () => {
+            fileTreeContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+        });
+
+        generateBtn.addEventListener('click', generateSelectedContext);
+
+        downloadBtn.addEventListener('click', () => {
+            const content = outputPre.textContent;
+            const blob = new Blob([content], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const date = new Date().toISOString().slice(0, 10);
+            
+            a.href = url;
+            a.download = `context_custom_${date}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+        
+        // --- Initialization ---
+
+        fetch('context.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                fullContext = data;
+                fileTreeContainer.innerHTML = ''; // Clear "Loading..." message
+                renderFileTree(fullContext.file_structure, fileTreeContainer, '');
+                
+                // Also render docs as a selectable "folder"
+                if (fullContext.project_documentation && Object.keys(fullContext.project_documentation).length > 0) {
+                     const docsNode = {};
+                     Object.keys(fullContext.project_documentation).forEach(docKey => {
+                         docsNode[docKey] = { type: 'file' };
+                     });
+                     const docsTree = { 'docs': docsNode };
+                     renderFileTree(docsTree, fileTreeContainer, '');
+                }
+            })
+            .catch(error => {
+                fileTreeContainer.innerHTML = `<p style="color: var(--danger-color);"><b>Error:</b> Could not load context.json. ${error.message}</p>`;
+                console.error('Failed to load context.json:', error);
+            });
+    });
 </script>
 
 </body>
 </html>"""
 
     try:
-        with open(input_json_path, 'r', encoding='utf-8') as f:
-            json_content = f.read()
-
-        # 1. Escapa innehållet för säker visning i <pre>-taggen
-        escaped_content = html.escape(json_content)
-
-        # 2. Skapa en data-URI för nedladdningsknappen
-        # URL-enkodar den råa JSON-datan för att den ska vara giltig i en länk.
-        encoded_json_for_uri = urllib.parse.quote(json_content)
-        data_uri = f"data:application/json;charset=utf-8,{encoded_json_for_uri}"
-
-        # Fyll i mallen med den förberedda datan
-        final_html = html_template.format(
-            escaped_content=escaped_content,
-            data_uri=data_uri
-        )
-
         with open(output_html_path, 'w', encoding='utf-8') as f:
-            f.write(final_html)
+            f.write(html_template)
+        print(f"[INFO] Wrapper: Skapade framgångsrikt den interaktiva HTML-filen '{output_html_path}'.")
 
-        print(f"[INFO] Wrapper: Skapade framgångsrikt '{output_html_path}' med UI-förbättringar.")
-
-    except FileNotFoundError:
-        print(f"[ERROR] Wrapper: Kunde inte hitta indatafilen: {input_json_path}", file=sys.stderr)
-        sys.exit(1)
     except Exception as e:
-        print(f"[ERROR] Wrapper: Ett oväntat fel inträffade: {e}", file=sys.stderr)
+        print(f"[ERROR] Wrapper: Ett oväntat fel inträffade vid skrivning till fil: {e}", file=sys.stderr)
         sys.exit(1)
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print("Användning: python wrap_json_in_html.py <sökväg-till-input.json> <sökväg-till-output.html>", file=sys.stderr)
+        # Denna del är nu mindre relevant då filen inte längre behöver en JSON-input,
+        # men vi behåller signaturen för att vara konsekvent med GHA-workflowet.
+        print("Användning: python wrap_json_in_html.py <dummy-input.json> <sökväg-till-output.html>", file=sys.stderr)
         sys.exit(1)
-    
-    input_file = sys.argv[1]
+
+    # sys.argv[1] (input_file) ignoreras medvetet.
     output_file = sys.argv[2]
     
-    wrap_json_in_html(input_file, output_file)
+    # Skapa output-mappen om den inte finns
+    output_dir = os.path.dirname(output_file)
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
+        
+    create_interactive_html(output_file)
