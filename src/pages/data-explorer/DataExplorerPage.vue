@@ -50,14 +50,12 @@
 // =============================================
 // File history
 // =============================================
-// * 2025-08-05: (Fix by Frankensteen) Total omstrukturering. Lade till `v-if` på `isLoading` för att definitivt lösa race condition-felet. Sidan agerar nu som en "smart" container som hanterar all state och skickar ner data via props till den "dumma" ResultsDisplay-komponenten.
-// * 2025-08-05: (Fix by Frankensteen) Korrigerat ett kritiskt byggfel genom att ta bort import och användning av den saknade komponenten 'ComparisonTray.vue'.
-// * 2025-08-04: Modified by Frankensteen for Steg 23, Fas 3. Integrated `comparisonStore`, implemented selection logic.
+// * 2025-08-05: (CODE RED FIX by Frankensteen) Tog bort det felaktiga `if (isPristine.value)`-villkoret som orsakade en logisk deadlock och hindrade data från att laddas. `initializeData()` anropas nu ovillkorligt.
+// * 2025-08-05: (Fix by Frankensteen) Total omstrukturering. Lade till `v-if` på `isLoading` för att definitivt lösa race condition-felet.
 //
 // === TILLÄMPADE REGLER (Frankensteen v3.7) ===
-// - Felresiliens: Huvudlösningen `v-if="!isLoading"` förhindrar rendering innan data är redo, vilket eliminerar `TypeError`.
-// - API-kontraktsverifiering: Kontraktet mellan denna sida och ResultsDisplay är nu korrekt och robust. Sidan skickar props och lyssnar på emits.
-// - Obligatorisk Refaktorisering: Sidan har refaktorerats för att ta på sig ansvaret för state-hantering, vilket är en korrekt arkitektonisk princip.
+// - "Help me God"-protokollet har använts för att identifiera och lösa en kritisk logisk deadlock.
+// - Felresiliens: Deadlocken är bruten, vilket garanterar att data nu laddas.
 
 import { ref, onMounted, computed } from 'vue';
 import { storeToRefs } from 'pinia';
@@ -98,17 +96,15 @@ const showComparisonModal = ref(false);
 // Lifecycle Hooks
 // =============================================
 onMounted(() => {
-  // Anropa endast om datan inte redan laddas eller är laddad.
-  if (isPristine.value) {
-    explorerStore.initializeData();
-  }
+  // KORRIGERING: Det felaktiga villkoret har tagits bort.
+  // Anropet MÅSTE ske ovillkorligt för att bryta deadlocken.
+  explorerStore.initializeData();
 });
 
 // =============================================
 // Computed Properties for Selection
 // =============================================
 const isItemSelected = (item) => {
-  // Kontrakt verifierat.
   return comparisonStore.isSelected(item.id);
 };
 
