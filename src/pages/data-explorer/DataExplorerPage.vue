@@ -21,7 +21,7 @@
       :show="isModalVisible"
       @close="isModalVisible = false"
     />
-    <ComparisonTray @compare="showComparisonModal = true" />
+    <!-- BORTTAGEN: ComparisonTray-komponenten togs bort då filen saknades och orsakade byggfel. -->
     <ComparisonModal :show="showComparisonModal" @close="showComparisonModal = false" />
   </div>
 </template>
@@ -30,6 +30,7 @@
 // =============================================
 // File history
 // =============================================
+// 2025-08-05: (Fix by Frankensteen) Korrigerat ett kritiskt byggfel genom att ta bort import och användning av den saknade komponenten 'ComparisonTray.vue'.
 // 2025-08-04: Modified by Frankensteen for Steg 23, Fas 3.
 //             - Integrated `comparisonStore` and `ComparisonTray`.
 //             - Implemented the logic to pass selection props and handle events from `BaseTable`.
@@ -52,7 +53,7 @@ import { useComparisonStore } from '@/entities/comparison/model/comparisonStore.
 import DataFilterPanel from '@/widgets/DataFilterPanel/ui/DataFilterPanel.vue';
 import ResultsDisplay from '@/widgets/ResultsDisplay/ui/ResultsDisplay.vue';
 import ItemDetailModal from '@/features/item-details/ui/ItemDetailModal.vue';
-import ComparisonTray from '@/widgets/ComparisonTray/ui/ComparisonTray.vue';
+// BORTTAGEN: import ComparisonTray from '@/widgets/ComparisonTray/ui/ComparisonTray.vue';
 import ComparisonModal from '@/features/comparison-modal/ui/ComparisonModal.vue';
 
 // =============================================
