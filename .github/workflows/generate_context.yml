@@ -200,18 +200,17 @@ jobs:
         run: |
           echo "$(date -Iseconds) [INFO] Skapar metadata..."
           cat > ${{ env.SITE_DIR }}/metadata.json << EOF
-{
-  "generated_at": "$(date -Iseconds)",
-  "workflow_run_id": "${{ github.run_id }}",
-  "commit_sha": "${{ github.sha }}",
-  "repository": "${{ github.repository }}",
-  "file_size_bytes": ${{ steps.validate.outputs.file-size }},
-  "python_version": "${{ env.PYTHON_VERSION }}",
-  "runner_os": "${{ runner.os }}"
-}
-EOF
+          {
+            "generated_at": "$(date -Iseconds)",
+            "workflow_run_id": "${{ github.run_id }}",
+            "commit_sha": "${{ github.sha }}",
+            "repository": "${{ github.repository }}",
+            "file_size_bytes": ${{ steps.validate.outputs.file-size }},
+            "python_version": "${{ env.PYTHON_VERSION }}",
+            "runner_os": "${{ runner.os }}"
+          }
+          EOF
           echo "$(date -Iseconds) [INFO] Metadata skapad."
-
       # Steg 10: Ladda upp artefakt för GitHub Pages.
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
