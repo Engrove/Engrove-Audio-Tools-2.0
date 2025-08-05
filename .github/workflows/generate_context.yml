@@ -168,7 +168,7 @@ jobs:
           fi
           
           # Validera JSON-struktur (grundläggande)
-          python -c "
+          cat > validate_json.py << 'EOF'
 import json, sys
 try:
     with open('${{ env.SITE_DIR }}/${{ env.CONTEXT_FILE }}', 'r', encoding='utf-8') as f:
@@ -185,12 +185,13 @@ try:
         print('[ERROR] file_structure ska vara ett objekt')
         sys.exit(1)
         
-    print(f'[INFO] JSON-struktur validerad. Filstruktur innehåller {len(data[\"file_structure\"])} objekt.')
+    print(f'[INFO] JSON-struktur validerad. Filstruktur innehåller {len(data["file_structure"])} objekt.')
     
 except Exception as e:
     print(f'[ERROR] JSON-validering misslyckades: {e}')
     sys.exit(1)
-"
+EOF
+          python validate_json.py
           
           echo "$(date -Iseconds) [INFO] JSON validerad framgångsrikt ($file_size bytes)."
 
