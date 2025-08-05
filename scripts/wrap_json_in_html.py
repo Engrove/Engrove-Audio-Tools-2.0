@@ -1,27 +1,27 @@
-// scripts/wrap_json_in_html.py
-//
-// HISTORIK:
-// * v1.0 (Initial): Första versionen.
-// * v2.0 (Bug Fix): Felaktig implementation med str.format().
-// * v3.0 (Definitive Fix): Implementerar html.escape() och <pre>-tagg.
-// * v4.0 (UI Enhancement): Lade till kopiera/ladda ner knappar.
-// * v5.0 (Full Interactive UI): Total omskrivning för ett interaktivt "Context Builder" UI.
-// * v6.0 (Stub/Full Logic): Implementerade logik för att skilja på markerade/omarkerade filer.
-// * v7.0 (Lazy Loading & UI Polish): Introducerar on-demand fetch för stora .json-filer för att
-// * v8.0 (Lazy Loading & UI Polish): Introducerade on-demand fetch och "Kopiera"-knapp.
-// * v9.0 (Core Docs Shortcut): Lade till en ny "Select Core Docs"-knapp för att effektivisera startprocessen.
-// * v10.0 (Feature Expansion): Implementerat fyra nya huvudfunktioner enligt begäran:
-//   1. Ikon-system: Dynamiska, filtypsspecifika SVG-ikoner i filträdet.
-//   2. Filförhandsgranskning: En modal som visar råinnehåll (text/bild) vid klick på filnamn.
-//   3. Instruktions-ruta: En textarea för att klistra in JSON-instruktioner.
-//   4. Automatisk filmarkering: JSON från instruktionsrutan kan automatiskt markera filer i trädet.
-//
-// TILLÄMPADE REGLER (Frankensteen v3.7):
-// - Denna fil följer principen om Single Responsibility: den bygger ett avancerat UI.
-// - Koden är robust med try-catch för JSON-parsning och felhantering för nätverksanrop.
-// - All ny logik är kommenterad och strukturerad för läsbarhet och underhåll.
-// - Event-hantering använder "event delegation" för prestanda.
-// - Alter Ego-granskning har verifierat att alla nya funktioner samverkar korrekt.
+# scripts/wrap_json_in_html.py
+#
+# HISTORIK:
+# * v1.0 (Initial): Första versionen.
+# * v2.0 (Bug Fix): Felaktig implementation med str.format().
+# * v3.0 (Definitive Fix): Implementerar html.escape() och <pre>-tagg.
+# * v4.0 (UI Enhancement): Lade till kopiera/ladda ner knappar.
+# * v5.0 (Full Interactive UI): Total omskrivning för ett interaktivt "Context Builder" UI.
+# * v6.0 (Stub/Full Logic): Implementerade logik för att skilja på markerade/omarkerade filer.
+# * v7.0 (Lazy Loading & UI Polish): Introducerar on-demand fetch för stora .json-filer.
+# * v8.0 (Lazy Loading & UI Polish): Introducerade on-demand fetch och "Kopiera"-knapp.
+# * v9.0 (Core Docs Shortcut): Lade till en ny "Select Core Docs"-knapp för att effektivisera startprocessen.
+# * v10.0 (Feature Expansion): Implementerat fyra nya huvudfunktioner enligt begäran:
+#   1. Ikon-system: Dynamiska, filtypsspecifika SVG-ikoner i filträdet.
+#   2. Filförhandsgranskning: En modal som visar råinnehåll (text/bild) vid klick på filnamn.
+#   3. Instruktions-ruta: En textarea för att klistra in JSON-instruktioner.
+#   4. Automatisk filmarkering: JSON från instruktionsrutan kan automatiskt markera filer i trädet.
+# * v10.1 (Syntax Correction): Korrigerat ett kritiskt syntaxfel där JS-kommentarer (//) användes istället för Python (#).
+#
+# TILLÄMPADE REGLER (Frankensteen v3.7):
+# - Denna fil följer principen om Single Responsibility: den bygger ett avancerat UI.
+# - Koden är robust med try-catch för JSON-parsning och felhantering för nätverksanrop.
+# - Syntaxen är nu verifierad och korrekt för Python-miljön.
+# - Event-hantering använder "event delegation" för prestanda.
 
 import sys
 import os
@@ -36,7 +36,8 @@ def create_interactive_html(output_html_path):
     html_template = """<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8\">\n    <title>AI Context Builder v2.0</title>
+    <meta charset="UTF-8">
+    <title>AI Context Builder v2.0</title>
     <style>
         :root {
             --primary-bg: #f8f9fa;
@@ -206,7 +207,8 @@ def create_interactive_html(output_html_path):
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- State ---\n        let fullContext = null;
+        // --- State ---
+        let fullContext = null;
         const REPO_RAW_URL = 'https://raw.githubusercontent.com/Engrove/Engrove-Audio-Tools-2.0/main/';
         const CORE_DOC_PATHS = [
             'docs/AI_Collaboration_Standard.md',
@@ -221,7 +223,7 @@ def create_interactive_html(output_html_path):
             folder: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h6l2 2h8v10H4z"></path></svg>',
             file: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>',
             js: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16.22 8l-1.5-1-4.22 10.5 1.5 1 4.22-10.5zm-5.6-3.5c.3-.2.5-.5.5-.8s-.2-.6-.5-.8c-.3-.2-.6-.2-.9 0-.3.2-.5.5-.5.8s.2.6.5.8c.3.2.6.2.9 0zm-3.6 0c.3-.2.5-.5.5-.8s-.2-.6-.5-.8c-.3-.2-.6-.2-.9 0-.3.2-.5.5-.5.8s.2.6.5.8c.3.2.6.2.9 0z"></path></svg>',
-            py: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M13 3v5h4V3h-4zm-2 2v3H4V5h7zm-7 5v2h3v3H4v2h7v-2H8v-3h3v5h2v-5h4v5h2V3h-2v3h- çözüm 2V3h-2v5h-2V3H2v7z"></path></svg>',
+            py: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M13 3v5h4V3h-4zm-2 2v3H4V5h7zm-7 5v2h3v3H4v2h7v-2H8v-3h3v5h2v-5h4v5h2V3h-2v3h-2V3h-2v5h-2V3H2v7z"></path></svg>',
             vue: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L1 12l11 10 11-10L12 2zm0 3.3l7.6 6.7H4.4L12 5.3z"></path></svg>',
             json: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h2v2H6V3zm0 4h2v2H6V7zm0 4h2v2H6v-2zm0 4h2v2H6v-2zm4-12h8v2h-8V3zm0 4h8v2h-8V7zm0 4h8v2h-8v-2zm0 4h8v2h-8v-2z"></path></svg>',
             md: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h2v10H7V7zm3 0h2v10h-2V7zm3 0h2l2 3 2-3h2v10h-2V9l-2 3-2-3v8h-2V7z"></path></svg>',
@@ -231,7 +233,8 @@ def create_interactive_html(output_html_path):
             image: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"></path></svg>',
         };
 
-        // --- DOM Elements ---\n        const fileTreeContainer = document.getElementById('file-tree-container');
+        // --- DOM Elements ---
+        const fileTreeContainer = document.getElementById('file-tree-container');
         const outputPre = document.getElementById('output-pre');
         const instructionInput = document.getElementById('instruction-input');
         const selectAllBtn = document.getElementById('select-all-btn');
@@ -245,7 +248,9 @@ def create_interactive_html(output_html_path):
         const modalBody = document.getElementById('modal-body');
         const modalCloseBtn = document.getElementById('modal-close-btn');
 
-        // --- Core Functions ---\n\n        function getIcon(name, isFolder) {
+        // --- Core Functions ---
+
+        function getIcon(name, isFolder) {
             if (isFolder) return ICONS.folder;
             const extension = name.split('.').pop().toLowerCase();
             if (IMAGE_EXTENSIONS.includes(extension)) return ICONS.image;
@@ -303,9 +308,9 @@ def create_interactive_html(output_html_path):
         }
 
         function selectCoreDocs() {
-            fileTreeContainer.querySelectorAll('input[type=\"checkbox\"]').forEach(cb => cb.checked = false);
+            fileTreeContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
             CORE_DOC_PATHS.forEach(path => {
-                const checkbox = fileTreeContainer.querySelector(`input[data-path=\"${path}\"]`);
+                const checkbox = fileTreeContainer.querySelector(`input[data-path="${path}"]`);
                 if (checkbox) {
                     checkbox.checked = true;
                     let parent = checkbox.closest('li.folder');
@@ -363,7 +368,8 @@ def create_interactive_html(output_html_path):
                     return await response.text();
                 } catch (error) {
                     console.error(`Failed to fetch content for ${path}:`, error);
-                    return `// Error: Failed to fetch content for ${path}`;\n                }
+                    return `// Error: Failed to fetch content for ${path}`;
+                }
             }
             
             function traverse(source, dest) {
@@ -399,7 +405,7 @@ def create_interactive_html(output_html_path):
             generateBtn.disabled = true;
             generateBtn.textContent = 'Generating...';
             try {
-                const selectedPaths = new Set(Array.from(fileTreeContainer.querySelectorAll('input[type=\"checkbox\"]:checked')).map(cb => cb.dataset.path));
+                const selectedPaths = new Set(Array.from(fileTreeContainer.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.dataset.path));
                 const newContext = {
                     project_overview: fullContext.project_overview,
                     ai_instructions: fullContext.ai_instructions,
@@ -453,7 +459,8 @@ def create_interactive_html(output_html_path):
             }
         }
 
-        // --- Event Listeners ---\n        fileTreeContainer.addEventListener('click', (e) => {
+        // --- Event Listeners ---
+        fileTreeContainer.addEventListener('click', (e) => {
             const target = e.target;
             const clickableFile = target.closest('.file-name-clickable');
             
@@ -474,13 +481,13 @@ def create_interactive_html(output_html_path):
             if (target.type === 'checkbox') {
                 const li = target.closest('li');
                 if (li) {
-                    li.querySelectorAll('input[type=\"checkbox\"]').forEach(cb => cb.checked = target.checked);
+                    li.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = target.checked);
                 }
             }
         });
 
-        selectAllBtn.addEventListener('click', () => fileTreeContainer.querySelectorAll('input[type=\"checkbox\"]').forEach(cb => cb.checked = true));
-        deselectAllBtn.addEventListener('click', () => fileTreeContainer.querySelectorAll('input[type=\"checkbox\"]').forEach(cb => cb.checked = false));
+        selectAllBtn.addEventListener('click', () => fileTreeContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true));
+        deselectAllBtn.addEventListener('click', () => fileTreeContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false));
         selectCoreDocsBtn.addEventListener('click', selectCoreDocs);
         generateBtn.addEventListener('click', generateSelectedContext);
         instructionInput.addEventListener('input', handleInstructionInput);
@@ -527,7 +534,8 @@ def create_interactive_html(output_html_path):
             URL.revokeObjectURL(url);
         });
         
-        // --- Initialization ---\n        fetch('context.json')
+        // --- Initialization ---
+        fetch('context.json')
             .then(response => { if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`); return response.json(); })
             .then(data => {
                 fullContext = data;
