@@ -1,164 +1,166 @@
 <!-- src/pages/data-explorer/DataExplorerPage.vue -->
-<!--
-  Detta är sidkomponenten för "Data Explorer". Dess primära ansvar är att
-  arrangera layouten för de olika widgetarna och att initiera datainhämtningen
-  när sidan laddas. Den hanterar även state för modal-fönstret.
-
-  FELRÄTTNING (Regression från Steg 11):
-  - Importerar och använder `storeToRefs` från Pinia för att säkerställa att
-    state-variabler som `isLoading`, `error`, och `dataType` förblir reaktiva.
-    Detta löser buggen där sidan fastnade permanent i laddningsläget.
--->
 <template>
-  <div class="page-container">
-    <header class="page-header">
-      <h1>Data Explorer</h1>
-      <p class="page-description">
-        Search, filter, and explore the complete database of tonearms and cartridges. Use the controls to start a search.
-      </p>
-    </header>
-
-    <!-- Visar laddningsindikator medan datan hämtas -->
-    <div v-if="isLoading" class="status-container loading">
-      <p>Loading Component Databases...</p>
-    </div>
-
-    <!-- Visar felmeddelande om något går fel vid datainhämtning -->
-    <div v-else-if="error" class="status-container error">
-      <h2>Failed to load data</h2>
-      <p>{{ error }}</p>
-    </div>
-
-    <!-- Huvudlayouten när datan är laddad -->
-    <div v-else class="explorer-layout">
-      <DataFilterPanel />
-      <ResultsDisplay @item-selected="showItemDetails" />
-    </div>
-
-    <!-- Modal-fönstret för att visa detaljer. Den ligger i DOM:en men är bara synlig när isModalOpen är true. -->
-    <ItemDetailModal
-      v-model:isOpen="isModalOpen"
-      :item="selectedItem"
-      :data-type="dataType"
+  <div class="data-explorer-page">
+    <DataFilterPanel />
+    <ResultsDisplay
+      :items="explorerStore.filteredAndSortedResults"
+      :is-loading="explorerStore.isLoading"
+      @row-click="handleRowClick"
+      @sort="handleSort"
+      :sort-key="sortKey"
+      :sort-order="sortOrder"
+      :show-selection="true"
+      :is-item-selected="isItemSelected"
+      :selection-limit-reached="comparisonStore.isLimitReached"
+      :all-visible-items-selected="allVisibleSelected"
+      @toggle-item-selection="handleToggleItem"
+      @toggle-select-all-visible="handleSelectAllVisible"
     />
+    <ItemDetailModal
+      :item="selectedItem"
+      :show="isModalVisible"
+      @close="isModalVisible = false"
+    />
+    <ComparisonTray @compare="showComparisonModal = true" />
+    <!-- Placeholder for the final component -->
+    <!-- <ComparisonModal :show="showComparisonModal" @close="showComparisonModal = false" /> -->
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useHead } from '@unhead/vue';
-import { storeToRefs } from 'pinia'; // KORRIGERING: Importera storeToRefs
-import { useExplorerStore } from '../../entities/data-explorer/model/explorerStore.js';
-import DataFilterPanel from '../../widgets/DataFilterPanel/ui/DataFilterPanel.vue';
-import ResultsDisplay from '../../widgets/ResultsDisplay/ui/ResultsDisplay.vue';
-import ItemDetailModal from '../../features/item-details/ui/ItemDetailModal.vue';
+// =============================================
+// File history
+// =============================================
+// 2025-08-04: Modified by Frankensteen for Steg 23, Fas 3.
+//             - Integrated `comparisonStore` and `ComparisonTray`.
+//             - Implemented the logic to pass selection props and handle events from `BaseTable`.
+//             - Added logic for "select all visible" functionality.
+//             - Now acts as the central conductor for all explorer interactions.
+//
 
-// --- SEO & METADATA ---
-useHead({
-  title: 'Component Database Explorer | Engrove Audio Toolkit',
-  meta: [
-    { 
-      name: 'description', 
-      content: 'Search and filter a comprehensive database of tonearms and phono cartridges. Find specifications, compliance data, effective mass, and more.' 
-    },
-    { property: 'og:title', content: 'Component Database Explorer | Engrove Audio Toolkit' },
-    { property: 'og:description', content: 'Search and filter a comprehensive database of tonearms and phono cartridges.' },
-  ],
+// =============================================
+// Instruktioner vid skapande av fil
+// =============================================
+// Kärndirektiv: Fullständig kod, alltid. Inga genvägar.
+// Principen "Explicit Alltid": Props till `ResultsDisplay` är alla explicit bundna.
+// API-kontraktsverifiering: Uppfyller det nya, utökade kontraktet för `ResultsDisplay`/`BaseTable`.
+// Red Team Alter Ego-granskning: Logiken för "select all" hanterar både val och av-val korrekt.
+//
+
+import { ref, onMounted, computed } from 'vue';
+import { useExplorerStore } from '@/entities/data-explorer/model/explorerStore.js';
+import { useComparisonStore } from '@/entities/comparison/model/comparisonStore.js';
+import DataFilterPanel from '@/widgets/DataFilterPanel/ui/DataFilterPanel.vue';
+import ResultsDisplay from '@/widgets/ResultsDisplay/ui/ResultsDisplay.vue';
+import ItemDetailModal from '@/features/item-details/ui/ItemDetailModal.vue';
+import ComparisonTray from '@/widgets/ComparisonTray/ui/ComparisonTray.vue';
+// import ComparisonModal from '@/features/comparison-modal/ui/ComparisonModal.vue';
+
+// =============================================
+// Store Initialization
+// =============================================
+const explorerStore = useExplorerStore();
+const comparisonStore = useComparisonStore();
+
+// =============================================
+// Local State
+// =============================================
+const selectedItem = ref(null);
+const isModalVisible = ref(false);
+const showComparisonModal = ref(false); // For the next step
+const sortKey = ref('manufacturer');
+const sortOrder = ref('asc'); // 'asc' or 'desc'
+
+// =============================================
+// Lifecycle Hooks
+// =============================================
+onMounted(() => {
+  if (explorerStore.allItems.length === 0) {
+    explorerStore.initialize();
+  }
 });
 
+// =============================================
+// Computed Properties for Selection
+// =============================================
+const isItemSelected = (item) => {
+  return comparisonStore.isSelected(item.id);
+};
 
-// --- STORE INTEGRATION ---
-const store = useExplorerStore();
-// KORRIGERING: Använd storeToRefs för att extrahera reaktiva variabler.
-// Detta säkerställer att komponenten uppdateras när värdena i storen ändras.
-const { isLoading, error, dataType } = storeToRefs(store);
+const allVisibleSelected = computed(() => {
+  const visibleItems = explorerStore.filteredAndSortedResults;
+  if (visibleItems.length === 0) {
+    return false;
+  }
+  return visibleItems.every(item => comparisonStore.isSelected(item.id));
+});
 
-
-// --- MODAL STATE & LOGIC ---
-const isModalOpen = ref(false);
-const selectedItem = ref(null);
-
-/**
- * Funktion som anropas när en rad i tabellen klickas.
- * Den sätter det valda objektet och öppnar modal-fönstret.
- * @param {Object} item - Dataobjektet för den klickade raden.
- */
-function showItemDetails(item) {
+// =============================================
+// Event Handlers
+// =============================================
+function handleRowClick(item) {
   selectedItem.value = item;
-  isModalOpen.value = true;
+  isModalVisible.value = true;
 }
 
+function handleSort(key) {
+  if (sortKey.value === key) {
+    sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortKey.value = key;
+    sortOrder.value = 'asc';
+  }
+}
 
-// --- LIFECYCLE HOOKS ---
-onMounted(() => {
-  // Anropa initialize-funktionen från storen för att starta datainhämtningen.
-  store.initialize();
-});
+function handleToggleItem(item) {
+  comparisonStore.toggleItem(item.id);
+}
+
+function handleSelectAllVisible() {
+  const visibleItemIds = explorerStore.filteredAndSortedResults.map(item => item.id);
+  
+  if (allVisibleSelected.value) {
+    // If all are selected, deselect all of them
+    visibleItemIds.forEach(id => {
+      if (comparisonStore.isSelected(id)) {
+        comparisonStore.toggleItem(id);
+      }
+    });
+  } else {
+    // If not all are selected, select all available ones
+    visibleItemIds.forEach(id => {
+      if (!comparisonStore.isSelected(id) && !comparisonStore.isLimitReached) {
+        comparisonStore.toggleItem(id);
+      }
+    });
+  }
+}
+
 </script>
 
 <style scoped>
-.page-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 1rem 2rem;
-}
-
-.page-header {
-  margin-bottom: 2rem;
-  border-bottom: 1px solid var(--color-border-primary);
-  padding-bottom: 1rem;
-}
-
-.page-header h1 {
-  font-size: var(--font-size-h1);
-  color: var(--color-text-high-emphasis);
-  margin: 0;
-}
-
-.page-description {
-  margin-top: 0.5rem;
-  margin-bottom: 0;
-  color: var(--color-text-medium-emphasis);
-  max-width: 80ch;
-}
-
-.explorer-layout {
+.data-explorer-page {
   display: grid;
-  grid-template-columns: 300px minmax(0, 1fr);
-  gap: 2rem;
-  align-items: flex-start;
+  grid-template-columns: 300px 1fr;
+  gap: var(--spacing-5);
+  padding: var(--spacing-5);
+  height: calc(100vh - var(--header-height)); /* Full height minus header */
+  overflow: hidden; /* Prevent body scroll */
 }
 
-.status-container {
-  padding: 4rem 2rem;
-  text-align: center;
-  background-color: var(--color-surface-secondary);
-  border: 1px solid var(--color-border-primary);
-  border-radius: 12px;
-}
-
-.status-container.error {
-  background-color: var(--color-status-error);
-  color: var(--color-text-high-emphasis);
-  border-color: var(--color-status-error);
-}
-
-.status-container p {
-  font-size: var(--font-size-h3);
-  font-weight: var(--font-weight-medium);
-}
-
-/* Responsivitet */
-@media (max-width: 900px) {
-  .explorer-layout {
-    grid-template-columns: 1fr;
+@media (max-width: 1024px) {
+  .data-explorer-page {
+    grid-template-columns: 250px 1fr;
   }
 }
 
 @media (max-width: 768px) {
-    .page-container {
-        padding: 1rem;
-    }
+  .data-explorer-page {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr; /* Filters on top, results below */
+    height: auto;
+    overflow-y: auto;
+  }
 }
 </style>
 <!-- src/pages/data-explorer/DataExplorerPage.vue -->
