@@ -5,9 +5,9 @@
 # * v2.0 (Post-Tribunal): Förbättrad version efter "Help me God"-granskning.
 # * v3.0 (Enhanced): Robust felhantering, cachning och validering.
 # * v4.0 (AI Data Dump): Omdesignad för att skapa en ren HTML-sida avsedd för AI-konsumtion.
-#   - FÖRBÄTTRAR: index.html genereras nu som en strikt datakälla.
-#   - LÄGGER TILL: JSON-innehållet bäddas in direkt i HTML-koden för enkel parsning.
-#   - FÖRENKLAR: Tar bort all onödig formatering och länkar.
+# * v5.0 (Robust Generation): Ersätter 'cat'-kommandon med ett Python-skript för att bygga index.html.
+#   - FIXAR: Löser problem med trunkerad output för stora JSON-filer.
+#   - FÖRBÄTTRAR: HTML-eskaperar JSON-innehåll för att garantera en giltig HTML-sida.
 #
 # TILLÄMPADE REGLER (Frankensteen v3.7):
 # - Robust felhantering med explicit validering i varje kritiskt steg.
@@ -136,19 +136,45 @@ jobs:
           EOF
           echo "[INFO] Metadata skapad."
 
-      # Steg 9: Skapa strikt index.html för AI-kontext.
-      - name: Create index.html for AI Context
+      # Steg 9: Skapa strikt index.html med Python för robusthet.
+      - name: Create index.html for AI Context (Robust Method)
         run: |
-          INDEX_PATH="${{ env.SITE_DIR }}/index.html"
-          CONTEXT_PATH="${{ env.SITE_DIR }}/${{ env.CONTEXT_FILE }}"
-          METADATA_PATH="${{ env.SITE_DIR }}/${{ env.METADATA_FILE }}"
+          python -c "
+          import os
+          import html
 
-          # Starta HTML-filen med AI-beskrivningen
-          cat > "$INDEX_PATH" << 'EOF'
+          # Hämta filsökvägar från miljövariabler
+          site_dir = os.environ.get('SITE_DIR')
+          context_file = os.environ.get('CONTEXT_FILE')
+          metadata_file = os.environ.get('METADATA_FILE')
+
+          index_path = os.path.join(site_dir, 'index.html')
+          context_path = os.path.join(site_dir, context_file)
+          metadata_path = os.path.join(site_dir, metadata_file)
+
+          # Läs innehållet från de genererade JSON-filerna
+          try:
+              with open(context_path, 'r', encoding='utf-8') as f:
+                  context_json = f.read()
+          except FileNotFoundError:
+              context_json = '{\"error\": \"context.json not found\"}'
+
+          try:
+              with open(metadata_path, 'r', encoding='utf-8') as f:
+                  metadata_json = f.read()
+          except FileNotFoundError:
+              metadata_json = '{\"error\": \"metadata.json not found\"}'
+          
+          # HTML-escapea JSON-innehållet för att förhindra att tecken som <, > och & bryter HTML-strukturen.
+          safe_context_json = html.escape(context_json)
+          safe_metadata_json = html.escape(metadata_json)
+
+          # Definiera hela HTML-mallen
+          html_template = f'''
           <!DOCTYPE html>
-          <html lang="sv">
+          <html lang=\"sv\">
           <head>
-              <meta charset="UTF-8">
+              <meta charset=\"UTF-8\">
               <title>AI Projektkontext: Engrove Audio Tools</title>
           </head>
           <body>
@@ -157,37 +183,27 @@ jobs:
                   <p>Detta dokument är en automatgenererad datakälla avsedd för AI-modeller som Google Gemini. Sidan innehåller den fullständiga kontexten för GitHub-repot Engrove/Engrove-Audio-Tools-2.0, uppdelad i sektioner. All data presenteras i råformat för att underlätta maskinell parsning och analys.</p>
               </header>
               <main>
-                  <section id="context-json">
+                  <section id=\"context-json\">
                       <h2>Fullständig Projektkontext (context.json)</h2>
                       <p>Följande JSON-objekt innehåller en komplett, rekursiv trädstruktur över alla filer i projektet. Varje filobjekt inkluderar metadata som filstorlek, filändelse, samt extraherade kommentarer och kodberoenden (för textfiler).</p>
-                      <pre><code>
-          EOF
-
-          # Bädda in innehållet från context.json
-          cat "$CONTEXT_PATH" >> "$INDEX_PATH"
-
-          # Fortsätt med metadata.json
-          cat >> "$INDEX_PATH" << 'EOF'
-                      </code></pre>
+                      <pre><code>{safe_context_json}</code></pre>
                   </section>
-                  <section id="metadata-json">
+                  <section id=\"metadata-json\">
                       <h2>Byggmetadata (metadata.json)</h2>
                       <p>Följande JSON-objekt innehåller metadata om den specifika GitHub Actions-körning som genererade detta dokument, inklusive tidsstämpel, commit-SHA och repository-information.</p>
-                      <pre><code>
-          EOF
-
-          # Bädda in innehållet från metadata.json
-          cat "$METADATA_PATH" >> "$INDEX_PATH"
-
-          # Avsluta HTML-filen
-          cat >> "$INDEX_PATH" << 'EOF'
-                      </code></pre>
+                      <pre><code>{safe_metadata_json}</code></pre>
                   </section>
               </main>
           </body>
           </html>
-          EOF
-          echo "[INFO] index.html för AI-kontext skapad."
+          '''
+
+          # Skriv den färdiga HTML-filen
+          with open(index_path, 'w', encoding='utf-8') as f:
+              f.write(html_template)
+          
+          print('[INFO] index.html för AI-kontext skapad med Python.')
+          "
 
       # Steg 10: Ladda upp artefakt för GitHub Pages.
       - name: Upload Pages Artifact
