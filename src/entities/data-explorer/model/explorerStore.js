@@ -20,6 +20,7 @@
 // - setPage(page): Hanterar paginering.
 //
 // === HISTORIK ===
+// * 2025-08-05: (Fix av Frankensteen) Korrigerat `TypeError` i `availableFilters`. Logiken hanterar nu `undefined` klassificeringar och pekar korrekt på den nästlade `categories`-arrayen.
 // * 2025-08-05: (Fix av Frankensteen) Korrigerat import från `filters.js`. Importerar och använder nu de två separata funktionerna `applyFilters` och `applySorting` korrekt.
 // * 2025-08-05: (Fix av Frankensteen) Korrigerat importnamnet för transformationsfunktionen från `transformer.js` för att matcha den exporterade funktionen `transformAndClassifyData`.
 // * 2025-08-05: (Fix av Frankensteen) Korrigerat ett kritiskt byggfel. Filen hade av misstag blivit helt överskriven med Vue-komponentkod från `DataFilterPanel.vue`. Innehållet har återställts till sin korrekta Pinia store-implementation.
@@ -27,15 +28,15 @@
 // * 2024-08-04: (UPPDRAG 20) Initial skapelse.
 //
 // === TILLÄMPADE REGLER (Frankensteen v3.7) ===
-// - Fullständig kod, alltid: Filen är komplett och återställd.
-// - Obligatorisk Refaktorisering: Den korrekta, refaktorerade Pinia-logiken har återinförts.
-// - API-kontraktsverifiering: Kontraktet med `filters.js` och `transformer.js` är nu uppfyllt.
+// - Fullständig kod, alltid: Filen är komplett.
+// - Red Team Alter Ego-granskning: Den kritiska "TypeError" har analyserats och en robust lösning har implementerats.
+// - Felresiliens: `availableFilters` är nu motståndskraftig mot race conditions och ofullständig data.
 
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { fetchExplorerData } from '../api/fetchExplorerData.js';
 import { transformAndClassifyData } from '../lib/transformer.js';
-import { applyFilters, applySorting } from '../lib/filters.js'; // Korrigerad import
+import { applyFilters, applySorting } from '../lib/filters.js';
 
 export const useExplorerStore = defineStore('explorer', () => {
   // --- State ---
@@ -127,13 +128,20 @@ export const useExplorerStore = defineStore('explorer', () => {
 
   const availableFilters = computed(() => {
     if (!dataType.value || !filtersMap.value[dataType.value]) return [];
-    return filtersMap.value[dataType.value].categorical.map(filter => ({
-      ...filter,
-      options: [
-        { value: '', text: `Any ${filter.label}` },
-        ...currentClassifications.value[filter.key]
-      ]
-    }));
+    
+    return filtersMap.value[dataType.value].categorical.map(filter => {
+      // KORRIGERING: Hämta klassificeringsgruppen och säkerställ att den existerar.
+      const classificationGroup = currentClassifications.value[filter.key];
+      
+      return {
+        ...filter,
+        options: [
+          { value: '', text: `Any ${filter.label}` },
+          // KORRIGERING: Sprid den nästlade 'categories'-arrayen och ha en fallback.
+          ...(classificationGroup ? classificationGroup.categories : [])
+        ]
+      };
+    });
   });
   
   const availableNumericFilters = computed(() => {
@@ -149,7 +157,6 @@ export const useExplorerStore = defineStore('explorer', () => {
   const currentResults = computed(() => {
     if (!dataType.value) return [];
     
-    // Korrigerad logik: applicera filter först, sedan sortering
     const filtered = applyFilters(
       currentTransformedData.value,
       searchTerm.value,
