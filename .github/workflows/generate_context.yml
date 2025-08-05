@@ -1,15 +1,15 @@
 # .github/workflows/generate_context.yml
 #
 # HISTORIK:
-# * v1.0 - v8.0: Tidigare versioner.
-# * v9.0 (Help me God Audit): Total refaktorisering. Publicerar nu rå JSON istället för HTML
-#   för att säkerställa att AI-modeller kan processa datan direkt och robust.
+# * v1.0 - v10.0: Tidigare versioner med diverse felaktiga inbäddningsförsök.
+# * v12.0 (Correct Architecture): Implementerar den korrekta, robusta arkitekturen.
+#   Ansvaret är nu separerat: ett skript genererar JSON, ett annat skript
+#   wrappar det i HTML. Arbetsflödet är rent, läsbart och underhållbart.
 #
 # TILLÄMPADE REGLER (Frankensteen v3.7):
-# - Robust felhantering med explicit validering i varje kritiskt steg.
-# - Prestanda-optimering genom cachning.
-# - Säkerhet genom minimala behörigheter och säker tokenhantering.
-# - Observabilitet genom strukturerad loggning.
+# - Följer Single Responsibility Principle. Varje steg gör en sak.
+# - Inga inbäddade skript. Anropar externa skript för maximal robusthet.
+# - Validerar utdata från varje kritiskt steg.
 
 name: Generate and Deploy AI Context Data
 
@@ -37,15 +37,16 @@ permissions:
 
 env:
   PYTHON_VERSION: '3.11'
-  CONTEXT_FILE: 'context.json'
-  METADATA_FILE: 'metadata.json'
   SITE_DIR: '_site'
+  JSON_FILE: 'context.json'
+  HTML_FILE: 'context.html'
+  METADATA_FILE: 'metadata.json'
 
 jobs:
   validate-and-build:
     runs-on: ubuntu-latest
     outputs:
-      context-generated: ${{ steps.generate.outputs.success }}
+      context-generated: ${{ steps.create-html.outputs.success }}
 
     steps:
       - name: Checkout Repository
@@ -65,12 +66,12 @@ jobs:
       - name: Prepare Output Directory
         run: mkdir -p ${{ env.SITE_DIR }}
 
-      - name: Generate Context JSON
-        id: generate
+      - name: Generate Raw Context JSON
+        id: generate-json
         run: |
-          if python scripts/generate_full_context.py > ${{ env.SITE_DIR }}/${{ env.CONTEXT_FILE }} 2> generation.log; then
+          if python scripts/generate_full_context.py > ${{ env.SITE_DIR }}/${{ env.JSON_FILE }} 2> generation.log; then
+            echo "[INFO] Rå context.json genererades framgångsrikt."
             echo "success=true" >> $GITHUB_OUTPUT
-            echo "[INFO] context.json genererades framgångsrikt."
           else
             echo "[ERROR] Misslyckades med att generera context.json. Se logg nedan:"
             cat generation.log
@@ -80,8 +81,21 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Create HTML Wrapper from JSON
+        id: create-html
+        if: steps.generate-json.outputs.success == 'true'
+        run: |
+          if python scripts/wrap_json_in_html.py ${{ env.SITE_DIR }}/${{ env.JSON_FILE }} ${{ env.SITE_DIR }}/${{ env.HTML_FILE }}; then
+            echo "[INFO] context.html skapades framgångsrikt."
+            echo "success=true" >> $GITHUB_OUTPUT
+          else
+            echo "[ERROR] Misslyckades med att skapa context.html från context.json."
+            echo "success=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
       - name: Create Metadata
-        if: steps.generate.outputs.success == 'true'
+        if: steps.create-html.outputs.success == 'true'
         run: |
           cat > ${{ env.SITE_DIR }}/${{ env.METADATA_FILE }} << EOF
           {
@@ -94,7 +108,7 @@ jobs:
           echo "[INFO] metadata.json skapad."
 
       - name: Upload Pages Artifact
-        if: steps.generate.outputs.success == 'true'
+        if: steps.create-html.outputs.success == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ${{ env.SITE_DIR }}
