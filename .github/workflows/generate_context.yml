@@ -90,9 +90,9 @@ jobs:
       # Steg 4: Installera Python-beroenden med version pinning.
       - name: Install Dependencies
         run: |
-          echo "$(date -Iseconds) [INFO] Installerar Python-beroenden..."
+          echo "$(date -Iseconds) [INFO] Installerar Python-beroenden från requirements.txt..."
           pip install --upgrade pip
-          pip install requests==2.31.0 jsonschema==4.19.0
+          pip install -r requirements.txt
           echo "$(date -Iseconds) [INFO] Beroenden installerade framgångsrikt."
 
       # Steg 5: Validera att skriptet finns och är körbart.
