@@ -1,115 +1,93 @@
 <!-- src/widgets/ResultsDisplay/ui/ResultsDisplay.vue -->
 <!--
   Historik:
-  - 2024-08-04: (UPPDRAG 20) Uppdaterad för att peka på de nya `_name`-fälten för tabellvisning.
+  - 2025-08-05: (Fix av Frankensteen) Total ombyggnad till en ren presentationskomponent. Alla direkta store-beroenden har tagits bort. Komponenten tar nu emot all data via props och kommunicerar via emits, vilket löser flera API-brott.
   - 2024-08-04: (UPPDRAG 22) Helt refaktorerad för att ta bort lokal logik för tabell-headers och istället konsumera dem från storen.
+  - 2024-08-04: (UPPDRAG 20) Uppdaterad för att peka på de nya `_name`-fälten för tabellvisning.
 -->
 <!--
   Viktiga implementerade regler:
   - Fullständig kod, alltid: Filen är komplett.
-  - Obligatorisk Refaktorisering: Lokal UI-logik (headers) har tagits bort. Komponenten är nu en "dummare" presentationskomponent.
-  - Alter Ego-granskning: Verifierat att komponenten korrekt binder till de nya centraliserade getters och actions från storen.
+  - Obligatorisk Refaktorisering: Komponenten är nu en "dum" presentationskomponent, vilket är en betydande arkitektonisk förbättring.
+  - API-kontraktsverifiering: Det nya kontraktet med props och emits är tydligt och robust.
+  - Felresiliens: Komponenten är inte längre sårbar för race conditions i storen.
 -->
 <template>
   <main class="results-area">
-    <!-- Platshållare när inga filter har applicerats -->
-    <div v-if="isPristine" class="results-placeholder">
-      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M20 17.58A5 5 0 0 0 15 8l-6.4 6.4a5 5 0 1 0 7.8 7.8L20 17.58z"></path></svg>
-      <p>Use the filters to begin your search.</p>
+    <div class="results-header">
+      <h3>Found {{ totalResults }} {{ dataType === 'cartridges' ? 'cartridges' : 'tonearms' }}</h3>
+      <!-- Lade till @click-event för CSV-export -->
+      <BaseButton 
+        variant="primary"
+        @click="$emit('export-csv')"
+        :disabled="totalResults === 0"
+      >
+        Download CSV
+      </BaseButton>
     </div>
 
-    <!-- Huvudinnehållet när filter är aktiva eller sökning gjorts -->
-    <div v-else>
-      <div class="results-header">
-        <h3>Found {{ totalResultsCount }} {{ dataType === 'cartridges' ? 'cartridges' : 'tonearms' }}</h3>
-        <BaseButton 
-          variant="primary"
-          @click="exportToCSV" 
-          :disabled="totalResultsCount === 0"
-        >
-          Download CSV
-        </BaseButton>
-      </div>
+    <!-- Paginering (topp) -->
+    <div v-if="totalPages > 1" class="pagination-controls">
+      <BaseButton variant="secondary" @click="$emit('page-change', currentPage - 1)" :disabled="currentPage === 1">‹ Prev</BaseButton>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <BaseButton variant="secondary" @click="$emit('page-change', currentPage + 1)" :disabled="currentPage === totalPages">Next ›</BaseButton>
+    </div>
 
-      <!-- Paginering (topp) -->
-      <div v-if="totalPages > 1" class="pagination-controls">
-        <BaseButton variant="secondary" @click="prevPage" :disabled="!canGoPrev">‹ Prev</BaseButton>
-        <span>Page {{ currentPage }} of {{ totalPages }}</span>
-        <BaseButton variant="secondary" @click="nextPage" :disabled="!canGoNext">Next ›</BaseButton>
-      </div>
+    <!-- Resultattabell -->
+    <BaseTable
+      :items="items"
+      :headers="headers"
+      :sort-key="sortKey"
+      :sort-order="sortOrder"
+      @sort="$emit('sort', $event)"
+      @row-click="$emit('row-click', $event)"
+      :show-selection="showSelection"
+      :is-item-selected="isItemSelected"
+      :selection-limit-reached="selectionLimitReached"
+      :all-visible-items-selected="allVisibleItemsSelected"
+      @toggle-item-selection="$emit('toggle-item-selection', $event)"
+      @toggle-select-all-visible="$emit('toggle-select-all-visible')"
+    />
 
-      <!-- Resultattabell som styrs från storen -->
-      <BaseTable
-        :items="paginatedResults"
-        :headers="currentHeaders"
-        :sort-key="sortKey"
-        :sort-order="sortOrder"
-        @sort="setSortKey"
-        @row-click="emit('item-selected', $event)"
-      />
-
-      <!-- Paginering (botten) -->
-      <div v-if="totalPages > 1" class="pagination-controls bottom">
-        <BaseButton variant="secondary" @click="prevPage" :disabled="!canGoPrev">‹ Prev</BaseButton>
-        <span>Page {{ currentPage }} of {{ totalPages }}</span>
-        <BaseButton variant="secondary" @click="nextPage" :disabled="!canGoNext">Next ›</BaseButton>
-      </div>
+    <!-- Paginering (botten) -->
+    <div v-if="totalPages > 1" class="pagination-controls bottom">
+      <BaseButton variant="secondary" @click="$emit('page-change', currentPage - 1)" :disabled="currentPage === 1">‹ Prev</BaseButton>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <BaseButton variant="secondary" @click="$emit('page-change', currentPage + 1)" :disabled="currentPage === totalPages">Next ›</BaseButton>
     </div>
   </main>
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { storeToRefs } from 'pinia';
-import { useExplorerStore } from '@/entities/data-explorer/model/explorerStore.js';
 import BaseTable from '@/shared/ui/BaseTable.vue';
 import BaseButton from '@/shared/ui/BaseButton.vue';
 
 // --- PROPS & EMITS ---
-const emit = defineEmits(['item-selected']);
 
-// --- STORE INTEGRATION ---
-const store = useExplorerStore();
-
-// Destrukturera actions direkt från storen.
-const { setSortKey, nextPage, prevPage, exportToCSV } = store;
-
-// Destrukturera state och getters med storeToRefs för att behålla reaktiviteten.
-const {
-  dataType,
-  searchTerm,
-  categoryFilters,
-  numericFilters,
-  totalResultsCount,
-  paginatedResults,
-  currentPage,
-  sortKey,
-  sortOrder,
-  totalPages,
-  currentHeaders, // NY: Importerad från store
-} = storeToRefs(store);
-
-
-// --- COMPUTED PROPERTIES ---
-
-// BORTTAGEN: Den lokala computed propertyn `currentHeaders` har raderats.
-// Logiken finns nu centraliserad i explorerStore.
-
-// Avgör om filterpanelen är i sitt "ursprungliga" tillstånd.
-const isPristine = computed(() => {
-  const isSearchTermEmpty = searchTerm.value === '';
-  const areCategoriesEmpty = Object.values(categoryFilters.value).every(v => v === undefined || v === '');
-  const areNumericsEmpty = Object.values(numericFilters.value).every(v => v.min === null && v.max === null);
-
-  // Pristine är när INGEN sökning har gjorts OCH inga resultat finns.
-  // Detta förhindrar att platshållaren visas när man återställer filter men det fortfarande finns resultat.
-  return totalResultsCount.value === 0 && isSearchTermEmpty && areCategoriesEmpty && areNumericsEmpty;
+defineProps({
+  items: { type: Array, required: true },
+  headers: { type: Array, required: true },
+  dataType: { type: String, required: true },
+  totalResults: { type: Number, required: true },
+  totalPages: { type: Number, required: true },
+  currentPage: { type: Number, required: true },
+  sortKey: { type: String, required: true },
+  sortOrder: { type: String, required: true },
+  // Props för val-funktionalitet
+  showSelection: { type: Boolean, default: false },
+  isItemSelected: { type: Function, default: () => false },
+  selectionLimitReached: { type: Boolean, default: false },
+  allVisibleItemsSelected: { type: Boolean, default: false },
 });
 
-// Beräkningar för paginering
-const canGoPrev = computed(() => currentPage.value > 1);
-const canGoNext = computed(() => currentPage.value < totalPages.value);
-
+defineEmits([
+  'sort',
+  'page-change',
+  'row-click',
+  'export-csv',
+  'toggle-item-selection',
+  'toggle-select-all-visible'
+]);
 </script>
 
 <style scoped>
@@ -151,30 +129,6 @@ const canGoNext = computed(() => currentPage.value < totalPages.value);
   font-weight: var(--font-weight-medium);
   font-family: var(--font-family-monospace);
   user-select: none;
-}
-
-.results-placeholder {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 400px;
-  border: 2px dashed var(--color-border-primary);
-  border-radius: 12px;
-  color: var(--color-text-low-emphasis);
-  text-align: center;
-}
-
-.results-placeholder svg {
-  margin-bottom: 1rem;
-  color: var(--color-text-low-emphasis);
-  opacity: 0.5;
-}
-
-.results-placeholder p {
-  font-size: var(--font-size-h3);
-  font-weight: var(--font-weight-medium);
-  margin: 0;
 }
 
 /* ========================================================================== */
