@@ -211,6 +211,44 @@ jobs:
           }
           EOF
           echo "$(date -Iseconds) [INFO] Metadata skapad."
+      # Steg 9.5: Skapa en enkel index.html för att visa filerna
+      - name: Create index.html
+        run: |
+          echo "$(date -Iseconds) [INFO] Skapar index.html..."
+          cat > ${{ env.SITE_DIR }}/index.html << EOF
+      <!DOCTYPE html>
+      <html lang="sv">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Projektkontext för Engrove Audio Tools</title>
+          <style>
+              body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif; line-height: 1.6; padding: 2em; max-width: 800px; margin: 0 auto; }
+              h1 { color: #24292e; border-bottom: 1px solid #e1e4e8; padding-bottom: 0.3em; }
+              a { color: #0366d6; text-decoration: none; }
+              a:hover { text-decoration: underline; }
+              ul { list-style-type: none; padding: 0; }
+              li { background-color: #f6f8fa; border: 1px solid #d1d5da; border-radius: 6px; padding: 12px; margin-bottom: 8px; }
+              footer { margin-top: 2em; color: #586069; font-size: 0.9em; }
+          </style>
+      </head>
+      <body>
+          <h1>Projektkontext</h1>
+          <p>Denna sida innehåller automatiskt genererade filer som beskriver projektets struktur och metadata.</p>
+          
+          <ul>
+              <li><a href="context.json"><strong>context.json</strong></a> - Fullständig kontext med filstruktur och projektöversikt.</li>
+              <li><a href="metadata.json"><strong>metadata.json</strong></a> - Metadata om den senaste körningen av detta workflow.</li>
+          </ul>
+
+          <footer>
+              Sidan genererades automatiskt: $(date -Iseconds)
+          </footer>
+      </body>
+      </html>
+      EOF
+          echo "$(date -Iseconds) [INFO] index.html skapad."
+          
       # Steg 10: Ladda upp artefakt för GitHub Pages.
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
