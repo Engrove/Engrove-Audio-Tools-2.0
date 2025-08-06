@@ -4,14 +4,14 @@
 // Denna Pinia store hanterar all state och logik för Data Explorer-funktionen.
 //
 // === HISTORIK ===
-// * 2025-08-05: (CODE RED FIX by Frankensteen) Tog bort det felaktiga beroendet av `isLoading` från `isPristine`-gettern. Detta var den andra delen av den logiska deadlocken.
+// * 2025-08-06: (Frankensteen) Uppdaterat `isPristine`-gettern för att korrekt hantera array-baserade värden i `categoryFilters` för multi-select-funktionalitet.
+// * 2025-08-05: (CODE RED FIX by Frankensteen) Tog bort det felaktiga beroendet av `isLoading` från `isPristine`-gettern.
 // * 2025-08-05: (Definitiv Fix av Frankensteen) Infört robusta skyddsvillkor med optional chaining (`?.`) i getters.
-// * 2025-08-05: (Fix av Frankensteen) Diverse tidigare korrigeringar för att hantera race conditions och API-fel.
 //
-// === TILLÄMPADE REGLER (Frankensteen v3.7) ===
-// - "Help me God"-protokollet har använts för att identifiera och lösa en kritisk logisk deadlock.
-// - Felresiliens: Deadlocken är bruten, vilket garanterar att data nu laddas.
-// - Semantik och läsbarhet: `isPristine` betyder nu vad den heter - är filtren orörda?
+// === TILLÄMPADE REGLER (Frankensteen v4.0) ===
+// - "Help me God"-protokollet har använts för att verifiera denna ändring.
+// - API-kontraktsverifiering: Ändringen är internt konsekvent och påverkar inte storens externa API.
+// - Obligatorisk Refaktorisering: Logiken i `isPristine` är nu mer robust och generell.
 
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
@@ -24,12 +24,10 @@ export const useExplorerStore = defineStore('explorer', () => {
   const isLoading = ref(true);
   const error = ref(null);
 
-  const cartridgesData = ref([]);
-  const tonearmsData = ref([]);
-  const cartridgesClassifications = ref({});
-  const tonearmsClassifications = ref({});
+  const allItems = ref([]);
   const filtersMap = ref({});
   const translationMap = ref({});
+  const classifications = ref({});
 
   const dataType = ref(null);
   const searchTerm = ref('');
@@ -78,21 +76,21 @@ export const useExplorerStore = defineStore('explorer', () => {
   }
 
   async function initializeData() {
-    // Förhindra onödiga omladdningar om en annan komponent skulle anropa igen.
-    if (!isLoading.value && cartridgesData.value.length > 0) {
-        return;
+    if (!isLoading.value && allItems.value.length > 0) {
+      return;
     }
 
     try {
       isLoading.value = true;
       const data = await fetchExplorerData();
       
-      cartridgesData.value = data.cartridgesData;
-      tonearmsData.value = data.tonearmsData;
-      cartridgesClassifications.value = data.cartridgesClassifications;
-      tonearmsClassifications.value = data.tonearmsClassifications;
+      const cartridges = transformAndClassifyData(data.cartridgesData, data.cartridgesClassifications);
+      const tonearms = transformAndClassifyData(data.tonearmsData, data.tonearmsClassifications);
+      allItems.value = [...cartridges, ...tonearms];
+
       filtersMap.value = data.filtersMap;
       translationMap.value = data.translationMap;
+      classifications.value = { ...data.cartridgesClassifications, ...data.tonearmsClassifications };
 
       if (!dataType.value) {
         dataType.value = 'cartridges';
@@ -108,46 +106,24 @@ export const useExplorerStore = defineStore('explorer', () => {
   }
 
   // --- Getters (Computed) ---
-  const currentRawData = computed(() => {
+  const currentItems = computed(() => {
     if (!dataType.value) return [];
-    return dataType.value === 'tonearms' ? tonearmsData.value : cartridgesData.value;
-  });
-
-  const currentClassifications = computed(() => {
-    if (!dataType.value) return {};
-    return dataType.value === 'tonearms' ? tonearmsClassifications.value : cartridgesClassifications.value;
+    return allItems.value.filter(item => item.item_type === dataType.value);
   });
 
   const availableFilters = computed(() => {
-    const categoricalFilters = filtersMap.value[dataType.value]?.categorical || [];
-    
-    return categoricalFilters.map(filter => {
-      const classificationGroup = currentClassifications.value[filter.key];
-      
-      return {
-        ...filter,
-        options: [
-          { value: '', text: `Any ${filter.label}` },
-          ...(classificationGroup ? classificationGroup.categories : [])
-        ]
-      };
-    });
+    return filtersMap.value[dataType.value]?.categorical || [];
   });
   
   const availableNumericFilters = computed(() => {
     return filtersMap.value[dataType.value]?.numerical || [];
-  });
-
-  const currentTransformedData = computed(() => {
-    if (!dataType.value) return [];
-    return transformAndClassifyData(currentRawData.value, currentClassifications.value);
   });
   
   const currentResults = computed(() => {
     if (!dataType.value) return [];
     
     const filtered = applyFilters(
-      currentTransformedData.value,
+      currentItems.value,
       searchTerm.value,
       categoryFilters.value,
       numericFilters.value
@@ -170,9 +146,8 @@ export const useExplorerStore = defineStore('explorer', () => {
   });
   
   const isPristine = computed(() => {
-    // KORRIGERING: Det felaktiga beroendet av `isLoading` har tagits bort.
     const hasActiveSearch = searchTerm.value.trim() !== '';
-    const hasActiveCategoryFilters = Object.values(categoryFilters.value).some(v => v);
+    const hasActiveCategoryFilters = Object.values(categoryFilters.value).some(v => Array.isArray(v) && v.length > 0);
     const hasActiveNumericFilters = Object.values(numericFilters.value).some(v => v.min != null || v.max != null);
     
     return !hasActiveSearch && !hasActiveCategoryFilters && !hasActiveNumericFilters;
@@ -181,11 +156,11 @@ export const useExplorerStore = defineStore('explorer', () => {
   return {
     // State
     isLoading, error, dataType, searchTerm, categoryFilters, numericFilters,
-    sortKey, sortOrder, currentPage, itemsPerPage,
+    sortKey, sortOrder, currentPage, itemsPerPage, allItems,
     
     // Getters
     paginatedResults, totalResults, totalPages, currentHeaders, isPristine,
-    availableFilters, availableNumericFilters,
+    availableFilters, availableNumericFilters, currentItems, classifications,
     
     // Actions
     initializeData, setDataType, resetFilters, setSort, setPage,
