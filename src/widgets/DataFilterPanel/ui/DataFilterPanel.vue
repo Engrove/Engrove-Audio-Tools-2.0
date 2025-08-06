@@ -1,6 +1,7 @@
 <!-- src/widgets/DataFilterPanel/ui/DataFilterPanel.vue -->
 <!--
   Historik:
+  - 2025-08-06: (Frankensteen) DEFINITIVE FIX: Implemented fallback logic (label: cat.name || cat.id) in the correct, up-to-date version of this file to handle missing 'name' properties in classification data.
   - 2025-08-06: (Frankensteen - Operation: Strategisk Reträtt) Slutförd. Komponenten är nu anpassad till den nya Options API-storen. `storeToRefs` används inte längre för state-objekt, och v-model är direkt bundet till `store.property`. Detta löser den kritiska TypeError-kraschen.
   - 2025-08-06: (Frankensteen - Operation: Synkroniserad Initialisering) All lokal logik för filter-initialisering (watch, onMounted) har tagits bort. Komponenten förlitar sig nu helt på att storen tillhandahåller ett synkroniserat och korrekt state, vilket löser race condition-kraschen.
   - 2025-08-06: (Frankensteen) Bytte ut BaseSelect mot BaseMultiSelect för alla kategorifilter för att möjliggöra flervalsfiltrering.
@@ -8,9 +9,9 @@
 -->
 <!--
   Viktiga implementerade regler:
+  - Felresiliens: Komponenten hanterar nu ofullständig data (saknad 'name'-nyckel) utan att misslyckas.
   - API-kontraktsverifiering: Komponenten konsumerar nu korrekt en Pinia Options API-store, vilket är en fundamental ändring av dess interna API-kontrakt.
   - Obligatorisk Refaktorisering: Genom att ta bort felaktig state-hantering och anpassa till den nya arkitekturen är komponenten nu både enklare och korrekt.
-  - Felresiliens: Grundorsaken till en kritisk krasch har eliminerats.
 -->
 <template>
   <aside class="filter-panel">
@@ -102,7 +103,7 @@ const getOptionsForFilter = (filterKey) => {
   }
   return classificationGroup.categories.map(cat => ({
     value: cat.id,
-    label: cat.name
+    label: cat.name || cat.id
   }));
 };
 
