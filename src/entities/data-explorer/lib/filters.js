@@ -12,18 +12,17 @@
  * @param {Array<Object>} items - Listan med objekt som ska filtreras (t.ex. alla tonarmar).
  * @param {string} searchTerm - Söksträngen som användaren har matat in.
  * @param {Object} categoryFilters - Ett objekt med kategoriska filter. 
- *   Exempel: { compliance_level: 'high', bearing_type: 'unipivot' }
+ *   Exempel (Single-select): { compliance_level: 'high' }
+ *   Exempel (Multi-select): { manufacturer: ['Ortofon', 'Rega'], stylus_family: ['Elliptical'] }
  * @param {Object} numericFilters - Ett objekt med numeriska intervallfilter.
  *   Exempel: { effective_mass_g: { min: 10, max: 15 } }
  * @returns {Array<Object>} En ny array med de filtrerade objekten.
  */
 export function applyFilters(items, searchTerm, categoryFilters, numericFilters) {
-  // Normalisera söktermen för skiftlägesokänslig sökning.
   const normalizedSearchTerm = searchTerm.toLowerCase().trim();
 
   return items.filter(item => {
     // --- Söktermsfiltrering (Text Search) ---
-    // Söker i 'manufacturer' och 'model'. Om söktermen är tom, godkänns alla.
     const manufacturerMatch = item.manufacturer ? item.manufacturer.toLowerCase().includes(normalizedSearchTerm) : false;
     const modelMatch = item.model ? item.model.toLowerCase().includes(normalizedSearchTerm) : false;
     const searchMatch = normalizedSearchTerm === '' ? true : (manufacturerMatch || modelMatch);
@@ -31,41 +30,54 @@ export function applyFilters(items, searchTerm, categoryFilters, numericFilters)
       return false;
     }
 
-    // --- Kategorisk Filtrering (Dropdowns) ---
-    // Loopar igenom alla aktiva kategorifilter.
+    // --- Kategorisk Filtrering (Dropdowns & Multi-Select) ---
     for (const key in categoryFilters) {
-      const filterValue = categoryFilters[key];
-      // Om ett filter är satt (inte null/undefined) och objektets värde inte matchar, uteslut det.
-      if (filterValue && item[key] !== filterValue) {
-        return false;
+      const filterValues = categoryFilters[key];
+      
+      // Hoppa över om filtret är null, undefined eller en tom array.
+      if (!filterValues || filterValues.length === 0) {
+        continue;
+      }
+      
+      const itemValue = item[key];
+      const filterValuesArray = Array.isArray(filterValues) ? filterValues : [filterValues];
+
+      // Hantera "tags" speciellt, eftersom det är en array i datan.
+      if (key === 'tags' && Array.isArray(itemValue)) {
+        // Om någon av item's tags finns i filter-arrayen, är det en match.
+        const tagMatch = itemValue.some(tag => filterValuesArray.includes(tag));
+        if (!tagMatch) {
+          return false;
+        }
+      } else {
+        // För alla andra fält, kontrollera om item's värde finns i filter-arrayen.
+        if (!filterValuesArray.includes(itemValue)) {
+          return false;
+        }
       }
     }
 
     // --- Numerisk Intervallfiltrering (Range Filters) ---
-    // Loopar igenom alla aktiva numeriska filter.
     for (const key in numericFilters) {
       const { min, max } = numericFilters[key];
       const itemValue = item[key];
       
-      // Hoppa över om objektet saknar värde för detta filter.
       if (itemValue === null || itemValue === undefined) {
         continue;
       }
 
-      // Om ett min-värde är satt och objektets värde är mindre, uteslut det.
-      if (min !== null && itemValue < min) {
+      if (min !== null && min !== undefined && itemValue < min) {
         return false;
       }
-      // Om ett max-värde är satt och objektets värde är större, uteslut det.
-      if (max !== null && itemValue > max) {
+      if (max !== null && max !== undefined && itemValue > max) {
         return false;
       }
     }
 
-    // Om objektet klarade alla kontroller, inkludera det i resultatet.
     return true;
   });
 }
+
 
 /**
  * Sorterar en lista av objekt baserat på en nyckel och ordning.
@@ -76,30 +88,24 @@ export function applyFilters(items, searchTerm, categoryFilters, numericFilters)
  * @returns {Array<Object>} En ny, sorterad array.
  */
 export function applySorting(items, sortKey, sortOrder) {
-  // Om ingen sorteringsnyckel är angiven, returnera listan som den är.
   if (!sortKey) {
     return items;
   }
 
-  // Skapa en kopia av arrayen för att undvika att mutera originalet.
   return [...items].sort((a, b) => {
     const valA = a[sortKey];
     const valB = b[sortKey];
 
-    // Hantera null/undefined-värden så att de alltid hamnar sist.
     if (valA === null || valA === undefined) return 1;
     if (valB === null || valB === undefined) return -1;
 
     let comparison = 0;
-    // Jämför baserat på datatyp.
     if (typeof valA === 'number' && typeof valB === 'number') {
       comparison = valA - valB;
     } else {
       comparison = String(valA).toLowerCase().localeCompare(String(valB).toLowerCase());
     }
     
-    // Om sortOrder är 'desc', invertera jämförelseresultatet.
-    // Om sortOrder är 'asc', returnera comparison direkt.
     return sortOrder === 'desc' ? -comparison : comparison;
   });
 }
