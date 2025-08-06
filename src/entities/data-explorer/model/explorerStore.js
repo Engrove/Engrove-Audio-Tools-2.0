@@ -4,18 +4,17 @@
 // Denna Pinia store hanterar all state och logik för Data Explorer-funktionen.
 //
 // === HISTORIK ===
+// * 2025-08-06: (Frankensteen - DEFINITIV FIX) Helt refaktorerad för att säkerställa atomära state-övergångar. 'watch'-logiken har tagits bort och all filter-initialisering sker nu synkront inuti 'setDataType'-åtgärden. Detta löser en subtil race condition som orsakade tomma dropdowns.
 // * 2025-08-06: (Frankensteen - Operation: Synkroniserad Initialisering) Infört en intern 'watch' för att atomiskt synkronisera filter-state (categoryFilters, numericFilters) med den valda datatypen. Detta löser en kritisk race condition-krasch.
 // * 2025-08-06: (Frankensteen) Uppdaterat `isPristine`-gettern för att korrekt hantera array-baserade värden i `categoryFilters` för multi-select-funktionalitet.
-// * 2025-08-05: (CODE RED FIX by Frankensteen) Tog bort det felaktiga beroendet av `isLoading` från `isPristine`-gettern.
-// * 2025-08-05: (Definitiv Fix av Frankensteen) Infört robusta skyddsvillkor med optional chaining (`?.`) i getters.
 //
 // === TILLÄMPADE REGLER (Frankensteen v4.0) ===
 // - "Help me God"-protokollet har använts för att verifiera denna ändring.
-// - API-kontraktsverifiering: Den interna logiken är förbättrad, men det externa API:et (actions, getters) förblir konsekvent.
-// - Obligatorisk Refaktorisering: Logiken för state-initialisering är nu centraliserad, robust och borttagen från komponentlagret.
+// - API-kontraktsverifiering: Det externa API:et förblir konsekvent, men beteendet hos 'setDataType' är nu mer robust.
+// - Obligatorisk Refaktorisering: Logiken är nu korrekt placerad för att garantera atomära state-uppdateringar.
 
 import { defineStore } from 'pinia';
-import { ref, computed, watch } from 'vue'; // Ny import: watch
+import { ref, computed } from 'vue'; // 'watch' har tagits bort
 import { fetchExplorerData } from '../api/fetchExplorerData.js';
 import { transformAndClassifyData } from '../lib/transformer.js';
 import { applyFilters, applySorting } from '../lib/filters.js';
@@ -54,30 +53,37 @@ export const useExplorerStore = defineStore('explorer', () => {
   });
   
   // --- Actions ---
-  function _resetFilterValues() {
+  function _initializeAndResetFilters() {
     searchTerm.value = '';
     currentPage.value = 1;
     sortKey.value = 'manufacturer';
     sortOrder.value = 'asc';
 
-    // Istället för att radera objekten, nollställ deras värden
-    for (const key in categoryFilters.value) {
-        categoryFilters.value[key] = [];
-    }
-    for (const key in numericFilters.value) {
-        numericFilters.value[key] = { min: null, max: null };
-    }
+    // Bygg om state-objekten från grunden för att matcha de nya filtren
+    const newCategoryFilters = {};
+    availableFilters.value.forEach(filter => {
+      newCategoryFilters[filter.key] = [];
+    });
+    categoryFilters.value = newCategoryFilters;
+
+    const newNumericFilters = {};
+    availableNumericFilters.value.forEach(filter => {
+      newNumericFilters[filter.key] = { min: null, max: null };
+    });
+    numericFilters.value = newNumericFilters;
   }
 
   function setDataType(type) {
     if (dataType.value !== type) {
       dataType.value = type;
-      // Anrop till _resetAllFilters tas bort härifrån. Watchern hanterar det.
+      // All logik körs nu här, synkront och atomärt
+      _initializeAndResetFilters();
     }
   }
 
   function resetFilters() {
-    _resetFilterValues();
+    // Anropar samma funktion för att säkerställa konsekvens
+    _initializeAndResetFilters();
   }
 
   function setSort(key) {
@@ -115,6 +121,8 @@ export const useExplorerStore = defineStore('explorer', () => {
 
       if (!dataType.value) {
         dataType.value = 'cartridges';
+        // Initialisera filter för start-datatypen
+        _initializeAndResetFilters();
       }
 
       error.value = null;
@@ -126,28 +134,7 @@ export const useExplorerStore = defineStore('explorer', () => {
     }
   }
 
-  // --- NY WATCHER FÖR SYNKRONISERING ---
-  // Denna watcher är lösningen. Den garanterar att när `availableFilters` ändras
-  // (som ett resultat av att `dataType` ändras), så är filter-staten omedelbart
-  // synkroniserad och korrekt initialiserad INNAN UI kan försöka rendera.
-  watch(availableFilters, (newFilters, oldFilters) => {
-      _resetFilterValues(); // Nollställ alla filtervärden
-
-      // Bygg om state-objekten från grunden för att matcha de nya filtren
-      const newCategoryFilters = {};
-      availableFilters.value.forEach(filter => {
-          newCategoryFilters[filter.key] = [];
-      });
-      categoryFilters.value = newCategoryFilters;
-
-      const newNumericFilters = {};
-      availableNumericFilters.value.forEach(filter => {
-          newNumericFilters[filter.key] = { min: null, max: null };
-      });
-      numericFilters.value = newNumericFilters;
-
-  }, { deep: true });
-
+  // --- Watcher har tagits bort ---
 
   // --- Getters (Computed) Forts. ---
   const currentResults = computed(() => {
