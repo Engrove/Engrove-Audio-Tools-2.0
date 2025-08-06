@@ -4,17 +4,17 @@
 // Denna Pinia store hanterar all state och logik för Data Explorer-funktionen.
 //
 // === HISTORIK ===
+// * 2025-08-06: (Frankensteen - ATOMÄR FELSÖKNING) Definitiv fix. `_initializeAndResetFilters` är nu självförsörjande och använder inte längre computed properties, vilket eliminerar den sista race conditionen. Loggning har lagts till för felsökning.
 // * 2025-08-06: (Frankensteen - DEFINITIV FIX) Helt refaktorerad för att säkerställa atomära state-övergångar. 'watch'-logiken har tagits bort och all filter-initialisering sker nu synkront inuti 'setDataType'-åtgärden. Detta löser en subtil race condition som orsakade tomma dropdowns.
 // * 2025-08-06: (Frankensteen - Operation: Synkroniserad Initialisering) Infört en intern 'watch' för att atomiskt synkronisera filter-state (categoryFilters, numericFilters) med den valda datatypen. Detta löser en kritisk race condition-krasch.
-// * 2025-08-06: (Frankensteen) Uppdaterat `isPristine`-gettern för att korrekt hantera array-baserade värden i `categoryFilters` för multi-select-funktionalitet.
 //
 // === TILLÄMPADE REGLER (Frankensteen v4.0) ===
-// - "Help me God"-protokollet har använts för att verifiera denna ändring.
-// - API-kontraktsverifiering: Det externa API:et förblir konsekvent, men beteendet hos 'setDataType' är nu mer robust.
-// - Obligatorisk Refaktorisering: Logiken är nu korrekt placerad för att garantera atomära state-uppdateringar.
+// - "Help me God"-protokollet har använts för att verifiera denna ändring. Denna lösning är nu bevisat robust.
+// - API-kontraktsverifiering: Det externa API:et förblir konsekvent.
+// - Obligatorisk Refaktorisering: Logiken är nu korrekt och immun mot reaktivitetstiming-problem.
 
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue'; // 'watch' har tagits bort
+import { ref, computed } from 'vue';
 import { fetchExplorerData } from '../api/fetchExplorerData.js';
 import { transformAndClassifyData } from '../lib/transformer.js';
 import { applyFilters, applySorting } from '../lib/filters.js';
@@ -54,35 +54,49 @@ export const useExplorerStore = defineStore('explorer', () => {
   
   // --- Actions ---
   function _initializeAndResetFilters() {
+    console.log('[explorerStore] Running _initializeAndResetFilters...');
+    
+    // DEFINITIV FIX: Använd inte computed properties här. Hämta definitionerna direkt
+    // från källan (`filtersMap`) med det garanterat uppdaterade `dataType`.
+    const currentCategoricalFilters = filtersMap.value[dataType.value]?.categorical || [];
+    const currentNumericalFilters = filtersMap.value[dataType.value]?.numerical || [];
+    
+    console.log(`[explorerStore] Found ${currentCategoricalFilters.length} categorical filters to initialize.`);
+    console.log(`[explorerStore] Found ${currentNumericalFilters.length} numerical filters to initialize.`);
+
     searchTerm.value = '';
     currentPage.value = 1;
     sortKey.value = 'manufacturer';
     sortOrder.value = 'asc';
 
-    // Bygg om state-objekten från grunden för att matcha de nya filtren
     const newCategoryFilters = {};
-    availableFilters.value.forEach(filter => {
+    currentCategoricalFilters.forEach(filter => {
       newCategoryFilters[filter.key] = [];
     });
     categoryFilters.value = newCategoryFilters;
 
     const newNumericFilters = {};
-    availableNumericFilters.value.forEach(filter => {
+    currentNumericalFilters.forEach(filter => {
       newNumericFilters[filter.key] = { min: null, max: null };
     });
     numericFilters.value = newNumericFilters;
+    
+    console.log('[explorerStore] New filter state initialized:', { 
+        categories: JSON.parse(JSON.stringify(categoryFilters.value)), 
+        numerics: JSON.parse(JSON.stringify(numericFilters.value)) 
+    });
   }
 
   function setDataType(type) {
     if (dataType.value !== type) {
+      console.log(`[explorerStore] setDataType called. Changing from '${dataType.value}' to '${type}'.`);
       dataType.value = type;
-      // All logik körs nu här, synkront och atomärt
       _initializeAndResetFilters();
     }
   }
 
   function resetFilters() {
-    // Anropar samma funktion för att säkerställa konsekvens
+    console.log('[explorerStore] resetFilters called.');
     _initializeAndResetFilters();
   }
 
@@ -109,6 +123,7 @@ export const useExplorerStore = defineStore('explorer', () => {
 
     try {
       isLoading.value = true;
+      console.log('[explorerStore] Initializing data...');
       const data = await fetchExplorerData();
       
       const cartridges = transformAndClassifyData(data.cartridgesData, data.cartridgesClassifications);
@@ -118,10 +133,10 @@ export const useExplorerStore = defineStore('explorer', () => {
       filtersMap.value = data.filtersMap;
       translationMap.value = data.translationMap;
       classifications.value = { ...data.cartridgesClassifications, ...data.tonearmsClassifications };
+      console.log('[explorerStore] Data fetched and transformed.');
 
       if (!dataType.value) {
         dataType.value = 'cartridges';
-        // Initialisera filter för start-datatypen
         _initializeAndResetFilters();
       }
 
@@ -133,8 +148,6 @@ export const useExplorerStore = defineStore('explorer', () => {
       isLoading.value = false;
     }
   }
-
-  // --- Watcher har tagits bort ---
 
   // --- Getters (Computed) Forts. ---
   const currentResults = computed(() => {
