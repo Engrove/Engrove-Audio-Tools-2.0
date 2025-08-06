@@ -16,17 +16,17 @@
 # * v12.0 (Modal Copy/Download): Lade till knappar för kopiering och nedladdning i filförhandsgranskningsmodalen.
 # * v12.1 (CRITICAL BUGFIX): Lade till defensiva null-kontroller runt `addEventListener` för att förhindra appkrasch.
 # * v13.0 (2025-08-06): Uppdaterad för att hantera den nya modulära instruktionsstrukturen.
-# * v13.1 (2025-08-06): (BUGFIX) Korrigerat "Select/Deselect All"-logiken för att
-#   ignorera inaktiverade kryssrutor, vilket förhindrar att den obligatoriska
-#   instruktionen avmarkeras.
+# * v13.1 (2025-08-06): (BUGFIX) Korrigerat "Select/Deselect All"-logiken.
+# * v14.0 (2025-08-06): (KORRIGERING) All speciallogik i JavaScript för att rendera `docs`-mappen har tagits bort.
+#   Filträdet renderas nu enhetligt från `file_structure`-objektet, vilket automatiskt
+#   korrigerar renderingsfelet för nästlade dokumentationsfiler. Koden är nu betydligt enklare.
 #
 # TILLÄMPADE REGLER (Frankensteen v4.0):
-# - Felresiliens: Använder guard clauses och :not(:disabled)-selektorer för att
-#   göra UI-interaktionerna robusta och förutsägbara.
-# - Tydlighet: Lade till en CSS-klass och en tooltip för att visuellt
-#   kommunicera varför kryssrutan är inaktiverad.
-# - Fullständig kod, alltid: Denna version är en komplett och korrekt
-#   representation av den ursprungliga filen med kirurgiska ändringar.
+# - Enkelhet: Genom att förlita sig på en enda renderingsfunktion (`renderFileTree`) för
+#   hela filstrukturen, blir koden mindre, mer lättläst och mindre felbenägen.
+# - Fullständig kod, alltid: Detta är en komplett, fungerande fil med den förenklade logiken.
+# - API-kontraktsverifiering: Front-end-koden anpassas för att konsumera det nya, enhetliga
+#   `file_structure`-objektet från `generate_full_context.py`.
 
 import sys
 import os
@@ -42,7 +42,7 @@ def create_interactive_html(output_html_path):
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>AI Context Builder v2.1</title>
+    <title>AI Context Builder v3.0</title>
     <style>
         :root {
             --primary-bg: #f8f9fa;
@@ -201,13 +201,12 @@ def create_interactive_html(output_html_path):
         let fullContext = null;
         const REPO_RAW_URL = 'https://raw.githubusercontent.com/Engrove/Engrove-Audio-Tools-2.0/main/';
         const AI_CORE_INSTRUCTION_PATH = 'docs/ai_protocols/AI_Core_Instruction.md';
+        // Note: 'select-core-docs-btn' will now also select from the 'docs' tree
         const CORE_DOC_PATHS = [
             'docs/ai_protocols/ai_config.json',
-            'docs/AI_Collaboration_Standard.md',
-            'docs/Global_UI-Standard_Komponentspecifikation.md',
-            'docs/ByggLogg_instruktion.md',
             'package.json',
             'vite.config.js',
+            'scripts/generate_full_context.py',
             'scripts/wrap_json_in_html.py'
         ];
         const IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'];
@@ -251,13 +250,13 @@ def create_interactive_html(output_html_path):
 
         function renderFileTree(node, parentElement, currentPath) {
             const ul = document.createElement('ul');
+            // Sort folders before files, then alphabetically
             const sortedKeys = Object.keys(node).sort((a, b) => {
                 const aIsFile = node[a].type === 'file';
                 const bIsFile = node[b].type === 'file';
-                if (aIsFile === bIsFile) {
-                    return a.localeCompare(b);
-                }
-                return aIsFile ? 1 : -1;
+                if (aIsFile && !bIsFile) return 1;  // a is file, b is folder -> b comes first
+                if (!aIsFile && bIsFile) return -1; // a is folder, b is file -> a comes first
+                return a.localeCompare(b); // both are same type, sort alphabetically
             });
 
             sortedKeys.forEach(key => {
@@ -265,33 +264,40 @@ def create_interactive_html(output_html_path):
                 const itemPath = currentPath ? `${currentPath}/${key}` : key;
                 const li = document.createElement('li');
                 const isFolder = item.type !== 'file';
+                
                 const label = document.createElement('label');
                 label.className = 'tree-item-label';
+
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
                 checkbox.setAttribute('data-path', itemPath);
                 label.appendChild(checkbox);
+
                 const iconSpan = document.createElement('span');
                 iconSpan.className = 'file-icon';
                 iconSpan.innerHTML = getIcon(key, isFolder);
                 label.appendChild(iconSpan);
+                
                 if (isFolder) {
                     li.classList.add('folder');
                     const toggle = document.createElement('span');
                     toggle.className = 'toggle';
                     toggle.textContent = '►';
                     li.appendChild(toggle);
+
                     const folderNameSpan = document.createElement('span');
                     folderNameSpan.textContent = ` ${key}`;
                     label.appendChild(folderNameSpan);
                     li.appendChild(label);
+
                     const nestedUl = renderFileTree(item, li, itemPath);
                     nestedUl.style.display = 'none';
                     li.appendChild(nestedUl);
                 } else {
                     li.classList.add('file');
-                    const fileNameSpan = document.createElement('span');
+                    const fileNameSpan = document.createElement('a');
                     fileNameSpan.className = 'file-name-clickable';
+                    fileNameSpan.href = '#';
                     fileNameSpan.textContent = ` ${key}`;
                     fileNameSpan.setAttribute('data-path', itemPath);
                     label.appendChild(fileNameSpan);
@@ -316,16 +322,21 @@ def create_interactive_html(output_html_path):
                 label.classList.add('mandatory');
                 label.title = 'Core instruction is mandatory and cannot be deselected.';
             } else {
-                console.warn(`Could not find the parent label for the core instruction checkbox. Styling and tooltip will not be applied.`);
+                console.warn(`Could not find the parent label for the core instruction checkbox.`);
             }
         }
 
         function selectCoreDocs() {
             fileTreeContainer.querySelectorAll('input[type="checkbox"]:not(:disabled)').forEach(cb => cb.checked = false);
-            CORE_DOC_PATHS.forEach(path => {
+            // Also check the mandatory core instruction just in case
+            const coreCheckbox = fileTreeContainer.querySelector(`input[data-path="${AI_CORE_INSTRUCTION_PATH}"]`);
+            if(coreCheckbox) coreCheckbox.checked = true;
+
+            [...CORE_DOC_PATHS].forEach(path => {
                 const checkbox = fileTreeContainer.querySelector(`input[data-path="${path}"]`);
                 if (checkbox && !checkbox.disabled) {
                     checkbox.checked = true;
+                    // Auto-expand parent folders
                     let parent = checkbox.closest('li.folder');
                     while(parent) {
                         const nestedUl = parent.querySelector('ul');
@@ -381,8 +392,7 @@ def create_interactive_html(output_html_path):
 
         async function buildNewContextStructure(sourceNode, selectedPaths) {
             const newNode = {};
-            const contentPromises = [];
-            const itemsToPopulate = [];
+
             async function fetchFileContent(path) {
                 try {
                     const response = await fetch(`${REPO_RAW_URL}${path}`);
@@ -393,32 +403,45 @@ def create_interactive_html(output_html_path):
                     return `// Error: Failed to fetch content for ${path}`;
                 }
             }
-            function traverse(source, dest) {
-                for (const key in source) {
+
+            const contentPromises = [];
+            const itemsToPopulate = [];
+
+            function traverse(source, dest, currentPath = '') {
+                const sortedKeys = Object.keys(source).sort();
+
+                for (const key of sortedKeys) {
                     const item = source[key];
+                    const itemPath = currentPath ? `${currentPath}/${key}` : key;
+                    
                     if (item.type === 'file') {
                         const isSelected = selectedPaths.has(item.path);
-                        const stub = JSON.parse(JSON.stringify(item));
+                        const stub = { ...item }; // Shallow copy
+
                         if (isSelected && (item.is_binary || item.content === null)) {
                             contentPromises.push(fetchFileContent(item.path));
-                            itemsToPopulate.push({ a: stub, b: item.path });
+                            itemsToPopulate.push({ stubRef: stub, path: item.path });
                         } else if (!isSelected) {
-                            delete stub.content;
+                            delete stub.content; // Remove content if not selected
                         }
                         dest[key] = stub;
-                    } else {
+                    } else { // It's a directory
                         dest[key] = {};
-                        traverse(item, dest[key]);
+                        traverse(item, dest[key], itemPath);
                     }
                 }
             }
+
             traverse(sourceNode, newNode);
+
             const fetchedContents = await Promise.all(contentPromises);
             itemsToPopulate.forEach((item, index) => {
-                item.a.content = fetchedContents[index];
+                item.stubRef.content = fetchedContents[index];
             });
+
             return newNode;
         }
+
 
         async function generateSelectedContext() {
             if (!fullContext) return;
@@ -429,20 +452,12 @@ def create_interactive_html(output_html_path):
                 const newContext = {
                     project_overview: fullContext.project_overview,
                     ai_instructions: fullContext.ai_instructions,
-                    project_documentation: {},
                     file_structure: {}
                 };
                 if (instructionInput.value.trim()) {
                     newContext.ai_instructions_input = instructionInput.value.trim();
                 }
-                if (fullContext.project_documentation) {
-                    for (const docKey in fullContext.project_documentation) {
-                        const docPath = `docs/ai_protocols/${docKey}`;
-                        if (selectedPaths.has(docPath)) {
-                           newContext.project_documentation[docKey] = fullContext.project_documentation[docKey];
-                        }
-                    }
-                }
+
                 newContext.file_structure = await buildNewContextStructure(fullContext.file_structure, selectedPaths);
                 outputPre.textContent = JSON.stringify(newContext, null, 2);
                 copyBtn.disabled = false;
@@ -538,23 +553,10 @@ def create_interactive_html(output_html_path):
                 fullContext = data;
                 fileTreeContainer.innerHTML = '';
                 
-                const docsRoot = {};
-                const protocolsNode = {};
-                docsRoot['ai_protocols'] = protocolsNode;
-
-                if (fullContext.project_documentation) {
-                    Object.keys(fullContext.project_documentation).forEach(docKey => {
-                        const path = `docs/ai_protocols/${docKey}`;
-                        protocolsNode[docKey] = { type: 'file', path: path, is_binary: false, content: fullContext.project_documentation[docKey] };
-                    });
-                }
-                protocolsNode['AI_Core_Instruction.md'] = { type: 'file', path: AI_CORE_INSTRUCTION_PATH, is_binary: false, content: fullContext.ai_instructions };
-                
-                const docsContainer = document.createElement('div');
-                renderFileTree(docsRoot, docsContainer, 'docs');
-                fileTreeContainer.appendChild(docsContainer.firstChild);
-
+                // FÖRENKLING: Ta bort all speciallogik för 'docs'.
+                // renderFileTree hanterar nu hela strukturen enhetligt.
                 renderFileTree(fullContext.file_structure, fileTreeContainer, '');
+                
                 enforceCoreInstruction();
             })
             .catch(error => {
