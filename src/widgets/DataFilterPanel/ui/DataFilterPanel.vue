@@ -1,14 +1,15 @@
 <!-- src/widgets/DataFilterPanel/ui/DataFilterPanel.vue -->
 <!--
   Historik:
+  - 2025-08-06: (Frankensteen - Operation: Synkroniserad Initialisering) All lokal logik för filter-initialisering (watch, onMounted) har tagits bort. Komponenten förlitar sig nu helt på att storen tillhandahåller ett synkroniserat och korrekt state, vilket löser race condition-kraschen.
   - 2025-08-06: (Frankensteen) Bytte ut BaseSelect mot BaseMultiSelect för alla kategorifilter för att möjliggöra flervalsfiltrering.
   - 2024-08-04: (UPPDRAG 22) Förenklad genom att ta bort lokal logik och konsumera filterdefinitioner från storen.
 -->
 <!--
   Viktiga implementerade regler:
   - "Help me God"-protokollet har använts för att verifiera denna ändring.
-  - API-kontraktsverifiering: Komponenten interagerar nu korrekt med explorerStore som förväntar sig arrayer för kategorifilter.
-  - Obligatorisk Refaktorisering: UI-lagret är nu fullständigt synkroniserat med den nya, avancerade filtreringslogiken.
+  - API-kontraktsverifiering: Komponenten är nu en renare konsument av storens API, utan sidoeffekter.
+  - Obligatorisk Refaktorisering: Genom att ta bort state-hanteringslogik har komponenten blivit enklare och mer fokuserad på sin presentationsuppgift.
 -->
 <template>
   <aside class="filter-panel">
@@ -72,7 +73,6 @@
 </template>
 
 <script setup>
-import { onMounted, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useExplorerStore } from '@/entities/data-explorer/model/explorerStore.js';
 import BaseButton from '@/shared/ui/BaseButton.vue';
@@ -105,27 +105,8 @@ const getOptionsForFilter = (filterKey) => {
   }));
 };
 
-// Säkerställer att filter-objekten är reaktiva och initierade
-const initializeFilters = () => {
-  availableFilters.value.forEach(filter => {
-    if (!categoryFilters.value[filter.key]) {
-      categoryFilters.value[filter.key] = [];
-    }
-  });
-  availableNumericFilters.value.forEach(filter => {
-    if (!numericFilters.value[filter.key]) {
-      numericFilters.value[filter.key] = { min: null, max: null };
-    }
-  });
-};
-
-onMounted(() => {
-  initializeFilters();
-});
-
-watch([availableFilters, availableNumericFilters], () => {
-  initializeFilters();
-}, { deep: true });
+// All lokal 'watch' och 'onMounted' logik har tagits bort.
+// Komponenten litar nu på att storen tillhandahåller ett korrekt initialiserat state.
 
 </script>
 
@@ -190,4 +171,4 @@ h3 {
   }
 }
 </style>
-<!-- src/widgets/DataFilterPanel/ui/DataFilterPanel.vue -->```
+<!-- src/widgets/DataFilterPanel/ui/DataFilterPanel.vue -->
