@@ -13,10 +13,12 @@
 # * v10.0 (Feature Expansion): Implementerat fyra nya huvudfunktioner.
 # * v10.1 (Syntax Correction): Korrigerat ett kritiskt syntaxfel (// vs #).
 # * v11.0 (Improved Auto-Select): Uppdaterat JSON-driven filmarkering enligt nya krav.
-# * v12.0 (2025-08-06): (BUGFIX) Korrigerat "Select/Deselect All"-logiken för att
+# * v12.0 (Modal Copy/Download): Lade till knappar för kopiering och nedladdning i filförhandsgranskningsmodalen.
+# * v12.1 (CRITICAL BUGFIX): Lade till defensiva null-kontroller runt `addEventListener` för att förhindra appkrasch.
+# * v13.0 (2025-08-06): Uppdaterad för att hantera den nya modulära instruktionsstrukturen.
+# * v13.1 (2025-08-06): (BUGFIX) Korrigerat "Select/Deselect All"-logiken för att
 #   ignorera inaktiverade kryssrutor, vilket förhindrar att den obligatoriska
-#   instruktionen avmarkeras. Uppdaterad för att hantera den nya modulära
-#   instruktionsstrukturen och tvinga valet av kärninstruktionen.
+#   instruktionen avmarkeras.
 #
 # TILLÄMPADE REGLER (Frankensteen v4.0):
 # - Felresiliens: Använder guard clauses och :not(:disabled)-selektorer för att
@@ -585,4 +587,3 @@ if __name__ == "__main__":
         os.makedirs(output_dir, exist_ok=True)
         
     create_interactive_html(output_file)
---- END OF FILE wrap_json_in_html.py ---
