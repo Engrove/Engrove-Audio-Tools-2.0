@@ -2460,3 +2460,15 @@ En sammanfattning av interaktionen skapas för Gemini_Chatthistorik.txt.
 En komplett och fristående Kontext-JSON-instruktion genereras för "Steg 26", vilken specificerar de filer som behövs för att implementera den nya planen.
 
 Inväntar godkännande och startsignal för att påbörja implementationen av "Steg 26".
+
+=== Session 26 (2025-08-06) ===
+- Engrove rapporterar att föregående fix (Operation: Synkroniserad Initialisering) löste konsol-kraschen men inte det underliggande felet. Dropdowns och data är fortfarande tomma.
+- Frankensteen analyserar och identifierar en djupare race condition relaterad till timingen av computed properties i Vue. Den föreslagna lösningen att flytta logiken till `setDataType` var korrekt i teorin men felaktig i implementationen.
+- Frankensteen föreslår en ny fix för att göra `_initializeAndResetFilters` självförsörjande och inte beroende av computed properties, samt att instrumentera koden med loggning. Engrove godkänner.
+- Engrove rapporterar att även denna fix misslyckas. Konsolloggen visar att storens interna logik verkar korrekt, men UI:t uppdateras inte.
+- Engrove tillhandahåller en äldre, fungerande version av `explorerStore.js` från en annan branch som referens. Detta visar sig vara den avgörande ledtråden.
+- Frankensteen och Tribunalen analyserar den fungerande filen och drar slutsatsen att grundorsaken är ett arkitektoniskt misstag: valet av Pinia's Composition API för denna specifika, komplexa store är instabilt. Den äldre filens Options API-struktur är bevisat robust för detta scenario.
+- Frankensteen föreslår "Operation: Strategisk Reträtt" – en fullständig omskrivning av storen till Options API. Engrove godkänner.
+- Frankensteens första försök till omskrivning är ofullständigt, saknar funktionalitet (t.ex. exportToCSV) och korrekt historik. Engrove påpekar detta allvarliga brott mot Kärndirektiven.
+- En metadiskussion om Frankensteens misslyckanden leder till skapandet av ett nytt, stående protokoll: Pre-Svarsverifiering (PSV), som läggs till i `AI_Core_Instruction.md`.
+- Frankensteen levererar en slutgiltig, komplett och korrekt version av `explorerStore.js` baserad på Options API och förbereder avslutning av sessionen.
