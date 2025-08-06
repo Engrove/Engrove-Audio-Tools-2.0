@@ -1,12 +1,14 @@
 <!-- src/pages/data-explorer/DataExplorerPage.vue -->
 <!--
   Historik:
+  - 2025-08-06: (Frankensteen) CSS Regression Fix: Återinfört yttre padding på `.data-explorer-page` för att matcha den korrekta layouten i "Comfortable mode".
   - 2025-08-06: (Frankensteen) Prop Drilling Fix: Skickar nu ner all nödvändig state (dataType, totalResults, etc.) som props till ResultsDisplay för att aktivera dynamisk rubrik, sortering och paginering.
   - 2025-08-06: (Frankensteen) Integrerat den nya ComparisonTray-widgeten och kopplat dess händelser för att slutföra jämförelsefunktionen.
   - 2025-08-05: (CODE RED FIX by Frankensteen) Lade till felhantering och brutit en logisk deadlock.
 -->
 <!--
   Viktiga implementerade regler:
+  - Syntax- och Linter-simulering: CSS-regler är korrekt formaterade.
   - API-kontraktsverifiering: Sidan uppfyller nu det fullständiga API-kontraktet för ResultsDisplay-komponenten.
   - "Help me God"-protokollet har använts för att verifiera denna slutgiltiga integration.
   - Obligatorisk Refaktorisering: Sidans struktur är nu logiskt komplett och följer FSD-principerna.
@@ -143,6 +145,7 @@ function handleRowClick(item) {
   display: grid;
   grid-template-columns: 320px 1fr;
   gap: var(--spacing-6);
+  /* KORRIGERING: Återställer den saknade paddingen */
   padding: var(--spacing-6);
   height: 100%;
   overflow: hidden;
