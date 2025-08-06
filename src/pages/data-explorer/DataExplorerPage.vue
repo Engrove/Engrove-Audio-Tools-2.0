@@ -1,13 +1,14 @@
 <!-- src/pages/data-explorer/DataExplorerPage.vue -->
 <!--
   Historik:
+  - 2025-08-06: (Frankensteen) Prop Drilling Fix: Skickar nu ner all nödvändig state (dataType, totalResults, etc.) som props till ResultsDisplay för att aktivera dynamisk rubrik, sortering och paginering.
   - 2025-08-06: (Frankensteen) Integrerat den nya ComparisonTray-widgeten och kopplat dess händelser för att slutföra jämförelsefunktionen.
   - 2025-08-05: (CODE RED FIX by Frankensteen) Lade till felhantering och brutit en logisk deadlock.
 -->
 <!--
   Viktiga implementerade regler:
+  - API-kontraktsverifiering: Sidan uppfyller nu det fullständiga API-kontraktet för ResultsDisplay-komponenten.
   - "Help me God"-protokollet har använts för att verifiera denna slutgiltiga integration.
-  - API-kontraktsverifiering: Sidan agerar som en korrekt "dirigent" och hanterar props/events mellan widgets.
   - Obligatorisk Refaktorisering: Sidans struktur är nu logiskt komplett och följer FSD-principerna.
 -->
 <template>
@@ -31,6 +32,12 @@
       <ResultsDisplay
         :items="paginatedResults"
         :headers="currentHeaders"
+        :dataType="dataType"
+        :totalResults="totalResults"
+        :totalPages="totalPages"
+        :currentPage="currentPage"
+        :sortKey="sortKey"
+        :sortOrder="sortOrder"
         @row-click="handleRowClick"
         @sort="explorerStore.setSort"
         @page-change="explorerStore.setPage"
@@ -72,6 +79,12 @@ const {
   error,
   paginatedResults, 
   currentHeaders,
+  dataType,
+  totalResults,
+  totalPages,
+  currentPage,
+  sortKey,
+  sortOrder,
 } = storeToRefs(explorerStore);
 
 const selectedItem = ref(null);
