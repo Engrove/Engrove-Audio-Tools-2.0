@@ -1,15 +1,16 @@
 <!-- src/widgets/DataFilterPanel/ui/DataFilterPanel.vue -->
 <!--
   Historik:
+  - 2025-08-06: (Frankensteen - Operation: Strategisk Reträtt) Slutförd. Komponenten är nu anpassad till den nya Options API-storen. `storeToRefs` används inte längre för state-objekt, och v-model är direkt bundet till `store.property`. Detta löser den kritiska TypeError-kraschen.
   - 2025-08-06: (Frankensteen - Operation: Synkroniserad Initialisering) All lokal logik för filter-initialisering (watch, onMounted) har tagits bort. Komponenten förlitar sig nu helt på att storen tillhandahåller ett synkroniserat och korrekt state, vilket löser race condition-kraschen.
   - 2025-08-06: (Frankensteen) Bytte ut BaseSelect mot BaseMultiSelect för alla kategorifilter för att möjliggöra flervalsfiltrering.
   - 2024-08-04: (UPPDRAG 22) Förenklad genom att ta bort lokal logik och konsumera filterdefinitioner från storen.
 -->
 <!--
   Viktiga implementerade regler:
-  - "Help me God"-protokollet har använts för att verifiera denna ändring.
-  - API-kontraktsverifiering: Komponenten är nu en renare konsument av storens API, utan sidoeffekter.
-  - Obligatorisk Refaktorisering: Genom att ta bort state-hanteringslogik har komponenten blivit enklare och mer fokuserad på sin presentationsuppgift.
+  - API-kontraktsverifiering: Komponenten konsumerar nu korrekt en Pinia Options API-store, vilket är en fundamental ändring av dess interna API-kontrakt.
+  - Obligatorisk Refaktorisering: Genom att ta bort felaktig state-hantering och anpassa till den nya arkitekturen är komponenten nu både enklare och korrekt.
+  - Felresiliens: Grundorsaken till en kritisk krasch har eliminerats.
 -->
 <template>
   <aside class="filter-panel">
@@ -51,7 +52,7 @@
         <BaseMultiSelect
           :label="filter.label"
           :options="getOptionsForFilter(filter.key)"
-          v-model="categoryFilters[filter.key]"
+          v-model="store.categoryFilters[filter.key]"
         />
       </div>
 
@@ -60,7 +61,7 @@
         <RangeFilter
           :label="filter.label"
           :unit="filter.unit"
-          v-model="numericFilters[filter.key]"
+          v-model="store.numericFilters[filter.key]"
         />
       </div>
 
@@ -83,11 +84,11 @@ import RangeFilter from '@/shared/ui/RangeFilter.vue';
 const store = useExplorerStore();
 const { setDataType, resetFilters } = store;
 
+// categoryFilters och numericFilters tas bort från storeToRefs, då de är vanliga
+// objekt i Options API-storen och inte refs. Vi binder direkt till dem via 'store'.
 const {
   dataType,
   searchTerm,
-  categoryFilters,
-  numericFilters,
   availableFilters,
   availableNumericFilters,
   classifications,
@@ -104,9 +105,6 @@ const getOptionsForFilter = (filterKey) => {
     label: cat.name
   }));
 };
-
-// All lokal 'watch' och 'onMounted' logik har tagits bort.
-// Komponenten litar nu på att storen tillhandahåller ett korrekt initialiserat state.
 
 </script>
 
@@ -171,4 +169,3 @@ h3 {
   }
 }
 </style>
-<!-- src/widgets/DataFilterPanel/ui/DataFilterPanel.vue -->
