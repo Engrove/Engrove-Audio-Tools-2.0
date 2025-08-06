@@ -2418,3 +2418,8 @@ Kronologisk Projekthistorik: Session 23.3
 5. Engrove frågade specifikt om existensen av en flervalskomponent. Frankensteen verifierade att 'src/shared/ui/BaseMultiSelect.vue' existerade men var oanvänd, vilket bekräftade regressionen.
 6. Engrove godkände analysen och begärde att Frankensteen skulle förbereda en komplett AI-instruktion för nästa chatt-session istället för att påbörja implementationen direkt.
 7. Frankensteen aktiverade "Brainstorming next step"-protokollet och genererade en komplett, fristående leverans, inklusive en ny ByggLogg-post och en JSON-konfiguration för AI Context Builder.
+
+=== SESSION 25 (06.08.2025) ===
+Engrove: "Commit. Nästa uppdrag är att felsöka din lösning. Här är felet..."
+Frankensteen: (Analyserar konsollogg och skärmdump) "Tack för rapporten. Jag bekräftar felet. Jag aktiverar 'Help me God'-protokollet för att genomföra en grundorsaksanalys."
+Frankensteen: (Efter intern analys) "Analysen är slutförd. Grundorsaken är en race condition. När du byter datatyp töms filter-state (categoryFilters = {}), men UI-komponenten hinner försöka rendera med de nya filtren innan state har hunnit återinitialiseras. Detta skickar undefined till BaseMultiSelect, som kraschar när den försöker läsa .length. Lösningen är att flytta ansvaret för att initialisera filtren från komponenten (DataFilterPanel) till storen (explorerStore) och säkerställa att det sker atomärt i en watch på dataType. Jag har formulerat planen 'Operation: Synkroniserad Initialisering'."
