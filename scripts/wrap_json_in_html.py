@@ -18,15 +18,16 @@
 # * v13.0 (2025-08-06): Uppdaterad för att hantera den nya modulära instruktionsstrukturen.
 # * v13.1 (2025-08-06): (BUGFIX) Korrigerat "Select/Deselect All"-logiken.
 # * v14.0 (2025-08-06): (KORRIGERING) All speciallogik i JavaScript för att rendera `docs`-mappen har tagits bort.
-#   Filträdet renderas nu enhetligt från `file_structure`-objektet, vilket automatiskt
-#   korrigerar renderingsfelet för nästlade dokumentationsfiler. Koden är nu betydligt enklare.
+#   Filträdet renderas nu enhetligt från `file_structure`-objektet.
+# * v15.0 (2025-08-06): Implementerat tre nya funktioner:
+#   1. "Copy" och "Download"-knappar i förhandsgranskningsmodalen är nu fullt fungerande.
+#   2. Filträdet expanderas nu automatiskt till valda filer när JSON klistras in.
+#   3. En ny knapp "Generate Files" har lagts till för att skapa en JSON med endast filinnehåll.
 #
 # TILLÄMPADE REGLER (Frankensteen v4.0):
-# - Enkelhet: Genom att förlita sig på en enda renderingsfunktion (`renderFileTree`) för
-#   hela filstrukturen, blir koden mindre, mer lättläst och mindre felbenägen.
-# - Fullständig kod, alltid: Detta är en komplett, fungerande fil med den förenklade logiken.
-# - API-kontraktsverifiering: Front-end-koden anpassas för att konsumera det nya, enhetliga
-#   `file_structure`-objektet från `generate_full_context.py`.
+# - Fullständig kod, alltid: Detta är en komplett, fungerande fil med den nya logiken.
+# - API-kontraktsverifiering: Befintliga funktioner har utökats utan att bryta deras kontrakt.
+# - Obligatorisk Refaktorisering: Logiken för att expandera trädgrenar har brutits ut till en återanvändbar funktion.
 
 import sys
 import os
@@ -42,7 +43,7 @@ def create_interactive_html(output_html_path):
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>AI Context Builder v3.0</title>
+    <title>AI Context Builder v3.1</title>
     <style>
         :root {
             --primary-bg: #f8f9fa;
@@ -55,6 +56,7 @@ def create_interactive_html(output_html_path):
             --accent-hover: #0056b3;
             --success-color: #28a745;
             --danger-color: #dc3545;
+            --info-color: #17a2b8;
             --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             --font-mono: "JetBrains Mono", "SF Mono", "Consolas", "Liberation Mono", "Menlo", monospace;
         }
@@ -104,6 +106,8 @@ def create_interactive_html(output_html_path):
         button:disabled { background-color: #e9ecef; cursor: not-allowed; opacity: 0.7; }
         button.primary { background-color: var(--accent-color); color: white; border-color: var(--accent-color); }
         button.primary:hover:not(:disabled) { background-color: var(--accent-hover); }
+        button.info { background-color: var(--info-color); color: white; border-color: var(--info-color); }
+        button.info:hover:not(:disabled) { background-color: #138496; }
         
         #file-tree-container { flex-grow: 1; }
         #file-tree-container ul { list-style-type: none; padding-left: 20px; }
@@ -163,6 +167,7 @@ def create_interactive_html(output_html_path):
         <button id="deselect-all-btn">Deselect All</button>
         <button id="select-core-docs-btn">Select Core Docs</button>
         <button id="generate-context-btn" class="primary">Generate Context</button>
+        <button id="generate-files-btn" class="info">Generate Files</button>
     </div>
     <div id="file-tree-container"><p>Loading context data...</p></div>
 </div>
@@ -201,51 +206,26 @@ def create_interactive_html(output_html_path):
         let fullContext = null;
         const REPO_RAW_URL = 'https://raw.githubusercontent.com/Engrove/Engrove-Audio-Tools-2.0/main/';
         const AI_CORE_INSTRUCTION_PATH = 'docs/ai_protocols/AI_Core_Instruction.md';
-        // Note: 'select-core-docs-btn' will now also select from the 'docs' tree
 
         const CORE_DOC_PATHS = [
-            // --- AI & Process ---
-            // Maskinläsbara definitioner av alla kärnregler. Obligatorisk.
             'docs/ai_protocols/ai_config.json',
-            // Protokollet för sessionsbaserad versionshantering. Kritiskt för vårt arbetsflöde.
             'docs/ai_protocols/Levande_Kontext_Protokoll.md',
-            // Definierar standarden för fil-headers och samarbete.
             'docs/AI_Collaboration_Standard.md',
-            // Resten av protokollen
             'docs/ai_protocols/Beroendeanalys_Protokoll.md',
             'docs/ai_protocols/Brainstorming_Protokoll.md',
             'docs/ai_protocols/Help_me_God_Protokoll.md',
             'docs/ai_protocols/K-MOD_Protokoll.md',
             'docs/ai_protocols/Kontext-JSON_Protokoll.md',
-
-            // --- Arkitektur & Standarder ---
-            // Den definitiva "ritningen" för projektets mappstruktur och arbetsflöde.
             'docs/Mappstruktur_och_Arbetsflöde.md',
-            // Definierar den övergripande designfilosofin, färger och typografi.
             'docs/Global_UI-Standard_för_Engrove-plattformen.md',
-            // Detaljerad specifikation för alla Base-komponenter.
             'docs/Global_UI-Standard_Komponentspecifikation.md',
-
-            // --- Projekt & Vision (NY GRUPP) ---
-            // Ger en teknisk översikt av hela stacken.
             'docs/Teknisk_Beskrivning_Engrove_Audio_Toolkit.md',
-            // Detaljerad migreringsplan som förklarar "varför" v2.0-arkitekturen existerar.
             'docs/Blueprint_för_Migrering_v1_till_v2.md',
-            // Den övergripande tekniska och strategiska analysen av hela projektet.
             'docs/Engrove_Audio_Toolkit_v2.0_Analys.md',
-
-            // --- Projektkonfiguration ---
-            // Definierar projektets beroenden och skript.
             'package.json',
-            // Definierar byggprocessen och ingångspunkter.
             'vite.config.js',
-
-            // --- Metakontext (Verktygen själva) ---
-            // Skriptet som validerar och berikar AI-instruktionerna.
             'scripts/process_ai_instructions.py',
-            // Skriptet som genererar den primära kontext-JSON-filen.
             'scripts/generate_full_context.py',
-            // Skriptet som bygger detta interaktiva UI.
             'scripts/wrap_json_in_html.py'
         ];
 
@@ -270,6 +250,7 @@ def create_interactive_html(output_html_path):
         const deselectAllBtn = document.getElementById('deselect-all-btn');
         const selectCoreDocsBtn = document.getElementById('select-core-docs-btn');
         const generateBtn = document.getElementById('generate-context-btn');
+        const generateFilesBtn = document.getElementById('generate-files-btn');
         const copyBtn = document.getElementById('copy-json-btn');
         const downloadBtn = document.getElementById('download-json-btn');
         const modal = document.getElementById('file-preview-modal');
@@ -280,6 +261,7 @@ def create_interactive_html(output_html_path):
         const modalDownloadBtn = document.getElementById('modal-download-btn');
         let currentFileContent = '';
         let currentFilePath = '';
+        let currentFileIsBinary = false;
 
         function getIcon(name, isFolder) {
             if (isFolder) return ICONS.folder;
@@ -290,13 +272,12 @@ def create_interactive_html(output_html_path):
 
         function renderFileTree(node, parentElement, currentPath) {
             const ul = document.createElement('ul');
-            // Sort folders before files, then alphabetically
             const sortedKeys = Object.keys(node).sort((a, b) => {
                 const aIsFile = node[a].type === 'file';
                 const bIsFile = node[b].type === 'file';
-                if (aIsFile && !bIsFile) return 1;  // a is file, b is folder -> b comes first
-                if (!aIsFile && bIsFile) return -1; // a is folder, b is file -> a comes first
-                return a.localeCompare(b); // both are same type, sort alphabetically
+                if (aIsFile && !bIsFile) return 1;
+                if (!aIsFile && bIsFile) return -1;
+                return a.localeCompare(b);
             });
 
             sortedKeys.forEach(key => {
@@ -351,42 +332,40 @@ def create_interactive_html(output_html_path):
         
         function enforceCoreInstruction() {
             const coreCheckbox = fileTreeContainer.querySelector(`input[data-path="${AI_CORE_INSTRUCTION_PATH}"]`);
-            if (!coreCheckbox) {
-                console.warn(`Could not find the core instruction checkbox for path: ${AI_CORE_INSTRUCTION_PATH}`);
-                return;
+            if (coreCheckbox) {
+                coreCheckbox.checked = true;
+                coreCheckbox.disabled = true;
+                const label = coreCheckbox.closest('label');
+                if (label) {
+                    label.classList.add('mandatory');
+                    label.title = 'Core instruction is mandatory and cannot be deselected.';
+                }
             }
-            coreCheckbox.checked = true;
-            coreCheckbox.disabled = true;
-            const label = coreCheckbox.closest('label');
-            if (label) {
-                label.classList.add('mandatory');
-                label.title = 'Core instruction is mandatory and cannot be deselected.';
-            } else {
-                console.warn(`Could not find the parent label for the core instruction checkbox.`);
+        }
+
+        function expandToNode(element) {
+            let parent = element.parentElement.closest('li.folder');
+            while(parent) {
+                const nestedUl = parent.querySelector('ul');
+                const toggle = parent.querySelector('.toggle');
+                if (nestedUl && toggle) {
+                    nestedUl.style.display = 'block';
+                    toggle.textContent = '▼';
+                }
+                parent = parent.parentElement.closest('li.folder');
             }
         }
 
         function selectCoreDocs() {
             fileTreeContainer.querySelectorAll('input[type="checkbox"]:not(:disabled)').forEach(cb => cb.checked = false);
-            // Also check the mandatory core instruction just in case
             const coreCheckbox = fileTreeContainer.querySelector(`input[data-path="${AI_CORE_INSTRUCTION_PATH}"]`);
             if(coreCheckbox) coreCheckbox.checked = true;
 
-            [...CORE_DOC_PATHS].forEach(path => {
+            CORE_DOC_PATHS.forEach(path => {
                 const checkbox = fileTreeContainer.querySelector(`input[data-path="${path}"]`);
                 if (checkbox && !checkbox.disabled) {
                     checkbox.checked = true;
-                    // Auto-expand parent folders
-                    let parent = checkbox.closest('li.folder');
-                    while(parent) {
-                        const nestedUl = parent.querySelector('ul');
-                        const toggle = parent.querySelector('.toggle');
-                        if (nestedUl && toggle) {
-                            nestedUl.style.display = 'block';
-                            toggle.textContent = '▼';
-                        }
-                        parent = parent.parentElement.closest('li.folder');
-                    }
+                    expandToNode(checkbox);
                 }
             });
         }
@@ -395,19 +374,26 @@ def create_interactive_html(output_html_path):
             modalTitle.textContent = path;
             modalBody.innerHTML = '<p>Loading content...</p>';
             modal.classList.add('visible');
-            if (modalCopyBtn) modalCopyBtn.disabled = true; 
-            if (modalDownloadBtn) modalDownloadBtn.disabled = true;
+            modalCopyBtn.disabled = true;
+            modalDownloadBtn.disabled = true;
             currentFileContent = '';
             currentFilePath = path;
+            currentFileIsBinary = false;
+            
             try {
                 const url = `${REPO_RAW_URL}${path}`;
                 const extension = path.split('.').pop().toLowerCase();
+                
                 if (IMAGE_EXTENSIONS.includes(extension)) {
+                    currentFileIsBinary = true;
                     modalBody.innerHTML = `<img src="${url}" alt="Preview of ${path}">`;
-                    currentFileContent = url;
-                    if (modalCopyBtn) modalCopyBtn.disabled = true;
-                    if (modalDownloadBtn) modalDownloadBtn.disabled = false;
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+                    currentFileContent = await response.blob();
+                    modalCopyBtn.disabled = true; // Can't copy image blob to clipboard easily
+                    modalDownloadBtn.disabled = false;
                 } else {
+                    currentFileIsBinary = false;
                     const response = await fetch(url);
                     if (!response.ok) throw new Error(`HTTP error ${response.status}`);
                     const textContent = await response.text();
@@ -418,54 +404,52 @@ def create_interactive_html(output_html_path):
                     pre.appendChild(code);
                     modalBody.innerHTML = '';
                     modalBody.appendChild(pre);
-                    if (modalCopyBtn) modalCopyBtn.disabled = false;
-                    if (modalDownloadBtn) modalDownloadBtn.disabled = false;
+                    modalCopyBtn.disabled = false;
+                    modalDownloadBtn.disabled = false;
                 }
             } catch (error) {
                 console.error(`Failed to fetch content for ${path}:`, error);
                 modalBody.textContent = `Error: Failed to fetch content for ${path}. ${error.message}`;
                 currentFileContent = '';
-                if (modalCopyBtn) modalCopyBtn.disabled = true;
-                if (modalDownloadBtn) modalDownloadBtn.disabled = true;
+                modalCopyBtn.disabled = true;
+                modalDownloadBtn.disabled = true;
+            }
+        }
+
+        async function fetchFileContent(path) {
+            try {
+                const response = await fetch(`${REPO_RAW_URL}${path}`);
+                if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+                return await response.text();
+            } catch (error) {
+                console.error(`Failed to fetch content for ${path}:`, error);
+                return `// Error: Failed to fetch content for ${path}`;
             }
         }
 
         async function buildNewContextStructure(sourceNode, selectedPaths) {
             const newNode = {};
-
-            async function fetchFileContent(path) {
-                try {
-                    const response = await fetch(`${REPO_RAW_URL}${path}`);
-                    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
-                    return await response.text();
-                } catch (error) {
-                    console.error(`Failed to fetch content for ${path}:`, error);
-                    return `// Error: Failed to fetch content for ${path}`;
-                }
-            }
-
-            const contentPromises = [];
-            const itemsToPopulate = [];
+            const promises = [];
 
             function traverse(source, dest, currentPath = '') {
                 const sortedKeys = Object.keys(source).sort();
-
                 for (const key of sortedKeys) {
                     const item = source[key];
                     const itemPath = currentPath ? `${currentPath}/${key}` : key;
-                    
                     if (item.type === 'file') {
                         const isSelected = selectedPaths.has(item.path);
-                        const stub = { ...item }; // Shallow copy
-
+                        const stub = { ...item };
                         if (isSelected && (item.is_binary || item.content === null)) {
-                            contentPromises.push(fetchFileContent(item.path));
-                            itemsToPopulate.push({ stubRef: stub, path: item.path });
+                            promises.push(
+                                fetchFileContent(item.path).then(content => {
+                                    stub.content = content;
+                                })
+                            );
                         } else if (!isSelected) {
-                            delete stub.content; // Remove content if not selected
+                            delete stub.content;
                         }
                         dest[key] = stub;
-                    } else { // It's a directory
+                    } else {
                         dest[key] = {};
                         traverse(item, dest[key], itemPath);
                     }
@@ -473,15 +457,9 @@ def create_interactive_html(output_html_path):
             }
 
             traverse(sourceNode, newNode);
-
-            const fetchedContents = await Promise.all(contentPromises);
-            itemsToPopulate.forEach((item, index) => {
-                item.stubRef.content = fetchedContents[index];
-            });
-
+            await Promise.all(promises);
             return newNode;
         }
-
 
         async function generateSelectedContext() {
             if (!fullContext) return;
@@ -497,7 +475,6 @@ def create_interactive_html(output_html_path):
                 if (instructionInput.value.trim()) {
                     newContext.ai_instructions_input = instructionInput.value.trim();
                 }
-
                 newContext.file_structure = await buildNewContextStructure(fullContext.file_structure, selectedPaths);
                 outputPre.textContent = JSON.stringify(newContext, null, 2);
                 copyBtn.disabled = false;
@@ -510,6 +487,49 @@ def create_interactive_html(output_html_path):
                 generateBtn.textContent = 'Generate Context';
             }
         }
+
+        async function generateFilesOnly() {
+            if (!fullContext) return;
+            generateFilesBtn.disabled = true;
+            generateFilesBtn.textContent = 'Generating...';
+            try {
+                let output = {};
+                const instructionText = instructionInput.value.trim();
+
+                if (instructionText) {
+                    try {
+                        // Try to parse as JSON first
+                        const parsedJson = JSON.parse(instructionText);
+                        output = { ...parsedJson };
+                    } catch (e) {
+                        // If not JSON, treat as plain text instruction
+                        output.user_instruction = instructionText;
+                    }
+                }
+
+                const selectedPaths = new Set(Array.from(fileTreeContainer.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.dataset.path));
+                const filesContent = {};
+                const promises = Array.from(selectedPaths).map(path => 
+                    fetchFileContent(path).then(content => {
+                        filesContent[path] = content;
+                    })
+                );
+
+                await Promise.all(promises);
+                output.files = filesContent;
+
+                outputPre.textContent = JSON.stringify(output, null, 2);
+                copyBtn.disabled = false;
+                downloadBtn.disabled = false;
+
+            } catch (error) {
+                outputPre.textContent = `An error occurred during file generation: ${error.message}`;
+                console.error(error);
+            } finally {
+                generateFilesBtn.disabled = false;
+                generateFilesBtn.textContent = 'Generate Files';
+            }
+        }
         
         function handleInstructionInput() {
             const text = instructionInput.value;
@@ -519,16 +539,14 @@ def create_interactive_html(output_html_path):
                 if (parsed && Array.isArray(parsed.filesToSelect)) {
                     const allCheckboxes = Array.from(fileTreeContainer.querySelectorAll('input[type="checkbox"]'));
                     parsed.filesToSelect.forEach(pathInJson => {
-                        const lowerJsonPath = pathInJson.toLowerCase();
-                        allCheckboxes.forEach(cb => {
-                            const dataPath = cb.dataset.path.toLowerCase();
-                            if (dataPath.endsWith(lowerJsonPath)) {
-                                cb.checked = true;
-                            }
-                        });
+                        const checkbox = allCheckboxes.find(cb => cb.dataset.path === pathInJson);
+                        if (checkbox) {
+                           checkbox.checked = true;
+                           expandToNode(checkbox);
+                        }
                     });
                 }
-            } catch (e) {}
+            } catch (e) { /* Ignore parse errors, it might not be JSON */ }
         }
 
         fileTreeContainer.addEventListener('click', (e) => {
@@ -561,20 +579,53 @@ def create_interactive_html(output_html_path):
         deselectAllBtn.addEventListener('click', () => fileTreeContainer.querySelectorAll('input[type="checkbox"]:not(:disabled)').forEach(cb => cb.checked = false));
         selectCoreDocsBtn.addEventListener('click', selectCoreDocs);
         generateBtn.addEventListener('click', generateSelectedContext);
+        generateFilesBtn.addEventListener('click', generateFilesOnly);
         instructionInput.addEventListener('input', handleInstructionInput);
+
         const closeModal = () => modal.classList.remove('visible');
         modalCloseBtn.addEventListener('click', closeModal);
         modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('visible')) closeModal(); });
+
+        function showButtonFeedback(button, text, color) {
+            const originalText = button.textContent;
+            button.textContent = text;
+            button.style.backgroundColor = `var(--${color}-color)`;
+            button.style.color = 'white';
+            setTimeout(() => { 
+                button.textContent = originalText; 
+                button.style.backgroundColor = ''; 
+                button.style.color = '';
+            }, 2000);
+        }
+
         copyBtn.addEventListener('click', () => {
-            navigator.clipboard.writeText(outputPre.textContent).then(() => {
-                const originalText = copyBtn.textContent;
-                copyBtn.textContent = 'Copied!';
-                copyBtn.style.backgroundColor = 'var(--success-color)';
-                copyBtn.style.color = 'white';
-                setTimeout(() => { copyBtn.textContent = originalText; copyBtn.style.backgroundColor = ''; copyBtn.style.color = ''; }, 2000);
-            }).catch(err => { console.error('Failed to copy text: ', err); copyBtn.textContent = 'Error!'; copyBtn.style.backgroundColor = 'var(--danger-color)'; copyBtn.style.color = 'white'; });
+            navigator.clipboard.writeText(outputPre.textContent)
+                .then(() => showButtonFeedback(copyBtn, 'Copied!', 'success'))
+                .catch(() => showButtonFeedback(copyBtn, 'Error!', 'danger'));
         });
+
+        modalCopyBtn.addEventListener('click', () => {
+             if (!currentFileIsBinary && currentFileContent) {
+                navigator.clipboard.writeText(currentFileContent)
+                    .then(() => showButtonFeedback(modalCopyBtn, 'Copied!', 'success'))
+                    .catch(() => showButtonFeedback(modalCopyBtn, 'Error!', 'danger'));
+             }
+        });
+
+        modalDownloadBtn.addEventListener('click', () => {
+            if (!currentFileContent) return;
+            const blob = currentFileIsBinary ? currentFileContent : new Blob([currentFileContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = currentFilePath.split('/').pop() || 'download';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
         downloadBtn.addEventListener('click', () => {
             const blob = new Blob([outputPre.textContent], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
@@ -592,11 +643,7 @@ def create_interactive_html(output_html_path):
             .then(data => {
                 fullContext = data;
                 fileTreeContainer.innerHTML = '';
-                
-                // FÖRENKLING: Ta bort all speciallogik för 'docs'.
-                // renderFileTree hanterar nu hela strukturen enhetligt.
                 renderFileTree(fullContext.file_structure, fileTreeContainer, '');
-                
                 enforceCoreInstruction();
             })
             .catch(error => {
