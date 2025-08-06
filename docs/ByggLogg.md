@@ -761,3 +761,22 @@ Projektet är i ett **blockerat** tillstånd. Data Explorer är icke-funktionell
     *   Buggen är **ännu inte löst** i UI:t, då komponenten som konsumerar storen (`DataFilterPanel.vue`) ännu inte har anpassats till den nya arkitekturen.
 
 *   **Nästa Steg:** Att i nästa session anpassa `DataFilterPanel.vue` för att korrekt interagera med den nya Options API-baserade storen, vilket slutgiltigt bör lösa buggen.
+
+---
+
+### **Statusrapport: Steg 27 | 6.8.2025**
+
+**Övergripande Sammanfattning:**  
+En intensiv och framgångsrik felsöknings- och analyssession genomfördes. Efter att ha löst en kritisk applikationskrasch och ett visuellt API-kontraktsbrott, genomfördes en fullständig, systematisk granskning av Data Explorer-modulens nuvarande tillstånd. Resultatet är en verifierad och omfattande lista på åtta specifika buggar, funktionella regressioner och visuella fel som nu utgör en konkret och prioriterad "punch list" för nästa utvecklingssteg.
+
+**Detaljerade Genomförda Åtgärder:**
+
+* **Grundorsaksanalys av Applikationskrasch:** En serie av TypeError\-krascher vid applikationsstart analyserades systematiskt. Genom att först isolera persistens-lagret och sedan instrumentera main.js med diagnostisk loggning, identifierades den definitiva grundorsaken som ett arkitektoniskt fel där en Pinia-store (loggerStore) anropades på modulnivå i explorerStore.js innan Pinia-systemet hade initialiserats.  
+* **Korregering av Initialiseringskedjan:** Det felaktiga store-anropet flyttades från modulnivå in i de actions där det behövdes. Detta löste den blockerande kraschen och gjorde applikationen körbar igen.  
+* **Korregering av Visuellt API-Kontraktsbrott:** Ett fel där dropdown-alternativen i BaseMultiSelect var tomma åtgärdades genom att korrigera anropet till BaseCheckbox från att använda en :label\-prop till att korrekt använda komponentens default \<slot\>.  
+* **Systematisk Bugg-inventering:** En fullständig genomgång av den nu fungerande Data Explorer-modulen genomfördes, vilket resulterade i en formell, 8-punktslista över alla kvarvarande problem, inklusive CSS-fel, datakontraktsbrott, och funktionella regressioner som saknad paginering och radklicksfunktionalitet.
+
+**Nuvarande Projektstatus:**  
+Projektet är nu i ett stabilt, körbart tillstånd. Alla kända, kvarvarande buggar och regressioner i Data Explorer-modulen har blivit identifierade, analyserade och dokumenterade. Projektet är perfekt förberett för en fokuserad och systematisk buggfix-session (Steg 28).
+
+
