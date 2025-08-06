@@ -4,17 +4,18 @@
 // Denna Pinia store hanterar all state och logik för Data Explorer-funktionen.
 //
 // === HISTORIK ===
+// * 2025-08-06: (Frankensteen - Operation: Synkroniserad Initialisering) Infört en intern 'watch' för att atomiskt synkronisera filter-state (categoryFilters, numericFilters) med den valda datatypen. Detta löser en kritisk race condition-krasch.
 // * 2025-08-06: (Frankensteen) Uppdaterat `isPristine`-gettern för att korrekt hantera array-baserade värden i `categoryFilters` för multi-select-funktionalitet.
 // * 2025-08-05: (CODE RED FIX by Frankensteen) Tog bort det felaktiga beroendet av `isLoading` från `isPristine`-gettern.
 // * 2025-08-05: (Definitiv Fix av Frankensteen) Infört robusta skyddsvillkor med optional chaining (`?.`) i getters.
 //
 // === TILLÄMPADE REGLER (Frankensteen v4.0) ===
 // - "Help me God"-protokollet har använts för att verifiera denna ändring.
-// - API-kontraktsverifiering: Ändringen är internt konsekvent och påverkar inte storens externa API.
-// - Obligatorisk Refaktorisering: Logiken i `isPristine` är nu mer robust och generell.
+// - API-kontraktsverifiering: Den interna logiken är förbättrad, men det externa API:et (actions, getters) förblir konsekvent.
+// - Obligatorisk Refaktorisering: Logiken för state-initialisering är nu centraliserad, robust och borttagen från komponentlagret.
 
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue'; // Ny import: watch
 import { fetchExplorerData } from '../api/fetchExplorerData.js';
 import { transformAndClassifyData } from '../lib/transformer.js';
 import { applyFilters, applySorting } from '../lib/filters.js';
@@ -38,25 +39,45 @@ export const useExplorerStore = defineStore('explorer', () => {
   const currentPage = ref(1);
   const itemsPerPage = ref(25);
 
+  // --- Getters (Computed) ---
+  const currentItems = computed(() => {
+    if (!dataType.value) return [];
+    return allItems.value.filter(item => item.item_type === dataType.value);
+  });
+
+  const availableFilters = computed(() => {
+    return filtersMap.value[dataType.value]?.categorical || [];
+  });
+
+  const availableNumericFilters = computed(() => {
+    return filtersMap.value[dataType.value]?.numerical || [];
+  });
+  
   // --- Actions ---
-  function _resetAllFilters() {
+  function _resetFilterValues() {
     searchTerm.value = '';
-    categoryFilters.value = {};
-    numericFilters.value = {};
     currentPage.value = 1;
     sortKey.value = 'manufacturer';
     sortOrder.value = 'asc';
+
+    // Istället för att radera objekten, nollställ deras värden
+    for (const key in categoryFilters.value) {
+        categoryFilters.value[key] = [];
+    }
+    for (const key in numericFilters.value) {
+        numericFilters.value[key] = { min: null, max: null };
+    }
   }
 
   function setDataType(type) {
     if (dataType.value !== type) {
       dataType.value = type;
-      _resetAllFilters();
+      // Anrop till _resetAllFilters tas bort härifrån. Watchern hanterar det.
     }
   }
 
   function resetFilters() {
-    _resetAllFilters();
+    _resetFilterValues();
   }
 
   function setSort(key) {
@@ -105,20 +126,30 @@ export const useExplorerStore = defineStore('explorer', () => {
     }
   }
 
-  // --- Getters (Computed) ---
-  const currentItems = computed(() => {
-    if (!dataType.value) return [];
-    return allItems.value.filter(item => item.item_type === dataType.value);
-  });
+  // --- NY WATCHER FÖR SYNKRONISERING ---
+  // Denna watcher är lösningen. Den garanterar att när `availableFilters` ändras
+  // (som ett resultat av att `dataType` ändras), så är filter-staten omedelbart
+  // synkroniserad och korrekt initialiserad INNAN UI kan försöka rendera.
+  watch(availableFilters, (newFilters, oldFilters) => {
+      _resetFilterValues(); // Nollställ alla filtervärden
 
-  const availableFilters = computed(() => {
-    return filtersMap.value[dataType.value]?.categorical || [];
-  });
-  
-  const availableNumericFilters = computed(() => {
-    return filtersMap.value[dataType.value]?.numerical || [];
-  });
-  
+      // Bygg om state-objekten från grunden för att matcha de nya filtren
+      const newCategoryFilters = {};
+      availableFilters.value.forEach(filter => {
+          newCategoryFilters[filter.key] = [];
+      });
+      categoryFilters.value = newCategoryFilters;
+
+      const newNumericFilters = {};
+      availableNumericFilters.value.forEach(filter => {
+          newNumericFilters[filter.key] = { min: null, max: null };
+      });
+      numericFilters.value = newNumericFilters;
+
+  }, { deep: true });
+
+
+  // --- Getters (Computed) Forts. ---
   const currentResults = computed(() => {
     if (!dataType.value) return [];
     
