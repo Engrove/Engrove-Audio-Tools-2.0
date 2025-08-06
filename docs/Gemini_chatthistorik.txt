@@ -2472,3 +2472,13 @@ Inväntar godkännande och startsignal för att påbörja implementationen av "S
 - Frankensteens första försök till omskrivning är ofullständigt, saknar funktionalitet (t.ex. exportToCSV) och korrekt historik. Engrove påpekar detta allvarliga brott mot Kärndirektiven.
 - En metadiskussion om Frankensteens misslyckanden leder till skapandet av ett nytt, stående protokoll: Pre-Svarsverifiering (PSV), som läggs till i `AI_Core_Instruction.md`.
 - Frankensteen levererar en slutgiltig, komplett och korrekt version av `explorerStore.js` baserad på Options API och förbereder avslutning av sessionen.
+
+### **Kronologisk Projekthistorik: Session 27**
+
+* **Engrove:** Rapporterade ett flertal buggar i den driftsatta applikationen, inklusive visuella fel i dropdowns och en icke-fungerande sökfunktion. Tillhandahöll skärmdumpar och loggar som bevis.  
+* **Frankensteen:** Genomförde en analys och identifierade två huvudproblem: ett logiskt dataflödesfel i explorerStore.js och ett CSS z-index\-problem i BaseMultiSelect.vue. Presenterade en tvåfasplan för att åtgärda dessa.  
+* **Engrove & Frankensteen:** Implementerade de två föreslagna korrigeringarna. explorerStore.js uppdaterades för att korrekt tagga dataobjekt, och BaseMultiSelect.vue uppdaterades med z-index\-logik.  
+* **Engrove:** Rapporterade att en ny serie buggar nu var synliga och att problemen var mer komplexa än tidigare antaget. Tillhandahöll en ny, komplett felrapport med 8 specifika punkter.  
+* **Frankensteen:** Accepterade den nya, mer omfattande felrapporten. Genomförde en ny, djupgående teknisk analys av varje enskild punkt och bekräftade grundorsaken för samtliga 8 problem, från CSS-regressioner till funktionella regressioner och datakontraktsbrott.  
+* **Engrove:** Godkände den slutgiltiga analysen och beordrade avslutning av sessionen för att förbereda en ren, fokuserad buggfix-session.
+
