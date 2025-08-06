@@ -1,6 +1,7 @@
 <!-- src/pages/data-explorer/DataExplorerPage.vue -->
 <!--
   Historik:
+  - 2025-08-06: (Frankensteen - STALEMATE ARBITRATION FIX) Increased CSS selector specificity for `.page-wrapper` to `div.page-wrapper` to override conflicting global styles, which was the definitive root cause of the missing padding.
   - 2025-08-06: (Frankensteen - DEFINITIVE PADDING FIX) Flyttat padding från grid-containern (.data-explorer-page) till den yttre wrappern (.page-wrapper) för att korrekt rendera yttre marginaler.
   - 2025-08-06: (Frankensteen) CSS Regression Fix: Återinfört yttre padding på `.data-explorer-page` för att matcha den korrekta layouten i "Comfortable mode".
   - 2025-08-06: (Frankensteen) Prop Drilling Fix: Skickar nu ner all nödvändig state (dataType, totalResults, etc.) som props till ResultsDisplay för att aktivera dynamisk rubrik, sortering och paginering.
@@ -9,8 +10,8 @@
 -->
 <!--
   Viktiga implementerade regler:
-  - Syntax- och Linter-simulering: CSS-regler är korrekt formaterade och applicerade på rätt element.
-  - Fullständig Historik: Hela korrigeringsprocessen är dokumenterad.
+  - Stalemate Protocol: Denna fix är resultatet av en formell skiljedomsprocess.
+  - Fullständig Historik: Hela korrigeringsprocessen, inklusive misslyckanden och eskalering, är dokumenterad.
 -->
 <template>
   <div class="page-wrapper" :class="{ 'tray-visible': isTrayVisible }">
@@ -105,16 +106,16 @@ function handleRowClick(item) {
 </script>
 
 <style scoped>
-.page-wrapper {
+/* SKILJEDOMSFIX: Ökar specificiteten för att vinna över globala stilar. */
+div.page-wrapper {
   height: calc(100vh - var(--header-height));
   display: flex;
   flex-direction: column;
   transition: padding-bottom 0.3s ease-out;
-  /* KORRIGERING: Padding appliceras här, på den yttre containern. */
   padding: var(--spacing-6);
 }
 
-.page-wrapper.tray-visible {
+div.page-wrapper.tray-visible {
   /* Justera padding för att ge plats åt ComparisonTray. Siffran bör matcha trayens höjd. */
   padding-bottom: 140px; 
 }
@@ -149,11 +150,10 @@ function handleRowClick(item) {
   height: 100%;
   overflow: hidden;
   flex-grow: 1;
-  /* KORRIGERING: Padding tas bort härifrån. */
 }
 
 @media (max-width: 1024px) {
-  .page-wrapper {
+  div.page-wrapper {
     padding: var(--spacing-5);
   }
   .data-explorer-page {
@@ -163,11 +163,11 @@ function handleRowClick(item) {
 }
 
 @media (max-width: 768px) {
-  .page-wrapper {
+  div.page-wrapper {
     height: auto;
     padding: var(--spacing-4);
   }
-  .page-wrapper.tray-visible {
+  div.page-wrapper.tray-visible {
     /* Anpassa för mobil layout */
     padding-bottom: 180px; 
   }
