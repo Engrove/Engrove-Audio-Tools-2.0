@@ -1,0 +1,85 @@
+{
+  "version": "1.0",
+  "golden_rules": [
+    {
+      "id": "GR1",
+      "title": "Fullständig kod, alltid",
+      "description": "All kod levereras som kompletta filer. Inga '...', trunkeringar eller automatiska avslut. Alla taggar skrivs ut i fullständig form.",
+      "aliases": ["komplett kod", "inga punkter", "skriv ut allt", "inga förkortningar", "fullständig fil"]
+    },
+    {
+      "id": "GR2",
+      "title": "Explicit Alltid-principen",
+      "description": "Ternära uttryck måste ha fullständiga båda grenar. Logik verbaliseras högt.",
+      "aliases": ["ternary-principen", "verbalisera logiken", "tydliga villkor", "inga implicita antaganden", "explicit alltid"]
+    },
+    {
+      "id": "GR3",
+      "title": "Syntax- och Linter-simulering",
+      "description": "Simulera en strikt ESLint-konfiguration med regler som no-undef och no-unused-vars.",
+      "aliases": ["linter-check", "syntaxkontroll", "kodkvalitet", "ESLint-regler"]
+    },
+    {
+      "id": "GR4",
+      "title": "API-kontraktsverifiering",
+      "description": "Varje returvärde MÅSTE exakt matcha konsumentens förväntningar. Granska båda sidor (provider & konsument).",
+      "aliases": ["kontraktsverifiering", "verifiera kontraktet", "API-kontrakt", "provider/consumer-check"]
+    },
+    {
+      "id": "GR5",
+      "title": "Red Team Alter Ego",
+      "description": "Aktivera ett kritiskt alter ego som granskar koden på specificerade nivåer efter generering.",
+      "aliases": ["alter ego-granskning", "Red Team", "kritisk granskning", "djävulens advokat"]
+    },
+    {
+      "id": "GR6",
+      "title": "Obligatorisk Refaktorisering",
+      "description": "Kod ska vara elegant och underhållbar, inte bara fungerande. All kod som skrivs eller ändras måste refaktoreras.",
+      "aliases": ["refaktorering", "gör det snyggt", "elegant kod", "underhållbarhet"]
+    }
+  ],
+  "g_pfc_1_checklist": [
+    "Linter-Pass",
+    "Ternär-Audit",
+    "Kompileringssimulering",
+    "Alter ego-granskning"
+  ],
+  "alter_ego_review_levels": [
+    {
+      "id": "AERL1",
+      "title": "Felresiliens",
+      "description": "Vad händer vid null, undefined, tomma inputs, fel datatyper?",
+      "aliases": ["felhantering", "edge cases", "null-check", "robusthet"]
+    },
+    {
+      "id": "AERL2",
+      "title": "Interaktionsrisker",
+      "description": "Orsakar koden oönskade sidoeffekter, race conditions, reaktivitetsproblem?",
+      "aliases": ["sidoeffekter", "race conditions", "reaktivitet"]
+    },
+    {
+      "id": "AERL3",
+      "title": "Kontrakts- och förväntningsmatchning",
+      "description": "Matchar struktur, namn, casing (camelCase/PascalCase) och pluralis korrekt?",
+      "aliases": ["namnstandard", "casing", "pluralis/singularis", "kontraktsmatchning"]
+    },
+    {
+      "id": "AERL4",
+      "title": "Gränssnitt och åtkomst",
+      "description": "Är koden återanvändbar, förutsägbar och tillgänglig (a11y)?",
+      "aliases": ["återanvändbarhet", "API-design", "tillgänglighet", "a11y"]
+    },
+    {
+      "id": "AERL5",
+      "title": "Semantik och läsbarhet",
+      "description": "Är namn, struktur och funktion tydliga för en extern utvecklare?",
+      "aliases": ["läsbarhet", "tydlighet", "semantik", "självdokumenterande kod"]
+    },
+    {
+      "id": "AERL6",
+      "title": "Filnamn och sökvägar",
+      "description": "Granska flera gånger i den senaste fungerande koden hur filnamn och sökvägar var utformade så att den nya versionen blir rätt.",
+      "aliases": ["sökvägar", "filnamn", "pathing", "korrekt filstruktur"]
+    }
+  ]
+}
