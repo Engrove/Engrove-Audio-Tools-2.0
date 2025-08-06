@@ -4,6 +4,9 @@
 // Denna Pinia store hanterar all state och logik för Data Explorer-funktionen.
 //
 // === HISTORIK ===
+// * 2025-08-06: (Frankensteen - KRITISK FIX v2) Flyttat `useLoggerStore()`-anropet från modulens toppnivå
+//   in i actions. Detta löser den fundamentala race condition-kraschen vid app-start genom att säkerställa
+//   att storen anropas först efter att Pinia har initialiserats av Vue.
 // * 2025-08-06: (Frankensteen - Felsökning) Instrumenterad med loggerStore för att spåra dataflöde och state-ändringar.
 // * 2025-08-06: (Frankensteen - FULLSTÄNDIG ÅTERSTÄLLNING) Slutgiltig version. Återimplementerad med Options API för maximal reaktivitetsstabilitet. All funktionalitet från tidigare versioner, inklusive `exportToCSV`, har återställts och integrerats. Historiken är komplett. Detta är den definitiva fixen.
 // * 2025-08-06: (Frankensteen - DEFINITIV FIX v2) Bytt strategi från att ersätta filter-objekten till att mutera dem på plats (ta bort/lägg till nycklar). Detta löser ett subtilt reaktivitetsproblem i Vue.
@@ -22,7 +25,7 @@ import { transformAndClassifyData } from '../lib/transformer.js';
 import { applyFilters, applySorting } from '../lib/filters.js';
 import { useLoggerStore } from '@/entities/logger/model/loggerStore.js';
 
-const logger = useLoggerStore();
+// VIKTIGT: Anropa inte useLoggerStore() här på toppnivån.
 
 export const useExplorerStore = defineStore('explorer', {
   state: () => ({
@@ -87,6 +90,7 @@ export const useExplorerStore = defineStore('explorer', {
 
   actions: {
     _initializeAndResetFilters() {
+      const logger = useLoggerStore();
       logger.addLog('Running _initializeAndResetFilters...', 'ExplorerStore', { dataType: this.dataType });
 
       this.searchTerm = '';
@@ -116,6 +120,7 @@ export const useExplorerStore = defineStore('explorer', {
     },
 
     setDataType(type) {
+      const logger = useLoggerStore();
       logger.addLog(`Setting data type to: ${type}`, 'ExplorerStore');
       if (this.dataType !== type) {
         this.dataType = type;
@@ -126,6 +131,7 @@ export const useExplorerStore = defineStore('explorer', {
     },
 
     resetFilters() {
+        const logger = useLoggerStore();
         logger.addLog('Resetting all filters.', 'ExplorerStore');
         this._initializeAndResetFilters();
     },
@@ -147,6 +153,7 @@ export const useExplorerStore = defineStore('explorer', {
     },
     
     async initializeData() {
+        const logger = useLoggerStore();
         logger.addLog('initializeData called.', 'ExplorerStore');
         if (!this.isLoading && this.allItems.length > 0) {
             logger.addLog('Data already initialized. Skipping.', 'ExplorerStore');
