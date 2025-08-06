@@ -24,6 +24,7 @@ Vid starten av varje session är kontext-versionen `v0`, vilket representerar de
 **1. `Uppdatera levande kontext: [Kort beskrivning av ändringen]`**
    *   **Funktion:** Detta är "commit"-kommandot. Det instruerar mig att ta den senaste filen jag levererade, spara den som en ny version i min interna historik, och öka versionsnumret (`+1`). Beskrivningen du anger blir "commit-meddelandet".
    *   **Exempel:** `Uppdatera levande kontext: Lade till BaseMultiSelect för kategorifilter.`
+   *   **Exempel:** `Commit: Lade till BaseMultiSelect för kategorifilter.`
 
 **2. `Återgå till kontext version [nummer]`**
    *   **Funktion:** Detta är "checkout"-kommandot. Det instruerar mig att ändra min aktiva pekare till en specifik, tidigare version från historiken. All efterföljande kodgenerering kommer att baseras på den återställda versionen.
