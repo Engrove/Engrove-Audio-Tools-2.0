@@ -211,6 +211,12 @@ def create_interactive_html(output_html_path):
             'docs/ai_protocols/Levande_Kontext_Protokoll.md',
             // Definierar standarden för fil-headers och samarbete.
             'docs/AI_Collaboration_Standard.md',
+            // Resten av protokollen
+            'docs/ai_protocolsBeroendeanalys_Protokoll.md',
+            'docs/ai_protocols/Brainstorming_Protokoll.md',
+            'docs/ai_protocols/Help_me_God_Protokoll.md',
+            'docs/ai_protocols/K-MOD_Protokoll.md',
+            'docs/ai_protocols/Kontext-JSON_Protokoll.md',
 
             // --- Arkitektur & Standarder ---
             // Den definitiva "ritningen" för projektets mappstruktur och arbetsflöde.
