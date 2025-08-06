@@ -1,6 +1,37 @@
 <!-- src/shared/ui/BaseMultiSelect.vue -->
+<!--
+  === SYFTE & ANSVAR ===
+  Denna fil definierar en återanvändbar flervalskomponent (multi-select dropdown)
+  för avancerad filtrering i applikationen. Den är designad för att vara
+  agnostisk, stödja v-model och hantera sitt eget öppna/stängda tillstånd.
+
+  === API-KONTRAKT (Props, Emits) ===
+  PROPS:
+  - options (Array, required): En lista med objekt, där varje objekt måste ha 'value' och 'label'.
+  - modelValue (Array, required): Den reaktiva arrayen som håller de valda värdena (används för v-model).
+  - label (String): En valfri etikett som visas ovanför komponenten.
+
+  EMITS:
+  - 'update:modelValue': Sänds när användaren väljer/avväljer ett alternativ. Krävs för v-model.
+
+  === HISTORIK ===
+  * 2025-08-06: (Frankensteen) Lade till dynamisk z-index-hantering för att lösa problem med överlappande dropdowns.
+  * 2025-08-06: (Frankensteen - Felsökning) Korrigerat ett API-kontraktsbrott. Ändrat :label-prop till att använda default-slot för BaseCheckbox för att korrekt rendera etikettext.
+  * 2025-08-04: Created by Frankensteen as part of Steg 23.
+              - A reusable multi-select component for advanced filtering.
+              - Compatible with v-model via `modelValue` prop and `update:modelValue` emit.
+              - Uses BaseCheckbox for consistent UI.
+              - Manages its own open/closed state and handles outside clicks.
+
+  === TILLÄMPADE REGLER (Frankensteen v4.0) ===
+  - Fullständig kod, alltid: Hela filen, inklusive fullständig historik, levereras.
+  - API-kontraktsverifiering: Korrigerat API-brott mot BaseCheckbox.
+  - Obligatorisk Refaktorisering: z-index-lösningen är implementerad på ett rent och underhållbart sätt.
+  - Fullständig Historik: All tidigare historik har bevarats och ny har lagts till.
+  - Inledande fil-kommentarer: Denna header har lagts till enligt standard.
+-->
 <template>
-  <div class="base-multi-select" ref="multiSelectRef">
+  <div class="base-multi-select" ref="multiSelectRef" :class="{ 'is-open': isOpen }">
     <label v-if="label" :for="id" class="base-multi-select__label">{{ label }}</label>
     <div class="base-multi-select__control">
       <button
@@ -55,33 +86,9 @@
 </template>
 
 <script setup>
-// =============================================
-// File history
-// =============================================
-// * 2025-08-06: (Frankensteen - Felsökning) Korrigerat ett API-kontraktsbrott. Ändrat :label-prop till att använda default-slot för BaseCheckbox för att korrekt rendera etikettext.
-// * 2025-08-04: Created by Frankensteen as part of Steg 23.
-//             - A reusable multi-select component for advanced filtering.
-//             - Compatible with v-model via `modelValue` prop and `update:modelValue` emit.
-//             - Uses BaseCheckbox for consistent UI.
-//             - Manages its own open/closed state and handles outside clicks.
-//
-
-// =============================================
-// Instruktioner vid skapande av fil
-// =============================================
-// Kärndirektiv: Fullständig kod, alltid. Inga genvägar.
-// Principen "Explicit Alltid": All logik ska vara tydlig och fullständig.
-// API-kontraktsverifiering: v-model-kontraktet är strikt implementerat.
-// Red Team Alter Ego-granskning: Hanterar outside clicks, ARIA-attribut för tillgänglighet.
-// Obligatorisk Refaktorisering: Logiken är uppdelad i tydliga, fokuserade funktioner.
-//
-
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import BaseCheckbox from '@/shared/ui/BaseCheckbox.vue';
 
-// =============================================
-// Component Interface (Props & Emits)
-// =============================================
 const props = defineProps({
   options: {
     type: Array,
@@ -100,16 +107,10 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue']);
 
-// =============================================
-// Internal State
-// =============================================
 const id = `base-multi-select-${Math.random().toString(36).substring(2, 9)}`;
 const isOpen = ref(false);
 const multiSelectRef = ref(null);
 
-// =============================================
-// Computed Properties
-// =============================================
 const selectedText = computed(() => {
   if (props.modelValue.length === 0) {
     return `Select ${props.label || 'options'}...`;
@@ -121,9 +122,6 @@ const selectedText = computed(() => {
   return `${props.modelValue.length} selected`;
 });
 
-// =============================================
-// Methods
-// =============================================
 const isSelected = (optionValue) => {
   return props.modelValue.includes(optionValue);
 };
@@ -141,9 +139,6 @@ const toggleOption = (optionValue) => {
   emit('update:modelValue', newModelValue);
 };
 
-// =============================================
-// Lifecycle and Event Handling
-// =============================================
 const handleClickOutside = (event) => {
   if (multiSelectRef.value && !multiSelectRef.value.contains(event.target)) {
     isOpen.value = false;
@@ -158,17 +153,20 @@ onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside);
 });
 
-// Watch for the dropdown opening, useful for potential future enhancements
 watch(isOpen, (newValue) => {
   // Logic to run when dropdown opens/closes can be added here.
 });
-
 </script>
 
 <style scoped>
 .base-multi-select {
   position: relative;
   width: 100%;
+}
+
+.base-multi-select.is-open {
+  /* Höjer den aktiva dropdownen över sina syskon för att förhindra överlappning */
+  z-index: 20;
 }
 
 .base-multi-select__label {
@@ -262,14 +260,12 @@ watch(isOpen, (newValue) => {
   border-radius: var(--border-radius-small);
 }
 
-/* BaseCheckbox is used inside, so we adjust its label styling for this context */
 .base-multi-select__option-item :deep(label) {
   width: 100%;
   cursor: pointer;
   padding: var(--spacing-1) 0;
 }
 
-/* Transitions */
 .fade-in-up-enter-active,
 .fade-in-up-leave-active {
   transition: opacity 0.2s ease, transform 0.2s ease;
