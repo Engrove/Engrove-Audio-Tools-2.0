@@ -47,6 +47,7 @@
 // - 'update:modelValue': Sänds när användaren väljer/avväljer ett alternativ. Krävs för v-model.
 //
 // === HISTORIK ===
+// * 2025-08-06: (Frankensteen - DEFINITIVE VISUAL FIX) Corrected all CSS color variables to use the mandatory '--color-' prefix (e.g., '--surface-tertiary' -> '--color-surface-tertiary'). This fixes the root cause of the missing background and border styling.
 // * 2025-08-06: (Frankensteen - TRIBUNAL FAILURE & CORRECTION) Added the missing 'background-color' property to the dropdown. Previous fixes incorrectly focused only on z-index, ignoring the visual evidence of transparency. This is the definitive visual fix.
 // * 2025-08-06: (Frankensteen - TRIBUNAL REVIEW) Definitiv fix för CSS stacking context. Tidigare fix var felaktig. Denna fix applicerar z-index på komponentens rot-element när den är öppen, vilket är den verifierat korrekta lösningen.
 // * 2025-08-06: (Frankensteen) Lade till dynamisk z-index-hantering för att lösa problem med överlappande dropdowns.
@@ -54,8 +55,8 @@
 // * 2025-08-04: Created by Frankensteen as part of Steg 23.
 //
 // === TILLÄMPADE REGLER (Frankensteen v4.0) ===
-// - Help me God: Denna lösning har granskats och godkänts av tribunalen efter ett initialt, allvarligt misslyckande.
-// - Fullständig Historik: Hela den smärtsamma men korrekta historiken är bevarad.
+// - Syntax- och Linter-simulering: Korrigerat CSS-variabelnamn för att matcha den globala token-filen.
+// - Fullständig Historik: Hela den korrekta historiken är bevarad.
 
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import BaseCheckbox from '@/shared/ui/BaseCheckbox.vue';
@@ -132,7 +133,6 @@ onBeforeUnmount(() => {
   width: 100%;
 }
 
-/* DEFINITIV FIX 1: Applicera z-index på hela komponenten när den är öppen */
 .base-multi-select.is-open {
   z-index: 10;
 }
@@ -142,7 +142,7 @@ onBeforeUnmount(() => {
   margin-bottom: var(--spacing-1);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  color: var(--text-medium-emphasis);
+  color: var(--color-text-medium-emphasis);
 }
 
 .base-multi-select__control {
@@ -150,29 +150,29 @@ onBeforeUnmount(() => {
   justify-content: space-between;
   align-items: center;
   padding: var(--input-padding-y) var(--input-padding-x);
-  background-color: var(--surface-tertiary);
-  border: 1px solid var(--border-primary);
+  background-color: var(--color-surface-tertiary);
+  border: 1px solid var(--color-border-primary);
   border-radius: var(--border-radius-md);
   cursor: pointer;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .base-multi-select.is-open .base-multi-select__control {
-  border-color: var(--interactive-accent);
-  box-shadow: 0 0 0 1px var(--interactive-accent);
+  border-color: var(--color-interactive-accent);
+  box-shadow: 0 0 0 1px var(--color-interactive-accent);
 }
 
 .base-multi-select__placeholder {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: var(--text-high-emphasis);
+  color: var(--color-text-high-emphasis);
 }
 
 .base-multi-select__arrow {
   width: 20px;
   height: 20px;
-  color: var(--text-medium-emphasis);
+  color: var(--color-text-medium-emphasis);
   transition: transform 0.2s;
 }
 
@@ -186,7 +186,7 @@ onBeforeUnmount(() => {
   left: 0;
   right: 0;
   margin-top: 4px;
-  border: 1px solid var(--border-primary);
+  border: 1px solid var(--color-border-primary);
   border-radius: var(--border-radius-md);
   max-height: 200px;
   overflow-y: auto;
@@ -196,8 +196,7 @@ onBeforeUnmount(() => {
   margin-block-end: 0;
   padding-inline-start: 0;
   z-index: 10;
-  /* DEFINITIV FIX 2: Lägg till den saknade bakgrundsfärgen. */
-  background-color: var(--surface-secondary);
+  background-color: var(--color-surface-secondary);
 }
 
 
@@ -208,7 +207,7 @@ onBeforeUnmount(() => {
 }
 
 .base-multi-select__dropdown li:hover {
-  background-color: var(--surface-tertiary);
+  background-color: var(--color-surface-tertiary);
 }
 
 /* Override BaseCheckbox styles for tighter layout */
