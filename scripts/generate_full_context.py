@@ -96,6 +96,7 @@ def extract_from_content(content, patterns):
             
     return ordered_unique_matches
 
+
 # --- Kärnfunktioner för datahämtning ---
 
 def get_session_headers():
