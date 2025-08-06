@@ -11,8 +11,11 @@
 // - Är helt inaktiv i produktionsläge för att spara minne och prestanda.
 // - Skriver ut formaterade meddelanden till webbläsarens konsol i debug-läge.
 //
-// ÄNDRING (Felsökning):
-// - Miljövariabler via Vite/Cloudflare fungerar inte tillförlitligt.
+// Historik:
+// - 2025-08-06: (Frankensteen - KRITISK FIX) Tog bort det initiala `addLog`-anropet
+//   från modulens rot för att lösa en race condition-krasch vid app-start.
+// - 2025-08-06: (Frankensteen - Felsökning)
+//   Miljövariabler via Vite/Cloudflare fungerar inte tillförlitligt.
 //   Flaggan är nu hårdkodad för att garantera att felsökningsläget är aktivt.
 
 import { ref } from 'vue';
@@ -93,9 +96,6 @@ export const useLoggerStore = defineStore('logger', () => {
     logs.value = [];
     addLog('Log cleared.', 'Logger');
   }
-
-  // Initialiserar loggen med ett startmeddelande (endast i debug-läge).
-  addLog('Logger initialized.', 'System');
 
   return {
     logs,
