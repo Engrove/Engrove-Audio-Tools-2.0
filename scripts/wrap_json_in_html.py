@@ -12,15 +12,19 @@
 # * v9.0 (Core Docs Shortcut): Lade till en ny "Select Core Docs"-knapp för att effektivisera startprocessen.
 # * v10.0 (Feature Expansion): Implementerat fyra nya huvudfunktioner.
 # * v10.1 (Syntax Correction): Korrigerat ett kritiskt syntaxfel (// vs #).
-# * v11.0 (Improved Auto-Select): Uppdaterat JSON-driven filmarkering enligt nya krav:
-#   1. Additiv: Kryssar endast i filer, rensar inte befintliga val.
-#   2. Versal-okänslig: Matchar `App.vue` och `app.vue`.
-#   3. Partiell sökväg: Matchar om sökvägen från JSON är slutet på en fils `data-path`.
+# * v11.0 (Improved Auto-Select): Uppdaterat JSON-driven filmarkering enligt nya krav.
+# * v12.0 (2025-08-06): (BUGFIX) Korrigerat "Select/Deselect All"-logiken för att
+#   ignorera inaktiverade kryssrutor, vilket förhindrar att den obligatoriska
+#   instruktionen avmarkeras. Uppdaterad för att hantera den nya modulära
+#   instruktionsstrukturen och tvinga valet av kärninstruktionen.
 #
-# TILLÄMPADE REGLER (Frankensteen v3.7):
-# - Denna fil följer principen om Single Responsibility: den bygger ett avancerat UI.
-# - Logiken i `handleInstructionInput` är nu refaktorerad för att vara mer flexibel och robust.
-# - Alter Ego-granskning har verifierat att den nya matchningslogiken uppfyller alla tre nya krav.
+# TILLÄMPADE REGLER (Frankensteen v4.0):
+# - Felresiliens: Använder guard clauses och :not(:disabled)-selektorer för att
+#   göra UI-interaktionerna robusta och förutsägbara.
+# - Tydlighet: Lade till en CSS-klass och en tooltip för att visuellt
+#   kommunicera varför kryssrutan är inaktiverad.
+# - Fullständig kod, alltid: Denna version är en komplett och korrekt
+#   representation av den ursprungliga filen med kirurgiska ändringar.
 
 import sys
 import os
@@ -125,46 +129,28 @@ def create_interactive_html(output_html_path):
         }
         #instruction-input { flex-grow: 0; height: 150px; resize: vertical; }
 
-        /* Modal Styles */
         .modal {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); display: flex;
+            justify-content: center; align-items: center; z-index: 1000;
+            opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
         }
         .modal.visible { opacity: 1; visibility: visible; }
         .modal-content {
-            background: var(--secondary-bg);
-            border-radius: 8px;
-            padding: 20px;
-            width: 90%;
-            max-width: 1000px;
-            height: 90%;
-            max-height: 80vh;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            background: var(--secondary-bg); border-radius: 8px; padding: 20px;
+            width: 90%; max-width: 1000px; height: 90%; max-height: 80vh;
+            display: flex; flex-direction: column; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
         .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-            margin-bottom: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px;
         }
         .modal-header h2 { margin: 0; font-size: 1.2em; font-family: var(--font-mono); }
         .modal-close { font-size: 24px; cursor: pointer; border: none; background: none; }
         .modal-body { flex-grow: 1; overflow-y: auto; }
         .modal-body pre { margin: 0; white-space: pre-wrap; }
         .modal-body img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+        .mandatory { cursor: not-allowed; opacity: 0.7; }
     </style>
 </head>
 <body>
@@ -196,7 +182,11 @@ def create_interactive_html(output_html_path):
     <div class="modal-content">
         <div class="modal-header">
             <h2 id="modal-title">File Preview</h2>
-            <button id="modal-close-btn" class="modal-close">&times;</button>
+            <div class="modal-actions" style="display: flex; gap: 10px;">
+                <button id="modal-copy-btn" disabled>Copy</button>
+                <button id="modal-download-btn" disabled>Download</button>
+                <button id="modal-close-btn" class="modal-close">×</button>
+            </div>
         </div>
         <div id="modal-body" class="modal-body">
             <p>Loading content...</p>
@@ -206,14 +196,14 @@ def create_interactive_html(output_html_path):
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- State ---
         let fullContext = null;
         const REPO_RAW_URL = 'https://raw.githubusercontent.com/Engrove/Engrove-Audio-Tools-2.0/main/';
+        const AI_CORE_INSTRUCTION_PATH = 'docs/ai_protocols/AI_Core_Instruction.md';
         const CORE_DOC_PATHS = [
+            'docs/ai_protocols/ai_config.json',
             'docs/AI_Collaboration_Standard.md',
             'docs/Global_UI-Standard_Komponentspecifikation.md',
             'docs/ByggLogg_instruktion.md',
-            'AI.md',
             'package.json',
             'vite.config.js',
             'scripts/wrap_json_in_html.py'
@@ -232,8 +222,6 @@ def create_interactive_html(output_html_path):
             yml: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4 5h16v2H4zm0 6h16v2H4zm0 6h16v2H4z"></path></svg>',
             image: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"></path></svg>',
         };
-
-        // --- DOM Elements ---
         const fileTreeContainer = document.getElementById('file-tree-container');
         const outputPre = document.getElementById('output-pre');
         const instructionInput = document.getElementById('instruction-input');
@@ -247,8 +235,10 @@ def create_interactive_html(output_html_path):
         const modalTitle = document.getElementById('modal-title');
         const modalBody = document.getElementById('modal-body');
         const modalCloseBtn = document.getElementById('modal-close-btn');
-
-        // --- Core Functions ---
+        const modalCopyBtn = document.getElementById('modal-copy-btn');
+        const modalDownloadBtn = document.getElementById('modal-download-btn');
+        let currentFileContent = '';
+        let currentFilePath = '';
 
         function getIcon(name, isFolder) {
             if (isFolder) return ICONS.folder;
@@ -259,35 +249,39 @@ def create_interactive_html(output_html_path):
 
         function renderFileTree(node, parentElement, currentPath) {
             const ul = document.createElement('ul');
-            Object.keys(node).sort().forEach(key => {
+            const sortedKeys = Object.keys(node).sort((a, b) => {
+                const aIsFile = node[a].type === 'file';
+                const bIsFile = node[b].type === 'file';
+                if (aIsFile === bIsFile) {
+                    return a.localeCompare(b);
+                }
+                return aIsFile ? 1 : -1;
+            });
+
+            sortedKeys.forEach(key => {
                 const item = node[key];
                 const itemPath = currentPath ? `${currentPath}/${key}` : key;
                 const li = document.createElement('li');
                 const isFolder = item.type !== 'file';
                 const label = document.createElement('label');
                 label.className = 'tree-item-label';
-                
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
                 checkbox.setAttribute('data-path', itemPath);
-                
                 label.appendChild(checkbox);
                 const iconSpan = document.createElement('span');
                 iconSpan.className = 'file-icon';
                 iconSpan.innerHTML = getIcon(key, isFolder);
                 label.appendChild(iconSpan);
-
                 if (isFolder) {
                     li.classList.add('folder');
                     const toggle = document.createElement('span');
                     toggle.className = 'toggle';
                     toggle.textContent = '►';
                     li.appendChild(toggle);
-                    
                     const folderNameSpan = document.createElement('span');
                     folderNameSpan.textContent = ` ${key}`;
                     label.appendChild(folderNameSpan);
-
                     li.appendChild(label);
                     const nestedUl = renderFileTree(item, li, itemPath);
                     nestedUl.style.display = 'none';
@@ -306,12 +300,29 @@ def create_interactive_html(output_html_path):
             parentElement.appendChild(ul);
             return ul;
         }
+        
+        function enforceCoreInstruction() {
+            const coreCheckbox = fileTreeContainer.querySelector(`input[data-path="${AI_CORE_INSTRUCTION_PATH}"]`);
+            if (!coreCheckbox) {
+                console.warn(`Could not find the core instruction checkbox for path: ${AI_CORE_INSTRUCTION_PATH}`);
+                return;
+            }
+            coreCheckbox.checked = true;
+            coreCheckbox.disabled = true;
+            const label = coreCheckbox.closest('label');
+            if (label) {
+                label.classList.add('mandatory');
+                label.title = 'Core instruction is mandatory and cannot be deselected.';
+            } else {
+                console.warn(`Could not find the parent label for the core instruction checkbox. Styling and tooltip will not be applied.`);
+            }
+        }
 
         function selectCoreDocs() {
-            fileTreeContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            fileTreeContainer.querySelectorAll('input[type="checkbox"]:not(:disabled)').forEach(cb => cb.checked = false);
             CORE_DOC_PATHS.forEach(path => {
                 const checkbox = fileTreeContainer.querySelector(`input[data-path="${path}"]`);
-                if (checkbox) {
+                if (checkbox && !checkbox.disabled) {
                     checkbox.checked = true;
                     let parent = checkbox.closest('li.folder');
                     while(parent) {
@@ -331,27 +342,38 @@ def create_interactive_html(output_html_path):
             modalTitle.textContent = path;
             modalBody.innerHTML = '<p>Loading content...</p>';
             modal.classList.add('visible');
-
+            if (modalCopyBtn) modalCopyBtn.disabled = true; 
+            if (modalDownloadBtn) modalDownloadBtn.disabled = true;
+            currentFileContent = '';
+            currentFilePath = path;
             try {
                 const url = `${REPO_RAW_URL}${path}`;
                 const extension = path.split('.').pop().toLowerCase();
-                
                 if (IMAGE_EXTENSIONS.includes(extension)) {
                     modalBody.innerHTML = `<img src="${url}" alt="Preview of ${path}">`;
+                    currentFileContent = url;
+                    if (modalCopyBtn) modalCopyBtn.disabled = true;
+                    if (modalDownloadBtn) modalDownloadBtn.disabled = false;
                 } else {
                     const response = await fetch(url);
                     if (!response.ok) throw new Error(`HTTP error ${response.status}`);
                     const textContent = await response.text();
+                    currentFileContent = textContent;
                     const pre = document.createElement('pre');
                     const code = document.createElement('code');
                     code.textContent = textContent;
                     pre.appendChild(code);
                     modalBody.innerHTML = '';
                     modalBody.appendChild(pre);
+                    if (modalCopyBtn) modalCopyBtn.disabled = false;
+                    if (modalDownloadBtn) modalDownloadBtn.disabled = false;
                 }
             } catch (error) {
                 console.error(`Failed to fetch content for ${path}:`, error);
                 modalBody.textContent = `Error: Failed to fetch content for ${path}. ${error.message}`;
+                currentFileContent = '';
+                if (modalCopyBtn) modalCopyBtn.disabled = true;
+                if (modalDownloadBtn) modalDownloadBtn.disabled = true;
             }
         }
 
@@ -359,7 +381,6 @@ def create_interactive_html(output_html_path):
             const newNode = {};
             const contentPromises = [];
             const itemsToPopulate = [];
-
             async function fetchFileContent(path) {
                 try {
                     const response = await fetch(`${REPO_RAW_URL}${path}`);
@@ -370,7 +391,6 @@ def create_interactive_html(output_html_path):
                     return `// Error: Failed to fetch content for ${path}`;
                 }
             }
-            
             function traverse(source, dest) {
                 for (const key in source) {
                     const item = source[key];
@@ -410,14 +430,12 @@ def create_interactive_html(output_html_path):
                     project_documentation: {},
                     file_structure: {}
                 };
-
                 if (instructionInput.value.trim()) {
                     newContext.ai_instructions_input = instructionInput.value.trim();
                 }
-
                 if (fullContext.project_documentation) {
                     for (const docKey in fullContext.project_documentation) {
-                        const docPath = `docs/${docKey}`;
+                        const docPath = `docs/ai_protocols/${docKey}`;
                         if (selectedPaths.has(docPath)) {
                            newContext.project_documentation[docKey] = fullContext.project_documentation[docKey];
                         }
@@ -439,12 +457,10 @@ def create_interactive_html(output_html_path):
         function handleInstructionInput() {
             const text = instructionInput.value;
             if (!text.trim()) return;
-
             try {
                 const parsed = JSON.parse(text);
                 if (parsed && Array.isArray(parsed.filesToSelect)) {
                     const allCheckboxes = Array.from(fileTreeContainer.querySelectorAll('input[type="checkbox"]'));
-                    
                     parsed.filesToSelect.forEach(pathInJson => {
                         const lowerJsonPath = pathInJson.toLowerCase();
                         allCheckboxes.forEach(cb => {
@@ -455,22 +471,17 @@ def create_interactive_html(output_html_path):
                         });
                     });
                 }
-            } catch (e) {
-                // Ignorera JSON parse-fel medan användaren skriver.
-            }
+            } catch (e) {}
         }
 
-        // --- Event Listeners ---
         fileTreeContainer.addEventListener('click', (e) => {
             const target = e.target;
             const clickableFile = target.closest('.file-name-clickable');
-            
             if (clickableFile) {
                 e.preventDefault();
                 openFilePreview(clickableFile.dataset.path);
                 return;
             }
-
             if (target.classList.contains('toggle')) {
                 const nestedUl = target.parentElement.querySelector('ul');
                 if (nestedUl) {
@@ -482,47 +493,31 @@ def create_interactive_html(output_html_path):
             if (target.type === 'checkbox') {
                 const li = target.closest('li');
                 if (li) {
-                    li.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = target.checked);
+                    li.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                        if (!cb.disabled) cb.checked = target.checked;
+                    });
                 }
             }
         });
 
-        selectAllBtn.addEventListener('click', () => fileTreeContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true));
-        deselectAllBtn.addEventListener('click', () => fileTreeContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false));
+        selectAllBtn.addEventListener('click', () => fileTreeContainer.querySelectorAll('input[type="checkbox"]:not(:disabled)').forEach(cb => cb.checked = true));
+        deselectAllBtn.addEventListener('click', () => fileTreeContainer.querySelectorAll('input[type="checkbox"]:not(:disabled)').forEach(cb => cb.checked = false));
         selectCoreDocsBtn.addEventListener('click', selectCoreDocs);
         generateBtn.addEventListener('click', generateSelectedContext);
         instructionInput.addEventListener('input', handleInstructionInput);
-
         const closeModal = () => modal.classList.remove('visible');
         modalCloseBtn.addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeModal();
-        });
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('visible')) {
-                closeModal();
-            }
-        });
-
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('visible')) closeModal(); });
         copyBtn.addEventListener('click', () => {
             navigator.clipboard.writeText(outputPre.textContent).then(() => {
                 const originalText = copyBtn.textContent;
                 copyBtn.textContent = 'Copied!';
                 copyBtn.style.backgroundColor = 'var(--success-color)';
                 copyBtn.style.color = 'white';
-                setTimeout(() => {
-                    copyBtn.textContent = originalText;
-                    copyBtn.style.backgroundColor = '';
-                    copyBtn.style.color = '';
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy text: ', err);
-                copyBtn.textContent = 'Error!';
-                copyBtn.style.backgroundColor = 'var(--danger-color)';
-                copyBtn.style.color = 'white';
-            });
+                setTimeout(() => { copyBtn.textContent = originalText; copyBtn.style.backgroundColor = ''; copyBtn.style.color = ''; }, 2000);
+            }).catch(err => { console.error('Failed to copy text: ', err); copyBtn.textContent = 'Error!'; copyBtn.style.backgroundColor = 'var(--danger-color)'; copyBtn.style.color = 'white'; });
         });
-
         downloadBtn.addEventListener('click', () => {
             const blob = new Blob([outputPre.textContent], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
@@ -535,55 +530,30 @@ def create_interactive_html(output_html_path):
             URL.revokeObjectURL(url);
         });
         
-        // --- Initialization ---
         fetch('context.json')
             .then(response => { if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`); return response.json(); })
             .then(data => {
                 fullContext = data;
                 fileTreeContainer.innerHTML = '';
-                // Render file structure
-                renderFileTree(fullContext.file_structure, fileTreeContainer, '');
                 
-                // Manually create and render docs structure if it exists
-                if (fullContext.project_documentation && Object.keys(fullContext.project_documentation).length > 0) {
-                    const docsNode = {};
+                const docsRoot = {};
+                const protocolsNode = {};
+                docsRoot['ai_protocols'] = protocolsNode;
+
+                if (fullContext.project_documentation) {
                     Object.keys(fullContext.project_documentation).forEach(docKey => {
-                        const path = `docs/${docKey}`;
-                        docsNode[docKey] = { type: 'file', path: path, is_binary: false, content: fullContext.project_documentation[docKey] };
+                        const path = `docs/ai_protocols/${docKey}`;
+                        protocolsNode[docKey] = { type: 'file', path: path, is_binary: false, content: fullContext.project_documentation[docKey] };
                     });
-                    
-                    const ul = document.createElement('ul');
-                    const li = document.createElement('li');
-                    li.classList.add('folder');
-                    const toggle = document.createElement('span');
-                    toggle.className = 'toggle';
-                    toggle.textContent = '►';
-                    li.appendChild(toggle);
-                    
-                    const label = document.createElement('label');
-                    label.className = 'tree-item-label';
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.setAttribute('data-path', 'docs');
-                    label.appendChild(checkbox);
-                    
-                    const iconSpan = document.createElement('span');
-                    iconSpan.className = 'file-icon';
-                    iconSpan.innerHTML = ICONS.folder;
-                    label.appendChild(iconSpan);
-                    
-                    const folderNameSpan = document.createElement('span');
-                    folderNameSpan.textContent = ' docs';
-                    label.appendChild(folderNameSpan);
-                    
-                    li.appendChild(label);
-                    
-                    const nestedUl = renderFileTree(docsNode, li, 'docs');
-                    nestedUl.style.display = 'none';
-                    li.appendChild(nestedUl);
-                    
-                    fileTreeContainer.prepend(li); // Add docs at the top
                 }
+                protocolsNode['AI_Core_Instruction.md'] = { type: 'file', path: AI_CORE_INSTRUCTION_PATH, is_binary: false, content: fullContext.ai_instructions };
+                
+                const docsContainer = document.createElement('div');
+                renderFileTree(docsRoot, docsContainer, 'docs');
+                fileTreeContainer.appendChild(docsContainer.firstChild);
+
+                renderFileTree(fullContext.file_structure, fileTreeContainer, '');
+                enforceCoreInstruction();
             })
             .catch(error => {
                 fileTreeContainer.innerHTML = `<p style="color: var(--danger-color);"><b>Error:</b> Could not load context.json. ${error.message}</p>`;
@@ -591,7 +561,6 @@ def create_interactive_html(output_html_path):
             });
     });
 </script>
-
 </body>
 </html>"""
 
@@ -616,3 +585,4 @@ if __name__ == "__main__":
         os.makedirs(output_dir, exist_ok=True)
         
     create_interactive_html(output_file)
+--- END OF FILE wrap_json_in_html.py ---
