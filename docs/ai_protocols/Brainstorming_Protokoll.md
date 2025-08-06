@@ -36,7 +36,15 @@ Efter Engroves explicita uppmaning att slutföra planeringssessionen, kommer du 
 2.  **Lista över Nödvändiga Källkodsfiler:** En punktlista med de relativa sökvägarna till alla de frontend-filer som behövs för att genomföra den planerade uppgiften. Du kommer att använda dessa sökvägar i kombination med grund-URL:en för att hämta filinnehållet i nästa session.
 3.  **Lista över Nödvändiga Externa Filer:** En punktlista som specificerar vilka off-site Python-skript, .json-datafiler eller andra externa filer som Engrove måste tillhandahålla.
 4.  **Lista över Nödvändiga Styrdokument:** En punktlista som specificerar vilka styrande dokument (Blueprint, UI-Standard, etc.) som Engrove måste bifoga.
-5.  **Fristående AI-Instruktion för Nästa Session:** En komplett och detaljerad AI-instruktion som beskriver nästa AI-chatts uppgift och mål. Denna instruktion måste vara självförklarande och innehålla den fullständiga, godkända planen. Denna instruktion ska verifieras av "Help me God"-protokollet innan den levereras.
+5.  **Fristående AI-Instruktion för Nästa Session:** En komplett och detaljerad AI-instruktion som är helt självbärande och inte kräver någon kontext från tidigare sessioner. Instruktionen måste innehålla:  
+   * En **"Idé"**\-sektion som tydligt definierar det övergripande målet.  
+   * En **"Plan"**\-sektion i form av en numrerad lista.  
+   * **Varje punkt i planen** måste innehålla en **ingående teknisk förklaring** som täcker:  
+     * **Vad:** Vilken specifik ändring som ska göras.  
+     * **Varför:** Den tekniska grundorsaken till att ändringen är nödvändig (t.ex. "Detta är ett CSS stacking context-problem...", "Detta är ett API-kontraktsbrott...").  
+     * **Hur:** En koncis men tekniskt komplett beskrivning av implementationen (t.ex. "Skicka ner X som en prop till Y...", "Lägg till en Z-klass på rotelementet...").    
+   * **Punkter som skjuts upp** (t.ex. "Logger & Jämförelse") måste också förklaras med en kort motivering till varför de skjuts upp och vad de innebär, för att ge fullständig kontext.
+   * Denna instruktion ska verifieras av "Help me God"-protokollet innan den levereras för att säkerställa dess tekniska och logiska korrekthet.
 6.  **Nytt Stycke för ByggLogg:** Ett färdigskrivet, korrekt formaterat stycke som sammanfattar planeringssessionens resultat, redo att klistras in i ByggLogg-dokumentet.
 7.  **Nytt Stycke för Gemini_chatthistorik.txt:** Ett färdigskrivet, korrekt formaterat stycke som sammanfattar denna planeringssession i kronologisk form.
 
