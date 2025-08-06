@@ -3,6 +3,7 @@
 // Denna fil har instrumenterats med console.log för att spåra initialiseringsprocessen
 // och identifiera den exakta punkten där kraschen inträffar.
 // console.log('[DEBUG] main.js: Initial imports.');
+// alla loggningar bort kommenterade.
 
 import { createApp } from 'vue';
 // console.log('[DEBUG] main.js: Imported vue');
