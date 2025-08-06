@@ -23,7 +23,7 @@ Denna JSON-fil utgör en ny, obligatorisk leveranspunkt (punkt 8) i "Slutgiltig 
 Objektet måste innehålla följande nycklar:
 
 *   `task_summary` (String): En koncis sammanfattning av den planerade uppgiften på en enda rad.
-*   `full_instruction_preview` (String): En textrepresentation av den fullständiga, fristående AI-instruktionen som skapades i punkt 5 av brainstorming-protokollet. Detta ger en mänsklig förhandsgranskning av hela uppgiften.
+*   `full_instruction_preview` (String): En textrepresentation av den fullständiga, fristående AI-instruktionen som skapades i punkt 5 av Brainstorming_Protokoll.md. Denna text måste innehålla en fullständig och djupt detaljerad uppdragsbeskrivning, inklusive tekniska analyser och implementation-detaljer för varje delmoment, i enlighet med de skärpta kraven i brainstorming-protokollet. Detta ger en mänsklig förhandsgranskning av hela den verifierade uppgiften.
 *   `filesToSelect` (Array of Strings): En komplett, platt lista med de relativa sökvägarna till **alla** filer som identifierats som nödvändiga (källkod, externa filer, styrdokument). Detta är nyckeln som AI Context Builder-verktyget använder för att automatiskt markera kryssrutorna.
 *   `notes` (String, Optional): En valfri sträng för extra anteckningar eller påminnelser inför nästa session, t.ex. "Fokusera på felhanteringen i `fetchData.js`" eller "Kom ihåg att uppdatera versionsnumret i `package.json`".
 
