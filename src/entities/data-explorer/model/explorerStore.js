@@ -4,6 +4,9 @@
 // Denna Pinia store hanterar all state och logik för Data Explorer-funktionen.
 //
 // === HISTORIK ===
+// * 2025-08-06: (Frankensteen - DATA FLOW FIX) Lade till `item_type`-egenskap på varje objekt
+//   under `initializeData` för att `currentItems`-gettern ska kunna filtrera korrekt.
+//   Detta löser buggen där inga resultat visades.
 // * 2025-08-06: (Frankensteen - KRITISK FIX v2) Flyttat `useLoggerStore()`-anropet från modulens toppnivå
 //   in i actions. Detta löser den fundamentala race condition-kraschen vid app-start genom att säkerställa
 //   att storen anropas först efter att Pinia har initialiserats av Vue.
@@ -24,8 +27,6 @@ import { fetchExplorerData } from '../api/fetchExplorerData.js';
 import { transformAndClassifyData } from '../lib/transformer.js';
 import { applyFilters, applySorting } from '../lib/filters.js';
 import { useLoggerStore } from '@/entities/logger/model/loggerStore.js';
-
-// VIKTIGT: Anropa inte useLoggerStore() här på toppnivån.
 
 export const useExplorerStore = defineStore('explorer', {
   state: () => ({
@@ -48,6 +49,7 @@ export const useExplorerStore = defineStore('explorer', {
   getters: {
     currentItems(state) {
       if (!state.dataType) return [];
+      // This getter now works correctly because `item_type` exists
       return state.allItems.filter(item => item.item_type === state.dataType);
     },
     availableFilters(state) {
@@ -166,15 +168,18 @@ export const useExplorerStore = defineStore('explorer', {
             const data = await fetchExplorerData();
             logger.addLog('Data fetched successfully.', 'ExplorerStore', { 'keys': Object.keys(data) });
 
-            const cartridges = transformAndClassifyData(data.cartridgesData, data.cartridgesClassifications);
-            const tonearms = transformAndClassifyData(data.tonearmsData, data.tonearmsClassifications);
-            this.allItems = [...cartridges, ...tonearms];
+            const transformedCartridges = (transformAndClassifyData(data.cartridgesData, data.cartridgesClassifications) || [])
+                .map(item => ({ ...item, item_type: 'cartridges' }));
+            const transformedTonearms = (transformAndClassifyData(data.tonearmsData, data.tonearmsClassifications) || [])
+                .map(item => ({ ...item, item_type: 'tonearms' }));
+            
+            this.allItems = [...transformedCartridges, ...transformedTonearms];
 
             this.filtersMap = data.filtersMap;
             this.translationMap = data.translationMap;
             this.classifications = { ...data.cartridgesClassifications, ...data.tonearmsClassifications };
             
-            logger.addLog('Data transformed and state populated.', 'ExplorerStore', {
+            logger.addLog('Data transformed, tagged with item_type, and state populated.', 'ExplorerStore', {
                 totalItems: this.allItems.length,
                 filtersMapLoaded: !!this.filtersMap,
             });
