@@ -1,6 +1,7 @@
 <!-- src/pages/data-explorer/DataExplorerPage.vue -->
 <!--
   Historik:
+  - 2025-08-06: (Frankensteen - DEFINITIVE PADDING FIX) Flyttat padding från grid-containern (.data-explorer-page) till den yttre wrappern (.page-wrapper) för att korrekt rendera yttre marginaler.
   - 2025-08-06: (Frankensteen) CSS Regression Fix: Återinfört yttre padding på `.data-explorer-page` för att matcha den korrekta layouten i "Comfortable mode".
   - 2025-08-06: (Frankensteen) Prop Drilling Fix: Skickar nu ner all nödvändig state (dataType, totalResults, etc.) som props till ResultsDisplay för att aktivera dynamisk rubrik, sortering och paginering.
   - 2025-08-06: (Frankensteen) Integrerat den nya ComparisonTray-widgeten och kopplat dess händelser för att slutföra jämförelsefunktionen.
@@ -8,10 +9,8 @@
 -->
 <!--
   Viktiga implementerade regler:
-  - Syntax- och Linter-simulering: CSS-regler är korrekt formaterade.
-  - API-kontraktsverifiering: Sidan uppfyller nu det fullständiga API-kontraktet för ResultsDisplay-komponenten.
-  - "Help me God"-protokollet har använts för att verifiera denna slutgiltiga integration.
-  - Obligatorisk Refaktorisering: Sidans struktur är nu logiskt komplett och följer FSD-principerna.
+  - Syntax- och Linter-simulering: CSS-regler är korrekt formaterade och applicerade på rätt element.
+  - Fullständig Historik: Hela korrigeringsprocessen är dokumenterad.
 -->
 <template>
   <div class="page-wrapper" :class="{ 'tray-visible': isTrayVisible }">
@@ -111,6 +110,8 @@ function handleRowClick(item) {
   display: flex;
   flex-direction: column;
   transition: padding-bottom 0.3s ease-out;
+  /* KORRIGERING: Padding appliceras här, på den yttre containern. */
+  padding: var(--spacing-6);
 }
 
 .page-wrapper.tray-visible {
@@ -145,24 +146,26 @@ function handleRowClick(item) {
   display: grid;
   grid-template-columns: 320px 1fr;
   gap: var(--spacing-6);
-  /* KORRIGERING: Återställer den saknade paddingen */
-  padding: var(--spacing-6);
   height: 100%;
   overflow: hidden;
   flex-grow: 1;
+  /* KORRIGERING: Padding tas bort härifrån. */
 }
 
 @media (max-width: 1024px) {
+  .page-wrapper {
+    padding: var(--spacing-5);
+  }
   .data-explorer-page {
     grid-template-columns: 280px 1fr;
     gap: var(--spacing-5);
-    padding: var(--spacing-5);
   }
 }
 
 @media (max-width: 768px) {
   .page-wrapper {
     height: auto;
+    padding: var(--spacing-4);
   }
   .page-wrapper.tray-visible {
     /* Anpassa för mobil layout */
