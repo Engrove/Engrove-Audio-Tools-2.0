@@ -184,6 +184,11 @@
       {
         "id": "Durable",
         "description": "Built to withstand heavy use, often a feature of DJ or broadcast cartridges."
+      },
+      {
+        "id": "balanced",
+        "name": "Balanced",
+        "description": "Automatically added by script."
       }
     ]
   }
