@@ -4,6 +4,7 @@
 // Denna Pinia store hanterar all state och logik för Data Explorer-funktionen.
 //
 // === HISTORIK ===
+// * 2025-08-06: (Frankensteen - Felsökning) Instrumenterad med loggerStore för att spåra dataflöde och state-ändringar.
 // * 2025-08-06: (Frankensteen - FULLSTÄNDIG ÅTERSTÄLLNING) Slutgiltig version. Återimplementerad med Options API för maximal reaktivitetsstabilitet. All funktionalitet från tidigare versioner, inklusive `exportToCSV`, har återställts och integrerats. Historiken är komplett. Detta är den definitiva fixen.
 // * 2025-08-06: (Frankensteen - DEFINITIV FIX v2) Bytt strategi från att ersätta filter-objekten till att mutera dem på plats (ta bort/lägg till nycklar). Detta löser ett subtilt reaktivitetsproblem i Vue.
 // * 2025-08-06: (Frankensteen - ATOMÄR FELSÖKNING) Definitiv fix. `_initializeAndResetFilters` är nu självförsörjande och använder inte längre computed properties, vilket eliminerar den sista race conditionen. Loggning har lagts till för felsökning.
@@ -19,6 +20,9 @@ import { defineStore } from 'pinia';
 import { fetchExplorerData } from '../api/fetchExplorerData.js';
 import { transformAndClassifyData } from '../lib/transformer.js';
 import { applyFilters, applySorting } from '../lib/filters.js';
+import { useLoggerStore } from '@/entities/logger/model/loggerStore.js';
+
+const logger = useLoggerStore();
 
 export const useExplorerStore = defineStore('explorer', {
   state: () => ({
@@ -83,11 +87,18 @@ export const useExplorerStore = defineStore('explorer', {
 
   actions: {
     _initializeAndResetFilters() {
+      logger.addLog('Running _initializeAndResetFilters...', 'ExplorerStore', { dataType: this.dataType });
+
       this.searchTerm = '';
       this.currentPage = 1;
       this.sortKey = 'manufacturer';
       this.sortOrder = 'asc';
       
+      logger.addLog('State reset. Now preparing to initialize filters.', 'ExplorerStore', {
+        availableCategorical: this.availableFilters,
+        availableNumerical: this.availableNumericFilters
+      });
+
       Object.keys(this.categoryFilters).forEach(key => delete this.categoryFilters[key]);
       Object.keys(this.numericFilters).forEach(key => delete this.numericFilters[key]);
 
@@ -97,16 +108,25 @@ export const useExplorerStore = defineStore('explorer', {
       this.availableNumericFilters.forEach(filter => {
         this.numericFilters[filter.key] = { min: null, max: null };
       });
+      
+      logger.addLog('Filters initialized.', 'ExplorerStore', {
+        categoryFilters: JSON.parse(JSON.stringify(this.categoryFilters)),
+        numericFilters: JSON.parse(JSON.stringify(this.numericFilters))
+      });
     },
 
     setDataType(type) {
+      logger.addLog(`Setting data type to: ${type}`, 'ExplorerStore');
       if (this.dataType !== type) {
         this.dataType = type;
         this._initializeAndResetFilters();
+      } else {
+        logger.addLog('Data type already set. No changes made.', 'ExplorerStore');
       }
     },
 
     resetFilters() {
+        logger.addLog('Resetting all filters.', 'ExplorerStore');
         this._initializeAndResetFilters();
     },
 
@@ -127,11 +147,18 @@ export const useExplorerStore = defineStore('explorer', {
     },
     
     async initializeData() {
-        if (!this.isLoading && this.allItems.length > 0) return;
+        logger.addLog('initializeData called.', 'ExplorerStore');
+        if (!this.isLoading && this.allItems.length > 0) {
+            logger.addLog('Data already initialized. Skipping.', 'ExplorerStore');
+            return;
+        }
         this.isLoading = true;
         this.error = null;
         try {
+            logger.addLog('Fetching data from API...', 'ExplorerStore');
             const data = await fetchExplorerData();
+            logger.addLog('Data fetched successfully.', 'ExplorerStore', { 'keys': Object.keys(data) });
+
             const cartridges = transformAndClassifyData(data.cartridgesData, data.cartridgesClassifications);
             const tonearms = transformAndClassifyData(data.tonearmsData, data.tonearmsClassifications);
             this.allItems = [...cartridges, ...tonearms];
@@ -139,13 +166,22 @@ export const useExplorerStore = defineStore('explorer', {
             this.filtersMap = data.filtersMap;
             this.translationMap = data.translationMap;
             this.classifications = { ...data.cartridgesClassifications, ...data.tonearmsClassifications };
+            
+            logger.addLog('Data transformed and state populated.', 'ExplorerStore', {
+                totalItems: this.allItems.length,
+                filtersMapLoaded: !!this.filtersMap,
+            });
 
             this._initializeAndResetFilters();
+            logger.addLog('Initial filters set.', 'ExplorerStore');
+
         } catch (e) {
             console.error('Failed to initialize explorer store:', e);
+            logger.addLog('ERROR: Failed to initialize data.', 'ExplorerStore', { error: e.message });
             this.error = 'Could not load data. Please try again later.';
         } finally {
             this.isLoading = false;
+            logger.addLog('initializeData finished. isLoading set to false.', 'ExplorerStore');
         }
     },
 
@@ -161,14 +197,14 @@ export const useExplorerStore = defineStore('explorer', {
         const values = headers.map(header => {
           let value = row[header];
           if (value === null || value === undefined) return '';
-          if (Array.isArray(value)) value = `"${value.join('; ')}"`;
-          if (typeof value === 'string' && value.includes(',')) value = `"${value}"`;
+          if (Array.isArray(value)) value = `\"${value.join('; ')}\"`;
+          if (typeof value === 'string' && value.includes(',')) value = `\"${value}\"`;
           return value;
         });
         csvRows.push(values.join(','));
       }
 
-      const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+      const blob = new Blob([csvRows.join('\\n')], { type: 'text/csv;charset=utf-8;' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
