@@ -19,15 +19,14 @@
 # * v13.1 (2025-08-06): (BUGFIX) Korrigerat "Select/Deselect All"-logiken.
 # * v14.0 (2025-08-06): (KORRIGERING) All speciallogik i JavaScript för att rendera `docs`-mappen har tagits bort.
 #   Filträdet renderas nu enhetligt från `file_structure`-objektet.
-# * v15.0 (2025-08-06): Implementerat tre nya funktioner:
-#   1. "Copy" och "Download"-knappar i förhandsgranskningsmodalen är nu fullt fungerande.
-#   2. Filträdet expanderas nu automatiskt till valda filer när JSON klistras in.
-#   3. En ny knapp "Generate Files" har lagts till för att skapa en JSON med endast filinnehåll.
+# * v15.0 (2025-08-06): Implementerat tre nya funktioner (modalknappar, trädexpansion, Generate Files).
+# * v15.1 (2025-08-06): (KORRIGERING) Rättat ett kritiskt logiskt fel i `generateFilesOnly` som gjorde att filinnehåll inte hämtades.
+#   Funktionen återanvänder nu den robusta `buildNewContextStructure`-logiken.
 #
 # TILLÄMPADE REGLER (Frankensteen v4.0):
-# - Fullständig kod, alltid: Detta är en komplett, fungerande fil med den nya logiken.
-# - API-kontraktsverifiering: Befintliga funktioner har utökats utan att bryta deras kontrakt.
-# - Obligatorisk Refaktorisering: Logiken för att expandera trädgrenar har brutits ut till en återanvändbar funktion.
+# - Red Team Alter Ego: Identifierade och korrigerade det logiska felet i den tidigare implementationen.
+# - Obligatorisk Refaktorisering: Eliminerade kodduplicering genom att återanvända `buildNewContextStructure`.
+# - Fullständig kod, alltid: Detta är en komplett, fungerande fil med den korrigerade logiken.
 
 import sys
 import os
@@ -43,7 +42,7 @@ def create_interactive_html(output_html_path):
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>AI Context Builder v3.1</title>
+    <title>AI Context Builder v3.2</title>
     <style>
         :root {
             --primary-bg: #f8f9fa;
@@ -390,7 +389,7 @@ def create_interactive_html(output_html_path):
                     const response = await fetch(url);
                     if (!response.ok) throw new Error(`HTTP error ${response.status}`);
                     currentFileContent = await response.blob();
-                    modalCopyBtn.disabled = true; // Can't copy image blob to clipboard easily
+                    modalCopyBtn.disabled = true;
                     modalDownloadBtn.disabled = false;
                 } else {
                     currentFileIsBinary = false;
@@ -410,9 +409,6 @@ def create_interactive_html(output_html_path):
             } catch (error) {
                 console.error(`Failed to fetch content for ${path}:`, error);
                 modalBody.textContent = `Error: Failed to fetch content for ${path}. ${error.message}`;
-                currentFileContent = '';
-                modalCopyBtn.disabled = true;
-                modalDownloadBtn.disabled = true;
             }
         }
 
@@ -481,7 +477,6 @@ def create_interactive_html(output_html_path):
                 downloadBtn.disabled = false;
             } catch (error) {
                 outputPre.textContent = `An error occurred during context generation: ${error.message}`;
-                console.error(error);
             } finally {
                 generateBtn.disabled = false;
                 generateBtn.textContent = 'Generate Context';
@@ -498,24 +493,32 @@ def create_interactive_html(output_html_path):
 
                 if (instructionText) {
                     try {
-                        // Try to parse as JSON first
-                        const parsedJson = JSON.parse(instructionText);
-                        output = { ...parsedJson };
+                        output = { ...JSON.parse(instructionText) };
                     } catch (e) {
-                        // If not JSON, treat as plain text instruction
                         output.user_instruction = instructionText;
                     }
                 }
 
                 const selectedPaths = new Set(Array.from(fileTreeContainer.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.dataset.path));
                 const filesContent = {};
-                const promises = Array.from(selectedPaths).map(path => 
-                    fetchFileContent(path).then(content => {
-                        filesContent[path] = content;
-                    })
-                );
 
-                await Promise.all(promises);
+                // Re-use the robust build function to get content
+                const populatedStructure = await buildNewContextStructure(fullContext.file_structure, selectedPaths);
+                
+                function extractFiles(node) {
+                    for (const key in node) {
+                        const item = node[key];
+                        if (item.type === 'file') {
+                            if (item.content !== undefined) {
+                                filesContent[item.path] = item.content;
+                            }
+                        } else {
+                            extractFiles(item);
+                        }
+                    }
+                }
+
+                extractFiles(populatedStructure);
                 output.files = filesContent;
 
                 outputPre.textContent = JSON.stringify(output, null, 2);
@@ -524,7 +527,6 @@ def create_interactive_html(output_html_path):
 
             } catch (error) {
                 outputPre.textContent = `An error occurred during file generation: ${error.message}`;
-                console.error(error);
             } finally {
                 generateFilesBtn.disabled = false;
                 generateFilesBtn.textContent = 'Generate Files';
@@ -546,7 +548,7 @@ def create_interactive_html(output_html_path):
                         }
                     });
                 }
-            } catch (e) { /* Ignore parse errors, it might not be JSON */ }
+            } catch (e) { /* Ignore parse errors */ }
         }
 
         fileTreeContainer.addEventListener('click', (e) => {
@@ -648,7 +650,6 @@ def create_interactive_html(output_html_path):
             })
             .catch(error => {
                 fileTreeContainer.innerHTML = `<p style="color: var(--danger-color);"><b>Error:</b> Could not load context.json. ${error.message}</p>`;
-                console.error('Failed to load context.json:', error);
             });
     });
 </script>
