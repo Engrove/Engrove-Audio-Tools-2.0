@@ -212,7 +212,7 @@ def create_interactive_html(output_html_path):
             // Definierar standarden för fil-headers och samarbete.
             'docs/AI_Collaboration_Standard.md',
             // Resten av protokollen
-            'docs/ai_protocolsBeroendeanalys_Protokoll.md',
+            'docs/ai_protocols/Beroendeanalys_Protokoll.md',
             'docs/ai_protocols/Brainstorming_Protokoll.md',
             'docs/ai_protocols/Help_me_God_Protokoll.md',
             'docs/ai_protocols/K-MOD_Protokoll.md',
