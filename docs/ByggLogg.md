@@ -741,3 +741,23 @@ En kritisk TypeError\-krasch som gjorde hela Data Explorer-modulen obrukbar vid 
 **Nuvarande Projektstatus:**  
 Projektet är i ett **blockerat** tillstånd. Data Explorer är icke-funktionell. En definitiv grundorsak har identifierats och en robust, godkänd plan för att åtgärda felet är på plats. Nästa session ("Steg 26") kommer att fokusera helt på implementationen av denna plan.
 
+---
+
+**Steg 26: Data Explorer - Felsökningsloop och Arkitektonisk Korrigering | 2025-08-06**
+
+*   **Mål:** Lösa den kritiska buggen i Data Explorer där filterkontroller och data inte renderades korrekt efter byte av datatyp.
+
+*   **Process:** Detta steg blev en djup och utdragen felsökningsprocess.
+    1.  En första fix löste en `TypeError`-krasch men inte det underliggande logiska felet.
+    2.  En andra fix med en `watch`-funktion i `explorerStore` visade sig vara en felaktig arkitektonisk väg som inte löste problemet på grund av timing-problem i Vues reaktivitetssystem.
+    3.  Efter att ha fått en äldre, fungerande version av filen som referens, identifierades grundorsaken: mitt val av Pinia's Composition API var olämpligt för just denna komplexa, dynamiska store, vilket orsakade reaktivitetsbrott.
+    4.  Beslut togs att genomföra en "Strategisk Reträtt" till Pinia's mer robusta **Options API** för denna specifika store.
+    5.  Ett initialt försök att återimplementera storen var ofullständigt och saknade kritisk funktionalitet, ett allvarligt brott mot Kärndirektiven.
+    6.  En metadiskussion ledde till införandet av ett nytt, stående protokoll, **Pre-Svarsverifiering (PSV)**, för att förhindra framtida kontextdrift.
+
+*   **Resultat:**
+    *   En komplett, robust och funktionellt korrekt `src/entities/data-explorer/model/explorerStore.js` har genererats med den stabila Options API-strukturen, men med all ny logik och datakontrakt bevarade.
+    *   `docs/ai_protocols/AI_Core_Instruction.md` har uppdaterats med den nya PSV-ordern.
+    *   Buggen är **ännu inte löst** i UI:t, då komponenten som konsumerar storen (`DataFilterPanel.vue`) ännu inte har anpassats till den nya arkitekturen.
+
+*   **Nästa Steg:** Att i nästa session anpassa `DataFilterPanel.vue` för att korrekt interagera med den nya Options API-baserade storen, vilket slutgiltigt bör lösa buggen.
