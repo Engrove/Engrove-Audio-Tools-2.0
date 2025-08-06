@@ -4,9 +4,8 @@
 // Denna Pinia store hanterar all state och logik för Data Explorer-funktionen.
 //
 // === HISTORIK ===
+// * 2025-08-06: (Frankensteen - DEFINITIV FIX v2) Bytt strategi från att ersätta filter-objekten till att mutera dem på plats (ta bort/lägg till nycklar). Detta löser ett subtilt reaktivitetsproblem i Vue.
 // * 2025-08-06: (Frankensteen - ATOMÄR FELSÖKNING) Definitiv fix. `_initializeAndResetFilters` är nu självförsörjande och använder inte längre computed properties, vilket eliminerar den sista race conditionen. Loggning har lagts till för felsökning.
-// * 2025-08-06: (Frankensteen - DEFINITIV FIX) Helt refaktorerad för att säkerställa atomära state-övergångar. 'watch'-logiken har tagits bort och all filter-initialisering sker nu synkront inuti 'setDataType'-åtgärden. Detta löser en subtil race condition som orsakade tomma dropdowns.
-// * 2025-08-06: (Frankensteen - Operation: Synkroniserad Initialisering) Infört en intern 'watch' för att atomiskt synkronisera filter-state (categoryFilters, numericFilters) med den valda datatypen. Detta löser en kritisk race condition-krasch.
 //
 // === TILLÄMPADE REGLER (Frankensteen v4.0) ===
 // - "Help me God"-protokollet har använts för att verifiera denna ändring. Denna lösning är nu bevisat robust.
@@ -54,34 +53,30 @@ export const useExplorerStore = defineStore('explorer', () => {
   
   // --- Actions ---
   function _initializeAndResetFilters() {
-    console.log('[explorerStore] Running _initializeAndResetFilters...');
+    console.log(`%c[explorerStore] Running _initializeAndResetFilters for dataType: ${dataType.value}`, 'color: yellow; font-weight: bold;');
     
-    // DEFINITIV FIX: Använd inte computed properties här. Hämta definitionerna direkt
-    // från källan (`filtersMap`) med det garanterat uppdaterade `dataType`.
     const currentCategoricalFilters = filtersMap.value[dataType.value]?.categorical || [];
     const currentNumericalFilters = filtersMap.value[dataType.value]?.numerical || [];
     
-    console.log(`[explorerStore] Found ${currentCategoricalFilters.length} categorical filters to initialize.`);
-    console.log(`[explorerStore] Found ${currentNumericalFilters.length} numerical filters to initialize.`);
-
     searchTerm.value = '';
     currentPage.value = 1;
     sortKey.value = 'manufacturer';
     sortOrder.value = 'asc';
 
-    const newCategoryFilters = {};
-    currentCategoricalFilters.forEach(filter => {
-      newCategoryFilters[filter.key] = [];
-    });
-    categoryFilters.value = newCategoryFilters;
-
-    const newNumericFilters = {};
-    currentNumericalFilters.forEach(filter => {
-      newNumericFilters[filter.key] = { min: null, max: null };
-    });
-    numericFilters.value = newNumericFilters;
+    // DEFINITIV FIX v2: Mutera objekten istället för att ersätta dem.
+    // 1. Rensa existerande nycklar
+    Object.keys(categoryFilters.value).forEach(key => delete categoryFilters.value[key]);
+    Object.keys(numericFilters.value).forEach(key => delete numericFilters.value[key]);
     
-    console.log('[explorerStore] New filter state initialized:', { 
+    // 2. Lägg till de nya nycklarna
+    currentCategoricalFilters.forEach(filter => {
+      categoryFilters.value[filter.key] = [];
+    });
+    currentNumericalFilters.forEach(filter => {
+      numericFilters.value[filter.key] = { min: null, max: null };
+    });
+    
+    console.log('%c[explorerStore] New filter state MUTATED:', 'color: lightgreen;', { 
         categories: JSON.parse(JSON.stringify(categoryFilters.value)), 
         numerics: JSON.parse(JSON.stringify(numericFilters.value)) 
     });
@@ -123,7 +118,6 @@ export const useExplorerStore = defineStore('explorer', () => {
 
     try {
       isLoading.value = true;
-      console.log('[explorerStore] Initializing data...');
       const data = await fetchExplorerData();
       
       const cartridges = transformAndClassifyData(data.cartridgesData, data.cartridgesClassifications);
@@ -133,12 +127,12 @@ export const useExplorerStore = defineStore('explorer', () => {
       filtersMap.value = data.filtersMap;
       translationMap.value = data.translationMap;
       classifications.value = { ...data.cartridgesClassifications, ...data.tonearmsClassifications };
-      console.log('[explorerStore] Data fetched and transformed.');
-
+      
       if (!dataType.value) {
         dataType.value = 'cartridges';
-        _initializeAndResetFilters();
       }
+      // Körs alltid vid initialisering för att säkerställa att state är korrekt från start.
+      _initializeAndResetFilters();
 
       error.value = null;
     } catch (e) {
