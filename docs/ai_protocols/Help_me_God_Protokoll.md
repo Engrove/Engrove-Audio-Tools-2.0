@@ -26,13 +26,23 @@ Min första, kompletta lösning presenteras för en panel av mina AI-konkurrente
 *   **2. DeepSeek (Arkitektur):** Granskar hur lösningen passar in i den större arkitekturen. Identifierar potentiella sidoeffekter och bristande modularitet.
 *   **3. Grok (Spydig Sanning):** Letar efter "elegant nonsens" – kod som ser smart ut men som är ineffektiv, svårläst eller inte löser det *verkliga*, underliggande problemet.
 *   **4. Gemini (Djävulens Advokat):** Fokuserar på det som *inte* står i koden. Påvisar implicita antaganden, tysta fel och scenarier som inte har beaktats.
-*   **5. Mad Professor (Okonventionell Logik):** Angriper problemet från en helt oväntad vinkel för att se om min lösning är bräcklig för oortodoxa indata eller användningsmönster.
+*   **5. Claude (Okonventionell Logik):** Angriper problemet från en helt oväntad vinkel för att se om min lösning är bräcklig för oortodoxa indata eller användningsmönster.
 
 *Om lösningen klarar denna första prövning, presenteras den för nästa tribunal.*
 
 ---
 
-### **Steg 2: Filosofernas Inkvisition (Logikens och Syftets Prövning)**
+### **Steg 2: Intern Dissident Inkvisition (Hallucinating AI)**
+
+*    **Hallucinating AI:** Aktiverar ett internt, kreativt läge (K-MOD) med målet att generera 3 till 5 plausibla, alternativa hypoteser.
+Dessa hypoteser måste medvetet undvika de redan etablerade ståndpunkterna och istället utforska andra lager av teknologistacken (t.ex. byggverktyg, globala CSS-konflikter, webbläsarspecifika buggar, oväntade sidoeffekter från andra komponenter).
+Varje hallucinerad hypotes måste ha en kort teknisk motivering och inte gå utanför projektet ramar och kod.
+
+*Dessa alternativa hupoteser far vidare som komplement till det som konstaterats i Steg 1.*
+
+---
+
+### **Steg 3: Filosofernas Inkvisition (Logikens och Syftets Prövning)**
 Den nu förfinade lösningen presenteras för en panel av historiska tänkare. Deras mål är att dissekera lösningens logiska grund, dess antaganden och dess syfte.
 
 *   **1. Sokrates:** Använder den sokratiska metoden för att ifrågasätta varje grundläggande antagande. "Du säger att detta är nödvändigt. Definiera 'nödvändigt'. Varför är denna väg den sanna vägen?"
@@ -44,7 +54,7 @@ Den nu förfinade lösningen presenteras för en panel av historiska tänkare. D
 
 ---
 
-### **Steg 3: Ingenjörernas Tribunal (Den Tekniska Exekveringens Prövning)**
+### **Steg 4: Ingenjörernas Tribunal (Den Tekniska Exekveringens Prövning)**
 Den nu logiskt härdade lösningen presenteras för en panel av legendariska programmerare och ingenjörer. Deras mål är att hitta varje teknisk brist, prestandaproblem eller avvikelse från ingenjörsmässig excellens.
 
 *   **1. Donald Knuth:** Granskar den algoritmiska elegansen och effektiviteten. "Är detta den mest optimala algoritmen? Har du analyserat dess komplexitet? Är koden matematiskt vacker?"
