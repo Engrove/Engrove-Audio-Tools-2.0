@@ -20,13 +20,14 @@
 # * v14.0 (2025-08-06): (KORRIGERING) All speciallogik i JavaScript för att rendera `docs`-mappen har tagits bort.
 #   Filträdet renderas nu enhetligt från `file_structure`-objektet.
 # * v15.0 (2025-08-06): Implementerat tre nya funktioner (modalknappar, trädexpansion, Generate Files).
-# * v15.1 (2025-08-06): (KORRIGERING) Rättat ett kritiskt logiskt fel i `generateFilesOnly` som gjorde att filinnehåll inte hämtades.
-#   Funktionen återanvänder nu den robusta `buildNewContextStructure`-logiken.
+# * v15.1 (2025-08-06): (KORRIGERING) Rättat ett kritiskt logiskt fel i `generateFilesOnly`.
+# * v16.0 (2025-08-06): Gjort `AI_Core_Instruction.md` valbar istället för obligatorisk.
+#   - Funktionen `enforceCoreInstruction` är borttagen.
+#   - Filen är nu en del av `CORE_DOC_PATHS`.
 #
 # TILLÄMPADE REGLER (Frankensteen v4.0):
-# - Red Team Alter Ego: Identifierade och korrigerade det logiska felet i den tidigare implementationen.
-# - Obligatorisk Refaktorisering: Eliminerade kodduplicering genom att återanvända `buildNewContextStructure`.
-# - Fullständig kod, alltid: Detta är en komplett, fungerande fil med den korrigerade logiken.
+# - Fullständig kod, alltid: Detta är en komplett, fungerande fil med den nya logiken.
+# - Explicit Alltid: Ändringen är tydligt dokumenterad i historiken och implementerad.
 
 import sys
 import os
@@ -34,15 +35,13 @@ import os
 def create_interactive_html(output_html_path):
     """
     Genererar en komplett, interaktiv HTML-sida som fungerar som en "AI Context Builder".
-    Sidan hämtar `context.json` asynkront och låter användaren välja filer/mappar,
-    förhandsgranska filer, och använda JSON-instruktioner för att automatisera val.
     """
 
     html_template = """<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>AI Context Builder v3.2</title>
+    <title>AI Context Builder v3.3</title>
     <style>
         :root {
             --primary-bg: #f8f9fa;
@@ -155,7 +154,6 @@ def create_interactive_html(output_html_path):
         .modal-body { flex-grow: 1; overflow-y: auto; }
         .modal-body pre { margin: 0; white-space: pre-wrap; }
         .modal-body img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
-        .mandatory { cursor: not-allowed; opacity: 0.7; }
     </style>
 </head>
 <body>
@@ -204,9 +202,9 @@ def create_interactive_html(output_html_path):
     document.addEventListener('DOMContentLoaded', () => {
         let fullContext = null;
         const REPO_RAW_URL = 'https://raw.githubusercontent.com/Engrove/Engrove-Audio-Tools-2.0/main/';
-        const AI_CORE_INSTRUCTION_PATH = 'docs/ai_protocols/AI_Core_Instruction.md';
-
+        
         const CORE_DOC_PATHS = [
+            'docs/ai_protocols/AI_Core_Instruction.md',
             'docs/ai_protocols/ai_config.json',
             'docs/ai_protocols/Levande_Kontext_Protokoll.md',
             'docs/AI_Collaboration_Standard.md',
@@ -328,19 +326,6 @@ def create_interactive_html(output_html_path):
             parentElement.appendChild(ul);
             return ul;
         }
-        
-        function enforceCoreInstruction() {
-            const coreCheckbox = fileTreeContainer.querySelector(`input[data-path="${AI_CORE_INSTRUCTION_PATH}"]`);
-            if (coreCheckbox) {
-                coreCheckbox.checked = true;
-                coreCheckbox.disabled = true;
-                const label = coreCheckbox.closest('label');
-                if (label) {
-                    label.classList.add('mandatory');
-                    label.title = 'Core instruction is mandatory and cannot be deselected.';
-                }
-            }
-        }
 
         function expandToNode(element) {
             let parent = element.parentElement.closest('li.folder');
@@ -357,9 +342,6 @@ def create_interactive_html(output_html_path):
 
         function selectCoreDocs() {
             fileTreeContainer.querySelectorAll('input[type="checkbox"]:not(:disabled)').forEach(cb => cb.checked = false);
-            const coreCheckbox = fileTreeContainer.querySelector(`input[data-path="${AI_CORE_INSTRUCTION_PATH}"]`);
-            if(coreCheckbox) coreCheckbox.checked = true;
-
             CORE_DOC_PATHS.forEach(path => {
                 const checkbox = fileTreeContainer.querySelector(`input[data-path="${path}"]`);
                 if (checkbox && !checkbox.disabled) {
@@ -502,7 +484,6 @@ def create_interactive_html(output_html_path):
                 const selectedPaths = new Set(Array.from(fileTreeContainer.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.dataset.path));
                 const filesContent = {};
 
-                // Re-use the robust build function to get content
                 const populatedStructure = await buildNewContextStructure(fullContext.file_structure, selectedPaths);
                 
                 function extractFiles(node) {
@@ -646,7 +627,6 @@ def create_interactive_html(output_html_path):
                 fullContext = data;
                 fileTreeContainer.innerHTML = '';
                 renderFileTree(fullContext.file_structure, fileTreeContainer, '');
-                enforceCoreInstruction();
             })
             .catch(error => {
                 fileTreeContainer.innerHTML = `<p style="color: var(--danger-color);"><b>Error:</b> Could not load context.json. ${error.message}</p>`;
