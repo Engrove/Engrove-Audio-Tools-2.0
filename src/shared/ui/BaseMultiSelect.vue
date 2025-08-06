@@ -42,9 +42,10 @@
               <BaseCheckbox
                 :model-value="isSelected(option.value)"
                 @update:modelValue="toggleOption(option.value)"
-                :label="option.label"
                 :id="`option-${id}-${option.value}`"
-              />
+              >
+                {{ option.label }}
+              </BaseCheckbox>
             </li>
           </ul>
         </div>
@@ -57,7 +58,8 @@
 // =============================================
 // File history
 // =============================================
-// 2025-08-04: Created by Frankensteen as part of Steg 23.
+// * 2025-08-06: (Frankensteen - Felsökning) Korrigerat ett API-kontraktsbrott. Ändrat :label-prop till att använda default-slot för BaseCheckbox för att korrekt rendera etikettext.
+// * 2025-08-04: Created by Frankensteen as part of Steg 23.
 //             - A reusable multi-select component for advanced filtering.
 //             - Compatible with v-model via `modelValue` prop and `update:modelValue` emit.
 //             - Uses BaseCheckbox for consistent UI.
@@ -279,4 +281,3 @@ watch(isOpen, (newValue) => {
   transform: translateY(-8px);
 }
 </style>
-<!-- src/shared/ui/BaseMultiSelect.vue -->
