@@ -14,17 +14,18 @@
 # * v10.0 (Order Fix): Helt omskriven `extract_from_content`-funktion. Använder nu `re.finditer`
 #   och sorterar matchningar baserat på deras startindex i filen. Detta korrigerar den
 #   kritiska buggen där kommentarer och beroenden listades i fel (alfabetisk) ordning.
-# * v11.0 (2025-08-06): Helt omskriven för att stödja den nya modulära
-#   instruktionsstrukturen. Letar nu specifikt efter en kärninstruktion
-#   (AI_Core_Instruction.md) och behandlar alla andra protokoll som vanlig
-#   projektdokumentation. Avslutar med felkod om kärninstruktionen saknas.
+# * v11.0 (2025-08-06): Omskriven för att stödja den modulära instruktionsstrukturen.
+# * v12.0 (2025-08-06): (KORRIGERING) Helt refaktorerad för att skapa en enhetlig filstruktur.
+#   All specialhantering av `docs`-mappen har tagits bort. Alla filer och mappar,
+#   inklusive dokumentation, behandlas nu på samma sätt och byggs in i ett enda
+#   `file_structure`-objekt. `project_documentation` är borttagen.
 #
 # TILLÄMPADE REGLER (Frankensteen v4.0):
-# - Följer den nya modulära arkitekturen.
-# - API-kontraktsverifiering: Säkerställer att den genererade JSON-filen
-#   har den förväntade strukturen med `ai_instructions` korrekt ifyllt.
-# - Felresiliens: Implementerar en "fail-fast"-strategi med sys.exit(1) om
-#   den kritiska kärninstruktionen inte kan hämtas eller är tom.
+# - Enkelhet och Enhetlighet: Genom att ta bort speciallogiken för `docs` är skriptet
+#   nu mer robust, enklare att underhålla och producerar ett konsekvent dataformat.
+# - API-kontraktsverifiering: Det nya kontraktet är förenklat. `file_structure` är nu
+#   den enda källan för hela trädstrukturen, vilket matchar front-endens förväntningar.
+# - Felresiliens: Fortsätter använda "fail-fast" om kärninstruktionen saknas.
 
 import requests
 import re
@@ -36,7 +37,6 @@ import sys
 REPO = "Engrove/Engrove-Audio-Tools-2.0"
 BRANCH = "main"
 AI_CORE_INSTRUCTION_PATH = "docs/ai_protocols/AI_Core_Instruction.md"
-DOCS_PATH = "docs"
 
 # Lista över filändelser som ska behandlas som binära.
 BINARY_EXTENSIONS = {
@@ -54,8 +54,8 @@ COMMENT_PATTERNS = [
     re.compile(r'<!--[\s\S]*?-->'), re.compile(r'#.*'),
 ]
 DEP_PATTERNS = [
-    re.compile(r'^\s*import(?:.*?from)?\s*[\'"]([^\'"]+)[\'"]', re.MULTILINE),
-    re.compile(r'require\([\'"]([^\'\"]+)[\'\"]\)', re.MULTILINE),
+    re.compile(r'^\s*import(?:.*?from)?\s*[\'\"]([^\'\"]+)[\'\"]', re.MULTILINE),
+    re.compile(r'require\([\'\"]([^\'\"]+)[\'\"]\)', re.MULTILINE),
     re.compile(r'^\s*(?:from|import)\s+([a-zA-Z0-9_.]+)', re.MULTILINE),
 ]
 
@@ -103,7 +103,7 @@ def get_session_headers():
     """Skapar headers för API-anrop. Använder GITHUB_TOKEN om det finns."""
     token = os.getenv('GITHUB_TOKEN')
     headers = {
-        'User-Agent': 'Python-Context-Generator/11.0',
+        'User-Agent': 'Python-Context-Generator/12.0',
         'Accept': 'application/vnd.github.v3+json'
     }
     if token:
@@ -149,27 +149,16 @@ def main():
         log_message("FATAL", "Kunde inte hämta grundläggande repository-data. Avbryter.")
         sys.exit(1)
 
-    ai_instructions = get_raw_file_content(AI_CORE_INSTRUCTION_PATH, headers)
-    if not ai_instructions or not ai_instructions.strip():
+    ai_instructions_content = get_raw_file_content(AI_CORE_INSTRUCTION_PATH, headers)
+    if not ai_instructions_content or not ai_instructions_content.strip():
         log_message("FATAL", f"Kunde inte hämta den obligatoriska kärninstruktionen från '{AI_CORE_INSTRUCTION_PATH}' eller så är filen tom. Avbryter.")
         sys.exit(1)
     log_message("INFO", f"Hämtade kärninstruktionen från '{AI_CORE_INSTRUCTION_PATH}'.")
 
-    project_documentation = {}
-    doc_files = [item for item in tree_info['tree'] if item['path'].startswith(DOCS_PATH + '/') and item['path'].endswith('.md') and item['path'] != AI_CORE_INSTRUCTION_PATH]
-    if doc_files:
-        log_message("INFO", f"Hittade {len(doc_files)} styrande dokument och protokoll.")
-        for doc_item in doc_files:
-            doc_path = doc_item['path']
-            doc_content = get_raw_file_content(doc_path, headers)
-            if doc_content:
-                project_documentation[os.path.basename(doc_path)] = doc_content
-    else:
-        log_message("WARN", f"Inga ytterligare .md-filer hittades i mappen '{DOCS_PATH}'.")
-
+    # NYTT: All specialhantering för docs är borta. Vi bygger en enda struktur.
     file_structure = {}
-    file_list = [item for item in tree_info['tree'] if item['type'] == 'blob' and not item['path'].startswith(DOCS_PATH + '/')]
-    log_message("INFO", f"Hittade {len(file_list)} källkodsfiler att analysera.")
+    file_list = [item for item in tree_info['tree'] if item['type'] == 'blob']
+    log_message("INFO", f"Hittade {len(file_list)} filer att analysera (inklusive dokumentation).")
 
     for i, item in enumerate(file_list):
         path = item['path']
@@ -182,7 +171,10 @@ def main():
         path_parts = path.split('/')
         current_level = file_structure
         for part in path_parts[:-1]:
-            current_level = current_level.setdefault(part, {})
+            # Skapa en ny mapp om den inte finns
+            if part not in current_level:
+                current_level[part] = {}
+            current_level = current_level[part]
         
         file_data = {
             "type": "file",
@@ -192,20 +184,23 @@ def main():
             "is_binary": is_binary or is_json,
             "comments": [],
             "dependencies": [],
-            "content": None
+            "content": None # Hålls som None för att inte överbelasta JSON
         }
-
-        if is_json:
-            log_message("INFO", f"Hoppar över innehållsläsning för JSON-datafil: {path}")
-        elif is_binary:
-            log_message("INFO", f"Hoppar över innehållsläsning för binär fil: {path}")
-        else:
+        
+        # Läs bara innehåll för textbaserade filer
+        if not (is_binary or is_json):
             content = get_raw_file_content(path, headers)
             if content:
                 file_data["comments"] = [sanitize_comment(c) for c in extract_from_content(content, COMMENT_PATTERNS)]
                 file_data["dependencies"] = extract_from_content(content, DEP_PATTERNS)
-                file_data["content"] = content
-
+                # Spara endast innehållet om det är kärninstruktionen för att hålla JSON liten
+                if path == AI_CORE_INSTRUCTION_PATH:
+                     # Detta är en dubblett, men vi behåller den för den gamla ai_instructions-nyckeln.
+                     # Vi lagrar inte innehållet i file_structure-objektet för att hålla det konsekvent.
+                     pass
+                else:
+                    file_data["content"] = content
+        
         current_level[path_parts[-1]] = file_data
 
     final_context = {
@@ -216,8 +211,8 @@ def main():
             "last_updated_at": repo_info.get('pushed_at'),
             "url": repo_info.get('html_url')
         },
-        "ai_instructions": ai_instructions,
-        "project_documentation": project_documentation,
+        "ai_instructions": ai_instructions_content,
+        "project_documentation": {}, # Denna nyckel är nu tom, men behålls för bakåtkompatibilitet om något externt verktyg skulle förvänta sig den.
         "file_structure": file_structure
     }
     
