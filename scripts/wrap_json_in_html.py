@@ -202,13 +202,35 @@ def create_interactive_html(output_html_path):
         const REPO_RAW_URL = 'https://raw.githubusercontent.com/Engrove/Engrove-Audio-Tools-2.0/main/';
         const AI_CORE_INSTRUCTION_PATH = 'docs/ai_protocols/AI_Core_Instruction.md';
         // Note: 'select-core-docs-btn' will now also select from the 'docs' tree
-        const CORE_DOC_PATHS = [
-            'docs/ai_protocols/ai_config.json',
-            'package.json',
-            'vite.config.js',
-            'scripts/generate_full_context.py',
-            'scripts/wrap_json_in_html.py'
-        ];
+const CORE_DOC_PATHS = [
+    // --- AI & Process ---
+    // Maskinläsbara definitioner av alla kärnregler. Obligatorisk.
+    'docs/ai_protocols/ai_config.json',
+    // Protokollet för sessionsbaserad versionshantering. Kritiskt för vårt arbetsflöde.
+    'docs/ai_protocols/Levande_Kontext_Protokoll.md',
+    // Definierar standarden för fil-headers och samarbete.
+    'docs/AI_Collaboration_Standard.md',
+
+    // --- Arkitektur & Standarder ---
+    // Den definitiva "ritningen" för projektets mappstruktur och arbetsflöde.
+    'docs/Mappstruktur_och_Arbetsflöde.md',
+    // Definierar den övergripande designfilosofin, färger och typografi.
+    'docs/Global_UI-Standard_för_Engrove-plattformen.md',
+    // Detaljerad specifikation för alla Base-komponenter.
+    'docs/Global_UI-Standard_Komponentspecifikation.md',
+
+    // --- Projektkonfiguration ---
+    // Definierar projektets beroenden och skript.
+    'package.json',
+    // Definierar byggprocessen och ingångspunkter.
+    'vite.config.js',
+
+    // --- Metakontext (Verktygen själva) ---
+    // Skriptet som genererar den primära kontext-JSON-filen.
+    'scripts/generate_full_context.py',
+    // Skriptet som bygger detta interaktiva UI.
+    'scripts/wrap_json_in_html.py'
+];
         const IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'];
         const ICONS = {
             folder: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h6l2 2h8v10H4z"></path></svg>',
