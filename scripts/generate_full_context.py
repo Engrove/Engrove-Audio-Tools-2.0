@@ -14,12 +14,17 @@
 # * v10.0 (Order Fix): Helt omskriven `extract_from_content`-funktion. Använder nu `re.finditer`
 #   och sorterar matchningar baserat på deras startindex i filen. Detta korrigerar den
 #   kritiska buggen där kommentarer och beroenden listades i fel (alfabetisk) ordning.
+# * v11.0 (2025-08-06): Helt omskriven för att stödja den nya modulära
+#   instruktionsstrukturen. Letar nu specifikt efter en kärninstruktion
+#   (AI_Core_Instruction.md) och behandlar alla andra protokoll som vanlig
+#   projektdokumentation. Avslutar med felkod om kärninstruktionen saknas.
 #
-# TILLÄMPADE REGLER (Frankensteen v3.7):
-# - Denna fil följer principerna om "Explicit Alltid" och robust felhantering.
-# - Alla nätverksanrop är inkapslade i try-except-block.
-# - Dataflöden (stdout) och loggflöden (stderr) är strikt separerade.
-# - Koden har refaktoriserats för läsbarhet och underhållbarhet.
+# TILLÄMPADE REGLER (Frankensteen v4.0):
+# - Följer den nya modulära arkitekturen.
+# - API-kontraktsverifiering: Säkerställer att den genererade JSON-filen
+#   har den förväntade strukturen med `ai_instructions` korrekt ifyllt.
+# - Felresiliens: Implementerar en "fail-fast"-strategi med sys.exit(1) om
+#   den kritiska kärninstruktionen inte kan hämtas eller är tom.
 
 import requests
 import re
@@ -30,7 +35,7 @@ import sys
 # --- Konfiguration ---
 REPO = "Engrove/Engrove-Audio-Tools-2.0"
 BRANCH = "main"
-AI_MD_PATH = "AI.md"
+AI_CORE_INSTRUCTION_PATH = "docs/ai_protocols/AI_Core_Instruction.md"
 DOCS_PATH = "docs"
 
 # Lista över filändelser som ska behandlas som binära.
@@ -50,7 +55,7 @@ COMMENT_PATTERNS = [
 ]
 DEP_PATTERNS = [
     re.compile(r'^\s*import(?:.*?from)?\s*[\'"]([^\'"]+)[\'"]', re.MULTILINE),
-    re.compile(r'require\([\'"]([^\'"]+)[\'"]\)', re.MULTILINE),
+    re.compile(r'require\([\'"]([^\'\"]+)[\'\"]\)', re.MULTILINE),
     re.compile(r'^\s*(?:from|import)\s+([a-zA-Z0-9_.]+)', re.MULTILINE),
 ]
 
@@ -73,11 +78,7 @@ def extract_from_content(content, patterns):
     all_matches = []
     for pattern in patterns:
         for match in re.finditer(pattern, content):
-            # För mönster som DEP_PATTERNS kan `match.groups()` innehålla `None`.
-            # Vi vill ha den första giltiga gruppen.
-            # För COMMENT_PATTERNS är `match.group(0)` hela matchningen.
             if pattern in DEP_PATTERNS:
-                # Extrahera den första icke-None gruppen från tuple
                 match_text = next((g for g in match.groups() if g is not None), None)
             else: # COMMENT_PATTERNS
                 match_text = match.group(0)
@@ -85,12 +86,7 @@ def extract_from_content(content, patterns):
             if match_text:
                  all_matches.append((match.start(), match_text))
 
-    # Sortera alla funna matchningar baserat på deras startposition
     all_matches.sort(key=lambda x: x[0])
-
-    # Returnera enbart den matchade texten, nu i korrekt ordning
-    # Använd en uppsättning för att filtrera bort exakta dubbletter som kan uppstå
-    # från överlappande regex-mönster, men bevara ordningen.
     seen = set()
     ordered_unique_matches = []
     for _, text in all_matches:
@@ -100,21 +96,20 @@ def extract_from_content(content, patterns):
             
     return ordered_unique_matches
 
-
 # --- Kärnfunktioner för datahämtning ---
 
 def get_session_headers():
     """Skapar headers för API-anrop. Använder GITHUB_TOKEN om det finns."""
     token = os.getenv('GITHUB_TOKEN')
     headers = {
-        'User-Agent': 'Python-Context-Generator/10.0',
+        'User-Agent': 'Python-Context-Generator/11.0',
         'Accept': 'application/vnd.github.v3+json'
     }
     if token:
         log_message("INFO", "GITHUB_TOKEN hittades. Använder autentiserade anrop.")
         headers['Authorization'] = f"token {token}"
     else:
-        log_message("WARN", "Ingen GITHUB_TOKEN hittades. Anropen är anonyma och har strikt rate limit.")
+        log_message("WARN", "Ingen GITHUB_TOKEN hittades. Anropen är anonyma.")
     return headers
 
 def get_api_data(url, headers):
@@ -153,17 +148,23 @@ def main():
         log_message("FATAL", "Kunde inte hämta grundläggande repository-data. Avbryter.")
         sys.exit(1)
 
+    ai_instructions = get_raw_file_content(AI_CORE_INSTRUCTION_PATH, headers)
+    if not ai_instructions or not ai_instructions.strip():
+        log_message("FATAL", f"Kunde inte hämta den obligatoriska kärninstruktionen från '{AI_CORE_INSTRUCTION_PATH}' eller så är filen tom. Avbryter.")
+        sys.exit(1)
+    log_message("INFO", f"Hämtade kärninstruktionen från '{AI_CORE_INSTRUCTION_PATH}'.")
+
     project_documentation = {}
-    doc_files = [item for item in tree_info['tree'] if item['path'].startswith(DOCS_PATH + '/') and item['path'].endswith('.md')]
+    doc_files = [item for item in tree_info['tree'] if item['path'].startswith(DOCS_PATH + '/') and item['path'].endswith('.md') and item['path'] != AI_CORE_INSTRUCTION_PATH]
     if doc_files:
-        log_message("INFO", f"Hittade {len(doc_files)} styrande dokument i mappen '{DOCS_PATH}'.")
+        log_message("INFO", f"Hittade {len(doc_files)} styrande dokument och protokoll.")
         for doc_item in doc_files:
             doc_path = doc_item['path']
             doc_content = get_raw_file_content(doc_path, headers)
             if doc_content:
                 project_documentation[os.path.basename(doc_path)] = doc_content
     else:
-        log_message("WARN", f"Inga .md-filer hittades i mappen '{DOCS_PATH}'.")
+        log_message("WARN", f"Inga ytterligare .md-filer hittades i mappen '{DOCS_PATH}'.")
 
     file_structure = {}
     file_list = [item for item in tree_info['tree'] if item['type'] == 'blob' and not item['path'].startswith(DOCS_PATH + '/')]
@@ -171,9 +172,6 @@ def main():
 
     for i, item in enumerate(file_list):
         path = item['path']
-        if path.lower() == AI_MD_PATH.lower():
-            continue
-            
         log_message("INFO", f"Bearbetar ({i+1}/{len(file_list)}): {path}")
         
         file_extension = path.split('.')[-1].lower() if '.' in path else ''
@@ -208,8 +206,6 @@ def main():
                 file_data["content"] = content
 
         current_level[path_parts[-1]] = file_data
-
-    ai_instructions = get_raw_file_content(AI_MD_PATH, headers)
 
     final_context = {
         "project_overview": {
