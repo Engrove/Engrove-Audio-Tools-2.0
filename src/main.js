@@ -1,36 +1,70 @@
 // src/app/main.js
-// Detta är applikationens huvud-startpunkt (entry point).
-// Den skapar Vue-appen, importerar globala stilar och plugins,
-// och monterar appen på DOM-trädet.
+// === DIAGNOSTISK VERSION ===
+// Denna fil har instrumenterats med console.log för att spåra initialiseringsprocessen
+// och identifiera den exakta punkten där kraschen inträffar.
 
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
-import piniaPluginPersistedState from 'pinia-plugin-persistedstate';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
+import { createHead } from '@unhead/vue';
 
-// Importerar rotkomponenten App.vue
 import App from '../App.vue';
+import router from './router.js';
 
-// Importerar de globala stilarna. Vite kommer att hantera dessa.
 import './styles/_tokens.css';
 import './styles/_global.css';
 
-// Importerar routern.
-import router from './router.js';
+console.log('[DEBUG] main.js: Start of script execution.');
 
-// Skapar en Pinia-instans för global state management.
-const pinia = createPinia();
-// Registrerar persistens-pluginet för att spara state till localStorage.
-pinia.use(piniaPluginPersistedState);
-
-// Skapar Vue-applikationsinstansen med App.vue som rotkomponent.
+// 1. Skapa Vue-applikationens instans.
 const app = createApp(App);
+console.log('[DEBUG] main.js: 1. createApp(App) - SUCCESS.');
 
-// Registrerar Pinia-instansen i appen.
-app.use(pinia);
-// Registrerar routern i appen.
-app.use(router);
+// 2. Skapa en Pinia-instans för state management.
+const pinia = createPinia();
+console.log('[DEBUG] main.js: 2. createPinia() - SUCCESS.');
 
-// Monterar den färdigkonfigurerade appen på HTML-elementet med id="app".
-// Detta element finns i /index.html.
-app.mount('#app');
-// src/app/main.js
+// Registrera pluginet som hanterar persistent state (sparar i localStorage).
+try {
+  pinia.use(piniaPluginPersistedstate);
+  console.log('[DEBUG] main.js: 2a. pinia.use(piniaPluginPersistedstate) - SUCCESS.');
+} catch (e) {
+  console.error('[DEBUG] main.js: 2a. pinia.use(piniaPluginPersistedstate) - FAILED.', e);
+  throw e; // Kasta om felet för att se hela stacktracen
+}
+
+
+// 3. Skapa en instans för att hantera dokumentets <head> (för SEO).
+const head = createHead();
+console.log('[DEBUG] main.js: 3. createHead() - SUCCESS.');
+
+// 4. Registrera alla plugins med Vue-appen.
+try {
+  console.log('[DEBUG] main.js: 4a. Attempting app.use(pinia)...');
+  app.use(pinia);
+  console.log('[DEBUG] main.js: 4a. app.use(pinia) - SUCCESS.');
+
+  console.log('[DEBUG] main.js: 4b. Attempting app.use(router)...');
+  app.use(router);
+  console.log('[DEBUG] main.js: 4b. app.use(router) - SUCCESS.');
+
+  console.log('[DEBUG] main.js: 4c. Attempting app.use(head)...');
+  app.use(head);
+  console.log('[DEBUG] main.js: 4c. app.use(head) - SUCCESS.');
+} catch (e) {
+    console.error('[DEBUG] main.js: 4. app.use() block - FAILED.', e);
+    throw e;
+}
+
+
+// 5. Montera den färdigkonfigurerade appen till DOM-elementet med id="app".
+try {
+  console.log('[DEBUG] main.js: 5. Attempting app.mount(\'#app\')...');
+  app.mount('#app');
+  console.log('[DEBUG] main.js: 5. app.mount(\'#app\') - SUCCESS.');
+} catch (e) {
+    console.error('[DEBUG] main.js: 5. app.mount() - FAILED.', e);
+    throw e;
+}
+
+console.log('[DEBUG] main.js: End of script execution.');
