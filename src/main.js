@@ -2,17 +2,31 @@
 // === DIAGNOSTISK VERSION ===
 // Denna fil har instrumenterats med console.log för att spåra initialiseringsprocessen
 // och identifiera den exakta punkten där kraschen inträffar.
+console.log('[DEBUG] main.js: Initial imports.');
 
 import { createApp } from 'vue';
+console.log('[DEBUG] main.js: Imported vue');
+
 import { createPinia } from 'pinia';
+console.log('[DEBUG] main.js: Imported pinia');
+
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
+console.log('[DEBUG] main.js: Imported pinia-plugin-persistedstat');
+
 import { createHead } from '@unhead/vue';
+console.log('[DEBUG] main.js: Imported @unhead/vue');
 
 import App from '../App.vue';
+console.log('[DEBUG] main.js: Imported ../App.vue');
+
 import router from './router.js';
+console.log('[DEBUG] main.js: Imported ./router.js');
 
 import './styles/_tokens.css';
+console.log('[DEBUG] main.js: Imported ./styles/_tokens.css');
+
 import './styles/_global.css';
+console.log('[DEBUG] main.js: Imported ./styles/_global.css');
 
 console.log('[DEBUG] main.js: Start of script execution.');
 
