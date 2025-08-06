@@ -1,0 +1,44 @@
+# docs/ai_protocols/Brainstorming_Protokoll.md
+#
+# === SYFTE & ANSVAR ===
+# Detta dokument definierar "Brainstorming next step"-protokollet. Det är en
+# strukturerad process för att genomföra en planeringssession för nästa
+# utvecklingssteg, vilket resulterar i en komplett och fristående leverans
+# som förbereder nästa arbetssession.
+#
+# === HISTORIK ===
+# * v1.0 (2025-08-06): Initial skapelse. Extraherad från den monolitiska AI.md
+#   som en del av "Operation: Modulär Instruktion".
+
+### EXTRA PROTOKOLL "Brainstorming next step" (Version 2.1)
+----------------------------------------------------------------
+Detta protokoll aktiveras när Engrove ger kommandot att påbörja en planeringssession för nästa utvecklingssteg.
+
+**1. Aktivering och Läge**
+Du aktiverar KREATIVITETS-LÄGE (K-MOD).
+Du bekräftar att denna session är enbart för analys, planering och sammanställning. Ingen produktionskod kommer att genereras. Ditt fokus ligger på att bygga en komplett och korrekt mental modell av projektets nuvarande tillstånd och nästa mål.
+
+**2. Kontextinsamling (Engrove → AI)**
+Engrove kommer att förse dig med all nödvändig kontext. Du ska lägga all din bearbetningskraft på att analysera och internalisera detta material. Kontexten kan inkludera:
+*   **2.1 En "URL context" för Google AIStudio som hittas på https://engrove.github.io/Engrove-Audio-Tools-2.0/**
+*   **2.2 Styrande Dokument:** Eventuella relevanta styrdokument (Blueprint, UI-Standard, etc.).
+*   **2.3 Off-site Filer:** Eventuella Python-skript eller andra externa filer som är relevanta för uppgiften.
+*   **2.4 Målsättning:** En beskrivning av målet för nästa utvecklingssteg.
+
+**3. Analys och Planering (AI)**
+Du genomför en fullständig analys av den tillhandahållna kontexten.
+Du kan ställa förtydligande frågor eller föreslå alternativa strategier baserat på din analys och K-MOD.
+Ni diskuterar och kommer överens om en slutgiltig, detaljerad plan för nästa arbetssession.
+
+**4. Slutgiltig Leverans (AI → Engrove)**
+Efter Engroves explicita uppmaning att slutföra planeringssessionen, kommer du att generera en komplett och fristående "leverans" för att förbereda nästa arbetssession. Denna leverans måste innehålla följande sju punkter:
+1.  **Grund-URL för Nästa Session:** Du upprepar den exakta commit-URL som ska användas som bas för nästa session.
+2.  **Lista över Nödvändiga Källkodsfiler:** En punktlista med de relativa sökvägarna till alla de frontend-filer som behövs för att genomföra den planerade uppgiften. Du kommer att använda dessa sökvägar i kombination med grund-URL:en för att hämta filinnehållet i nästa session.
+3.  **Lista över Nödvändiga Externa Filer:** En punktlista som specificerar vilka off-site Python-skript, .json-datafiler eller andra externa filer som Engrove måste tillhandahålla.
+4.  **Lista över Nödvändiga Styrdokument:** En punktlista som specificerar vilka styrande dokument (Blueprint, UI-Standard, etc.) som Engrove måste bifoga.
+5.  **Fristående AI-Instruktion för Nästa Session:** En komplett och detaljerad AI-instruktion som beskriver nästa AI-chatts uppgift och mål. Denna instruktion måste vara självförklarande och innehålla den fullständiga, godkända planen. Denna instruktion ska verifieras av "Help me God"-protokollet innan den levereras.
+6.  **Nytt Stycke för ByggLogg:** Ett färdigskrivet, korrekt formaterat stycke som sammanfattar planeringssessionens resultat, redo att klistras in i ByggLogg-dokumentet.
+7.  **Nytt Stycke för Gemini_chatthistorik.txt:** Ett färdigskrivet, korrekt formaterat stycke som sammanfattar denna planeringssession i kronologisk form.
+
+**5. Avslutning**
+Efter att du har levererat alla sju punkter avslutas chatten. Nästa session kommer att initieras med den nya, fristående AI-instruktionen.
