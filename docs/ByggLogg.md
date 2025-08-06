@@ -712,3 +712,32 @@ En grundlig och systematisk felsökningsprocess genomfördes för att identifier
 
 **Nuvarande Projektstatus:**
 Projektet är stabilt men funktionellt inkomplett. En definitiv grundorsak till problemen i Data Explorer har identifierats, och en robust, godkänd plan för att återställa all avsedd funktionalitet är på plats. Nästa session kommer att fokusera helt på implementationen av denna plan.
+
+### **Statusrapport: Steg 25 | 6.8.2025**
+
+**Övergripande Sammanfattning:**  
+En kritisk TypeError\-krasch som gjorde hela Data Explorer-modulen obrukbar vid byte av datatyp har felsökts. Grundorsaksanalysen, genomförd med "Help me God"-protokollet, identifierade en allvarlig race condition där filter-state blev inkonsistent under rendering. En detaljerad åtgärdsplan, "Operation: Synkroniserad Initialisering", har formulerats för att lösa problemet genom att centralisera och synkronisera state-hanteringen direkt i Pinia-storen, vilket garanterar data-integritet genom hela applikationens livscykel.
+
+---
+
+**Detaljerade Genomförda Åtgärder:**
+
+* **Grundorsaksanalys via "Help me God"-protokoll:** En rigorös, AI-driven korsförhörsprocess användes för att dissekera problemet.  
+  * **Symptom:** Konsolloggen visade ett TypeError: Cannot read properties of undefined (reading 'length'), och UI:t renderade tomma filter-dropdowns och inga sökresultat.  
+  * **Grundorsak Identifierad:** Felet spårades till BaseMultiSelect.vue\-komponenten, som kraschade när den mottog undefined som sin modelValue\-prop. Detta inträffade på grund av en race condition:  
+    1. När användaren byter datatyp (t.ex. från "Cartridges" till "Tonearms") anropas setDataType\-actionen i explorerStore.  
+    2. Denna action anropar \_resetAllFilters, som omedelbart tömmer categoryFilters\-objektet till {}.  
+    3. Vue-komponenten DataFilterPanel.vue påbörjar en omrendering. Den loopar igenom de *nya* tonarms-filtren, men försöker binda v-model till categoryFilters\['bearing\_type'\], vilket vid denna exakta tidpunkt är undefined.  
+    4. Detta undefined\-värde skickas till BaseMultiSelect, som omedelbart kraschar.  
+  *   
+  * **Slutsats:** Den nuvarande logiken, där state-initialisering sker i komponenten via en watch, är inte tillräckligt robust. State-hanteringen måste vara atomär och ske centralt.  
+*   
+* **Formulering av Åtgärdsplan:** En detaljerad, tvåstegsplan skapades för att systematiskt åtgärda den identifierade grundorsaken.  
+  * **Resultat:** En komplett och verifierad plan, "Operation: Synkroniserad Initialisering", har etablerats. Planen involverar en refaktorisering av explorerStore för att göra den självförsörjande gällande sin egen state-initialisering, och en efterföljande förenkling av DataFilterPanel\-komponenten.  
+* 
+
+---
+
+**Nuvarande Projektstatus:**  
+Projektet är i ett **blockerat** tillstånd. Data Explorer är icke-funktionell. En definitiv grundorsak har identifierats och en robust, godkänd plan för att åtgärda felet är på plats. Nästa session ("Steg 26") kommer att fokusera helt på implementationen av denna plan.
+
