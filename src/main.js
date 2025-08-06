@@ -20,7 +20,7 @@ import router from './router.js';
 // Skapar en Pinia-instans för global state management.
 const pinia = createPinia();
 // Registrerar persistens-pluginet för att spara state till localStorage.
-// pinia.use(piniaPluginPersistedState);
+pinia.use(piniaPluginPersistedState);
 
 // Skapar Vue-applikationsinstansen med App.vue som rotkomponent.
 const app = createApp(App);
