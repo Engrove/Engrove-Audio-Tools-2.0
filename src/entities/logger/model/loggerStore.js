@@ -7,11 +7,12 @@
 // Funktioner:
 // - Samlar loggmeddelanden från hela appen.
 // - Tidsstämplar varje meddelande.
-// - Håller automatiskt logghistoriken begränsad till 300 rader.
+// - Håller automatiskt logghistoriken begränsad till 2000 rader.
 // - Är helt inaktiv i produktionsläge för att spara minne och prestanda.
 // - Skriver ut formaterade meddelanden till webbläsarens konsol i debug-läge.
 //
 // Historik:
+// - 2025-08-07: (Frankensteen) Ökade MAX_LOG_ENTRIES från 300 till 2000 enligt specifikation.
 // - 2025-08-07: (Frankensteen) KRITISK FIX: Aktiverade persistens genom att lägga till `{ persist: true }`. Detta var grundorsaken till att "Engrove Inspector" inte visade några loggar.
 // - 2025-08-06: (Frankensteen - KRITISK FIX) Tog bort det initiala `addLog`-anropet
 //   från modulens rot för att lösa en race condition-krasch vid app-start.
@@ -37,7 +38,7 @@ export const IS_DEBUG_MODE = true;
 // ==========================================================================
 
 // Definierar den maximala storleken på logg-bufferten.
-const MAX_LOG_ENTRIES = 300;
+const MAX_LOG_ENTRIES = 2000;
 
 export const useLoggerStore = defineStore('logger', () => {
   // --- STATE ---
