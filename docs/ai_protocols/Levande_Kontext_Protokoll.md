@@ -34,6 +34,9 @@ Vid starten av varje session är kontext-versionen `v0`, vilket representerar de
    *   **Funktion:** Detta är "log"-kommandot. Det instruerar mig att skriva ut en sammanfattning av den interna kontext-historiken för den aktuella sessionen, inklusive version, beskrivning och vilken som är aktiv.
    *   **Exempel:** `Visa kontext-historik`
 
+**4. `Logga hallucination`:** `<antal falska påståenden>/<antal faktapåståenden>`
+   *  **Funktion:** Appendrar en rad i intern metrics‑logg för sessionen.
+
 **Mina Svar:**
 
 *   **Efter `Uppdatera`:**
