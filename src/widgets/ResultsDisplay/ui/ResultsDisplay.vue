@@ -1,149 +1,163 @@
 <!-- src/widgets/ResultsDisplay/ui/ResultsDisplay.vue -->
 <!--
   Historik:
-  - 2025-08-05: (Fix av Frankensteen) Total ombyggnad till en ren presentationskomponent. Alla direkta store-beroenden har tagits bort. Komponenten tar nu emot all data via props och kommunicerar via emits, vilket löser flera API-brott.
-  - 2024-08-04: (UPPDRAG 22) Helt refaktorerad för att ta bort lokal logik för tabell-headers och istället konsumera dem från storen.
-  - 2024-08-04: (UPPDRAG 20) Uppdaterad för att peka på de nya `_name`-fälten för tabellvisning.
+  - 2025-08-07: (Frankensteen) Slutfört integrationen för jämförelsefunktionen. Komponenten agerar nu som en transparent mellanhand för all urvalslogik genom att acceptera och skicka vidare nya props och emits.
+  - 2025-08-05: (Fix av Frankensteen) Total ombyggnad till en ren presentationskomponent. Alla direkta store-beroenden har tagits bort.
+  - 2024-08-04: (UPPDRAG 22) Helt refaktorerad för att ta bort lokal logik för tabell-headers.
+  - 2024-08-04: (UPPDRAG 20) Uppdaterad för att peka på de nya `_name`-fälten.
 -->
 <!--
   Viktiga implementerade regler:
-  - Fullständig kod, alltid: Filen är komplett.
-  - Obligatorisk Refaktorisering: Komponenten är nu en "dum" presentationskomponent, vilket är en betydande arkitektonisk förbättring.
-  - API-kontraktsverifiering: Det nya kontraktet med props och emits är tydligt och robust.
-  - Felresiliens: Komponenten är inte längre sårbar för race conditions i storen.
+  - API-kontraktsverifiering: Det utökade kontraktet med nya props och emits är nu fullständigt implementerat.
+  - Obligatorisk Refaktorisering: Komponenten bibehåller sin status som en "dum" presentationskomponent.
 -->
 <template>
-  <main class="results-area">
-    <div class="results-header">
-      <h3>Found {{ totalResults }} {{ dataType === 'cartridges' ? 'cartridges' : 'tonearms' }}</h3>
-      <!-- Lade till @click-event för CSV-export -->
+  <div class="results-display-wrapper">
+    <header class="results-header">
+      <div class="results-summary">
+        <h2>Found {{ totalResults }} {{ dataType }}</h2>
+        <p v-if="totalPages > 1">Showing page {{ currentPage }} of {{ totalPages }}</p>
+      </div>
       <BaseButton 
-        variant="primary"
-        @click="$emit('export-csv')"
-        :disabled="totalResults === 0"
+        variant="secondary" 
+        @click="$emit('export-csv')" 
+        :disabled="items.length === 0"
+        title="Export current results to CSV file"
       >
-        Download CSV
+        Export CSV
       </BaseButton>
+    </header>
+
+    <div class="table-wrapper">
+      <BaseTable
+        :items="items"
+        :headers="headers"
+        :sortKey="sortKey"
+        :sortOrder="sortOrder"
+        :showSelection="showSelection"
+        :isItemSelected="isItemSelected"
+        :selectionLimitReached="selectionLimitReached"
+        :allVisibleItemsSelected="allVisibleItemsSelected"
+        @row-click="$emit('row-click', $event)"
+        @sort="$emit('sort', $event)"
+        @toggle-item-selection="$emit('toggle-item-selection', $event)"
+        @toggle-select-all-visible="$emit('toggle-select-all-visible', $event)"
+      />
     </div>
 
-    <!-- Paginering (topp) -->
-    <div v-if="totalPages > 1" class="pagination-controls">
-      <BaseButton variant="secondary" @click="$emit('page-change', currentPage - 1)" :disabled="currentPage === 1">‹ Prev</BaseButton>
-      <span>Page {{ currentPage }} of {{ totalPages }}</span>
-      <BaseButton variant="secondary" @click="$emit('page-change', currentPage + 1)" :disabled="currentPage === totalPages">Next ›</BaseButton>
-    </div>
-
-    <!-- Resultattabell -->
-    <BaseTable
-      :items="items"
-      :headers="headers"
-      :sort-key="sortKey"
-      :sort-order="sortOrder"
-      @sort="$emit('sort', $event)"
-      @row-click="$emit('row-click', $event)"
-      :show-selection="showSelection"
-      :is-item-selected="isItemSelected"
-      :selection-limit-reached="selectionLimitReached"
-      :all-visible-items-selected="allVisibleItemsSelected"
-      @toggle-item-selection="$emit('toggle-item-selection', $event)"
-      @toggle-select-all-visible="$emit('toggle-select-all-visible')"
-    />
-
-    <!-- Paginering (botten) -->
-    <div v-if="totalPages > 1" class="pagination-controls bottom">
-      <BaseButton variant="secondary" @click="$emit('page-change', currentPage - 1)" :disabled="currentPage === 1">‹ Prev</BaseButton>
-      <span>Page {{ currentPage }} of {{ totalPages }}</span>
-      <BaseButton variant="secondary" @click="$emit('page-change', currentPage + 1)" :disabled="currentPage === totalPages">Next ›</BaseButton>
-    </div>
-  </main>
+    <footer v-if="totalPages > 1" class="results-footer">
+      <BaseButton @click="$emit('page-change', currentPage - 1)" :disabled="currentPage <= 1">
+        Previous
+      </BaseButton>
+      <span>Page {{ currentPage }} / {{ totalPages }}</span>
+      <BaseButton @click="$emit('page-change', currentPage + 1)" :disabled="currentPage >= totalPages">
+        Next
+      </BaseButton>
+    </footer>
+  </div>
 </template>
 
 <script setup>
 import BaseTable from '@/shared/ui/BaseTable.vue';
 import BaseButton from '@/shared/ui/BaseButton.vue';
 
-// --- PROPS & EMITS ---
-
+// PROPS & EMITS ---
 defineProps({
-  items: { type: Array, required: true },
-  headers: { type: Array, required: true },
-  dataType: { type: String, required: true },
-  totalResults: { type: Number, required: true },
-  totalPages: { type: Number, required: true },
-  currentPage: { type: Number, required: true },
-  sortKey: { type: String, required: true },
-  sortOrder: { type: String, required: true },
+  items: Array,
+  headers: Array,
+  dataType: String,
+  totalResults: Number,
+  totalPages: Number,
+  currentPage: Number,
+  sortKey: String,
+  sortOrder: String,
   // Props för val-funktionalitet
-  showSelection: { type: Boolean, default: false },
-  isItemSelected: { type: Function, default: () => false },
-  selectionLimitReached: { type: Boolean, default: false },
-  allVisibleItemsSelected: { type: Boolean, default: false },
+  showSelection: {
+    type: Boolean,
+    default: false,
+  },
+  isItemSelected: {
+    type: Function,
+    default: () => false,
+  },
+  selectionLimitReached: {
+    type: Boolean,
+    default: false,
+  },
+  allVisibleItemsSelected: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 defineEmits([
-  'sort',
-  'page-change',
-  'row-click',
-  'export-csv',
-  'toggle-item-selection',
-  'toggle-select-all-visible'
+    'row-click', 
+    'sort', 
+    'page-change', 
+    'export-csv',
+    'toggle-item-selection',
+    'toggle-select-all-visible'
 ]);
 </script>
 
 <style scoped>
-.results-area {
-  min-height: 500px; /* Förhindrar layout-hopp vid laddning */
-  overflow-x: auto; /* Fångar upp tabellens bredd och förhindrar att den spräcker sidlayouten. */
+.results-display-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0; /* Förhindrar layout-hopp vid laddning */
 }
 
 .results-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--spacing-4);
+  padding-bottom: var(--spacing-4);
+  border-bottom: 1px solid var(--border-primary);
+  flex-shrink: 0;
 }
 
-.results-header h3 {
+.results-summary h2 {
+  font-size: var(--font-size-h2);
+  color: var(--text-high-emphasis);
   margin: 0;
-  color: var(--color-text-high-emphasis);
-  /* Gör texten okänslig för markering för att undvika textval vid dubbelklick. */
-  user-select: none;
 }
 
-.pagination-controls {
+.results-summary p {
+  font-size: var(--font-size-body);
+  color: var(--text-medium-emphasis);
+  margin: 0;
+  margin-top: var(--spacing-1);
+}
+
+.table-wrapper {
+  flex-grow: 1;
+  overflow-y: auto; /* Fångar upp tabellens bredd och förhindrar att den spräcker sidlayouten. */
+}
+
+.results-footer {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.pagination-controls.bottom {
-    margin-top: 1.5rem;
-    margin-bottom: 0;
-}
-
-.pagination-controls span {
-  font-size: var(--font-size-label);
-  color: var(--color-text-medium-emphasis);
-  font-weight: var(--font-weight-medium);
-  font-family: var(--font-family-monospace);
-  user-select: none;
+  padding-top: var(--spacing-4);
+  margin-top: var(--spacing-4);
+  border-top: 1px solid var(--border-primary);
+  user-select: none; /* Gör texten okänslig för markering för att undvika textval vid dubbelklick. */
+  flex-shrink: 0;
 }
 
 /* ========================================================================== */
 /* TEMA-ÖVERSTYRNING FÖR KOMPAKT LÄGE                                         */
 /* ========================================================================== */
-:global(.compact-theme) .results-header {
-  margin-bottom: 1rem;
+.compact-theme .results-header {
+  margin-bottom: var(--spacing-3);
+  padding-bottom: var(--spacing-3);
 }
 
-:global(.compact-theme) .pagination-controls {
-  margin-bottom: 1rem;
-}
-
-:global(.compact-theme) .pagination-controls.bottom {
-  margin-top: 1rem;
+.compact-theme .results-footer {
+  margin-top: var(--spacing-3);
+  padding-top: var(--spacing-3);
 }
 </style>
 <!-- src/widgets/ResultsDisplay/ui/ResultsDisplay.vue -->
