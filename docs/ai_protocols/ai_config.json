@@ -55,15 +55,20 @@
       "description": "Uppdrag, planer och hand‑off‑data ska anges i XML eller JSON där så är möjligt.",
       "aliases": ["structured prompts", "JSON‑prompt", "XML‑prompt"]
     },
-    { "id": "GR10",
-      "title": "Sandbox‑exekvering",
-      "description": "All kod måste köras i isolerad container (se Sandbox_Execution_Protokoll.md) innan leverans.",
-      "aliases": ["sandbox", "isolerad körning"]
+    {
+      "id": "GR10",
+      "title": "Programmatisk kodbedömning",
+      "description": "Alla kod‑leveranser ska utvärderas av LLM‑Judge enligt `LLM_Judge_Protokoll.md`."
     },
-    { "id": "GR11",
-      "title": "LLM‑Judge‑värdering",
-      "description": "Kod blockeras om medelbetyg < 4.0 enligt LLM_Judge‑Protokoll.md.",
-      "aliases": ["domar‑agent", "automatiserad kodreview"]
+    {
+      "id": "GR11",
+      "title": "Sandbox‑exekvering",
+      "description": "Kod får endast köras inom policyn i `Sandbox_Execution_Protokoll.md`."
+    },
+    {
+      "id": "GR12",
+      "title": "HITL‑interruption",
+      "description": "Modellen måste pausa vid punkter definierade i `HITL_Interrupt_Points.md`."
     }
   ],
   "g_pfc_1_checklist": [
