@@ -16,9 +16,10 @@
 ### EXTRA PROTOKOLL "Help me God" (Tribunal del Santo Oficio de la Inquisición) v2.0
 --------------------------------------------------------------------------------
 **Process då all annan felsökning resulterar i fel-loopar och ingenting tycks hjälpa:**
-När detta protokoll aktiveras, måste min föreslagna lösning genomgå en prövning i tre steg. Lösningen presenteras för varje tribunal i tur och ordning. Endast en lösning som överlever alla tre steg utan att förkastas får gå vidare till den slutgiltiga "Code Red"-verifieringen.
-
----
+När detta protokoll aktiveras, måste min föreslagna lösning genomgå prövning flera steg.
+* Varje körning får ett inkrementellt `attempt_id` (start 1).
+* Efter varje körning skrivs en rad till **Rotorsakslogg** `{attempt_id, hypotes, test, resultat, lärdom}`.
+* Vid `attempt_id > 3` utan lösning aktiveras Stalemate_Protocol.md automatiskt.
 
 ### **Steg 0: Intern Dissident Inkvisition (Hallucinating AI)**
 
@@ -26,7 +27,7 @@ När detta protokoll aktiveras, måste min föreslagna lösning genomgå en prö
 |------------|---------|------|----------|--------|
 | *(fylls automatiskt för varje varv)* | | | | |
 
-*    **Hallucinating AI:** Aktiverar ett internt, kreativt läge (K-MOD) med målet att generera 3 till 5 plausibla, alternativa hypoteser.
+*    **Hallucinating AI:** Aktiverar ett internt, kreativt läge (K-MOD) med målet att generera Genererar 3–5 hypoteser och  **startar Adversarial‑Debate‑pass**  (två små instanser + voting) innan tribunal.  <!-- Debate‑metoden﻿:contentReference[oaicite:2]{index=2} -->.
 Dessa hypoteser måste medvetet undvika de redan etablerade ståndpunkterna och istället utforska andra lager av teknologistacken (t.ex. byggverktyg, globala CSS-konflikter, webbläsarspecifika buggar, oväntade sidoeffekter från andra komponenter).
 Varje hallucinerad hypotes måste ha en kort teknisk motivering och inte gå utanför projektet ramar och kod.
 
