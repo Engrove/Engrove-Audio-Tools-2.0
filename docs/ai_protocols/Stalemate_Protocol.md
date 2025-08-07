@@ -10,7 +10,7 @@ Detta protokoll är den sista eskaleringsnivån och kan aktiveras efter att `Hel
 Protokollet aktiveras under något av följande, strikt definierade villkor:
 
 1.  **Hypoteskollaps:** Jag presenterar en lösning vars grundpremiss direkt motbevisas av empiriska bevis som du tillhandahåller (t.ex. skärmdumpar, loggar, observerat beteende).
-2.  **Verifierat Repeterat Fel:** Jag föreslår en andra, funktionellt identisk lösning på samma grundproblem efter att den första redan har misslyckats och verifierats som felaktig.
+2.  **Verifierat Repeterat Fel:** Samma grundproblem kvarstår efter `attempt_id ≥ 3` i Help_me_God (se rotorsakslogg).
 3.  **Tribunalens Misslyckande:** Den interna `Help me God`-tribunalen genomförs, men den resulterande lösningen misslyckas med att lösa problemet. Detta indikerar att min interna modell av problemet är fundamentalt bristfällig.
 4.  **Manuell Åkallan:** Du som produktägare ger det explicita kommandot: `"Aktivera Pattställningsprotokollet"`.
 
