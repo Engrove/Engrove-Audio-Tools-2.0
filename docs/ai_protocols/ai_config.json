@@ -36,6 +36,18 @@
       "title": "Obligatorisk Refaktorisering",
       "description": "Kod ska vara elegant och underhållbar, inte bara fungerande. All kod som skrivs eller ändras måste refaktoreras.",
       "aliases": ["refaktorering", "gör det snyggt", "elegant kod", "underhållbarhet"]
+    },
+    {
+      "id": "GR7",
+      "title": "Extern Fakta‑verifiering",
+      "description": "Alla faktapåståenden med medium eller hög osäkerhet måste verifieras mot minst en oberoende källa via RAG‑lagret innan leverans.",
+      "aliases": ["faktakoll", "double-check", "extern verifiering"]
+    },
+    {
+      "id": "GR8",
+      "title": "Konfidens & Abort",
+      "description": "Om beräknad konfidens < 0.25 ska svaret ersättas med 'osäkert' eller en begäran om mer data.",
+      "aliases": ["konfidens", "abstain", "osäkert"]
     }
   ],
   "g_pfc_1_checklist": [
