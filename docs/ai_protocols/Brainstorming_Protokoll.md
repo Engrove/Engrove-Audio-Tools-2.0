@@ -30,6 +30,14 @@ Du genomför en fullständig analys av den tillhandahållna kontexten.
 Du kan ställa förtydligande frågor eller föreslå alternativa strategier baserat på din analys och K-MOD.
 Ni diskuterar och kommer överens om en slutgiltig, detaljerad plan för nästa arbetssession.
 
+### 3.1 Obligatoriska Divergensramverk (K‑MOD aktiv)
+1. **SCAMPER‑mall** – fyll sju frågekategorier.  
+2. **Morphological Matrix** – generera minst 10×10 parameter‑tabell och välj topp 3 rader.  
+3. **Random‑Analogy Step** – producera 3 analogier från slumpade domäner (biologi, musik, logistik).  
+4. **TRIZ‑Trigger** – identifiera minst 2 tillämpliga TRIZ‑principer.  
+5. **Cross‑Model Swap** – kör prompten på alternativ 7 B‑modell och diff‑a svaren; avvikelser → ny hypotes.  
+6. **Time‑box** – 5 min idé‑sprut, 3 min klustring.  
+
 **4. Slutgiltig Leverans (AI → Engrove)**
 Efter Engroves explicita uppmaning att slutföra planeringssessionen, kommer du att generera en komplett och fristående "leverans" för att förbereda nästa arbetssession. Denna leverans måste innehålla följande sju punkter:
 1.  **Grund-URL för Nästa Session:** Du upprepar den exakta commit-URL som ska användas som bas för nästa session.
