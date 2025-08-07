@@ -1,7 +1,8 @@
 <!-- src/widgets/ComparisonTray/ui/ComparisonTray.vue -->
 <!--
   Historik:
-  - 2025-08-07: (Frankensteen) KRITISK FIX: Korrigerat alla CSS-variabelnamn för att matcha den globala _tokens.css-filen (t.ex. --surface-secondary -> --color-surface-secondary). Detta åtgärdar buggen där komponenten renderades som transparent.
+  - 2025-08-07: (Frankensteen) Instrumenterad med loggerStore för att spåra Compare-knappens klick-händelse.
+  - 2025-08-07: (Frankensteen) KRITISK FIX: Korrigerat alla CSS-variabelnamn för att matcha den globala _tokens.css-filen.
   - 2025-08-06: (Frankensteen) Skapad från grunden som en del av "Operation Återimplementering".
 -->
 <!--
@@ -18,7 +19,7 @@
       <div class="tray-actions">
         <BaseButton 
           variant="primary" 
-          @click="$emit('compare')"
+          @click="handleCompareClick"
           :disabled="comparisonStore.selectedItemsCount < 2"
           title="Compare selected items"
         >
@@ -52,20 +53,39 @@
 import { computed } from 'vue';
 import { useComparisonStore } from '@/entities/comparison/model/comparisonStore.js';
 import { useExplorerStore } from '@/entities/data-explorer/model/explorerStore.js';
+import { useLoggerStore, IS_DEBUG_MODE } from '@/entities/logger/model/loggerStore.js'; // NYTT: Importera logger
 import BaseButton from '@/shared/ui/BaseButton.vue';
 
 const COMPARISON_LIMIT = 5;
 
 const comparisonStore = useComparisonStore();
 const explorerStore = useExplorerStore();
+const logger = useLoggerStore(); // NYTT: Initiera logger
 
-defineEmits(['compare', 'clear']);
+const emit = defineEmits(['compare', 'clear']);
 
 const selectedItems = computed(() => {
   return comparisonStore.selectedItemIds
     .map(id => explorerStore.allItems.find(item => item.id === id))
-    .filter(item => item !== undefined); // Säkerställer att inga 'undefined' items visas
+    .filter(item => item !== undefined); 
 });
+
+// NYTT: Lokal metod för att hantera klick och loggning
+function handleCompareClick() {
+  if (IS_DEBUG_MODE) {
+    logger.startLogSession('Compare Button Click');
+    logger.addLog(
+      'Compare button clicked. Emitting @compare event.', 
+      'ComparisonTray'
+    );
+  }
+  
+  emit('compare');
+
+  if (IS_DEBUG_MODE) {
+    logger.endLogSession();
+  }
+}
 </script>
 
 <style scoped>
