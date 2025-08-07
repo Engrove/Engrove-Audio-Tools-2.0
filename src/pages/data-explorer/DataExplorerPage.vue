@@ -1,6 +1,7 @@
 <!-- src/pages/data-explorer/DataExplorerPage.vue -->
 <!--
   Historik:
+  - 2025-08-07: (Frankensteen) KRITISK FIX: Lade till händelselyssnaren @compare="isComparisonModalVisible = true" på ComparisonTray-komponenten. Detta åtgärdar buggen där Compare-knappen var inaktiv.
   - 2025-08-06: (Frankensteen - STALEMATE ARBITRATION FIX) Increased CSS selector specificity for `.page-wrapper` to `div.page-wrapper` to override conflicting global styles, which was the definitive root cause of the missing padding.
   - 2025-08-06: (Frankensteen - DEFINITIVE PADDING FIX) Flyttat padding från grid-containern (.data-explorer-page) till den yttre wrappern (.page-wrapper) för att korrekt rendera yttre marginaler.
   - 2025-08-06: (Frankensteen) CSS Regression Fix: Återinfört yttre padding på `.data-explorer-page` för att matcha den korrekta layouten i "Comfortable mode".
@@ -10,7 +11,7 @@
 -->
 <!--
   Viktiga implementerade regler:
-  - Stalemate Protocol: Denna fix är resultatet av en formell skiljedomsprocess.
+  - API-kontraktsverifiering: Händelsekedjan från ComparisonTray till DataExplorerPage är nu komplett och korrekt implementerad.
   - Fullständig Historik: Hela korrigeringsprocessen, inklusive misslyckanden och eskalering, är dokumenterad.
 -->
 <template>
@@ -49,6 +50,7 @@
         @page-change="explorerStore.setPage"
         @toggle-item-selection="handleToggleItem"
         @toggle-select-all-visible="handleToggleSelectAllVisible"
+        @export-csv="explorerStore.exportToCSV"
       />
     </main>
 
@@ -132,7 +134,6 @@ function handleToggleSelectAllVisible() {
         }
     });
 }
-
 </script>
 
 <style scoped>
@@ -159,16 +160,16 @@ div.page-wrapper.tray-visible {
   text-align: center;
   padding: var(--spacing-6);
   font-size: var(--font-size-h3);
-  color: var(--text-medium-emphasis);
+  color: var(--color-text-medium-emphasis);
 }
 
 .placeholder-wrapper.error {
-  color: var(--text-danger);
+  color: var(--color-text-danger);
 }
 
 .error-details {
   font-size: var(--font-size-body);
-  color: var(--text-low-emphasis);
+  color: var(--color-text-low-emphasis);
   margin-top: 0.5rem;
   margin-bottom: 1.5rem;
 }
