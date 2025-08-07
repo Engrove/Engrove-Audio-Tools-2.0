@@ -222,6 +222,7 @@ def create_interactive_html(output_html_path):
       'docs/Teknisk_Beskrivning_Engrove_Audio_Toolkit.md',
       'docs/Blueprint_för_Migrering_v1_till_v2.md',
       'docs/Engrove_Audio_Toolkit_v2.0_Analys.md',
+      'docs/ai_protocols/Hallucination_Leaderboard_Check.md',
       'package.json',
       'vite.config.js',
       'scripts/process_ai_instructions.py',
