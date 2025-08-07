@@ -56,7 +56,9 @@
     "Kompileringssimulering",
     "Alter ego-granskning",
     "ExternFaktaCheck",
-    "KonfidensCheck"
+    "KonfidensCheck",
+    "CoT_Self_Check",
+    "SemanticEntropyProbe"
   ],
   "alter_ego_review_levels": [
     {
