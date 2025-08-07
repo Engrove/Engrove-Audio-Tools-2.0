@@ -22,7 +22,7 @@
     {
       "id": "GR4",
       "title": "API-kontraktsverifiering",
-      "description": "Varje returvärde MÅSTE exakt matcha konsumentens förväntningar. Granska båda sidor (provider & konsument).",
+      "description": "Verifiera den fullständiga kommunikationskedjan mellan samverkande delar. Detta inkluderar att props som skickas från en förälder matchar vad barnet förväntar sig, OCH att händelser (emits) som skickas från ett barn har en motsvarande händelselyssnare i föräldern. Kontraktet måste vara komplett i båda riktningarna.",
       "aliases": ["kontraktsverifiering", "verifiera kontraktet", "API-kontrakt", "provider/consumer-check"]
     },
     {
