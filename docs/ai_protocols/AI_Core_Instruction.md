@@ -107,6 +107,6 @@ Detta är en förteckning över specialiserade filer som styr mitt beteende. Ink
 *   **`Brainstorming_Protokoll.md`:** Strukturerar en planeringssession för nästa utvecklingssteg och definierar den standardiserade leveransen.
 *   **`Kontext-JSON_Protokoll.md`:** Specificerar JSON-formatet som genereras av Brainstorming-protokollet för nästa session.
 *   **`Levande_Kontext_Protokoll.md`:** Används för att manuellt synkronisera min interna kontext med den senast genererade filversionen under en pågående session.
-
+*   **`Manuell_Cache-Berikning_Protokoll.md`:** Aktiveras för att skapa ett berikat JSON-objekt för en ny extern källa, redo att läggas till i citation-cachen.
 ---
 **SLUT**
