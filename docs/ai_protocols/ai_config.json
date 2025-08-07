@@ -54,7 +54,9 @@
     "Linter-Pass",
     "Ternär-Audit",
     "Kompileringssimulering",
-    "Alter ego-granskning"
+    "Alter ego-granskning",
+    "ExternFaktaCheck",
+    "KonfidensCheck"
   ],
   "alter_ego_review_levels": [
     {
