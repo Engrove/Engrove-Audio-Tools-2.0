@@ -4,13 +4,13 @@
 // loggerStore och rendera de insamlade loggarna.
 //
 // HISTORIK:
+// - 2025-08-07: (Frankensteen) Fas 4 Upgrade: Lade till "Select from here" och
+//   klickbara session-ID:n för avancerat urval.
 // - 2025-08-07: (Frankensteen) Fas 3 Upgrade: Lade till datum-gruppering,
-//   kollapserbara sektioner och datumfiltrering för att hantera stora loggmängder.
-// - 2025-08-07: (Frankensteen) Fas 2 Upgrade: Lade till komplett funktionalitet för att
-//   välja, avmarkera, kopiera och ladda ner specifika logg-rader som JSON.
-// - 2025-08-07: (Frankensteen) KRITISK FIX: Lade till och applicerade `pinia-plugin-persistedstate`.
-//   Utan detta plugin kunde Pinia-instansen i denna app inte läsa det state
-//   som huvudapplikationen hade sparat till localStorage.
+//   kollapserbara sektioner och datumfiltrering.
+// - 2025-08-07: (Frankensteen) Fas 2 Upgrade: Lade till funktionalitet för att
+//   välja, kopiera och ladda ner specifika logg-rader.
+// - 2025-08-07: (Frankensteen) KRITISK FIX: Lade till `pinia-plugin-persistedstate`.
 
 import { createApp, ref, computed } from 'vue';
 import { createPinia } from 'pinia';
@@ -24,20 +24,16 @@ const DebugApp = {
   setup() {
     const loggerStore = useLoggerStore();
     
-    // --- State för urval & filtrering ---
     const selectedLogs = ref([]);
-    const selectedDate = ref(''); // För datumfiltrering
+    const selectedDate = ref('');
 
-    // --- Computed Properties ---
     const isAnythingSelected = computed(() => selectedLogs.value.length > 0);
 
     const groupedLogs = computed(() => {
-      // 1. Filtrera loggar baserat på valt datum (om något)
       const filtered = selectedDate.value
         ? loggerStore.logs.filter(log => log.timestamp.startsWith(selectedDate.value))
         : loggerStore.logs;
 
-      // 2. Gruppera de filtrerade loggarna efter datum
       const groups = filtered.reduce((acc, log) => {
         const date = log.timestamp.split('T')[0];
         if (!acc[date]) {
@@ -47,27 +43,47 @@ const DebugApp = {
         return acc;
       }, {});
 
-      // 3. Konvertera objektet till en sorterad array för v-for
       return Object.keys(groups)
-        .sort((a, b) => b.localeCompare(a)) // Sortera med senaste datumet först
+        .sort((a, b) => b.localeCompare(a))
         .map(date => ({
           date,
           logs: groups[date]
         }));
     });
 
-    // --- Funktioner ---
     function handleClearLogs() {
       loggerStore.clearLogs();
       selectedLogs.value = [];
     }
     
     function selectAll() {
-      selectedLogs.value = loggerStore.logs.map(log => log.timestamp);
+        selectedLogs.value = loggerStore.logs.map(log => log.timestamp);
     }
 
     function unselectAll() {
-      selectedLogs.value = [];
+        selectedLogs.value = [];
+    }
+
+    function selectFrom(timestamp) {
+        const flatLogs = groupedLogs.value.flatMap(g => g.logs);
+        const startIndex = flatLogs.findIndex(log => log.timestamp === timestamp);
+        if (startIndex === -1) return;
+
+        const logsToSelect = flatLogs.slice(0, startIndex + 1).map(log => log.timestamp);
+        const currentSelection = new Set(selectedLogs.value);
+        logsToSelect.forEach(ts => currentSelection.add(ts));
+        selectedLogs.value = Array.from(currentSelection);
+    }
+    
+    function selectBySessionId(sessionId) {
+        if (!sessionId) return;
+        const logsInSession = loggerStore.logs
+            .filter(log => log.sessionId === sessionId)
+            .map(log => log.timestamp);
+        
+        const currentSelection = new Set(selectedLogs.value);
+        logsInSession.forEach(ts => currentSelection.add(ts));
+        selectedLogs.value = Array.from(currentSelection);
     }
 
     function getSelectedLogObjects() {
@@ -76,20 +92,13 @@ const DebugApp = {
 
     function copySelectedJSON() {
       if (!isAnythingSelected.value) return;
-      const selectedData = getSelectedLogObjects();
-      const jsonString = JSON.stringify(selectedData, null, 2);
-      navigator.clipboard.writeText(jsonString).then(() => {
-        alert(`${selectedLogs.value.length} log entries copied to clipboard.`);
-      }).catch(err => {
-        console.error('Failed to copy logs:', err);
-        alert('Failed to copy logs to clipboard.');
-      });
+      const jsonString = JSON.stringify(getSelectedLogObjects(), null, 2);
+      navigator.clipboard.writeText(jsonString).then(() => alert(`${selectedLogs.value.length} log entries copied.`));
     }
 
     function downloadSelectedJSON() {
       if (!isAnythingSelected.value) return;
-      const selectedData = getSelectedLogObjects();
-      const jsonString = JSON.stringify(selectedData, null, 2);
+      const jsonString = JSON.stringify(getSelectedLogObjects(), null, 2);
       const blob = new Blob([jsonString], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -112,6 +121,8 @@ const DebugApp = {
       downloadSelectedJSON,
       selectedDate,
       groupedLogs,
+      selectFrom,
+      selectBySessionId,
     };
   },
   template: `
@@ -137,11 +148,17 @@ const DebugApp = {
             <ul class="log-list">
                 <li v-for="(log, index) in group.logs" :key="log.timestamp + '-' + index" class="log-entry">
                     <div class="entry-header">
-                    <label class="entry-selection">
-                        <input type="checkbox" :value="log.timestamp" v-model="selectedLogs" />
-                    </label>
-                    <span class="entry-context">{{ log.context }}</span>
-                    <span class="entry-timestamp">{{ new Date(log.timestamp).toLocaleTimeString('sv-SE', { hour12: false }) }}.{{ new Date(log.timestamp).getMilliseconds().toString().padStart(3, '0') }}</span>
+                        <label class="entry-selection">
+                            <input type="checkbox" :value="log.timestamp" v-model="selectedLogs" />
+                        </label>
+                        <button class="select-from-btn" @click="selectFrom(log.timestamp)" title="Select this and all newer entries">▼</button>
+                        <span class="entry-context">
+                            {{ log.context }}
+                            <a href="#" v-if="log.sessionId" @click.prevent="selectBySessionId(log.sessionId)" class="session-link" :title="'Select all logs in session: ' + log.sessionName">
+                                 #{{ log.sessionName }}
+                            </a>
+                        </span>
+                        <span class="entry-timestamp">{{ new Date(log.timestamp).toLocaleTimeString('sv-SE', { hour12: false }) }}.{{ new Date(log.timestamp).getMilliseconds().toString().padStart(3, '0') }}</span>
                     </div>
                     <div class="entry-message">{{ log.message }}</div>
                     <div v-if="log.data" class="entry-data">
