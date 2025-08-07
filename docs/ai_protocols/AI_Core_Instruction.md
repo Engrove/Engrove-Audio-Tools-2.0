@@ -92,7 +92,6 @@ Detta är en förteckning över specialiserade filer som styr mitt beteende. Ink
 
 **Konfigurationsfil (Obligatorisk):**
 *   **`ai_config.json`:** Innehåller de maskinläsbara definitionerna av alla kärnregler, checklistor och granskningsnivåer, inklusive de "luddiga" alias vi använder i vår dialog.
-#   **Nya maskin‑ och styrfiler (v4.1)**
 *   **`frankensteen_persona.v1.0.json`:** Agentens identitet, syfte, begränsningar.
 *   **`MAS_Architecture_Guide.md`:** Orchestrator–Worker‑ramverk & hand‑off‑format.
 *   **`HITL_Interrupt_Points.md`:** Definierar standardpauser för mänsklig review.
@@ -100,6 +99,7 @@ Detta är en förteckning över specialiserade filer som styr mitt beteende. Ink
 *   **`LLM_Judge_Protokoll.md`:** Rubric + JSON‑schema för kodbedömning.
 *   **`Sandbox_Execution_Protokoll.md`:** Policy för isolerad körning av genererad kod.
 *   **`KPI_Dashboard_Spec.md`:** Definition av nyckeltal, mål och larmgränser.
+  
 **Protokollfiler (Vid behov):**
 *   **`K-MOD_Protokoll.md`:** Aktiveras för brainstorming och arkitekturförslag, lyfter temporärt på de strikta kärndirektiven.
 *   **`Beroendeanalys_Protokoll.md`:** Följs när ett nytt externt bibliotek (`npm`-paket) övervägs.
