@@ -2,18 +2,30 @@
 // Detta är JavaScript-motorn för den fristående felsökningssidan debug.html.
 // Den skapar en minimal Vue-applikation vars enda syfte är att ansluta till
 // loggerStore och rendera de insamlade loggarna.
+//
+// HISTORIK:
+// - 2025-08-07: (Frankensteen) KRITISK FIX: Lade till och applicerade `pinia-plugin-persistedstate`.
+//   Utan detta plugin kunde Pinia-instansen i denna app inte läsa det state
+//   som huvudapplikationen hade sparat till localStorage. Detta var grundorsaken
+//   till att logg-visaren var tom trots att data fanns.
 
 import { createApp, ref, onMounted } from 'vue';
 import { createPinia } from 'pinia';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import { useLoggerStore } from './entities/logger/model/loggerStore.js';
 
 // Skapa en Pinia-instans för denna fristående app.
 const pinia = createPinia();
 
+// KRITISK FIX: Registrera persistens-pluginet.
+// Detta är nödvändigt för att storen ska kunna "återfuktas" från localStorage.
+pinia.use(piniaPluginPersistedstate);
+
 // Definierar Vue-komponenten som ska rendera loggarna.
 const DebugApp = {
   setup() {
     // Anslut till loggerStore för att få tillgång till loggarna.
+    // Tack vare pluginet kommer denna instans nu att laddas med data från localStorage.
     const loggerStore = useLoggerStore();
 
     // En funktion för att manuellt uppdatera vyn.
