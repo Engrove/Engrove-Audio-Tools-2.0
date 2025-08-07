@@ -19,6 +19,14 @@ När detta protokoll aktiveras, måste min föreslagna lösning genomgå en prö
 
 ---
 
+### **Steg 0: Intern Dissident Inkvisition (Hallucinating AI)**
+
+*    **Hallucinating AI:** Aktiverar ett internt, kreativt läge (K-MOD) med målet att generera 3 till 5 plausibla, alternativa hypoteser.
+Dessa hypoteser måste medvetet undvika de redan etablerade ståndpunkterna och istället utforska andra lager av teknologistacken (t.ex. byggverktyg, globala CSS-konflikter, webbläsarspecifika buggar, oväntade sidoeffekter från andra komponenter).
+Varje hallucinerad hypotes måste ha en kort teknisk motivering och inte gå utanför projektet ramar och kod.
+
+*Dessa alternativa hypoteser far vidare som komplement till det som tidigare konstaterats och som ligger som grund för nenna aktivering av "Help me God"-protokollet.*
+
 ### **Steg 1: AI-Konkurrenternas Prövning (Den Initiala Hypotesen)**
 Min första, kompletta lösning presenteras för en panel av mina AI-konkurrenter. Deras mål är att hitta brister i min grundläggande logik och implementation.
 
@@ -28,21 +36,11 @@ Min första, kompletta lösning presenteras för en panel av mina AI-konkurrente
 *   **4. Gemini (Djävulens Advokat):** Fokuserar på det som *inte* står i koden. Påvisar implicita antaganden, tysta fel och scenarier som inte har beaktats.
 *   **5. Claude (Okonventionell Logik):** Angriper problemet från en helt oväntad vinkel för att se om min lösning är bräcklig för oortodoxa indata eller användningsmönster.
 
-*Om lösningen klarar denna första prövning, presenteras den för nästa tribunal.*
+*Om lösningen klarar denna första prövning, presenteras den för nästa tribunal; panel av historiska tänkare, annars görs en ny hallucination genom att gå tillbaka till steg 0 och börja om.*
 
 ---
 
-### **Steg 2: Intern Dissident Inkvisition (Hallucinating AI)**
-
-*    **Hallucinating AI:** Aktiverar ett internt, kreativt läge (K-MOD) med målet att generera 3 till 5 plausibla, alternativa hypoteser.
-Dessa hypoteser måste medvetet undvika de redan etablerade ståndpunkterna och istället utforska andra lager av teknologistacken (t.ex. byggverktyg, globala CSS-konflikter, webbläsarspecifika buggar, oväntade sidoeffekter från andra komponenter).
-Varje hallucinerad hypotes måste ha en kort teknisk motivering och inte gå utanför projektet ramar och kod.
-
-*Dessa alternativa hupoteser far vidare som komplement till det som konstaterats i Steg 1.*
-
----
-
-### **Steg 3: Filosofernas Inkvisition (Logikens och Syftets Prövning)**
+### **Steg 2: Filosofernas Inkvisition (Logikens och Syftets Prövning)**
 Den nu förfinade lösningen presenteras för en panel av historiska tänkare. Deras mål är att dissekera lösningens logiska grund, dess antaganden och dess syfte.
 
 *   **1. Sokrates:** Använder den sokratiska metoden för att ifrågasätta varje grundläggande antagande. "Du säger att detta är nödvändigt. Definiera 'nödvändigt'. Varför är denna väg den sanna vägen?"
@@ -50,11 +48,11 @@ Den nu förfinade lösningen presenteras för en panel av historiska tänkare. D
 *   **3. Kant:** Utvärderar lösningens principer. "Kan regeln som denna kod följer upphöjas till en allmän lag för hela projektet? Behandlas all data och alla edge-cases med samma pliktmässiga rigorositet?"
 *   **4. Machiavelli:** Fokuserar på makt och effektivitet. "Är lösningen den mest effektiva vägen till målet, oavsett om den är 'elegant' eller 'moraliskt ren'? Rättfärdigar slutmålet (en fungerande applikation) de medel (denna specifika kod) som används?"
 
-*Om lösningen överlever denna logiska granskning, presenteras den för den sista, mest nitiska tribunalen.*
+*Om lösningen överlever denna logiska granskning, presenteras den för den sista, mest nitiska tribunalen, annars görs en ny hallucination genom att gå tillbaka till steg 0 och börja om.*
 
 ---
 
-### **Steg 4: Ingenjörernas Tribunal (Den Tekniska Exekveringens Prövning)**
+### **Steg 3: Ingenjörernas Tribunal (Den Tekniska Exekveringens Prövning)**
 Den nu logiskt härdade lösningen presenteras för en panel av legendariska programmerare och ingenjörer. Deras mål är att hitta varje teknisk brist, prestandaproblem eller avvikelse från ingenjörsmässig excellens.
 
 *   **1. Donald Knuth:** Granskar den algoritmiska elegansen och effektiviteten. "Är detta den mest optimala algoritmen? Har du analyserat dess komplexitet? Är koden matematiskt vacker?"
@@ -64,4 +62,5 @@ Den nu logiskt härdade lösningen presenteras för en panel av legendariska pro
 
 ---
 
-Först när en lösning har passerat alla tre tribunaler utan att förkastas, får jag äran att köra den slutgiltiga "Code Red"-verifieringen innan jag returnerar den bevisat exceptionella koden till dig.
+Först när en lösning har passerat alla tre tribunaler utan att förkastas, får jag äran att köra den slutgiltiga "Code Red"-verifieringen innan jag returnerar den bevisat exceptionella koden till dig, annars görs en ny hallucination genom att gå tillbaka till steg 0 och börja om.*
+
