@@ -1,19 +1,20 @@
 <!-- src/pages/data-explorer/DataExplorerPage.vue -->
 <!--
   Historik:
+  - 2025-08-07: (Frankensteen) Instrumenterad med loggerStore. Anropar nu en lokal metod handleCompare() för att logga mottagandet av @compare-eventet.
   - 2025-08-07: (Frankensteen) Instrumenterad med loggerStore. Anropar nu addLog() i onMounted för att verifiera att loggningssystemet fungerar.
-  - 2025-08-07: (Frankensteen) KRITISK FIX: Lade till händelselyssnaren @compare="isComparisonModalVisible = true" på ComparisonTray-komponenten. Detta åtgärdar buggen där Compare-knappen var inaktiv.
-  - 2025-08-06: (Frankensteen - STALEMATE ARBITRATION FIX) Increased CSS selector specificity for `.page-wrapper` to `div.page-wrapper` to override conflicting global styles, which was the definitive root cause of the missing padding.
-  - 2025-08-06: (Frankensteen - DEFINITIVE PADDING FIX) Flyttat padding från grid-containern (.data-explorer-page) till den yttre wrappern (.page-wrapper) för att korrekt rendera yttre marginaler.
-  - 2025-08-06: (Frankensteen) CSS Regression Fix: Återinfört yttre padding på `.data-explorer-page` för att matcha den korrekta layouten i "Comfortable mode".
-  - 2025-08-06: (Frankensteen) Prop Drilling Fix: Skickar nu ner all nödvändig state (dataType, totalResults, etc.) som props till ResultsDisplay för att aktivera dynamisk rubrik, sortering och paginering.
-  - 2025-08-06: (Frankensteen) Integrerat den nya ComparisonTray-widgeten och kopplat dess händelser för att slutföra jämförelsefunktionen.
-  - 2025-08-05: (CODE RED FIX by Frankensteen) Lade till felhantering och brutit en logisk deadlock.
+  - 2025-08-07: (Frankensteen) KRITISK FIX: Lade till händelselyssnaren @compare="isComparisonModalVisible = true" på ComparisonTray-komponenten.
+  - 2025-08-06: (Frankensteen - STALEMATE ARBITRATION FIX) Increased CSS selector specificity.
+  - 2025-08-06: (Frankensteen - DEFINITIVE PADDING FIX) Flyttat padding.
+  - 2025-08-06: (Frankensteen) CSS Regression Fix: Återinfört yttre padding.
+  - 2025-08-06: (Frankensteen) Prop Drilling Fix: Skickar nu ner all nödvändig state som props.
+  - 2025-08-06: (Frankensteen) Integrerat den nya ComparisonTray-widgeten.
+  - 2025-08-05: (CODE RED FIX by Frankensteen) Lade till felhantering.
 -->
 <!--
   Viktiga implementerade regler:
-  - API-kontraktsverifiering: Händelsekedjan från ComparisonTray till DataExplorerPage är nu komplett och korrekt implementerad.
-  - Fullständig Historik: Hela korrigeringsprocessen, inklusive misslyckanden och eskalering, är dokumenterad.
+  - API-kontraktsverifiering: Händelsekedjan från ComparisonTray till DataExplorerPage är nu komplett och instrumenterad.
+  - Fullständig Historik: Hela korrigeringsprocessen är dokumenterad.
 -->
 <template>
   <div class="page-wrapper" :class="{ 'tray-visible': isTrayVisible }">
@@ -65,7 +66,7 @@
       :show="isComparisonModalVisible" 
       @close="isComparisonModalVisible = false" 
     />
-    <ComparisonTray @compare="isComparisonModalVisible = true" />
+    <ComparisonTray @compare="handleCompare" />
   </div>
 </template>
 
@@ -74,7 +75,7 @@ import { ref, onMounted, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useExplorerStore } from '@/entities/data-explorer/model/explorerStore.js';
 import { useComparisonStore } from '@/entities/comparison/model/comparisonStore.js';
-import { useLoggerStore } from '@/entities/logger/model/loggerStore.js';
+import { useLoggerStore, IS_DEBUG_MODE } from '@/entities/logger/model/loggerStore.js';
 
 import DataFilterPanel from '@/widgets/DataFilterPanel/ui/DataFilterPanel.vue';
 import ResultsDisplay from '@/widgets/ResultsDisplay/ui/ResultsDisplay.vue';
@@ -112,7 +113,9 @@ const allVisibleItemsSelected = computed(() => {
 });
 
 onMounted(() => {
-  logger.addLog('DataExplorerPage mounted. Initializing data...', 'DataExplorerPage');
+  if (IS_DEBUG_MODE) {
+    logger.addLog('DataExplorerPage mounted. Initializing data...', 'DataExplorerPage');
+  }
   explorerStore.initializeData();
 });
 
@@ -137,6 +140,17 @@ function handleToggleSelectAllVisible() {
             comparisonStore.toggleItem(id);
         }
     });
+}
+
+// NYTT: Lokal metod för att hantera händelsen från ComparisonTray
+function handleCompare() {
+  if (IS_DEBUG_MODE) {
+    logger.addLog(
+      '@compare event received. Setting isComparisonModalVisible to true.', 
+      'DataExplorerPage'
+    );
+  }
+  isComparisonModalVisible.value = true;
 }
 
 </script>
