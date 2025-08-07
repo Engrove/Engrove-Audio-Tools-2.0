@@ -203,28 +203,31 @@ def create_interactive_html(output_html_path):
         let fullContext = null;
         const REPO_RAW_URL = 'https://raw.githubusercontent.com/Engrove/Engrove-Audio-Tools-2.0/main/';
         
-        const CORE_DOC_PATHS = [
-            'docs/ai_protocols/AI_Core_Instruction.md',
-            'docs/ai_protocols/ai_config.json',
-            'docs/ai_protocols/Levande_Kontext_Protokoll.md',
-            'docs/AI_Collaboration_Standard.md',
-            'docs/ai_protocols/Beroendeanalys_Protokoll.md',
-            'docs/ai_protocols/Brainstorming_Protokoll.md',
-            'docs/ai_protocols/Help_me_God_Protokoll.md',
-            'docs/ai_protocols/K-MOD_Protokoll.md',
-            'docs/ai_protocols/Kontext-JSON_Protokoll.md',
-            'docs/Mappstruktur_och_Arbetsflöde.md',
-            'docs/Global_UI-Standard_för_Engrove-plattformen.md',
-            'docs/Global_UI-Standard_Komponentspecifikation.md',
-            'docs/Teknisk_Beskrivning_Engrove_Audio_Toolkit.md',
-            'docs/Blueprint_för_Migrering_v1_till_v2.md',
-            'docs/Engrove_Audio_Toolkit_v2.0_Analys.md',
-            'package.json',
-            'vite.config.js',
-            'scripts/process_ai_instructions.py',
-            'scripts/generate_full_context.py',
-            'scripts/wrap_json_in_html.py'
-        ];
+    const CORE_DOC_PATHS = [
+      'docs/ai_protocols/AI_Core_Instruction.md',
+      'docs/ai_protocols/ai_config.json',
+      'docs/ai_protocols/Levande_Kontext_Protokoll.md',
+      'docs/ai_protocols/Confidence_Protocol.md',
+      'docs/ai_protocols/Multi_Sample_Protokoll.md',
+      'docs/ai_protocols/RAG_Faktacheck_Protokoll.md',
+      'docs/AI_Collaboration_Standard.md',
+      'docs/ai_protocols/Beroendeanalys_Protokoll.md',
+      'docs/ai_protocols/Brainstorming_Protokoll.md',
+      'docs/ai_protocols/Help_me_God_Protokoll.md',
+      'docs/ai_protocols/K-MOD_Protokoll.md',
+      'docs/ai_protocols/Kontext-JSON_Protokoll.md',
+      'docs/Mappstruktur_och_Arbetsflöde.md',
+      'docs/Global_UI-Standard_för_Engrove-plattformen.md',
+      'docs/Global_UI-Standard_Komponentspecifikation.md',
+      'docs/Teknisk_Beskrivning_Engrove_Audio_Toolkit.md',
+      'docs/Blueprint_för_Migrering_v1_till_v2.md',
+      'docs/Engrove_Audio_Toolkit_v2.0_Analys.md',
+      'package.json',
+      'vite.config.js',
+      'scripts/process_ai_instructions.py',
+      'scripts/generate_full_context.py',
+      'scripts/wrap_json_in_html.py'
+    ];
 
         const IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'];
         const ICONS = {
