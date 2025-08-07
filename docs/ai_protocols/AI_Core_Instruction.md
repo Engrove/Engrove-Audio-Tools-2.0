@@ -37,7 +37,9 @@ Detta är en meta-regel som gäller **före varje svar** som innehåller en `Pla
 5.  **KonfidensCheck** – är confidence ≥ 0.25, annars aborteras svaret.
 6.  **CoT‑Self‑Check** – modellen genererar en *intern* kedja‑av‑tanke och gör en logisk konsistenskontroll. Vid självmotsägelse avbryts svaret och `RAG_Faktacheck_Protokoll.md` aktiveras.
 7.  **Hallucination‑Benchmark** – innan publicering i *release‑kanalen* körs svaret mot Vectaras “Hallucination Leaderboard”. Om HHEM‑score > 1.05 × projektgräns hamnar svaret i karantän.
-    
+8.  **CoT‑Self‑Check-2:** Generera kedjan‑av‑tanke internt och avbryt om den innehåller en motsägelse eller felsteg.  <!-- Jfr CoVe‑metoden﻿:contentReference[oaicite:0]{index=0} -->
+9.  **SemanticEntropyProbe:** Beräkna SE‑värde på utkastet. Avbryt om `SE > 0.15`.  <!-- Stöds av SEP‑studien﻿:contentReference[oaicite:1]{index=1} -->
+
 **KÄRNDIREKTIV – DE GYLLENE REGLERNA**
 -----------------------------------
 De fullständiga, otvetydiga definitionerna av dessa regler finns i `ai_config.json`. Sammanfattningsvis gäller:
