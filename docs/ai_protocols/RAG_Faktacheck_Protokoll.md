@@ -5,6 +5,7 @@ Tvingar fram retrieval‑augmented generation för faktapåståenden.
 
 **Process**  
 1. Extrahera alla faktapåståenden i utkastet.
+
   1a. **Citation‑Cache:** slå upp DOI/URL i `tools/citation_cache.json`; hoppa nät‑lookup om giltig post < 30 d.  
   1b. **Domän‑RAG‑Index:** vid medicin, juridik eller finans, använd motsvarande fack‑index först.  
 3. Kör webb‑ eller docs‑sök; behåll topp 3 källor.  
