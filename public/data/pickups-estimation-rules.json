@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-08-04T17:46:35.9748Z",
+  "timestamp": "2025-08-07T16:58:22.6922Z",
   "source_data_count": 2973,
   "analysis_data_count": 78,
   "global_fallback": {
@@ -54,10 +54,10 @@
         "cantilever_class": "Standard",
         "stylus_family": "Line-Contact"
       },
-      "k": 1.5746,
-      "m": 1.4028,
-      "r_squared": 0.9735,
-      "sample_size": 10
+      "k": 1.5159,
+      "m": 2.1870,
+      "r_squared": 0.9718,
+      "sample_size": 9
     },
     {
       "priority": 1,
@@ -99,10 +99,10 @@
         "type": "MC",
         "cantilever_class": "Standard"
       },
-      "k": 1.4019,
-      "m": 3.1557,
-      "r_squared": 0.9123,
-      "sample_size": 41
+      "k": 1.3826,
+      "m": 3.3830,
+      "r_squared": 0.9121,
+      "sample_size": 40
     },
     {
       "priority": 3,
