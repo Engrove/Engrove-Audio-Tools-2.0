@@ -224,6 +224,7 @@ def create_interactive_html(output_html_path):
       'docs/ai_protocols/Sandbox_Execution_Protokoll.md',
       'docs/ai_protocols/KPI_Dashboard_Spec.md',
       'docs/Mappstruktur_och_Arbetsflöde.md',
+      'tools/citation_cache.json',
       'docs/Global_UI-Standard_för_Engrove-plattformen.md',
       'docs/Global_UI-Standard_Komponentspecifikation.md',
       'docs/Teknisk_Beskrivning_Engrove_Audio_Toolkit.md',
