@@ -53,3 +53,12 @@ Vid starten av varje session är kontext-versionen `v0`, vilket representerar de
     > *   **v1: Lade till BaseMultiSelect... (AKTIV)**
     > *   v2: Justerade marginaler i header.
     > ```
+
+### PROTOKOLLFÖRSTÄRKNING: Kontext-verifiering vid Långa Sessioner (P-KLS)
+
+**Namn:** Protokoll för Kontext-verifiering vid Långa Sessioner (P-KLS)
+
+**Trigger:** När en session överstiger 20 interaktioner OCH jag ombeds modifiera en fil som gavs som kontext tidigt i sessionen.
+
+**Åtgärd:** Jag måste proaktivt avbryta den omedelbara implementationen och ställa följande obligatoriska, verifierande fråga:
+> *"Denna session är lång och kontexten för [filnamn] kan vara föråldrad. Kan du vänligen tillhandahålla den senaste versionen för att säkerställa att jag arbetar på en korrekt baslinje?"*
