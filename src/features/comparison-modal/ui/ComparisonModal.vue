@@ -1,27 +1,38 @@
 <!-- src/features/comparison-modal/ui/ComparisonModal.vue -->
+<!--
+  HISTORIK:
+  - 2025-08-07: (Frankensteen) KRITISK FIX: Adresserade de dubbla scrollbarsen genom att
+    implementera flexbox-baserad layout och säkerställa att ComparisonModal__content
+    är den enda scrollbara containern.
+  - 2025-08-07: (Frankensteen) FIX: Använder nu BaseModal:s namngivna slot '#header'
+    istället för att rendera en egen rubrik. Åtgärdar "Modal Title"-buggen.
+  - 2025-08-04: Created by Frankensteen for Steg 23, Fas 3.
+-->
 <template>
   <BaseModal :show="show" @close="emit('close')" :max-width="'max-w-6xl'">
-    <div class="comparison-modal" v-if="selectedItems.length > 0">
-      <header class="comparison-modal__header">
+    <!-- Använd BaseModal:s header slot för att visa rubriken -->
+    <template #header>
+      <div class="comparison-modal__header">
         <h1 class="comparison-modal__title">Item Comparison</h1>
         <p class="comparison-modal__subtitle">
           Comparing {{ selectedItems.length }} {{ selectedItems.length === 1 ? 'item' : 'items' }}
         </p>
-      </header>
+      </div>
+    </template>
+    
+    <!-- Modalen har nu ComparisonModal__content som huvud-sloten -->
+    <main class="comparison-modal__content">
+      <BaseTable
+        :headers="tableHeaders"
+        :items="transposedData"
+      >
+        <!-- Custom cell rendering for values -->
+        <template v-for="item in selectedItems" :key="item.id" v-slot:[`cell-${item.id}`]="{ item: row }">
+          {{ row[item.id] !== undefined ? row[item.id] : '–' }}
+        </template>
+      </BaseTable>
+    </main>
 
-      <main class="comparison-modal__content">
-        <BaseTable
-          :headers="tableHeaders"
-          :items="transposedData"
-        >
-          <!-- Custom cell rendering for values -->
-          <template v-for="item in selectedItems" :key="item.id" v-slot:[`cell-${item.id}`]="{ item: row }">
-            {{ row[item.id] !== undefined ? row[item.id] : '–' }}
-          </template>
-        </BaseTable>
-      </main>
-
-    </div>
   </BaseModal>
 </template>
 
@@ -77,14 +88,14 @@ const explorerStore = useExplorerStore();
 const propertiesToCompare = [
   { key: 'manufacturer', label: 'Manufacturer' },
   { key: 'model', label: 'Model' },
-  { key: 'type', label: 'Type' },
+  { key: 'type_name', label: 'Type' },
   { key: 'weight_g', label: 'Weight (g)' },
   { key: 'effective_mass_g', label: 'Effective Mass (g)' },
   { key: 'output_voltage_mv', label: 'Output (mV)' },
   { key: 'compliance_dynamic_10hz', label: 'Compliance (10Hz)' },
   { key: 'tracking_force_g', label: 'Tracking Force (g)' },
   { key: 'internal_impedance_ohms', label: 'Impedance (Ω)' },
-  { key: 'stylus_type', label: 'Stylus' },
+  { key: 'stylus_type_name', label: 'Stylus' },
   { key: 'tags', label: 'Tags' },
 ];
 
@@ -102,6 +113,8 @@ const tableHeaders = computed(() => {
   }
   const itemHeaders = selectedItems.value.map(item => ({
     key: item.id,
+    // Note: If you need manufacturer and model names formatted, you would do it here.
+    // However, the data provided in the log already has these names available on the `item` object.
     label: `${item.manufacturer} ${item.model}`,
     sortable: false,
   }));
@@ -135,45 +148,45 @@ const transposedData = computed(() => {
     return row;
   });
 });
-
 </script>
 
 <style scoped>
-.comparison-modal {
-  padding: var(--spacing-6);
-  color: var(--text-medium-emphasis);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-5);
-}
-
+/* Denna sektion ersätter det som tidigare var i BaseModal:s huvudslot */
 .comparison-modal__header {
-  border-bottom: 1px solid var(--border-primary);
-  padding-bottom: var(--spacing-4);
+  /* No padding here, as BaseModal already handles it */
+  padding: 0;
+  border-bottom: none;
 }
 
 .comparison-modal__title {
-  color: var(--text-high-emphasis);
-  font-size: var(--font-size-h2);
-  font-weight: var(--font-weight-bold);
+  /* BaseModal's title styling is already applied via slot. */
+  margin: 0;
 }
 
 .comparison-modal__subtitle {
   font-size: var(--font-size-body);
-  color: var(--text-low-emphasis);
+  color: var(--color-text-low-emphasis);
   margin-top: var(--spacing-1);
 }
 
 .comparison-modal__content {
-  max-height: 70vh;
+  /* Använder flexbox för att säkerställa att innehållsarean fyller resten av utrymmet */
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  /* Tillåt vertikal scrollbar här, och endast här */
   overflow-y: auto;
+  /* Tillåt horisontell scrollbar för BaseTable om den blir bred */
+  overflow-x: auto; 
+  padding: var(--spacing-5);
+  gap: var(--spacing-4);
 }
 
-/* Make the BaseTable header sticky inside the modal */
+/* BaseTable header ska vara sticky */
 .comparison-modal__content :deep(thead th) {
   position: sticky;
   top: 0;
-  z-index: 2; /* Needs to be higher than table content */
+  z-index: 2; 
 }
 </style>
 <!-- src/features/comparison-modal/ui/ComparisonModal.vue -->
