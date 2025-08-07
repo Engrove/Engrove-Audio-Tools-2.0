@@ -12,6 +12,7 @@
 // - Skriver ut formaterade meddelanden till webbläsarens konsol i debug-läge.
 //
 // Historik:
+// - 2025-08-07: (Frankensteen) KRITISK FIX: Aktiverade persistens genom att lägga till `{ persist: true }`. Detta var grundorsaken till att "Engrove Inspector" inte visade några loggar.
 // - 2025-08-06: (Frankensteen - KRITISK FIX) Tog bort det initiala `addLog`-anropet
 //   från modulens rot för att lösa en race condition-krasch vid app-start.
 // - 2025-08-06: (Frankensteen - Felsökning)
@@ -102,5 +103,7 @@ export const useLoggerStore = defineStore('logger', () => {
     addLog,
     clearLogs,
   };
+}, {
+  persist: true,
 });
 // src/entities/logger/model/loggerStore.js
