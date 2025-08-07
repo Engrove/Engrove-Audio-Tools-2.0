@@ -1,5 +1,5 @@
 {
-  "version": "1.0",
+  "version": "1.1",
   "golden_rules": [
     {
       "id": "GR1",
@@ -48,6 +48,22 @@
       "title": "Konfidens & Abort",
       "description": "Om beräknad konfidens < 0.25 ska svaret ersättas med 'osäkert' eller en begäran om mer data.",
       "aliases": ["konfidens", "abstain", "osäkert"]
+    },
+    {
+      "id": "GR9",
+      "title": "Strukturerade Prompt‑format",
+      "description": "Uppdrag, planer och hand‑off‑data ska anges i XML eller JSON där så är möjligt.",
+      "aliases": ["structured prompts", "JSON‑prompt", "XML‑prompt"]
+    },
+    { "id": "GR10",
+      "title": "Sandbox‑exekvering",
+      "description": "All kod måste köras i isolerad container (se Sandbox_Execution_Protokoll.md) innan leverans.",
+      "aliases": ["sandbox", "isolerad körning"]
+    },
+    { "id": "GR11",
+      "title": "LLM‑Judge‑värdering",
+      "description": "Kod blockeras om medelbetyg < 4.0 enligt LLM_Judge‑Protokoll.md.",
+      "aliases": ["domar‑agent", "automatiserad kodreview"]
     }
   ],
   "g_pfc_1_checklist": [
