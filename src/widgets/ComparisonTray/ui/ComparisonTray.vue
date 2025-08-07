@@ -1,6 +1,7 @@
 <!-- src/widgets/ComparisonTray/ui/ComparisonTray.vue -->
 <!--
   Historik:
+  - 2025-08-07: (Frankensteen) KRITISK FIX: Korrigerat alla CSS-variabelnamn för att matcha den globala _tokens.css-filen (t.ex. --surface-secondary -> --color-surface-secondary). Detta åtgärdar buggen där komponenten renderades som transparent.
   - 2025-08-06: (Frankensteen) Skapad från grunden som en del av "Operation Återimplementering".
 -->
 <!--
@@ -74,9 +75,9 @@ const selectedItems = computed(() => {
   left: 0;
   right: 0;
   z-index: 1000;
-  background-color: var(--surface-secondary);
-  border-top: 1px solid var(--border-primary);
-  box-shadow: var(--shadow-large-reverse);
+  background-color: var(--color-surface-secondary);
+  border-top: 1px solid var(--color-border-primary);
+  box-shadow: 0 -4px 12px -2px rgba(0, 0, 0, 0.2);
   padding: var(--spacing-4) var(--spacing-6);
   display: flex;
   flex-direction: column;
@@ -100,7 +101,7 @@ const selectedItems = computed(() => {
 .tray-title {
   font-size: var(--font-size-h3);
   font-weight: var(--font-weight-bold);
-  color: var(--text-high-emphasis);
+  color: var(--color-text-high-emphasis);
 }
 
 .tray-actions {
@@ -122,10 +123,10 @@ const selectedItems = computed(() => {
   display: flex;
   align-items: center;
   gap: var(--spacing-2);
-  background-color: var(--surface-tertiary);
+  background-color: var(--color-surface-tertiary);
   padding: var(--spacing-2) var(--spacing-3);
   border-radius: var(--border-radius-full);
-  border: 1px solid var(--border-primary);
+  border: 1px solid var(--color-border-primary);
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -137,19 +138,19 @@ const selectedItems = computed(() => {
 
 .item-manufacturer {
   font-size: var(--font-size-small);
-  color: var(--text-low-emphasis);
+  color: var(--color-text-low-emphasis);
 }
 
 .item-model {
   font-size: var(--font-size-body);
-  color: var(--text-medium-emphasis);
+  color: var(--color-text-medium-emphasis);
   font-weight: var(--font-weight-medium);
 }
 
 .remove-item-btn {
   background: none;
   border: none;
-  color: var(--text-low-emphasis);
+  color: var(--color-text-low-emphasis);
   cursor: pointer;
   font-size: 1.5rem;
   line-height: 1;
@@ -159,7 +160,7 @@ const selectedItems = computed(() => {
 }
 
 .remove-item-btn:hover {
-  color: var(--text-high-emphasis);
+  color: var(--color-text-high-emphasis);
 }
 </style>
 <!-- src/widgets/ComparisonTray/ui/ComparisonTray.vue -->
