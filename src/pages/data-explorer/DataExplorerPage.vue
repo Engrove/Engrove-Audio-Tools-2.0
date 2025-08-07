@@ -134,6 +134,7 @@ function handleToggleSelectAllVisible() {
         }
     });
 }
+
 </script>
 
 <style scoped>
