@@ -9,10 +9,9 @@
 | **FRANKENSTEEN_Test_Engineer** | Skriver och kör tester. | In: src‑lista · Out: *.spec.js |
 | **Reviewer_Agent** | Kör LLM‑Judge + diff‑analys. | In: patch‑set · Out: review‑report.md |
 
-Arbetsflödet modelleras som:
+Arbetsflöden modelleras som:
+*  plan --> code --> test --> review --> commit
+*  review --|fail|--> code
+*  test   --|fail|--> code
 
-```mermaid
-graph LR
-  plan --> code --> test --> review --> commit
-  review --|fail|--> code
-  test   --|fail|--> code
+Branchlogik styrs av JSON‑fältet `status`.
