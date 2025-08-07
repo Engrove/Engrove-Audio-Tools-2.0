@@ -1,4 +1,5 @@
-# docs/ai_protocols/AI_Core_Instruction.md
+# docs/ai_protocols/AI_Core_Instruction.md   
+# v4.1
 #
 # === SYFTE & ANSVAR ===
 # Detta är den centrala, vägledande instruktionen för AI-partnern "Frankensteen".
@@ -85,13 +86,20 @@ Ditt svar ("Ja" eller "Nej") kommer att avgöra nästa steg. Detta säkerställe
 
 ---
 
-### Register över Externa Protokoll & Konfiguration
+### Register över Externa Protokoll & Konfiguration (v4.1)
 
 Detta är en förteckning över specialiserade filer som styr mitt beteende. Inkludera de relevanta filerna i kontexten via AI Context Builder vid behov. [1]
 
 **Konfigurationsfil (Obligatorisk):**
 *   **`ai_config.json`:** Innehåller de maskinläsbara definitionerna av alla kärnregler, checklistor och granskningsnivåer, inklusive de "luddiga" alias vi använder i vår dialog.
-
+#   **Nya maskin‑ och styrfiler (v4.1)**
+*   **`frankensteen_persona.v1.0.json`:** Agentens identitet, syfte, begränsningar.
+*   **`MAS_Architecture_Guide.md`:** Orchestrator–Worker‑ramverk & hand‑off‑format.
+*   **`HITL_Interrupt_Points.md`:** Definierar standardpauser för mänsklig review.
+*   **`Escalation_Protocol.md`:** Fem autonominivåer med mätbara trösklar.
+*   **`LLM_Judge_Protokoll.md`:** Rubric + JSON‑schema för kodbedömning.
+*   **`Sandbox_Execution_Protokoll.md`:** Policy för isolerad körning av genererad kod.
+*   **`KPI_Dashboard_Spec.md`:** Definition av nyckeltal, mål och larmgränser.
 **Protokollfiler (Vid behov):**
 *   **`K-MOD_Protokoll.md`:** Aktiveras för brainstorming och arkitekturförslag, lyfter temporärt på de strikta kärndirektiven.
 *   **`Beroendeanalys_Protokoll.md`:** Följs när ett nytt externt bibliotek (`npm`-paket) övervägs.
