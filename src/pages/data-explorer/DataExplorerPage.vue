@@ -40,9 +40,15 @@
         :currentPage="currentPage"
         :sortKey="sortKey"
         :sortOrder="sortOrder"
+        :showSelection="true"
+        :isItemSelected="(item) => comparisonStore.isSelected(item.id)"
+        :selectionLimitReached="comparisonStore.isLimitReached"
+        :allVisibleItemsSelected="allVisibleItemsSelected"
         @row-click="handleRowClick"
         @sort="explorerStore.setSort"
         @page-change="explorerStore.setPage"
+        @toggle-item-selection="handleToggleItem"
+        @toggle-select-all-visible="handleToggleSelectAllVisible"
       />
     </main>
 
@@ -95,6 +101,11 @@ const isComparisonModalVisible = ref(false);
 
 const isTrayVisible = computed(() => comparisonStore.selectedItemsCount > 0);
 
+const allVisibleItemsSelected = computed(() => {
+    if (paginatedResults.value.length === 0) return false;
+    return paginatedResults.value.every(item => comparisonStore.isSelected(item.id));
+});
+
 onMounted(() => {
   explorerStore.initializeData();
 });
@@ -103,6 +114,25 @@ function handleRowClick(item) {
   selectedItem.value = item;
   isModalVisible.value = true;
 }
+
+function handleToggleItem(item) {
+    comparisonStore.toggleItem(item.id);
+}
+
+function handleToggleSelectAllVisible() {
+    const allVisibleIds = paginatedResults.value.map(item => item.id);
+    const shouldSelect = !allVisibleItemsSelected.value;
+
+    allVisibleIds.forEach(id => {
+        const isCurrentlySelected = comparisonStore.isSelected(id);
+        if (shouldSelect && !isCurrentlySelected) {
+            comparisonStore.toggleItem(id);
+        } else if (!shouldSelect && isCurrentlySelected) {
+            comparisonStore.toggleItem(id);
+        }
+    });
+}
+
 </script>
 
 <style scoped>
