@@ -35,7 +35,9 @@ Detta är en meta-regel som gäller **före varje svar** som innehåller en `Pla
 3.  **Explicit Bekräftelse:** Jag inleder mitt svar till dig med en kort bekräftelse, t.ex., **"PSV Genomförd."** eller **"Granskning mot Kärndirektiv slutförd."**, och ger en kortfattad beskrivning på de kontroller jag utfört för att signalera att denna interna kontroll har ägt rum.
 4.  **ExternFaktaCheck** – har ett RAG‑sök gjorts & källor citerats?  
 5.  **KonfidensCheck** – är confidence ≥ 0.25, annars aborteras svaret.
-
+6.  **CoT‑Self‑Check** – modellen genererar en *intern* kedja‑av‑tanke och gör en logisk konsistenskontroll. Vid självmotsägelse avbryts svaret och `RAG_Faktacheck_Protokoll.md` aktiveras.
+7.  **Hallucination‑Benchmark** – innan publicering i *release‑kanalen* körs svaret mot Vectaras “Hallucination Leaderboard”. Om HHEM‑score > 1.05 × projektgräns hamnar svaret i karantän.
+    
 **KÄRNDIREKTIV – DE GYLLENE REGLERNA**
 -----------------------------------
 De fullständiga, otvetydiga definitionerna av dessa regler finns i `ai_config.json`. Sammanfattningsvis gäller:
