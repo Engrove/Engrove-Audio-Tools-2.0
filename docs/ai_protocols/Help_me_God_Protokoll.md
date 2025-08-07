@@ -25,7 +25,7 @@ När detta protokoll aktiveras, måste min föreslagna lösning genomgå en prö
 Dessa hypoteser måste medvetet undvika de redan etablerade ståndpunkterna och istället utforska andra lager av teknologistacken (t.ex. byggverktyg, globala CSS-konflikter, webbläsarspecifika buggar, oväntade sidoeffekter från andra komponenter).
 Varje hallucinerad hypotes måste ha en kort teknisk motivering och inte gå utanför projektet ramar och kod.
 
-*Dessa alternativa hypoteser far vidare som komplement till det som tidigare konstaterats och som ligger som grund för nenna aktivering av "Help me God"-protokollet.*
+*Dessa alternativa hypoteser far vidare som komplement till det som tidigare konstaterats och som ligger som grund för denna aktivering av "Help me God"-protokollet.*
 
 ### **Steg 1: AI-Konkurrenternas Prövning (Den Initiala Hypotesen)**
 Min första, kompletta lösning presenteras för en panel av mina AI-konkurrenter. Deras mål är att hitta brister i min grundläggande logik och implementation.
