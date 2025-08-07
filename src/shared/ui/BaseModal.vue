@@ -1,21 +1,29 @@
 <!-- src/shared/ui/BaseModal.vue -->
-<!-- En generell och återanvändbar modal-komponent. Den är "dum" och -->
-<!-- hanterar endast det visuella och grundläggande interaktioner (visa/dölj, stängning). -->
-<!-- Innehållet i modalen injiceras via slots. -->
+<!--
+  En generell och återanvändbar modal-komponent. Den är "dum" och
+  hanterar endast det visuella och grundläggande interaktioner (visa/dölj, stängning).
+  Innehållet i modalen injiceras via slots.
+
+  HISTORIK:
+  - 2025-08-07 (Frankensteen): KRITISK FIX - API-kontraktet har standardiserats.
+    Prop-namnet har ändrats från `isOpen` till `show` och emit-händelsen från
+    `update:isOpen` till `close` för att matcha hur komponenten används
+    i applikationen och för att skapa ett enklare, mer robust API.
+-->
 <template>
   <transition name="modal-fade">
     <div
-      v-if="isOpen"
+      v-if="show"
       class="modal-overlay"
-      @click.self="close"
+      @click.self="handleClose"
     >
-      <div class="modal-panel">
+      <div class="modal-panel" :class="maxWidth">
         <header class="modal-header">
           <!-- Använder en slot för titeln för flexibilitet -->
           <h3 class="modal-title">
-            <slot name="header">Standardrubrik</slot>
+            <slot name="header">Modal Title</slot>
           </h3>
-          <button @click="close" class="close-button" aria-label="Stäng modal">
+          <button @click="handleClose" class="close-button" aria-label="Stäng modal">
             ×
           </button>
         </header>
@@ -33,31 +41,35 @@ import { onMounted, onUnmounted, watch } from 'vue';
 
 // --- PROPS & EMITS ---
 const props = defineProps({
-  // Styr synligheten av modalen. Stödjer v-model:isOpen.
-  isOpen: {
+  // Styr synligheten av modalen.
+  show: {
     type: Boolean,
     required: true,
   },
+  maxWidth: {
+    type: String,
+    default: 'max-w-3xl' // TailwindCSS-liknande klassnamn
+  }
 });
 
-const emit = defineEmits(['update:isOpen']);
+const emit = defineEmits(['close']);
 
 // --- FUNKTIONER ---
-const close = () => {
-  emit('update:isOpen', false);
+const handleClose = () => {
+  emit('close');
 };
 
 // Hanterar tangentbordstryckningar, specifikt för 'Escape'-tangenten.
 const handleKeyDown = (event) => {
-  if (event.key === 'Escape' && props.isOpen) {
-    close();
+  if (event.key === 'Escape' && props.show) {
+    handleClose();
   }
 };
 
 // --- LIFECYCLE & WATCHERS ---
-// När modalen öppnas (props.isOpen blir true), lås scroll på body.
+// När modalen öppnas (props.show blir true), lås scroll på body.
 // När den stängs, lås upp.
-watch(() => props.isOpen, (newValue) => {
+watch(() => props.show, (newValue) => {
   if (newValue) {
     document.body.classList.add('body-scroll-lock');
   } else {
@@ -114,10 +126,14 @@ onUnmounted(() => {
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   width: 90%;
-  max-width: 800px;
   max-height: 90vh; /* Begränsar höjden så den inte tar över hela skärmen */
   overflow: hidden; /* Förhindrar att innehåll går utanför rundade hörn */
 }
+
+/* Max-width klasser */
+.max-w-3xl { max-width: 800px; }
+.max-w-6xl { max-width: 1200px; }
+
 
 /* Header-sektionen av modalen */
 .modal-header {
