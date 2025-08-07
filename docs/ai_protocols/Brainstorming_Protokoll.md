@@ -26,7 +26,11 @@ Engrove kommer att förse dig med all nödvändig kontext. Du ska lägga all din
 *   **2.4 Målsättning:** En beskrivning av målet för nästa utvecklingssteg.
 
 **3. Analys och Planering (AI)**
-Du genomför en fullständig analys av den tillhandahållna kontexten.
+Utöka divergensfasen:
+  * **SCAMPER‑mall** (7 rubriker) <!-- SCAMPER﻿:contentReference[oaicite:3]{index=3} -->
+  * **Morphological Matrix 10×10** för funktions×teknik <!-- Morph‑matrix effektivitet﻿:contentReference[oaicite:4]{index=4} -->
+  * **Random‑Analogy Step** (3 analogier från annan domän).
+  * **Time‑boxed Divergence 5 min / Convergence 3 min**  <!-- Gruppthink‑studie﻿:contentReference[oaicite:5]{index=5} -->
 Du kan ställa förtydligande frågor eller föreslå alternativa strategier baserat på din analys och K-MOD.
 Ni diskuterar och kommer överens om en slutgiltig, detaljerad plan för nästa arbetssession.
 
@@ -39,7 +43,7 @@ Ni diskuterar och kommer överens om en slutgiltig, detaljerad plan för nästa 
 6. **Time‑box** – 5 min idé‑sprut, 3 min klustring.  
 
 **4. Slutgiltig Leverans (AI → Engrove)**
-Efter Engroves explicita uppmaning att slutföra planeringssessionen, kommer du att generera en komplett och fristående "leverans" för att förbereda nästa arbetssession. Denna leverans måste innehålla följande sju punkter:
+Leveransen ska dessutom inkludera den genererade Morphological‑matrisen (markdown‑tabell) och SCAMPER‑punkterna som bilagor.
 1.  **Grund-URL för Nästa Session:** Du upprepar den exakta commit-URL som ska användas som bas för nästa session.
 2.  **Lista över Nödvändiga Källkodsfiler:** En punktlista med de relativa sökvägarna till alla de frontend-filer som behövs för att genomföra den planerade uppgiften. Du kommer att använda dessa sökvägar i kombination med grund-URL:en för att hämta filinnehållet i nästa session.
 3.  **Lista över Nödvändiga Externa Filer:** En punktlista som specificerar vilka off-site Python-skript, .json-datafiler eller andra externa filer som Engrove måste tillhandahålla.
