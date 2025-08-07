@@ -10,7 +10,9 @@ Tvingar fram retrieval‑augmented generation för faktapåståenden.
  2. Kör webb‑ eller docs‑sök; behåll topp 3 källor.  
  3. Jämför påståenden ↔ källor. Avvikelse → flagga.  
  4. **HAT‑Pipeline:** om ≥15 % av fakta flaggas i steg 3, kör *Hallucination‑Aware Tuning* (RAG‑HAT) och logga i `rag_hat.log`.  
- 5. Bifoga käll‑citat i slut‑svaret.
+ 5. Om hallucination upptäcks → kör **HAT‑tuning** (Hallucination‑Aware Tuning) vid nästa modell‑deploy.  <!-- RAG‑HAT﻿:contentReference[oaicite:6]{index=6} -->
+ 6. För medicin/juridik → växla till domän‑specifikt RAG‑index.
+
 
 **Aktivering**  
 Implicit när PSV steg 4 triggas.
