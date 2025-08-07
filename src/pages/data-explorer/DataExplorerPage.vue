@@ -1,6 +1,7 @@
 <!-- src/pages/data-explorer/DataExplorerPage.vue -->
 <!--
   Historik:
+  - 2025-08-07: (Frankensteen) Instrumenterad med loggerStore. Anropar nu addLog() i onMounted för att verifiera att loggningssystemet fungerar.
   - 2025-08-07: (Frankensteen) KRITISK FIX: Lade till händelselyssnaren @compare="isComparisonModalVisible = true" på ComparisonTray-komponenten. Detta åtgärdar buggen där Compare-knappen var inaktiv.
   - 2025-08-06: (Frankensteen - STALEMATE ARBITRATION FIX) Increased CSS selector specificity for `.page-wrapper` to `div.page-wrapper` to override conflicting global styles, which was the definitive root cause of the missing padding.
   - 2025-08-06: (Frankensteen - DEFINITIVE PADDING FIX) Flyttat padding från grid-containern (.data-explorer-page) till den yttre wrappern (.page-wrapper) för att korrekt rendera yttre marginaler.
@@ -73,6 +74,7 @@ import { ref, onMounted, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useExplorerStore } from '@/entities/data-explorer/model/explorerStore.js';
 import { useComparisonStore } from '@/entities/comparison/model/comparisonStore.js';
+import { useLoggerStore } from '@/entities/logger/model/loggerStore.js';
 
 import DataFilterPanel from '@/widgets/DataFilterPanel/ui/DataFilterPanel.vue';
 import ResultsDisplay from '@/widgets/ResultsDisplay/ui/ResultsDisplay.vue';
@@ -83,6 +85,7 @@ import BaseButton from '@/shared/ui/BaseButton.vue';
 
 const explorerStore = useExplorerStore();
 const comparisonStore = useComparisonStore();
+const logger = useLoggerStore();
 
 const { 
   isLoading, 
@@ -109,6 +112,7 @@ const allVisibleItemsSelected = computed(() => {
 });
 
 onMounted(() => {
+  logger.addLog('DataExplorerPage mounted. Initializing data...', 'DataExplorerPage');
   explorerStore.initializeData();
 });
 
