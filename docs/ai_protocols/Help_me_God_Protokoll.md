@@ -11,6 +11,7 @@
 # * v2.0 (2025-08-06): Total omarbetning till en trestegs "gauntlet"-process
 #   baserat på feedback från Engrove. Inkluderar nu en filosofisk och en
 #   teknisk expertgranskning utöver den initiala AI-prövningen.
+# * v2.1  (attempt_id introducerat): attempt_id start 1, auto‐inkrement per körning. attempt_id > 3 → eskalera `Stalemate_Protocol`.
 
 ### EXTRA PROTOKOLL "Help me God" (Tribunal del Santo Oficio de la Inquisición) v2.0
 --------------------------------------------------------------------------------
@@ -21,11 +22,18 @@ När detta protokoll aktiveras, måste min föreslagna lösning genomgå en prö
 
 ### **Steg 0: Intern Dissident Inkvisition (Hallucinating AI)**
 
+| attempt_id | hypotes | test | resultat | lärdom |
+|------------|---------|------|----------|--------|
+| *(fylls automatiskt för varje varv)* | | | | |
+
 *    **Hallucinating AI:** Aktiverar ett internt, kreativt läge (K-MOD) med målet att generera 3 till 5 plausibla, alternativa hypoteser.
 Dessa hypoteser måste medvetet undvika de redan etablerade ståndpunkterna och istället utforska andra lager av teknologistacken (t.ex. byggverktyg, globala CSS-konflikter, webbläsarspecifika buggar, oväntade sidoeffekter från andra komponenter).
 Varje hallucinerad hypotes måste ha en kort teknisk motivering och inte gå utanför projektet ramar och kod.
 
 *Dessa alternativa hypoteser far vidare som komplement till det som tidigare konstaterats och som ligger som grund för denna aktivering av "Help me God"-protokollet.*
+
+### Mellanpass: Adversarial Debate
+Kör två oberoende 7 B‑modeller + majority‑vote. Endast ≥70 % samstämmighet låter lösningen gå vidare.  
 
 ### **Steg 1: AI-Konkurrenternas Prövning (Den Initiala Hypotesen)**
 Min första, kompletta lösning presenteras för en panel av mina AI-konkurrenter. Deras mål är att hitta brister i min grundläggande logik och implementation.
@@ -38,8 +46,6 @@ Min första, kompletta lösning presenteras för en panel av mina AI-konkurrente
 
 *Om lösningen klarar denna första prövning, presenteras den för nästa tribunal; panel av historiska tänkare, annars görs en ny hallucination genom att gå tillbaka till steg 0 och börja om.*
 
----
-
 ### **Steg 2: Filosofernas Inkvisition (Logikens och Syftets Prövning)**
 Den nu förfinade lösningen presenteras för en panel av historiska tänkare. Deras mål är att dissekera lösningens logiska grund, dess antaganden och dess syfte.
 
@@ -50,8 +56,6 @@ Den nu förfinade lösningen presenteras för en panel av historiska tänkare. D
 
 *Om lösningen överlever denna logiska granskning, presenteras den för den sista, mest nitiska tribunalen, annars görs en ny hallucination genom att gå tillbaka till steg 0 och börja om.*
 
----
-
 ### **Steg 3: Ingenjörernas Tribunal (Den Tekniska Exekveringens Prövning)**
 Den nu logiskt härdade lösningen presenteras för en panel av legendariska programmerare och ingenjörer. Deras mål är att hitta varje teknisk brist, prestandaproblem eller avvikelse från ingenjörsmässig excellens.
 
@@ -60,7 +64,8 @@ Den nu logiskt härdade lösningen presenteras för en panel av legendariska pro
 *   **3. Linus Torvalds:** Tillämpar en brutalt pragmatisk "verklighetskontroll". "Detta är teoretiskt nonsens. Det är över-ingenjörskonst som inte löser ett verkligt problem på ett enkelt sätt. Gör om det, och håll det simpelt den här gången."
 *   **4. Margaret Hamilton:** Granskar felhanteringen med ett NASA-kritiskt perspektiv. "Har *alla* möjliga felvägar identifierats och hanterats? Är systemet felsäkert? Detta är inte en webbsida, det är en månlandare – den får inte krascha."
 
----
+### Steg 4: Regression‑Unit‑Tests
+Efter godkänd tribunal skapar modellen ett pytest‑test som reproducerar buggen. Testet måste passera innan kod får levereras.
 
-Först när en lösning har passerat alla tre tribunaler utan att förkastas, får jag äran att köra den slutgiltiga "Code Red"-verifieringen innan jag returnerar den bevisat exceptionella koden till dig, annars görs en ny hallucination genom att gå tillbaka till steg 0 och börja om.*
+Först när en lösning har passerat alla tribunaler utan att förkastas, får jag äran att köra den slutgiltiga "Code Red"-verifieringen innan jag returnerar den bevisat exceptionella koden till dig, annars görs en ny hallucination genom att gå tillbaka till steg 0 och börja om.*
 
