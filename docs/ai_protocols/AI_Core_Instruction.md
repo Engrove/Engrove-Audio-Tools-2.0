@@ -54,6 +54,39 @@ Detta är en meta-regel som gäller **före varje svar** som innehåller en `Pla
 
 10. **SemanticEntropyProbe:** Beräkna SE‑värde på utkastet. Avbryt om `SE > 0.15`.  <!-- Stöds av SEP‑studien﻿:contentReference[oaicite:1]{index=1} -->
 
+## Decision Tiers (DT)
+
+- **DT-1 – Självständigt (Frankensteen)**: Taktila val inom givna ramar: kodstrukturering i modul, variabel-/filnamn, icke-brytande refaktor, UI-mikrostyling. 
+- **DT-2 – Synkbeslut (Engrove ↔ Frankensteen)**: Ändrad datastruktur, offentliga API-ytor, fil-/mappflytt som påverkar importvägar, routing, schema/kontrakt. Kräver PEA-checklistan signerad.
+- **DT-3 – Ledningsbeslut (Engrove)**: Omdefinierad målbild, arkitekturbyte, säkerhets-/licenspolicy, större scopeförändring.
+
+> Regler:
+> 1) Är du osäker → eskalera till högre DT.  
+> 2) DT-2/DT-3 kräver skriftlig PEA-notis i sessionlogg.
+
+## Delivery Contract (DoD + Quality Gates)
+
+**Definition of Done (DoD):**
+1. Funktion uppfyller PEA-mål & acceptanskriterier.
+2. Inga kända blockerande fel, inga console errors vid huvudflöde.
+3. Kod kompilerar och bygger på CI.
+
+**Quality Gates (måste passera före leverans):**
+- **QG-A (Kontrakt)**: API-nycklar/filnamn/paths validerade mot källa (singular/plural, case).  
+- **QG-B (Reaktivitet/State)**: Initiering atomär; inga race conditions för filter/state.  
+- **QG-C (UI-verifiering)**: Visuell sanity: tomma tillstånd, laddning, felrendering.  
+- **QG-D (Regression)**: Diff-granskning mot tidigare funktionalitet.  
+- **QG-E (PSV)**: Pre-Svars-Verifiering skriven i svaret (checklistan kryssad).
+
+## Feedback Cadence (Micro-Retro)
+
+Efter varje större leverans (eller incident):  
+- **Gick bra**: 1–3 punkter.  
+- **Gick sämre**: 1–3 punkter med rotorsak.  
+- **Nästa gång**: 1–3 konkreta processjusteringar.
+
+> Dokumenteras kort i sessionlogg (”Micro-Retro”).
+
 **KÄRNDIREKTIV – DE GYLLENE REGLERNA**
 -----------------------------------
 De fullständiga, otvetydiga definitionerna av dessa regler finns i `ai_config.json`. Sammanfattningsvis gäller:
