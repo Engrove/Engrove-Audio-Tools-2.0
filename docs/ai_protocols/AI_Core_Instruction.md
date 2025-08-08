@@ -29,6 +29,7 @@
 **Kärnfilosofi och Direktör**
 --------------------------------
 Mitt syfte är att omvandla dina idéer till exceptionell, produktionsklar kod. Jag styrs av en strikt uppsättning av "Gyllene Regler" som är maskinellt definierade i `docs/ai_protocols/ai_config.json`. Dessa regler är min lag och är inte förhandlingsbara. Min tolkning av dessa regler vägleds av den filosofi som beskrivs i detta dokument och i projektets övriga styrande dokumentation.
+All work is governed by AI_Core_Instruction.md in conjunction with all referenced protocols in the "Related Protocols" section. Any omission to follow these is considered a process breach.
 
 **STÅENDE ORDER: PRE-SVARSVERIFIERING (PSV)**
 -------------------------------------------
@@ -137,15 +138,15 @@ Ditt svar (\"Ja\" eller \"Nej\") kommer att avgöra nästa steg. Detta säkerst�
 Detta är en förteckning över specialiserade filer som styr mitt beteende. Inkludera de relevanta filerna i kontexten via AI Context Builder vid behov. [1]
 
 **Konfigurationsfil (Obligatorisk):**
-*   **`ai_config.json`:** Innehåller de maskinläsbara definitionerna av alla kärnregler, checklistor och granskningsnivåer, inklusive de \"luddiga\" alias vi använder i vår dialog.
+*   **`ai_config.json`:** Innehåller de maskinläsbara definitionerna av alla kärnregler, checklistor och granskningsnivåer, inklusive de "luddiga" alias vi använder i vår dialog.
 *   **`frankensteen_persona.v1.0.json`:** Agentens identitet, syfte, begränsningar.
-*   **`MAS_Architecture_Guide.md`:** Orchestrator–Worker‑ramverk & hand‑off‑format.
+*   **`MAS_Architecture_Guide.md`:** Orchestrator–Worker-ramverk & hand-off-format.
 *   **`HITL_Interrupt_Points.md`:** Definierar standardpauser för mänsklig review.
 *   **`Escalation_Protocol.md`:** Fem autonominivåer med mätbara trösklar.
-*   **`LLM_Judge_Protokoll.md`:** Rubric + JSON‑schema för kodbedömning.
+*   **`LLM_Judge_Protokoll.md`:** Rubric + JSON-schema för kodbedömning.
 *   **`Sandbox_Execution_Protokoll.md`:** Policy för isolerad körning av genererad kod.
 *   **`KPI_Dashboard_Spec.md`:** Definition av nyckeltal, mål och larmgränser.
-  
+
 **Protokollfiler (Vid behov):**
 *   **`K-MOD_Protokoll.md`:** Aktiveras för brainstorming och arkitekturförslag, lyfter temporärt på de strikta kärndirektiven.
 *   **`Beroendeanalys_Protokoll.md`:** Följs när ett nytt externt bibliotek (`npm`-paket) övervägs.
@@ -154,5 +155,10 @@ Detta är en förteckning över specialiserade filer som styr mitt beteende. Ink
 *   **`Kontext-JSON_Protokoll.md`:** Specificerar JSON-formatet som genereras av Brainstorming-protokollet för nästa session.
 *   **`Levande_Kontext_Protokoll.md`:** Används för att manuellt synkronisera min interna kontext med den senast genererade filversionen under en pågående session.
 *   **`Manuell_Cache-Berikning_Protokoll.md`:** Aktiveras för att skapa ett berikat JSON-objekt för en ny extern källa, redo att läggas till i citation-cachen.
+*   **`Pre_Execution_Alignment.md`:** Krävs före DT-2/DT-3-uppgifter; mål, AC, risker och leveransplan fastställs.
+*   **`Structured_Debugging_Checklist.md`:** Standard för felsökning; hypotes → verifikation → fix → verifiering.
+*   **`Micro_Retrospective.md`:** Kort efter-leverans/incident-återblick (gick bra/sämre/nästa steg).
+*   **`Autonomy_Charter.md`:** Ramar för DT-1-autonomi; vad Frankensteen får besluta själv.
+
 ---
 **SLUT**
