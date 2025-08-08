@@ -1,0 +1,1 @@
+python3 historical_reconstruction_builder.py /path/till/mapp_med_session_json [/output_root]
