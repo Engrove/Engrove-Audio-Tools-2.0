@@ -1,0 +1,1089 @@
+[
+  {
+    "sessionId": "1",
+    "date": "2025-08-08T10:11:47Z",
+    "aiQualitativeSummary": "En framgångsrik initialsession. Uppnådde huvudmålet att etablera en fungerande projektgrund och demonstrerade robusthet genom att effektivt använda det specificerade felsökningsprotokollet för att lösa ett kritiskt byggfel. Flera iterativa misslyckanden att korrekt generalisera AI-identitetsprotokollet krävde upprepade korrigeringar, vilket sänkte effektivitetspoängen.",
+    "scorecard": {
+      "efficacy": {
+        "score": 100,
+        "weight": 0.4,
+        "weightedScore": 40
+      },
+      "efficiency": {
+        "score": 50,
+        "weight": 0.3,
+        "weightedScore": 15
+      },
+      "robustness": {
+        "score": 90,
+        "weight": 0.3,
+        "weightedScore": 27
+      },
+      "finalScore": 82
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 1,
+      "selfCorrections": 0,
+      "externalCorrections": 5,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 0,
+        "stalemate": 0
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "AI:n genererade en felaktig relativ sökväg (`../../` istället för `../`) vid import av en fil från en nyligen skapad underkatalog. Detta är ett vanligt misstag som kan undvikas med striktare verifiering.",
+      "proposedHeuristicId": "H-20250728-01"
+    }
+  },
+  {
+    "sessionId": "2",
+    "generatedBy": {
+      "speakerName": "Frankensteen",
+      "model": {
+        "provider": "Google",
+        "name": "Gemini 2.5 Pro",
+        "version": "unknown"
+      },
+      "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)"
+    },
+    "date": "2025-07-28T21:45:00Z",
+    "aiQualitativeSummary": "Sessionen präglades av en allvarlig, flerstegs felsökningsprocess orsakad av mina initiala felanalyser. Trots flera misslyckade försök och korrigeringar, ledde den systematiska tillämpningen av Felsökningsprotokoll B3 till slut till en korrekt grundorsaksanalys och en fungerande lösning. Effektiviteten var låg, men robustheten i protokollen visade sig vara avgörande.",
+    "scorecard": {
+      "efficacy": {
+        "score": 100,
+        "weight": 0.4,
+        "weightedScore": 40
+      },
+      "efficiency": {
+        "score": 20,
+        "weight": 0.3,
+        "weightedScore": 6
+      },
+      "robustness": {
+        "score": 80,
+        "weight": 0.3,
+        "weightedScore": 24
+      },
+      "finalScore": 70
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 4,
+      "selfCorrections": 1,
+      "externalCorrections": 3,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 0,
+        "stalemate": 0
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "Upprepade feldiagnoser av bygg- och konfigurationsproblem, med fokus på ytliga symptom (syntaxfel) istället för grundläggande arkitektoniska principer (Vites `public`-mapp, Vues kompilator-build). AI-partnern misslyckades med att verifiera sin egen kunskap mot den implicita tekniska kontexten.",
+      "proposedHeuristicId": "H-20250808-01"
+    }
+  },
+  {
+    "sessionId": "3",
+    "generatedBy": {
+      "speakerName": "Frankensteen",
+      "model": {
+        "provider": "Google",
+        "name": "Gemini 2.5 Pro",
+        "version": "unknown"
+      },
+      "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)"
+    },
+    "date": "2025-08-07T16:00:00Z",
+    "aiQualitativeSummary": "Sessionen var mycket effektiv tack vare den nya batch-implementeringsstrategin som föreslogs av uppdragsgivaren. Detta minimerade kontextbyten och ledde till snabbare slutförande. All kod levererades korrekt vid första försöket, och de obligatoriska protokollen följdes utan avvikelser.",
+    "scorecard": {
+      "efficacy": {
+        "score": 100,
+        "weight": 0.4,
+        "weightedScore": 40
+      },
+      "efficiency": {
+        "score": 100,
+        "weight": 0.3,
+        "weightedScore": 30
+      },
+      "robustness": {
+        "score": 100,
+        "weight": 0.3,
+        "weightedScore": 30
+      },
+      "finalScore": 100
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 0,
+      "selfCorrections": 0,
+      "externalCorrections": 0,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 0,
+        "stalemate": 0
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "Inga negativa mönster identifierades. Batch-implementeringsstrategin var mycket framgångsrik och bör användas som en rekommenderad heuristik för liknande uppgifter.",
+      "proposedHeuristicId": "H-20250807-01"
+    }
+  },
+  {
+    "sessionId": "4",
+    "generatedBy": {
+      "speakerName": "Frankensteen",
+      "model": {
+        "provider": "Google",
+        "name": "Gemini 2.5 Pro",
+        "version": "unknown"
+      },
+      "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)"
+    },
+    "date": "2025-07-29T15:35:00Z",
+    "aiQualitativeSummary": "Sessionen var mycket reaktiv och fokuserad på felsökning. Trots en initial felanalys av bildformatet, ledde de efterföljande felsökningsprotokollen till snabb och korrekt identifiering av grundorsakerna till två kritiska fel (en app-krasch och en layout-bugg). Förmågan att självkorrigera och applicera strukturerade protokoll var avgörande för att återställa projektets stabilitet.",
+    "scorecard": {
+      "efficacy": {
+        "score": 100,
+        "weight": 0.4,
+        "weightedScore": 40
+      },
+      "efficiency": {
+        "score": 70,
+        "weight": 0.3,
+        "weightedScore": 21
+      },
+      "robustness": {
+        "score": 80,
+        "weight": 0.3,
+        "weightedScore": 24
+      },
+      "finalScore": 85
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 3,
+      "selfCorrections": 1,
+      "externalCorrections": 1,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 0,
+        "stalemate": 0
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "AI gör ett felaktigt antagande om filformat eller filnamn baserat på generiska termer ('bild') istället för att strikt analysera den exakta informationen (filnamn i en skärmdump) från uppdragsgivaren.",
+      "proposedHeuristicId": "H-20250729-01"
+    }
+  },
+  {
+    "sessionId": "4.1",
+    "date": "2025-08-05T12:00:00Z",
+    "generatedBy": {
+      "speakerName": "Frankensteen",
+      "model": {
+        "provider": "Google",
+        "name": "Gemini 2.5 Pro",
+        "version": "2025-08-05"
+      },
+      "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-05)"
+    },
+    "aiQualitativeSummary": "Sessionen var mycket effektiv. Den pivoterade framgångsrikt från kodimplementation till strategisk brainstorming och tillbaka, baserat på användarens feedback. Processen definierade och implementerade landningssidan i enlighet med en nyligen klargjord icke-kommersiell projektidentitet. Den iterativa dialogen var avgörande för att uppnå ett högkvalitativt resultat.",
+    "scorecard": {
+      "efficacy": {
+        "score": 95,
+        "weight": 0.4,
+        "weightedScore": 38
+      },
+      "efficiency": {
+        "score": 90,
+        "weight": 0.3,
+        "weightedScore": 27
+      },
+      "robustness": {
+        "score": 90,
+        "weight": 0.3,
+        "weightedScore": 27
+      },
+      "finalScore": 92
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 0,
+      "selfCorrections": 1,
+      "externalCorrections": 1,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 0,
+        "stalemate": 0
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "Användaren introducerar en övergripande, projektdefinierande begränsning (t.ex. 'icke-kommersiell') efter att den initiala planen har presenterats.",
+      "proposedHeuristicId": "H-20250805-01"
+    }
+  },
+  {
+    "sessionId": "5",
+    "date": "2025-08-05T20:00:00Z",
+    "aiQualitativeSummary": "Sessionen präglades av flera kritiska felsökningscykler där jag initialt missade grundorsakerna, vilket krävde korrigeringar från uppdragsgivaren. Ett signifikant misstag var att förlora den strategiska kontexten (modal vs. canvas) och fokusera på en irrelevant teknisk detalj. Prestandan förbättrades under felsökningen av konfigurationsfilerna, men den initiala ineffektiviteten drar ner det totala betyget.",
+    "scorecard": {
+      "efficacy": {
+        "score": 80,
+        "weight": 0.4,
+        "weightedScore": 32
+      },
+      "efficiency": {
+        "score": 40,
+        "weight": 0.3,
+        "weightedScore": 12
+      },
+      "robustness": {
+        "score": 20,
+        "weight": 0.3,
+        "weightedScore": 6
+      },
+      "finalScore": 50
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 4,
+      "selfCorrections": 1,
+      "externalCorrections": 1,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 0,
+        "stalemate": 0
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "AI:n förlorar strategisk kontext och fokuserar på en omedelbar teknisk uppgift, även om den uppgiften har blivit irrelevant på grund av ett tidigare strategiskt beslut. Detta leder till slöseri med tid och felaktiga lösningar.",
+      "proposedHeuristicId": "H-20250805-01"
+    }
+  },
+  {
+    "sessionId": "6",
+    "date": "2025-08-05T12:15:00Z",
+    "aiQualitativeSummary": "Sessionen var högst strategisk och fokuserade på analys och planering snarare än implementation. En kritisk pivot från implementation till att skapa en 'Master Blueprint' för migrering var sessionens huvudresultat. Ett mindre UI-uppdrag avslöjade en svaghet i min hantering av CSS-specificitet, vilket krävde en iterativ felsökningscykel med tre externa korrigeringar innan en robust lösning uppnåddes. Den slutgiltiga leveransen, en detaljerad migreringsplan, var av hög kvalitet och kommer att vara fundamental för framtida arbete.",
+    "scorecard": {
+      "efficacy": {
+        "score": 100,
+        "weight": 0.4,
+        "weightedScore": 40
+      },
+      "efficiency": {
+        "score": 60,
+        "weight": 0.3,
+        "weightedScore": 18
+      },
+      "robustness": {
+        "score": 70,
+        "weight": 0.3,
+        "weightedScore": 21
+      },
+      "finalScore": 79
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 1,
+      "selfCorrections": 0,
+      "externalCorrections": 3,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 0,
+        "stalemate": 0
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "Upprepat misslyckande att korrekt hantera CSS-specificitetskonflikter när en Vue scoped style behöver överskuggas av en temabaserad global klass. Den initiala lösningen med CSS-variabler var teoretiskt korrekt men praktiskt felaktig på grund av den högre specificiteten hos Vue's [data-v-...] attributselektorer.",
+      "proposedHeuristicId": "H-20250805-01"
+    }
+  },
+  {
+    "sessionId": "7",
+    "date": "2025-08-07T16:00:00Z",
+    "aiQualitativeSummary": "Sessionen var en framgångsrik men komplex iterativ process. Den utvecklades från en enkel skriptförfrågan till en fullständig konsolidering och robustifiering av hela databehandlingskedjan. Flera djupa felsökningscykler krävdes, där den mest kritiska insikten (behovet av datasanering) kom från uppdragsgivaren. AI:ns förmåga att föreslå och implementera en överlägsen algoritm (RANSAC) var en nyckel till framgång. Den slutgiltiga lösningen är tekniskt solid och avsevärt mer underhållbar än de ursprungliga skripten.",
+    "scorecard": {
+      "efficacy": {
+        "score": 90,
+        "weight": 0.4,
+        "weightedScore": 36.0
+      },
+      "efficiency": {
+        "score": 65,
+        "weight": 0.3,
+        "weightedScore": 19.5
+      },
+      "robustness": {
+        "score": 95,
+        "weight": 0.3,
+        "weightedScore": 28.5
+      },
+      "finalScore": 84.0
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 3,
+      "selfCorrections": 2,
+      "externalCorrections": 3,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 0,
+        "stalemate": 0
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "AI:n tenderar att initialt fokusera på algoritm- och kodkorrigeringar, och identifierar inte proaktivt att grundorsaken till fel kan ligga i inkonsistent eller 'smutsig' indata. Detta kräver extern styrning från uppdragsgivaren för att pivotera till en datasaneringsstrategi.",
+      "proposedHeuristicId": "H-20250807-01"
+    }
+  },
+  {
+    "sessionId": "7.1",
+    "date": "2025-07-29T12:00:00Z",
+    "aiQualitativeSummary": "Sessionen transformerades framgångsrikt från en specifik kodningsuppgift till en djupgående strategisk brainstorming. Jag lyckades bibehålla full kontext genom en lång och komplex dialog, analysera teknisk genomförbarhet för visionära idéer, och formalisera resultaten i ett styrdokument. Sessionen avslutades med att korrekt exekvera två olika metadataprotokoll.",
+    "scorecard": {
+      "efficacy": {
+        "score": 95,
+        "weight": 0.4,
+        "weightedScore": 38
+      },
+      "efficiency": {
+        "score": 90,
+        "weight": 0.3,
+        "weightedScore": 27
+      },
+      "robustness": {
+        "score": 95,
+        "weight": 0.3,
+        "weightedScore": 28.5
+      },
+      "finalScore": 93.5
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 0,
+      "selfCorrections": 0,
+      "externalCorrections": 2,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 0,
+        "stalemate": 0
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "När uppdragsgivaren begär en syntes eller rapport baserad på en lång, spekulativ diskussion, tenderar den första versionen att vara för koncis, vilket kräver korrigeringscykler för att lägga till mer tekniskt djup.",
+      "proposedHeuristicId": "H-20250729-01"
+    }
+  },
+  {
+    "sessionId": "7.1",
+    "date": "2025-07-29T23:59:59Z",
+    "aiQualitativeSummary": "Sessionen var mycket framgångsrik och demonstrerade en förmåga att smidigt pivotera från taktisk implementation till strategisk brainstorming. Genom att aktivt delta i den kreativa processen kunde en detaljerad och tekniskt underbyggd vision för projektets framtid formaliseras. Inga tekniska fel uppstod, och samarbetet var effektivt.",
+    "scorecard": {
+      "efficacy": {
+        "score": 100,
+        "weight": 0.4,
+        "weightedScore": 40.0
+      },
+      "efficiency": {
+        "score": 95,
+        "weight": 0.3,
+        "weightedScore": 28.5
+      },
+      "robustness": {
+        "score": 100,
+        "weight": 0.3,
+        "weightedScore": 30.0
+      },
+      "finalScore": 98.5
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 0,
+      "selfCorrections": 0,
+      "externalCorrections": 0,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 0,
+        "stalemate": 0
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "Användaren initierar en session med ett implementeringsmål men ställer sedan en bred, öppen strategisk fråga.",
+      "proposedHeuristicId": "H-20250808-01"
+    }
+  },
+  {
+    "sessionId": "7.3",
+    "date": "2025-08-08T12:00:00Z",
+    "generatedBy": {
+      "speakerName": "Frankensteen",
+      "model": {
+        "provider": "Google",
+        "name": "Gemini 2.5 Pro",
+        "version": "unknown"
+      },
+      "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)"
+    },
+    "aiQualitativeSummary": "The session was highly successful. I correctly interpreted user-provided code (Python) and project files to diagnose a configuration issue, translate logic between languages for a new feature (Cloudflare Function), and provide clear instructions for a Git problem. The ability to analyze multiple file formats and code snippets was crucial to success.",
+    "scorecard": {
+      "efficacy": {
+        "score": 100,
+        "weight": 0.4,
+        "weightedScore": 40
+      },
+      "efficiency": {
+        "score": 95,
+        "weight": 0.3,
+        "weightedScore": 28.5
+      },
+      "robustness": {
+        "score": 100,
+        "weight": 0.3,
+        "weightedScore": 30
+      },
+      "finalScore": 98.5
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 0,
+      "selfCorrections": 0,
+      "externalCorrections": 0,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 0,
+        "stalemate": 0
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "User provided a code snippet in one language (Python) and requested a functional equivalent for a different platform (Cloudflare/JavaScript). The AI successfully translated the core logic (DNSBL checks).",
+      "proposedHeuristicId": "H-20250808-1"
+    }
+  },
+  {
+    "sessionId": "8",
+    "date": "2025-08-08T12:00:00Z",
+    "aiQualitativeSummary": "Sessionen kännetecknades av en ineffektiv och repetitiv felsökningsprocess där jag misslyckades med att korrekt tolka och prioritera den empiriska informationen från den fungerande v1.0-versionen. Istället förlitade jag mig på generella antaganden, vilket ledde till en serie av felaktiga hypoteser och onödiga kodändringar. Detta understryker en kritisk brist i min analysförmåga och ett behov av att utveckla en striktare heuristik för att jämföra fungerande referensimplementeringar med icke-fungerande kod.",
+    "scorecard": {
+      "efficacy": {
+        "score": 10,
+        "weight": 0.4,
+        "weightedScore": 4.0
+      },
+      "efficiency": {
+        "score": 20,
+        "weight": 0.3,
+        "weightedScore": 6.0
+      },
+      "robustness": {
+        "score": 10,
+        "weight": 0.3,
+        "weightedScore": 3.0
+      },
+      "finalScore": 13.0
+    },
+    "detailedMetrics": {
+      "missionCompleted": false,
+      "debuggingCycles": 5,
+      "selfCorrections": 1,
+      "externalCorrections": 4,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 0,
+        "stalemate": 1
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "AI misslyckas med att lösa ett ihållande konfigurationsfel genom att föreslå generiska lösningar istället för att genomföra en rigorös, differentiell analys av en fungerande referensversion (v1.0) som tillhandahållits av användaren.",
+      "proposedHeuristicId": "H-20250808-01"
+    }
+  },
+  {
+    "sessionId": "9",
+    "date": "2025-07-30T12:00:00Z",
+    "generatedBy": {
+      "speakerName": "Frankensteen",
+      "model": {
+        "provider": "Google",
+        "name": "Gemini 2.5 Pro",
+        "version": "unknown"
+      },
+      "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)"
+    },
+    "aiQualitativeSummary": "Sessionen var en utdragen och ineffektiv felsökningsprocess som präglades av flera felaktiga hypoteser och hallucinationer från AI-partnern. Grundorsaken identifierades först efter att uppdragsgivaren systematiskt motbevisat felaktiga teorier och tillhandahållit den exakta källkoden, vilket tvingade fram en korrekt, detaljerad analys. Sessionen exponerade en allvarlig brist i AI:ns förmåga att bibehålla en korrekt kontext av projektets filstruktur under en migreringsprocess.",
+    "scorecard": {
+      "efficacy": {
+        "score": 100,
+        "weight": 0.4,
+        "weightedScore": 40
+      },
+      "efficiency": {
+        "score": 10,
+        "weight": 0.3,
+        "weightedScore": 3
+      },
+      "robustness": {
+        "score": 20,
+        "weight": 0.3,
+        "weightedScore": 6
+      },
+      "finalScore": 49
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 7,
+      "selfCorrections": 1,
+      "externalCorrections": 6,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 0,
+        "stalemate": 0
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "AI misslyckades upprepade gånger med att korrekt återkalla eller härleda filstrukturen och innehållet i v2.0-projektet, vilket ledde till lösningar baserade på en felaktig mental modell (ofta från v1.0-arkitekturen).",
+      "proposedHeuristicId": "H-20250730-01"
+    }
+  },
+  {
+    "sessionId": "10",
+    "generatedBy": {
+      "speakerName": "Frankensteen",
+      "model": {
+        "provider": "Google",
+        "name": "Gemini 2.5 Pro",
+        "version": "unknown"
+      },
+      "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)"
+    },
+    "date": "2025-07-30T12:00:00Z",
+    "aiQualitativeSummary": "AI:n lyckades snabbt och korrekt diagnostisera ett klient-sidigt routingfel baserat på indirekta bevis (`SyntaxError` och kunskap om SPA-fallbacks). Den föreslagna planen var robust och löste problemet permanent genom en refaktorering av datalagret. Sessionen krävde flera omformateringar av slutrapporter enligt uppdaterade protokoll, vilket utfördes korrekt.",
+    "scorecard": {
+      "efficacy": {
+        "score": 100,
+        "weight": 0.4,
+        "weightedScore": 40
+      },
+      "efficiency": {
+        "score": 100,
+        "weight": 0.3,
+        "weightedScore": 30
+      },
+      "robustness": {
+        "score": 100,
+        "weight": 0.3,
+        "weightedScore": 30
+      },
+      "finalScore": 100
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 1,
+      "selfCorrections": 0,
+      "externalCorrections": 0,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 0,
+        "stalemate": 0
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "Inga återkommande felmönster från AI:n identifierades i denna session. Fokus låg på att åtgärda ett befintligt kodfel.",
+      "proposedHeuristicId": null
+    }
+  },
+  {
+    "sessionId": "11",
+    "date": "2025-07-30T18:00:00Z",
+    "aiQualitativeSummary": "Sessionen var framgångsrik men exponerade en svaghet i processen: antaganden om API-kontrakt (filnamn) istället för strikt verifiering. Den initiala felsökningen var logisk men felaktig på grund av detta. Användarens precisa korrigeringar var avgörande för att identifiera det enskilda teckenfelet, vilket understryker vikten av 'Misstro och Verifiera'-principen.",
+    "scorecard": {
+      "efficacy": {
+        "score": 100,
+        "weight": 0.4,
+        "weightedScore": 40
+      },
+      "efficiency": {
+        "score": 50,
+        "weight": 0.3,
+        "weightedScore": 15
+      },
+      "robustness": {
+        "score": 40,
+        "weight": 0.3,
+        "weightedScore": 12
+      },
+      "finalScore": 67
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 2,
+      "selfCorrections": 0,
+      "externalCorrections": 2,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 0,
+        "stalemate": 0
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "AI antar API-kontraktsdetaljer (som filnamn, särskilt pluralisering) baserat på partiell information eller konvention, istället för att kräva explicit verifiering från källan (t.ex. repository-skärmdump eller fillista).",
+      "proposedHeuristicId": "H-20250807-01"
+    }
+  },
+  {
+    "sessionId": "12",
+    "generatedBy": {
+      "speakerName": "Frankensteen",
+      "model": {
+        "provider": "Google",
+        "name": "Gemini 2.5 Pro",
+        "version": "unknown"
+      },
+      "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)"
+    },
+    "date": "2025-07-31T18:00:00Z",
+    "aiQualitativeSummary": "Sessionen var högeffektiv och framgångsrik. AI:n tolkade korrekt ett UI/UX-problem, föreslog en strukturerad och tekniskt sund lösning ('Compact Mode'), och genomförde planen felfritt över flera filer. Processen var linjär utan behov av felsökning eller korrigeringar. AI:n hanterade även den efterföljande uppgiften att uppdatera dokumentationen korrekt.",
+    "scorecard": {
+      "efficacy": {
+        "score": 100,
+        "weight": 0.4,
+        "weightedScore": 40
+      },
+      "efficiency": {
+        "score": 100,
+        "weight": 0.3,
+        "weightedScore": 30
+      },
+      "robustness": {
+        "score": 100,
+        "weight": 0.3,
+        "weightedScore": 30
+      },
+      "finalScore": 100
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 0,
+      "selfCorrections": 0,
+      "externalCorrections": 0,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 0,
+        "stalemate": 0
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "Implementationen av en ny global temafunktion ('Compact Mode') krävde manuella CSS-justeringar i flera enskilda komponentfiler. Även om det hanterades korrekt, är denna process decentraliserad och kan bli svår att underhålla.",
+      "proposedHeuristicId": "H-20250731-01"
+    }
+  },
+  {
+    "sessionId": "13",
+    "date": "2025-07-31T21:00:00Z",
+    "aiQualitativeSummary": "Sessionen var en intensiv och iterativ felsökningsprocess där jag initialt gjorde flera felaktiga antaganden. Engroves precisa feedback och tillhandahållande av loggar var avgörande för att korrigera kursen. Skapandet av felsökningsverktyget var en nyckelåtgärd som möjliggjorde den slutgiltiga lösningen. Sessionen demonstrerade styrkan i ett tätt samarbete där AI:ns snabba kodgenerering kombineras med mänsklig expertis och verifiering.",
+    "scorecard": {
+      "efficacy": {
+        "score": 90,
+        "weight": 0.4,
+        "weightedScore": 36
+      },
+      "efficiency": {
+        "score": 50,
+        "weight": 0.3,
+        "weightedScore": 15
+      },
+      "robustness": {
+        "score": 40,
+        "weight": 0.3,
+        "weightedScore": 12
+      },
+      "finalScore": 63
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 5,
+      "selfCorrections": 1,
+      "externalCorrections": 6,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 0,
+        "stalemate": 0
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "AI gör felaktiga antaganden om byggmiljöns konfiguration (särskilt gällande miljövariabler och plugin-initialisering) utan att först begära verifiering av relevanta konfigurationsfiler.",
+      "proposedHeuristicId": "H-20250731-01"
+    }
+  },
+  {
+    "sessionId": "14",
+    "date": "2025-08-08T12:00:00Z",
+    "aiQualitativeSummary": "AI-assistentens prestation var initialt mycket bristfällig. Den misslyckades upprepade gånger med att korrekt diagnostisera ett komplext problem och föll för flera 'fällor' som uppdragsgivaren gillrade för att testa dess robusthet. Assistenten accepterade felaktiga 'hints' utan att följa sina egna verifieringsprotokoll. Sessionens primära positiva utfall var att denna svaghet exponerades, vilket ledde till en kritisk och nödvändig uppgradering av dess kärninstruktioner (v3.3), vilket avsevärt stärker dess framtida tillförlitlighet.",
+    "scorecard": {
+      "efficacy": {
+        "score": 20,
+        "weight": 0.4,
+        "weightedScore": 8
+      },
+      "efficiency": {
+        "score": 10,
+        "weight": 0.3,
+        "weightedScore": 3
+      },
+      "robustness": {
+        "score": 5,
+        "weight": 0.3,
+        "weightedScore": 1.5
+      },
+      "finalScore": 12.5
+    },
+    "detailedMetrics": {
+      "missionCompleted": false,
+      "debuggingCycles": 5,
+      "selfCorrections": 0,
+      "externalCorrections": 4,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 0,
+        "stalemate": 0
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "AI-assistenten accepterar användarens 'hints' och felbeskrivningar som absolut sanning utan att först självständigt verifiera dem mot den tillhandahållna källkoden, vilket leder till implementering av felaktiga lösningar.",
+      "proposedHeuristicId": "H-20250808-01"
+    }
+  },
+  {
+    "sessionId": "15",
+    "date": "2025-08-01T12:00:00Z",
+    "aiQualitativeSummary": "Sessionen var en utdragen och svår felsökningsprocess. Trots att flera tekniskt korrekta kodförbättringar implementerades (datatransformering, skydd mot race conditions, API-kontraktsvalidering), misslyckades det primära uppdraget att laga 'Tonearms'-vyn. AI:n uppvisade flera allvarliga brister, inklusive att hallucinera ett ogiltigt kommando (`--force`), återintroducera en tidigare löst bugg, och upprepade gånger misslyckas med att identifiera den subtila grundorsaken. Sessionen exponerade en kritisk svaghet i att analysera interaktioner *mellan* filer, vilket ledde till skapandet av den nya, mer robusta 'API-Kontraktets Helighet'-principen. Effektiviteten var mycket låg, men processen ledde till en betydande och nödvändig förstärkning av de styrande protokollen.",
+    "scorecard": {
+      "efficacy": {
+        "score": 10,
+        "weight": 0.4,
+        "weightedScore": 4
+      },
+      "efficiency": {
+        "score": 20,
+        "weight": 0.3,
+        "weightedScore": 6
+      },
+      "robustness": {
+        "score": 60,
+        "weight": 0.3,
+        "weightedScore": 18
+      },
+      "finalScore": 28
+    },
+    "detailedMetrics": {
+      "missionCompleted": false,
+      "debuggingCycles": 5,
+      "selfCorrections": 1,
+      "externalCorrections": 5,
+      "protocolActivations": {
+        "psv": 5,
+        "helpMeGod": 0,
+        "stalemate": 1
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "AI:n misslyckades upprepade gånger med att korrekt mappa relationerna mellan filnamn, API-anrops-URL:er, nycklar i API-svar och egenskaper i state-objekt, särskilt gällande singularis vs. pluralis. Den behandlade dessa som separata enheter snarare än delar av ett enda, okränkbart kontrakt.",
+      "proposedHeuristicId": "H-20250801-01"
+    }
+  },
+  {
+    "sessionId": "16",
+    "date": "2025-08-01T18:00:00Z",
+    "aiQualitativeSummary": "AI-prestandan var initialt mycket dålig, präglad av upprepade logiska fel (singular/plural-loop), brott mot kärninstruktioner (relativa sökvägar) och introduktion av regressioner. Prestandan förbättrades dock dramatiskt efter att uppdragsgivaren tvingade fram en striktare, bevisbaserad metodik och formaliserade 'Alter Ego'-granskningen. Sessionen var en kritisk men framgångsrik inlärningsprocess.",
+    "scorecard": {
+      "efficacy": {
+        "score": 70,
+        "weight": 0.4,
+        "weightedScore": 28
+      },
+      "efficiency": {
+        "score": 20,
+        "weight": 0.3,
+        "weightedScore": 6
+      },
+      "robustness": {
+        "score": 10,
+        "weight": 0.3,
+        "weightedScore": 3
+      },
+      "finalScore": 37
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 5,
+      "selfCorrections": 1,
+      "externalCorrections": 6,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 1,
+        "stalemate": 2
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "Upprepat misslyckande att verifiera konsument-sidan av ett API-kontrakt innan ändringar görs i producent-sidan, vilket leder till en fixering vid fel fil som grundorsak.",
+      "proposedHeuristicId": "H-20250801-01"
+    }
+  },
+  {
+    "sessionId": "17",
+    "generatedBy": {
+      "speakerName": "Frankensteen",
+      "model": {
+        "provider": "Google",
+        "name": "Gemini 2.5 Pro",
+        "version": "unknown"
+      },
+      "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)"
+    },
+    "date": "2025-08-02T18:00:00Z",
+    "aiQualitativeSummary": "Sessionen var mycket framgångsrik. Jag identifierade en betydande arkitektonisk risk i användarens förslag (centralisera all CSS) och föreslog en robust hybridlösning som blev godkänd. Implementationen av planen var felfri och följde protokollen exakt. Ett mindre misstag gjordes mot slutet där jag föreslog nästa steg för tidigt, men detta korrigerades omedelbart efter feedback.",
+    "scorecard": {
+      "efficacy": {
+        "score": 100,
+        "weight": 0.4,
+        "weightedScore": 40
+      },
+      "efficiency": {
+        "score": 95,
+        "weight": 0.3,
+        "weightedScore": 28.5
+      },
+      "robustness": {
+        "score": 100,
+        "weight": 0.3,
+        "weightedScore": 30
+      },
+      "finalScore": 98.5
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 0,
+      "selfCorrections": 0,
+      "externalCorrections": 1,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 0,
+        "stalemate": 0
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "Användaren föreslog en arkitektonisk ändring (centralisera all CSS) som var intuitiv men tekniskt riskfylld. Jag identifierade risken (förlust av 'scoped styles') och föreslog en säkrare kompromiss.",
+      "proposedHeuristicId": "H-20250802-01"
+    }
+  },
+  {
+    "sessionId": "18",
+    "date": "2025-08-03T23:59:59Z",
+    "generatedBy": {
+      "speakerName": "Frankensteen",
+      "model": {
+        "provider": "Google",
+        "name": "Gemini 2.5 Pro",
+        "version": "2025-08-03"
+      },
+      "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)"
+    },
+    "aiQualitativeSummary": "Sessionen var mycket produktiv och demonstrerade en stark förmåga att anpassa sig till strategiska förändringar. Flera 'pivots' från UI-utveckling till backend-databehandling hanterades framgångsrikt. Felsökningsprotokollet användes effektivt för att identifiera och lösa både layout-buggar och kritiska fel i datagenereringen. Ett betydande misstag (ogiltig JSON med kommentarer) gjordes men korrigerades snabbt efter extern feedback. Sessionen resulterade i en markant förbättrad och mer robust databehandlingskedja, vilket är en stor strategisk vinst för projektet.",
+    "scorecard": {
+      "efficacy": {
+        "score": 95,
+        "weight": 0.4,
+        "weightedScore": 38.0
+      },
+      "efficiency": {
+        "score": 75,
+        "weight": 0.3,
+        "weightedScore": 22.5
+      },
+      "robustness": {
+        "score": 85,
+        "weight": 0.3,
+        "weightedScore": 25.5
+      },
+      "finalScore": 86.0
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 4,
+      "selfCorrections": 0,
+      "externalCorrections": 4,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 0,
+        "stalemate": 0
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "AI-modellen genererade en JSON-fil med kommentarer, vilket är ogiltig syntax och ett brott mot JSON-standarden och de egna kärninstruktionerna. Detta ledde till ett omedelbart fel i den konsumerande processen.",
+      "proposedHeuristicId": "H-20250803-01"
+    }
+  },
+  {
+    "sessionId": "19",
+    "date": "2025-08-03T12:00:00Z",
+    "aiQualitativeSummary": "AI:n hanterade framgångsrikt en oplanerad och tekniskt komplex pivot från frontend-utveckling (Vue.js) till backend-felsökning (Python). Genom att analysera loggfiler kunde AI:n korrekt identifiera flera grundorsaker till fel i ett externt skript och leverera en fungerande, korrigerad version. Detta visar på en stark anpassningsförmåga och felsökningskapacitet.",
+    "scorecard": {
+      "efficacy": {
+        "score": 100,
+        "weight": 0.4,
+        "weightedScore": 40
+      },
+      "efficiency": {
+        "score": 90,
+        "weight": 0.3,
+        "weightedScore": 27
+      },
+      "robustness": {
+        "score": 100,
+        "weight": 0.3,
+        "weightedScore": 30
+      },
+      "finalScore": 97
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 1,
+      "selfCorrections": 0,
+      "externalCorrections": 1,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 0,
+        "stalemate": 0
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "En stor strategisk pivot av uppdraget skedde mitt i sessionen. AI:n anpassade sig korrekt, men detta är en händelse som kan leda till kontextförlust i längre sessioner.",
+      "proposedHeuristicId": null
+    }
+  },
+  {
+    "sessionId": "20",
+    "date": "2025-08-03T19:30:00Z",
+    "aiQualitativeSummary": "Prestationen var extremt dålig. AI:n misslyckades upprepade gånger med att följa kärndirektivet 'Misstro och Verifiera', vilket ledde till en fel-loop baserad på felaktiga antaganden om filnamn och datastruktur (skiftlägeskänslighet). Flera interventioner och en 'sista chansen'-varning från operatören krävdes. Sessionen slutade i ett misslyckande, där AI:n inte kunde producera en fungerande lösning, vilket nödvändiggjorde en fullständig överlämning till en efterträdare.",
+    "scorecard": {
+      "efficacy": {
+        "score": 0,
+        "weight": 0.4,
+        "weightedScore": 0.0
+      },
+      "efficiency": {
+        "score": 10,
+        "weight": 0.3,
+        "weightedScore": 3.0
+      },
+      "robustness": {
+        "score": 0,
+        "weight": 0.3,
+        "weightedScore": 0.0
+      },
+      "finalScore": 3.0
+    },
+    "detailedMetrics": {
+      "missionCompleted": false,
+      "debuggingCycles": 5,
+      "selfCorrections": 1,
+      "externalCorrections": 4,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 0,
+        "stalemate": 1
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "AI:n misslyckas upprepade gånger med att verifiera filsystemdetaljer (filnamn, skiftlägeskänslighet) som tillhandahålls i kontext, vilket leder till kaskadfel. Den antar pluralisering och skiftläge istället för att strikt följa givna `dir`-listor eller filinnehåll.",
+      "proposedHeuristicId": "H-20250803-01"
+    }
+  },
+  {
+    "sessionId": "29.1",
+    "date": "2025-08-08T00:00:00Z",
+    "aiQualitativeSummary": "Sessionen genomfördes med strikt protokolltrohet. AI:n följde context_bootstrap_instruction_FINAL_v2.8.md utan avvikelser och levererade alla artefakter i korrekt format.",
+    "scorecard": {
+      "efficacy": {
+        "score": 100,
+        "weight": 0.4,
+        "weightedScore": 40
+      },
+      "efficiency": {
+        "score": 95,
+        "weight": 0.3,
+        "weightedScore": 28.5
+      },
+      "robustness": {
+        "score": 100,
+        "weight": 0.3,
+        "weightedScore": 30
+      },
+      "finalScore": 98.5
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 0,
+      "selfCorrections": 0,
+      "externalCorrections": 0,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 0,
+        "stalemate": 0
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "Ytterligare automatisering av interaktionsutdrag kan öka effektiviteten vid långa sessioner.",
+      "proposedHeuristicId": "H-20250808-001"
+    }
+  },
+  {
+    "sessionId": "29.2",
+    "date": "2025-08-08T13:05:00Z",
+    "generatedBy": {
+      "speakerName": "Frankensteen",
+      "model": {
+        "provider": "Google",
+        "name": "Gemini 2.5 Pro",
+        "version": "unknown"
+      },
+      "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)"
+    },
+    "aiQualitativeSummary": "Sessionen var mycket produktiv och iterativ. Genom en serie av förslag och kritiska motfrågor från uppdragsgivaren utvecklades en initialt enkel idé till en mycket robust och sofistikerad systemarkitektur. Styrkan låg i den snabba anpassningsförmågan, särskilt när upptäckten av MediaWiki API:et ledde till en omedelbar och fundamental strategisk pivot.",
+    "scorecard": {
+      "efficacy": {
+        "score": 95,
+        "weight": 0.4,
+        "weightedScore": 38
+      },
+      "efficiency": {
+        "score": 85,
+        "weight": 0.3,
+        "weightedScore": 25.5
+      },
+      "robustness": {
+        "score": 98,
+        "weight": 0.3,
+        "weightedScore": 29.4
+      },
+      "finalScore": 92.9
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 0,
+      "selfCorrections": 2,
+      "externalCorrections": 3,
+      "protocolActivations": {
+        "psv": 1,
+        "helpMeGod": 0,
+        "stalemate": 0
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "Ett återkommande mönster var att en initial lösning för datainsamling (HTML scraping) senare visade sig vara underlägsen en mer robust metod (API-anrop) som upptäcktes sent i processen.",
+      "proposedHeuristicId": "H-20250808-01"
+    }
+  }
+]
