@@ -21,6 +21,8 @@
 #   Istället för att själv läsa och parsa flera AI-relaterade filer, anropar detta skript
 #   nu `scripts/process_ai_instructions.py` och infogar dess fullständiga, berikade och
 #   validerade JSON-output direkt i det slutgiltiga kontextobjektet.
+# * v14.0 (2025-08-08): (DENNA ÄNDRING – Steg 2) Integrerar AI Performance Metrics genom att
+#   anropa `scripts/process_ai_metrics.py` och infogar outputen under nyckeln `ai_performance_metrics`.
 #
 # TILLÄMPADE REGLER (Frankensteen v4.0 - Post-Tribunal):
 # - Arkitektur (Single Responsibility Principle): Ansvaret för att hantera AI-instruktioner
@@ -30,19 +32,22 @@
 #   `process_ai_instructions.py` och placerar det under en ny, tydlig nyckel (`ai_config_processed`).
 # - Felresiliens: Felhanteringen för AI-instruktioner är nu implicit. Om `process_ai_instructions.py`
 #   rapporterar fel, blir dessa en del av den genererade datan utan att stoppa bygget.
+# - DENNA ÄNDRING: Integrationen av `ai_performance_metrics` följer samma mönster, utan att
+#   påverka övrig logik. Misslyckanden loggas till stderr och resulterar i ett tomt objekt.
 
 import requests
 import re
 import json
 import os
 import sys
-import subprocess # Ny import för att köra externa skript
+import subprocess  # Ny import för att köra externa skript
 
 # --- Konfiguration ---
 REPO = "Engrove/Engrove-Audio-Tools-2.0"
 BRANCH = "main"
 AI_CORE_INSTRUCTION_PATH = "docs/ai_protocols/AI_Core_Instruction.md"
-AI_PROCESSOR_SCRIPT_PATH = "scripts/process_ai_instructions.py" # Ny konfiguration
+AI_PROCESSOR_SCRIPT_PATH = "scripts/process_ai_instructions.py"  # Ny konfiguration
+AI_METRICS_SCRIPT_PATH = "scripts/process_ai_metrics.py"         # (Steg 2) Ny konfiguration
 
 # Lista över filändelser som ska behandlas som binära.
 BINARY_EXTENSIONS = {
@@ -60,8 +65,8 @@ COMMENT_PATTERNS = [
     re.compile(r'<!--[\s\S]*?-->'), re.compile(r'#.*'),
 ]
 DEP_PATTERNS = [
-    re.compile(r'^\s*import(?:.*?from)?\s*[\'\"]([^\'\"]+)[\'\"]', re.MULTILINE),
-    re.compile(r'require\([\'\"]([^\'\"]+)[\'\"]\)', re.MULTILINE),
+    re.compile(r'^\s*import(?:.*?from)?\s*[\'"]([^\'"]+)[\'"]', re.MULTILINE),
+    re.compile(r'require\([\'"]([^\'"]+)[\'"]\)', re.MULTILINE),
     re.compile(r'^\s*(?:from|import)\s+([a-zA-Z0-9_.]+)', re.MULTILINE),
 ]
 
@@ -86,11 +91,11 @@ def extract_from_content(content, patterns):
         for match in re.finditer(pattern, content):
             if pattern in DEP_PATTERNS:
                 match_text = next((g for g in match.groups() if g is not None), None)
-            else: # COMMENT_PATTERNS
+            else:  # COMMENT_PATTERNS
                 match_text = match.group(0)
 
             if match_text:
-                 all_matches.append((match.start(), match_text))
+                all_matches.append((match.start(), match_text))
 
     all_matches.sort(key=lambda x: x[0])
     seen = set()
@@ -99,7 +104,7 @@ def extract_from_content(content, patterns):
         if text not in seen:
             seen.add(text)
             ordered_unique_matches.append(text)
-            
+
     return ordered_unique_matches
 
 
@@ -108,7 +113,7 @@ def get_session_headers():
     """Skapar headers för API-anrop. Använder GITHUB_TOKEN om det finns."""
     token = os.getenv('GITHUB_TOKEN')
     headers = {
-        'User-Agent': 'Python-Context-Generator/13.0',
+        'User-Agent': 'Python-Context-Generator/14.0',
         'Accept': 'application/vnd.github.v3+json'
     }
     if token:
@@ -139,17 +144,16 @@ def get_raw_file_content(path, headers):
         log_message("WARN", f"Kunde inte läsa filen: {path}")
         return None
 
-# --- Ny funktion för att köra processorn ---
+# --- Kör externa processorer ---
 def get_processed_ai_config():
     """Kör AI-instruktionsprocessorn och returnerar dess JSON-output som ett Python-objekt."""
     try:
         log_message("INFO", f"Kör AI-instruktionsprocessor: {AI_PROCESSOR_SCRIPT_PATH}")
-        # Använder sys.executable för att säkerställa att samma Python-tolk används
         result = subprocess.run(
             [sys.executable, AI_PROCESSOR_SCRIPT_PATH],
             capture_output=True,
             text=True,
-            check=True,  # Kastar ett fel om skriptet misslyckas (exit code != 0)
+            check=True,
             encoding='utf-8'
         )
         return json.loads(result.stdout)
@@ -159,8 +163,7 @@ def get_processed_ai_config():
         log_message("FATAL", f"Processor-skriptet misslyckades: {e.stderr}")
     except json.JSONDecodeError as e:
         log_message("FATAL", f"Kunde inte parsa output från processor-skriptet: {e}")
-    
-    # Returnera ett tomt objekt med fel om något går fel
+
     return {
         "config_data": {},
         "protocols": [],
@@ -170,12 +173,34 @@ def get_processed_ai_config():
         }
     }
 
-# --- Huvudlogik ---
+def get_ai_performance_metrics():
+    """
+    (Steg 2) Kör AI-metrics-processorn och returnerar dess JSON-output.
+    Misslyckanden loggas och resulterar i {} för att inte stoppa bygget.
+    """
+    try:
+        log_message("INFO", f"Kör AI-metrics-processor: {AI_METRICS_SCRIPT_PATH}")
+        result = subprocess.run(
+            [sys.executable, AI_METRICS_SCRIPT_PATH],
+            capture_output=True,
+            text=True,
+            check=True,
+            encoding='utf-8'
+        )
+        return json.loads(result.stdout) if result.stdout.strip() else {}
+    except FileNotFoundError:
+        log_message("ERROR", f"Metrics-skriptet hittades inte: {AI_METRICS_SCRIPT_PATH}")
+    except subprocess.CalledProcessError as e:
+        log_message("ERROR", f"Metrics-skriptet misslyckades: {e.stderr}")
+    except json.JSONDecodeError as e:
+        log_message("ERROR", f"Ogiltig JSON från metrics-skriptet: {e}")
+    return {}
 
+# --- Huvudlogik ---
 def main():
     """Orkestrerar hela processen och skriver den slutgiltiga JSON-datan till stdout."""
     log_message("INFO", f"Startar generering av kontext för {REPO} på branchen {BRANCH}.")
-    
+
     headers = get_session_headers()
 
     repo_info = get_api_data(f"https://api.github.com/repos/{REPO}", headers)
@@ -185,25 +210,29 @@ def main():
         log_message("FATAL", "Kunde inte hämta grundläggande repository-data. Avbryter.")
         sys.exit(1)
 
-    # Anropa processorn för att få all AI-relaterad data
+    # AI-instruktionsdata
     processed_ai_data = get_processed_ai_config()
 
-    # Hämta fortfarande kärninstruktionen separat för `ai_instructions`-nyckeln
+    # Kärninstruktionen
     ai_instructions_content = get_raw_file_content(AI_CORE_INSTRUCTION_PATH, headers)
     if not ai_instructions_content or not ai_instructions_content.strip():
-        # Om den inte kan hämtas här, lägg till ett fel i rapporten som redan finns
-        processed_ai_data["validation_report"]["errors"].append(
-            f"Could not fetch content for core instruction: {AI_CORE_INSTRUCTION_PATH}"
-        )
+        # Behåll bakåtkompatibel felrapport om core instruction saknas
+        if isinstance(processed_ai_data, dict) and "validation_report" in processed_ai_data:
+            processed_ai_data["validation_report"]["errors"].append(
+                f"Could not fetch content for core instruction: {AI_CORE_INSTRUCTION_PATH}"
+            )
+
+    # (Steg 2) AI Performance Metrics
+    ai_performance_metrics = get_ai_performance_metrics()
 
     file_structure = {}
     file_list = [item for item in tree_info['tree'] if item['type'] == 'blob']
     log_message("INFO", f"Hittade {len(file_list)} filer att analysera (inklusive dokumentation).")
-    
+
     for i, item in enumerate(file_list):
         path = item['path']
         log_message("INFO", f"Bearbetar ({i+1}/{len(file_list)}): {path}")
-        
+
         file_extension = path.split('.')[-1].lower() if '.' in path else ''
         is_binary = file_extension in BINARY_EXTENSIONS
         is_json = file_extension == 'json'
@@ -214,7 +243,7 @@ def main():
             if part not in current_level:
                 current_level[part] = {}
             current_level = current_level[part]
-        
+
         file_data = {
             "type": "file",
             "path": path,
@@ -225,16 +254,15 @@ def main():
             "dependencies": [],
             "content": None
         }
-        
+
         if not (is_binary or is_json):
             content = get_raw_file_content(path, headers)
             if content:
                 file_data["comments"] = [sanitize_comment(c) for c in extract_from_content(content, COMMENT_PATTERNS)]
                 file_data["dependencies"] = extract_from_content(content, DEP_PATTERNS)
                 file_data["content"] = content
-        
-        current_level[path_parts[-1]] = file_data
 
+        current_level[path_parts[-1]] = file_data
 
     final_context = {
         "project_overview": {
@@ -245,10 +273,11 @@ def main():
             "url": repo_info.get('html_url')
         },
         "ai_instructions": ai_instructions_content or "Core instruction could not be loaded.",
-        "ai_config_processed": processed_ai_data, # Ny, berikad nyckel
+        "ai_config_processed": processed_ai_data,      # Befintlig, berikad nyckel
+        "ai_performance_metrics": ai_performance_metrics,  # (Steg 2) Ny nyckel
         "file_structure": file_structure
     }
-    
+
     print(json.dumps(final_context, indent=2, ensure_ascii=False), file=sys.stdout)
     log_message("INFO", "Kontextgenerering slutförd. Resultat skickat till stdout.")
 
