@@ -1,66 +1,77 @@
+#!/usr/bin/env python3
 # scripts/process_ai_metrics.py
 #
 # === SYFTE & ANSVAR ===
-# Detta skript fungerar som en "backend"-processor för AI Performance Dashboard.
-# Dess enda ansvar är att på ett robust sätt läsa in de JSON-baserade loggfilerna
-# (ByggLogg.json, frankensteen_learning_db.json) och aggregera dem till ett
-# enda, rent JSON-objekt som är optimerat för frontend-konsumtion.
-# Det skrivs ut till standard output för att kunna fångas upp av andra skript.
+# Läser AI-prestandadata och lärdomsdatabas och sammanför dem till ett JSON-objekt.
+# Källor: docs/ByggLogg.json och tools/frankensteen_learning_db.json.
+# Skriver resultatet till stdout (inte fil).
+#
+# === API-KONTRAKT ===
+# IN: (filer på disk)
+#  - docs/ByggLogg.json (valfri; om saknas => tom lista)
+#  - tools/frankensteen_learning_db.json (valfri; om saknas => tom lista eller tom dict)
+# UT (stdout, application/json):
+#  {
+#    "performanceLog": <list|dict|[]>,
+#    "learningDatabase": <list|dict|[]>
+#  }
 #
 # === HISTORIK ===
-# * v1.0 (2025-08-07): Initial skapelse som en del av "Operation: Metakognition, Fas 5".
+# * v1.0 (2025-08-08): Initial skapelse enligt Operation: Metakognition (Fas 5).
 #
-# === TILLÄMPADE REGLER (Frankensteen v4.0) ===
-# - Arkitektur (Single Responsibility Principle): Skriptet gör en sak: läser och aggregerar data.
-# - Felresiliens: Hanterar fall där loggfilerna inte finns eller är korrupta
-#   genom att returnera tomma listor istället för att krascha.
-# - API-kontraktsverifiering: Outputen följer ett strikt och förutsägbart JSON-schema.
+# === TILLÄMPADE REGLER (Frankensteen v4.x) ===
+# - Fullständig kod, alltid (inga platshållare)
+# - Ingen gissning: defensiv inläsning med tydliga standardvärden
+# - Single Responsibility: endast inläsning och sammanslagning, ingen presentation
 
 import json
-import os
 import sys
+from pathlib import Path
+from typing import Any, Union
 
-# Definiera de relativa sökvägarna till datakällorna
-BYGGLOGG_PATH = 'docs/ByggLogg.json'
-LEARNING_DB_PATH = 'tools/frankensteen_learning_db.json'
 
-def read_json_file(path, default_value):
+BYGG_LOGG_PATH = Path("docs/ByggLogg.json")
+LEARNING_DB_PATH = Path("tools/frankensteen_learning_db.json")
+
+
+def load_json_file(path: Path) -> Union[dict, list]:
     """
-    Läser en JSON-fil på ett säkert sätt. Returnerar ett standardvärde (t.ex. en tom lista)
-    om filen inte finns eller inte kan parsas.
+    Robust inläsning av JSON.
+    Vid avvikelse returneras tom lista ([]) för att undvika antaganden.
+    Alla fel loggas till stderr.
     """
-    if not os.path.exists(path):
-        # Det är inte ett fel om filen inte finns än, särskilt i början.
-        return default_value
     try:
-        with open(path, 'r', encoding='utf-8') as f:
-            # Hantera specialfallet med en helt tom fil
-            content = f.read()
-            if not content.strip():
-                return default_value
-            return json.loads(content)
-    except (json.JSONDecodeError, IOError) as e:
-        # Skriv en varning till stderr så att det syns i byggloggar
-        # utan att förorena JSON-outputen.
-        print(f"Warning: Could not read or parse {path}. Returning default. Reason: {e}", file=sys.stderr)
-        return default_value
+        if not path.exists():
+            sys.stderr.write(f"[VARNING] Filen saknas: {path}\n")
+            return []
+        content = path.read_text(encoding="utf-8").strip()
+        if not content:
+            sys.stderr.write(f"[VARNING] Filen är tom: {path}\n")
+            return []
+        data = json.loads(content)
+        if not isinstance(data, (dict, list)):
+            sys.stderr.write(f"[VARNING] Oväntad JSON-rot i {path} (typ {type(data).__name__}); använder tom lista.\n")
+            return []
+        return data
+    except json.JSONDecodeError as e:
+        sys.stderr.write(f"[FEL] Ogiltig JSON i {path}: {e}\n")
+        return []
+    except Exception as e:
+        sys.stderr.write(f"[FEL] Kunde inte läsa {path}: {e}\n")
+        return []
 
-def main():
-    """
-    Huvudfunktion som orkestrerar läsning, aggregering och utskrift.
-    """
-    # Läs in data från källfilerna med robust felhantering
-    bygglogg_data = read_json_file(BYGGLOGG_PATH, [])
-    learning_db_data = read_json_file(LEARNING_DB_PATH, [])
 
-    # Strukturera den slutgiltiga outputen enligt det definierade kontraktet
-    final_metrics = {
-        "performanceLog": bygglogg_data,
-        "learningDatabase": learning_db_data
+def main() -> None:
+    performance_log: Any = load_json_file(BYGG_LOGG_PATH)
+    learning_database: Any = load_json_file(LEARNING_DB_PATH)
+
+    output = {
+        "performanceLog": performance_log,
+        "learningDatabase": learning_database,
     }
 
-    # Skriv ut det kombinerade JSON-objektet till standard output
-    print(json.dumps(final_metrics, indent=2, ensure_ascii=False))
+    json.dump(output, sys.stdout, ensure_ascii=False, indent=2)
+
 
 if __name__ == "__main__":
     main()
