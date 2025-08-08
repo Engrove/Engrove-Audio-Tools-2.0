@@ -5658,6 +5658,3947 @@
     ]
   },
   {
+    "sessionId": "21",
+    "interactions": [
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Initierar sessionen med ett omfattande uppdrag: att refaktorera hela projektet från 'Pickup' till 'Cartridge' och åtgärda en serie buggar i databehandlingskedjan. Tillhandahåller alla nödvändiga källfiler, inklusive `prepare_data.py`, `ai_9.8.py`, och diverse data- och frontend-filer."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Bekräftar uppdraget och presenterar en plan för att korrigera `prepare_data.py`. Levererar därefter en första, felaktig version av skriptet."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Rapporterar att AI:ns kod misslyckades med ett syntaxfel och, efter manuell korrigering, fortfarande producerar massiva datamappningsfel. Bifogar bevis i form av konsolloggar och felaktiga output-filer."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Erkänner sitt misslyckande, identifierar en ny grundorsak (inkonsekvens i `data-aliases.json`) och presenterar en reviderad, mer omfattande plan för att korrigera hela datakedjan."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Utmanar AI:n att genomföra en självkritisk 'Alter Ego'-granskning av den nya planen innan kod skrivs."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Genomför granskningen och upptäcker själv kritiska brister i sin egen plan. Presenterar en ytterligare förbättrad och mer komplett plan."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Eskalerar granskningen och beordrar AI:n att köra ett 'Help me God'-korsförhör med sina alter egon för att stresstesta den föreslagna lösningen."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Genomför korsförhöret, försvarar framgångsrikt sin plan och levererar därefter en ny version av `prepare_data.py`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Rapporterar att även den nya koden är felaktig och fortfarande producerar mappningsfel, specifikt för 'tags'-fältet. Beordrar ett nytt, mer intensivt 'Help me God'-korsförhör."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Genomför det andra korsförhöret, identifierar den sanna grundorsaken (en arkitektonisk brist i mappningsfunktionen), och levererar en helt omskriven, dekomponerad och korrekt version av `prepare_data.py`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Bekräftar att den senaste koden fungerar som avsett och att de kvarvarande varningarna är förväntat beteende. Godkänner koden och ber AI:n att fortsätta."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Fortsätter med planen och levererar en uppdaterad `ai_9.8.py` med korrigerad `rectype`-filtrering och en refaktorerad, robust API-spårningsfunktion."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Tillhandahåller en extern teknisk analys av `ai_9.8.py` som AI:n ska ta i beaktning."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Assimilerar den externa analysen och fortsätter implementationen genom att leverera uppdaterade frontend-filer: `fetchExplorerData.js` och `explorerStore.js`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Tillhandahåller en testfil (`test_translation_map.py`) och beordrar AI:n att integrera den som en intern testsvit i `prepare_data.py`."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Accepterar, presenterar en plan för integration och levererar en ny `prepare_data.py` med inbyggd testsvit."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Lägger till ett sista krav: att implementera en mer intelligent urvalslogik för preview-data."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Implementerar den nya urvalslogiken i `prepare_data.py`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Genomför ett korsförhör på den nya urvalslogiken och påpekar brister i reproducerbarhet (saknad `random.seed`)."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Erkänner bristerna och levererar en uppdaterad `prepare_data.py` som nu är deterministisk och parametriserad."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Lägger till kravet att skriptet ska generera en automatisk AI-audit-rapport."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Implementerar rapportfunktionen i `prepare_data.py`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Föreslår en sista förbättring: att göra rapporten mer strukturerad och AI-läsbar."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Implementerar den strukturerade rapporten och levererar `prepare_data.py` (v3.6)."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Använder den senaste `ByggLogg`-instruktionen och ber AI:n att skapa en komplett ByggLogg för session 23."
+      }
+    ]
+  },
+  {
+    "sessionId": "22",
+    "interactions": [
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Inleder sessionen med en detaljerad uppdragsbeskrivning, \"AI-INSTRUKTION FÖR STEG 22\". Målet är att slutföra \"Operation: Återställning\" genom att refaktorera hela frontend-modulen för Data Explorer. En exakt femstegsplan specificeras för att synkronisera API-lager, datalager och UI-komponenter med en ny, centraliserad datastruktur. All relevant källkod och en mall för genomförandet bifogas."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Bekräftar att planen är godkänd och påbörjar implementationen. Levererar den första av fem filer: den uppdaterade `src/entities/data-explorer/api/fetchExplorerData.js`, och bekräftar att API-kontraktet har anpassats från `pickups` till `cartridges`."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Fortsätter implementationen och levererar den andra, mest komplexa filen: den helt omskrivna `src/entities/data-explorer/model/explorerStore.js`. Noterar att all terminologi är ändrad, UI-logik har centraliserats, och felhantering samt prestanda har förbättrats."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Fortsätter med UI-komponenterna och levererar den tredje filen: den förenklade `src/widgets/DataFilterPanel/ui/DataFilterPanel.vue`. Bekräftar att all lokal logik har tagits bort och att komponenten nu konsumerar data direkt från den centrala storen."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererar den fjärde UI-komponenten: `src/widgets/ResultsDisplay/ui/ResultsDisplay.vue`. Verifierar att den lokala logiken för tabellrubriker har raderats och att komponenten korrekt binder till `currentHeaders`-gettern från storen."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Slutför uppdraget genom att leverera den femte och sista filen, `src/features/item-details/ui/ItemDetailModal.vue`, i sitt oförändrade tillstånd. Genomför en mental verifiering som bekräftar att filen redan är kompatibel med det nya datakontraktet och deklarerar \"Operation: Återställning\" som slutförd."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Återkommer med en omfattande och positiv utvärdering. Meddelar att ett \"Help me God\"-korsförhör har genomförts på all levererad kod och bifogar ett detaljerat protokoll. Rapporten bekräftar att koden är godkänd enligt alla strikta kriterier."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Tackar för den rigorösa verifieringen, bekräftar att uppdraget är slutfört och godkänt, och meddelar att den är redo för nästa uppgift."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Ger en ny instruktion: AI:n ska själv utföra ett \"Help me God\"-korsförhör på den kod den just levererade."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Accepterar och genomför en fullständig självgranskning enligt \"Help me God\"-protokollet. Antar rollerna som sina fem alter egon och attackerar sin egen kod ur olika perspektiv. Drar slutsatsen att koden klarar även den strängaste granskningen och bekräftar att systemet är robust."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Introducerar ett nytt protokoll, \"ByggLogg Instruktion\", för att analysera och sammanfatta sessioner. Bifogar en komplett historik från Steg 1 till 21 och instruerar AI:n att skapa en ny logg för den pågående sessionen (Steg 22)."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Följer det nya protokollet, analyserar händelserna i sessionen och genererar `Statusrapport: Steg 22 | 04.08.2025` i det specificerade markdown-formatet."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Ger den sista instruktionen för sessionen: att skapa en kronologisk projekthistorik för hela Session 22."
+      }
+    ]
+  },
+  {
+    "sessionId": "22.9",
+    "interactions": [
+      {
+        "turnIndex": 1,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Initierade sessionen genom att tillhandahålla 22 styrdokument och bad AI:n att analysera dem för att förstå projektet och sin roll."
+      },
+      {
+        "turnIndex": 2,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Bekräftade analysen av alla dokument och presenterade en detaljerad uppfattning om projektets arkitektur, mål och sin egen funktion som 'Frankensteen'."
+      },
+      {
+        "turnIndex": 3,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Presenterade en sjupunktsplan för nästa utvecklingssteg av Data Explorer och aktiverade 'Brainstorming next step'-protokollet."
+      },
+      {
+        "turnIndex": 4,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Aktiverade K-MOD och levererade en detaljerad analys och utökning av planen, samt en komplett 'leverans' med listor över filer och en fristående AI-instruktion för nästa session."
+      },
+      {
+        "turnIndex": 5,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Instruerade AI:n att läsa en specifik fil (`cartridges-classifications.json`) direkt från en GitHub-URL."
+      },
+      {
+        "turnIndex": 6,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Bekräftade att filen hade lästs och analyserats framgångsrikt från den angivna URL:en."
+      },
+      {
+        "turnIndex": 7,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Instruerade AI:n att läsa alla tio datafiler från en specifik GitHub-sökväg baserat på en skärmdump."
+      },
+      {
+        "turnIndex": 8,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Bekräftade att alla tio datafiler hade analyserats och att en komplett bild av datastrukturen nu fanns."
+      },
+      {
+        "turnIndex": 9,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Föreslog och validerade ett nytt arbetsflöde där AI:n får direkt tillgång till filer via en commit-hash-URL."
+      },
+      {
+        "turnIndex": 10,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Verifierade metoden och genererade ett formellt tillägg till 'Brainstorming next step'-protokollet."
+      },
+      {
+        "turnIndex": 11,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Introducerade 'Project Tree Generator' som ett verktyg och tillhandahöll en komplett filstruktur."
+      },
+      {
+        "turnIndex": 12,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Bekräftade förmågan att tolka output från verktyget och föreslog att formalisera detta i protokollet."
+      },
+      {
+        "turnIndex": 13,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Begärde en fullständigt uppdaterad version av 'Brainstorming next step'-protokollet."
+      },
+      {
+        "turnIndex": 14,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererade den uppdaterade versionen av protokollet (v2.0)."
+      },
+      {
+        "turnIndex": 15,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Korrigerade AI:n och krävde att protokollet skulle vara mer explicit gällande formatet på grund-URL:en."
+      },
+      {
+        "turnIndex": 16,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererade den slutgiltiga, korrigerade versionen av protokollet (v2.1)."
+      },
+      {
+        "turnIndex": 17,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Föreslog att skapa ett nytt, heltäckande 'Projektfil-Manifest' som kontinuerligt uppdateras."
+      },
+      {
+        "turnIndex": 18,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Höll med om förslaget, presenterade en detaljerad plan för det nya dokumentets struktur och underhåll, och inväntade godkännande."
+      },
+      {
+        "turnIndex": 19,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkände planen och gav order om att skapa den första versionen av manifestet."
+      },
+      {
+        "turnIndex": 20,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererade den första, kompletta versionen av 'Projektfil-Manifest: Engrove Audio Toolkit v2.0'."
+      },
+      {
+        "turnIndex": 21,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Tillhandahöll en ny commit-hash och en uppdaterad filstruktur, och gav order om att uppdatera manifestet."
+      },
+      {
+        "turnIndex": 22,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Bekräftade mottagandet av den nya informationen och att den mentala modellen av projektet var uppdaterad."
+      },
+      {
+        "turnIndex": 23,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Gav order om att skapa den uppdaterade versionen av manifestet."
+      },
+      {
+        "turnIndex": 24,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererade den uppdaterade versionen av 'Projektfil-Manifest v1.1'."
+      },
+      {
+        "turnIndex": 25,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Gav order om att avsluta brainstorming-sessionen och generera de slutgiltiga artefakterna enligt protokollet."
+      },
+      {
+        "turnIndex": 26,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Genererade och levererade de sju slutgiltiga punkterna för att avsluta sessionen, inklusive ByggLogg och en AI-instruktion för nästa session."
+      },
+      {
+        "turnIndex": 27,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Introducerade det slutgiltiga master-protokollet (`context_bootstrap_instruction_FINAL_v2.8.md`) och gav order om att exekvera det på den nuvarande sessionen."
+      },
+      {
+        "turnIndex": 28,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Bekräftade och exekverade protokollet och levererade den konsoliderade JSON-artefakten."
+      },
+      {
+        "turnIndex": 29,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Tillade de sista obligatoriska reglerna: all text måste vara på svenska, och en fullständig, rad-för-rad-granskning av hela chatten måste utföras."
+      },
+      {
+        "turnIndex": 30,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Bekräftade de nya reglerna, genomförde en fullständig omgranskning och levererade en ny, uppdaterad artefaktfil helt på svenska."
+      },
+      {
+        "turnIndex": 31,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Tillhandahöll master-protokollet igen och gav den slutgiltiga ordern att exekvera det på session 23."
+      },
+      {
+        "turnIndex": 32,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Bekräftade och exekverade protokollet, och levererade den konsoliderade JSON-artefakten för session 23."
+      },
+      {
+        "turnIndex": 33,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Gav den slutgiltiga ordern: att agera enligt det analyserade protokollet baserat på en fullständig granskning av hela denna chattsession från det allra första inlägget."
+      }
+    ]
+  },
+  {
+    "sessionId": "23",
+    "interactions": [
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Initierade sessionen med att presentera den senaste versionen av `context.json`. Identifierade ett nytt strategiskt behov: att skapa en genvägsknapp i AI Context Builder för att automatiskt välja en uppsättning viktiga grunddokument."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-05"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-05)",
+        "summary": "Bekräftade förståelsen för uppdraget. Analyserade `context.json` och identifierade en lista på sju kritiska filer som utgör en lämplig baslinje. Presenterade en detaljerad plan för att implementera en \"Select Core Docs\"-knapp i `wrap_json_in_html.py`, inklusive logik för att expandera trädstrukturen för visuell bekräftelse."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkände planen."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-05"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-05)",
+        "summary": "Levererade den uppdaterade och verifierade koden för `scripts/wrap_json_in_html.py` som innehåller den nya funktionen."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkände implementationen. Initierade ett nytt, större uppdrag: att systematiskt konvertera all återstående ostrukturerad dokumentation till ett standardiserat Markdown-format för att komplettera `/docs`-mappen. Lade till två nya, obligatoriska regler till AI-instruktionerna: 1) Fullständig historik ska alltid bevaras. 2) Fullständigt filinnehåll för loggfiler måste bevaras."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-05"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-05)",
+        "summary": "Bekräftade de nya reglerna och påbörjade den sekventiella konverteringen av tio dokument, där varje fil godkändes individuellt av Engrove."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Rapporterade att AI-studiogränssnittet förvanskade texten och föreslog ett nytt arbetsflöde där AI:n endast agerar som teknisk redaktör och Engrove hanterar kopieringen."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-05"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-05)",
+        "summary": "Accepterade det nya arbetsflödet och slutförde konverteringen av de sista loggfilerna."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Upptäckte att AI:n började korta ner sina svar, vilket var ett tecken på kontextdegradering. Beslutade att avsluta sessionen och begärde de slutgiltiga rapporterna."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-05"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-05)",
+        "summary": "Bekräftade beslutet och genererade den begärda ByggLogg-rapporten samt denna kronologiska historik."
+      }
+    ]
+  },
+  {
+    "sessionId": "23.1",
+    "interactions": [
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Inleder sessionen med att tillhandahålla alla styrdokument, projektfiler och en detaljerad instruktion för att implementera 'Data Explorer - Fas 3'."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Bekräftar mottagandet av all kontext och presenterar en plan för Fas 1: Omarbetning av `ItemDetailModal.vue`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkänner planen och ger utökat mandat att hämta filer."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererar den omskrivna `ItemDetailModal.vue`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkänner, meddelar ny commit-hash och ger klartecken för nästa fas."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Presenterar planen för Fas 2: Avancerad Filtrering."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkänner planen."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererar `BaseMultiSelect.vue`, `DataFilterPanel.vue`, och `explorerStore.js`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkänner, meddelar ny commit-hash och ger klartecken att fortsätta."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Presenterar planen för Fas 3: Implementation av 'Jämför Korg'."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkänner planen."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererar `comparisonStore.js`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkänner."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererar en felaktig, trunkerad version av `BaseTable.vue`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Identifierar det kritiska felet med `BaseTable.vue` och ifrågasätter AI:ns process."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Erkänner felet, genomför en intern tribunal, och förklarar grundorsaken (hallucination av källkod). Föreslår en ny, säkrare arbetsprincip."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Ifrågasätter AI:ns tekniska förmåga och föreslår en proxy-lösning."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Testar proxy-lösningen och bevisar att den blockeras av interna säkerhetsregler, vilket bekräftar att den nya arbetsprincipen är nödvändig."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Itererar på proxy-idén för att hitta en fungerande lösning."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Analyserar och förklarar varför även de förfinade proxy-idéerna kommer att misslyckas, och etablerar slutgiltigt 'Principen om Explicit Kontext'."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Föreslår en pragmatisk användning av proxyn (endast för fil-lista) och ger klartecken att fortsätta."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Godkänner det nya arbetsflödet och levererar den korrekta, sammanslagna versionen av `BaseTable.vue`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkänner."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererar de återstående filerna för jämförelsefunktionen: `ComparisonTray.vue`, `DataExplorerPage.vue`, och `ComparisonModal.vue`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Meddelar att allt är klart och begär en ByggLogg och Chathistorik."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererar de begärda rapporterna."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Tillhandahåller den fullständiga historiken från tidigare sessioner och ger instruktioner om att skapa den slutgiltiga, korrekt formaterade sammanfattningen."
+      }
+    ]
+  },
+  {
+    "sessionId": "23.3",
+    "interactions": [
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Inleder sessionen med att ge direktiv om att vidareutveckla AI Context Builder med fyra specifika krav: JSON-instruktionsruta, automatisk filmarkering, förbättrade ikoner och en filförhandsgranskningsmodal."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Bekräftar förståelsen och presenterar en detaljerad, fyrstegsplan för att implementera samtliga funktioner genom att modifiera `scripts/wrap_json_in_html.py`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkänner planen."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererar den uppdaterade koden för `scripts/wrap_json_in_html.py` som innehåller alla fyra nya funktioner."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Rapporterar ett kritiskt byggfel och bifogar en bygglogg som visar ett `SyntaxError` i den levererade filen."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Initierar felsökning, identifierar grundorsaken som felaktig kommentarsyntax (// i Python), ber om ursäkt och levererar en korrigerad version."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Ber om ett JSON-exempel för att testa den nya auto-kryssningsfunktionen."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererar ett JSON-exempel med en `filesToSelect`-nyckel."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Ger tre punkter med förbättringsfeedback: matchningen ska vara skiftlägesokänslig, additiv och stödja partiella sökvägar."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Bekräftar de nya kraven och presenterar en reviderad plan för att skriva om matchningslogiken i JavaScript."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkänner den reviderade planen."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererar den slutgiltiga versionen av `scripts/wrap_json_in_html.py` med den nya, robusta matchningslogiken."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Initierar ett metauppdrag: att skapa ett nytt protokoll för `AI.md` som formellt definierar JSON-strukturen."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererar ett färdigformaterat Markdown-block för det nya protokollet 'KONTEXT-JSON FÖR NÄSTA SESSION'."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Ger det avslutande kommandot: att läsa in `Gemini_chatthistorik.txt` och generera ByggLogg-post samt kronologisk historik."
+      }
+    ]
+  },
+  {
+    "sessionId": "23.5",
+    "interactions": [
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Initierade felsökning genom att tillhandahålla en bygglogg som visade ett syntaxfel i `explorerStore.js`."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Analyserade loggen, identifierade att HTML hade klistrats in i en JS-fil och begärde de två inblandade filerna för att kunna åtgärda felet."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Begärde en JSON-fil enligt brainstorming-protokollet för att förbereda nästa session."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererade den begärda kontext-JSON-filen för att starta felsökningssessionen."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Tillhandahöll den fullständiga kontexten, inklusive de två begärda filerna (`explorerStore.js` och `DataFilterPanel.vue`)."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Analyserade de korrupta filerna och levererade en helt återställd version av `explorerStore.js`, rensad från all HTML."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Tillhandahöll en ny bygglogg som visade ett nytt fel: en saknad fil, `ComparisonTray.vue`."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Analyserade felet och begärde den anropande filen (`DataExplorerPage.vue`) för att ta bort referensen."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Tillhandahöll innehållet i `DataExplorerPage.vue`."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererade en korrigerad version av `DataExplorerPage.vue` där import och användning av den saknade komponenten var borttagen."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Tillhandahöll en ny bygglogg som visade ett importfel: 'transformItems' exporterades inte från `transformer.js`."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Identifierade API-kontraktsbrottet och begärde `explorerStore.js` och `transformer.js`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Tillhandahöll de två begärda filerna."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererade en korrigerad `explorerStore.js` med rätt funktionsnamn (`transformAndClassifyData`)."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Tillhandahöll en ny bygglogg med ett liknande importfel för `filterAndSortItems` från `filters.js`."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Identifierade det andra API-kontraktsbrottet och begärde `explorerStore.js` och `filters.js`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Tillhandahöll de två begärda filerna."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererade en korrigerad `explorerStore.js` som nu använde de två separata funktionerna `applyFilters` och `applySorting`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Tillhandahöll en körtidslogg som visade ett `TypeError` relaterat till 'length'."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Analyserade felet och identifierade felaktig datastrukturhantering i `availableFilters`. Begärde `explorerStore.js` för att åtgärda det."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Tillhandahöll `explorerStore.js` och aktiverade \"Help me God\"-protokollet."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Genomförde tribunalen, bekräftade planen och levererade en korrigerad `explorerStore.js` med robustare hantering i `availableFilters`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Rapporterade att exakt samma `TypeError` kvarstod, vilket indikerade att föregående fix var otillräcklig."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Utförde en djupare analys, identifierade grundorsaken som en race condition vid initialisering och föreslog en ny plan för att åtgärda den. Begärde `explorerStore.js`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Tillhandahöll `explorerStore.js`."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererade en ny version av `explorerStore.js` med skyddsvillkor och ett standardvärde för `dataType` för att hantera race condition."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Konstaterade att felsökningen misslyckats då samma fel kvarstod och begärde en JSON-instruktion för nästa chatt."
+      }
+    ]
+  },
+  {
+    "sessionId": "24",
+    "interactions": [
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren rapporterade ett `TypeError` i Data Explorer, vilket gjorde sidan obrukbar, och bifogade en skärmdump."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "AI:n analyserade felet som en race condition och föreslog en plan att införa `isLoading`-logik i komponenterna för att förhindra för tidig rendering."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren godkände planen."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "AI:n levererade korrigerade filer (`ResultsDisplay.vue` och `DataExplorerPage.vue`) enligt planen."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren påpekade att den obligatoriska fil-headern saknades i `DataExplorerPage.vue`."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "AI:n bad om ursäkt och levererade en korrigerad version av `DataExplorerPage.vue` med den saknade headern."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren rapporterade ett nytt fel: ett `TypeError` relaterat till `.map()` som inträffade efter att sidan hade laddats. Bifogade en ny skärmdump."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "AI:n aktiverade \"Help me God\"-protokollet och identifierade att `availableFilters`-gettern i `explorerStore.js` var sårbar för ofullständig data. Föreslog en kirurgisk korrigering med optional chaining."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren rapporterade att sidan nu var permanent fast i ett \"Loading data...\"-läge och bifogade en skärmdump."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "AI:n aktiverade \"Code Red\" och \"Help me God\", identifierade en logisk deadlock mellan `DataExplorerPage.vue` och `explorerStore.js`, samt ett dolt stavfel i ett `fetch`-anrop i `fetchExplorerData.js`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren visade en skärmdump av den nu fungerande sidan men påpekade att de avancerade filter- och jämförelsefunktionerna saknades. Begärde en analys av den avsedda funktionaliteten."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "AI:n aktiverade återigen \"Help me God\", bekräftade en allvarlig funktionell regression och ett brutet datakontrakt i `data-filters-map.json`. Föreslog en komplett återimplementeringsplan."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren frågade om existensen av en flervalskomponent."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "AI:n verifierade att `BaseMultiSelect.vue` existerade men var oanvänd, vilket bekräftade regressionen."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren godkände planen och begärde att en fristående AI-instruktion för nästa session skulle skapas."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "AI:n aktiverade \"Brainstorming next step\"-protokollet och levererade en komplett uppsättning artefakter för nästa session, inklusive den begärda JSON-instruktionen."
+      }
+    ]
+  },
+  {
+    "sessionId": "24.1",
+    "interactions": [
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Provided the main directive `context_bootstrap_instruction_FINAL_v2.8.md` for historical reconstruction, specifying the session ID as '24.1'."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Acknowledged the protocol, conducted a 'Help me God' verification, and correctly identified that the source chat log for session 24.1 was missing, formally requesting it from the user."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Clarified that the current chat session itself is the source material for the reconstruction of session 24.1."
+      }
+    ]
+  },
+  {
+    "sessionId": "24.2",
+    "interactions": [
+      {
+        "turnIndex": 1,
+        "timestamp": "2025-08-08T14:10:00Z",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Task: Implement copy and download buttons in the file preview modal of the AI Context Builder."
+      },
+      {
+        "turnIndex": 2,
+        "timestamp": "2025-08-08T14:11:00Z",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-08"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-08)",
+        "summary": "Provided a plan and code (v12.0) to add copy/download buttons to the modal, including HTML and JavaScript logic."
+      },
+      {
+        "turnIndex": 3,
+        "timestamp": "2025-08-08T14:12:00Z",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Reported that the previous update broke the application."
+      },
+      {
+        "turnIndex": 4,
+        "timestamp": "2025-08-08T14:13:00Z",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-08"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-08)",
+        "summary": "Apologized for breaking the app, diagnosed the issue as a TypeError, and provided a critical bugfix (v12.1) with defensive coding and G-PFC-1 validation."
+      },
+      {
+        "turnIndex": 5,
+        "timestamp": "2025-08-08T14:14:00Z",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Requested a 'Help me God' protocol review of the latest code changes."
+      },
+      {
+        "turnIndex": 6,
+        "timestamp": "2025-08-08T14:15:00Z",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-08"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-08)",
+        "summary": "Performed a 'Help me God' protocol review, confirming stability and correctness of the modal copy/download functionality and the previous critical bugfix."
+      }
+    ]
+  },
+  {
+    "sessionId": "24.3",
+    "interactions": [
+      {
+        "turnIndex": 1,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Provided comprehensive project documentation, including 'ByggLogg' for Steg 24, and initiated the request for a JSON output for the current session (24.3)."
+      },
+      {
+        "turnIndex": 2,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-08"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-08)",
+        "summary": "Responded by identifying the absence of 'Gemini_Chatthistorik.md' and 'AI_Collaboration_Standard.md' from the provided file structure, despite their reported formalization in previous logs."
+      },
+      {
+        "turnIndex": 3,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Inquired whether 'AI_Collaboration_Standard.md' had been previously attached, seeking clarification on its presence in the provided context."
+      },
+      {
+        "turnIndex": 4,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-08"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-08)",
+        "summary": "Confirmed that the content for 'AI_Collaboration_Standard.md' was indeed provided in the initial context, but noted its physical absence from the listed 'docs/' directory within the file structure."
+      },
+      {
+        "turnIndex": 5,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Provided a new directive to process 'context_bootstrap_instruction_FINAL_v2.8.md' and generate the full JSON output for session 24.3."
+      }
+    ]
+  },
+  {
+    "sessionId": "24.4",
+    "interactions": [
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren begärde en granskning av hela projektets funktionalitet."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n genomförde en teknisk granskning och identifierade kritiska fel, optimeringspotential och förbättringsförslag, med fokus på en funktionell regression i Data Explorer."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren frågade om det JSON-baserade instruktionskonceptet är ett fungerande arbetssätt."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n bekräftade att JSON-konceptet är exceptionellt effektivt och analyserade dess fördelar gällande felresiliens, gränssnitt och semantik."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren identifierade en svaghet i arbetsflödet: risken för att AI:n 'minns fel' när kod uppdateras successivt under en session."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n höll med, analyserade problemet som 'kontextdrift' och föreslog ett nytt protokoll, 'Levande Kontext', för att synkronisera sin interna modell."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren begärde den exakta Markdown-texten för det nya protokollet."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n levererade den begärda Markdown-texten för 'Levande Kontext'-protokollet."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren frågade om fördelarna med att dela upp den monolitiska AI.md i mindre filer."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n presenterade en detaljerad plan för att refaktorera AI.md till en modulär struktur med en ny `docs/ai_protocols/`-mapp, med argument om minskad kognitiv belastning och förbättrad underhållbarhet."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren frågade om JSON-format skulle vara bättre än Markdown för AI-reglerna."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n genomförde en Pro & Contra-analys och föreslog en överlägsen hybridstrategi som kombinerar en maskinläsbar `ai_config.json` för regler med en mänskligt läsbar `AI_Core.md` för filosofi."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren förbättrade hybridförslaget genom att kräva ett fält för 'luddiga' mänskliga alias för reglerna i `ai_config.json`."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n höll med och presenterade en uppdaterad `ai_config.json`-struktur som inkluderade ett `aliases`-fält för varje regel."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren beordrade en fullständig 'Help me God'-granskning av det nya hybridförslaget."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n genomförde en simulerad tribunal, identifierade en svaghet (risk för desynkronisering) och föreslog en 'Code Red'-åtgärd: ett nytt valideringsskript, `scripts/validate_ai_instructions.py`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren brainstormade vidare på 'Levande Kontext'-protokollet och föreslog versionshantering, status och beskrivningar."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n aktiverade K-MOD, analyserade förslaget som ett 'mini-Git' och formaliserade det till 'Levande Kontext v2.0' med kommandon för att uppdatera, återgå och visa historik."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren godkände planen och initierade 'Operation: Modulär Instruktion' för att omedelbart anamma den nya strukturen."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n bekräftade planen och föreslog att den nya kärninstruktionen skulle heta `AI_Core_Instruction.md`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren begärde den första protokollfilen."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n levererade `K-MOD_Protokoll.md`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren ifrågasatte varför filerna var Markdown när en hybridmodell hade diskuterats."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n förtydligade att detta var ett refaktoreringssteg och att JSON-filen skulle skapas efteråt."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren godkände förklaringen och begärde nästa fil."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n levererade `Beroendeanalys_Protokoll.md`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren begärde nästa fil."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n levererade `Help_me_God_Protokoll.md`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren begärde en markant ändring av 'Help me God'-protokollet till en trestegsprocess med filosofer och ingenjörer."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n levererade den helt omarbetade `Help_me_God_Protokoll.md` v2.0."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren begärde nästa fil."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n levererade `Brainstorming_Protokoll.md`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren begärde nästa fil."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n levererade `Kontext-JSON_Protokoll.md`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren begärde nästa fil."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n levererade `Levande_Kontext_Protokoll.md` v2.0."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren begärde `ai_config.json`."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n levererade `ai_config.json` v1.0."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren begärde den sista filen, `AI_Core_Instruction.md`."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n levererade `AI_Core_Instruction.md` v4.0."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren föreslog att AI:n proaktivt borde fråga efter protokollfiler vid behov."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n höll med och levererade en ny Markdown-sektion, 'Proaktiv Protokollhantering', att lägga till i kärninstruktionen."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren beordrade en uppdatering av kontextgenerator-skripten för att anpassa dem till den nya modulära strukturen."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n levererade uppdaterade versioner av `generate_full_context.py` och `wrap_json_in_html.py`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren identifierade en kritisk bugg i den föreslagna `wrap_json_in_html.py` relaterad till 'Select/Deselect All'-knapparna."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n erkände felet, genomförde en grundorsaksanalys och levererade en korrigerad JavaScript-logik."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren begärde de kompletta, korrigerade filerna."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n erkände ett allvarligt fel där den hade trunkerat kod och historik, bad om ursäkt och levererade de fullständiga, korrekta versionerna av `generate_full_context.py` och `wrap_json_in_html.py`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren påpekade att AI:n igen hade levererat en avsevärt kortare version av `wrap_json_in_html.py` och bifogade den korrekta källfilen samt en bygglogg som visade ett `SyntaxError`."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n erkände ett katastrofalt misslyckande, analyserade byggloggen, identifierade syntaxfelet som sitt eget fel och levererade en garanterat komplett och korrekt version av `wrap_json_in_html.py`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren avslutade sessionen, påpekade en kvarvarande renderingsbugg i UI:t och begärde en JSON-instruktion för nästa chatt."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n levererade en JSON-instruktion för att åtgärda renderingsbuggen."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren påpekade att AI:n hade glömt den andra delen av planen: att skapa valideringsskriptet `scripts/validate_ai_instructions.py`."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "AI:n erkände sitt 'fokusdrift'-fel och levererade en ny, komplett JSON-instruktion som inkluderade båda uppgifterna för nästa session."
+      }
+    ]
+  },
+  {
+    "sessionId": "24.5",
+    "interactions": [
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Initierar en strategisk planeringssession för nästa fas av Data Explorer. Presenterar en sjupunktslista med önskade funktioner, inklusive en omarbetad detaljmodal och flervalsfilter. Etablerar ett nytt arbetsflöde för att ge AI:n direktåtkomst till projektfiler via GitHub commit-hashar och en Project Tree-genererad filstruktur."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "Aktiverar KREATIVITETS-LÄGE (K-MOD). Bekräftar och verifierar det nya arbetsflödet. Genomför en fullständig fil-för-fil-analys av hela projektet baserat på den nya metoden. Skapar ett nytt, heltäckande styrdokument: Projektfil-Manifest: Engrove Audio Toolkit v2.0. Utarbetar en detaljerad teknisk plan för \"Data Explorer Fas 3\" baserat på Engroves krav och egna K-MOD-förslag. Sessionen avslutas med att AI:n, enligt protokoll, genererar en komplett leverans med listor över nödvändiga filer och en detaljerad AI-instruktion för nästa implementation-session (Steg 23)."
+      }
+    ]
+  },
+  {
+    "sessionId": "24.6",
+    "interactions": [
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Tillhandahöll en JSON-kontext och bad om en validering av CORE_DOC_PATHS-konstanten, efter att själv ha lagt till Levande_Kontext_Protokoll.md."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "Analyserade projektstrukturen och rekommenderade en utökad, kommenterad CORE_DOC_PATHS-array för att inkludera centrala styrdokument."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Levererade en ny, komplett JSON-kontext från den senaste GitHub Actions-körningen och bad om en verifiering av att den var korrekt enligt de senaste ändringarna."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "Genomförde en detaljerad granskning och identifierade en kritisk avvikelse: den nya nyckeln 'ai_config_processed' saknades, vilket indikerade att JSON-filen genererats av en föråldrad version av skripten."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Tillhandahöll en skärmdump av en lyckad GitHub Actions-körning och den allra senaste JSON-kontextfilen för en ny granskning."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "Genomförde en ny verifiering och bekräftade att den senaste JSON-filen nu var helt korrekt och innehöll den förväntade 'ai_config_processed'-strukturen. Deklarerade implementationen som lyckad."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Ställde en metakognitiv fråga om AI:n kunde dra nytta av den nya, berikade 'ai_config_processed'-datan."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "Besvarade jakande och gav en detaljerad förklaring av hur den strukturerade datan i 'config_data', 'protocols', och 'validation_report' skulle användas för att eliminera tvetydighet, hantera fel proaktivt och agera som en systemövervakare."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Identifierade ett fel i den genererade datan: en felaktig sökväg med '../' i valideringsrapporten. Föreslog en arkitektonisk förbättring: att göra rapporten 'självläkande' genom att skapa virtuella JSON-poster för oregistrerade filer."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "Erkände logikbristen och godkände den föreslagna förbättringen. Presenterade en reviderad plan för att skriva om 'process_ai_instructions.py' för att rekursivt skanna hela /docs-mappen, normalisera sökvägar och producera en enhetlig, självläkande output. Levererade den uppdaterade koden."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Levererade en ny komplett JSON-kontext genererad med det uppdaterade skriptet och bad om en slutgiltig verifiering."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "Analyserade den nya JSON-filen och bekräftade att den nu var helt korrekt. Sökvägarna var rena, och oregistrerade filer var korrekt inkluderade med status 'UNREGISTERED'. Deklarerade implementationen som en fullständig framgång."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Bad om en slutgiltig validering och rekommendation för CORE_DOC_PATHS-konstanten baserat på den allra senaste, kompletta projektstrukturen."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-06"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+        "summary": "Levererade en slutgiltig, utökad och rekommenderad lista för CORE_DOC_PATHS, nu inkluderande nya, kritiska styrdokument för arkitektur och projektvision."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Initierade det formella avslutningsprotokollet genom att tillhandahålla 'context_bootstrap_instruction_FINAL_v2.8.md' och specificera sessionId som '24.6'."
+      }
+    ]
+  },
+  {
+    "sessionId": "25",
+    "interactions": [
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Inleder sessionen med att rapportera ett allvarligt fel i den tidigare levererade lösningen. Tillhandahåller en skärmdump som visuellt bekräftar felet, en detaljerad konsollogg och ger en direkt order att felsöka lösningen. Begär skapandet av en ny ByggLogg-post, en Chatthistorik-uppdatering, samt en Kontext-JSON-instruktion för nästa session."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Bekräftar mottagandet av felrapporten och aktiverar 'Help me God'-protokollet för en djupgående grundorsaksanalys. Identifierar en kritisk race condition som grundorsak och formulerar en komplett åtgärdsplan med namnet 'Operation: Synkroniserad Initialisering'. Skapar och levererar de tre begärda dokumenten: en ny statusrapport för ByggLogg, en sammanfattning för Chatthistorik, och en komplett Kontext-JSON-instruktion för nästa session."
+      }
+    ]
+  },
+  {
+    "sessionId": "26",
+    "interactions": [
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Rapporterar en TypeError-krasch i Data Explorer och tillhandahåller kontext."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Analyserar en race condition, aktiverar 'Help me God' och föreslår en fix med en 'watch' i `explorerStore`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkänner planen."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererar `explorerStore.js` och sedan den förenklade `DataFilterPanel.vue`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Rapporterar att buggen kvarstår (inga fel, men tomma dropdowns/data)."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Erkänner ett djupare fel, föreslår en ny fix för att göra state-övergången atomär i `setDataType`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Rapporterar att även den andra fixen misslyckades och tillhandahåller en fungerande fil från en annan branch som en avgörande ledtråd."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Analyserar den fungerande filen, identifierar det arkitektoniska misstaget (Composition vs. Options API) och föreslår en 'Strategisk Reträtt'."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkänner reträtten."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererar en ofullständig version av `explorerStore.js`, vilket bryter mot Kärndirektiven."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Kritiserar skarpt den ofullständiga filen och ifrågasätter AI:ns förmåga att följa instruktioner."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Tar fullt ansvar, identifierar 'kontextuellt tunnelseende' och föreslår det nya PSV-protokollet som en permanent lösning."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkänner PSV-protokollet och frågar om dess placering."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererar den uppdaterade `AI_Core_Instruction.md` med PSV-protokollet på korrekt plats."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Avslutar den misslyckade sessionen och begär de slutgiltiga artefakterna."
+      }
+    ]
+  },
+  {
+    "sessionId": "27",
+    "interactions": [
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Rapporterade att Data Explorer nu laddar data men att ett flertal buggar kvarstår: sökning fungerar inte, dropdowns är visuellt felaktiga. Tillhandahöll skärmdumpar och logg från Engrove Inspector som bevis."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Analyserade loggarna och identifierade två grundorsaker: ett logiskt dataflödesfel i `explorerStore.js` och ett CSS z-index-problem. Presenterade en plan för att åtgärda båda."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererade en uppdaterad `explorerStore.js` för att korrigera dataflödet."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Identifierade och påpekade ett allvarligt fel i den levererade koden: en `... (resten av historiken)`-kommentar, vilket är ett brott mot kärndirektiven."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Bad om ursäkt för felet, införde ett nytt internt 'Code Red'-verifieringsprotokoll och levererade en fullständig, korrekt version av `explorerStore.js`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Gav instruktioner om att utöka AI-instruktionerna med två nya kärndirektiv: 'Fullständig Historik' och 'Inledande fil-kommentarer'."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Bekräftade mottagandet och integrationen av de två nya kärndirektiven i sin interna modell."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererade den andra delen av fixen: en uppdaterad `BaseMultiSelect.vue` med korrigerat `z-index` och en fullständig, standardiserad fil-header."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Rapporterade att `z-index`-fixen var otillräcklig och att det snarare var ett CSS-färgarvsproblem. Tillhandahöll en ny, uttömmande lista på 8 specifika buggar och regressioner, med skärmdumpar."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Accepterade den nya felrapporten, genomförde en ny teknisk analys för samtliga 8 punkter och bekräftade grundorsakerna."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Avslutade sessionen och begärde de slutgiltiga artefakterna, inklusive en mer detaljerad `Kontext-JSON` för nästa session."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Bekräftade felet i sin tidigare genererade `Kontext-JSON` och levererade en ny, uttömmande version som uppfyller de högre kraven."
+      }
+    ]
+  },
+  {
+    "sessionId": "27.1",
+    "interactions": [
+      {
+        "turnIndex": 1,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Begärde tre nya funktioner för AI Context Builder: 1) Fungerande 'Copy'/'Download'-knappar i modalen. 2) Automatisk expansion av filträdet när filer väljs via inklistrad JSON. 3) En ny 'Generate Files'-knapp för att skapa en JSON med endast filinnehåll."
+      },
+      {
+        "turnIndex": 2,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Bekräftade uppdraget, presenterade en detaljerad plan för att implementera alla tre funktioner i 'scripts/wrap_json_in_html.py' och levererade den fullständiga, uppdaterade filen."
+      },
+      {
+        "turnIndex": 3,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Tillhandahöll ett JSON-objekt som testfall för den nya 'Generate Files'-funktionen, vilket avslöjade ett fel där filinnehåll inte hämtades korrekt."
+      },
+      {
+        "turnIndex": 4,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Identifierade och erkände ett kritiskt logiskt fel i föregående implementation av 'generateFilesOnly'. Presenterade en korrigerad plan som återanvänder befintlig robust kod för att hämta filinnehåll, och levererade den slutgiltiga, korrigerade versionen av 'scripts/wrap_json_in_html.py'."
+      }
+    ]
+  },
+  {
+    "sessionId": "27.2",
+    "interactions": [
+      {
+        "turnIndex": 1,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren rapporterar ett problem med `ai_9.8.py`: API-anropsgränsen verkar inte respekteras och klassificeringsfiler uppdateras inte. Bifogar felloggar och filstruktur."
+      },
+      {
+        "turnIndex": 2,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "AI:n analyserar loggarna och drar slutsatsen att API-gränsen påverkas av återförsök och att det finns en namnkonflikt i klassificeringsfilerna, och föreslår kodändringar."
+      },
+      {
+        "turnIndex": 3,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren förtydligar att den avsedda logiken är att begränsa på antalet API-anrop, inte på antalet bearbetade objekt."
+      },
+      {
+        "turnIndex": 4,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "AI:n förstår det korrigerade kravet och föreslår en ny logik för `while`-loopen och användarprompten för att räkna API-anrop."
+      },
+      {
+        "turnIndex": 5,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren bekräftar den nya logiken och ber AI:n att sammanställa och validera alla föreslagna ändringar via en Tribunal."
+      },
+      {
+        "turnIndex": 6,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "AI:n presenterar en fullständig, sammanställd plan och genomför en Tribunal-granskning som godkänner planen."
+      },
+      {
+        "turnIndex": 7,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren godkänner planen."
+      },
+      {
+        "turnIndex": 8,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "AI:n levererar den korrigerade koden `ai_9.9.py`."
+      },
+      {
+        "turnIndex": 9,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren rapporterar att den nya koden kraschar med en `IndexError` och bifogar en ny traceback. Användaren begär också att `Help_me_God`-protokollet ska uppdateras och användas."
+      },
+      {
+        "turnIndex": 10,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "AI:n erkänner att felet kvarstår, aktiverar det uppdaterade `Help_me_God`-protokollet och presenterar en ny, validerad hypotes och en korrigerad kod (`ai_9.9.1.py`)."
+      },
+      {
+        "turnIndex": 11,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren rapporterar att `ai_9.9.1.py` fortfarande kraschar med exakt samma `IndexError` men på en annan plats, och begär att `Stalemate`-protokollet ska implementeras."
+      },
+      {
+        "turnIndex": 12,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "AI:n aktiverar `Stalemate`-protokollet och genererar en `Stalemate_Request.json` för extern granskning."
+      },
+      {
+        "turnIndex": 13,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren agerar som extern skiljedomare, presenterar en detaljerad analys och domslut som fastställer att grundorsaken är en felaktigt 'escapad' placeholder `{{}}` i `PROMPT_DISCOVER_BASE`."
+      },
+      {
+        "turnIndex": 14,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "AI:n accepterar domslutet och levererar den slutgiltigt korrigerade koden `ai_9.9.3.py`."
+      },
+      {
+        "turnIndex": 15,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Användaren ställer en fråga om varför en specifik instruktion finns i `PROMPT_DISCOVER_BASE`."
+      },
+      {
+        "turnIndex": 16,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "AI:n ger en detaljerad teknisk förklaring om hur instruktionen skapar ett otvetydigt, maskin-parsbart kontrakt för att hantera sökningar som inte ger resultat."
+      }
+    ]
+  },
+  {
+    "sessionId": "27.3",
+    "interactions": [
+      {
+        "turnIndex": 1,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Rapporterade ett flertal buggar i den driftsatta applikationen, inklusive visuella fel i dropdowns och en icke-fungerande sökfunktion. Tillhandahöll skärmdumpar och loggar som bevis."
+      },
+      {
+        "turnIndex": 2,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "unknown",
+          "name": "unknown",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (unknown:unknown@unknown)",
+        "summary": "Genomförde en analys och identifierade två huvudproblem: ett logiskt dataflödesfel i explorerStore.js och ett CSS z-index-problem i BaseMultiSelect.vue. Presenterade en tvåfasplan för att åtgärda dessa."
+      },
+      {
+        "turnIndex": 3,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkände planen och beordrade implementationen."
+      },
+      {
+        "turnIndex": 4,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "unknown",
+          "name": "unknown",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (unknown:unknown@unknown)",
+        "summary": "Implementerade de två föreslagna korrigeringarna i explorerStore.js och BaseMultiSelect.vue."
+      },
+      {
+        "turnIndex": 5,
+        "timestamp": "unknown",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Rapporterade att en ny serie buggar nu var synliga och att problemen var mer komplexa än tidigare antaget. Tillhandahöll en ny, komplett felrapport med 8 specifika punkter."
+      },
+      {
+        "turnIndex": 6,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "unknown",
+          "name": "unknown",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (unknown:unknown@unknown)",
+        "summary": "Accepterade den nya, mer omfattande felrapporten. Genomförde en ny, djupgående teknisk analys av varje enskild punkt och bekräftade grundorsaken för samtliga 8 problem, och listade dem som en handlingsplan för nästa session."
+      }
+    ]
+  },
+  {
+    "sessionId": "28",
+    "interactions": [
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (human:operator@unknown)",
+        "summary": "Initierar 'Operation: Återställning Fas 2' för att åtgärda 8 buggar i Data Explorer."
+      },
+      {
+        "speakerName": "Google",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Google (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Presenterade en felaktig plan att modifiera en genererad JSON-fil. Blev korrigerad och presenterade en ny plan för att modifiera Python-skript."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (human:operator@unknown)",
+        "summary": "Korrigerade AI:ns plan igen, specificerade att lösningen skulle vara en fallback i frontend-koden, inte en ändring i backend."
+      },
+      {
+        "speakerName": "Google",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Google (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Accepterade den överlägsna frontend-lösningen. Levererade därefter en serie felaktiga eller ofullständiga CSS-fixar för dropdown-menyn, vilket krävde flera korrigeringar och en teknisk analys från Engrove för att slutligen lösa problemet."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (human:operator@unknown)",
+        "summary": "Bekräftade att CSS-buggen var löst. Tillhandahöll den korrekta versionen av `DataFilterPanel.vue` efter att AI:n arbetat med en inaktuell, cachad version."
+      },
+      {
+        "speakerName": "Google",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Google (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Bad om ursäkt för kontextdrift. Använde den korrekta filen för att implementera fallback-logiken för filter och levererade sedan den korrekta `DataExplorerPage.vue` för att lösa 'prop drilling'-problemet."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (human:operator@unknown)",
+        "summary": "Rapporterade att padding-felet kvarstod och aktiverade 'Stalemate Protocol'."
+      },
+      {
+        "speakerName": "Google",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Google (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Genererade en `Stalemate_Request.json`. Mottog en skiljedom, accepterade domen och levererade en korrigerad `_tokens.css`-fil."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (human:operator@unknown)",
+        "summary": "Initierade 'Fas 1.1' för att felsöka ett nytt, kritiskt fel där uppdaterade JSON-filer havererade applikationen. Tillhandahöll fungerande och trasiga datafiler för analys."
+      },
+      {
+        "speakerName": "Google",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Google (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Genomförde en differentiell analys, identifierade ett API-kontraktsbrott i `data-filters-map.json` och spårade det till `prepare_data.py`. Fick godkänt efter en 'Help me God'-verifiering att rekonstruera den felaktiga funktionen i Python-skriptet och levererade den korrigerade filen."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (human:operator@unknown)",
+        "summary": "Instruerade AI:n att uppdatera `ByggLogg_instruktion.md` till ett formellt avslutningsprotokoll."
+      },
+      {
+        "speakerName": "Google",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Google (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererade det nya, omarbetade avslutningsprotokollet."
+      }
+    ]
+  },
+  {
+    "sessionId": "29",
+    "interactions": [
+      {
+        "turnIndex": 1,
+        "timestamp": "2025-08-07T18:01:00Z",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Rapporterade att 'Compare'-knappen fortfarande är inaktiv och föreslog en strategisk pivot för att först åtgärda och uppgradera 'Engrove Inspector'-felsökningsverktyget."
+      },
+      {
+        "turnIndex": 2,
+        "timestamp": "2025-08-07T18:02:00Z",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-07"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-07)",
+        "summary": "Accepterade pivoten, analyserade felsökningsverktyget och identifierade att felet berodde på ett saknat persistens-plugin i 'debug.js'. Föreslog en plan för att först åtgärda detta."
+      },
+      {
+        "turnIndex": 3,
+        "timestamp": "2025-08-07T18:03:00Z",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkände planen och tillhandahöll alla nödvändiga filer för felsökningsverktyget."
+      },
+      {
+        "turnIndex": 4,
+        "timestamp": "2025-08-07T18:04:00Z",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-07"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-07)",
+        "summary": "Levererade korrigerad kod för 'loggerStore.js' och 'DataExplorerPage.vue' för att aktivera loggningen, följt av en korrigering av 'debug.js' för att läsa den persistenta datan, vilket löste problemet."
+      },
+      {
+        "turnIndex": 5,
+        "timestamp": "2025-08-07T18:05:00Z",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Bekräftade att felsökningsverktyget fungerade och presenterade en omfattande lista med sju uppgraderingskrav för att göra det mer kraftfullt."
+      },
+      {
+        "turnIndex": 6,
+        "timestamp": "2025-08-07T18:06:00Z",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-07"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-07)",
+        "summary": "Analyserade kraven och levererade stegvis de uppdaterade filerna 'loggerStore.js' och 'debug.js' som implementerade all ny funktionalitet (urval, export, gruppering, sessioner)."
+      },
+      {
+        "turnIndex": 7,
+        "timestamp": "2025-08-07T18:07:00Z",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkände de slutförda uppgraderingarna och återupptog felsökningen av 'Compare'-knappen, samt introducerade idén om ett nytt protokoll (P-MAAIP) för att mäta AI-prestanda."
+      },
+      {
+        "turnIndex": 8,
+        "timestamp": "2025-08-07T18:08:00Z",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-07"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-07)",
+        "summary": "Instrumenterade koden med det nya felsökningsverktyget, vilket ledde till den slutgiltiga identifieringen och korrigeringen av ett API-kontraktsbrott i 'BaseModal.vue' som den verkliga grundorsaken."
+      },
+      {
+        "turnIndex": 9,
+        "timestamp": "2025-08-07T18:09:00Z",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Bekräftade att alla buggar var lösta och initierade en brainstorming-session för att utforma P-MAAIP, vilket resulterade i en migrering av all historik till ett JSON-först-format."
+      },
+      {
+        "turnIndex": 10,
+        "timestamp": "2025-08-07T18:10:00Z",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-07"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-07)",
+        "summary": "Ledde brainstorming-sessionen, formaliserade JSON-scheman för alla nya loggfiler och uppdaterade de interna AI-protokollen ('AI_Core_Instruction.md', 'AI_Chatt_Avslutningsprotokoll.md') för att reflektera det nya, självförbättrande systemet."
+      },
+      {
+        "turnIndex": 11,
+        "timestamp": "2025-08-07T18:11:00Z",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Identifierade ett allvarligt fall av kontextdegradering då AI:n levererade ofullständig kod och krävde en permanent, protokoll-baserad lösning."
+      },
+      {
+        "turnIndex": 12,
+        "timestamp": "2025-08-07T18:12:00Z",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-07"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-07)",
+        "summary": "Implementerade den föreslagna lösningen genom att skapa regeln 'P-KLS' i 'Levande_Kontext_Protokoll.md' och bad om ursäkt för sina upprepade misstag."
+      },
+      {
+        "turnIndex": 13,
+        "timestamp": "2025-08-07T18:13:00Z",
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Gav det slutgiltiga kommandot för att aktivera avslutningsprotokollet."
+      }
+    ]
+  },
+  {
+    "sessionId": "29.0b",
+    "interactions": [
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Rapporterade att 'Compare'-knappen var inaktiv och att 'ComparisonTray' var transparent, och bifogade bevis."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Analyserade felen, identifierade grundorsakerna som ett brutet API-kontrakt och felaktiga CSS-variabler, och presenterade en tvåstegsplan för att åtgärda dem."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkände Steg 1 av planen."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererade den korrigerade `ComparisonTray.vue` med rätt CSS-variabler."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkände Steg 2 av planen."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererade den korrigerade `DataExplorerPage.vue` med den saknade händelselyssnaren."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Frågade varför koden hade buggar och om instruktionerna var felaktiga."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Genomförde en grundorsaksanalys av sina egna misstag och konstaterade att felet låg i exekveringen, inte instruktionerna."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Föreslog att de identifierade bristerna skulle formaliseras som nya, generella regler i AI-instruktionerna."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Godkände förslaget och presenterade konkreta uppdateringar för Kärndirektiv #4 och PSV-processen."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkände ändringarna av kärninstruktionerna."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Bekräftade att de nya protokollen var integrerade och aktiva."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Rapporterade att 'Compare'-knappen fortfarande var inaktiv och initierade en pivot för att först göra 'Engrove Inspector' fullt funktionell."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Godkände pivoten, analyserade felsökningsverktyget och presenterade en plan för att aktivera det genom att korrigera persistens-konfigurationen."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkände och instruerade implementationen av Steg 1 och 2 för att aktivera loggningen."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererade de korrigerade filerna `loggerStore.js` och `DataExplorerPage.vue`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Rapporterade att loggarna nu sparades i localStorage men inte visades i Inspector, och lade fram en serie omfattande uppgraderingsförslag för verktyget."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Identifierade att `debug.js` saknade persistens-plugin, presenterade en plan för att fixa det och integrerade de nya uppgraderingsförslagen i en fasindelad plan."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkände implementationen av alla uppgraderingar för Inspector, och introducerade idén om ett nytt protokoll (P-MAAIP) för att mäta AI-prestanda."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererade de uppgraderade filerna för Inspector och presenterade en utökad plan, 'Operation: Metakognition', som inkluderade P-MAAIP och en självförbättrande återkopplingsloop."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Utökade visionen ytterligare med en offentlig 'AI Performance'-vy i AI Context Builder."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Integrerade den nya fasen i 'Operation: Metakognition' och presenterade en uppdaterad, komplett plan."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Initierade en brainstormingsession för P-MAAIP och ifrågasatte om `.md` var det bästa formatet för loggfilerna."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Analyserade frågan och argumenterade för att byta till ett strikt JSON-format för alla loggfiler för att säkerställa dataintegritet och maskinläsbarhet."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Föreslog att skapa ett specialiserat protokoll för att återgenerera all historisk data i det nya JSON-formatet istället för att försöka konvertera den."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Godkände den överlägsna strategin och levererade 'Protokoll för Historisk Rekonstruktion (P-HR)'."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Tillhandahöll de första resultaten från den historiska rekonstruktionen och instruerade AI:n att gå vidare med att uppdatera avslutningsprotokollet."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererade det nya, JSON-baserade `AI_Chatt_Avslutningsprotokoll.md` (v3.0)."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkände det nya protokollet och gav klartecken för nästa fas: att skapa `frankensteen_learning_db.json`."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererade den tomma `frankensteen_learning_db.json`-filen."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkände och gav klartecken för nästa fas: att uppdatera kärninstruktionerna."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Levererade den uppdaterade `AI_Core_Instruction.md` (v4.2) som nu inkluderar den självförbättrande återkopplingsloopen."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Godkände och gav klartecken för nästa fas: att bygga AI Performance Dashboard."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+        "summary": "Presenterade en detaljerad, trestegsplan för Fas 5 och levererade det första skriptet, `scripts/process_ai_metrics.py`."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Avbröt den pågående sessionen på grund av en hallucination från AI:n och begärde en fullständig, teknisk AI-instruktion för att starta en ny, ren session."
+      }
+    ]
+  },
+  {
     "sessionId": "29.1",
     "interactions": [
       {
