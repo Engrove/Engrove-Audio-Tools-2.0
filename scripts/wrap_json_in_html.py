@@ -164,7 +164,6 @@ def create_interactive_html(output_html_path):
         #performance-container { display: flex; flex-direction: column; gap: .75rem; }
         .metric-block { border: 1px solid var(--border-color); border-radius: 6px; padding: .75rem; background: var(--secondary-bg); }
         .metric-block h3 { margin: 0 0 .5rem 0; font-size: 1rem; }
-
     </style>
 </head>
 <body>
@@ -215,16 +214,18 @@ def create_interactive_html(output_html_path):
     </div>
 </div>
 
+</div>
 
     <div id="tab-performance" class="tab-panel">
         <div id="performance-container">
             <div id="perf-summary" class="metric-block"><h3>Sammanfattning</h3><div id="perf-summary-body">Ingen data.</div></div>
             <div id="perf-log" class="metric-block"><h3>ByggLogg</h3><div id="perf-log-body">Ingen data.</div></div>
             <div id="perf-learning" class="metric-block"><h3>Learning DB</h3><div id="perf-learning-body">Ingen data.</div></div>
+            <div id="perf-provider" class="metric-block"><h3>Per leverantör</h3><div id="perf-provider-body">Ingen data.</div></div>
+            <div id="perf-model" class="metric-block"><h3>Per modell</h3><div id="perf-model-body">Ingen data.</div></div>
             <button id="refresh-performance" class="primary">Uppdatera prestandadata</button>
         </div>
     </div>
-</div>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         let fullContext = null;
@@ -678,7 +679,7 @@ def create_interactive_html(output_html_path):
             });
     });
 
-// --- Tabs & Performance Dashboard (Step 3) ---
+// --- Tabs (Step 3 baseline) ---
 document.querySelectorAll('.tab-button').forEach(btn => {
   btn.addEventListener('click', () => {
     const tab = btn.getAttribute('data-tab');
@@ -714,7 +715,6 @@ function renderList(targetEl, items, labelKey) {
 }
 
 async function refreshPerformanceData() {
-  // Re-fetch context.json to get latest metrics produced by generate_full_context.py
   try {
     const res = await fetch('context.json', { cache: 'no-store' });
     if (!res.ok) throw new Error(`status ${res.status}`);
@@ -723,6 +723,45 @@ async function refreshPerformanceData() {
   } catch (e) {
     console.error('Kunde inte läsa om context.json:', e);
   }
+}
+
+// --- Aggregation helpers (UI-berikning) ---
+function aggregateModelStats(items) {
+  const byProvider = {};
+  const byModel = {};
+  const visit = (obj) => {
+    if (obj && typeof obj === 'object') {
+      if (obj.model && typeof obj.model === 'object') {
+        const prov = obj.model.provider || 'unknown';
+        const name = obj.model.name || 'unknown';
+        byProvider[prov] = (byProvider[prov] || 0) + 1;
+        const key = `${prov}:${name}`;
+        byModel[key] = (byModel[key] || 0) + 1;
+      }
+      for (const k in obj) {
+        const v = obj[k];
+        if (Array.isArray(v)) v.forEach(visit);
+        else if (v && typeof v === 'object') visit(v);
+      }
+    }
+  };
+  (items || []).forEach(visit);
+  return { byProvider, byModel };
+}
+
+function renderKeyValueList(targetEl, mapping) {
+  targetEl.innerHTML = '';
+  const keys = Object.keys(mapping);
+  if (keys.length === 0) { targetEl.textContent = 'Ingen data.'; return; }
+  const ul = document.createElement('ul');
+  ul.style.margin = 0;
+  ul.style.paddingLeft = '1.25rem';
+  keys.sort().forEach((k) => {
+    const li = document.createElement('li');
+    li.textContent = `${k}: ${mapping[k]}`;
+    ul.appendChild(li);
+  });
+  targetEl.appendChild(ul);
 }
 
 function renderPerformanceDashboard() {
@@ -735,7 +774,6 @@ function renderPerformanceDashboard() {
   const perfLog = metrics.performanceLog || [];
   const learningDb = metrics.learningDatabase || [];
 
-  // Simple summary
   const sum = {
     performanceLog_count: Array.isArray(perfLog) ? perfLog.length : (perfLog && typeof perfLog === 'object' ? Object.keys(perfLog).length : 0),
     learningDatabase_count: Array.isArray(learningDb) ? learningDb.length : (learningDb && typeof learningDb === 'object' ? Object.keys(learningDb).length : 0)
@@ -744,6 +782,14 @@ function renderPerformanceDashboard() {
 
   renderList(perfLogBody, Array.isArray(perfLog) ? perfLog : [perfLog], null);
   renderList(perfLearningBody, Array.isArray(learningDb) ? learningDb : [learningDb], null);
+
+  const provBody = document.getElementById('perf-provider-body');
+  const modelBody = document.getElementById('perf-model-body');
+
+  const allItems = [].concat(Array.isArray(perfLog)?perfLog:[perfLog]).concat(Array.isArray(learningDb)?learningDb:[learningDb]);
+  const agg = aggregateModelStats(allItems);
+  renderKeyValueList(provBody, agg.byProvider);
+  renderKeyValueList(modelBody, agg.byModel);
 }
 
 document.addEventListener('click', (e) => {
@@ -751,7 +797,6 @@ document.addEventListener('click', (e) => {
     refreshPerformanceData();
   }
 });
-
 </script>
 </body>
 </html>"""
