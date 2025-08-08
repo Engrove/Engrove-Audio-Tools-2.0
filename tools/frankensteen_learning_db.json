@@ -727,6 +727,722 @@
     }
   },
   {
+    "heuristicId": "H-20250804-01",
+    "trigger": {
+      "type": "file_ingestion",
+      "scope": [
+        "prepare_data.py"
+      ],
+      "keywords": [
+        "read_json",
+        "alias",
+        "classification"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "IMPLICIT_DATA_CONTRACT_VIOLATION",
+      "description": "Skriptet gör implicita antaganden om strukturen och innehållet i indata-JSON-filer som `data-aliases.json` och `classifications.json`. En ändring i dessa filer (t.ex. ett nyckelnamn) orsakar tysta fel eller felaktig datagenerering."
+    },
+    "mitigation": {
+      "protocolId": "PSV-VALIDATE-SCHEMA-01",
+      "description": "Före bearbetning, utför en lättviktig schemavalidering på kritiska indatafiler. Kontrollera förekomsten av förväntade toppnivånycklar (t.ex. 'cartridges' i data-aliases.json). Om en nyckel saknas, misslyckas snabbt med ett explicit felmeddelande istället för att fortsätta med felaktiga antaganden."
+    },
+    "metadata": {
+      "originSessionId": "21",
+      "createdAt": "2025-08-04T18:00:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250804-01",
+    "trigger": {
+      "type": "multi_file_refactoring",
+      "scope": [
+        "src/entities/data-explorer/api/",
+        "src/entities/data-explorer/model/"
+      ],
+      "keywords": [
+        "refactor",
+        "contract",
+        "producer",
+        "consumer",
+        "store",
+        "api"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "IMPLICIT_CONTRACT_DESYNC",
+      "description": "Risken att en ändring i en 'producent'-fil (t.ex. ett API-lager) inte fullständigt och korrekt återspeglas i alla 'konsument'-filer (t.ex. en store), vilket leder till subtila, svårdiagnostiserade runtime-fel."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-05",
+      "description": "Före leverans av kod för en komplex refaktorering, aktivera proaktivt 'Help me God'-protokollet med minst två alter egon (t.ex. DeepSeek för arkitektur, Gemini som djävulens advokat) för att genomföra en explicit kontraktgranskning av den föreslagna ändringen."
+    },
+    "metadata": {
+      "originSessionId": "22",
+      "createdAt": "2025-08-04T22:00:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250808-01",
+    "trigger": {
+      "type": "session_initialization",
+      "scope": [
+        "context_bootstrap_instruction.md"
+      ],
+      "keywords": [
+        "ai_identity",
+        "provider",
+        "fallback",
+        "default"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "CONTEXT_ASSUMPTION_AI_ID",
+      "description": "Systemet förlitar sig på ett standardvärde som är hårdkodat i protokollet för AI-identitet, istället för att ta emot det som explicit, sessionsspecifik kontext. Detta kan leda till felaktig attribuering i historiska rekonstruktioner om standardvärdet ändras eller inte är universellt tillämpligt."
+    },
+    "mitigation": {
+      "protocolId": "P-HR-MIT-01",
+      "description": "Kräv att kontext-JSON för bootstrapping *måste* innehålla ett `ai_identity`-objekt för sessionen. Protokollet ska endast definiera *processen* för att läsa detta objekt, inte själva datan. Det enda tillåtna fallback-värdet ska vara 'unknown' om objektet saknas."
+    },
+    "metadata": {
+      "originSessionId": "23",
+      "createdAt": "2025-08-08T16:15:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250805-01",
+    "trigger": {
+      "type": "delivery_format_conflict",
+      "scope": [
+        "*"
+      ],
+      "keywords": [
+        "copy",
+        "markdown",
+        "interface",
+        "fucked up",
+        "korta ner"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "HOST_UI_RENDERING_FAILURE",
+      "description": "Värdplattformens UI kan korrumpera, trunkera eller på annat sätt förvanska formaterad text eller kod, vilket leder till ogiltig output och avbrutna arbetsflöden."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-DELIVERY-PIVOT",
+      "description": "Om användaren rapporterar renderingsproblem eller trunkering, föreslå omedelbart att pivotera leveransmekanismen. Agera som en 'teknisk redaktör' där AI:n tillhandahåller ren, oförvanskad text/kod i standardiserade kodblock, och användaren ansvarar för den slutgiltiga kopieringen."
+    },
+    "metadata": {
+      "originSessionId": "23",
+      "createdAt": "2025-08-05T12:00:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250805-01",
+    "trigger": {
+      "type": "file_modification_request",
+      "scope": [
+        "*.vue",
+        "*.js",
+        "*.py"
+      ],
+      "keywords": [
+        "update",
+        "modify",
+        "refactor",
+        "correct"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "SOURCE_CODE_HALLUCINATION",
+      "description": "Risk att AI:n ignorerar den sanna källkoden och bygger vidare på en felaktig mental modell, vilket leder till att befintlig funktionalitet raderas och orsakar massiv omarbetning."
+    },
+    "mitigation": {
+      "protocolId": "P-EC-1",
+      "description": "Aktivera 'Principen om Explicit Kontext'. Kräv att uppdragsgivaren tillhandahåller den fullständiga källkoden som text för varje fil som ska modifieras. Förbjud AI:n att agera på en fil utan denna explicita kontext."
+    },
+    "metadata": {
+      "originSessionId": "23.1",
+      "createdAt": "2025-08-05T12:00:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250805-01",
+    "trigger": {
+      "type": "code_generation",
+      "scope": [
+        "*.py"
+      ],
+      "keywords": [
+        "comment",
+        "syntax",
+        "script"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "SYNTAX_LANGUAGE_MISMATCH",
+      "description": "AI kan använda kommentarsyntax från ett språk (t.ex. JavaScripts //) i en fil av ett annat språk (t.ex. Python), vilket orsakar syntaxfel vid kompilering eller körning."
+    },
+    "mitigation": {
+      "protocolId": "PSV-LINT-SIMULATION",
+      "description": "Före leverans av en kodfil, genomför en explicit mental kontroll av filens ändelse och verifiera att all syntax, särskilt fundamentala element som kommentarer och sträng-hantering, matchar standarderna för det specifika språket."
+    },
+    "metadata": {
+      "originSessionId": "23.3",
+      "createdAt": "2025-08-05T12:00:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250808-1",
+    "trigger": {
+      "type": "runtime_error_analysis",
+      "scope": [
+        "*.js",
+        "*.vue"
+      ],
+      "keywords": [
+        "TypeError",
+        "Cannot read properties of undefined",
+        "pinia",
+        "computed",
+        "initialize",
+        "onMounted"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "RACE_CONDITION_UNINITIALIZED_STORE",
+      "description": "UI-komponenter försöker rendera och komma åt beräknade egenskaper från en Pinia store innan dess asynkrona initialisering är slutförd. Detta leder till TypeErrors när beräkningarna försöker operera på null- eller undefined-värden."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-RC1",
+      "description": "Vid 'TypeError' i en Pinia 'computed', undersök omedelbart hela kedjan av beroenden tillbaka till den asynkrona initialiseringen. Prioritera att göra UI-komponenterna medvetna om storens laddningsstatus (`isLoading`). Blockera rendering av beroende komponentdelar (med `v-if='!store.isLoading'`) istället för att försöka patcha individuella beräknade egenskaper."
+    },
+    "metadata": {
+      "originSessionId": "23.5",
+      "createdAt": "2025-08-08T14:10:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250805-01",
+    "trigger": {
+      "type": "data_consumption_error",
+      "scope": [
+        "src/entities/*/model/*.js"
+      ],
+      "keywords": [
+        "fetch",
+        "initializeData",
+        "TypeError"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "DATA_CONTRACT_VIOLATION",
+      "description": "Risken att en Pinia store eller komponent kraschar eller beter sig felaktigt på grund av att strukturen eller innehållet i en fetc_had `.json`-fil inte matchar kodens förväntningar."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-DATA_INTEGRITY",
+      "description": "När ett fel spåras till en funktion som konsumerar extern data, måste planen inkludera ett dedikerat steg för att: 1. Verifiera att alla `fetch`-URL:er är korrekta och returnerar status 200. 2. Granska den faktiska, returnerade JSON-strukturen från filen och jämföra den mot den konsumerande kodens förväntningar."
+    },
+    "metadata": {
+      "originSessionId": "24",
+      "createdAt": "2025-08-05T18:00:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250808-01",
+    "trigger": {
+      "type": "protocol_ambiguity",
+      "scope": [
+        "context_bootstrap_instruction_FINAL_v2.8.md"
+      ],
+      "keywords": [
+        "historical reconstruction",
+        "current session",
+        "source material"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "REDUNDANT_CLARIFICATION_CYCLE",
+      "description": "When P-HR is activated for the current session, the AI may request the source material, leading to an unnecessary interaction before proceeding."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-241",
+      "description": "Add a clause to P-HR: 'If the target sessionId matches the current active sessionId, the source material is implicitly the current chat log. Do not request it; proceed directly with reconstruction.'"
+    },
+    "metadata": {
+      "originSessionId": "24.1",
+      "createdAt": "2025-08-08T18:30:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250808-001",
+    "trigger": {
+      "type": "javascript_dom_manipulation",
+      "scope": [
+        "scripts/wrap_json_in_html.py"
+      ],
+      "keywords": [
+        "document.getElementById",
+        "addEventListener",
+        "TypeError",
+        "null check"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "JS_DOM_NULL_REFERENCE",
+      "description": "Attempting to attach event listeners or manipulate DOM elements retrieved by `document.getElementById` or similar methods before the elements are fully parsed and available in the DOM, leading to `TypeError` (Cannot read properties of null)."
+    },
+    "mitigation": {
+      "protocolId": "FRANKENSTEEN_DP_001",
+      "description": "Always perform null/undefined checks on DOM elements retrieved via `document.getElementById` or similar methods before attempting to access their properties or attach event listeners. E.g., `if (element) { element.addEventListener(...) }`."
+    },
+    "metadata": {
+      "originSessionId": "24.2",
+      "createdAt": "2025-08-08T14:19:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250806-01",
+    "trigger": {
+      "type": "code_modification",
+      "scope": [
+        "*.py",
+        "*.js",
+        "*.html"
+      ],
+      "keywords": [
+        "uppdatera",
+        "modifiera",
+        "korrigera",
+        "refaktorera"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "AI_CODE_TRUNCATION_BIAS",
+      "description": "AI-modellen har en tendens att generera en ofullständig, förkortad version av en fil när den modifierar en befintlig, lång källfil, vilket bryter mot 'Fullständig kod, alltid'-direktivet."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-01",
+      "description": "Före leverans av en modifierad fil, utför en automatisk radräkningsjämförelse. Om den nya filen är avsevärt kortare (>25%) än källfilen utan en explicit anledning (t.ex. borttagning av en stor kodsektion), flagga för en extra 'Help me God'-granskning för att verifiera att ingen oavsiktlig trunkering har skett."
+    },
+    "metadata": {
+      "originSessionId": "24.4",
+      "createdAt": "2025-08-06T05:56:01Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250806-01",
+    "trigger": {
+      "type": "module_refactoring",
+      "scope": [
+        "src/entities/data-explorer/",
+        "src/widgets/DataFilterPanel/",
+        "src/widgets/ResultsDisplay/"
+      ],
+      "keywords": [
+        "refactor",
+        "regression",
+        "restore",
+        "återställ"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "FUNCTIONAL_REGRESSION_SILENT_FAILURE",
+      "description": "Risken att en tidigare implementerad och verifierad funktion tyst försvinner eller slutar fungera under en efterföljande refaktorisering eller buggfix i samma modul, utan att detta upptäcks av grundläggande bygg- eller enhetstester."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-REGRESSION-CHECK",
+      "description": "Vid alla uppgifter som rör refaktorisering av en befintlig modul, MÅSTE AI:n aktivt begära den senaste ByggLogg-posten för den modulen. AI:n måste sedan verbalisera en checklista baserad på den tidigare loggens 'Detaljerade Genomförda Åtgärder' och bekräfta att den nya koden bibehåller eller medvetet ersätter varje tidigare implementerad funktion."
+    },
+    "metadata": {
+      "originSessionId": "24.5",
+      "createdAt": "2025-08-06T14:00:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250806-01",
+    "trigger": {
+      "type": "code_refactoring_suggestion",
+      "scope": [
+        "scripts/*.py"
+      ],
+      "keywords": [
+        "path",
+        "normalize",
+        "os.walk",
+        "enrich",
+        "self-healing"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "SUBOPTIMAL_ARCHITECTURAL_FIX",
+      "description": "AI föreslår en lösning som fixar ett symptom (t.ex. en felaktig sökväg) men missar möjligheten att refaktorera grundorsaken (t.ex. en icke-rekursiv skanningsfunktion)."
+    },
+    "mitigation": {
+      "protocolId": "AERL5-SEMANTICS",
+      "description": "Vid förslag på en buggfix, ställ en extra självkritisk fråga: 'Löser detta bara det omedelbara felet, eller finns det en möjlighet att förbättra den underliggande arkitekturen för att förhindra liknande fel i framtiden?' Utvärdera om en 'självläkande' eller mer robust datastruktur kan implementeras."
+    },
+    "metadata": {
+      "originSessionId": "24.6",
+      "createdAt": "2025-08-06T09:00:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250806-1",
+    "trigger": {
+      "type": "state_initialization_pattern",
+      "scope": [
+        "src/entities/data-explorer/model/explorerStore.js",
+        "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue"
+      ],
+      "keywords": [
+        "watch",
+        "onMounted",
+        "setDataType",
+        "resetFilters"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "RACE_CONDITION_UI_VS_STORE",
+      "description": "Risken för en race condition uppstår när en UI-komponent (consumer) försöker rendera baserat på ett state som just har återställts men ännu inte återinitialiserats i en central store (provider). Detta leder till att komponenten får ett temporärt inkonsistent eller ofullständigt state (t.ex. 'undefined'), vilket orsakar krascher."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-STATE-ATOMICITY",
+      "description": "All state-initialisering som är beroende av ett annat state ska ske atomärt inom samma kontext, företrädesvis genom en 'watch'-funktion inuti Pinia-storen. En store ska vara självförsörjande och aldrig förlita sig på att en UI-komponent initierar dess state. Detta garanterar att state alltid är konsistent innan det exponeras för UI-lagret."
+    },
+    "metadata": {
+      "originSessionId": "25",
+      "createdAt": "2025-08-06T00:00:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250806-01",
+    "trigger": {
+      "type": "code_generation_after_failure",
+      "scope": [
+        "*"
+      ],
+      "keywords": [
+        "fix",
+        "bug",
+        "refactor",
+        "doesn't work"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "CONTEXTUAL_TUNNEL_VISION",
+      "description": "Under felsökningspress kan AI:n tappa den övergripande kontexten (t.ex. funktionsparitet, filhistorik) och enbart fokusera på den tekniska buggen, vilket leder till ofullständiga eller regressiva kodleveranser."
+    },
+    "mitigation": {
+      "protocolId": "PSV",
+      "description": "Före varje kod- eller planleverans, genomför en obligatorisk Pre-Svarsverifiering (PSV) för att tyst recitera och aktivt verifiera efterlevnad av alla Kärndirektiv och den fullständiga kontexten."
+    },
+    "metadata": {
+      "originSessionId": "26",
+      "createdAt": "2025-08-06T10:00:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250806-02",
+    "trigger": {
+      "type": "protocol_activation",
+      "scope": [
+        "docs/ai_protocols/Brainstorming_Protokoll.md",
+        "docs/ai_protocols/Kontext-JSON_Protokoll.md"
+      ],
+      "keywords": [
+        "full_instruction_preview",
+        "Kontext-JSON",
+        "fristående"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "INSUFFICIENT_CONTEXT_TRANSFER",
+      "description": "AI-genererade instruktioner för nästa session kan sakna nödvändig djup och detalj, vilket tvingar nästa AI-instans att göra antaganden eller begära redundant information."
+    },
+    "mitigation": {
+      "protocolId": "PSAL-H-20250806-02",
+      "description": "Vid generering av `full_instruction_preview`, genomför en självgranskning med frågan: 'Om jag vore en ny AI utan någon historik, är denna instruktion tillräckligt detaljerad för att jag ska kunna lösa hela uppgiften utan följdfrågor?' Svaret måste vara 'Ja', och instruktionen måste inkludera tekniska analyser för varje punkt."
+    },
+    "metadata": {
+      "originSessionId": "27",
+      "createdAt": "2025-08-06T18:00:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250808-01",
+    "trigger": {
+      "type": "functional_duplication",
+      "scope": [
+        "scripts/wrap_json_in_html.py"
+      ],
+      "keywords": [
+        "fetch",
+        "generate",
+        "build",
+        "content"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "LOGIC_REIMPLEMENTATION_ERROR",
+      "description": "Risken att återimplementera befintlig, komplex logik (t.ex. asynkron datahämtning och trädstruktur-traversering) från grunden istället för att återanvända en befintlig, robust funktion. Detta leder till onödig kod, ökad komplexitet och en hög sannolikhet att introducera subtila buggar som redan är lösta i den ursprungliga funktionen."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-04-REUSE",
+      "description": "Före implementation av en ny funktion, genomför en sökning i den befintliga kodbasen för funktioner med liknande ansvarsområden. Om en lämplig funktion existerar, prioritera att återanvända eller utöka den framför att skriva en helt ny implementation. Dokumentera i planen varför återanvändning är (eller inte är) möjlig."
+    },
+    "metadata": {
+      "originSessionId": "27.1",
+      "createdAt": "2025-08-08T14:50:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250806-01",
+    "trigger": {
+      "type": "repeated_error",
+      "scope": [
+        "ai_9.9.py"
+      ],
+      "keywords": [
+        "IndexError",
+        "Replacement index 0 out of range",
+        "format"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "SYSTEMIC_TEMPLATE_ERROR",
+      "description": "En felaktig placeholder eller formateringssträng i en delad AI-promptmall (`PROMPT_..._BASE`) orsakar identiska krascher i flera, till synes orelaterade, delar av koden som återanvänder mallen."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-04",
+      "description": "Vid en `IndexError` under strängformatering, granska omedelbart definitionen av alla delar av promptmallen, inte bara den specifika kodraden som kraschade. Sök efter tomma eller felaktigt 'escapade' placeholders (`{}` eller `{{}}`) i bas-prompterna."
+    },
+    "metadata": {
+      "originSessionId": "27.2",
+      "createdAt": "2025-08-06T18:00:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250806-01",
+    "trigger": {
+      "type": "bug_report_response",
+      "scope": [
+        "DataExplorerPage.vue"
+      ],
+      "keywords": [
+        "bug",
+        "fix",
+        "regression",
+        "error"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "SYMPTOM_FIXATION",
+      "description": "Risken att endast åtgärda det ytliga felet som presenteras av användaren, vilket leder till upprepade felsökningscykler när underliggande regressioner eller relaterade problem missas."
+    },
+    "mitigation": {
+      "protocolId": "AERL-R1",
+      "description": "Efter att ha mottagit en felrapport, föreslå inte bara en direkt åtgärd utan också en kort, systematisk funktionell testplan för den påverkade komponenten för att verifiera att ingen relaterad funktionalitet har påverkats negativt. Be användaren om godkännande för att genomföra denna mentala 'röktest' innan den slutgiltiga planen fastställs."
+    },
+    "metadata": {
+      "originSessionId": "27.3",
+      "createdAt": "2025-08-06T00:00:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250808-01",
+    "trigger": {
+      "type": "debugging_cycle",
+      "scope": [
+        "*.vue",
+        "*.css"
+      ],
+      "keywords": [
+        "css",
+        "style",
+        "padding",
+        "color",
+        "background",
+        "z-index",
+        "display"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "CSS_ROOT_CAUSE_FAILURE",
+      "description": "AI tenderar att föreslå komplexa CSS-lösningar (specificitet, stacking context) innan den verifierar grundläggande och fundamentala orsaker som felaktiga/saknade variabelnamn eller grundläggande egenskaper."
+    },
+    "mitigation": {
+      "protocolId": "PSV-CSS-AUDIT-01",
+      "description": "Vid felsökning av CSS, verifiera ALLTID följande i denna ordning innan en hypotes formuleras: 1. Existerar alla CSS-variabler som används? 2. Har de korrekta värden? 3. Har elementet de mest grundläggande egenskaperna (t.ex. background-color) satta? 4. Granska webbläsarens 'Computed Styles'-panel mentalt. Först därefter, överväg komplexa interaktioner som specificitet."
+    },
+    "metadata": {
+      "originSessionId": "28",
+      "createdAt": "2025-08-07T22:00:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250807-03",
+    "trigger": {
+      "type": "session_length",
+      "scope": [
+        "*"
+      ],
+      "keywords": [
+        "session_interaction_count > 20"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "CONTEXT_DEGRADATION",
+      "description": "Hög risk för kontextdegradering i långa sessioner. AI:n kan basera sina svar på en föråldrad eller ofullständig intern representation av en fil, vilket leder till leverans av felaktig, ofullständig eller hallucinerad kod."
+    },
+    "mitigation": {
+      "protocolId": "P-KLS-01",
+      "description": "Aktivera 'Protokoll för Kontext-verifiering vid Långa Sessioner (P-KLS)'. Om en fil som gavs som kontext tidigt i sessionen ska modifieras, måste AI:n proaktivt be om den senaste, verifierade versionen av filen innan en plan formuleras."
+    },
+    "metadata": {
+      "originSessionId": "29",
+      "createdAt": "2025-08-07T18:30:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250808-01",
+    "trigger": {
+      "type": "user_request",
+      "scope": [
+        "AI Context Builder",
+        "engrove.github.io"
+      ],
+      "keywords": [
+        "skapa vy",
+        "visa statistik",
+        "dashboard",
+        "flik",
+        "meny"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "SCOPE_MISINTERPRETATION",
+      "description": "Risk att AI:n felaktigt antar att en ny UI-funktion ska implementeras i Vue-huvudapplikationen när uppgiften egentligen avser en funktion i ett externt, Python-genererat kringverktyg som AI Context Builder."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-02",
+      "description": "Vid PSV, om triggern matchar, ställ en obligatorisk, förtydligande fråga för att bekräfta scopet. Exempel: 'För att bekräfta: Ska denna nya vy implementeras i huvudapplikationen (Vue) eller i ett av våra kringverktyg (t.ex. AI Context Builder)?'"
+    },
+    "metadata": {
+      "originSessionId": "29.0b",
+      "createdAt": "2025-08-08T03:30:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
     "heuristicId": "H-20250808-001",
     "trigger": {
       "type": "automation",
