@@ -154,6 +154,17 @@ def create_interactive_html(output_html_path):
         .modal-body { flex-grow: 1; overflow-y: auto; }
         .modal-body pre { margin: 0; white-space: pre-wrap; }
         .modal-body img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+    
+        /* --- Tabs (Step 3) --- */
+        .tabs { display: flex; gap: .5rem; margin-bottom: 1rem; }
+        .tab-button { padding: .5rem .75rem; border: 1px solid var(--border-color); background: var(--secondary-bg); border-radius: 6px; cursor: pointer; }
+        .tab-button.active { background: var(--accent-color); color: #fff; border-color: var(--accent-color); }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: flex; flex-direction: column; gap: 1rem; }
+        #performance-container { display: flex; flex-direction: column; gap: .75rem; }
+        .metric-block { border: 1px solid var(--border-color); border-radius: 6px; padding: .75rem; background: var(--secondary-bg); }
+        .metric-block h3 { margin: 0 0 .5rem 0; font-size: 1rem; }
+
     </style>
 </head>
 <body>
@@ -170,6 +181,12 @@ def create_interactive_html(output_html_path):
 </div>
 
 <div id="right-panel" class="panel">
+    <div class="tabs">
+        <button class="tab-button active" data-tab="context">Context Builder</button>
+        <button class="tab-button" data-tab="performance">AI Performance</button>
+    </div>
+    <div id="tab-context" class="tab-panel active">
+
     <div class="output-container">
         <textarea id="instruction-input" placeholder="Paste instruction JSON here to auto-select files..."></textarea>
         <div class="output-area" style="display: flex; flex-direction: column;">
@@ -198,6 +215,16 @@ def create_interactive_html(output_html_path):
     </div>
 </div>
 
+
+    <div id="tab-performance" class="tab-panel">
+        <div id="performance-container">
+            <div id="perf-summary" class="metric-block"><h3>Sammanfattning</h3><div id="perf-summary-body">Ingen data.</div></div>
+            <div id="perf-log" class="metric-block"><h3>ByggLogg</h3><div id="perf-log-body">Ingen data.</div></div>
+            <div id="perf-learning" class="metric-block"><h3>Learning DB</h3><div id="perf-learning-body">Ingen data.</div></div>
+            <button id="refresh-performance" class="primary">Uppdatera prestandadata</button>
+        </div>
+    </div>
+</div>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         let fullContext = null;
@@ -650,6 +677,81 @@ def create_interactive_html(output_html_path):
                 fileTreeContainer.innerHTML = `<p style="color: var(--danger-color);"><b>Error:</b> Could not load context.json. ${error.message}</p>`;
             });
     });
+
+// --- Tabs & Performance Dashboard (Step 3) ---
+document.querySelectorAll('.tab-button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.getAttribute('data-tab');
+    document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(`tab-${tab}`).classList.add('active');
+    if (tab === 'performance') renderPerformanceDashboard();
+  });
+});
+
+function safeText(x) {
+  if (x === null || x === undefined) return '';
+  if (typeof x === 'string') return x;
+  try { return JSON.stringify(x, null, 2); } catch { return String(x); }
+}
+
+function renderList(targetEl, items, labelKey) {
+  targetEl.innerHTML = '';
+  if (!Array.isArray(items) || items.length === 0) {
+    targetEl.textContent = 'Ingen data.';
+    return;
+  }
+  const ul = document.createElement('ul');
+  ul.style.margin = 0;
+  ul.style.paddingLeft = '1.25rem';
+  items.slice(0, 50).forEach((it, i) => {
+    const li = document.createElement('li');
+    li.textContent = (labelKey && it && typeof it === 'object' && it[labelKey]) ? it[labelKey] : safeText(it);
+    ul.appendChild(li);
+  });
+  targetEl.appendChild(ul);
+}
+
+async function refreshPerformanceData() {
+  // Re-fetch context.json to get latest metrics produced by generate_full_context.py
+  try {
+    const res = await fetch('context.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error(`status ${res.status}`);
+    fullContext = await res.json();
+    renderPerformanceDashboard();
+  } catch (e) {
+    console.error('Kunde inte läsa om context.json:', e);
+  }
+}
+
+function renderPerformanceDashboard() {
+  if (!fullContext) return;
+  const metrics = fullContext.ai_performance_metrics || {};
+  const perfSummary = document.getElementById('perf-summary-body');
+  const perfLogBody = document.getElementById('perf-log-body');
+  const perfLearningBody = document.getElementById('perf-learning-body');
+
+  const perfLog = metrics.performanceLog || [];
+  const learningDb = metrics.learningDatabase || [];
+
+  // Simple summary
+  const sum = {
+    performanceLog_count: Array.isArray(perfLog) ? perfLog.length : (perfLog && typeof perfLog === 'object' ? Object.keys(perfLog).length : 0),
+    learningDatabase_count: Array.isArray(learningDb) ? learningDb.length : (learningDb && typeof learningDb === 'object' ? Object.keys(learningDb).length : 0)
+  };
+  perfSummary.textContent = JSON.stringify(sum, null, 2);
+
+  renderList(perfLogBody, Array.isArray(perfLog) ? perfLog : [perfLog], null);
+  renderList(perfLearningBody, Array.isArray(learningDb) ? learningDb : [learningDb], null);
+}
+
+document.addEventListener('click', (e) => {
+  if (e.target && e.target.id === 'refresh-performance') {
+    refreshPerformanceData();
+  }
+});
+
 </script>
 </body>
 </html>"""
