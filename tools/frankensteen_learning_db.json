@@ -1507,5 +1507,41 @@
         "docs/Chatthistorik.json"
       ]
     }
+  },
+  {
+    "heuristicId": "H-20250808-02",
+    "trigger": {
+      "type": "code_generation",
+      "scope": [
+        "*.py"
+      ],
+      "keywords": [
+        "loop",
+        "counter",
+        "session",
+        "budget",
+        "skip",
+        "fail",
+        "queue",
+        "while"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "LOGIC_ERROR_INCOMPLETE_LOOP_COUNTING",
+      "description": "Risk that a loop processing a queue fails to increment its primary counter under all possible exit conditions (e.g., skips, API failures), leading to incorrect termination and under-utilization of allocated resources."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-LOOP-INTEGRITY",
+      "description": "When designing a loop that processes a queue against a budget, explicitly create a mental checklist for all possible paths through the loop (e.g., success, skip, failure, retry). Verify that the primary progress/budget counter is correctly updated in *every single path* before delivering the code."
+    },
+    "metadata": {
+      "originSessionId": "31",
+      "createdAt": "2025-08-08T22:15:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
   }
 ]
