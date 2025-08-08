@@ -271,7 +271,6 @@ def create_interactive_html(output_html_path):
       'docs/Engrove_Audio_Toolkit_v2.0_Analys.md',
       'docs/ai_protocols/Hallucination_Leaderboard_Check.md',
       'docs/ByggLogg.json',
-      'docs/Chatthistorik.json',
       'package.json',
       'vite.config.js',
       'scripts/process_ai_instructions.py',
