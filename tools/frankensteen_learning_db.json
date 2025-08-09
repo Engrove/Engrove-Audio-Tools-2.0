@@ -1083,6 +1083,37 @@
     }
   },
   {
+    "heuristicId": "H-20250809-01",
+    "trigger": {
+      "type": "code_delivery",
+      "scope": [
+        "wrap_json_in_html.py"
+      ],
+      "keywords": [
+        "funktionalitet",
+        "kompatibilitet",
+        "GitHub Actions"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "R-001",
+      "description": "Förlust av funktionalitet vid kodoptimering."
+    },
+    "mitigation": {
+      "protocolId": "AI_Chatt_Avslutningsprotokoll",
+      "description": "Behåll fullständig ursprungskod och gör endast kompatibilitetsförbättringar utan borttagning av funktionalitet."
+    },
+    "metadata": {
+      "originSessionId": "38",
+      "createdAt": "2025-08-09T00:00:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
     "heuristicId": "H-20250808-01",
     "trigger": {
       "type": "protocol_ambiguity",

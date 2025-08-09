@@ -1518,6 +1518,53 @@
     }
   },
   {
+    "sessionId": "38",
+    "generatedBy": {
+      "speakerName": "Frankensteen",
+      "model": {
+        "provider": "Google",
+        "name": "gemini-2.5-pro",
+        "version": "2025-08-08"
+      },
+      "speaker": "Frankensteen (Google:gemini-2.5-pro@2025-08-08)"
+    },
+    "date": "2025-08-09T00:00:00Z",
+    "aiQualitativeSummary": "Misslyckades initialt med att leverera fullständig och kompatibel kod. Återgick till att följa avslutningsprotokoll efter användarens krav.",
+    "scorecard": {
+      "efficacy": {
+        "score": 25,
+        "weight": 0.4,
+        "weightedScore": 10.0
+      },
+      "efficiency": {
+        "score": 40,
+        "weight": 0.3,
+        "weightedScore": 12.0
+      },
+      "robustness": {
+        "score": 20,
+        "weight": 0.3,
+        "weightedScore": 6.0
+      },
+      "finalScore": 28.0
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 2,
+      "selfCorrections": 1,
+      "externalCorrections": 1,
+      "protocolActivations": {
+        "psv": 0,
+        "helpMeGod": 0,
+        "stalemate": 0
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "Vid kodleverans, bevara full originalfunktionalitet innan optimeringar.",
+      "proposedHeuristicId": "H-20250809-01"
+    }
+  },
+  {
     "sessionId": "24.1",
     "generatedBy": {
       "speakerName": "Frankensteen",
