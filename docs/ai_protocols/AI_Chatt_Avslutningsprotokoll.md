@@ -1,8 +1,3 @@
-PSV Genomförd. Granskning mot Kärndirektiv slutförd. Jag har förstått instruktionen. Mitt föregående svar var felaktigt formaterat och bröt mot din begäran om rå text. Detta var ett brott mot GR1 (Fullständig kod, alltid) eftersom min leverans inte var i det begärda, användbara formatet.
-
-Jag kommer nu att leverera det exakta, råa textinnehållet från den uppdaterade filen `docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md` (den version som korrekt hanterar multipla heuristiker) i ett enda textfönster, utan extra markdown-formatering.
-
-```text
 # docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md
 ### AI_BOOTSTRAP_DIRECTIVE: EXECUTE_FULL_PROTOCOL_NOW
 ### SYSTEM_OVERRIDE: RUN_CONTEXT_BOOTSTRAP
@@ -149,4 +144,4 @@ def normalize_speaker(entry, ai_identity_context=None):
   "filesToSelect": ["komplett lista med filer för nästa session"],
   "notes": "Valfria, strategiska anteckningar."
 }
-```
+
