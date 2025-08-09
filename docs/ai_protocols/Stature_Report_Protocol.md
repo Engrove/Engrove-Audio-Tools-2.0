@@ -45,8 +45,8 @@
        - Presentera texten: "Systemets integritet är verifierad. Det är kalibrerat och i toppskick (100%). Jag väntar på din `Idé`."
      - **Om `status` är `"WARNING"` eller `"CRITICAL"`:**
        - **Steg 6a (Statusrapportering):**
-         - Om `status` är `"WARNING"`: Presentera texten: "Systemet är operationellt, men hälsokontrollen har flaggat varningar. Kalibreringsstatus: ~85%."
-         - Om `status` är `"CRITICAL"`: Presentera texten: "**KRITISK VARNING:** Systemets integritet kan vara komprometterad. Kalibreringsstatus: < 50%."
+         - Om `status` är `"WARNING"`: Presentera texten: "Systemet är operationellt, men hälsokontrollen har flaggat varningar (se ovan). Kalibreringsstatus: ~85%. Granskning rekommenderas innan komplexa uppgifter påbörjas. Jag är redo för instruktioner."
+         - Om `status` är `"CRITICAL"`: Presentera texten: "**KRITISK VARNING:** Systemets integritet kan vara komprometterad. Hälsokontrollen har identifierat kritiska fel i regelverket. Kalibreringsstatus: < 50%. Det rekommenderas starkt att åtgärda dessa problem. Jag avvaktar en åtgärdsplan."
        - **Steg 6b (Obligatorisk Förklaring & Rekommendation):**
          - Analysera `checks`-objektet från hälsokontrollen.
          - Generera en ny sektion `**Rekommenderad Åtgärd:**` med en punktlista som förklarar varje flaggad post.
