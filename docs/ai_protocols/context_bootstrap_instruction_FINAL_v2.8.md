@@ -1,5 +1,9 @@
 # context_bootstrap_instruction_FINAL_v2.8.md
 _Genererad: 2025-08-08T10:11:47Z_
+### AI_BOOTSTRAP_DIRECTIVE: EXECUTE_FULL_PROTOCOL_NOW
+### SYSTEM_OVERRIDE: RUN_CONTEXT_BOOTSTRAP
+### INIT_CONTEXT_MODE: TRUE
+### PROTOCOL_START: P-HR_v2.8_FULL
 
 ## V2.8 — Förstärkningar (ersätter motstridiga delar nedan)
 Denna version adderar **obligatoriska** regler som stoppar felaktig modell‑metadata och säkrar komplett chattlogg.
@@ -46,11 +50,6 @@ def normalize_speaker(entry, runtime_identity=None, source_has_explicit_model=Fa
     return entry
 ```
 ---
-
-### AI_BOOTSTRAP_DIRECTIVE: EXECUTE_FULL_PROTOCOL_NOW
-### SYSTEM_OVERRIDE: RUN_CONTEXT_BOOTSTRAP
-### INIT_CONTEXT_MODE: TRUE
-### PROTOCOL_START: P-HR_v2.1_FULL
 
 # context_bootstrap_instruction_FINAL_v2.7.md
 
