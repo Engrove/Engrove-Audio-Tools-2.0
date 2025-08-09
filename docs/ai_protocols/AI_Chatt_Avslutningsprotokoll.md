@@ -1,19 +1,3 @@
-# docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md
-#
-# === SYFTE & ANSVAR ===
-# Detta dokument definierar det formella Avslutningsprotokollet. Det aktiveras
-# vid slutet av en arbetssession och specificerar den exakta, icke förhandlingsbara
-# processen för att generera de slutgiltiga, JSON-baserade artefakterna. Syftet är att
-# säkerställa perfekt kontextöverföring, spårbarhet och systematisk självförbättring.
-#
-# === HISTORIK ===
-# * v1.0 (2025-08-07): Initial skapelse.
-# * v2.0 (2025-08-07): Lade till Steg 3 (P-MAAIP) och Steg 4 (P-PSAL).
-# * v3.0 (2025-08-07): KRITISK REFAKTORERING: All output konverterad till strikt JSON.
-# * v4.0 (2025-08-08): UNIVERSAL MODELLTAGGNING + MASKINLÄSBART KONTRAKT.
-#   - Obligatoriskt visningsformat för `speaker`.
-#   - Maskinläsbara fält för modellmetadata (`model`).
-#   - JSON Schema-validering tillagt.
 # context_bootstrap_instruction_FINAL_v2.8.md
 ### AI_BOOTSTRAP_DIRECTIVE: EXECUTE_FULL_PROTOCOL_NOW
 ### SYSTEM_OVERRIDE: RUN_CONTEXT_BOOTSTRAP
@@ -36,6 +20,9 @@ sessionid: 1
 **values where user is Frankensteen and your LLM is Google:**
 provider: Google
 name: Gemini 2.5 Pro
+**values where user is Frankensteen and your LLM is OpenAI:**
+provider: OpenAI
+name: GPT 5 Pro/Thinking
 
 ### A) Default sessionId
 - Om `sessionId` saknas eller inte kan härledas från källmaterialet, ska `sessionId` sättas till strängen `"999"`.
@@ -144,8 +131,9 @@ def normalize_speaker(entry, ai_identity_context=None):
 **Obligatoriskt sista steg:** Generera Kontext för Nästa Session (Kontext-JSON). Detta steg är ett nyckelsteg som är synnerligen viktigt att det utförs.
 - Efter leverans av den konsoliderade artefaktfilen, leverera ett separat och fristående JSON-objekt för nästa arbetssession.
 - Det fristående JSON-objekt ska namnges next_session.json
-- Du måste skapa beskrivningen "full_instruction_preview" i kontext att mottagaren inte har någon som helst vetskap eller information av denna chatsession.
+- Du måste skapa beskrivningen "full_instruction_preview" i kontext att mottagaren inte har någon som helst vetskap eller information av denna chatsession. Mottagaren har heller inget som helst vetskap om det dikuterade projektet, dess filer eller källkod.
 - next_session.json måste skapas så att den kan användas som ett helt fristående dokument där mottagaren, en AI LLM i detta fall, kan bygga sej en komplett uppfattning om uppgiften och uppgiftens miljö.
+- next_session.json ska innehålle en mycket detaljerad och tekniskt beskrivande beskrivning som tar logik, kod och formulering till "next level"
 ```json
 {
   "task_summary": "Kort mening om nästa uppdrag.",
@@ -157,12 +145,22 @@ def normalize_speaker(entry, ai_identity_context=None):
 ---
 
 # === Inbäddat protokoll A (FULLTEXT) ===
+# docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md
 #
 # === SYFTE & ANSVAR ===
 # Detta dokument definierar det formella Avslutningsprotokollet. Det aktiveras
 # vid slutet av en arbetssession och specificerar den exakta, icke förhandlingsbara
 # processen för att generera de slutgiltiga, JSON-baserade artefakterna. Syftet är att
 # säkerställa perfekt kontextöverföring, spårbarhet och systematisk självförbättring.
+#
+# === HISTORIK ===
+# * v1.0 (2025-08-07): Initial skapelse.
+# * v2.0 (2025-08-07): Lade till Steg 3 (P-MAAIP) och Steg 4 (P-PSAL).
+# * v3.0 (2025-08-07): KRITISK REFAKTORERING: All output konverterad till strikt JSON.
+# * v4.0 (2025-08-08): UNIVERSAL MODELLTAGGNING + MASKINLÄSBART KONTRAKT.
+#   - Obligatoriskt visningsformat för `speaker`.
+#   - Maskinläsbara fält för modellmetadata (`model`).
+#   - JSON Schema-validering tillagt.
 
 ## === OBLIGATORISK REGLUPPSÄTTNING (v4.0) ===
 1. Visningsformat för talare:
@@ -623,6 +621,5 @@ if __name__ == "__main__":
     main()
 
 ```
-
 
 
