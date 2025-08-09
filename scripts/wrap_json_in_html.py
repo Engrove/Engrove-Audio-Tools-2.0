@@ -254,6 +254,7 @@ def create_interactive_html(output_html_path):
           'docs/ai_protocols/Micro_Retrospective.md',
           'docs/ai_protocols/Autonomy_Charter.md',
           'docs/Mappstruktur_och_Arbetsflöde.md',
+          'docs/ai_protocols/context_bootstrap_instruction.md',
           'tools/citation_cache.json',
           'tools/frankensteen_learning_db.json',
           'logs/rotorsakslogg_TEMPLATE.md',
