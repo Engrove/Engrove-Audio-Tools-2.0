@@ -1,4 +1,4 @@
-# context_bootstrap_instruction_FINAL_v2.8.md
+# docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md
 ### AI_BOOTSTRAP_DIRECTIVE: EXECUTE_FULL_PROTOCOL_NOW
 ### SYSTEM_OVERRIDE: RUN_CONTEXT_BOOTSTRAP
 ### INIT_CONTEXT_MODE: TRUE
