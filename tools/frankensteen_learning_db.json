@@ -917,6 +917,71 @@
     }
   },
   {
+    "heuristicId": "H-20250809-07",
+    "trigger": {
+      "type": "ci_cd_script_execution",
+      "scope": [
+        ".github/workflows/*.yml",
+        "scripts/*.py"
+      ],
+      "keywords": [
+        "sys.argv",
+        "Usage:",
+        "exit 1",
+        "fel antal argument"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "RISK_CI_SCRIPT_APICONTRACT_MISMATCH",
+      "description": "Risk för API-kontraktsbrott mellan ett CI/CD-workflow och ett anropat skript, där antalet eller typen av kommandoradsargument är felaktigt, vilket orsakar ett omedelbart byggfel."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-CI-ARGC-CHECK",
+      "description": "Vid modifiering av ett skript som anropas av ett CI-workflow, måste båda filerna granskas samtidigt. Verifiera att antalet argument i CI-anropet exakt matchar skriptets `sys.argv`-hantering."
+    },
+    "metadata": {
+      "originSessionId": "35",
+      "createdAt": "2025-08-09T12:00:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250809-08",
+    "trigger": {
+      "type": "file_modification_and_delivery",
+      "scope": [
+        "*"
+      ],
+      "keywords": [
+        "modifiera",
+        "uppdatera",
+        "korrigera",
+        "refaktorera"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "RISK_CATASTROPHIC_TRUNCATION",
+      "description": "AI:n levererar en gravt ofullständig (trunkerad) version av en fil som den har modifierat, vilket raderar befintlig funktionalitet och bryter mot kärndirektiv."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-LINECOUNT_DIFF",
+      "description": "Före leverans av en modifierad fil, MÅSTE en automatisk 'line-count diff' genomföras. Om den nya filen är >10% kortare än originalet utan en explicit, godkänd anledning (t.ex. 'ta bort funktion X'), MÅSTE leveransen avbrytas och 'Help me God'-protokollet aktiveras för att analysera orsaken till trunkeringen."
+    },
+    "metadata": {
+      "originSessionId": "35",
+      "createdAt": "2025-08-09T12:00:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
     "heuristicId": "H-20250806-01",
     "trigger": {
       "type": "bug_report_response",
