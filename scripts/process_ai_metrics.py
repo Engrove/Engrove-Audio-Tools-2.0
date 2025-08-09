@@ -3,12 +3,12 @@
 #
 # === SYFTE & ANSVAR ===
 # Läser AI-prestandadata och lärdomsdatabas och sammanför dem till ett JSON-objekt.
-# Källor: docs/ByggLogg.json och tools/frankensteen_learning_db.json.
+# Källor: docs/ai_protocol_performance.json och tools/frankensteen_learning_db.json.
 # Skriver resultatet till stdout (inte fil).
 #
 # === API-KONTRAKT ===
 # IN: (filer på disk)
-#  - docs/ByggLogg.json (valfri; om saknas => tom lista)
+#  - docs/ai_protocol_performance.json (valfri; om saknas => tom lista)
 #  - tools/frankensteen_learning_db.json (valfri; om saknas => tom lista eller tom dict)
 # UT (stdout, application/json):
 #  {
@@ -18,6 +18,8 @@
 #
 # === HISTORIK ===
 # * v1.0 (2025-08-08): Initial skapelse enligt Operation: Metakognition (Fas 5).
+# * v1.1 (2025-08-09): KRITISK FIX: Ändrat källan från docs/ByggLogg.json till
+#   docs/ai_protocol_performance.json för att matcha frontend-kontraktet.
 #
 # === TILLÄMPADE REGLER (Frankensteen v4.x) ===
 # - Fullständig kod, alltid (inga platshållare)
@@ -30,7 +32,8 @@ from pathlib import Path
 from typing import Any, Union
 
 
-BYGG_LOGG_PATH = Path("docs/ByggLogg.json")
+# KORRIGERING: Ändrad sökväg från "docs/ByggLogg.json" till den korrekta filen.
+PERFORMANCE_LOG_PATH = Path("docs/ai_protocol_performance.json")
 LEARNING_DB_PATH = Path("tools/frankensteen_learning_db.json")
 
 
@@ -62,7 +65,7 @@ def load_json_file(path: Path) -> Union[dict, list]:
 
 
 def main() -> None:
-    performance_log: Any = load_json_file(BYGG_LOGG_PATH)
+    performance_log: Any = load_json_file(PERFORMANCE_LOG_PATH)
     learning_database: Any = load_json_file(LEARNING_DB_PATH)
 
     output = {
