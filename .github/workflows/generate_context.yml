@@ -5,11 +5,15 @@
 # * v12.0 (Correct Architecture): Implementerar den korrekta, robusta arkitekturen.
 #   Ansvaret är nu separerat: ett skript genererar JSON, ett annat skript
 #   wrappar det i HTML. Arbetsflödet är rent, läsbart och underhållbart.
+# * v12.1 (DENNA ÄNDRING): Korrigerat ett API-kontraktsbrott. Anropet till
+#   wrap_json_in_html.py har korrigerats för att endast skicka ETT argument
+#   (output-filen), vilket matchar skriptets definierade API och löser byggfelet.
 #
-# TILLÄMPADE REGLER (Frankensteen v3.7):
-# - Följer Single Responsibility Principle. Varje steg gör en sak.
-# - Inga inbäddade skript. Anropar externa skript för maximal robusthet.
-# - Validerar utdata från varje kritiskt steg.
+# TILLÄMPADE REGLER (Frankensteen v4.3):
+# - Post-Failure Scrutiny (PFS): Denna korrigering adresserar direkt det
+#   byggfel som identifierades i föregående körning.
+# - API-kontraktsverifiering: Kontraktet mellan detta CI-skript och det anropade
+#   Python-skriptet har nu verifierats och korrigerats.
 
 name: Generate and Deploy AI Context Data
 
@@ -85,7 +89,9 @@ jobs:
         id: create-html
         if: steps.generate-json.outputs.success == 'true'
         run: |
-          if python scripts/wrap_json_in_html.py ${{ env.SITE_DIR }}/${{ env.JSON_FILE }} ${{ env.SITE_DIR }}/${{ env.HTML_FILE }}; then
+          # KORRIGERING: Anropet skickar nu bara ETT argument, output-filen,
+          # för att matcha skriptets API-kontrakt.
+          if python scripts/wrap_json_in_html.py ${{ env.SITE_DIR }}/${{ env.HTML_FILE }}; then
             echo "[INFO] context.html skapades framgångsrikt."
             echo "success=true" >> $GITHUB_OUTPUT
           else
