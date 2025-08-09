@@ -24,10 +24,11 @@
 # * v16.0 (2025-08-06): Gjort `AI_Core_Instruction.md` valbar istället för obligatorisk.
 #   - Funktionen `enforceCoreInstruction` är borttagen.
 #   - Filen är nu en del av `CORE_DOC_PATHS`.
+# * v17.0 (2025-08-09): (DENNA ÄNDRING) Omarbetat "AI Performance"-fliken till en fullständig instrumentpanel med diagram och tabeller.
 #
 # TILLÄMPADE REGLER (Frankensteen v4.0):
 # - Fullständig kod, alltid: Detta är en komplett, fungerande fil med den nya logiken.
-# - Explicit Alltid: Ändringen är tydligt dokumenterad i historiken och implementerad.
+# - Obligatorisk Refaktorisering: Den nya instrumentpanelen är implementerad med tydlig separation mellan datahantering och rendering.
 
 import sys
 import os
@@ -41,9 +42,10 @@ def create_interactive_html(output_html_path):
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>AI Context Builder v3.3</title>
+    <title>AI Context Builder v3.4</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root {
+        :root {{
             --primary-bg: #f8f9fa;
             --secondary-bg: #ffffff;
             --tertiary-bg: #e9ecef;
@@ -57,8 +59,8 @@ def create_interactive_html(output_html_path):
             --info-color: #17a2b8;
             --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             --font-mono: "JetBrains Mono", "SF Mono", "Consolas", "Liberation Mono", "Menlo", monospace;
-        }
-        body {
+        }}
+        body {{
             font-family: var(--font-main);
             background-color: var(--primary-bg);
             color: var(--text-color);
@@ -66,31 +68,31 @@ def create_interactive_html(output_html_path):
             display: flex;
             height: 100vh;
             overflow: hidden;
-        }
-        .panel {
+        }}
+        .panel {{
             padding: 1em;
             overflow-y: auto;
             border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-        }
-        #left-panel {
+        }}
+        #left-panel {{
             width: 40%;
             min-width: 350px;
-        }
-        #right-panel {
+        }}
+        #right-panel {{
             width: 60%;
             gap: 1em;
-        }
-        .controls {
+        }}
+        .controls {{
             padding-bottom: 1em;
             margin-bottom: 1em;
             border-bottom: 1px solid var(--border-color);
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
-        }
-        button {
+        }}
+        button {{
             font-size: 14px;
             padding: 8px 16px;
             border-radius: 6px;
@@ -99,27 +101,27 @@ def create_interactive_html(output_html_path):
             background-color: var(--secondary-bg);
             color: var(--text-color);
             transition: background-color 0.2s, border-color 0.2s, color 0.2s;
-        }
-        button:hover { background-color: #e9ecef; }
-        button:disabled { background-color: #e9ecef; cursor: not-allowed; opacity: 0.7; }
-        button.primary { background-color: var(--accent-color); color: white; border-color: var(--accent-color); }
-        button.primary:hover:not(:disabled) { background-color: var(--accent-hover); }
-        button.info { background-color: var(--info-color); color: white; border-color: var(--info-color); }
-        button.info:hover:not(:disabled) { background-color: #138496; }
+        }}
+        button:hover {{ background-color: #e9ecef; }}
+        button:disabled {{ background-color: #e9ecef; cursor: not-allowed; opacity: 0.7; }}
+        button.primary {{ background-color: var(--accent-color); color: white; border-color: var(--accent-color); }}
+        button.primary:hover:not(:disabled) {{ background-color: var(--accent-hover); }}
+        button.info {{ background-color: var(--info-color); color: white; border-color: var(--info-color); }}
+        button.info:hover:not(:disabled) {{ background-color: #138496; }}
         
-        #file-tree-container { flex-grow: 1; }
-        #file-tree-container ul { list-style-type: none; padding-left: 20px; }
-        #file-tree-container li { padding: 3px 0; }
-        .toggle { cursor: pointer; user-select: none; display: inline-block; width: 1em; }
+        #file-tree-container {{ flex-grow: 1; }}
+        #file-tree-container ul {{ list-style-type: none; padding-left: 20px; }}
+        #file-tree-container li {{ padding: 3px 0; }}
+        .toggle {{ cursor: pointer; user-select: none; display: inline-block; width: 1em; }}
         
-        .tree-item-label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
-        .tree-item-label input[type="checkbox"] { cursor: pointer; }
-        .file-icon { width: 1.1em; height: 1.1em; color: var(--text-muted); }
-        .file-name-clickable { text-decoration: none; color: var(--text-color); }
-        .file-name-clickable:hover { text-decoration: underline; color: var(--accent-color); }
+        .tree-item-label {{ display: flex; align-items: center; gap: 6px; cursor: pointer; }}
+        .tree-item-label input[type="checkbox"] {{ cursor: pointer; }}
+        .file-icon {{ width: 1.1em; height: 1.1em; color: var(--text-muted); }}
+        .file-name-clickable {{ text-decoration: none; color: var(--text-color); }}
+        .file-name-clickable:hover {{ text-decoration: underline; color: var(--accent-color); }}
         
-        .output-container { display: flex; flex-direction: column; flex-grow: 1; gap: 1em; }
-        .output-area, #instruction-input {
+        .output-container {{ display: flex; flex-direction: column; flex-grow: 1; gap: 1em; }}
+        .output-area, #instruction-input {{
             white-space: pre-wrap;
             word-wrap: break-word;
             background-color: var(--secondary-bg);
@@ -130,40 +132,47 @@ def create_interactive_html(output_html_path):
             font-family: var(--font-mono);
             font-size: 14px;
             resize: none;
-        }
-        #instruction-input { flex-grow: 0; height: 150px; resize: vertical; }
+        }}
+        #instruction-input {{ flex-grow: 0; height: 150px; resize: vertical; }}
 
-        .modal {
+        .modal {{
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(0, 0, 0, 0.5); display: flex;
             justify-content: center; align-items: center; z-index: 1000;
             opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
-        }
-        .modal.visible { opacity: 1; visibility: visible; }
-        .modal-content {
+        }}
+        .modal.visible {{ opacity: 1; visibility: visible; }}
+        .modal-content {{
             background: var(--secondary-bg); border-radius: 8px; padding: 20px;
             width: 90%; max-width: 1000px; height: 90%; max-height: 80vh;
             display: flex; flex-direction: column; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-        .modal-header {
+        }}
+        .modal-header {{
             display: flex; justify-content: space-between; align-items: center;
             border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px;
-        }
-        .modal-header h2 { margin: 0; font-size: 1.2em; font-family: var(--font-mono); }
-        .modal-close { font-size: 24px; cursor: pointer; border: none; background: none; }
-        .modal-body { flex-grow: 1; overflow-y: auto; }
-        .modal-body pre { margin: 0; white-space: pre-wrap; }
-        .modal-body img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+        }}
+        .modal-header h2 {{ margin: 0; font-size: 1.2em; font-family: var(--font-mono); }}
+        .modal-close {{ font-size: 24px; cursor: pointer; border: none; background: none; }}
+        .modal-body {{ flex-grow: 1; overflow-y: auto; }}
+        .modal-body pre {{ margin: 0; white-space: pre-wrap; }}
+        .modal-body img {{ max-width: 100%; height: auto; display: block; margin: 0 auto; }}
     
         /* --- Tabs (Step 3) --- */
-        .tabs { display: flex; gap: .5rem; margin-bottom: 1rem; }
-        .tab-button { padding: .5rem .75rem; border: 1px solid var(--border-color); background: var(--secondary-bg); border-radius: 6px; cursor: pointer; }
-        .tab-button.active { background: var(--accent-color); color: #fff; border-color: var(--accent-color); }
-        .tab-panel { display: none; }
-        .tab-panel.active { display: flex; flex-direction: column; gap: 1rem; }
-        #performance-container { display: flex; flex-direction: column; gap: .75rem; }
-        .metric-block { border: 1px solid var(--border-color); border-radius: 6px; padding: .75rem; background: var(--secondary-bg); }
-        .metric-block h3 { margin: 0 0 .5rem 0; font-size: 1rem; }
+        .tabs {{ display: flex; gap: .5rem; margin-bottom: 1rem; }}
+        .tab-button {{ padding: .5rem .75rem; border: 1px solid var(--border-color); background: var(--secondary-bg); border-radius: 6px; cursor: pointer; }}
+        .tab-button.active {{ background: var(--accent-color); color: #fff; border-color: var(--accent-color); }}
+        .tab-panel {{ display: none; }}
+        .tab-panel.active {{ display: flex; flex-direction: column; gap: 1rem; flex-grow: 1; }}
+        
+        /* --- Performance Dashboard Styles --- */
+        #performance-container {{ display: flex; flex-direction: column; gap: 1rem; }}
+        .metric-block {{ border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; background: var(--secondary-bg); }}
+        .metric-block h3 {{ margin: 0 0 .75rem 0; font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; }}
+        .chart-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }}
+        .chart-container {{ position: relative; height: 300px; }}
+        #perf-learning-body table {{ width: 100%; border-collapse: collapse; font-size: 0.85rem; }}
+        #perf-learning-body th, #perf-learning-body td {{ border: 1px solid var(--border-color); padding: 8px; text-align: left; }}
+        #perf-learning-body th {{ background-color: var(--primary-bg); }}
     </style>
 </head>
 <body>
@@ -185,15 +194,42 @@ def create_interactive_html(output_html_path):
         <button class="tab-button" data-tab="performance">AI Performance</button>
     </div>
     <div id="tab-context" class="tab-panel active">
-
-    <div class="output-container">
-        <textarea id="instruction-input" placeholder="Paste instruction JSON here to auto-select files..."></textarea>
-        <div class="output-area" style="display: flex; flex-direction: column;">
-             <div class="controls" style="border-bottom: none; margin-bottom: 0; padding-bottom: 0;">
-                <button id="copy-json-btn" disabled>Copy JSON</button>
-                <button id="download-json-btn" disabled>Download JSON</button>
+        <div class="output-container">
+            <textarea id="instruction-input" placeholder="Paste instruction JSON here to auto-select files..."></textarea>
+            <div class="output-area" style="display: flex; flex-direction: column;">
+                 <div class="controls" style="border-bottom: none; margin-bottom: 0; padding-bottom: 0;">
+                    <button id="copy-json-btn" disabled>Copy JSON</button>
+                    <button id="download-json-btn" disabled>Download JSON</button>
+                </div>
+                <pre id="output-pre" style="flex-grow: 1; margin-top: 1em;">Generated context will appear here.</pre>
             </div>
-            <pre id="output-pre" style="flex-grow: 1; margin-top: 1em;">Generated context will appear here.</pre>
+        </div>
+    </div>
+    <div id="tab-performance" class="tab-panel">
+        <div id="performance-container">
+             <div class="chart-grid">
+                 <div class="metric-block chart-container">
+                    <h3>Final Score Over Time</h3>
+                    <canvas id="score-chart"></canvas>
+                </div>
+                <div class="metric-block chart-container">
+                    <h3>Session Metrics (Cycles)</h3>
+                    <canvas id="metrics-chart"></canvas>
+                </div>
+                 <div class="metric-block chart-container">
+                    <h3>Sessions Per Provider</h3>
+                    <canvas id="provider-chart"></canvas>
+                </div>
+                 <div class="metric-block chart-container">
+                    <h3>Sessions Per Model</h3>
+                    <canvas id="model-chart"></canvas>
+                </div>
+            </div>
+            <div id="perf-learning" class="metric-block">
+                <h3>Learning Database (Heuristics)</h3>
+                <div id="perf-learning-body">Ingen data.</div>
+            </div>
+            <button id="refresh-performance" class="primary">Uppdatera prestandadata</button>
         </div>
     </div>
 </div>
@@ -214,69 +250,56 @@ def create_interactive_html(output_html_path):
     </div>
 </div>
 
-</div>
-
-    <div id="tab-performance" class="tab-panel">
-        <div id="performance-container">
-            <div id="perf-summary" class="metric-block"><h3>Sammanfattning</h3><div id="perf-summary-body">Ingen data.</div></div>
-            <div id="perf-log" class="metric-block"><h3>ByggLogg</h3><div id="perf-log-body">Ingen data.</div></div>
-            <div id="perf-learning" class="metric-block"><h3>Learning DB</h3><div id="perf-learning-body">Ingen data.</div></div>
-            <div id="perf-provider" class="metric-block"><h3>Per leverantör</h3><div id="perf-provider-body">Ingen data.</div></div>
-            <div id="perf-model" class="metric-block"><h3>Per modell</h3><div id="perf-model-body">Ingen data.</div></div>
-            <button id="refresh-performance" class="primary">Uppdatera prestandadata</button>
-        </div>
-    </div>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         let fullContext = null;
         const REPO_RAW_URL = 'https://raw.githubusercontent.com/Engrove/Engrove-Audio-Tools-2.0/main/';
         
-    const CORE_DOC_PATHS = [
-      'docs/ai_protocols/AI_Core_Instruction.md',
-      'docs/ai_protocols/ai_config.json',
-      'docs/ai_protocols/Levande_Kontext_Protokoll.md',
-      'docs/ai_protocols/Confidence_Protocol.md',
-      'docs/ai_protocols/Multi_Sample_Protokoll.md',
-      'docs/ai_protocols/RAG_Faktacheck_Protokoll.md',
-      'docs/AI_Collaboration_Standard.md',
-      'docs/ai_protocols/Beroendeanalys_Protokoll.md',
-      'docs/ai_protocols/Brainstorming_Protokoll.md',
-      'docs/ai_protocols/Help_me_God_Protokoll.md',
-      'docs/ai_protocols/K-MOD_Protokoll.md',
-      'docs/ai_protocols/Kontext-JSON_Protokoll.md',
-      'docs/ai_protocols/frankensteen_persona.v1.0.json',
-      'docs/ai_protocols/MAS_Architecture_Guide.md',
-      'docs/ai_protocols/HITL_Interrupt_Points.md',
-      'docs/ai_protocols/Escalation_Protocol.md',
-      'docs/ai_protocols/LLM_Judge_Protokoll.md',
-      'docs/ai_protocols/Sandbox_Execution_Protokoll.md',
-      'docs/ai_protocols/KPI_Dashboard_Spec.md',
-      'docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md',
-      'docs/ai_protocols/Manuell_Cache-Berikning_Protokoll.md',
-      'docs/ai_protocols/Stalemate_Protocol.md',
-      'docs/ai_protocols/AI_Core_Instruction.md',
-      'docs/ai_protocols/Help_me_God_Protokoll.md',
-      'docs/ai_protocols/Pre_Execution_Alignment.md',
-      'docs/ai_protocols/Structured_Debugging_Checklist.md',
-      'docs/ai_protocols/Micro_Retrospective.md',
-      'docs/ai_protocols/Autonomy_Charter.md',
-      'docs/Mappstruktur_och_Arbetsflöde.md',
-      'tools/citation_cache.json',
-      'tools/frankensteen_learning_db.json',
-      'logs/rotorsakslogg_TEMPLATE.md',
-      'docs/Global_UI-Standard_för_Engrove-plattformen.md',
-      'docs/Global_UI-Standard_Komponentspecifikation.md',
-      'docs/Teknisk_Beskrivning_Engrove_Audio_Toolkit.md',
-      'docs/Blueprint_för_Migrering_v1_till_v2.md',
-      'docs/Engrove_Audio_Toolkit_v2.0_Analys.md',
-      'docs/ai_protocols/Hallucination_Leaderboard_Check.md',
-      'docs/ByggLogg.json',
-      'package.json',
-      'vite.config.js',
-      'scripts/process_ai_instructions.py',
-      'scripts/generate_full_context.py',
-      'scripts/wrap_json_in_html.py'
-    ];
+        const CORE_DOC_PATHS = [
+          'docs/ai_protocols/AI_Core_Instruction.md',
+          'docs/ai_protocols/ai_config.json',
+          'docs/ai_protocols/Levande_Kontext_Protokoll.md',
+          'docs/ai_protocols/Confidence_Protocol.md',
+          'docs/ai_protocols/Multi_Sample_Protokoll.md',
+          'docs/ai_protocols/RAG_Faktacheck_Protokoll.md',
+          'docs/AI_Collaboration_Standard.md',
+          'docs/ai_protocols/Beroendeanalys_Protokoll.md',
+          'docs/ai_protocols/Brainstorming_Protokoll.md',
+          'docs/ai_protocols/Help_me_God_Protokoll.md',
+          'docs/ai_protocols/K-MOD_Protokoll.md',
+          'docs/ai_protocols/Kontext-JSON_Protokoll.md',
+          'docs/ai_protocols/frankensteen_persona.v1.0.json',
+          'docs/ai_protocols/MAS_Architecture_Guide.md',
+          'docs/ai_protocols/HITL_Interrupt_Points.md',
+          'docs/ai_protocols/Escalation_Protocol.md',
+          'docs/ai_protocols/LLM_Judge_Protokoll.md',
+          'docs/ai_protocols/Sandbox_Execution_Protokoll.md',
+          'docs/ai_protocols/KPI_Dashboard_Spec.md',
+          'docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md',
+          'docs/ai_protocols/Manuell_Cache-Berikning_Protokoll.md',
+          'docs/ai_protocols/Stalemate_Protocol.md',
+          'docs/ai_protocols/Help_me_God_Protokoll.md',
+          'docs/ai_protocols/Pre_Execution_Alignment.md',
+          'docs/ai_protocols/Structured_Debugging_Checklist.md',
+          'docs/ai_protocols/Micro_Retrospective.md',
+          'docs/ai_protocols/Autonomy_Charter.md',
+          'docs/Mappstruktur_och_Arbetsflöde.md',
+          'tools/citation_cache.json',
+          'tools/frankensteen_learning_db.json',
+          'logs/rotorsakslogg_TEMPLATE.md',
+          'docs/Global_UI-Standard_för_Engrove-plattformen.md',
+          'docs/Global_UI-Standard_Komponentspecifikation.md',
+          'docs/Teknisk_Beskrivning_Engrove_Audio_Toolkit.md',
+          'docs/Blueprint_för_Migrering_v1_till_v2.md',
+          'docs/Engrove_Audio_Toolkit_v2.0_Analys.md',
+          'docs/ai_protocols/Hallucination_Leaderboard_Check.md',
+          'docs/ByggLogg.json',
+          'package.json',
+          'vite.config.js',
+          'scripts/process_ai_instructions.py',
+          'scripts/generate_full_context.py',
+          'scripts/wrap_json_in_html.py'
+        ];
 
         const IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'];
         const ICONS = {
@@ -533,7 +556,7 @@ def create_interactive_html(output_html_path):
                     }
                 }
 
-                const selectedPaths = new Set(Array.from(fileTreeContainer.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.dataset.path));
+                const selectedPaths = new Set(Array.from(fileTreeContainer.querySelectorAll('input[type=\"checkbox\"]:checked')).map(cb => cb.dataset.path));
                 const filesContent = {};
 
                 const populatedStructure = await buildNewContextStructure(fullContext.file_structure, selectedPaths);
@@ -618,8 +641,8 @@ def create_interactive_html(output_html_path):
         instructionInput.addEventListener('input', handleInstructionInput);
 
         const closeModal = () => modal.classList.remove('visible');
-        modalCloseBtn.addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+        if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeModal);
+        if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('visible')) closeModal(); });
 
         function showButtonFeedback(button, text, color) {
@@ -634,21 +657,21 @@ def create_interactive_html(output_html_path):
             }, 2000);
         }
 
-        copyBtn.addEventListener('click', () => {
+        if (copyBtn) copyBtn.addEventListener('click', () => {
             navigator.clipboard.writeText(outputPre.textContent)
                 .then(() => showButtonFeedback(copyBtn, 'Copied!', 'success'))
                 .catch(() => showButtonFeedback(copyBtn, 'Error!', 'danger'));
         });
 
-        modalCopyBtn.addEventListener('click', () => {
+        if (modalCopyBtn) modalCopyBtn.addEventListener('click', () => {
              if (!currentFileIsBinary && currentFileContent) {
                 navigator.clipboard.writeText(currentFileContent)
                     .then(() => showButtonFeedback(modalCopyBtn, 'Copied!', 'success'))
                     .catch(() => showButtonFeedback(modalCopyBtn, 'Error!', 'danger'));
              }
         });
-
-        modalDownloadBtn.addEventListener('click', () => {
+        
+        if (modalDownloadBtn) modalDownloadBtn.addEventListener('click', () => {
             if (!currentFileContent) return;
             const blob = currentFileIsBinary ? currentFileContent : new Blob([currentFileContent], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
@@ -661,7 +684,7 @@ def create_interactive_html(output_html_path):
             URL.revokeObjectURL(url);
         });
 
-        downloadBtn.addEventListener('click', () => {
+        if (downloadBtn) downloadBtn.addEventListener('click', () => {
             const blob = new Blob([outputPre.textContent], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -685,124 +708,186 @@ def create_interactive_html(output_html_path):
             });
     });
 
-// --- Tabs (Step 3 baseline) ---
-document.querySelectorAll('.tab-button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const tab = btn.getAttribute('data-tab');
-    document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    document.getElementById(`tab-${tab}`).classList.add('active');
-    if (tab === 'performance') renderPerformanceDashboard();
-  });
-});
+    // --- Tabs & Performance Dashboard Logic ---
+    const charts = {}; // Global object to hold chart instances
 
-function safeText(x) {
-  if (x === null || x === undefined) return '';
-  if (typeof x === 'string') return x;
-  try { return JSON.stringify(x, null, 2); } catch { return String(x); }
-}
+    document.querySelectorAll('.tab-button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.getAttribute('data-tab');
+        document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.getElementById(`tab-${tab}`).classList.add('active');
+        if (tab === 'performance') {
+            renderPerformanceDashboard();
+        }
+      });
+    });
 
-function renderList(targetEl, items, labelKey) {
-  targetEl.innerHTML = '';
-  if (!Array.isArray(items) || items.length === 0) {
-    targetEl.textContent = 'Ingen data.';
-    return;
-  }
-  const ul = document.createElement('ul');
-  ul.style.margin = 0;
-  ul.style.paddingLeft = '1.25rem';
-  items.slice(0, 50).forEach((it, i) => {
-    const li = document.createElement('li');
-    li.textContent = (labelKey && it && typeof it === 'object' && it[labelKey]) ? it[labelKey] : safeText(it);
-    ul.appendChild(li);
-  });
-  targetEl.appendChild(ul);
-}
-
-async function refreshPerformanceData() {
-  try {
-    const res = await fetch('context.json', { cache: 'no-store' });
-    if (!res.ok) throw new Error(`status ${res.status}`);
-    fullContext = await res.json();
-    renderPerformanceDashboard();
-  } catch (e) {
-    console.error('Kunde inte läsa om context.json:', e);
-  }
-}
-
-// --- Aggregation helpers (UI-berikning) ---
-function aggregateModelStats(items) {
-  const byProvider = {};
-  const byModel = {};
-  const visit = (obj) => {
-    if (obj && typeof obj === 'object') {
-      if (obj.model && typeof obj.model === 'object') {
-        const prov = obj.model.provider || 'unknown';
-        const name = obj.model.name || 'unknown';
-        byProvider[prov] = (byProvider[prov] || 0) + 1;
-        const key = `${prov}:${name}`;
-        byModel[key] = (byModel[key] || 0) + 1;
-      }
-      for (const k in obj) {
-        const v = obj[k];
-        if (Array.isArray(v)) v.forEach(visit);
-        else if (v && typeof v === 'object') visit(v);
-      }
+    async function refreshPerformanceData() {
+        try {
+            const res = await fetch('context.json', { cache: 'no-store' });
+            if (!res.ok) throw new Error(`status ${res.status}`);
+            const data = await res.json();
+            if (data && data.ai_performance_metrics) {
+                 fullContext.ai_performance_metrics = data.ai_performance_metrics;
+                 renderPerformanceDashboard();
+            }
+        } catch (e) {
+            console.error('Kunde inte läsa om context.json:', e);
+        }
     }
-  };
-  (items || []).forEach(visit);
-  return { byProvider, byModel };
-}
+    
+    document.addEventListener('click', (e) => {
+        if (e.target && e.target.id === 'refresh-performance') {
+            refreshPerformanceData();
+        }
+    });
 
-function renderKeyValueList(targetEl, mapping) {
-  targetEl.innerHTML = '';
-  const keys = Object.keys(mapping);
-  if (keys.length === 0) { targetEl.textContent = 'Ingen data.'; return; }
-  const ul = document.createElement('ul');
-  ul.style.margin = 0;
-  ul.style.paddingLeft = '1.25rem';
-  keys.sort().forEach((k) => {
-    const li = document.createElement('li');
-    li.textContent = `${k}: ${mapping[k]}`;
-    ul.appendChild(li);
-  });
-  targetEl.appendChild(ul);
-}
+    function aggregateModelStats(items) {
+      const byProvider = {};
+      const byModel = {};
+      const visit = (obj) => {
+        if (obj && typeof obj === 'object') {
+          if (obj.model && typeof obj.model === 'object') {
+            const prov = obj.model.provider || 'unknown';
+            const name = obj.model.name || 'unknown';
+            byProvider[prov] = (byProvider[prov] || 0) + 1;
+            const key = `${prov}:${name}`;
+            byModel[key] = (byModel[key] || 0) + 1;
+          } else if (obj.generatedBy && obj.generatedBy.model) {
+             const prov = obj.generatedBy.model.provider || 'unknown';
+             const name = obj.generatedBy.model.name || 'unknown';
+             byProvider[prov] = (byProvider[prov] || 0) + 1;
+             const key = `${prov}:${name}`;
+             byModel[key] = (byModel[key] || 0) + 1;
+          }
+          for (const k in obj) {
+            const v = obj[k];
+            if (Array.isArray(v)) v.forEach(visit);
+            else if (v && typeof v === 'object') visit(v);
+          }
+        }
+      };
+      (items || []).forEach(visit);
+      return { byProvider, byModel };
+    }
+    
+    function renderLearningDbTable(targetEl, data) {
+        if (!data || data.length === 0) {
+            targetEl.innerHTML = 'Ingen data.';
+            return;
+        }
+        const table = document.createElement('table');
+        table.innerHTML = `
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Risk</th>
+                    <th>Mitigation</th>
+                    <th>Trigger Keywords</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${data.map(item => `
+                    <tr>
+                        <td>${item.heuristicId || 'N/A'}</td>
+                        <td>${(item.identifiedRisk && item.identifiedRisk.description) || 'N/A'}</td>
+                        <td>${(item.mitigation && item.mitigation.description) || 'N/A'}</td>
+                        <td>${(item.trigger && item.trigger.keywords || []).join(', ')}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        `;
+        targetEl.innerHTML = '';
+        targetEl.appendChild(table);
+    }
+    
+    function renderPerformanceDashboard() {
+        if (!fullContext) return;
+        const metrics = fullContext.ai_performance_metrics || {};
+        const perfLog = Array.isArray(metrics.performanceLog) ? metrics.performanceLog : [];
+        const learningDb = Array.isArray(metrics.learningDatabase) ? metrics.learningDatabase : [];
 
-function renderPerformanceDashboard() {
-  if (!fullContext) return;
-  const metrics = fullContext.ai_performance_metrics || {};
-  const perfSummary = document.getElementById('perf-summary-body');
-  const perfLogBody = document.getElementById('perf-log-body');
-  const perfLearningBody = document.getElementById('perf-learning-body');
+        // Destroy old charts before redrawing
+        Object.values(charts).forEach(chart => {
+            if(chart && typeof chart.destroy === 'function') {
+                chart.destroy();
+            }
+        });
 
-  const perfLog = metrics.performanceLog || [];
-  const learningDb = metrics.learningDatabase || [];
+        if (perfLog.length === 0) {
+            document.getElementById('perf-learning-body').innerHTML = 'Ingen prestandadata tillgänglig för att rendera diagram.';
+            return;
+        }
 
-  const sum = {
-    performanceLog_count: Array.isArray(perfLog) ? perfLog.length : (perfLog && typeof perfLog === 'object' ? Object.keys(perfLog).length : 0),
-    learningDatabase_count: Array.isArray(learningDb) ? learningDb.length : (learningDb && typeof learningDb === 'object' ? Object.keys(learningDb).length : 0)
-  };
-  perfSummary.textContent = JSON.stringify(sum, null, 2);
+        // --- Data Processing ---
+        const labels = perfLog.map(p => `Session ${p.sessionId}`);
+        const finalScores = perfLog.map(p => p.scorecard ? p.scorecard.finalScore : 0);
+        const debuggingCycles = perfLog.map(p => p.detailedMetrics ? p.detailedMetrics.debuggingCycles : 0);
+        const selfCorrections = perfLog.map(p => p.detailedMetrics ? p.detailedMetrics.selfCorrections : 0);
+        const externalCorrections = perfLog.map(p => p.detailedMetrics ? p.detailedMetrics.externalCorrections : 0);
 
-  renderList(perfLogBody, Array.isArray(perfLog) ? perfLog : [perfLog], null);
-  renderList(perfLearningBody, Array.isArray(learningDb) ? learningDb : [learningDb], null);
+        const { byProvider, byModel } = aggregateModelStats(perfLog);
 
-  const provBody = document.getElementById('perf-provider-body');
-  const modelBody = document.getElementById('perf-model-body');
+        // --- Chart 1: Final Score Line Chart ---
+        const scoreCtx = document.getElementById('score-chart').getContext('2d');
+        charts.scoreChart = new Chart(scoreCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Final Score',
+                    data: finalScores,
+                    borderColor: 'var(--accent-color)',
+                    backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                    fill: true,
+                    tension: 0.1
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
 
-  const allItems = [].concat(Array.isArray(perfLog)?perfLog:[perfLog]).concat(Array.isArray(learningDb)?learningDb:[learningDb]);
-  const agg = aggregateModelStats(allItems);
-  renderKeyValueList(provBody, agg.byProvider);
-  renderKeyValueList(modelBody, agg.byModel);
-}
+        // --- Chart 2: Session Metrics Bar Chart ---
+        const metricsCtx = document.getElementById('metrics-chart').getContext('2d');
+        charts.metricsChart = new Chart(metricsCtx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: 'Debugging Cycles', data: debuggingCycles, backgroundColor: 'rgba(220, 53, 69, 0.7)' },
+                    { label: 'Self Corrections', data: selfCorrections, backgroundColor: 'rgba(255, 193, 7, 0.7)' },
+                    { label: 'External Corrections', data: externalCorrections, backgroundColor: 'rgba(23, 162, 184, 0.7)' },
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } } }
+        });
 
-document.addEventListener('click', (e) => {
-  if (e.target && e.target.id === 'refresh-performance') {
-    refreshPerformanceData();
-  }
-});
+        // --- Chart 3: Provider Pie Chart ---
+        const providerCtx = document.getElementById('provider-chart').getContext('2d');
+        charts.providerChart = new Chart(providerCtx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(byProvider),
+                datasets: [{ data: Object.values(byProvider) }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+        
+        // --- Chart 4: Model Pie Chart ---
+        const modelCtx = document.getElementById('model-chart').getContext('2d');
+        charts.modelChart = new Chart(modelCtx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(byModel),
+                datasets: [{ data: Object.values(byModel) }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+        
+        // --- Table: Learning DB ---
+        renderLearningDbTable(document.getElementById('perf-learning-body'), learningDb);
+    }
 </script>
 </body>
 </html>"""
