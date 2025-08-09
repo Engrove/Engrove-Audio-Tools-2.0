@@ -26,13 +26,13 @@
 #   - Filen är nu en del av `CORE_DOC_PATHS`.
 # * v17.0 (2025-08-09): Omarbetat "AI Performance"-fliken till en fullständig instrumentpanel med diagram och tabeller.
 # * v17.1 (2025-08-09): KRITISK FIX - Återställde HTML-mallen från en f-sträng till en vanlig sträng.
-# * v17.2 (2025-08-09): KRITISK SYNTAXFIX: Lade till den saknade avslutande `"""` för html_template-variabeln.
+# * v17.2 (2025-08-09): KRITISK SYNTAXFIX - Lade till den saknade avslutande `"""` för html_template-variabeln.
 # * v17.3 (2025-08-09): KRITISK RACE-CONDITION FIX: Säkerställde att prestanda-instrumentpanelen renderas korrekt.
-# * v17.4 (2025-08-09): (DENNA ÄNDRING) KRITISK SCOPE FIX: Flyttat all `fullContext`-beroende logik in i fetch-callbacken för att lösa ReferenceError.
+# * v17.4 (2025-08-09): KRITISK SCOPE FIX: Flyttat all `fullContext`-beroende logik in i fetch-callbacken.
+# * v17.5 (2025-08-09): (DENNA ÄNDRING) DEFINITIV SYNTAXFIX: Återställt den saknade avslutande `"""`-markören efter föregående misstag.
 #
 # TILLÄMPADE REGLER (Frankensteen v4.0):
-# - Red Team Alter Ego (AERL2): Identifierat och åtgärdat ett scope-relaterat ReferenceError.
-# - Fullständig kod, alltid: Denna fil är komplett och löser det rapporterade problemet.
+# - PSV-MIT-SYNTAX-DOUBLE-CHECK: En extra, manuell granskning av grundläggande syntax har genomförts för att säkerställa att inga uppenbara fel som oavslutade strängar finns kvar.
 
 import sys
 import os
@@ -256,9 +256,8 @@ def create_interactive_html(output_html_path):
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // KRITISK FIX: Flyttat till toppen för att ha rätt scope.
         let fullContext = null;
-        const charts = {}; // Global object to hold chart instances
+        const charts = {};
 
         const REPO_RAW_URL = 'https://raw.githubusercontent.com/Engrove/Engrove-Audio-Tools-2.0/main/';
         
@@ -842,4 +841,84 @@ def create_interactive_html(output_html_path):
 
             const metricsCtx = document.getElementById('metrics-chart').getContext('2d');
             charts.metricsChart = new Chart(metricsCtx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Debugging Cycles', data: debuggingCycles, backgroundColor: 'rgba(220, 53, 69, 0.7)' },
+                        { label: 'Self Corrections', data: selfCorrections, backgroundColor: 'rgba(255, 193, 7, 0.7)' },
+                        { label: 'External Corrections', data: externalCorrections, backgroundColor: 'rgba(23, 162, 184, 0.7)' },
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } } }
+            });
+
+            const providerCtx = document.getElementById('provider-chart').getContext('2d');
+            charts.providerChart = new Chart(providerCtx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(byProvider),
+                    datasets: [{ data: Object.values(byProvider) }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
             
+            const modelCtx = document.getElementById('model-chart').getContext('2d');
+            charts.modelChart = new Chart(modelCtx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(byModel),
+                    datasets: [{ data: Object.values(byModel) }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+            
+            const learningBody = document.getElementById('perf-learning-body');
+            if (learningBody) {
+                 renderLearningDbTable(learningBody, learningDb);
+            }
+        }
+
+        fetch('context.json')
+            .then(response => { if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`); return response.json(); })
+            .then(data => {
+                fullContext = data;
+                fileTreeContainer.innerHTML = '';
+                renderFileTree(fullContext.file_structure, fileTreeContainer, '');
+                
+                // Set up all event listeners that depend on fullContext *after* it's loaded.
+                setupPerformanceDashboard();
+                if (document.querySelector('.tab-button[data-tab="performance"]').classList.contains('active')) {
+                    renderPerformanceDashboard();
+                }
+            })
+            .catch(error => {
+                fileTreeContainer.innerHTML = `<p style="color: var(--danger-color);"><b>Error:</b> Could not load context.json. ${error.message}</p>`;
+            });
+    });
+</script>
+
+</body>
+</html>"""
+
+    try:
+        with open(output_html_path, 'w', encoding='utf-8') as f:
+            f.write(html_template)
+        print(f"[INFO] Wrapper: Skapade framgångsrikt den uppdaterade interaktiva HTML-filen '{output_html_path}'.")
+
+    except Exception as e:
+        print(f"[ERROR] Wrapper: Ett oväntat fel inträffade vid skrivning till fil: {e}", file=sys.stderr)
+        sys.exit(1)
+
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print("Användning: python wrap_json_in_html.py <dummy-input.json> <sökväg-till-output.html>", file=sys.stderr)
+        sys.exit(1)
+
+    output_file = sys.argv[2]
+    
+    output_dir = os.path.dirname(output_file)
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
+        
+    create_interactive_html(output_file)
