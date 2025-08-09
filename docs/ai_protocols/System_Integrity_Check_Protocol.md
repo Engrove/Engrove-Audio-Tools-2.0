@@ -8,8 +8,10 @@
 #
 # === HISTORIK ===
 # v1.0 (2025-08-09): Initial skapelse.
+# v1.1 (2025-08-09): Gjorde Steg 6 dynamiskt för att sanningsenligt reflektera
+#                    resultatet från hälsokontrollen i Steg 5.
 #
-# === KONTROLLPUNKTER ===
+# === PROTOKOLL-STEG ===
 
 **1. Heuristik-analys (`tools/frankensteen_learning_db.json`):**
    - **Konflikt-detektion:** Identifiera heuristiker vars `trigger`-villkor är identiska eller kraftigt överlappande men som föreskriver olika `mitigation`-åtgärder. Flagga dessa som `POTENTIAL_CONFLICT`.
