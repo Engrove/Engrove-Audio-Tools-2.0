@@ -16,6 +16,7 @@
     ],
     "schema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Dynamic Protocol Schema for Status Report",
       "type": "object",
       "required": [
         "protocolId",
@@ -30,13 +31,33 @@
           "type": "string",
           "const": "DP-STATURE-REPORT-01"
         },
+        "status": {
+          "enum": ["experimental", "active", "deprecated"]
+        },
         "trigger": {
           "type": "object",
+          "required": ["event"],
           "properties": {
             "event": {
               "const": "new_session_start"
             }
           }
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["action", "details"],
+            "properties": {
+              "action": { "type": "string" },
+              "details": { "type": "object" }
+            }
+          }
+        },
+        "schema": {
+          "type": "object",
+          "description": "Self-validating schema for this specific protocol instance."
         }
       }
     }
