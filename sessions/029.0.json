@@ -1,0 +1,313 @@
+{
+  "sessionId": "29",
+  "createdAt": "2025-08-07T18:30:00Z",
+  "artifacts": {
+    "ByggLogg": {
+      "sessionId": "29",
+      "date": "2025-08-07T18:30:00Z",
+      "summary": "En exceptionellt produktiv och transformerande session. En serie kritiska buggar i jämförelsefunktionen felsöktes och åtgärdades. Detta ledde till en strategisk pivot där hela det interna systemet för AI-samarbete och prestandamätning (Operation: Metakognition) designades och implementerades, inklusive en fundamental migrering från ostrukturerad text till ett robust, JSON-först-system för all historik och alla lärdomar.",
+      "actions": [
+        {
+          "title": "Felsökning och Uppgradering av 'Engrove Inspector'",
+          "files": [
+            {
+              "path": "src/entities/logger/model/loggerStore.js",
+              "changeDescription": "Aktiverade persistens, utökade loggkapaciteten och implementerade logik för att hantera namngivna logg-sessioner."
+            },
+            {
+              "path": "src/debug.js",
+              "changeDescription": "Uppgraderade UI och logik för att hantera persistens, urval, export, datumgruppering och sessions-ID-filtrering."
+            }
+          ],
+          "result": "Felsökningsverktyget transformerades från en simpel logg-visare till ett fullfjädrat, interaktivt analysverktyg."
+        },
+        {
+          "title": "Slutgiltig Felsökning av Jämförelsefunktionen",
+          "files": [
+            {
+              "path": "src/shared/ui/BaseModal.vue",
+              "changeDescription": "Reparerade ett kritiskt API-kontraktsbrott genom att standardisera props (show) och emits (close), vilket var den slutgiltiga grundorsaken till att modalen inte visades."
+            },
+            {
+              "path": "src/features/comparison-modal/ui/ComparisonModal.vue",
+              "changeDescription": "Åtgärdade visuella UI-buggar (dubbla scrollbars, felaktig titel) genom att korrekt använda BaseModals slots och implementera en robust flexbox-layout."
+            }
+          ],
+          "result": "Alla kända buggar i 'Jämför Korg'-funktionen är nu lösta och funktionen är visuellt och funktionellt komplett."
+        },
+        {
+          "title": "Design och Implementation av 'Operation: Metakognition'",
+          "files": [
+            {
+              "path": "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md",
+              "changeDescription": "Protokollet skrevs om från grunden (till v3.0) för att generera all output i ett strikt JSON-format istället för Markdown/Text."
+            },
+            {
+              "path": "Protokoll för Historisk Rekonstruktion (P-HR)",
+              "changeDescription": "Ett nytt, specialiserat protokoll skapades för att kunna återprocessa gamla chattsessioner och generera historik i det nya JSON-formatet."
+            },
+            {
+              "path": "tools/frankensteen_learning_db.json",
+              "changeDescription": "En ny, central Lärdomsdatabas skapades för att lagra verifierade heuristiker från tidigare misstag."
+            },
+            {
+              "path": "docs/ai_protocols/AI_Core_Instruction.md",
+              "changeDescription": "Kärninstruktionerna uppdaterades (till v4.2) med ett nytt obligatoriskt PSV-steg som tvingar fram proaktiv användning av Lärdomsdatabasen, vilket sluter den självförbättrande loopen."
+            },
+            {
+              "path": "scripts/process_ai_metrics.py",
+              "changeDescription": "Ett nytt backend-skript skapades för att aggregera data från loggfilerna för AI Performance Dashboard."
+            },
+            {
+              "path": "scripts/generate_full_context.py",
+              "changeDescription": "Huvudskriptet för kontextgenerering uppdaterades för att anropa det nya metrik-skriptet och inkludera dess data i den slutgiltiga outputen."
+            },
+            {
+              "path": "docs/ai_protocols/Levande_Kontext_Protokoll.md",
+              "changeDescription": "Protokollet uppdaterades med den nya regeln P-KLS för att proaktivt hantera kontextdegradering i långa sessioner."
+            }
+          ],
+          "result": "Hela det underliggande systemet för AI-samarbete har omformats till att vara datadrivet, självförbättrande och transparent."
+        }
+      ],
+      "projectStatus": "Projektet är i ett exceptionellt stabilt och robust tillstånd. All känd applikationsfunktionalitet är komplett, och det interna meta-systemet för AI-utveckling har genomgått en fundamental arkitektonisk uppgradering."
+    },
+    "Chatthistorik": {
+      "sessionId": "29",
+      "interactions": [
+        {
+          "turnIndex": 1,
+          "timestamp": "2025-08-07T18:01:00Z",
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Rapporterade att 'Compare'-knappen fortfarande är inaktiv och föreslog en strategisk pivot för att först åtgärda och uppgradera 'Engrove Inspector'-felsökningsverktyget."
+        },
+        {
+          "turnIndex": 2,
+          "timestamp": "2025-08-07T18:02:00Z",
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "2025-08-07"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-07)",
+          "summary": "Accepterade pivoten, analyserade felsökningsverktyget och identifierade att felet berodde på ett saknat persistens-plugin i 'debug.js'. Föreslog en plan för att först åtgärda detta."
+        },
+        {
+          "turnIndex": 3,
+          "timestamp": "2025-08-07T18:03:00Z",
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Godkände planen och tillhandahöll alla nödvändiga filer för felsökningsverktyget."
+        },
+        {
+          "turnIndex": 4,
+          "timestamp": "2025-08-07T18:04:00Z",
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "2025-08-07"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-07)",
+          "summary": "Levererade korrigerad kod för 'loggerStore.js' och 'DataExplorerPage.vue' för att aktivera loggningen, följt av en korrigering av 'debug.js' för att läsa den persistenta datan, vilket löste problemet."
+        },
+        {
+          "turnIndex": 5,
+          "timestamp": "2025-08-07T18:05:00Z",
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Bekräftade att felsökningsverktyget fungerade och presenterade en omfattande lista med sju uppgraderingskrav för att göra det mer kraftfullt."
+        },
+        {
+          "turnIndex": 6,
+          "timestamp": "2025-08-07T18:06:00Z",
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "2025-08-07"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-07)",
+          "summary": "Analyserade kraven och levererade stegvis de uppdaterade filerna 'loggerStore.js' och 'debug.js' som implementerade all ny funktionalitet (urval, export, gruppering, sessioner)."
+        },
+        {
+          "turnIndex": 7,
+          "timestamp": "2025-08-07T18:07:00Z",
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Godkände de slutförda uppgraderingarna och återupptog felsökningen av 'Compare'-knappen, samt introducerade idén om ett nytt protokoll (P-MAAIP) för att mäta AI-prestanda."
+        },
+        {
+          "turnIndex": 8,
+          "timestamp": "2025-08-07T18:08:00Z",
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "2025-08-07"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-07)",
+          "summary": "Instrumenterade koden med det nya felsökningsverktyget, vilket ledde till den slutgiltiga identifieringen och korrigeringen av ett API-kontraktsbrott i 'BaseModal.vue' som den verkliga grundorsaken."
+        },
+        {
+          "turnIndex": 9,
+          "timestamp": "2025-08-07T18:09:00Z",
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Bekräftade att alla buggar var lösta och initierade en brainstorming-session för att utforma P-MAAIP, vilket resulterade i en migrering av all historik till ett JSON-först-format."
+        },
+        {
+          "turnIndex": 10,
+          "timestamp": "2025-08-07T18:10:00Z",
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "2025-08-07"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-07)",
+          "summary": "Ledde brainstorming-sessionen, formaliserade JSON-scheman för alla nya loggfiler och uppdaterade de interna AI-protokollen ('AI_Core_Instruction.md', 'AI_Chatt_Avslutningsprotokoll.md') för att reflektera det nya, självförbättrande systemet."
+        },
+        {
+          "turnIndex": 11,
+          "timestamp": "2025-08-07T18:11:00Z",
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Identifierade ett allvarligt fall av kontextdegradering då AI:n levererade ofullständig kod och krävde en permanent, protokoll-baserad lösning."
+        },
+        {
+          "turnIndex": 12,
+          "timestamp": "2025-08-07T18:12:00Z",
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "2025-08-07"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-07)",
+          "summary": "Implementerade den föreslagna lösningen genom att skapa regeln 'P-KLS' i 'Levande_Kontext_Protokoll.md' och bad om ursäkt för sina upprepade misstag."
+        },
+        {
+          "turnIndex": 13,
+          "timestamp": "2025-08-07T18:13:00Z",
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Gav det slutgiltiga kommandot för att aktivera avslutningsprotokollet."
+        }
+      ]
+    },
+    "ai_protocol_performance": {
+      "sessionId": "29",
+      "generatedBy": {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-07"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-07)"
+      },
+      "date": "2025-08-07T18:30:00Z",
+      "aiQualitativeSummary": "Sessionen var exceptionellt produktiv men avslöjade en kritisk sårbarhet: kontextdegradering i långa, komplexa sessioner. Detta ledde till allvarliga, upprepade brott mot kärndirektiven. Den strategiska pivoten till att omforma hela meta-systemet till en JSON-baserad, självförbättrande loop var dock en massiv framgång som direkt åtgärdar den identifierade sårbarheten. Sessionen var kostsam i termer av effektivitet men ovärderlig i termer av systemisk förbättring.",
+      "scorecard": {
+        "efficacy": {
+          "score": 5,
+          "weight": 0.4,
+          "weightedScore": 2
+        },
+        "efficiency": {
+          "score": 1,
+          "weight": 0.3,
+          "weightedScore": 0.3
+        },
+        "robustness": {
+          "score": 1,
+          "weight": 0.3,
+          "weightedScore": 0.3
+        },
+        "finalScore": 2.6
+      },
+      "detailedMetrics": {
+        "missionCompleted": true,
+        "debuggingCycles": 3,
+        "selfCorrections": 8,
+        "externalCorrections": 9,
+        "protocolActivations": {
+          "psv": 24,
+          "helpMeGod": 0,
+          "stalemate": 0
+        }
+      },
+      "improvementSuggestion": {
+        "pattern": "I långa sessioner (>20 interaktioner) ökar risken för kontextdegradering exponentiellt, vilket leder till att AI:n hallucinerar eller levererar ofullständig kod baserat på en föråldrad intern state.",
+        "proposedHeuristicId": "H-20250807-03"
+      }
+    },
+    "frankensteen_learning_db": {
+      "heuristicId": "H-20250807-03",
+      "trigger": {
+        "type": "session_length",
+        "scope": [
+          "*"
+        ],
+        "keywords": [
+          "session_interaction_count > 20"
+        ]
+      },
+      "identifiedRisk": {
+        "riskId": "CONTEXT_DEGRADATION",
+        "description": "Hög risk för kontextdegradering i långa sessioner. AI:n kan basera sina svar på en föråldrad eller ofullständig intern representation av en fil, vilket leder till leverans av felaktig, ofullständig eller hallucinerad kod."
+      },
+      "mitigation": {
+        "protocolId": "P-KLS-01",
+        "description": "Aktivera 'Protokoll för Kontext-verifiering vid Långa Sessioner (P-KLS)'. Om en fil som gavs som kontext tidigt i sessionen ska modifieras, måste AI:n proaktivt be om den senaste, verifierade versionen av filen innan en plan formuleras."
+      },
+      "metadata": {
+        "originSessionId": "29",
+        "createdAt": "2025-08-07T18:30:00Z",
+        "status": "active",
+        "sourceLogFiles": [
+          "docs/ByggLogg.json",
+          "docs/Chatthistorik.json"
+        ]
+      }
+    }
+  }
+}

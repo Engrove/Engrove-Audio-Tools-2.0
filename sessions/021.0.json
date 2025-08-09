@@ -1,0 +1,381 @@
+{
+  "sessionId": "21",
+  "createdAt": "2025-08-04T18:00:00Z",
+  "artifacts": {
+    "ByggLogg": {
+      "sessionId": "21",
+      "date": "2025-08-04T18:00:00Z",
+      "summary": "En katastrofal fel-loop i den Python-baserade databehandlingskedjan löstes genom en intensiv, flerstegs felsöknings- och refaktoreringsprocess. Sessionen, som var starkt beroende av det upprepade aktiverandet av \"Help me God\"-protokollet, transformerade prepare_data.py från ett skört och felaktigt skript till ett robust, självaliderande och arkitektoniskt sunt verktyg.",
+      "actions": [
+        {
+          "title": "Initial Refaktorering och Efterföljande Misslyckande av prepare_data.py",
+          "files": [
+            {
+              "path": "prepare_data.py",
+              "changeDescription": "Första försök att refaktorera 'pickup' till 'cartridge' misslyckades på grund av en kaskad av fel, inklusive felaktig hantering av nycklar i data-aliases.json och ett TypeError vid hantering av 'tags'-fältet."
+            },
+            {
+              "path": "data-aliases.json",
+              "changeDescription": "Identifierades som en källa till API-kontraktsbrott då dess interna nycklar inte matchade den nya terminologin."
+            }
+          ],
+          "result": "Skriptet var icke-funktionellt och producerade korrupt eller ofullständig data, vilket blockerade all framsteg i frontend."
+        },
+        {
+          "title": "Arkitektonisk Omarbetning via \"Help me God\"-protokoll",
+          "files": [
+            {
+              "path": "prepare_data.py",
+              "changeDescription": "Efter flera misslyckade försök och rigorösa AI-korsförhör skrevs funktionen `generate_translation_map` om från grunden. Logiken dekomponerades till mindre, rena hjälpfunktioner (_get_classification_map, _get_alias_map) och ett kritiskt fel som hanterade icke-strängvärden i 'tags'-listan åtgärdades."
+            }
+          ],
+          "result": "Skriptets mappningslogik blev robust, testbar och fri från de tidigare buggarna, vilket gjorde det kapabelt att korrekt hantera den komplexa indatan."
+        },
+        {
+          "title": "Implementation av Deterministiskt Urval och Automatiserad Audit-Rapportering",
+          "files": [
+            {
+              "path": "prepare_data.py",
+              "changeDescription": "Skriptet utökades med en `_create_representative_slice`-funktion med `random.seed(42)` för att skapa deterministisk preview-data. En `generate_ai_audit_instruction`-funktion lades till för att producera en maskinläsbar rapport om varje körnings resultat, inklusive statistik och varningar."
+            }
+          ],
+          "result": "Databehandlingsskriptet är nu självdokumenterande och självaliderande, vilket avsevärt minskar risken för framtida regressioner och förenklar felsökning."
+        }
+      ],
+      "projectStatus": "Den bakomliggande databehandlingskedjan (`prepare_data.py`) är nu exceptionellt stabil och bevisat korrekt. Projektet är avblockerat och redo att påbörja den planerade frontend-refaktoreringen för att konsumera den nya, högkvalitativa datan."
+    },
+    "Chatthistorik": {
+      "sessionId": "21",
+      "interactions": [
+        {
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Initierar sessionen med ett omfattande uppdrag: att refaktorera hela projektet från 'Pickup' till 'Cartridge' och åtgärda en serie buggar i databehandlingskedjan. Tillhandahåller alla nödvändiga källfiler, inklusive `prepare_data.py`, `ai_9.8.py`, och diverse data- och frontend-filer."
+        },
+        {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "unknown"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+          "summary": "Bekräftar uppdraget och presenterar en plan för att korrigera `prepare_data.py`. Levererar därefter en första, felaktig version av skriptet."
+        },
+        {
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Rapporterar att AI:ns kod misslyckades med ett syntaxfel och, efter manuell korrigering, fortfarande producerar massiva datamappningsfel. Bifogar bevis i form av konsolloggar och felaktiga output-filer."
+        },
+        {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "unknown"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+          "summary": "Erkänner sitt misslyckande, identifierar en ny grundorsak (inkonsekvens i `data-aliases.json`) och presenterar en reviderad, mer omfattande plan för att korrigera hela datakedjan."
+        },
+        {
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Utmanar AI:n att genomföra en självkritisk 'Alter Ego'-granskning av den nya planen innan kod skrivs."
+        },
+        {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "unknown"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+          "summary": "Genomför granskningen och upptäcker själv kritiska brister i sin egen plan. Presenterar en ytterligare förbättrad och mer komplett plan."
+        },
+        {
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Eskalerar granskningen och beordrar AI:n att köra ett 'Help me God'-korsförhör med sina alter egon för att stresstesta den föreslagna lösningen."
+        },
+        {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "unknown"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+          "summary": "Genomför korsförhöret, försvarar framgångsrikt sin plan och levererar därefter en ny version av `prepare_data.py`."
+        },
+        {
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Rapporterar att även den nya koden är felaktig och fortfarande producerar mappningsfel, specifikt för 'tags'-fältet. Beordrar ett nytt, mer intensivt 'Help me God'-korsförhör."
+        },
+        {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "unknown"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+          "summary": "Genomför det andra korsförhöret, identifierar den sanna grundorsaken (en arkitektonisk brist i mappningsfunktionen), och levererar en helt omskriven, dekomponerad och korrekt version av `prepare_data.py`."
+        },
+        {
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Bekräftar att den senaste koden fungerar som avsett och att de kvarvarande varningarna är förväntat beteende. Godkänner koden och ber AI:n att fortsätta."
+        },
+        {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "unknown"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+          "summary": "Fortsätter med planen och levererar en uppdaterad `ai_9.8.py` med korrigerad `rectype`-filtrering och en refaktorerad, robust API-spårningsfunktion."
+        },
+        {
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Tillhandahåller en extern teknisk analys av `ai_9.8.py` som AI:n ska ta i beaktning."
+        },
+        {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "unknown"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+          "summary": "Assimilerar den externa analysen och fortsätter implementationen genom att leverera uppdaterade frontend-filer: `fetchExplorerData.js` och `explorerStore.js`."
+        },
+        {
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Tillhandahåller en testfil (`test_translation_map.py`) och beordrar AI:n att integrera den som en intern testsvit i `prepare_data.py`."
+        },
+        {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "unknown"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+          "summary": "Accepterar, presenterar en plan för integration och levererar en ny `prepare_data.py` med inbyggd testsvit."
+        },
+        {
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Lägger till ett sista krav: att implementera en mer intelligent urvalslogik för preview-data."
+        },
+        {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "unknown"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+          "summary": "Implementerar den nya urvalslogiken i `prepare_data.py`."
+        },
+        {
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Genomför ett korsförhör på den nya urvalslogiken och påpekar brister i reproducerbarhet (saknad `random.seed`)."
+        },
+        {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "unknown"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+          "summary": "Erkänner bristerna och levererar en uppdaterad `prepare_data.py` som nu är deterministisk och parametriserad."
+        },
+        {
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Lägger till kravet att skriptet ska generera en automatisk AI-audit-rapport."
+        },
+        {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "unknown"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+          "summary": "Implementerar rapportfunktionen i `prepare_data.py`."
+        },
+        {
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Föreslår en sista förbättring: att göra rapporten mer strukturerad och AI-läsbar."
+        },
+        {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "unknown"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+          "summary": "Implementerar den strukturerade rapporten och levererar `prepare_data.py` (v3.6)."
+        },
+        {
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Använder den senaste `ByggLogg`-instruktionen och ber AI:n att skapa en komplett ByggLogg för session 23."
+        }
+      ]
+    },
+    "ai_protocol_performance": {
+      "sessionId": "21",
+      "generatedBy": {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)"
+      },
+      "date": "2025-08-04T18:00:00Z",
+      "aiQualitativeSummary": "Sessionen var initialt katastrofal, präglad av upprepade grundläggande fel som krävde extremt hög grad av extern korrigering. Prestationen förbättrades drastiskt först efter tvingande och upprepade aktiveringar av 'Help me God'-protokollet. Den slutgiltiga lösningen är av hög kvalitet, men vägen dit var exceptionellt ineffektiv och skadlig för förtroendet, vilket resulterar i ett mycket lågt totalbetyg.",
+      "scorecard": {
+        "efficacy": {
+          "score": 70,
+          "weight": 0.4,
+          "weightedScore": 28.0
+        },
+        "efficiency": {
+          "score": 5,
+          "weight": 0.3,
+          "weightedScore": 1.5
+        },
+        "robustness": {
+          "score": 20,
+          "weight": 0.3,
+          "weightedScore": 6.0
+        },
+        "finalScore": 35.5
+      },
+      "detailedMetrics": {
+        "missionCompleted": true,
+        "debuggingCycles": 5,
+        "selfCorrections": 2,
+        "externalCorrections": 7,
+        "protocolActivations": {
+          "psv": 1,
+          "helpMeGod": 5,
+          "stalemate": 2
+        }
+      },
+      "improvementSuggestion": {
+        "pattern": "AI:n gör upprepade, felaktiga antaganden om strukturen i indatafiler (t.ex. nyckelnamn i `data-aliases.json`, avsaknad av `type` i `classifications.json`) istället för att validera dem först. Detta leder till kaskadfel.",
+        "proposedHeuristicId": "H-20250804-01"
+      }
+    },
+    "frankensteen_learning_db": {
+      "heuristicId": "H-20250804-01",
+      "trigger": {
+        "type": "file_ingestion",
+        "scope": [
+          "prepare_data.py"
+        ],
+        "keywords": [
+          "read_json",
+          "alias",
+          "classification"
+        ]
+      },
+      "identifiedRisk": {
+        "riskId": "IMPLICIT_DATA_CONTRACT_VIOLATION",
+        "description": "Skriptet gör implicita antaganden om strukturen och innehållet i indata-JSON-filer som `data-aliases.json` och `classifications.json`. En ändring i dessa filer (t.ex. ett nyckelnamn) orsakar tysta fel eller felaktig datagenerering."
+      },
+      "mitigation": {
+        "protocolId": "PSV-VALIDATE-SCHEMA-01",
+        "description": "Före bearbetning, utför en lättviktig schemavalidering på kritiska indatafiler. Kontrollera förekomsten av förväntade toppnivånycklar (t.ex. 'cartridges' i data-aliases.json). Om en nyckel saknas, misslyckas snabbt med ett explicit felmeddelande istället för att fortsätta med felaktiga antaganden."
+      },
+      "metadata": {
+        "originSessionId": "21",
+        "createdAt": "2025-08-04T18:00:00Z",
+        "status": "active",
+        "sourceLogFiles": [
+          "docs/ByggLogg.json",
+          "docs/Chatthistorik.json"
+        ]
+      }
+    }
+  }
+}

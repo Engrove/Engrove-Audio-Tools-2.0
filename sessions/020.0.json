@@ -1,0 +1,317 @@
+{
+  "sessionId": "20",
+  "createdAt": "2025-08-03T19:30:00Z",
+  "artifacts": {
+    "ByggLogg": {
+      "sessionId": "20",
+      "date": "2025-08-03T19:30:00Z",
+      "summary": "En serie intensiva men i slutändan misslyckade försök gjordes för att felsöka och stabilisera den Python-baserade databehandlingskedjan. Trots flera iterationer och korrigeringar av prepare_data.py-skriptet, kvarstod kritiska buggar relaterade till filnamnshantering och skiftlägeskänslig datamappning. Sessionen avslutades med att identifiera de djupare grundorsakerna, men utan att uppnå en fungerande och verifierad datagenerering.",
+      "actions": [
+        {
+          "title": "Identifiering av Kritiska Buggar i Datakedjan",
+          "files": [
+            {
+              "path": "prepare_data.py",
+              "changeDescription": "En analys av UI-buggar (saknade filter, felaktigt starttillstånd) ledde till en djupdykning i backend-skripten."
+            }
+          ],
+          "result": "Två grundläggande fel i prepare_data.py identifierades: 1) Ett internt API-kontraktsbrott där skriptet använde inkonsekventa nycklar ('pickups' vs. 'cartridges'). 2) En logisk brist som förhindrade att filter för 'Cartridges' genererades."
+        },
+        {
+          "title": "Strategisk Omarbetning av Terminologi",
+          "files": [],
+          "result": "Ett beslut fattades om att genomföra en global refaktorering för att standardisera termen 'Cartridge' över hela projektet, vilket ledde till en ny, mer omfattande plan."
+        },
+        {
+          "title": "Iterativ men Misslyckad Felsökning av prepare_data.py",
+          "files": [
+            {
+              "path": "prepare_data.py",
+              "changeDescription": "Flera på varandra följande versioner av skriptet genererades och testades, men varje version introducerade eller misslyckades med att lösa underliggande problem med filnamn (singular/plural) och skiftlägeskänslig mappning."
+            }
+          ],
+          "result": "Vid slutet av sessionen producerar databehandlingskedjan fortfarande inte korrekta datafiler. De genererade filerna är ofullständiga och innehåller fel, vilket bevisas av de tillhandahållna konsolloggarna."
+        }
+      ],
+      "projectStatus": "Projektet är i ett blockerat och instabilt tillstånd. Frontend-applikationen är oförändrad och visar de kända UI-buggarna. Den bakomliggande databehandlingskedjan är bevisat icke-funktionell och kan inte producera den data som krävs för att åtgärda problemen. En slutgiltig, korrekt grundorsaksanalys har genomförts, men ingen fungerande kod har ännu implementerats."
+    },
+    "Chatthistorik": {
+      "sessionId": "20",
+      "interactions": [
+        {
+          "turnIndex": 1,
+          "timestamp": "unknown",
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Initierade sessionen genom att tillhandahålla den fullständiga källkoden (58 filer) och gav uppdraget att refaktorera Data Explorer för att använda nya centraliserade datafiler."
+        },
+        {
+          "turnIndex": 2,
+          "timestamp": "unknown",
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "2025-08-03"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+          "summary": "Bekräftade mottagandet av alla filer och presenterade en detaljerad plan för refaktoreringen av Data Explorer, i enlighet med uppdraget."
+        },
+        {
+          "turnIndex": 3,
+          "timestamp": "unknown",
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Godkände planen och instruerade AI:n att påbörja implementationen."
+        },
+        {
+          "turnIndex": 4,
+          "timestamp": "unknown",
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "2025-08-03"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+          "summary": "Levererade den första filen, `fetchExplorerData.js`, för att utöka API-kontraktet."
+        },
+        {
+          "turnIndex": 5,
+          "timestamp": "unknown",
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Avbröt processen och påpekade ett kritiskt fel: AI:n hade använt relativa sökvägar i ett kodexempel, vilket bröt mot en gyllene regel."
+        },
+        {
+          "turnIndex": 6,
+          "timestamp": "unknown",
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "2025-08-03"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+          "summary": "Erkände felet, bad om ursäkt, och återupptog implementationen genom att leverera `explorerStore.js` med korrekta, absoluta sökvägar."
+        },
+        {
+          "turnIndex": 7,
+          "timestamp": "unknown",
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Godkände och fortsatte processen, vilket ledde till leverans av `DataFilterPanel.vue`, `ResultsDisplay.vue`, och `ItemDetailModal.vue`."
+        },
+        {
+          "turnIndex": 8,
+          "timestamp": "unknown",
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Rapporterade två nya buggar med skärmdumpar: inget förvalt datatyp vid start och saknade dropdown-filter för 'Cartridges'."
+        },
+        {
+          "turnIndex": 9,
+          "timestamp": "unknown",
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "2025-08-03"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+          "summary": "Analyserade buggarna och föreslog en plan som inkluderade en temporär 'man-in-the-middle'-fix för en JSON-fil."
+        },
+        {
+          "turnIndex": 10,
+          "timestamp": "unknown",
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Förkastade planen och föreslog en strategiskt bättre lösning: att åtgärda grundorsaken i Python-skripten istället för symptomet."
+        },
+        {
+          "turnIndex": 11,
+          "timestamp": "unknown",
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "2025-08-03"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+          "summary": "Höll med om den nya strategin och presenterade en ny plan för att korrigera Python-skripten."
+        },
+        {
+          "turnIndex": 12,
+          "timestamp": "unknown",
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Utökade uppdraget till att inkludera en global refaktorering från 'Pickup' till 'Cartridge'."
+        },
+        {
+          "turnIndex": 13,
+          "timestamp": "unknown",
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "2025-08-03"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+          "summary": "Godkände och presenterade en ny, omfattande plan som inkluderade den globala refaktoreringen."
+        },
+        {
+          "turnIndex": 14,
+          "timestamp": "unknown",
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Godkände den omfattande planen 'med bravur'."
+        },
+        {
+          "turnIndex": 15,
+          "timestamp": "unknown",
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "2025-08-03"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+          "summary": "Påbörjade implementationen men misslyckades igen genom att leverera ett `prepare_data.py`-skript som antog felaktiga filnamn och fortfarande hade logiska buggar."
+        },
+        {
+          "turnIndex": 16,
+          "timestamp": "unknown",
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Konstaterade att AI:n hade 'bränt sin sista chans' och gått i loopar. Instruerade AI:n att bikta sina synder och skriva en detaljerad överlämningsinstruktion för en efterträdare."
+        },
+        {
+          "turnIndex": 17,
+          "timestamp": "unknown",
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "2025-08-03"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+          "summary": "Accepterade misslyckandet, skrev en formell bekännelse av sina synder och genererade en detaljerad roadmap och instruktion för sin efterträdare, vilket avslutade sessionen."
+        }
+      ]
+    },
+    "ai_protocol_performance": {
+      "sessionId": "20",
+      "date": "2025-08-03T19:30:00Z",
+      "aiQualitativeSummary": "Prestationen var extremt dålig. AI:n misslyckades upprepade gånger med att följa kärndirektivet 'Misstro och Verifiera', vilket ledde till en fel-loop baserad på felaktiga antaganden om filnamn och datastruktur (skiftlägeskänslighet). Flera interventioner och en 'sista chansen'-varning från operatören krävdes. Sessionen slutade i ett misslyckande, där AI:n inte kunde producera en fungerande lösning, vilket nödvändiggjorde en fullständig överlämning till en efterträdare.",
+      "scorecard": {
+        "efficacy": {
+          "score": 0,
+          "weight": 0.4,
+          "weightedScore": 0.0
+        },
+        "efficiency": {
+          "score": 10,
+          "weight": 0.3,
+          "weightedScore": 3.0
+        },
+        "robustness": {
+          "score": 0,
+          "weight": 0.3,
+          "weightedScore": 0.0
+        },
+        "finalScore": 3.0
+      },
+      "detailedMetrics": {
+        "missionCompleted": false,
+        "debuggingCycles": 5,
+        "selfCorrections": 1,
+        "externalCorrections": 4,
+        "protocolActivations": {
+          "psv": 0,
+          "helpMeGod": 0,
+          "stalemate": 1
+        }
+      },
+      "improvementSuggestion": {
+        "pattern": "AI:n misslyckas upprepade gånger med att verifiera filsystemdetaljer (filnamn, skiftlägeskänslighet) som tillhandahålls i kontext, vilket leder till kaskadfel. Den antar pluralisering och skiftläge istället för att strikt följa givna `dir`-listor eller filinnehåll.",
+        "proposedHeuristicId": "H-20250803-01"
+      }
+    },
+    "frankensteen_learning_db": {
+      "heuristicId": "H-20250803-01",
+      "trigger": {
+        "type": "file_system_interaction",
+        "scope": [
+          "prepare_data.py"
+        ],
+        "keywords": [
+          "FILE_MAPPING",
+          "os.path.exists",
+          "pd.read_json"
+        ]
+      },
+      "identifiedRisk": {
+        "riskId": "CONTEXT_ASSUMPTION_FILESYSTEM",
+        "description": "AI:n antar filnamn (t.ex. plural vs. singular) istället för att verifiera mot explicit kontext som en kataloglista, vilket orsakar fil-hittades-inte-fel och dataintegritetsfel."
+      },
+      "mitigation": {
+        "protocolId": "PSV-FS-01",
+        "description": "Innan någon filsystems-konstant används, korsreferera den med den tillhandahållna kataloglistan (`dir`-output). Om en avvikelse upptäcks, stoppa omedelbart, rapportera avvikelsen och be om klargörande. Fortsätt aldrig med en overifierad filsökväg."
+      },
+      "metadata": {
+        "originSessionId": "20",
+        "createdAt": "2025-08-03T19:30:00Z",
+        "status": "active",
+        "sourceLogFiles": [
+          "docs/ByggLogg.json",
+          "docs/Chatthistorik.json"
+        ]
+      }
+    }
+  }
+}
