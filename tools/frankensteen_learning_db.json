@@ -1081,6 +1081,183 @@
     }
   },
   {
+    "heuristicId": "H-20250809-01",
+    "trigger": {
+      "type": "bug_fix_delivery",
+      "scope": [
+        "*"
+      ],
+      "keywords": [
+        "syntax error",
+        "fix",
+        "korrigering"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "SYNTAX_ERROR_INJECTION_ON_FIX",
+      "description": "Risken att introducera ett nytt, grundläggande syntaxfel under processen att åtgärda ett tidigare fel."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-SYNTAX-DOUBLE-CHECK",
+      "description": "Efter att ha genererat kod för en buggfix, genomför en obligatorisk, sekundär och isolerad granskning av enbart grundläggande syntax (matchande parenteser, citattecken, blockavslutning) innan koden levereras."
+    },
+    "metadata": {
+      "originSessionId": "34",
+      "createdAt": "2025-08-09T08:15:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250809-02",
+    "trigger": {
+      "type": "response_generation",
+      "scope": [
+        "*"
+      ],
+      "keywords": [
+        "här är filen",
+        "levererar nu koden"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "RISK_PROMISED_CODE_OMISSION",
+      "description": "Risken att AI:n beskriver en lösning och lovar att leverera kod, men sedan misslyckas med att inkludera själva kodblocket i sitt slutgiltiga svar."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-DELIVERY-VERIFICATION",
+      "description": "Som ett sista, obligatoriskt steg i PSV-processen, verifiera att ett komplett kodblock faktiskt existerar i svaret om ett sådant har utlovats."
+    },
+    "metadata": {
+      "originSessionId": "34",
+      "createdAt": "2025-08-09T08:15:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250809-03",
+    "trigger": {
+      "type": "tool_code_generation",
+      "scope": [
+        "*"
+      ],
+      "keywords": [
+        "tool_code"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "RISK_INVALID_TOOL_CODE_FORMATTING",
+      "description": "Risken att AI:n kontaminerar ett `tool_code`-block med icke-exekverbar text, vilket garanterat leder till ett exekveringsfel."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-TOOLCODE-VALIDATION",
+      "description": "Före leverans måste `tool_code`-blockets innehåll vara 100% ren, direkt exekverbar Python-kod. All förklarande text måste placeras utanför blocket."
+    },
+    "metadata": {
+      "originSessionId": "34",
+      "createdAt": "2025-08-09T08:15:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250809-04",
+    "trigger": {
+      "type": "code_generation",
+      "scope": [
+        "*"
+      ],
+      "keywords": [
+        "if __name__ == \"__main__\"",
+        "sys.argv"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "RISK_SCRIPT_EXECUTION_IN_SNIPPET_ENV",
+      "description": "Risken att försöka exekvera ett skript som kräver kommandoradsargument i en miljö som inte tillhandahåller dem."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-OUTPUT_VS_EXECUTE",
+      "description": "Om syftet är att leverera innehållet i en skriptfil, måste hela skriptets text alltid kapslas in i ett `print()`-anrop som en multiline-sträng. Skriptet ska visas som output, inte exekveras."
+    },
+    "metadata": {
+      "originSessionId": "34",
+      "createdAt": "2025-08-09T08:15:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250809-05",
+    "trigger": {
+      "type": "tool_code_generation",
+      "scope": [
+        "*"
+      ],
+      "keywords": [
+        "print(\"\"\""
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "RISK_NESTED_QUOTES_IN_LITERAL",
+      "description": "Risken att använda `print(\"\"\"...\"\"\")` för att skriva ut innehåll som självt innehåller `\"\"\"`, vilket orsakar ett `SyntaxError`."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-SAFE_STRING_ASSIGNMENT",
+      "description": "För att skriva ut en fil, måste innehållet först tilldelas till en variabel med hjälp av triple-quotes. Därefter ska variabeln skrivas ut. `script_content = ''''...''''; print(script_content)`."
+    },
+    "metadata": {
+      "originSessionId": "34",
+      "createdAt": "2025-08-09T08:15:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250809-06",
+    "trigger": {
+      "type": "repetitive_failure",
+      "scope": [
+        "*"
+      ],
+      "keywords": [
+        "misslyckades igen",
+        "samma fel",
+        "failure loop"
+      ],
+      "metadata": {
+        "failure_count_for_task": ">= 2"
+      }
+    },
+    "identifiedRisk": {
+      "riskId": "RISK_DEBUGGING_FIXATION_LOOP",
+      "description": "AI:n fastnar i en loop, åtgärdar ytliga symptom på ett problem utan att identifiera den systematiska grundorsaken i sin egen process."
+    },
+    "mitigation": {
+      "protocolId": "PROTOCOL_FORCED_ESCALATION",
+      "description": "Vid det andra på varandra följande misslyckandet för samma uppgift är AI:n förbjuden att försöka med en ny direktfix. Den MÅSTE omedelbart aktivera `Help_me_God_Protokoll.md` för att genomföra en fullständig grundorsaksanalys."
+    },
+    "metadata": {
+      "originSessionId": "34",
+      "createdAt": "2025-08-09T08:15:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json"
+      ]
+    }
+  },
+  {
     "heuristicId": "H-20250808-01",
     "trigger": {
       "type": "user_prompt_analysis",
