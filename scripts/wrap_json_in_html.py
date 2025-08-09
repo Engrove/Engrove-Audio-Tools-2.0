@@ -27,10 +27,11 @@
 # * v17.0 (2025-08-09): Omarbetat "AI Performance"-fliken till en fullständig instrumentpanel med diagram och tabeller.
 # * v17.1 (2025-08-09): KRITISK FIX - Återställde HTML-mallen från en f-sträng till en vanlig sträng.
 # * v17.2 (2025-08-09): KRITISK SYNTAXFIX: Lade till den saknade avslutande `"""` för html_template-variabeln.
-# * v17.3 (2025-08-09): (DENNA ÄNDRING) KRITISK RACE-CONDITION FIX: Säkerställer att prestanda-instrumentpanelen renderas korrekt även om datan laddas efter att fliken har aktiverats.
+# * v17.3 (2025-08-09): KRITISK RACE-CONDITION FIX: Säkerställde att prestanda-instrumentpanelen renderas korrekt.
+# * v17.4 (2025-08-09): (DENNA ÄNDRING) KRITISK SCOPE FIX: Flyttat all `fullContext`-beroende logik in i fetch-callbacken för att lösa ReferenceError.
 #
 # TILLÄMPADE REGLER (Frankensteen v4.0):
-# - Red Team Alter Ego (AERL2): Identifierat och åtgärdat en race condition-risk i UI-interaktionen.
+# - Red Team Alter Ego (AERL2): Identifierat och åtgärdat ett scope-relaterat ReferenceError.
 # - Fullständig kod, alltid: Denna fil är komplett och löser det rapporterade problemet.
 
 import sys
@@ -255,7 +256,10 @@ def create_interactive_html(output_html_path):
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // KRITISK FIX: Flyttat till toppen för att ha rätt scope.
         let fullContext = null;
+        const charts = {}; // Global object to hold chart instances
+
         const REPO_RAW_URL = 'https://raw.githubusercontent.com/Engrove/Engrove-Audio-Tools-2.0/main/';
         
         const CORE_DOC_PATHS = [
@@ -698,230 +702,144 @@ def create_interactive_html(output_html_path):
             URL.revokeObjectURL(url);
         });
         
-        fetch('context.json')
-            .then(response => { if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`); return response.json(); })
-            .then(data => {
-                fullContext = data;
-                fileTreeContainer.innerHTML = '';
-                renderFileTree(fullContext.file_structure, fileTreeContainer, '');
-                // KRITISK FIX: Om prestanda-fliken redan är aktiv när datan anländer, rendera den.
-                if (document.querySelector('.tab-button[data-tab="performance"]').classList.contains('active')) {
-                    renderPerformanceDashboard();
-                }
-            })
-            .catch(error => {
-                fileTreeContainer.innerHTML = `<p style="color: var(--danger-color);"><b>Error:</b> Could not load context.json. ${error.message}</p>`;
+        // --- Tabs & Performance Dashboard Logic ---
+        function setupPerformanceDashboard() {
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tab = btn.getAttribute('data-tab');
+                    document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                    document.getElementById(`tab-${tab}`).classList.add('active');
+                    if (tab === 'performance' && fullContext) {
+                        renderPerformanceDashboard();
+                    }
+                });
             });
-    });
 
-    // --- Tabs & Performance Dashboard Logic ---
-    const charts = {}; // Global object to hold chart instances
-
-    document.querySelectorAll('.tab-button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const tab = btn.getAttribute('data-tab');
-        document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-        document.getElementById(`tab-${tab}`).classList.add('active');
-        // KRITISK FIX: Rendera endast om datan faktiskt har laddats.
-        if (tab === 'performance' && fullContext) {
-            renderPerformanceDashboard();
+            document.addEventListener('click', (e) => {
+                if (e.target && e.target.id === 'refresh-performance') {
+                    refreshPerformanceData();
+                }
+            });
         }
-      });
-    });
 
-    async function refreshPerformanceData() {
-        try {
-            const res = await fetch('context.json', { cache: 'no-store' });
-            if (!res.ok) throw new Error(`status ${res.status}`);
-            const data = await res.json();
-            if (data && data.ai_performance_metrics) {
-                 fullContext.ai_performance_metrics = data.ai_performance_metrics;
-                 renderPerformanceDashboard();
+        async function refreshPerformanceData() {
+            try {
+                const res = await fetch('context.json', { cache: 'no-store' });
+                if (!res.ok) throw new Error(`status ${res.status}`);
+                const data = await res.json();
+                if (data && data.ai_performance_metrics) {
+                     fullContext.ai_performance_metrics = data.ai_performance_metrics;
+                     renderPerformanceDashboard();
+                }
+            } catch (e) {
+                console.error('Kunde inte läsa om context.json:', e);
             }
-        } catch (e) {
-            console.error('Kunde inte läsa om context.json:', e);
         }
-    }
-    
-    document.addEventListener('click', (e) => {
-        if (e.target && e.target.id === 'refresh-performance') {
-            refreshPerformanceData();
-        }
-    });
 
-    function aggregateModelStats(items) {
-      const byProvider = {};
-      const byModel = {};
-      const visit = (obj) => {
-        if (obj && typeof obj === 'object') {
-          if (obj.model && typeof obj.model === 'object') {
-            const prov = obj.model.provider || 'unknown';
-            const name = obj.model.name || 'unknown';
-            byProvider[prov] = (byProvider[prov] || 0) + 1;
-            const key = `${prov}:${name}`;
-            byModel[key] = (byModel[key] || 0) + 1;
-          } else if (obj.generatedBy && obj.generatedBy.model) {
-             const prov = obj.generatedBy.model.provider || 'unknown';
-             const name = obj.generatedBy.model.name || 'unknown';
-             byProvider[prov] = (byProvider[prov] || 0) + 1;
-             const key = `${prov}:${name}`;
-             byModel[key] = (byModel[key] || 0) + 1;
-          }
-          for (const k in obj) {
-            const v = obj[k];
-            if (Array.isArray(v)) v.forEach(visit);
-            else if (v && typeof v === 'object') visit(v);
-          }
+        function aggregateModelStats(items) {
+          const byProvider = {};
+          const byModel = {};
+          const visit = (obj) => {
+            if (obj && typeof obj === 'object') {
+              if (obj.model && typeof obj.model === 'object') {
+                const prov = obj.model.provider || 'unknown';
+                const name = obj.model.name || 'unknown';
+                byProvider[prov] = (byProvider[prov] || 0) + 1;
+                const key = `${prov}:${name}`;
+                byModel[key] = (byModel[key] || 0) + 1;
+              } else if (obj.generatedBy && obj.generatedBy.model) {
+                 const prov = obj.generatedBy.model.provider || 'unknown';
+                 const name = obj.generatedBy.model.name || 'unknown';
+                 byProvider[prov] = (byProvider[prov] || 0) + 1;
+                 const key = `${prov}:${name}`;
+                 byModel[key] = (byModel[key] || 0) + 1;
+              }
+              for (const k in obj) {
+                const v = obj[k];
+                if (Array.isArray(v)) v.forEach(visit);
+                else if (v && typeof v === 'object') visit(v);
+              }
+            }
+          };
+          (items || []).forEach(visit);
+          return { byProvider, byModel };
         }
-      };
-      (items || []).forEach(visit);
-      return { byProvider, byModel };
-    }
-    
-    function renderLearningDbTable(targetEl, data) {
-        if (!data || data.length === 0) {
-            targetEl.innerHTML = 'Ingen data.';
-            return;
-        }
-        const table = document.createElement('table');
-        table.innerHTML = `
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Risk</th>
-                    <th>Mitigation</th>
-                    <th>Trigger Keywords</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${data.map(item => `
+        
+        function renderLearningDbTable(targetEl, data) {
+            if (!data || data.length === 0) {
+                targetEl.innerHTML = 'Ingen data.';
+                return;
+            }
+            const table = document.createElement('table');
+            table.innerHTML = `
+                <thead>
                     <tr>
-                        <td>${item.heuristicId || 'N/A'}</td>
-                        <td>${(item.identifiedRisk && item.identifiedRisk.description) || 'N/A'}</td>
-                        <td>${(item.mitigation && item.mitigation.description) || 'N/A'}</td>
-                        <td>${(item.trigger && item.trigger.keywords || []).join(', ')}</td>
+                        <th>ID</th>
+                        <th>Risk</th>
+                        <th>Mitigation</th>
+                        <th>Trigger Keywords</th>
                     </tr>
-                `).join('')}
-            </tbody>
-        `;
-        targetEl.innerHTML = '';
-        targetEl.appendChild(table);
-    }
-    
-    function renderPerformanceDashboard() {
-        if (!fullContext) return;
-        const metrics = fullContext.ai_performance_metrics || {};
-        const perfLog = Array.isArray(metrics.performanceLog) ? metrics.performanceLog : [];
-        const learningDb = Array.isArray(metrics.learningDatabase) ? metrics.learningDatabase : [];
+                </thead>
+                <tbody>
+                    ${data.map(item => `
+                        <tr>
+                            <td>${item.heuristicId || 'N/A'}</td>
+                            <td>${(item.identifiedRisk && item.identifiedRisk.description) || 'N/A'}</td>
+                            <td>${(item.mitigation && item.mitigation.description) || 'N/A'}</td>
+                            <td>${(item.trigger && item.trigger.keywords || []).join(', ')}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            `;
+            targetEl.innerHTML = '';
+            targetEl.appendChild(table);
+        }
+        
+        function renderPerformanceDashboard() {
+            if (!fullContext) return;
+            const metrics = fullContext.ai_performance_metrics || {};
+            const perfLog = Array.isArray(metrics.performanceLog) ? metrics.performanceLog : [];
+            const learningDb = Array.isArray(metrics.learningDatabase) ? metrics.learningDatabase : [];
 
-        // Destroy old charts before redrawing
-        Object.values(charts).forEach(chart => {
-            if(chart && typeof chart.destroy === 'function') {
-                chart.destroy();
+            Object.values(charts).forEach(chart => {
+                if(chart && typeof chart.destroy === 'function') {
+                    chart.destroy();
+                }
+            });
+
+            if (perfLog.length === 0) {
+                const learningBody = document.getElementById('perf-learning-body');
+                if(learningBody) learningBody.innerHTML = 'Ingen prestandadata tillgänglig för att rendera diagram.';
+                return;
             }
-        });
 
-        if (perfLog.length === 0) {
-            const learningBody = document.getElementById('perf-learning-body');
-            if(learningBody) learningBody.innerHTML = 'Ingen prestandadata tillgänglig för att rendera diagram.';
-            return;
-        }
+            const labels = perfLog.map(p => `Session ${p.sessionId}`);
+            const finalScores = perfLog.map(p => p.scorecard ? p.scorecard.finalScore : 0);
+            const debuggingCycles = perfLog.map(p => p.detailedMetrics ? p.detailedMetrics.debuggingCycles : 0);
+            const selfCorrections = perfLog.map(p => p.detailedMetrics ? p.detailedMetrics.selfCorrections : 0);
+            const externalCorrections = perfLog.map(p => p.detailedMetrics ? p.detailedMetrics.externalCorrections : 0);
 
-        // --- Data Processing ---
-        const labels = perfLog.map(p => `Session ${p.sessionId}`);
-        const finalScores = perfLog.map(p => p.scorecard ? p.scorecard.finalScore : 0);
-        const debuggingCycles = perfLog.map(p => p.detailedMetrics ? p.detailedMetrics.debuggingCycles : 0);
-        const selfCorrections = perfLog.map(p => p.detailedMetrics ? p.detailedMetrics.selfCorrections : 0);
-        const externalCorrections = perfLog.map(p => p.detailedMetrics ? p.detailedMetrics.externalCorrections : 0);
+            const { byProvider, byModel } = aggregateModelStats(perfLog);
 
-        const { byProvider, byModel } = aggregateModelStats(perfLog);
+            const scoreCtx = document.getElementById('score-chart').getContext('2d');
+            charts.scoreChart = new Chart(scoreCtx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Final Score',
+                        data: finalScores,
+                        borderColor: 'var(--accent-color)',
+                        backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                        fill: true,
+                        tension: 0.1
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
 
-        // --- Chart 1: Final Score Line Chart ---
-        const scoreCtx = document.getElementById('score-chart').getContext('2d');
-        charts.scoreChart = new Chart(scoreCtx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Final Score',
-                    data: finalScores,
-                    borderColor: 'var(--accent-color)',
-                    backgroundColor: 'rgba(0, 123, 255, 0.1)',
-                    fill: true,
-                    tension: 0.1
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
-
-        // --- Chart 2: Session Metrics Bar Chart ---
-        const metricsCtx = document.getElementById('metrics-chart').getContext('2d');
-        charts.metricsChart = new Chart(metricsCtx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [
-                    { label: 'Debugging Cycles', data: debuggingCycles, backgroundColor: 'rgba(220, 53, 69, 0.7)' },
-                    { label: 'Self Corrections', data: selfCorrections, backgroundColor: 'rgba(255, 193, 7, 0.7)' },
-                    { label: 'External Corrections', data: externalCorrections, backgroundColor: 'rgba(23, 162, 184, 0.7)' },
-                ]
-            },
-            options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } } }
-        });
-
-        // --- Chart 3: Provider Pie Chart ---
-        const providerCtx = document.getElementById('provider-chart').getContext('2d');
-        charts.providerChart = new Chart(providerCtx, {
-            type: 'pie',
-            data: {
-                labels: Object.keys(byProvider),
-                datasets: [{ data: Object.values(byProvider) }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
-        
-        // --- Chart 4: Model Pie Chart ---
-        const modelCtx = document.getElementById('model-chart').getContext('2d');
-        charts.modelChart = new Chart(modelCtx, {
-            type: 'pie',
-            data: {
-                labels: Object.keys(byModel),
-                datasets: [{ data: Object.values(byModel) }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
-        
-        // --- Table: Learning DB ---
-        const learningBody = document.getElementById('perf-learning-body');
-        if (learningBody) {
-             renderLearningDbTable(learningBody, learningDb);
-        }
-    }
-</script>
-
-</body>
-</html>"""
-
-    try:
-        with open(output_html_path, 'w', encoding='utf-8') as f:
-            f.write(html_template)
-        print(f"[INFO] Wrapper: Skapade framgångsrikt den uppdaterade interaktiva HTML-filen '{output_html_path}'.")
-
-    except Exception as e:
-        print(f"[ERROR] Wrapper: Ett oväntat fel inträffade vid skrivning till fil: {e}", file=sys.stderr)
-        sys.exit(1)
-
-if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Användning: python wrap_json_in_html.py <dummy-input.json> <sökväg-till-output.html>", file=sys.stderr)
-        sys.exit(1)
-
-    output_file = sys.argv[2]
-    
-    output_dir = os.path.dirname(output_file)
-    if output_dir:
-        os.makedirs(output_dir, exist_ok=True)
-        
-    create_interactive_html(output_file)
+            const metricsCtx = document.getElementById('metrics-chart').getContext('2d');
+            charts.metricsChart = new Chart(metricsCtx, {
+            
