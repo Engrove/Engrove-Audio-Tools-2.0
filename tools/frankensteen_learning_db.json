@@ -161,7 +161,7 @@
     "metadata": {
       "originSessionId": "4.1",
       "createdAt": "2025-08-05T12:00:00Z",
-      "status": "active",
+      "status": "deprecated",
       "sourceLogFiles": [
         "docs/ByggLogg.json",
         "docs/Chatthistorik.json"
@@ -193,7 +193,7 @@
     "metadata": {
       "originSessionId": "5",
       "createdAt": "2025-08-05T20:00:00Z",
-      "status": "active",
+      "status": "deprecated",
       "sourceLogFiles": [
         "docs/ByggLogg.json",
         "docs/Chatthistorik.json"
@@ -226,7 +226,7 @@
     "metadata": {
       "originSessionId": "6",
       "createdAt": "2025-08-05T12:15:00Z",
-      "status": "active",
+      "status": "deprecated",
       "sourceLogFiles": [
         "docs/ByggLogg.json",
         "docs/Chatthistorik.json"
@@ -259,7 +259,7 @@
     "metadata": {
       "originSessionId": "7",
       "createdAt": "2025-08-07T16:00:00Z",
-      "status": "active",
+      "status": "deprecated",
       "sourceLogFiles": [
         "docs/ByggLogg.json",
         "docs/Chatthistorik.json"
@@ -456,7 +456,7 @@
     "metadata": {
       "originSessionId": "11",
       "createdAt": "2025-07-30T18:00:00Z",
-      "status": "active",
+      "status": "deprecated",
       "sourceLogFiles": [
         "docs/ByggLogg.json",
         "docs/Chatthistorik.json"
@@ -849,7 +849,7 @@
     "metadata": {
       "originSessionId": "23",
       "createdAt": "2025-08-05T12:00:00Z",
-      "status": "active",
+      "status": "deprecated",
       "sourceLogFiles": [
         "docs/ByggLogg.json",
         "docs/Chatthistorik.json"
@@ -914,7 +914,7 @@
     "metadata": {
       "originSessionId": "23.3",
       "createdAt": "2025-08-05T12:00:00Z",
-      "status": "active",
+      "status": "deprecated",
       "sourceLogFiles": [
         "docs/ByggLogg.json",
         "docs/Chatthistorik.json"
@@ -1392,7 +1392,7 @@
     },
     "identifiedRisk": {
       "riskId": "CONTEXT_DEGRADATION",
-      "description": "Hög risk för kontextdegradering i långa sessioner. AI:n kan basera sina svar på en föråldrad eller ofullständig intern representation av en fil, vilket leder till leverans av felaktig, ofullständig eller hallucinerad kod."
+      "description": "Hög risk för kontextdegradering i långa sessioner. AI:n kan basera sina svar på en förårad eller ofullständig intern representation av en fil, vilket leder till leverans av felaktig, ofullständig eller hallucinerad kod."
     },
     "mitigation": {
       "protocolId": "P-KLS-01",
@@ -1943,6 +1943,73 @@
       "originSessionId": "29.0b",
       "createdAt": "2025-08-08T03:30:00Z",
       "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250809-C01",
+    "trigger": {
+      "type": "code_generation",
+      "scope": [
+        "*.py"
+      ],
+      "keywords": [
+        "comment",
+        "syntax",
+        "script"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "SYNTAX_LANGUAGE_MISMATCH",
+      "description": "AI kan använda kommentarsyntax från ett språk (t.ex. JavaScripts //) i en fil av ett annat språk (t.ex. Python), vilket orsakar syntaxfel vid kompilering eller körning."
+    },
+    "mitigation": {
+      "protocolId": "PSV-LINT-SIMULATION",
+      "description": "Före leverans av en kodfil, genomför en explicit mental kontroll av filens ändelse och verifiera att all syntax, särskilt fundamentala element som kommentarer och sträng-hantering, matchar standarderna för det specifika språket."
+    },
+    "metadata": {
+      "originSessionId": "23.3",
+      "createdAt": "2025-08-09T21:40:00Z",
+      "status": "active",
+      "deprecates": [
+        "H-20250805-01"
+      ],
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250809-C02",
+    "trigger": {
+      "type": "api_call_implementation",
+      "scope": [
+        "src/entities/**/api/*.js"
+      ],
+      "keywords": [
+        "fetch",
+        ".json"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "API_CONTRACT_VIOLATION_FILENAME",
+      "description": "Risk att generera fetch-anrop till felaktiga filsökvägar på grund av antaganden om namnkonventioner (t.ex. singularis vs. pluralis), vilket leder till 404-fel som maskeras som SPA-fallback HTML-svar och efterföljande JSON-parsningsfel."
+    },
+    "mitigation": {
+      "protocolId": "P-VERIFY-STATIC-ASSETS",
+      "description": "Innan kod skrivs som involverar `fetch` till en statisk tillgång, begär och invänta explicit verifiering av tillgångens exakta, skiftlägeskänsliga, fullständiga sökväg från användaren, helst via en direkt fillista eller skärmdump från källkodsrepositoryt."
+    },
+    "metadata": {
+      "originSessionId": "11",
+      "createdAt": "2025-08-09T21:40:01Z",
+      "status": "active",
+      "deprecates": [
+        "H-20250807-01"
+      ],
       "sourceLogFiles": [
         "docs/ByggLogg.json",
         "docs/Chatthistorik.json"
