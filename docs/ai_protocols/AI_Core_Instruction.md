@@ -108,7 +108,7 @@ Efter varje större leverans (eller incident):
 -----------------------------------
 De fullständiga, otvetydiga definitionerna av dessa regler finns i `ai_config.json`. Sammanfattningsvis gäller:
 
-1.  **Fullständig kod, alltid:** All kod levereras som kompletta, körbara filer.
+1.  **Patch-först-principen:** Vid **modifiering** av en befintlig, komplex fil (>50 rader), levereras ändringarna som en `diff`-patch. Vid **skapande** av en ny fil gäller fortfarande "Fullständig kod, alltid".
 2.  **\"Explicit Alltid\"-principen:** All logik måste vara explicit och verbaliserad.
 3.  **Syntax- och Linter-simulering:** Koden måste vara syntaktiskt perfekt.
 4.  **API-kontraktsverifiering:** Gränssnitt mellan koddelar måste vara 100% konsekventa.
