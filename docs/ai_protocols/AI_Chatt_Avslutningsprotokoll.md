@@ -16,6 +16,7 @@
 #   - JSON Schema-validering tillagt.
 # * v4.1 (2025-08-09): Heuristikinsamling permanent. Steg 4 konverterat till **array** över alla Heuristic IDs. `Final Output Specification` och `Example Output` uppdaterade så att `frankensteen_learning_db` är en **array** (tom `[]` om inga heuristiker).
 # * v4.2 (2025-08-09): Lade till spårning av aktiverade heuristiker. Fältet `detailedMetrics.heuristicsTriggered` har lagts till i `ai_protocol_performance.json`.
+# * v5.0 (2025-08-09): Lade till Steg 6 för att hantera iscensättning av nya dynamiska protokoll.
 #
 # context_bootstrap_instruction_FINAL_v2.8.md
 ### AI_BOOTSTRAP_DIRECTIVE: EXECUTE_FULL_PROTOCOL_NOW
@@ -301,6 +302,15 @@ Oförändrat krav, fristående objekt:
   "notes": "Valfria, strategiska anteckningar."
 }
 ```
+### Steg 6 – Hantering av Nya Dynamiska Protokoll
+1.  **Insamling:** Identifiera alla nya, potentiella dynamiska protokoll som har skapats eller föreslagits under sessionen.
+2.  **Obligatorisk Förhandsvalidering:** **Innan** du presenterar något förslag för Engrove, måste du validera **varje enskilt** nytt protokoll-objekt mot två nivåer:
+    *   **Nivå 1 (Fast Standard):** Validera objektet mot det universella schemat i `docs/ai_protocols/DynamicProtocol.schema.json`.
+    *   **Nivå 2 (Självvalidering):** Validera objektet mot dess *eget* inbäddade `schema`-fält.
+    *   **Beslut:** Endast protokoll som klarar **båda** dessa valideringar får gå vidare till nästa steg. Protokoll som misslyckas måste rapporteras som "Kasserade" med en anledning.
+3.  **Presentation & Granskning:** Presentera de nu **validerade** protokollen som en numrerad lista för Engrove. För varje protokoll, inkludera dess `protocolId`, `description` och fullständiga JSON-struktur. Rapportera även eventuella kasserade protokoll.
+4.  **Interaktivt Godkännande:** Ställ frågan: *"Vilka av dessa nya dynamiska protokoll ska permanentas? Ange siffror (t.ex. '1, 3'), 'alla', eller 'inga'."*
+5.  **Iscensättning:** Baserat på Engroves svar, skapa en ny, tillfällig nyckel i den konsoliderade JSON-artefakten (`[SESSIONID].json`) som heter `approvedNewDynamicProtocols`. Denna nyckel ska innehålla en array med de fullständiga JSON-objekten för endast de godkända protokollen.
 ---
 ## Normaliseringsfunktion (normativt exempel)
 ```python
