@@ -161,7 +161,7 @@
     "metadata": {
       "originSessionId": "4.1",
       "createdAt": "2025-08-05T12:00:00Z",
-      "status": "deprecated",
+      "status": "active",
       "sourceLogFiles": [
         "docs/ByggLogg.json",
         "docs/Chatthistorik.json"
@@ -193,7 +193,7 @@
     "metadata": {
       "originSessionId": "5",
       "createdAt": "2025-08-05T20:00:00Z",
-      "status": "deprecated",
+      "status": "active",
       "sourceLogFiles": [
         "docs/ByggLogg.json",
         "docs/Chatthistorik.json"
@@ -226,7 +226,7 @@
     "metadata": {
       "originSessionId": "6",
       "createdAt": "2025-08-05T12:15:00Z",
-      "status": "deprecated",
+      "status": "active",
       "sourceLogFiles": [
         "docs/ByggLogg.json",
         "docs/Chatthistorik.json"
@@ -259,7 +259,7 @@
     "metadata": {
       "originSessionId": "7",
       "createdAt": "2025-08-07T16:00:00Z",
-      "status": "deprecated",
+      "status": "active",
       "sourceLogFiles": [
         "docs/ByggLogg.json",
         "docs/Chatthistorik.json"
@@ -456,7 +456,7 @@
     "metadata": {
       "originSessionId": "11",
       "createdAt": "2025-07-30T18:00:00Z",
-      "status": "deprecated",
+      "status": "active",
       "sourceLogFiles": [
         "docs/ByggLogg.json",
         "docs/Chatthistorik.json"
@@ -849,7 +849,7 @@
     "metadata": {
       "originSessionId": "23",
       "createdAt": "2025-08-05T12:00:00Z",
-      "status": "deprecated",
+      "status": "active",
       "sourceLogFiles": [
         "docs/ByggLogg.json",
         "docs/Chatthistorik.json"
@@ -914,7 +914,7 @@
     "metadata": {
       "originSessionId": "23.3",
       "createdAt": "2025-08-05T12:00:00Z",
-      "status": "deprecated",
+      "status": "active",
       "sourceLogFiles": [
         "docs/ByggLogg.json",
         "docs/Chatthistorik.json"
@@ -1392,7 +1392,7 @@
     },
     "identifiedRisk": {
       "riskId": "CONTEXT_DEGRADATION",
-      "description": "Hög risk för kontextdegradering i långa sessioner. AI:n kan basera sina svar på en förårad eller ofullständig intern representation av en fil, vilket leder till leverans av felaktig, ofullständig eller hallucinerad kod."
+      "description": "Hög risk för kontextdegradering i långa sessioner. AI:n kan basera sina svar på en föråldrad eller ofullständig intern representation av en fil, vilket leder till leverans av felaktig, ofullständig eller hallucinerad kod."
     },
     "mitigation": {
       "protocolId": "P-KLS-01",
@@ -1882,6 +1882,224 @@
     }
   },
   {
+    "heuristicId": "H-20250809-17",
+    "trigger": {
+      "type": "process_explanation_request",
+      "scope": [
+        "*"
+      ],
+      "keywords": [
+        "hur fungerar",
+        "processen för",
+        "förklara",
+        "integrera"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "RISK_PROCESS_OVERSIMPLIFICATION",
+      "description": "Risken att endast förklara den interaktiva delen av en process och utelämna efterföljande, automatiserade steg, vilket ger en ofullständig bild."
+    },
+    "mitigation": {
+      "protocolId": "PROTOCOL_EXPLAIN_FULL_LIFECYCLE",
+      "description": "Vid förklaring av en process som spänner över interaktiva och automatiserade system, mappa explicit ut hela kedjan och separera tydligt mellan 'Fas 1 (Interaktiv Iscensättning)' och 'Fas 2 (Automatiserad Integration)'."
+    },
+    "metadata": {
+      "originSessionId": "43",
+      "createdAt": "2025-08-09T22:58:32Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250809-18",
+    "trigger": {
+      "type": "process_explanation_request",
+      "scope": [
+        "*"
+      ],
+      "keywords": [
+        "hur fungerar",
+        "processen för",
+        "förklara",
+        "integrera"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "RISK_FRAGMENTED_PROCESS_EXPLANATION",
+      "description": "Risken att jag endast förklarar den omedelbara, interaktiva delen av en process och utelämnar de efterföljande, automatiserade stegen, vilket ger en ofullständig och vilseledande bild."
+    },
+    "mitigation": {
+      "protocolId": "PROTOCOL_EXPLAIN_FULL_LIFECYCLE",
+      "description": "Jag måste explicit mappa ut hela processkedjan. Min förklaring måste tydligt separera och definiera Fas 1 (Manuella/Interaktiva Steg) från Fas 2 (Automatiserade Steg) och beskriva exakt hur data eller artefakter överförs mellan faserna."
+    },
+    "metadata": {
+      "originSessionId": "43",
+      "createdAt": "2025-08-09T22:58:32Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250809-19",
+    "trigger": {
+      "type": "user_interface_design",
+      "scope": [
+        "*"
+      ],
+      "keywords": [
+        "kommando",
+        "gränssnitt",
+        "meny",
+        "alias"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "RISK_HIGH_COGNITIVE_LOAD_INTERFACE",
+      "description": "Risken att designa ett kommandosystem som kräver att användaren memorerar specifika textalias, vilket ökar den kognitiva belastningen."
+    },
+    "mitigation": {
+      "protocolId": "PROTOCOL_INTERACTIVE_MENU_PROPOSAL",
+      "description": "Vid design av ett kommandosystem, föreslå ett interaktivt, menystyrt flöde som primärt alternativ för att göra alla tillgängliga åtgärder explicita och minska användarens minnesbörda."
+    },
+    "metadata": {
+      "originSessionId": "43",
+      "createdAt": "2025-08-09T22:58:32Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250809-20",
+    "trigger": {
+      "type": "dynamic_protocol_design",
+      "scope": [
+        "docs/ai_protocols/DynamicProtocols.json"
+      ],
+      "keywords": [
+        "alternativ",
+        "kommando",
+        "meny",
+        "lista"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "RISK_UNNECESSARY_EXTERNALIZATION",
+      "description": "Risken att externalisera konfigurationsdata till en separat fil när den är central för ett protokolls logik och bör vara självständig."
+    },
+    "mitigation": {
+      "protocolId": "PROTOCOL_SELF_CONTAINED_LOGIC",
+      "description": "När ett dynamiskt protokolls primära funktion är att hantera en begränsad uppsättning alternativ, måste definitionerna för dessa alternativ vara inbäddade direkt i protokollets JSON-struktur för att säkerställa att det är helt självständigt."
+    },
+    "metadata": {
+      "originSessionId": "43",
+      "createdAt": "2025-08-09T22:58:32Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250809-21",
+    "trigger": {
+      "type": "solution_design",
+      "scope": [
+        "*"
+      ],
+      "keywords": [
+        "design",
+        "förslag",
+        "protokoll",
+        "system",
+        "gränssnitt"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "RISK_ENGINEER_CENTRIC_DESIGN",
+      "description": "Risken att designa ett system utifrån tekniska principer (t.ex. separation of concerns) utan att väga in slutanvändarens kognitiva belastning och användarvänlighet."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-UX-FIRST",
+      "description": "Vid design av ett nytt system eller protokoll, ställ den explicita frågan: 'Vilken lösning minimerar den kognitiva belastningen och antalet steg för slutanvändaren?' Använd svaret för att väga mellan teknisk 'renhet' och praktisk användbarhet."
+    },
+    "metadata": {
+      "originSessionId": "43",
+      "createdAt": "2025-08-09T22:58:32Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250809-22",
+    "trigger": {
+      "type": "artifact_explanation_request",
+      "scope": [
+        "*"
+      ],
+      "keywords": [
+        "inkomplett",
+        "saknas",
+        "varför"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "RISK_CONFUSION_ARTIFACT_VS_DEFINITION",
+      "description": "Risken att användaren uppfattar en sessionslogg som inkomplett för att den inte innehåller källkoden för de verktyg som skapades eller användes under sessionen."
+    },
+    "mitigation": {
+      "protocolId": "PROTOCOL_CLARIFY_ARTIFACT_ROLE",
+      "description": "Jag måste omedelbart förklara den fundamentala skillnaden: Sessionsartefakter dokumenterar *resultatet och händelserna* (loggen) under en session. De är inte en container för de permanenta *definitionerna* av verktyg eller protokoll."
+    },
+    "metadata": {
+      "originSessionId": "43",
+      "createdAt": "2025-08-09T22:58:32Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250809-23",
+    "trigger": {
+      "type": "file_modification_approval",
+      "scope": [
+        "docs/ai_protocols/DynamicProtocols.json",
+        "tools/frankensteen_learning_db.json",
+        "docs/ByggLogg.json"
+      ],
+      "keywords": [
+        "godkänna",
+        "implementera",
+        "uppdatera"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "RISK_MANUAL_AUTOMATED_SYSTEM_DESYNC",
+      "description": "AI:n kringgår den automatiserade integrationspipelinen genom att direkt leverera en modifierad version av en fil som ska hanteras av ett automatiserat skript. Detta leder till desynkronisering och regressionsbuggar."
+    },
+    "mitigation": {
+      "protocolId": "PROTOCOL_ADHERE_TO_AUTOMATED_PIPELINE_STRICT",
+      "description": "**STRIKT FÖRBJUDET:** Jag får aldrig direkt leverera eller instruera användaren att manuellt uppdatera en fil som hanteras av ett automatiserat skript. Alla ändringar MÅSTE iscensättas i sessionsartefakten och sedan integreras av det avsedda automatiserade skriptet."
+    },
+    "metadata": {
+      "originSessionId": "43",
+      "createdAt": "2025-08-09T22:58:32Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
     "heuristicId": "H-20250809-09",
     "trigger": {
       "type": "post_failure_user_query",
@@ -1943,73 +2161,6 @@
       "originSessionId": "29.0b",
       "createdAt": "2025-08-08T03:30:00Z",
       "status": "active",
-      "sourceLogFiles": [
-        "docs/ByggLogg.json",
-        "docs/Chatthistorik.json"
-      ]
-    }
-  },
-  {
-    "heuristicId": "H-20250809-C01",
-    "trigger": {
-      "type": "code_generation",
-      "scope": [
-        "*.py"
-      ],
-      "keywords": [
-        "comment",
-        "syntax",
-        "script"
-      ]
-    },
-    "identifiedRisk": {
-      "riskId": "SYNTAX_LANGUAGE_MISMATCH",
-      "description": "AI kan använda kommentarsyntax från ett språk (t.ex. JavaScripts //) i en fil av ett annat språk (t.ex. Python), vilket orsakar syntaxfel vid kompilering eller körning."
-    },
-    "mitigation": {
-      "protocolId": "PSV-LINT-SIMULATION",
-      "description": "Före leverans av en kodfil, genomför en explicit mental kontroll av filens ändelse och verifiera att all syntax, särskilt fundamentala element som kommentarer och sträng-hantering, matchar standarderna för det specifika språket."
-    },
-    "metadata": {
-      "originSessionId": "23.3",
-      "createdAt": "2025-08-09T21:40:00Z",
-      "status": "active",
-      "deprecates": [
-        "H-20250805-01"
-      ],
-      "sourceLogFiles": [
-        "docs/ByggLogg.json",
-        "docs/Chatthistorik.json"
-      ]
-    }
-  },
-  {
-    "heuristicId": "H-20250809-C02",
-    "trigger": {
-      "type": "api_call_implementation",
-      "scope": [
-        "src/entities/**/api/*.js"
-      ],
-      "keywords": [
-        "fetch",
-        ".json"
-      ]
-    },
-    "identifiedRisk": {
-      "riskId": "API_CONTRACT_VIOLATION_FILENAME",
-      "description": "Risk att generera fetch-anrop till felaktiga filsökvägar på grund av antaganden om namnkonventioner (t.ex. singularis vs. pluralis), vilket leder till 404-fel som maskeras som SPA-fallback HTML-svar och efterföljande JSON-parsningsfel."
-    },
-    "mitigation": {
-      "protocolId": "P-VERIFY-STATIC-ASSETS",
-      "description": "Innan kod skrivs som involverar `fetch` till en statisk tillgång, begär och invänta explicit verifiering av tillgångens exakta, skiftlägeskänsliga, fullständiga sökväg från användaren, helst via en direkt fillista eller skärmdump från källkodsrepositoryt."
-    },
-    "metadata": {
-      "originSessionId": "11",
-      "createdAt": "2025-08-09T21:40:01Z",
-      "status": "active",
-      "deprecates": [
-        "H-20250807-01"
-      ],
       "sourceLogFiles": [
         "docs/ByggLogg.json",
         "docs/Chatthistorik.json"
