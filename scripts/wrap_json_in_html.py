@@ -226,50 +226,56 @@ def create_interactive_html(output_html_path):
         const REPO_RAW_URL = 'https://raw.githubusercontent.com/Engrove/Engrove-Audio-Tools-2.0/main/';
         
         const CORE_DOC_PATHS = [
+          // Core Instructions & Config
           'docs/ai_protocols/AI_Core_Instruction.md',
           'docs/ai_protocols/ai_config.json',
-          'docs/ai_protocols/Levande_Kontext_Protokoll.md',
-          'docs/ai_protocols/Confidence_Protocol.md',
-          'docs/ai_protocols/Multi_Sample_Protokoll.md',
-          'docs/ai_protocols/RAG_Faktacheck_Protokoll.md',
-          'docs/AI_Collaboration_Standard.md',
-          'docs/ai_protocols/Beroendeanalys_Protokoll.md',
-          'docs/ai_protocols/Brainstorming_Protokoll.md',
-          'docs/ai_protocols/Help_me_God_Protokoll.md',
-          'docs/ai_protocols/K-MOD_Protokoll.md',
-          'docs/ai_protocols/Kontext-JSON_Protokoll.md',
           'docs/ai_protocols/frankensteen_persona.v1.0.json',
-          'docs/ai_protocols/MAS_Architecture_Guide.md',
-          'docs/ai_protocols/HITL_Interrupt_Points.md',
-          'docs/ai_protocols/Escalation_Protocol.md',
-          'docs/ai_protocols/LLM_Judge_Protokoll.md',
-          'docs/ai_protocols/Sandbox_Execution_Protokoll.md',
-          'docs/ai_protocols/KPI_Dashboard_Spec.md',
+
+          // Dynamic Protocols (New System)
+          'docs/ai_protocols/AI_Dynamic_Protocols.md',
+          'docs/ai_protocols/DynamicProtocols.json',
+          'docs/ai_protocols/DynamicProtocol.schema.json',
+          'docs/ai_protocols/System_Integrity_Check_Protocol.md',
+          'docs/ai_protocols/Stature_Report_Protocol.md',
+          
+          // Core Operational Protocols
           'docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md',
-          'docs/ai_protocols/Manuell_Cache-Berikning_Protokoll.md',
-          'docs/ai_protocols/Stalemate_Protocol.md',
           'docs/ai_protocols/Help_me_God_Protokoll.md',
-          'docs/ai_protocols/Pre_Execution_Alignment.md',
-          'docs/ai_protocols/Structured_Debugging_Checklist.md',
-          'docs/ai_protocols/Micro_Retrospective.md',
-          'docs/ai_protocols/Autonomy_Charter.md',
-          'docs/Mappstruktur_och_Arbetsflöde.md',
+          'docs/ai_protocols/Stalemate_Protocol.md',
+          'docs/ai_protocols/Levande_Kontext_Protokoll.md',
           'docs/ai_protocols/context_bootstrap_instruction.md',
-          'tools/citation_cache.json',
-          'tools/frankensteen_learning_db.json',
-          'logs/rotorsakslogg_TEMPLATE.md',
+
+          // High-Level Project Documentation
+          'docs/AI_Collaboration_Standard.md',
+          'docs/Mappstruktur_och_Arbetsflöde.md',
+          'docs/Blueprint_för_Migrering_v1_till_v2.md',
+          'docs/Engrove_Audio_Toolkit_v2.0_Analys.md',
           'docs/Global_UI-Standard_för_Engrove-plattformen.md',
           'docs/Global_UI-Standard_Komponentspecifikation.md',
           'docs/Teknisk_Beskrivning_Engrove_Audio_Toolkit.md',
-          'docs/Blueprint_för_Migrering_v1_till_v2.md',
-          'docs/Engrove_Audio_Toolkit_v2.0_Analys.md',
-          'docs/ai_protocols/Hallucination_Leaderboard_Check.md',
+
+          // Data & Learning Databases
           'docs/ByggLogg.json',
+          'tools/frankensteen_learning_db.json',
+          'tools/citation_cache.json',
+          'logs/rotorsakslogg_TEMPLATE.md',
+
+          // Supporting Protocols
+          'docs/ai_protocols/Beroendeanalys_Protokoll.md',
+          'docs/ai_protocols/Brainstorming_Protokoll.md',
+          'docs/ai_protocols/K-MOD_Protokoll.md',
+          'docs/ai_protocols/Kontext-JSON_Protokoll.md',
+          'docs/ai_protocols/Structured_Debugging_Checklist.md',
+          'docs/ai_protocols/Micro_Retrospective.md',
+          
+          // Project & Build Config
           'package.json',
           'vite.config.js',
-          'scripts/process_ai_instructions.py',
+
+          // Core Scripts
           'scripts/generate_full_context.py',
-          'scripts/wrap_json_in_html.py'
+          'scripts/wrap_json_in_html.py',
+          'scripts/history/historical_reconstruction_builder.py'
         ];
 
         const IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'];
