@@ -9,6 +9,8 @@ on:
     paths:
       - 'sessions/**.json'
       - '.github/workflows/process_historical_sessions.yml'
+      - 'scripts/history/historical_reconstruction_builder.py'
+      - 'requirements.txt'
 
   # Tillåter dig att köra detta workflow manuellt från "Actions"-fliken på GitHub
   workflow_dispatch:
@@ -34,6 +36,11 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
+      # NYTT STEG: Installera beroenden från requirements.txt
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+
       # Steg 3: Kör ditt Python-skript för att bygga de konsoliderade filerna
       - name: Run Historical Reconstruction Builder
         run: |
@@ -56,6 +63,7 @@ jobs:
             git add docs/Chatthistorik.json
             git add docs/ai_protocol_performance.json
             git add tools/frankensteen_learning_db.json
+            git add docs/ai_protocols/DynamicProtocols.json
 
             # Skapa ett commit-meddelande
             git commit -m "Chore: Update historical data from session logs" -m "Detta commit har genererats automatiskt av process_historical_sessions.yml workflow."
