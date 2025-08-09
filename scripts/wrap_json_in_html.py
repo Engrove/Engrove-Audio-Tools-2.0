@@ -1,39 +1,3 @@
-# scripts/wrap_json_in_html.py
-#
-# HISTORIK:
-# * v1.0 (Initial): Första versionen.
-# * v2.0 (Bug Fix): Felaktig implementation med str.format().
-# * v3.0 (Definitive Fix): Implementerar html.escape() och <pre>-tagg.
-# * v4.0 (UI Enhancement): Lade till kopiera/ladda ner knappar.
-# * v5.0 (Full Interactive UI): Total omskrivning för ett interaktivt "Context Builder" UI.
-# * v6.0 (Stub/Full Logic): Implementerade logik för att skilja på markerade/omarkerade filer.
-# * v7.0 (Lazy Loading & UI Polish): Introducerar on-demand fetch för stora .json-filer.
-# * v8.0 (Lazy Loading & UI Polish): Introducerade on-demand fetch och "Kopera"-knapp.
-# * v9.0 (Core Docs Shortcut): Lade till en ny "Select Core Docs"-knapp för att effektivisera startprocessen.
-# * v10.0 (Feature Expansion): Implementerat fyra nya huvudfunktioner.
-# * v10.1 (Syntax Correction): Korrigerat ett kritiskt syntaxfel (// vs #).
-# * v11.0 (Improved Auto-Select): Uppdaterat JSON-driven filmarkering enligt nya krav.
-# * v12.0 (Modal Copy/Download): Lade till knappar för kopiering och nedladdning i filförhandsgranskningsmodalen.
-# * v12.1 (CRITICAL BUGFIX): Lade till defensiva null-kontroller runt `addEventListener` för att förhindra appkrasch.
-# * v13.0 (2025-08-06): Uppdaterad för att hantera den nya modulära instruktionsstrukturen.
-# * v13.1 (2025-08-06): (BUGFIX) Korrigerat "Select/Deselect All"-logiken.
-# * v14.0 (2025-08-06): (KORRIGERING) All speciallogik i JavaScript för att rendera `docs`-mappen har tagits bort.
-#   Filträdet renderas nu enhetligt från `file_structure`-objektet.
-# * v15.0 (2025-08-06): Implementerat tre nya funktioner (modalknappar, trädexpansion, Generate Files).
-# * v15.1 (2025-08-06): (KORRIGERING) Rättat ett kritiskt logiskt fel i `generateFilesOnly`.
-# * v16.0 (2025-08-06): Gjort `AI_Core_Instruction.md` valbar istället för obligatorisk.
-#   - Funktionen `enforceCoreInstruction` är borttagen.
-#   - Filen är nu en del av `CORE_DOC_PATHS`.
-# * v17.0 (2025-08-09): Omarbetat "AI Performance"-fliken till en fullständig instrumentpanel med diagram och tabeller.
-# * v17.1 (2025-08-09): KRITISK FIX - Återställde HTML-mallen från en f-sträng till en vanlig sträng.
-# * v17.2 (2025-08-09): KRITISK SYNTAXFIX - Lade till den saknade avslutande `"""` för html_template-variabeln.
-# * v17.3 (2025-08-09): KRITISK RACE-CONDITION FIX: Säkerställde att prestanda-instrumentpanelen renderas korrekt.
-# * v17.4 (2025-08-09): KRITISK SCOPE FIX: Flyttat all `fullContext`-beroende logik in i fetch-callbacken.
-# * v17.5 (2025-08-09): (DENNA ÄNDRING) DEFINITIV SYNTAXFIX: Återställt den saknade avslutande `"""`-markören efter föregående misstag.
-#
-# TILLÄMPADE REGLER (Frankensteen v4.0):
-# - PSV-MIT-SYNTAX-DOUBLE-CHECK: En extra, manuell granskning av grundläggande syntax har genomförts för att säkerställa att inga uppenbara fel som oavslutade strängar finns kvar.
-
 import sys
 import os
 
@@ -797,8 +761,8 @@ def create_interactive_html(output_html_path):
         }
         
         function renderPerformanceDashboard() {
-            if (!fullContext) return;
-            const metrics = fullContext.ai_performance_metrics || {};
+            if (!fullContext || !fullContext.ai_performance_metrics) return;
+            const metrics = fullContext.ai_performance_metrics;
             const perfLog = Array.isArray(metrics.performanceLog) ? metrics.performanceLog : [];
             const learningDb = Array.isArray(metrics.learningDatabase) ? metrics.learningDatabase : [];
 
@@ -904,21 +868,25 @@ def create_interactive_html(output_html_path):
     try:
         with open(output_html_path, 'w', encoding='utf-8') as f:
             f.write(html_template)
-        print(f"[INFO] Wrapper: Skapade framgångsrikt den uppdaterade interaktiva HTML-filen '{output_html_path}'.")
-
+        # This print goes to stdout and will be captured by the GitHub Action
+        print(f"Successfully generated {output_html_path}")
     except Exception as e:
-        print(f"[ERROR] Wrapper: Ett oväntat fel inträffade vid skrivning till fil: {e}", file=sys.stderr)
+        # This print goes to stderr and will be captured by the GitHub Action's logs
+        print(f"Error writing to {output_html_path}: {e}", file=sys.stderr)
         sys.exit(1)
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Användning: python wrap_json_in_html.py <dummy-input.json> <sökväg-till-output.html>", file=sys.stderr)
+    # The first argument from sys.argv is the script name itself.
+    # The GitHub Action workflow provides the JSON content via stdin and the output path as the second argument.
+    if len(sys.argv) != 2:
+        print("Usage: python wrap_json_in_html.py <output_html_path>", file=sys.stderr)
         sys.exit(1)
 
-    output_file = sys.argv[2]
+    output_file_path = sys.argv[1]
     
-    output_dir = os.path.dirname(output_file)
+    # Create the directory for the output file if it doesn't exist.
+    output_dir = os.path.dirname(output_file_path)
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
         
-    create_interactive_html(output_file)
+    create_interactive_html(output_file_path)
