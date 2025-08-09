@@ -1551,6 +1551,40 @@
     }
   },
   {
+    "heuristicId": "H-20250809-09",
+    "trigger": {
+      "type": "post_failure_user_query",
+      "scope": [
+        "*"
+      ],
+      "keywords": [
+        "är du säker",
+        "fortfarande fel",
+        "granska igen",
+        "jämför",
+        "saknas",
+        "kortare än"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "POST_FAILURE_ASSESSMENT_ERROR",
+      "description": "AI:n bekräftar felaktigt att en korrigering är komplett trots att bevis på motsatsen finns, vilket indikerar en brist i Post-Failure Scrutiny (PFS) självutvärderingsloop."
+    },
+    "mitigation": {
+      "protocolId": "PROTOCOL_FORCED_DIFF",
+      "description": "När en användare ifrågasätter en korrigering för andra gången, är AI:n förbjuden att enbart omvärdera. Den MÅSTE utföra och presentera en programmatisk eller rad-för-rad 'diff'-jämförelse mellan användarens korrekta version och sin egen levererade version för att objektivt identifiera avvikelsen innan den fortsätter."
+    },
+    "metadata": {
+      "originSessionId": "41",
+      "createdAt": "2025-08-09T17:00:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
     "heuristicId": "H-20250806-02",
     "trigger": {
       "type": "protocol_activation",
