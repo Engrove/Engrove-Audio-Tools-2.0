@@ -25,11 +25,12 @@
 #   - Funktionen `enforceCoreInstruction` är borttagen.
 #   - Filen är nu en del av `CORE_DOC_PATHS`.
 # * v17.0 (2025-08-09): Omarbetat "AI Performance"-fliken till en fullständig instrumentpanel med diagram och tabeller.
-# * v17.1 (2025-08-09): (DENNA ÄNDRING - KRITISK FIX) Återställde HTML-mallen från en f-sträng till en vanlig sträng för att förhindra att Python felaktigt tolkar JavaScript-kodens måsvingar.
+# * v17.1 (2025-08-09): KRITISK FIX - Återställde HTML-mallen från en f-sträng till en vanlig sträng.
+# * v17.2 (2025-08-09): (DENNA ÄNDRING) KRITISK SYNTAXFIX: Lade till den saknade avslutande `"""` för html_template-variabeln.
 #
 # TILLÄMPADE REGLER (Frankensteen v4.0):
-# - Red Team Alter Ego: Identifierat att f-strängsformatering var grundorsaken till den totala UI-kraschen.
-# - Syntax- och Linter-simulering: Den korrigerade versionen säkerställer att giltig JavaScript genereras.
+# - Fullständig kod, alltid: Denna fil är nu komplett och syntaktiskt korrekt.
+# - Syntax- och Linter-simulering: Felet som borde ha fångats i detta steg har nu identifierats och åtgärdats.
 
 import sys
 import os
@@ -39,8 +40,6 @@ def create_interactive_html(output_html_path):
     Genererar en komplett, interaktiv HTML-sida som fungerar som en "AI Context Builder".
     """
 
-    # KRITISK FIX: Ändrat från f"""...""" till """...""" för att förhindra att Python
-    # försöker formatera de måsvingar som finns i JavaScript-koden.
     html_template = """<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,7 +47,7 @@ def create_interactive_html(output_html_path):
     <title>AI Context Builder v3.4</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root {{
+        :root {
             --primary-bg: #f8f9fa;
             --secondary-bg: #ffffff;
             --tertiary-bg: #e9ecef;
@@ -62,8 +61,8 @@ def create_interactive_html(output_html_path):
             --info-color: #17a2b8;
             --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             --font-mono: "JetBrains Mono", "SF Mono", "Consolas", "Liberation Mono", "Menlo", monospace;
-        }}
-        body {{
+        }
+        body {
             font-family: var(--font-main);
             background-color: var(--primary-bg);
             color: var(--text-color);
@@ -71,31 +70,31 @@ def create_interactive_html(output_html_path):
             display: flex;
             height: 100vh;
             overflow: hidden;
-        }}
-        .panel {{
+        }
+        .panel {
             padding: 1em;
             overflow-y: auto;
             border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-        }}
-        #left-panel {{
+        }
+        #left-panel {
             width: 40%;
             min-width: 350px;
-        }}
-        #right-panel {{
+        }
+        #right-panel {
             width: 60%;
             gap: 1em;
-        }}
-        .controls {{
+        }
+        .controls {
             padding-bottom: 1em;
             margin-bottom: 1em;
             border-bottom: 1px solid var(--border-color);
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
-        }}
-        button {{
+        }
+        button {
             font-size: 14px;
             padding: 8px 16px;
             border-radius: 6px;
@@ -104,27 +103,27 @@ def create_interactive_html(output_html_path):
             background-color: var(--secondary-bg);
             color: var(--text-color);
             transition: background-color 0.2s, border-color 0.2s, color 0.2s;
-        }}
-        button:hover {{ background-color: #e9ecef; }}
-        button:disabled {{ background-color: #e9ecef; cursor: not-allowed; opacity: 0.7; }}
-        button.primary {{ background-color: var(--accent-color); color: white; border-color: var(--accent-color); }}
-        button.primary:hover:not(:disabled) {{ background-color: var(--accent-hover); }}
-        button.info {{ background-color: var(--info-color); color: white; border-color: var(--info-color); }}
-        button.info:hover:not(:disabled) {{ background-color: #138496; }}
+        }
+        button:hover { background-color: #e9ecef; }
+        button:disabled { background-color: #e9ecef; cursor: not-allowed; opacity: 0.7; }
+        button.primary { background-color: var(--accent-color); color: white; border-color: var(--accent-color); }
+        button.primary:hover:not(:disabled) { background-color: var(--accent-hover); }
+        button.info { background-color: var(--info-color); color: white; border-color: var(--info-color); }
+        button.info:hover:not(:disabled) { background-color: #138496; }
         
-        #file-tree-container {{ flex-grow: 1; }}
-        #file-tree-container ul {{ list-style-type: none; padding-left: 20px; }}
-        #file-tree-container li {{ padding: 3px 0; }}
-        .toggle {{ cursor: pointer; user-select: none; display: inline-block; width: 1em; }}
+        #file-tree-container { flex-grow: 1; }
+        #file-tree-container ul { list-style-type: none; padding-left: 20px; }
+        #file-tree-container li { padding: 3px 0; }
+        .toggle { cursor: pointer; user-select: none; display: inline-block; width: 1em; }
         
-        .tree-item-label {{ display: flex; align-items: center; gap: 6px; cursor: pointer; }}
-        .tree-item-label input[type="checkbox"] {{ cursor: pointer; }}
-        .file-icon {{ width: 1.1em; height: 1.1em; color: var(--text-muted); }}
-        .file-name-clickable {{ text-decoration: none; color: var(--text-color); }}
-        .file-name-clickable:hover {{ text-decoration: underline; color: var(--accent-color); }}
+        .tree-item-label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+        .tree-item-label input[type="checkbox"] { cursor: pointer; }
+        .file-icon { width: 1.1em; height: 1.1em; color: var(--text-muted); }
+        .file-name-clickable { text-decoration: none; color: var(--text-color); }
+        .file-name-clickable:hover { text-decoration: underline; color: var(--accent-color); }
         
-        .output-container {{ display: flex; flex-direction: column; flex-grow: 1; gap: 1em; }}
-        .output-area, #instruction-input {{
+        .output-container { display: flex; flex-direction: column; flex-grow: 1; gap: 1em; }
+        .output-area, #instruction-input {
             white-space: pre-wrap;
             word-wrap: break-word;
             background-color: var(--secondary-bg);
@@ -135,47 +134,47 @@ def create_interactive_html(output_html_path):
             font-family: var(--font-mono);
             font-size: 14px;
             resize: none;
-        }}
-        #instruction-input {{ flex-grow: 0; height: 150px; resize: vertical; }}
+        }
+        #instruction-input { flex-grow: 0; height: 150px; resize: vertical; }
 
-        .modal {{
+        .modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(0, 0, 0, 0.5); display: flex;
             justify-content: center; align-items: center; z-index: 1000;
             opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
-        }}
-        .modal.visible {{ opacity: 1; visibility: visible; }}
-        .modal-content {{
+        }
+        .modal.visible { opacity: 1; visibility: visible; }
+        .modal-content {
             background: var(--secondary-bg); border-radius: 8px; padding: 20px;
             width: 90%; max-width: 1000px; height: 90%; max-height: 80vh;
             display: flex; flex-direction: column; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }}
-        .modal-header {{
+        }
+        .modal-header {
             display: flex; justify-content: space-between; align-items: center;
             border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px;
-        }}
-        .modal-header h2 {{ margin: 0; font-size: 1.2em; font-family: var(--font-mono); }}
-        .modal-close {{ font-size: 24px; cursor: pointer; border: none; background: none; }}
-        .modal-body {{ flex-grow: 1; overflow-y: auto; }}
-        .modal-body pre {{ margin: 0; white-space: pre-wrap; }}
-        .modal-body img {{ max-width: 100%; height: auto; display: block; margin: 0 auto; }}
+        }
+        .modal-header h2 { margin: 0; font-size: 1.2em; font-family: var(--font-mono); }
+        .modal-close { font-size: 24px; cursor: pointer; border: none; background: none; }
+        .modal-body { flex-grow: 1; overflow-y: auto; }
+        .modal-body pre { margin: 0; white-space: pre-wrap; }
+        .modal-body img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
     
         /* --- Tabs (Step 3) --- */
-        .tabs {{ display: flex; gap: .5rem; margin-bottom: 1rem; }}
-        .tab-button {{ padding: .5rem .75rem; border: 1px solid var(--border-color); background: var(--secondary-bg); border-radius: 6px; cursor: pointer; }}
-        .tab-button.active {{ background: var(--accent-color); color: #fff; border-color: var(--accent-color); }}
-        .tab-panel {{ display: none; }}
-        .tab-panel.active {{ display: flex; flex-direction: column; gap: 1rem; flex-grow: 1; }}
+        .tabs { display: flex; gap: .5rem; margin-bottom: 1rem; }
+        .tab-button { padding: .5rem .75rem; border: 1px solid var(--border-color); background: var(--secondary-bg); border-radius: 6px; cursor: pointer; }
+        .tab-button.active { background: var(--accent-color); color: #fff; border-color: var(--accent-color); }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: flex; flex-direction: column; gap: 1rem; flex-grow: 1; }
         
         /* --- Performance Dashboard Styles --- */
-        #performance-container {{ display: flex; flex-direction: column; gap: 1rem; }}
-        .metric-block {{ border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; background: var(--secondary-bg); }}
-        .metric-block h3 {{ margin: 0 0 .75rem 0; font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; }}
-        .chart-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }}
-        .chart-container {{ position: relative; height: 300px; }}
-        #perf-learning-body table {{ width: 100%; border-collapse: collapse; font-size: 0.85rem; }}
-        #perf-learning-body th, #perf-learning-body td {{ border: 1px solid var(--border-color); padding: 8px; text-align: left; }}
-        #perf-learning-body th {{ background-color: var(--primary-bg); }}
+        #performance-container { display: flex; flex-direction: column; gap: 1rem; }
+        .metric-block { border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; background: var(--secondary-bg); }
+        .metric-block h3 { margin: 0 0 .75rem 0; font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; }
+        .chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+        .chart-container { position: relative; height: 300px; }
+        #perf-learning-body table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        #perf-learning-body th, #perf-learning-body td { border: 1px solid var(--border-color); padding: 8px; text-align: left; }
+        #perf-learning-body th { background-color: var(--primary-bg); }
     </style>
 </head>
 <body>
@@ -897,4 +896,26 @@ def create_interactive_html(output_html_path):
     }
 </script>
 
-</body></html>
+</body></html>"""
+
+    try:
+        with open(output_html_path, 'w', encoding='utf-8') as f:
+            f.write(html_template)
+        print(f"[INFO] Wrapper: Skapade framgångsrikt den uppdaterade interaktiva HTML-filen '{output_html_path}'.")
+
+    except Exception as e:
+        print(f"[ERROR] Wrapper: Ett oväntat fel inträffade vid skrivning till fil: {e}", file=sys.stderr)
+        sys.exit(1)
+
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print("Användning: python wrap_json_in_html.py <dummy-input.json> <sökväg-till-output.html>", file=sys.stderr)
+        sys.exit(1)
+
+    output_file = sys.argv[2]
+    
+    output_dir = os.path.dirname(output_file)
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
+        
+    create_interactive_html(output_file)
