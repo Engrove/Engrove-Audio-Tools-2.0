@@ -165,6 +165,39 @@
     }
   },
   {
+    "heuristicId": "H-20250809-01",
+    "trigger": {
+      "type": "crawler_mediawiki_redirect_and_taxonomy",
+      "scope": [
+        "generic_crawler_v3_8.py",
+        "ScrapingProfile.v3_8.json"
+      ],
+      "keywords": [
+        "force_https",
+        "allow_redirects=False",
+        "Kategorie:Tonabnehmer",
+        "Category:Cartridges",
+        "WDQS SPARQL"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "MEDIAWIKI_HTTP_DOWNGRADE_AND_CATEGORY_MISMATCH",
+      "description": "MediaWiki-instans på .de svarar med 301 till http och annan språklig kategori-titel; naiv klient följer redirect och/eller frågar fel kategori, vilket ger 0 sidor."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-HTTPS-I18N-CAT",
+      "description": "1) Blockera http-downgrade, återförsök med strikt https. 2) Språkmedveten kategori-upplösning (de:Kategorie X ↔ en:Category Y) via konfig eller auto-detektion av 'siteinfo.lang'. 3) WDQS-fråga med explicit P31/P279* och label-service på begärda språk."
+    },
+    "metadata": {
+      "originSessionId": "33",
+      "createdAt": "2025-08-09T09:12:00Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "logs/crawler.txt"
+      ]
+    }
+  },
+  {
     "heuristicId": "H-20250801-01",
     "trigger": {
       "type": "api_contract_analysis",

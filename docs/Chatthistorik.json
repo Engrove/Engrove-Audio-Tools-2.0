@@ -1318,6 +1318,168 @@
     ]
   },
   {
+    "sessionId": "33",
+    "interactions": [
+      {
+        "turnIndex": 1,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (human:operator@unknown)",
+        "summary": "Frågar varför URL är hårdkodad i skriptet."
+      },
+      {
+        "turnIndex": 2,
+        "timestamp": "unknown",
+        "speakerName": "ChatGPT 5 Thinking",
+        "model": {
+          "provider": "OpenAI",
+          "name": "GPT 5 Pro/Thinking",
+          "version": "unknown"
+        },
+        "speaker": "ChatGPT 5 Thinking (OpenAI:GPT 5 Pro/Thinking@unknown)",
+        "summary": "Förklarar historik och föreslår profil-driven konfiguration."
+      },
+      {
+        "turnIndex": 3,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (human:operator@unknown)",
+        "summary": "Delar loggutdrag: hifi-wiki.de 404/301; hifi-wiki.com fungerar; Wikidata sökning 0 träffar."
+      },
+      {
+        "turnIndex": 4,
+        "timestamp": "unknown",
+        "speakerName": "ChatGPT 5 Thinking",
+        "model": {
+          "provider": "OpenAI",
+          "name": "GPT 5 Pro/Thinking",
+          "version": "unknown"
+        },
+        "speaker": "ChatGPT 5 Thinking (OpenAI:GPT 5 Pro/Thinking@unknown)",
+        "summary": "Diagnostiserar redirect-problemet och föreslår att tvinga HTTPS och blockera downgrade."
+      },
+      {
+        "turnIndex": 5,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (human:operator@unknown)",
+        "summary": "Ber om mer omfattande loggning och att filändelsen ska vara .txt."
+      },
+      {
+        "turnIndex": 6,
+        "timestamp": "unknown",
+        "speakerName": "ChatGPT 5 Thinking",
+        "model": {
+          "provider": "OpenAI",
+          "name": "GPT 5 Pro/Thinking",
+          "version": "unknown"
+        },
+        "speaker": "ChatGPT 5 Thinking (OpenAI:GPT 5 Pro/Thinking@unknown)",
+        "summary": "Levererar ny version med separat konsol/fil-loggning, crawler.txt töms vid start."
+      },
+      {
+        "turnIndex": 7,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (human:operator@unknown)",
+        "summary": "Begär slumpmässigt val av tre standard-UA i stället för bot-UA."
+      },
+      {
+        "turnIndex": 8,
+        "timestamp": "unknown",
+        "speakerName": "ChatGPT 5 Thinking",
+        "model": {
+          "provider": "OpenAI",
+          "name": "GPT 5 Pro/Thinking",
+          "version": "unknown"
+        },
+        "speaker": "ChatGPT 5 Thinking (OpenAI:GPT 5 Pro/Thinking@unknown)",
+        "summary": "Implementerar UA-rotation (Chrome/Edge/Safari)."
+      },
+      {
+        "turnIndex": 9,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (human:operator@unknown)",
+        "summary": "Instruerar: skriv crawler.txt i logs/ och staging_area.json i public/data/."
+      },
+      {
+        "turnIndex": 10,
+        "timestamp": "unknown",
+        "speakerName": "ChatGPT 5 Thinking",
+        "model": {
+          "provider": "OpenAI",
+          "name": "GPT 5 Pro/Thinking",
+          "version": "unknown"
+        },
+        "speaker": "ChatGPT 5 Thinking (OpenAI:GPT 5 Pro/Thinking@unknown)",
+        "summary": "Anpassar sökvägar, bekräftar skapande av mappar vid behov."
+      },
+      {
+        "turnIndex": 11,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (human:operator@unknown)",
+        "summary": "Begär: lägg till wikidata_sparql-profil, utöka KEY_MAP och hedra data_extraction_rules; smart key matching."
+      },
+      {
+        "turnIndex": 12,
+        "timestamp": "unknown",
+        "speakerName": "ChatGPT 5 Thinking",
+        "model": {
+          "provider": "OpenAI",
+          "name": "GPT 5 Pro/Thinking",
+          "version": "unknown"
+        },
+        "speaker": "ChatGPT 5 Thinking (OpenAI:GPT 5 Pro/Thinking@unknown)",
+        "summary": "Levererar v3.8 med begärda förbättringar och felsökningsloggning."
+      },
+      {
+        "turnIndex": 13,
+        "timestamp": "unknown",
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (human:operator@unknown)",
+        "summary": "Avslut: \"Fungerar till 33%\" och aktiverar avslutningsprotokoll för session 33."
+      }
+    ],
+    "coverageNote": "Fullständig tur-för-tur-transkript ej tillgängligt i denna leverans; ovan är fas-sammanfattningar i kronologi."
+  },
+  {
     "sessionId": "16",
     "interactions": [
       {

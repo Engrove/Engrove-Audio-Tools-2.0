@@ -296,6 +296,84 @@
     "projectStatus": "Projektet har nu en utökad uppsättning verifierade UI-komponenter och en väldefinierad strategisk vision som sträcker sig bortom den initiala v2.0-migreringen. Arbetet med att bygga Data Explorer kan nu fortsätta på en solid grund."
   },
   {
+    "sessionId": "33",
+    "date": "2025-08-09T09:12:00Z",
+    "summary": "Generisk crawler uppgraderades till v3.8 med strikt HTTPS för hifi-wiki.de, separerad loggning (INFO till konsol, FULL DEBUG till logs/crawler.txt), staging till public/data/staging_area.json, slumpmässigt webbläsar-UA, ny wikidata_sparql-profil, utökad KEY_MAP, smart nyckelmatchning och stöd för data_extraction_rules.",
+    "actions": [
+      {
+        "title": "Separat loggning + loggfil omlokaliserad",
+        "files": [
+          {
+            "path": "generic_crawler_v3_8.py",
+            "changeDescription": "Inför två loggers: console (INFO) och file (DEBUG). Fil-logg skrivs till logs/crawler.txt, filen trunceras vid start. Alla HTTP-request/response (status, URL, params, headers, kort preview av body) loggas på DEBUG."
+          }
+        ],
+        "result": "Konsolen visar kortfattad körning; crawler.txt innehåller full spårbarhet."
+      },
+      {
+        "title": "Staging till public/data/staging_area.json",
+        "files": [
+          {
+            "path": "generic_crawler_v3_8.py",
+            "changeDescription": "Skapa mappen public/data vid behov och append:a extraherade objekt radvis i JSONL eller som konsoliderad JSON-lista beroende på körning."
+          }
+        ],
+        "result": "Data hamnar i offentlig datastruktur för vidare konsumtion."
+      },
+      {
+        "title": "Tvinga HTTPS för hifi-wiki.de och blockera downgrade",
+        "files": [
+          {
+            "path": "generic_crawler_v3_8.py",
+            "changeDescription": "add_force_https('hifi-wiki.de') och allow_redirects=False; vid 301 till http avbryt och prova https://hifi-wiki.de/api.php på nytt."
+          }
+        ],
+        "result": "Undviker redirect till http://www.hifi-wiki.de och 404/parsefel minskar, men sajten svarar ibland ändå med 301 vilket hanteras defensivt."
+      },
+      {
+        "title": "Slumpmässigt webbläsar-UA per session",
+        "files": [
+          {
+            "path": "generic_crawler_v3_8.py",
+            "changeDescription": "Välj en UA från tre riktiga webbläsarsträngar (Chrome/Edge/Safari) vid uppstart och återanvänd under hela sessionen."
+          }
+        ],
+        "result": "Minskar blockeringar mot botar."
+      },
+      {
+        "title": "Ny profil: wikidata_sparql",
+        "files": [
+          {
+            "path": "ScrapingProfile.v3_8.json",
+            "changeDescription": "La till profil som använder WDQS endpoint (https://query.wikidata.org/sparql) med parametriserad SPARQL för pickup-objekt. Parser stödjer bindings→nyckel-mappning."
+          }
+        ],
+        "result": "Ger alternativ källa när MediaWiki saknar metadata."
+      },
+      {
+        "title": "Utökad KEY_MAP + smart key matching",
+        "files": [
+          {
+            "path": "generic_crawler_v3_8.py",
+            "changeDescription": "Lade till mappningar för channel_separation, channel_balance, crosstalk, compliance (static/dynamic), frequency_response, output_voltage, tracking_force, load/resistance/capacitance, inductance, weight, years, stylus, type, color m.fl. Införde fuzzy/alias-matchning (casefold, plural/singular, symbolnormalisering, dB/Hz/Ω)."
+          }
+        ],
+        "result": "Högre träffsäkerhet vid tolkning av wikitext och tabeller."
+      },
+      {
+        "title": "Hedra data_extraction_rules från profil",
+        "files": [
+          {
+            "path": "generic_crawler_v3_8.py",
+            "changeDescription": "Kör regelmotor (CSS/XPath/regex/label→value) före fallback (parsetree/wikitext-heuristik)."
+          }
+        ],
+        "result": "Mer deterministisk extraktion där regler finns."
+      }
+    ],
+    "projectStatus": "Delvis lyckat (≈33% enligt kund). Hifi-wiki.com fungerar och returnerar 60+ sidor; hifi-wiki.de svarar ofta 301→http vilket nu fångas; WDQS profil tillagd men kräver förfining av frågan."
+  },
+  {
     "sessionId": "16",
     "date": "2025-08-01T18:00:00Z",
     "summary": "Ett komplext, ihållande och flerstegs dataladdningsfel i Data Explorer-modulen har slutgiltigt identifierats och åtgärdats. Grundorsaken, ett subtilt API-kontraktsbrott som förvärrades av ett `ReferenceError`, har korrigerats. Samtidigt har ett visuellt renderingsfel i datatabellen åtgärdats och AI-assistentens kärninstruktioner har förstärkts med en \"Alter Ego\"-granskningsprocess för att avsevärt höja den framtida kodkvaliteten.",
