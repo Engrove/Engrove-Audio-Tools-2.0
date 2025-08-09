@@ -8,7 +8,7 @@
 # * v5.0 (Full Interactive UI): Total omskrivning för ett interaktivt "Context Builder" UI.
 # * v6.0 (Stub/Full Logic): Implementerade logik för att skilja på markerade/omarkerade filer.
 # * v7.0 (Lazy Loading & UI Polish): Introducerar on-demand fetch för stora .json-filer.
-# * v8.0 (Lazy Loading & UI Polish): Introducerade on-demand fetch och "Kopiera"-knapp.
+# * v8.0 (Lazy Loading & UI Polish): Introducerade on-demand fetch och "Kopera"-knapp.
 # * v9.0 (Core Docs Shortcut): Lade till en ny "Select Core Docs"-knapp för att effektivisera startprocessen.
 # * v10.0 (Feature Expansion): Implementerat fyra nya huvudfunktioner.
 # * v10.1 (Syntax Correction): Korrigerat ett kritiskt syntaxfel (// vs #).
@@ -26,11 +26,12 @@
 #   - Filen är nu en del av `CORE_DOC_PATHS`.
 # * v17.0 (2025-08-09): Omarbetat "AI Performance"-fliken till en fullständig instrumentpanel med diagram och tabeller.
 # * v17.1 (2025-08-09): KRITISK FIX - Återställde HTML-mallen från en f-sträng till en vanlig sträng.
-# * v17.2 (2025-08-09): (DENNA ÄNDRING) KRITISK SYNTAXFIX: Lade till den saknade avslutande `"""` för html_template-variabeln.
+# * v17.2 (2025-08-09): KRITISK SYNTAXFIX: Lade till den saknade avslutande `"""` för html_template-variabeln.
+# * v17.3 (2025-08-09): (DENNA ÄNDRING) KRITISK RACE-CONDITION FIX: Säkerställer att prestanda-instrumentpanelen renderas korrekt även om datan laddas efter att fliken har aktiverats.
 #
 # TILLÄMPADE REGLER (Frankensteen v4.0):
-# - Fullständig kod, alltid: Denna fil är nu komplett och syntaktiskt korrekt.
-# - Syntax- och Linter-simulering: Felet som borde ha fångats i detta steg har nu identifierats och åtgärdats.
+# - Red Team Alter Ego (AERL2): Identifierat och åtgärdat en race condition-risk i UI-interaktionen.
+# - Fullständig kod, alltid: Denna fil är komplett och löser det rapporterade problemet.
 
 import sys
 import os
@@ -688,9 +689,8 @@ def create_interactive_html(output_html_path):
 
         if (downloadBtn) downloadBtn.addEventListener('click', () => {
             const blob = new Blob([outputPre.textContent], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url;
+            a.href = URL.createObjectURL(blob);
             a.download = `context_custom_${new Date().toISOString().slice(0, 10)}.json`;
             document.body.appendChild(a);
             a.click();
@@ -704,6 +704,10 @@ def create_interactive_html(output_html_path):
                 fullContext = data;
                 fileTreeContainer.innerHTML = '';
                 renderFileTree(fullContext.file_structure, fileTreeContainer, '');
+                // KRITISK FIX: Om prestanda-fliken redan är aktiv när datan anländer, rendera den.
+                if (document.querySelector('.tab-button[data-tab="performance"]').classList.contains('active')) {
+                    renderPerformanceDashboard();
+                }
             })
             .catch(error => {
                 fileTreeContainer.innerHTML = `<p style="color: var(--danger-color);"><b>Error:</b> Could not load context.json. ${error.message}</p>`;
@@ -720,7 +724,8 @@ def create_interactive_html(output_html_path):
         btn.classList.add('active');
         document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
         document.getElementById(`tab-${tab}`).classList.add('active');
-        if (tab === 'performance') {
+        // KRITISK FIX: Rendera endast om datan faktiskt har laddats.
+        if (tab === 'performance' && fullContext) {
             renderPerformanceDashboard();
         }
       });
@@ -896,7 +901,8 @@ def create_interactive_html(output_html_path):
     }
 </script>
 
-</body></html>"""
+</body>
+</html>"""
 
     try:
         with open(output_html_path, 'w', encoding='utf-8') as f:
