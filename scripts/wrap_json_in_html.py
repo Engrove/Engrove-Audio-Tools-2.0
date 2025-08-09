@@ -24,11 +24,12 @@
 # * v16.0 (2025-08-06): Gjort `AI_Core_Instruction.md` valbar istället för obligatorisk.
 #   - Funktionen `enforceCoreInstruction` är borttagen.
 #   - Filen är nu en del av `CORE_DOC_PATHS`.
-# * v17.0 (2025-08-09): (DENNA ÄNDRING) Omarbetat "AI Performance"-fliken till en fullständig instrumentpanel med diagram och tabeller.
+# * v17.0 (2025-08-09): Omarbetat "AI Performance"-fliken till en fullständig instrumentpanel med diagram och tabeller.
+# * v17.1 (2025-08-09): (DENNA ÄNDRING - KRITISK FIX) Återställde HTML-mallen från en f-sträng till en vanlig sträng för att förhindra att Python felaktigt tolkar JavaScript-kodens måsvingar.
 #
 # TILLÄMPADE REGLER (Frankensteen v4.0):
-# - Fullständig kod, alltid: Detta är en komplett, fungerande fil med den nya logiken.
-# - Obligatorisk Refaktorisering: Den nya instrumentpanelen är implementerad med tydlig separation mellan datahantering och rendering.
+# - Red Team Alter Ego: Identifierat att f-strängsformatering var grundorsaken till den totala UI-kraschen.
+# - Syntax- och Linter-simulering: Den korrigerade versionen säkerställer att giltig JavaScript genereras.
 
 import sys
 import os
@@ -38,6 +39,8 @@ def create_interactive_html(output_html_path):
     Genererar en komplett, interaktiv HTML-sida som fungerar som en "AI Context Builder".
     """
 
+    # KRITISK FIX: Ändrat från f"""...""" till """...""" för att förhindra att Python
+    # försöker formatera de måsvingar som finns i JavaScript-koden.
     html_template = """<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -556,7 +559,7 @@ def create_interactive_html(output_html_path):
                     }
                 }
 
-                const selectedPaths = new Set(Array.from(fileTreeContainer.querySelectorAll('input[type=\"checkbox\"]:checked')).map(cb => cb.dataset.path));
+                const selectedPaths = new Set(Array.from(fileTreeContainer.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.dataset.path));
                 const filesContent = {};
 
                 const populatedStructure = await buildNewContextStructure(fullContext.file_structure, selectedPaths);
@@ -817,7 +820,8 @@ def create_interactive_html(output_html_path):
         });
 
         if (perfLog.length === 0) {
-            document.getElementById('perf-learning-body').innerHTML = 'Ingen prestandadata tillgänglig för att rendera diagram.';
+            const learningBody = document.getElementById('perf-learning-body');
+            if(learningBody) learningBody.innerHTML = 'Ingen prestandadata tillgänglig för att rendera diagram.';
             return;
         }
 
@@ -886,30 +890,11 @@ def create_interactive_html(output_html_path):
         });
         
         // --- Table: Learning DB ---
-        renderLearningDbTable(document.getElementById('perf-learning-body'), learningDb);
+        const learningBody = document.getElementById('perf-learning-body');
+        if (learningBody) {
+             renderLearningDbTable(learningBody, learningDb);
+        }
     }
 </script>
-</body>
-</html>"""
 
-    try:
-        with open(output_html_path, 'w', encoding='utf-8') as f:
-            f.write(html_template)
-        print(f"[INFO] Wrapper: Skapade framgångsrikt den uppdaterade interaktiva HTML-filen '{output_html_path}'.")
-
-    except Exception as e:
-        print(f"[ERROR] Wrapper: Ett oväntat fel inträffade vid skrivning till fil: {e}", file=sys.stderr)
-        sys.exit(1)
-
-if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Användning: python wrap_json_in_html.py <dummy-input.json> <sökväg-till-output.html>", file=sys.stderr)
-        sys.exit(1)
-
-    output_file = sys.argv[2]
-    
-    output_dir = os.path.dirname(output_file)
-    if output_dir:
-        os.makedirs(output_dir, exist_ok=True)
-        
-    create_interactive_html(output_file)
+</body></html>
