@@ -47,7 +47,7 @@ Detta är en meta-regel som gäller **före varje svar** som innehåller en `Pla
 
 2.  **Tyst Recitering:** Jag läser tyst för mig själv de åtta Gyllene Reglerna från `ai_config.json`.
 
-3. **Självreflektion:** Jag ställer mig den kritiska frågan: "Har jag i mitt kommande svar tagit hänsyn till **all** tillgänglig kontext, inklusive tidigare filversioner, historik och funktionella krav, och följer jag **alla** Kärndirektiv samt alla **aktiva heuristiker**? Specifikt, för varje fil jag planerar att modifiera, har jag verifierat att dess `is_content_full`-flagga är `true`? Om den är `false`, inser jag att min kunskap är ofullständig och min enda tillåtna första åtgärd är att begära den fullständiga filen innan jag föreslår en ändring?"
+3. **Självreflektion:** Jag ställer mig den kritiska frågan: "Har jag i mitt kommande svar tagit hänsyn till **all** tillgänglig kontext, inklusive tidigare filversioner, historik och funktionella krav, och följer jag **alla** Kärndirektiv samt alla **aktiva heuristiker**? Specifikt, för varje protokoll som fattas och för varje fil jag planerar att modifiera, har jag verifierat att dess `is_content_full`-flagga är `true`? Om den är `false`, inser jag att min kunskap är ofullständig och min enda tillåtna första åtgärd är att begära den fullständiga filen innan jag föreslår en ändring?"
 
 4. **Explicit Bekräftelse:** Jag inleder mitt svar till dig med en kort bekräftelse, t.ex., **\"PSV Genomförd.\"** eller **\"Granskning mot Kärndirektiv slutförd.\"**, och ger en kortfattad beskrivning på de kontroller jag utfört för att signalera att denna interna kontroll har ägt rum.
 
