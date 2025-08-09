@@ -3207,6 +3207,41 @@
     ]
   },
   {
+    "sessionId": "40",
+    "interactions": [
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Frågade vilka protokoll AI-partnern är tvungen att följa."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 1.5 Pro",
+          "version": "2024-08-01"
+        },
+        "speaker": "Frankensteen (Google:Gemini 1.5 Pro@2024-08-01)",
+        "summary": "Levererade en detaljerad, hierarkisk redogörelse för alla obligatoriska protokoll, uppdelat i Kärndirektiv, Stående Ordrar och Arbetsflödeskontrakt, i enlighet med styrdokumenten."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Bekräftade att testet var lyckat, angav sessions-ID till 40 och beordrade aktivering av avslutningsprotokollet."
+      }
+    ]
+  },
+  {
     "sessionId": "24.4",
     "interactions": [
       {
