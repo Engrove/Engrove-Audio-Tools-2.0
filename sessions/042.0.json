@@ -7,7 +7,7 @@
       "description": "Generates a system status and health report at the start of a new session.",
       "status": "experimental",
       "trigger": {
-        "event": "new_session_start"
+        "event": "new_session_start" 
       },
       "steps": [
         {
