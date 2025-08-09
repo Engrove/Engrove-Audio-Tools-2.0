@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# historical_reconstruction_builder.py
+# historical_reconstruction_builder.py (v2, 2025-08-09)
 # Läs en mapp med [SESSIONID].json och konsolidera till fyra standardfiler.
 #
 # OUTPUT:
@@ -12,6 +12,7 @@
 # - Sortera kronologiskt utifrån SESSIONID i filnamnet (numerisk).
 # - Normalisera talare: säkerställ maskinläsbar model + visningssträngen speaker.
 # - Var defensiv: hoppa över trasiga filer men logga stderr.
+# - Backcompat: accepterar både objekt (äldre) och array (nya) för frankensteen_learning_db.
 #
 # Användning:
 #   python3 historical_reconstruction_builder.py /path/to/sessions_dir  [/output_root]
@@ -115,10 +116,15 @@ def main():
         if isinstance(ap, dict):
             perf.append(ap)
 
-        # 4) Learning DB (om finns)
+        # 4) Learning DB (stöder både ny array och äldre objekt)
         lg = art.get("frankensteen_learning_db")
-        if isinstance(lg, dict):
+        if isinstance(lg, list):
+            heuristics.extend([h for h in lg if isinstance(h, dict)])
+        elif isinstance(lg, dict):
             heuristics.append(lg)
+        else:
+            # None eller annat: ignorera
+            pass
 
     # Skriv ut
     (docs_dir / "ByggLogg.json").write_text(json.dumps(bygglogg, ensure_ascii=False, indent=2), encoding="utf-8")
