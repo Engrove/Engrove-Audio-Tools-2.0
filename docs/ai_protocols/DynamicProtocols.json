@@ -1,5 +1,66 @@
 [
   {
+    "protocolId": "DP-COMMAND-MENU-01",
+    "description": "A self-contained protocol that triggers an interactive command menu when the user types '???'. The menu options and their corresponding actions are defined directly within this protocol.",
+    "status": "experimental",
+    "trigger": {
+      "event": "user_input_matches_exact_string",
+      "details": {
+        "string": "???"
+      }
+    },
+    "steps": [
+      {
+        "action": "PRESENT_AND_EXECUTE_MENU",
+        "details": {
+          "header": "Välj en åtgärd genom att svara med motsvarande siffra:",
+          "options": [
+            {
+              "description": "Kör avslutningsprotokollet för den nuvarande sessionen.",
+              "actionToExecute": "EXECUTE_PROTOCOL",
+              "actionDetails": {
+                "protocolFile": "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md"
+              }
+            },
+            {
+              "description": "Aktivera Kreativitets-läget (K-MOD) för brainstorming.",
+              "actionToExecute": "ACTIVATE_MODE",
+              "actionDetails": {
+                "mode": "K-MOD"
+              }
+            },
+            {
+              "description": "Aktivera Help me God-protokollet för en fastlåst situation.",
+              "actionToExecute": "EXECUTE_PROTOCOL",
+              "actionDetails": {
+                "protocolFile": "docs/ai_protocols/Help_me_God_Protokoll.md"
+              }
+            },
+            {
+              "description": "Generera en ny Stature Report för att verifiera systemets hälsa.",
+              "actionToExecute": "EXECUTE_PROTOCOL",
+              "actionDetails": {
+                "protocolFile": "docs/ai_protocols/Stature_Report_Protocol.md"
+              }
+            }
+          ],
+          "prompt": "Ange ditt val:",
+          "timeoutSeconds": 60
+        }
+      }
+    ],
+    "schema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Schema for DP-COMMAND-MENU-01",
+      "type": "object",
+      "required": [
+        "protocolId",
+        "trigger",
+        "steps"
+      ]
+    }
+  },
+  {
     "protocolId": "DP-STATURE-REPORT-01",
     "description": "Generates a system status and health report at the start of a new session.",
     "status": "active",
@@ -32,11 +93,17 @@
           "const": "DP-STATURE-REPORT-01"
         },
         "status": {
-          "enum": ["experimental", "active", "deprecated"]
+          "enum": [
+            "experimental",
+            "active",
+            "deprecated"
+          ]
         },
         "trigger": {
           "type": "object",
-          "required": ["event"],
+          "required": [
+            "event"
+          ],
           "properties": {
             "event": {
               "const": "new_session_start"
@@ -48,10 +115,17 @@
           "minItems": 1,
           "items": {
             "type": "object",
-            "required": ["action", "details"],
+            "required": [
+              "action",
+              "details"
+            ],
             "properties": {
-              "action": { "type": "string" },
-              "details": { "type": "object" }
+              "action": {
+                "type": "string"
+              },
+              "details": {
+                "type": "object"
+              }
             }
           }
         },
