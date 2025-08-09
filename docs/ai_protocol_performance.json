@@ -1020,6 +1020,53 @@
     }
   },
   {
+    "sessionId": "37",
+    "generatedBy": {
+      "speakerName": "Frankensteen",
+      "model": {
+        "provider": "Google",
+        "name": "gemini-2.5-pro",
+        "version": "2025-08-09"
+      },
+      "speaker": "Frankensteen (Google:gemini-2.5-pro@2025-08-09)"
+    },
+    "date": "2025-08-09T16:00:00Z",
+    "aiQualitativeSummary": "Sessionen var en framgångsrik meta-analys av AI:ns egna protokoll. Jag identifierade och förklarade korrekt de nyanserade skillnaderna i mitt agerande baserat på den initiala promptens karaktär. Jag hanterade och integrerade även ny historisk data korrekt. Inga fel, korrigeringar eller felsökningscykler krävdes.",
+    "scorecard": {
+      "efficacy": {
+        "score": 100,
+        "weight": 0.4,
+        "weightedScore": 40
+      },
+      "efficiency": {
+        "score": 100,
+        "weight": 0.3,
+        "weightedScore": 30
+      },
+      "robustness": {
+        "score": 100,
+        "weight": 0.3,
+        "weightedScore": 30
+      },
+      "finalScore": 100
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 0,
+      "selfCorrections": 0,
+      "externalCorrections": 0,
+      "protocolActivations": {
+        "psv": 5,
+        "helpMeGod": 0,
+        "stalemate": 0
+      }
+    },
+    "improvementSuggestion": {
+      "pattern": "Inga negativa mönster identifierades under denna meta-analytiska session.",
+      "proposedHeuristicId": null
+    }
+  },
+  {
     "sessionId": "17",
     "generatedBy": {
       "speakerName": "Frankensteen",
