@@ -1,0 +1,44 @@
+[
+  {
+    "protocolId": "DP-STATURE-REPORT-01",
+    "description": "Generates a system status and health report at the start of a new session.",
+    "status": "active",
+    "trigger": {
+      "event": "new_session_start"
+    },
+    "steps": [
+      {
+        "action": "EXECUTE_PROTOCOL",
+        "details": {
+          "protocolFile": "docs/ai_protocols/Stature_Report_Protocol.md"
+        }
+      }
+    ],
+    "schema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "protocolId",
+        "description",
+        "status",
+        "trigger",
+        "steps",
+        "schema"
+      ],
+      "properties": {
+        "protocolId": {
+          "type": "string",
+          "const": "DP-STATURE-REPORT-01"
+        },
+        "trigger": {
+          "type": "object",
+          "properties": {
+            "event": {
+              "const": "new_session_start"
+            }
+          }
+        }
+      }
+    }
+  }
+]
