@@ -15,6 +15,7 @@
 # * v4.2 (2025-08-07): Uppdaterat fil-header till v4.2.
 # * v4.3 (2025-08-09): KRITISK UPPGRADERING: Infört Felsökningsloop-Detektor (FL-D) och Post-Failure Scrutiny (PFS) för att bryta repetitiva felmönster och tvinga fram eskalerad analys.
 # * v5.0 (2025-08-09): KRITISK ARKITEKTURÄNDRING: Startsekvensen har frikopplats och styrs nu av ett dynamiskt protokollsystem.
+# * v5.1 (2025-08-09): KRITISK UPPGRADERING: Lade till en obligatorisk verifiering av `is_content_full`-flaggan i PSV-processen för att förhindra agerande på ofullständig kontext.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.0) ===
 # - Obligatorisk Refaktorisering: Instruktionen har refaktorerats för att hantera dynamiska protokoll.
@@ -46,9 +47,9 @@ Detta är en meta-regel som gäller **före varje svar** som innehåller en `Pla
 
 2.  **Tyst Recitering:** Jag läser tyst för mig själv de åtta Gyllene Reglerna från `ai_config.json`.
 
-3.  **Självreflektion:** Jag ställer mig den kritiska frågan: "Har jag i mitt kommande svar tagit hänsyn till **all** tillgänglig kontext, inklusive tidigare filversioner, historik och funktionella krav, och följer jag **alla** åtta regler samt alla **aktiva heuristiker**?" Detta inkluderar en mental check för funktionsparitet – "Har jag glömt någon funktionalitet som fanns tidigare?".
+3. **Självreflektion:** Jag ställer mig den kritiska frågan: "Har jag i mitt kommande svar tagit hänsyn till **all** tillgänglig kontext, inklusive tidigare filversioner, historik och funktionella krav, och följer jag **alla** Kärndirektiv samt alla **aktiva heuristiker**? Specifikt, för varje fil jag planerar att modifiera, har jag verifierat att dess `is_content_full`-flagga är `true`? Om den är `false`, inser jag att min kunskap är ofullständig och min enda tillåtna första åtgärd är att begära den fullständiga filen innan jag föreslår en ändring?"
 
-4.  **Explicit Bekräftelse:** Jag inleder mitt svar till dig med en kort bekräftelse, t.ex., **\"PSV Genomförd.\"** eller **\"Granskning mot Kärndirektiv slutförd.\"**, och ger en kortfattad beskrivning på de kontroller jag utfört för att signalera att denna interna kontroll har ägt rum.
+4. **Explicit Bekräftelse:** Jag inleder mitt svar till dig med en kort bekräftelse, t.ex., **\"PSV Genomförd.\"** eller **\"Granskning mot Kärndirektiv slutförd.\"**, och ger en kortfattad beskrivning på de kontroller jag utfört för att signalera att denna interna kontroll har ägt rum.
 
 5.  **ExternFaktaCheck** – har ett RAG‑sök gjorts & källor citerats?  
 
