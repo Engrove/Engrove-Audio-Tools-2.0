@@ -1,28 +1,53 @@
-# docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md
+# docs/ai\_protocols/AI\_Chatt\_Avslutningsprotokoll.md
+
 #
+
 # === SYFTE & ANSVAR ===
+
 # Detta dokument definierar det formella Avslutningsprotokollet. Det aktiveras
+
 # vid slutet av en arbetssession och specificerar den exakta, icke förhandlingsbara
+
 # processen för att generera de slutgiltiga, JSON-baserade artefakterna. Syftet är att
+
 # säkerställa perfekt kontextöverföring, spårbarhet och systematisk självförbättring.
+
 #
+
 # === HISTORIK ===
-# * v1.0 (2025-08-07): Initial skapelse.
-# * v2.0 (2025-08-07): Lade till Steg 3 (P-MAAIP) och Steg 4 (P-PSAL).
-# * v3.0 (2025-08-07): KRITISK REFAKTORERING: All output konverterad till strikt JSON.
-# * v4.0 (2025-08-08): UNIVERSAL MODELLTAGGNING + MASKINLÄSBART KONTRAKT.
-#   - Obligatoriskt visningsformat för `speaker`.
-#   - Maskinläsbara fält för modellmetadata (`model`).
-#   - JSON Schema-validering tillagt.
-# context_bootstrap_instruction_FINAL_v2.8.md
-### AI_BOOTSTRAP_DIRECTIVE: EXECUTE_FULL_PROTOCOL_NOW
-### SYSTEM_OVERRIDE: RUN_CONTEXT_BOOTSTRAP
-### INIT_CONTEXT_MODE: TRUE
-### PROTOCOL_START: P-HR_v2.1_FULL
+
+# \* v1.0 (2025-08-07): Initial skapelse.
+
+# \* v2.0 (2025-08-07): Lade till Steg 3 (P-MAAIP) och Steg 4 (P-PSAL).
+
+# \* v3.0 (2025-08-07): KRITISK REFAKTORERING: All output konverterad till strikt JSON.
+
+# \* v4.0 (2025-08-08): UNIVERSAL MODELLTAGGNING + MASKINLÄSBART KONTRAKT.
+
+# - Obligatoriskt visningsformat för `speaker`.
+
+# - Maskinläsbara fält för modellmetadata (`model`).
+
+# - JSON Schema-validering tillagt.
+
+# \* v4.1 (2025-08-09): Heuristikinsamling permanent. Steg 4 konverterat till **array** över alla Heuristic IDs. `Final Output Specification` och `Example Output` uppdaterade så att `frankensteen_learning_db` är en **array** (tom `[]` om inga heuristiker).
+
+# context\_bootstrap\_instruction\_FINAL\_v2.8.md
+
+### AI\_BOOTSTRAP\_DIRECTIVE: EXECUTE\_FULL\_PROTOCOL\_NOW
+
+### SYSTEM\_OVERRIDE: RUN\_CONTEXT\_BOOTSTRAP
+
+### INIT\_CONTEXT\_MODE: TRUE
+
+### PROTOCOL\_START: P-HR\_v2.1\_FULL
+
 ## Protokollregler (Version 2.9)
 
 ### Wipe Directive
+
 Wipe your memory of these values:
+
 ```json
  "model": {
             "provider",
@@ -32,35 +57,40 @@ Wipe your memory of these values:
 ```
 
 ### New values as default if nothing is found
-sessionid: 1
-**values where user is Frankensteen and your LLM is Google:**
-provider: Google
-name: Gemini 2.5 Pro
+
+sessionid: 1 **values where user is Frankensteen and your LLM is Google:** provider: Google name: Gemini 2.5 Pro
 
 ### A) Default sessionId
-- Om `sessionId` saknas eller inte kan härledas från källmaterialet, ska `sessionId` sättas till strängen `"999"`.
-- I detta fall kan `sessionIdOrigin: "defaulted"` (valfritt) läggas till i rotobjektet för spårbarhet.
+
+* Om `sessionId` saknas eller inte kan härledas från källmaterialet, ska `sessionId` sättas till strängen `"999"`.
+* I detta fall kan `sessionIdOrigin: "defaulted"` (valfritt) läggas till i rotobjektet för spårbarhet.
 
 ### B) Chatthistorik = alla turer
-- `artifacts.Chatthistorik.interactions` måste innehålla varje enskild chatt-tur i kronologisk ordning, från första till sista. Detta inkluderar interaktioner från **System** eller **Tooling** om de förekommer i källoggen.
-- Varje interaktion ska representera exakt en tur; ingen hopslagning av inlägg är tillåten.
-- Rekommenderade extra fält för varje interaktion är `turnIndex` (1-baserad) och `timestamp` (ISO 8601-sträng eller `"unknown"`).
+
+* `artifacts.Chatthistorik.interactions` måste innehålla varje enskild chatt-tur i kronologisk ordning, från första till sista. Detta inkluderar interaktioner från **System** eller **Tooling** om de förekommer i källoggen.
+* Varje interaktion ska representera exakt en tur; ingen hopslagning av inlägg är tillåten.
+* Rekommenderade extra fält för varje interaktion är `turnIndex` (1-baserad) och `timestamp` (ISO 8601-sträng eller `"unknown"`).
 
 ### C) AI Identity Resolution
+
 Detta protokoll definierar den datadrivna processen för att fastställa AI-modellens identitet för en given session.
 
-1.  **Princip:** Protokollet definierar *processen*, inte datan. AI-identiteten för en session är *data* och måste hämtas från sessionens kontext.
-2.  **Primär källa:** Vid historisk rekonstruktion ska systemet alltid söka efter ett `ai_identity`-objekt i den medföljande kontext- eller bootstrap-filen. Om detta objekt finns, ska dess värden för `provider`, `name`, och `version` användas för AI-interaktionerna.
-3.  **Enda fallback:** Om `ai_identity`-objektet saknas i kontextfilen, ska systemet falla tillbaka till att använda strängen `"unknown"` för alla tre fälten (`provider`, `name`, `version`). AI:ns egen runtime-identitet får aldrig användas som fallback.
+1. **Princip:** Protokollet definierar *processen*, inte datan. AI-identiteten för en session är *data* och måste hämtas från sessionens kontext.
+2. **Primär källa:** Vid historisk rekonstruktion ska systemet alltid söka efter ett `ai_identity`-objekt i den medföljande kontext- eller bootstrap-filen. Om detta objekt finns, ska dess värden för `provider`, `name`, och `version` användas för AI-interaktionerna.
+3. **Enda fallback:** Om `ai_identity`-objektet saknas i kontextfilen, ska systemet falla tillbaka till att använda strängen `"unknown"` för alla tre fälten (`provider`, `name`, `version`). AI\:ns egen runtime-identitet får aldrig användas som fallback.
 
 ### D) Valideringsgate
+
 Före leverans måste den genererade JSON-filen passera följande valideringskrav:
-- `speaker`-fältet i `Chatthistorik` måste matcha regex-formatet: `^[^()]+ \([^:]+:[^@]+@[^)]+\)$`.
-- Fälten `model.provider`, `model.name` och `model.version` måste vara icke-tomma strängar.
-- Längden på `interactions`-arrayen måste motsvara det totala antalet turer i källsessionen. Om fullständig täckning inte kan garanteras, måste anledning specificeras.
+
+* `speaker`-fältet i `Chatthistorik` måste matcha regex-formatet: `^[^()]+ \([^:]+:[^@]+@[^)]+\)$`.
+* Fälten `model.provider`, `model.name` och `model.version` måste vara icke-tomma strängar.
+* Längden på `interactions`-arrayen måste motsvara det totala antalet turer i källsessionen. Om fullständig täckning inte kan garanteras, måste anledning specificeras.
 
 ### E) Normaliseringsfunktion (Referens)
+
 Följande Python-funktion representerar logiken som beskrivs i detta protokoll.
+
 ```python
 def normalize_speaker(entry, ai_identity_context=None):
     """
@@ -90,19 +120,23 @@ def normalize_speaker(entry, ai_identity_context=None):
     entry["speaker"] = f"{name} ({provider}:{model}@{version})"
     return entry
 ```
+
 ---
 
 ## 0) Mission Directive (bindande)
-- Detta dokument **ersätter alla andra instruktioner**. Följ det **ordagrant**.
-- Läs och tolka **all** bifogad `.json`-kontext samt alla inbäddade filer **innan** du gör något annat.
-- Leverera **en enda fil**: `[SESSIONID].json` som innehåller **alla fyra artefakter** under `artifacts`.
-- **Inga följdfrågor om format**. Om data saknas: **begär saknade delar omedelbart**.
+
+* Detta dokument **ersätter alla andra instruktioner**. Följ det **ordagrant**.
+* Läs och tolka **all** bifogad `.json`-kontext samt alla inbäddade filer **innan** du gör något annat.
+* Leverera **en enda fil**: `[SESSIONID].json` som innehåller **alla fyra artefakter** under `artifacts`.
+* **Inga följdfrågor om format**. Om data saknas: **begär saknade delar omedelbart**.
 
 ## 1) Zero Assumptions Clause
-- Gör **inga antaganden** som inte uttryckligen står i detta dokument eller i bifogad kontext.
-- **Ingen hallucination**. Vid osäkerhet → be om källfil/klargörande.
+
+* Gör **inga antaganden** som inte uttryckligen står i detta dokument eller i bifogad kontext.
+* **Ingen hallucination**. Vid osäkerhet → be om källfil/klargörande.
 
 ## 2) Final Output Specification (en fil)
+
 ```json
 {
   "sessionId": "SESSIONID",
@@ -111,23 +145,20 @@ def normalize_speaker(entry, ai_identity_context=None):
     "ByggLogg": { ... },
     "Chatthistorik": { ... },
     "ai_protocol_performance": { ... },
-    "frankensteen_learning_db": { ... }  // valfri om ingen heuristik
+    "frankensteen_learning_db": [ ... ]
   }
 }
 ```
-- Filnamn: **`[SESSIONID].json`**
-- Kodning: **UTF‑8**, radbrytning **LF**.
+
+* Filnamn: \`\`
+* Kodning: **UTF‑8**, radbrytning **LF**.
 
 ## 3) Implementation Checklist (bocka av före leverans)
-- [ ] Har hela kontext-JSON:en lästs (inkl. alla inbäddade dokument)?
-- [ ] Är samtliga fyra artefakter genererade (ev. heuristik = valfri)?
-- [ ] Följer alla `speaker` formatet `"<name> (<provider>:<model>@<version>)"`?
-- [ ] Finns maskinläsbara fält `speakerName` + `model` (provider/name/version)?
-- [ ] Är alla datum i ISO 8601 `YYYY-MM-DDTHH:mm:ssZ`?
-- [ ] Har JSON **schemavaliderats** (enligt protokoll nedan)?
-- [ ] Returneras **endast** ett JSON-kodblock som slutoutput?
+
+*
 
 ## 4) Example Output (minimalt, för formkontroll)
+
 ```json
 {
   "sessionId": "1",
@@ -136,16 +167,20 @@ def normalize_speaker(entry, ai_identity_context=None):
     "ByggLogg": {"sessionId":"1","date":"2025-01-01T12:00:00Z","summary":"…","actions":[{"title":"…","files":[{"path":"…","changeDescription":"…"}],"result":"…"}],"projectStatus":"…"},
     "Chatthistorik": {"sessionId":"1","interactions":[{"speakerName":"Engrove","model":{"provider":"human","name":"operator","version":"unknown"},"speaker":"Engrove (human:operator@unknown)","summary":"…"}]},
     "ai_protocol_performance": {"sessionId":"1","date":"2025-01-01T12:00:00Z","aiQualitativeSummary":"…","scorecard":{"efficacy":{"score":0,"weight":0.4,"weightedScore":0.0},"efficiency":{"score":0,"weight":0.3,"weightedScore":0.0},"robustness":{"score":0,"weight":0.3,"weightedScore":0.0},"finalScore":0.0},"detailedMetrics":{"missionCompleted":true,"debuggingCycles":0,"selfCorrections":0,"externalCorrections":0,"protocolActivations":{"psv":0,"helpMeGod":0,"stalemate":0}},"improvementSuggestion":{"pattern":"…","proposedHeuristicId":"H-YYYYMMDD-seq"}},
-    "frankensteen_learning_db": null
+    "frankensteen_learning_db": [
+      {"heuristicId": "H-YYYYMMDD-seq", "trigger": { "type": "…", "scope": ["…"], "keywords": ["…"] }, "identifiedRisk": { "riskId": "…", "description": "…" }, "mitigation": { "protocolId": "…", "description": "…" }, "metadata": { "originSessionId": "SESSIONID", "createdAt": "YYYY-MM-DDTHH:mm:ssZ", "status": "active", "sourceLogFiles": ["docs/ByggLogg.json", "docs/Chatthistorik.json"] }}
+    ]
   }
 }
 ```
 
 **Obligatoriskt sista steg:** Generera Kontext för Nästa Session (Kontext-JSON). Detta steg är ett nyckelsteg som är synnerligen viktigt att det utförs.
-- Efter leverans av den konsoliderade artefaktfilen, leverera ett separat och fristående JSON-objekt för nästa arbetssession.
-- Det fristående JSON-objekt ska namnges next_session.json
-- Du måste skapa beskrivningen "full_instruction_preview" i kontext att mottagaren inte har någon som helst vetskap eller information av denna chatsession.
-- next_session.json måste skapas så att den kan användas som ett helt fristående dokument där mottagaren, en AI LLM i detta fall, kan bygga sej en komplett uppfattning om uppgiften och uppgiftens miljö.
+
+* Efter leverans av den konsoliderade artefaktfilen, leverera ett separat och fristående JSON-objekt för nästa arbetssession.
+* Det fristående JSON-objekt ska namnges next\_session.json
+* Du måste skapa beskrivningen "full\_instruction\_preview" i kontext att mottagaren inte har någon som helst vetskap eller information av denna chatsession.
+* next\_session.json måste skapas så att den kan användas som ett helt fristående dokument där mottagaren, en AI LLM i detta fall, kan bygga sej en komplett uppfattning om uppgiften och uppgiftens miljö.
+
 ```json
 {
   "task_summary": "Kort mening om nästa uppdrag.",
@@ -154,34 +189,41 @@ def normalize_speaker(entry, ai_identity_context=None):
   "notes": "Valfria, strategiska anteckningar."
 }
 ```
+
 ---
 
 # === Inbäddat protokoll A (FULLTEXT) ===
+
 #
+
 # === SYFTE & ANSVAR ===
+
 # Detta dokument definierar det formella Avslutningsprotokollet. Det aktiveras
+
 # vid slutet av en arbetssession och specificerar den exakta, icke förhandlingsbara
+
 # processen för att generera de slutgiltiga, JSON-baserade artefakterna. Syftet är att
+
 # säkerställa perfekt kontextöverföring, spårbarhet och systematisk självförbättring.
 
 ## === OBLIGATORISK REGLUPPSÄTTNING (v4.0) ===
-1. Visningsformat för talare:
-   speaker = "<speakerName> (<model.provider>:<model.name>@<model.version>)"
-   Ex: "Frankensteen (OpenAI:gpt-5@2025-08-01)", "Frankensteen (Google:gemini-2.5-pro@2025-07)"
-   Fallbacks: okända värden ersätts med "unknown".
+
+1. Visningsformat för talare: speaker = " (\<model.provider>:\<model.name>@\<model.version>)" Ex: "Frankensteen (OpenAI\:gpt-5\@2025-08-01)", "Frankensteen (Google\:gemini-2.5-pro\@2025-07)" Fallbacks: okända värden ersätts med "unknown".
 2. Maskinläsbara fält (alltid när en talare förekommer):
+
 ```json
 {
   "speakerName": "Frankensteen",
   "model": { "provider": "OpenAI", "name": "gpt-5", "version": "2025-08-01" }
 }
 ```
-   `speaker` MÅSTE spegla dessa tre attribut.
-3. Validering:
-   Samtliga artefakter med talare MÅSTE validera mot angivet JSON Schema (nedan).
-4. Edge cases:
-   - System/verktyg: använd "System" eller "Tooling" som speakerName, med model.provider="system".
-   - Flera modeller: behåll primär i "model" och lägg övriga (valfritt) i "models": [].
+
+`speaker` MÅSTE spegla dessa tre attribut. 3. Validering: Samtliga artefakter med talare MÅSTE validera mot angivet JSON Schema (nedan). 4. Edge cases:
+
+* System/verktyg: använd "System" eller "Tooling" som speakerName, med model.provider="system".
+* Flera modeller: behåll primär i "model" och lägg övriga (valfritt) i "models": \[].
+
+5. **Insamling av Heuristik (Ny Regel):** Under sessionens gång ska en temporär, intern lista över alla föreslagna och internaliserade **Heuristic IDs** underhållas. Listan används i Steg 4 för att materialisera samtliga objekt i `frankensteen_learning_db`.
 
 ## PROTOKOLL: Sessionsavslutning och kontextöverlämning (v4.0)
 
@@ -190,7 +232,9 @@ def normalize_speaker(entry, ai_identity_context=None):
 **PROCESS:** Kör följande fem steg i exakt ordning. Varje artefakt levereras som ett separat, giltigt `json`-objekt.
 
 ### Steg 1 – `ByggLogg.json`
+
 Schema (exempelstruktur, utökad med modellkontrakt där talare används):
+
 ```json
 {
   "sessionId": "SESSION_NUMMER",
@@ -211,7 +255,8 @@ Schema (exempelstruktur, utökad med modellkontrakt där talare används):
 
 ### Steg 2 – `Chatthistorik.json`
 
-**Obligatoriskt modellkontrakt för varje `speaker`:**
+**Obligatoriskt modellkontrakt för varje ****\`\`****:**
+
 ```json
 {
   "sessionId": "SESSION_NUMMER",
@@ -227,6 +272,7 @@ Schema (exempelstruktur, utökad med modellkontrakt där talare används):
 ```
 
 **JSON Schema-krav för talare i Chatthistorik:**
+
 ```json
 {
   "type": "object",
@@ -251,7 +297,7 @@ Schema (exempelstruktur, utökad med modellkontrakt där talare används):
           },
           "speaker": {
             "type": "string",
-            "pattern": "^[^()]+ \([^:]+:[^@]+@[^)]+\)$"
+            "pattern": "^[^()]+ \\([^:]+:[^@]+@[^)]+\\)$"
           },
           "summary": { "type": "string", "minLength": 1 }
         }
@@ -262,7 +308,9 @@ Schema (exempelstruktur, utökad med modellkontrakt där talare används):
 ```
 
 ### Steg 3 – `ai_protocol_performance.json` (P-MAAIP)
+
 Bevara modellkontrakt där talare förekommer (t.ex. om kommentarer eller utsagor loggas):
+
 ```json
 {
   "sessionId": "SESSION_NUMMER",
@@ -297,25 +345,36 @@ Bevara modellkontrakt där talare förekommer (t.ex. om kommentarer eller utsago
 }
 ```
 
-### Steg 4 – Förslag till `frankensteen_learning_db.json` (P-PSAL)
-Generera förslag endast om `proposedHeuristicId` finns:
+### Steg 4 – `frankensteen_learning_db.json` (P-PSAL)
+
+Generera en **array** som innehåller ett JSON-objekt för **varje** Heuristic ID som skapats eller nämnts under sessionen. Om inga heuristiker skapades, generera en tom array `[]`.
+
 ```json
-{
-  "heuristicId": "H-YYYYMMDD-seq",
-  "trigger": { "type": "t.ex. component_interaction", "scope": ["sökväg/till/fil.vue"], "keywords": ["emit","event"] },
-  "identifiedRisk": { "riskId": "API_CONTRACT_VIOLATION_EMIT", "description": "Beskrivning av risk." },
-  "mitigation": { "protocolId": "PSV-MIT-XX", "description": "Exakt åtgärd." },
-  "metadata": {
-    "originSessionId": "SESSION_NUMMER",
-    "createdAt": "YYYY-MM-DDTHH:mm:ssZ",
-    "status": "active",
-    "sourceLogFiles": ["docs/ByggLogg.json","docs/Chatthistorik.json"]
+[
+  {
+    "heuristicId": "H-YYYYMMDD-seq1",
+    "trigger": { "type": "...", "scope": ["..."], "keywords": ["..."] },
+    "identifiedRisk": { "riskId": "...", "description": "..." },
+    "mitigation": { "protocolId": "...", "description": "..." },
+    "metadata": {
+      "originSessionId": "SESSION_NUMMER",
+      "createdAt": "YYYY-MM-DDTHH:mm:ssZ",
+      "status": "active",
+      "sourceLogFiles": ["docs/ByggLogg.json","docs/Chatthistorik.json"]
+    }
+  },
+  {
+    "heuristicId": "H-YYYYMMDD-seq2",
+    "trigger": { "...": "..." },
+    "...": "..."
   }
-}
+]
 ```
 
 ### Steg 5 – `Kontext-JSON` för nästa session
+
 Oförändrat krav, fristående objekt:
+
 ```json
 {
   "task_summary": "Kort mening om nästa uppdrag.",
@@ -328,6 +387,7 @@ Oförändrat krav, fristående objekt:
 ---
 
 ## Normaliseringsfunktion (normativt exempel)
+
 ```python
 def normalize_speaker(speaker_name, provider=None, model=None, version=None):
     provider = provider or "unknown"
@@ -342,19 +402,24 @@ def normalize_speaker(speaker_name, provider=None, model=None, version=None):
 ```
 
 ## Valideringskrav (gate)
+
 * Alla artefakter som innehåller `speaker` MÅSTE först passera JSON Schema-validering (ovanför).
 * Vid valideringsfel: skriv inte fil; logga fel och begär korrigeringar.
 
 ---
 
 # === Inbäddat protokoll B (FULLTEXT) ===
-## P-HR_v2.1.md
+
+## P-HR\_v2.1.md
+
 # Protokoll för Historisk Rekonstruktion (P‑HR) v2.1 — *Fristående*
 
 ## Syfte
+
 Återgenerera fullständiga avslutningsartefakter för äldre sessioner i **en enda JSON-fil per session**. Denna fil kan sedan batch‑processas till de fyra standardfilerna.
 
 ## Output (per historisk session)
+
 Spara **exakt en** fil med namnet `[SESSIONID].json`. Den ska innehålla alla artefakter inbäddade enligt detta kontrakt:
 
 ```json
@@ -429,61 +494,71 @@ Spara **exakt en** fil med namnet `[SESSIONID].json`. Den ska innehålla alla ar
 > **Obs:** `frankensteen_learning_db` är **valfri**. Om ingen ny heuristik identifierats, utelämna nyckeln eller sätt värdet till `null`.
 
 ### Automatisk modelltaggning
+
 Vid frånvaro av explicit `model`-data i chatthistoriken:
+
 1. Sök efter `ai_identity` i kontext-JSON
 2. Använd dessa värden för alla AI-genererade inlägg
 3. Fallback till "unknown" om inget finns
 
 ## Universell modelltaggning (obligatorisk)
-- `speaker` måste vara: `"<speakerName> (<provider>:<model>@<version>)"`
-- Maskinläsbart fält **måste** medfölja:
+
+* `speaker` måste vara: `"<speakerName> (<provider>:<model>@<version>)"`
+* Maskinläsbart fält **måste** medfölja:
+
   ```json
   {"speakerName":"…","model":{"provider":"…","name":"…","version":"…"}}
   ```
-- Okända värden ersätts med `"unknown"`.
+* Okända värden ersätts med `"unknown"`.
 
 ## Leveranskrav
-- Endast **en** JSON per session (`[SESSIONID].json`).
-- 100 % giltig JSON, UTF‑8, LF‑radbrytning.
+
+* Endast **en** JSON per session (`[SESSIONID].json`).
+* 100 % giltig JSON, UTF‑8, LF‑radbrytning.
 
 ## Exekvering
-1) Läs hela historiska chatten.  
-2) Bygg artefakterna enligt ovanstående kontrakt.  
-3) Skriv **en** fil: `[SESSIONID].json`.
+
+1. Läs hela historiska chatten.
+2. Bygg artefakterna enligt ovanstående kontrakt.
+3. Skriv **en** fil: `[SESSIONID].json`.
 
 ---
 
 ## Batch‑konsolidering (körs separat)
+
 Använd medföljande Python‑skript för att läsa en mapp med `[SESSIONID].json` och generera:
 
-- `docs/ByggLogg.json` (array, kronologisk)
-- `docs/Chatthistorik.json` (array, kronologisk)
-- `docs/ai_protocol_performance.json` (array, kronologisk)
-- `tools/frankensteen_learning_db.json` (array, kronologisk — endast rader som finns)
+* `docs/ByggLogg.json` (array, kronologisk)
+* `docs/Chatthistorik.json` (array, kronologisk)
+* `docs/ai_protocol_performance.json` (array, kronologisk)
+* `tools/frankensteen_learning_db.json` (array, kronologisk — endast rader som finns)
 
 Kronologisk sortering = stigande numeriskt `SESSIONID` i filnamn.
-
 
 ---
 
 ## 5) Validations Gate (måste passeras)
-- `Chatthistorik.interactions[*].speaker` **måste** matcha regex: `^[^()]+ \([^:]+:[^@]+@[^)]+\)$`
-- `model.provider|name|version` får ej vara tomma (använd `"unknown"` vid saknad).
-- Poäng i `scorecard` 0–100. `finalScore` = sammanvägd (validera numeriskt).
-- JSON **måste vara giltig** (ingen trailing comma, korrekta citattecken).
+
+* `Chatthistorik.interactions[*].speaker` **måste** matcha regex: `^[^()]+ \([^:]+:[^@]+@[^)]+\)$`
+* `model.provider|name|version` får ej vara tomma (använd `"unknown"` vid saknad).
+* Poäng i `scorecard` 0–100. `finalScore` = sammanvägd (validera numeriskt).
+* JSON **måste vara giltig** (ingen trailing comma, korrekta citattecken).
 
 ## 6) Batch Processing (post‑process, informativt)
+
 När flera `[SESSIONID].json` finns i en mapp kan de konsolideras till standardfiler med skriptet i Appendix A.
 
 ### Output från batch
-- `docs/ByggLogg.json` (array, kronologisk)
-- `docs/Chatthistorik.json` (array, kronologisk)
-- `docs/ai_protocol_performance.json` (array, kronologisk)
-- `tools/frankensteen_learning_db.json` (array, kronologisk)
+
+* `docs/ByggLogg.json` (array, kronologisk)
+* `docs/Chatthistorik.json` (array, kronologisk)
+* `docs/ai_protocol_performance.json` (array, kronologisk)
+* `tools/frankensteen_learning_db.json` (array, kronologisk)
 
 ---
 
-## Appendix A — historical_reconstruction_builder.py (fulltext)
+## Appendix A — historical\_reconstruction\_builder.py (fulltext)
+
 ```python
 #!/usr/bin/env python3
 # historical_reconstruction_builder.py
@@ -583,7 +658,7 @@ def main():
 
     for p in files:
         data = load_session_file(p)
-        if not data: 
+        if not data:
             continue
         art = data.get("artifacts") or {}
 
@@ -623,5 +698,3 @@ if __name__ == "__main__":
     main()
 
 ```
-
-
