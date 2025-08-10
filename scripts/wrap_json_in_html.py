@@ -1,3 +1,19 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+wrap_json_in_html.py
+
+Genererar en komplett, interaktiv HTML-sida (AI Context Builder) som:
+- Laddar projectets context.json (byggd i GitHub Actions).
+- Visar filträdet och låter dig välja filer (fulltext/stub).
+- Har två knappar: "Skapa nästa arbete" (Discovery/Steg A) och "Skapa uppgift" (Implementation/Steg B).
+- Steg A defaultar till K-MOD (kreativt discovery-läge) utan kod.
+- Producerar provider-specifika bootstrap-JSON för ChatGPT 5 (OpenAI) och Gemini 2.5 Pro (Google).
+- Inkluderar en OBLIGATORISK regel: ALDRIG generera bilder om inte användaren uttryckligen begär det.
+
+Körs av GitHub Actions och skriver ut en fristående HTML-fil.
+"""
+
 import sys
 import os
 
@@ -7,10 +23,10 @@ def create_interactive_html(output_html_path):
     """
 
     html_template = """<!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
     <meta charset="UTF-8">
-    <title>AI Context Builder v3.4</title>
+    <title>AI Context Builder v3.5</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -26,8 +42,9 @@ def create_interactive_html(output_html_path):
             --danger-color: #dc3545;
             --info-color: #17a2b8;
             --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            --font-mono: "JetBrains Mono", "SF Mono", "Consolas", "Liberation Mono", "Menlo", monospace;
+            --font-mono: ui-monospace, "JetBrains Mono", "SF Mono", "Consolas", "Liberation Mono", "Menlo", monospace;
         }
+        * { box-sizing: border-box; }
         body {
             font-family: var(--font-main);
             background-color: var(--primary-bg);
@@ -44,14 +61,9 @@ def create_interactive_html(output_html_path):
             display: flex;
             flex-direction: column;
         }
-        #left-panel {
-            width: 40%;
-            min-width: 350px;
-        }
-        #right-panel {
-            width: 60%;
-            gap: 1em;
-        }
+        #left-panel { width: 40%; min-width: 350px; }
+        #right-panel { width: 60%; gap: 1em; }
+
         .controls {
             padding-bottom: 1em;
             margin-bottom: 1em;
@@ -59,6 +71,7 @@ def create_interactive_html(output_html_path):
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
+            align-items: center;
         }
         button {
             font-size: 14px;
@@ -76,18 +89,19 @@ def create_interactive_html(output_html_path):
         button.primary:hover:not(:disabled) { background-color: var(--accent-hover); }
         button.info { background-color: var(--info-color); color: white; border-color: var(--info-color); }
         button.info:hover:not(:disabled) { background-color: #138496; }
-        
+
+        label.inline { display: inline-flex; align-items: center; gap: 6px; }
+
         #file-tree-container { flex-grow: 1; }
         #file-tree-container ul { list-style-type: none; padding-left: 20px; }
         #file-tree-container li { padding: 3px 0; }
         .toggle { cursor: pointer; user-select: none; display: inline-block; width: 1em; }
-        
         .tree-item-label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
         .tree-item-label input[type="checkbox"] { cursor: pointer; }
         .file-icon { width: 1.1em; height: 1.1em; color: var(--text-muted); }
         .file-name-clickable { text-decoration: none; color: var(--text-color); }
         .file-name-clickable:hover { text-decoration: underline; color: var(--accent-color); }
-        
+
         .output-container { display: flex; flex-direction: column; flex-grow: 1; gap: 1em; }
         .output-area, #instruction-input {
             white-space: pre-wrap;
@@ -124,15 +138,13 @@ def create_interactive_html(output_html_path):
         .modal-body { flex-grow: 1; overflow-y: auto; }
         .modal-body pre { margin: 0; white-space: pre-wrap; }
         .modal-body img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
-    
-        /* --- Tabs (Step 3) --- */
+
         .tabs { display: flex; gap: .5rem; margin-bottom: 1rem; }
         .tab-button { padding: .5rem .75rem; border: 1px solid var(--border-color); background: var(--secondary-bg); border-radius: 6px; cursor: pointer; }
         .tab-button.active { background: var(--accent-color); color: #fff; border-color: var(--accent-color); }
         .tab-panel { display: none; }
         .tab-panel.active { display: flex; flex-direction: column; gap: 1rem; flex-grow: 1; }
-        
-        /* --- Performance Dashboard Styles --- */
+
         #performance-container { display: flex; flex-direction: column; gap: 1rem; }
         .metric-block { border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; background: var(--secondary-bg); }
         .metric-block h3 { margin: 0 0 .75rem 0; font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; }
@@ -161,6 +173,21 @@ def create_interactive_html(output_html_path):
         <button class="tab-button active" data-tab="context">Context Builder</button>
         <button class="tab-button" data-tab="performance">AI Performance</button>
     </div>
+
+    <!-- Bootstrap controls for prompts -->
+    <div class="controls" id="bootstrap-controls" style="border-bottom:1px solid var(--border-color);">
+        <span style="font-weight:600">Provider:</span>
+        <label class="inline"><input type="radio" name="provider" value="openai" checked> ChatGPT 5 (OpenAI)</label>
+        <label class="inline"><input type="radio" name="provider" value="gemini"> Gemini 2.5 Pro (Google)</label>
+        <span style="flex:0 0 16px"></span>
+        <label class="inline" title="Kreativt discovery-läge (ingen kod) i Steg A">
+            <input type="checkbox" id="kmod-toggle" checked> K-MOD i Steg A
+        </label>
+        <span style="flex:1"></span>
+        <button id="make-discovery">Skapa nästa arbete</button>
+        <button id="make-implementation" class="primary">Skapa uppgift</button>
+    </div>
+
     <div id="tab-context" class="tab-panel active">
         <div class="output-container">
             <textarea id="instruction-input" placeholder="Paste instruction JSON here to auto-select files..."></textarea>
@@ -169,10 +196,11 @@ def create_interactive_html(output_html_path):
                     <button id="copy-json-btn" disabled>Copy JSON</button>
                     <button id="download-json-btn" disabled>Download JSON</button>
                 </div>
-                <pre id="output-pre" style="flex-grow: 1; margin-top: 1em;">Generated context will appear here.</pre>
+                <pre id="output-pre" style="flex-grow: 1; margin-top: 1em;">Generated context or bootstrap JSON will appear here.</pre>
             </div>
         </div>
     </div>
+
     <div id="tab-performance" class="tab-panel">
         <div id="performance-container">
              <div class="chart-grid">
@@ -224,7 +252,8 @@ def create_interactive_html(output_html_path):
         const charts = {};
 
         const REPO_RAW_URL = 'https://raw.githubusercontent.com/Engrove/Engrove-Audio-Tools-2.0/main/';
-        
+
+        // --- Core docs (auto-select helpers) ---
         const CORE_DOC_PATHS = [
           // Core Instructions & Config
           'docs/ai_protocols/AI_Core_Instruction.md',
@@ -237,7 +266,7 @@ def create_interactive_html(output_html_path):
           'docs/ai_protocols/DynamicProtocol.schema.json',
           'docs/ai_protocols/System_Integrity_Check_Protocol.md',
           'docs/ai_protocols/Stature_Report_Protocol.md',
-          
+
           // Core Operational Protocols
           'docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md',
           'docs/ai_protocols/Help_me_God_Protokoll.md',
@@ -267,7 +296,7 @@ def create_interactive_html(output_html_path):
           'docs/ai_protocols/Kontext-JSON_Protokoll.md',
           'docs/ai_protocols/Structured_Debugging_Checklist.md',
           'docs/ai_protocols/Micro_Retrospective.md',
-          
+
           // Project & Build Config
           'package.json',
           'vite.config.js',
@@ -308,9 +337,29 @@ def create_interactive_html(output_html_path):
         const modalCloseBtn = document.getElementById('modal-close-btn');
         const modalCopyBtn = document.getElementById('modal-copy-btn');
         const modalDownloadBtn = document.getElementById('modal-download-btn');
+        const btnDisc = document.getElementById('make-discovery');
+        const btnImpl = document.getElementById('make-implementation');
+        const kmodToggle = document.getElementById('kmod-toggle');
+
         let currentFileContent = '';
         let currentFilePath = '';
         let currentFileIsBinary = false;
+
+        // --- MUST-regler (Implementation) inkl. bild-förbud ---
+        const NO_IMAGE_RULE = "[MUST] ALDRIG generera bilder om inte användaren uttryckligen begär bildgenerering. Inga bildverktyg, inga Markdown-bilder, inga data-URI.";
+        const MUST_STRICT = [
+          "[MUST] Diff om >50 rader → unified patch",
+          "[MUST] Full historik i filhuvud (ingen trunkering)",
+          "[MUST] Ändra ej filer med is_content_full=false",
+          "[MUST] Lista berörda API-kontrakt",
+          "[MUST] Lägg till/uppdatera tester + körkommandon",
+          NO_IMAGE_RULE,
+          "Svar ENBART i PLAN-JSON → (OK) → GEN-JSON"
+        ].join("\\n");
+
+        // --- K-MOD banner för Steg A (Discovery) + bild-förbud ---
+        const KMOD_BANNER = "MODE: K-MOD (Brainstorming/Discovery). Ingen kod. Endast JSON enligt schema.";
+        const IMAGE_GUARD_BANNER = "BILDREGEL: ALDRIG generera bilder i denna session om det inte uttryckligen efterfrågas av användaren.";
 
         function getIcon(name, isFolder) {
             if (isFolder) return ICONS.folder;
@@ -334,7 +383,7 @@ def create_interactive_html(output_html_path):
                 const itemPath = currentPath ? `${currentPath}/${key}` : key;
                 const li = document.createElement('li');
                 const isFolder = item.type !== 'file';
-                
+
                 const label = document.createElement('label');
                 label.className = 'tree-item-label';
 
@@ -347,7 +396,7 @@ def create_interactive_html(output_html_path):
                 iconSpan.className = 'file-icon';
                 iconSpan.innerHTML = getIcon(key, isFolder);
                 label.appendChild(iconSpan);
-                
+
                 if (isFolder) {
                     li.classList.add('folder');
                     const toggle = document.createElement('span');
@@ -402,8 +451,14 @@ def create_interactive_html(output_html_path):
                 }
             });
         }
-        
+
         async function openFilePreview(path) {
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            const modalCopyBtn = document.getElementById('modal-copy-btn');
+            const modalDownloadBtn = document.getElementById('modal-download-btn');
+            const modal = document.getElementById('file-preview-modal');
+
             modalTitle.textContent = path;
             modalBody.innerHTML = '<p>Loading content...</p>';
             modal.classList.add('visible');
@@ -412,14 +467,14 @@ def create_interactive_html(output_html_path):
             currentFileContent = '';
             currentFilePath = path;
             currentFileIsBinary = false;
-            
+
             try {
                 const url = `${REPO_RAW_URL}${path}`;
                 const extension = path.split('.').pop().toLowerCase();
-                
+
                 if (IMAGE_EXTENSIONS.includes(extension)) {
                     currentFileIsBinary = true;
-                    modalBody.innerHTML = `<img src="${url}" alt="Preview of ${path}">`;
+                    modalBody.innerHTML = `<img src="\${url}" alt="Preview of \${path}">`;
                     const response = await fetch(url);
                     if (!response.ok) throw new Error(`HTTP error ${response.status}`);
                     currentFileContent = await response.blob();
@@ -505,6 +560,15 @@ def create_interactive_html(output_html_path):
                 if (instructionInput.value.trim()) {
                     newContext.ai_instructions_input = instructionInput.value.trim();
                 }
+                // Injicera global obligatorisk bildregel i ai_instructions om möjligt
+                try {
+                    if (typeof newContext.ai_instructions === 'object' && newContext.ai_instructions) {
+                        newContext.ai_instructions.obligatory_rules = Array.from(new Set([...(newContext.ai_instructions.obligatory_rules || []), "forbid_image_generation"]));
+                    } else {
+                        newContext.ai_instructions = {"obligatory_rules":["forbid_image_generation"]};
+                    }
+                } catch (e) { /* best effort */ }
+
                 newContext.file_structure = await buildNewContextStructure(fullContext.file_structure, selectedPaths);
                 outputPre.textContent = JSON.stringify(newContext, null, 2);
                 copyBtn.disabled = false;
@@ -533,11 +597,19 @@ def create_interactive_html(output_html_path):
                     }
                 }
 
+                // Lägg in global bild-förbudsregel även här (om output har konfiguration)
+                if (typeof output === 'object' && output) {
+                    if (!output.obligatory_rules) output.obligatory_rules = [];
+                    if (!output.obligatory_rules.includes("forbid_image_generation")) {
+                        output.obligatory_rules.push("forbid_image_generation");
+                    }
+                }
+
                 const selectedPaths = new Set(Array.from(fileTreeContainer.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.dataset.path));
                 const filesContent = {};
 
                 const populatedStructure = await buildNewContextStructure(fullContext.file_structure, selectedPaths);
-                
+
                 function extractFiles(node) {
                     for (const key in node) {
                         const item = node[key];
@@ -565,7 +637,7 @@ def create_interactive_html(output_html_path):
                 generateFilesBtn.textContent = 'Generate Files';
             }
         }
-        
+
         function handleInstructionInput() {
             const text = instructionInput.value;
             if (!text.trim()) return;
@@ -582,6 +654,90 @@ def create_interactive_html(output_html_path):
                     });
                 }
             } catch (e) { /* Ignore parse errors */ }
+        }
+
+        // --- Provider helpers (bootstrap JSON) ---
+        function toOpenAI(systemText, userText) {
+          return {
+            provider: "openai",
+            model: "gpt-5",
+            auto_start: true,
+            messages: [
+              { role: "system", content: systemText },
+              { role: "user",   content: userText }
+            ]
+          };
+        }
+        function toGemini(systemText, userText) {
+          return {
+            provider: "google",
+            model: "gemini-2.5-pro",
+            auto_start: true,
+            system_instruction: systemText,
+            contents: [
+              { role: "user", parts: [{ text: userText }] }
+            ]
+          };
+        }
+
+        // --- Build implementation session text from selected files ---
+        function guessLang(path) {
+          const ext = (path.split('.').pop() || '').toLowerCase();
+          if (["ts","tsx"].includes(ext)) return "ts";
+          if (ext === "vue") return "vue";
+          if (ext === "py") return "py";
+          if (["js","jsx"].includes(ext)) return "js";
+          if (ext === "md") return "md";
+          return "txt";
+        }
+        function buildSessionTemplate(task, selectedPaths) {
+          const list = selectedPaths.map(p => {
+            const cb = fileTreeContainer.querySelector('input[data-path="'+p+'"]');
+            const li = cb ? cb.closest('li') : null;
+            const full = li ? ((li.textContent||"").toLowerCase().includes("(full)")) : false; // heuristik
+            const lang = guessLang(p);
+            return `- ${p} (is_content_full=${full ? "true" : "false"}, lang=${lang})`;
+          }).join("\\n");
+          return [
+            `UPPGIFT: ${task}`,
+            "FILER:",
+            list || "- (inga filer valda i buildern)",
+            "PLANERA"
+          ].join("\\n");
+        }
+
+        // --- Discovery prompt (Steg A) JSON schema ---
+        function buildDiscoveryPrompt(task) {
+          return {
+            protocol_id: "discovery_v1",
+            psv: ["rules_rehearsed","risk_scan"],
+            mode: "K-MOD",
+            obligatory_rules: ["forbid_image_generation"],
+            task,
+            filesToSelect: [],
+            requires_full_files: [],
+            stubs_ok: [],
+            requires_chunks: [],
+            api_contracts_touched: [],
+            risks: [],
+            test_plan: [],
+            done_when: ["tests_green","lint_ok","types_ok"],
+            _note: "Lista bara det som krävs. Motivera varje post i requires_full_files i notes (≤200 tecken)."
+          };
+        }
+
+        // --- UI interactions ---
+        function getSelectedPaths() {
+          return Array.from(fileTreeContainer.querySelectorAll('input[type="checkbox"]:checked'))
+            .map(cb => cb.dataset.path)
+            .filter(Boolean);
+        }
+        function getTask() {
+          const t = instructionInput.value.trim();
+          return (t && t.length < 200) ? t : "Beskriv kort mål i en mening.";
+        }
+        function currentProvider() {
+          return (document.querySelector('input[name="provider"]:checked')?.value || "openai");
         }
 
         fileTreeContainer.addEventListener('click', (e) => {
@@ -617,20 +773,17 @@ def create_interactive_html(output_html_path):
         generateFilesBtn.addEventListener('click', generateFilesOnly);
         instructionInput.addEventListener('input', handleInstructionInput);
 
-        const closeModal = () => modal.classList.remove('visible');
-        if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeModal);
-        if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('visible')) closeModal(); });
-
         function showButtonFeedback(button, text, color) {
             const originalText = button.textContent;
             button.textContent = text;
+            const originalBg = button.style.backgroundColor;
+            const originalColor = button.style.color;
             button.style.backgroundColor = `var(--${color}-color)`;
             button.style.color = 'white';
-            setTimeout(() => { 
-                button.textContent = originalText; 
-                button.style.backgroundColor = ''; 
-                button.style.color = '';
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.backgroundColor = originalBg;
+                button.style.color = originalColor;
             }, 2000);
         }
 
@@ -640,6 +793,12 @@ def create_interactive_html(output_html_path):
                 .catch(() => showButtonFeedback(copyBtn, 'Error!', 'danger'));
         });
 
+        const closeModal = () => document.getElementById('file-preview-modal').classList.remove('visible');
+        if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeModal);
+        const modalEl = document.getElementById('file-preview-modal');
+        if (modalEl) modalEl.addEventListener('click', (e) => { if (e.target === modalEl) closeModal(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modalEl.classList.contains('visible')) closeModal(); });
+
         if (modalCopyBtn) modalCopyBtn.addEventListener('click', () => {
              if (!currentFileIsBinary && currentFileContent) {
                 navigator.clipboard.writeText(currentFileContent)
@@ -647,7 +806,7 @@ def create_interactive_html(output_html_path):
                     .catch(() => showButtonFeedback(modalCopyBtn, 'Error!', 'danger'));
              }
         });
-        
+
         if (modalDownloadBtn) modalDownloadBtn.addEventListener('click', () => {
             if (!currentFileContent) return;
             const blob = currentFileIsBinary ? currentFileContent : new Blob([currentFileContent], { type: 'text/plain' });
@@ -663,15 +822,53 @@ def create_interactive_html(output_html_path):
 
         if (downloadBtn) downloadBtn.addEventListener('click', () => {
             const blob = new Blob([outputPre.textContent], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
+            a.href = url;
             a.download = `context_custom_${new Date().toISOString().slice(0, 10)}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         });
-        
+
+        // --- Discovery & Implementation buttons ---
+        btnDisc?.addEventListener('click', () => {
+          const task = getTask();
+          const disc = buildDiscoveryPrompt(task);
+          if (!kmodToggle?.checked) { delete disc.mode; } // K-MOD off if unchecked
+
+          const discoveryText = [
+            "SESSION: PLANERA NÄSTA ARBETE (Discovery)",
+            KMOD_BANNER,
+            IMAGE_GUARD_BANNER,
+            "KRAV: Svara ENBART med giltig JSON enligt schema. Ingen kod.",
+            "SCHEMA:",
+            JSON.stringify(disc, null, 2),
+            "KONTEXT-RÅD:",
+            "- Lista bara det som verkligen behövs för implementationen i nästa steg.",
+            "- Motivera varje post i 'requires_full_files' kort i 'notes' (max 200 tecken)."
+          ].join("\\n");
+
+          outputPre.textContent = discoveryText;
+          copyBtn.disabled = false; downloadBtn.disabled = false;
+          showButtonFeedback(btnDisc, "Skapad!", "success");
+        });
+
+        btnImpl?.addEventListener('click', () => {
+          const task = getTask();
+          const selected = getSelectedPaths();
+          const systemText = MUST_STRICT;
+          const userText = buildSessionTemplate(task, selected);
+          const provider = currentProvider();
+          const bootstrap = (provider === "gemini") ? toGemini(systemText, userText)
+                                                    : toOpenAI(systemText, userText);
+
+          outputPre.textContent = JSON.stringify(bootstrap, null, 2);
+          copyBtn.disabled = false; downloadBtn.disabled = false;
+          showButtonFeedback(btnImpl, "Skapad!", "success");
+        });
+
         // --- Tabs & Performance Dashboard Logic ---
         function setupPerformanceDashboard() {
             document.querySelectorAll('.tab-button').forEach(btn => {
@@ -736,7 +933,7 @@ def create_interactive_html(output_html_path):
           (items || []).forEach(visit);
           return { byProvider, byModel };
         }
-        
+
         function renderLearningDbTable(targetEl, data) {
             if (!data || data.length === 0) {
                 targetEl.innerHTML = 'Ingen data.';
@@ -766,7 +963,7 @@ def create_interactive_html(output_html_path):
             targetEl.innerHTML = '';
             targetEl.appendChild(table);
         }
-        
+
         function renderPerformanceDashboard() {
             if (!fullContext || !fullContext.ai_performance_metrics) return;
             const metrics = fullContext.ai_performance_metrics;
@@ -833,7 +1030,7 @@ def create_interactive_html(output_html_path):
                 },
                 options: { responsive: true, maintainAspectRatio: false }
             });
-            
+
             const modelCtx = document.getElementById('model-chart').getContext('2d');
             charts.modelChart = new Chart(modelCtx, {
                 type: 'pie',
@@ -843,21 +1040,20 @@ def create_interactive_html(output_html_path):
                 },
                 options: { responsive: true, maintainAspectRatio: false }
             });
-            
+
             const learningBody = document.getElementById('perf-learning-body');
             if (learningBody) {
                  renderLearningDbTable(learningBody, learningDb);
             }
         }
 
+        // --- Load context.json and init UI ---
         fetch('context.json')
             .then(response => { if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`); return response.json(); })
             .then(data => {
                 fullContext = data;
                 fileTreeContainer.innerHTML = '';
                 renderFileTree(fullContext.file_structure, fileTreeContainer, '');
-                
-                // Set up all event listeners that depend on fullContext *after* it's loaded.
                 setupPerformanceDashboard();
                 if (document.querySelector('.tab-button[data-tab="performance"]').classList.contains('active')) {
                     renderPerformanceDashboard();
@@ -875,25 +1071,19 @@ def create_interactive_html(output_html_path):
     try:
         with open(output_html_path, 'w', encoding='utf-8') as f:
             f.write(html_template)
-        # This print goes to stdout and will be captured by the GitHub Action
         print(f"Successfully generated {output_html_path}")
     except Exception as e:
-        # This print goes to stderr and will be captured by the GitHub Action's logs
         print(f"Error writing to {output_html_path}: {e}", file=sys.stderr)
         sys.exit(1)
 
 if __name__ == "__main__":
-    # The first argument from sys.argv is the script name itself.
-    # The GitHub Action workflow provides the JSON content via stdin and the output path as the second argument.
     if len(sys.argv) != 2:
         print("Usage: python wrap_json_in_html.py <output_html_path>", file=sys.stderr)
         sys.exit(1)
 
     output_file_path = sys.argv[1]
-    
-    # Create the directory for the output file if it doesn't exist.
     output_dir = os.path.dirname(output_file_path)
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
-        
+
     create_interactive_html(output_file_path)
