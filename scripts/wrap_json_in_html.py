@@ -1,18 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-wrap_json_in_html.py — AI Context Builder v7.3-p1
+wrap_json_in_html.py — AI Context Builder v7.3-p2 (2025-08-10)
+
+Nyheter vs v7.3:
+- Download: ISO-datum i filnamn (YYYY-MM-DDTHH-MM-SSZ)
+- Generate Files: output är markdown med inbäddad ```json och inkluderar checksums (sha256_lf per fil)
+- Träd: kaskadkryss + tri-state (föräldrar speglar barnstatus)
+- Busy-overlay + arbetslogg
+- Discovery: strikt K-MOD (paths) / D-MOD (selected_ids + echo_rules_hash)
+- Filförhandsvisning (text/bild)
+- AI Performance: filter, KPI, diagram, tabeller, CSV-export, refresh
+- Plugin-stöd: valfri parallell modul/py som injicerar extra CSS/JS/HTML
 
 Kör:
   python wrap_json_in_html.py out.html
-
-Läser lokal context.json (skapas av generate_full_context.py) med fält:
-{
-  "file_structure": { ... nested ... },
-  "project_overview": {... valfritt ...},
-  "ai_instructions": {... valfritt ...},
-  "ai_performance_metrics": {... valfritt ...}
-}
+  python wrap_json_in_html.py out.html plugins/patch_center.py
 """
 import os, sys
 
@@ -152,7 +155,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         <button id="download" disabled>Download</button>
       </div>
       <pre id="out">Här visas Discovery-prompt (K/D) eller output.</pre>
-      <div class="small">Output kan vara: prompt (txt), markdown med JSON-sektioner (md), eller rå JSON (Generate Files).</div>
+      <div class="small">Output är alltid markdown med inbäddad ```json.</div>
     </div>
   </div>
 
@@ -246,7 +249,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         </li>
         <li>Klistra in modellsvar (STRICT JSON) → auto-select.</li>
         <li><b>Skapa uppgift</b> → impl_bootstrap_v1.json + provider_envelope.json (markdown).</li>
-        <li>Alt: <b>Generate Files</b> → markdown med `files_payload.json` inbäddad.</li>
+        <li>Alt: <b>Generate Files</b> → markdown med `files_payload.json` + `checksums`.</li>
       </ol>
     </main>
     <footer><button id="helpOk" class="primary">OK</button></footer>
@@ -332,7 +335,8 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   };
 
   // ---------- State ----------
-  let ctx=null, FILES=[], CODE_FILES=[], FILE_INFO=new Map();
+  let ctx=null, FILES=[], CODE_FILES=[];
+  const FILE_INFO=new Map();
   let LAST_CANDIDATES=[], LAST_RULES_HASH=null;
   const CORE = [
     'docs/ai_protocols/AI_Core_Instruction.md',
@@ -360,7 +364,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   }
   function clearBanner(){ els.banner.style.display='none'; els.banner.textContent=''; els.banner.className='banner'; }
   function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-
   function logw(msg){ const t=new Date().toLocaleTimeString(); els.worklog.textContent += `[${t}] ${msg}\n`; els.worklog.scrollTop = els.worklog.scrollHeight; }
   async function withBusy(label, fn){
     els.worklog.textContent = '';
@@ -385,6 +388,14 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     if(e==='html') return 'html';
     if(e==='css') return 'css';
     return 'txt';
+  }
+
+  // Canonisering + hash (LF, utan BOM)
+  function canonText(s){ return (s||'').replace(/\uFEFF/g,'').replace(/\r\n?/g,'\n'); }
+  async function sha256HexLF(text){
+    const enc = new TextEncoder().encode(canonText(text));
+    const buf = await crypto.subtle.digest('SHA-256', enc);
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
   }
 
   async function fetchText(path){
@@ -560,24 +571,32 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
   async function generateFiles(){
     try{
-      clearBanner(); logw('Hämtar fulltext för valda filer…');
+      clearBanner(); logw('Hämtar fulltext + checksums för valda filer…');
       const sels = new Set(selectedPaths());
       const files = {};
+      const checksums = {};
       async function walk(src){
         for(const k of Object.keys(src)){
           const it = src[k];
           if(it.type==='file' && sels.has(it.path)){
-            try{ files[it.path] = await fetchText(it.path); }
-            catch(_){ files[it.path] = `// Error: failed to fetch ${it.path}`; }
+            try{
+              const t = await fetchText(it.path);
+              files[it.path] = t;
+              checksums[it.path] = await sha256HexLF(t);
+            }catch(_){
+              const msg = `// Error: failed to fetch ${it.path}`;
+              files[it.path] = msg;
+              checksums[it.path] = await sha256HexLF(msg);
+            }
           }else if(it.type!=='file'){
             await walk(it);
           }
         }
       }
       await walk(ctx.file_structure);
-      const payload = { obligatory_rules:['forbid_image_generation'], files };
+      const payload = { obligatory_rules:['forbid_image_generation'], files, checksums };
       emit(payload, 'files_payload.json');
-      showBanner('Filer genererade.', 'ok');
+      showBanner('Filer genererade (md).', 'ok');
     }catch(e){
       showBanner('Fel vid file-generering: '+e.message, 'err');
     }
@@ -1070,7 +1089,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     const blob = new Blob([els.out.textContent], {type:'text/markdown'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href=url;
-    const iso = new Date().toISOString().replace(/[:]/g,'-').replace(/\..+Z$/,'Z');
+    const iso = new Date().toISOString().replace(/:/g,'-').replace(/\..+Z$/,'Z');
     a.download = 'context_bundle_'+iso+'.md';
     document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
   };
@@ -1133,40 +1152,32 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
 def _apply_extension_plugin(html: str, plugin_path: str) -> str:
     """
-    Laddar ett parallellt Python-skript/modul och injicerar frivilliga tillägg i HTML:
-    Modulen kan definiera följande variabler (alla valfria):
-      - EXTEND_HEAD: str   (lägger in i <head> precis före </head>)
-      - EXTEND_BODY: str   (lägger in i <body> precis före </body>)
-      - EXTEND_JS:   str   (wrap: <script>(...)</script> före </body> om inte redan script-taggar)
-      - EXTEND_CSS:  str   (wrap: <style>(...)</style> i <head> om inte redan style-taggar)
-    Pathen kan vara en .py-fil eller import-sökväg. Fel ignoreras försiktigt.
+    Laddar ett parallellt Python-skript/modul och injicerar tillägg i HTML:
+      - EXTEND_HEAD: str   → före </head>
+      - EXTEND_BODY: str   → före </body>
+      - EXTEND_JS:   str   → <script>…</script> före </body> om ingen <script> redan
+      - EXTEND_CSS:  str   → <style>…</style> i <head> om ingen <style> redan
     """
-    import importlib.util, types, os, sys
-    if not plugin_path:
-        return html
-    mod = None
+    import importlib.util, importlib, types
     try:
-        if os.path.isfile(plugin_path) and plugin_path.endswith('.py'):
-            spec = importlib.util.spec_from_file_location("cb_plugin_ext", plugin_path)
-            if spec and spec.loader:
-                mod = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(mod)  # type: ignore
-        else:
-            mod = importlib.import_module(plugin_path)  # type: ignore
+      if os.path.isfile(plugin_path) and plugin_path.endswith('.py'):
+          spec = importlib.util.spec_from_file_location("cb_plugin_ext", plugin_path)
+          if spec and spec.loader:
+              mod = importlib.util.module_from_spec(spec)
+              spec.loader.exec_module(mod)  # type: ignore
+          else:
+              return html
+      else:
+          mod = importlib.import_module(plugin_path)  # type: ignore
     except Exception as e:
-        # Om plugin inte kunde laddas – returnera original HTML
-        sys.stderr.write(f"[wrap_json_in_html] Varning: kunde inte ladda plugin '{plugin_path}': {e}\n")
-        return html
-
-    if not mod:
-        return html
+      sys.stderr.write(f"[wrap_json_in_html] Varning: kunde inte ladda plugin '{plugin_path}': {e}\n")
+      return html
 
     head_add = getattr(mod, "EXTEND_HEAD", "") or ""
     body_add = getattr(mod, "EXTEND_BODY", "") or ""
     js_add   = getattr(mod, "EXTEND_JS", "")   or ""
     css_add  = getattr(mod, "EXTEND_CSS", "")  or ""
 
-    # Injicera i head
     if css_add and "<style" not in css_add.lower():
         css_add = f"<style>\n{css_add}\n</style>"
     head_inject = (head_add or "") + (("\n"+css_add) if css_add else "")
@@ -1175,7 +1186,6 @@ def _apply_extension_plugin(html: str, plugin_path: str) -> str:
         if idx != -1:
             html = html[:idx] + head_inject + html[idx:]
 
-    # Injicera i body
     body_inject = body_add or ""
     if js_add:
         if "<script" not in js_add.lower():
@@ -1191,7 +1201,6 @@ def _apply_extension_plugin(html: str, plugin_path: str) -> str:
 
 
 def main():
-    # Usage: python wrap_json_in_html.py <output_html_path> [optional_extension_module_or_py]
     if len(sys.argv) not in (2,3):
         print("Usage: python wrap_json_in_html.py <output_html_path> [optional_extension_module_or_py]", file=sys.stderr)
         sys.exit(1)
