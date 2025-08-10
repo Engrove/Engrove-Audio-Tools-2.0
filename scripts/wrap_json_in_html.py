@@ -339,23 +339,102 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   const FILE_INFO=new Map();
   let LAST_CANDIDATES=[], LAST_RULES_HASH=null;
   const CORE = [
-    'docs/ai_protocols/AI_Core_Instruction.md',
-    'docs/ai_protocols/ai_config.json',
-    'docs/ai_protocols/frankensteen_persona.v1.0.json',
-    'docs/ai_protocols/AI_Dynamic_Protocols.md',
-    'docs/ai_protocols/DynamicProtocols.json',
-    'docs/ai_protocols/System_Integrity_Check_Protocol.md',
-    'docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md',
-    'docs/ai_protocols/Help_me_God_Protokoll.md',
-    'docs/ai_protocols/Stalemate_Protocol.md',
-    'docs/ai_protocols/Levande_Kontext_Protokoll.md',
-    'docs/ai_protocols/Diff_JSON_Protocol.md',
-    'docs/AI_Collaboration_Standard.md',
-    'package.json',
-    'vite.config.js',
-    'scripts/generate_full_context.py',
-    'scripts/wrap_json_in_html.py'
-  ];
+  // Projekt/bygge
+  "package.json",
+  "vite.config.js",
+  "index.html",
+  "debug.html",
+  "showcase.html",
+
+  // App entry + ram
+  "src/app/main.js",
+  "src/app/router.js",
+  "src/App.vue",
+
+  // Globala stilar
+  "src/app/styles/_tokens.css",
+  "src/app/styles/_global.css",
+  "src/app/styles/_components.css",
+
+  // Sidor
+  "src/pages/home/HomePage.vue",
+  "src/pages/about/AboutPage.vue",
+  "src/pages/data-explorer/DataExplorerPage.vue",
+
+  // Data Explorer (modell/logic)
+  "src/entities/data-explorer/model/explorerStore.js",
+  "src/entities/data-explorer/api/fetchExplorerData.js",
+  "src/entities/data-explorer/lib/filters.js",
+  "src/entities/data-explorer/lib/transformer.js",
+
+  // Widgets
+  "src/widgets/GlobalHeader/GlobalHeader.vue",
+  "src/widgets/GlobalFooter/GlobalFooter.vue",
+  "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
+  "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+
+  // Bas-UI
+  "src/shared/ui/BaseButton.vue",
+  "src/shared/ui/BaseInput.vue",
+  "src/shared/ui/BaseSelect.vue",
+  "src/shared/ui/BaseMultiSelect.vue",
+  "src/shared/ui/RangeFilter.vue",
+  "src/shared/ui/BaseModal.vue",
+  "src/shared/ui/BaseTable.vue",
+
+  // Jämförelse
+  "src/entities/comparison/model/comparisonStore.js",
+  "src/features/comparison-modal/ui/ComparisonModal.vue",
+  "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+
+  // Tema, densitet, settings
+  "src/features/theme-toggle/model/themeStore.js",
+  "src/features/theme-toggle/ui/ThemeToggle.vue",
+  "src/entities/settings/model/settingsStore.js",
+  "src/features/density-toggle/ui/DensityToggle.vue",
+
+  // Logg / dev
+  "src/entities/logger/model/loggerStore.js",
+  "src/showcase.js",
+
+  // Context Builder (om uppgiften berör detta)
+  "scripts/generate_full_context.py",
+  "scripts/wrap_json_in_html.py",
+
+  // AI-protokoll – kärna
+  "docs/AI_Collaboration_Standard.md",
+  "docs/ai_protocols/AI_Core_Instruction.md",
+  "docs/ai_protocols/ai_config.json",
+  "docs/ai_protocols/frankensteen_persona.v1.0.json",
+  "docs/ai_protocols/System_Integrity_Check_Protocol.md",
+  "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md",
+  "docs/ai_protocols/Pre_Execution_Alignment.md",
+  "docs/ai_protocols/Structured_Debugging_Checklist.md",
+  "docs/ai_protocols/Micro_Retrospective.md",
+
+  // AI-protokoll – discovery/kontext
+  "docs/ai_protocols/Brainstorming_Protokoll.md",
+  "docs/ai_protocols/Kontext-JSON_Protokoll.md",
+  "docs/ai_protocols/Levande_Kontext_Protokoll.md",
+  "docs/ai_protocols/Diff_JSON_Protocol.md",
+
+  // AI-protokoll – dynamiska/regler
+  "docs/ai_protocols/AI_Dynamic_Protocols.md",
+  "docs/ai_protocols/DynamicProtocols.json",
+
+  // AI-protokoll – felsökning/eskalering
+  "docs/ai_protocols/Help_me_God_Protokoll.md",
+  "docs/ai_protocols/Stalemate_Protocol.md",
+
+  // AI-prestanda & lärande
+  "docs/ai_protocol_performance.json",
+  "tools/frankensteen_learning_db.json",
+
+  // Public / deploy-konfig
+  "public/_routes.json",
+  "public/_headers",
+  "public/LICENSE"
+];
 
   // ---------- Utils ----------
   function showBanner(msg, kind='warn'){
