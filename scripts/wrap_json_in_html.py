@@ -349,6 +349,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     'docs/ai_protocols/Help_me_God_Protokoll.md',
     'docs/ai_protocols/Stalemate_Protocol.md',
     'docs/ai_protocols/Levande_Kontext_Protokoll.md',
+    'docs/ai_protocols/Diff_JSON_Protocol.md',
     'docs/AI_Collaboration_Standard.md',
     'package.json',
     'vite.config.js',
