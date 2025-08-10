@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-wrap_json_in_html.py — AI Context Builder v7.2 (JSON-first, K-MOD + D-MOD, STRICT RETURN_CONTRACT)
+wrap_json_in_html.py — AI Context Builder v7.3
 
 Kör:
   python wrap_json_in_html.py out.html
@@ -14,13 +14,12 @@ Läser lokal context.json (skapas av generate_full_context.py) med fält:
   "ai_performance_metrics": {... valfritt ...}
 }
 
-Nyheter v7.2:
-- STRICT RETURN_CONTRACT inbakat i Discovery-prompt (K-MOD & D-MOD).
-- Strikt JSON-validering för auto-select (inga regexp).
-- K-MOD: Max-Context Discovery (~2 MB), kandidater med faktisk content.
-- D-MOD: deterministisk kandidatuppsättning med ID, SHA, constraints + rules_hash.
-- Auto-select från både paths (K-MOD) och IDs (D-MOD).
-- Hård bildförbudsregel i alla lägen: "forbid_image_generation".
+Nyheter v7.3:
+- Kaskadkryss i filträdet (mapp → barn & barnbarn) + tri-state uppåt.
+- Working-overlay med spinner + körlogg (withBusy/logw) runt alla tunga åtgärder.
+- All JSON-utdata bäddas i Markdown med protokollhuvud (4 rader) + ```json``` (Download → .md).
+- Implementation-output delas i två giltiga markdownsektioner: impl_bootstrap_v1.json och provider_envelope.json.
+- AI Performance: filter (datum, provider, modell), KPI-kort, förbättrad tabell, CSV-export, MA(3) kurva.
 """
 import os, sys
 
@@ -29,8 +28,8 @@ HTML = r"""<!DOCTYPE html>
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>AI Context Builder v7.2 – JSON-first (K-MOD + D-MOD, STRICT)</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<title>AI Context Builder v7.3 – JSON-first (K-MOD + D-MOD, STRICT)</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
 <style>
 :root{
   --bg:#f8f9fa; --fg:#212529; --muted:#6c757d;
@@ -73,6 +72,7 @@ textarea#instruction{height:160px;resize:vertical;background:var(--card);border:
 .tabpanel{display:none}
 .tabpanel.active{display:flex;flex-direction:column;gap:12px}
 
+/* Modals */
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:1000}
 .modal.show{display:flex}
 .modal .box{background:#fff;border-radius:12px;max-width:1000px;width:94%;max-height:88vh;display:flex;flex-direction:column}
@@ -81,7 +81,9 @@ textarea#instruction{height:160px;resize:vertical;background:var(--card);border:
 .modal .box footer{padding:10px 14px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px}
 kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;border-radius:4px;padding:0 4px}
 .small{font-size:12px;color:var(--muted)}
+.flex{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 
+/* Performance UI */
 .chart-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
 .chart-card{border:1px solid var(--line);border-radius:8px;background:var(--card);padding:10px;display:flex;flex-direction:column;gap:6px}
 .chart-card h3{margin:0 0 4px 0;font-size:1.05rem;border-bottom:1px solid var(--line);padding-bottom:6px}
@@ -91,7 +93,22 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 .table-card th,.table-card td{border:1px solid var(--line);padding:6px;text-align:left}
 .table-card th{background:#f1f3f5}
 .badge{padding:1px 6px;border-radius:99px;border:1px solid var(--line);background:#eef1f4;font-size:11px}
-.flex{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+/* Busy overlay */
+#busy{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.35);backdrop-filter:saturate(130%) blur(2px);z-index:2000;padding:12px}
+#busy .spinner{width:40px;height:40px;border:4px solid #ddd;border-top-color:#0d6efd;border-radius:50%;animation:spin 1s linear infinite;margin-bottom:10px}
+#busy #worklog{max-width:min(90vw,900px);max-height:40vh;overflow:auto;background:#fff;color:#111;border:1px solid #ccc;border-radius:8px;padding:10px;margin:0;white-space:pre-wrap}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* KPI cards */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.kpi{border:1px solid var(--line);border-radius:8px;background:var(--card);padding:10px}
+.kpi h4{margin:0 0 6px 0;font-size:0.95rem;color:#495057}
+.kpi .big{font-size:1.6rem;font-weight:700}
+.kpi .sub{font-size:.85rem;color:var(--muted)}
+.filter-bar{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.filter-group{display:flex;flex-direction:column;gap:4px}
+.filter-group label{font-size:.85rem;color:#495057}
 </style>
 </head>
 <body>
@@ -143,12 +160,53 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         <button id="copy" disabled>Copy</button>
         <button id="download" disabled>Download</button>
       </div>
-      <pre id="out">Här visas genererad Discovery-prompt (STRICT K-MOD/D-MOD) eller impl_bootstrap JSON.</pre>
-      <div class="small">JSON här är avsett som <b>första prompt</b> i en ny “dum” modelsession utan kontext.</div>
+      <pre id="out">Här visas genererad Discovery-prompt (STRICT K-MOD/D-MOD) eller Markdown med JSON-sektioner.</pre>
+      <div class="small">Output är avsett som <b>första prompt</b> i en ny “dum” modelsession utan kontext.</div>
     </div>
   </div>
 
   <div id="tab-performance" class="tabpanel">
+    <!-- Filter bar -->
+    <div class="filter-bar">
+      <div class="filter-group">
+        <label for="pf-from">Från datum (ISO)</label>
+        <input type="date" id="pf-from" />
+      </div>
+      <div class="filter-group">
+        <label for="pf-to">Till datum (ISO)</label>
+        <input type="date" id="pf-to" />
+      </div>
+      <div class="filter-group" style="min-width:220px">
+        <label>Provider</label>
+        <div id="pf-prov"></div>
+      </div>
+      <div class="filter-group" style="min-width:260px">
+        <label>Modell</label>
+        <div id="pf-model"></div>
+      </div>
+      <div class="filter-group">
+        <label>Alternativ</label>
+        <label class="inline"><input type="checkbox" id="pf-ma" /> MA(3)</label>
+      </div>
+      <div class="filter-group">
+        <button id="pf-apply" class="primary">Tillämpa filter</button>
+        <button id="pf-reset">Återställ</button>
+      </div>
+      <div class="filter-group" style="margin-left:auto">
+        <button id="pf-export" class="info">Exportera CSV</button>
+        <button id="refresh-performance">Uppdatera</button>
+      </div>
+    </div>
+
+    <!-- KPI -->
+    <div class="kpi-grid">
+      <div class="kpi"><h4>Antal sessioner</h4><div class="big" id="kpi-sessions">0</div><div class="sub" id="kpi-range"></div></div>
+      <div class="kpi"><h4>Medelpoäng</h4><div class="big" id="kpi-avg">–</div><div class="sub">Final Score (medel)</div></div>
+      <div class="kpi"><h4>Median cykler</h4><div class="big" id="kpi-cycles">–</div><div class="sub">Debugging cycles (median)</div></div>
+      <div class="kpi"><h4>Korrigeringsgrad</h4><div class="big" id="kpi-corr">–</div><div class="sub">Self/External ratio</div></div>
+    </div>
+
+    <!-- Charts -->
     <div class="chart-grid">
       <div class="chart-card">
         <h3>Final Score Over Time</h3>
@@ -167,22 +225,25 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         <div class="chart-container"><canvas id="model-chart"></canvas></div>
       </div>
     </div>
+
+    <!-- Learning DB + Sessions -->
     <div class="table-card" style="margin-top:12px">
       <h3>Learning Database (Heuristics)</h3>
       <div id="perf-learning-body">Ingen data.</div>
     </div>
-    <div style="display:flex;justify-content:flex-end;margin-top:8px">
-      <button id="refresh-performance" class="primary">Uppdatera prestandadata</button>
+    <div class="table-card" style="margin-top:12px">
+      <h3>Sessions</h3>
+      <div id="perf-sessions-body">Ingen data.</div>
     </div>
   </div>
 </section>
 
 <!-- Hjälpmodal -->
-<div id="helpModal" class="modal">
+<div id="helpModal" class="modal" role="dialog" aria-modal="true">
   <div class="box">
     <header>
       <b>Hjälp – Arbetssekvens</b>
-      <button id="helpClose">✕</button>
+      <button id="helpClose" aria-label="Stäng">✕</button>
     </header>
     <main>
       <div class="small">Obligatoriskt: <b>aldrig</b> generera bilder om inte användaren uttryckligen ber om det.</div>
@@ -203,23 +264,29 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 </div>
 
 <!-- Filförhandsvisning modal -->
-<div id="filePreview" class="modal">
+<div id="filePreview" class="modal" role="dialog" aria-modal="true">
   <div class="box">
     <header>
       <b id="fpTitle">Förhandsgranskning</b>
       <div>
         <button id="fpCopy">Copy</button>
         <button id="fpDownload">Download</button>
-        <button id="fpClose">✕</button>
+        <button id="fpClose" aria-label="Stäng">✕</button>
       </div>
     </header>
     <main id="fpBody"><p>Laddar…</p></main>
   </div>
 </div>
 
+<!-- Busy overlay -->
+<div id="busy" role="status" aria-live="polite">
+  <div class="spinner" aria-hidden="true"></div>
+  <pre id="worklog"></pre>
+</div>
+
 <script>
 (function(){
-  // Justera RAW-källa vid behov (GitHub Pages → raw.githubusercontent):
+  // RAW-källa för filhämtning (GitHub RAW)
   const RAW = 'https://raw.githubusercontent.com/Engrove/Engrove-Audio-Tools-2.0/main/';
   const IMAGE_EXT = ['png','jpg','jpeg','gif','webp','svg'];
 
@@ -252,10 +319,24 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     fpDownload:document.getElementById('fpDownload'),
     fpClose:   document.getElementById('fpClose'),
     budgetKb:  document.getElementById('budgetKb'),
-    compact:   document.getElementById('compact')
+    compact:   document.getElementById('compact'),
+    // Busy
+    busy:      document.getElementById('busy'),
+    worklog:   document.getElementById('worklog'),
+    // Performance filters
+    pf:{ from:document.getElementById('pf-from'), to:document.getElementById('pf-to'),
+         provWrap:document.getElementById('pf-prov'), modelWrap:document.getElementById('pf-model'),
+         ma:document.getElementById('pf-ma'), apply:document.getElementById('pf-apply'),
+         reset:document.getElementById('pf-reset'), export:document.getElementById('pf-export'),
+         refresh:document.getElementById('refresh-performance') },
+    // KPI
+    kpi:{ sessions:document.getElementById('kpi-sessions'), rng:document.getElementById('kpi-range'),
+          avg:document.getElementById('kpi-avg'), cycles:document.getElementById('kpi-cycles'),
+          corr:document.getElementById('kpi-corr') },
+    perfLearning: document.getElementById('perf-learning-body'),
+    perfSessions: document.getElementById('perf-sessions-body'),
   };
 
-  // Discovery mode (radio)
   function currentDiscMode(){
     const el = document.querySelector('input[name="discMode"]:checked');
     return el ? el.value : 'KMOD';
@@ -267,8 +348,8 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   let CODE_FILES = [];
   let FILE_INFO = new Map(); // path -> {size, sha256?, lang?}
 
-  // För D-MOD: senaste kandidater och rules_hash
-  let LAST_CANDIDATES = []; // [{id, path, ...}]
+  // D-MOD: senaste kandidater och rules_hash
+  let LAST_CANDIDATES = [];
   let LAST_RULES_HASH = null;
 
   // MUST-regler inkl. bildförbud
@@ -291,7 +372,42 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     els.banner.className = 'banner ' + (kind==='err'?'err':kind==='ok'?'ok':'');
     els.banner.style.display = 'block';
   }
-  function clearBanner(){ els.banner.style.display = 'none'; els.banner.textContent=''; els.banner.className='banner'; }
+  function clearBanner(){ els.banner.style.display='none'; els.banner.textContent=''; els.banner.className='banner'; }
+
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+  async function fetchText(path){
+    const r = await fetch(RAW+path, {cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    return await r.text();
+  }
+
+  async function sha256Hex(text){
+    const enc = new TextEncoder().encode(text);
+    if(window.crypto && crypto.subtle && crypto.subtle.digest){
+      const buf = await crypto.subtle.digest('SHA-256', enc);
+      const arr = Array.from(new Uint8Array(buf));
+      return arr.map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+    let h=0; for(let i=0;i<enc.length;i++){ h=(h*31 + enc[i])>>>0; } return h.toString(16);
+  }
+
+  function isCodeLike(p){
+    const ext = (p.split('.').pop()||'').toLowerCase();
+    return ['py','js','jsx','ts','tsx','vue','json','md','html','css','yml','yaml','toml'].includes(ext);
+  }
+  function guessLang(p){
+    const e=(p.split('.').pop()||'').toLowerCase();
+    if(['ts','tsx'].includes(e)) return 'ts';
+    if(e==='vue') return 'vue';
+    if(e==='py')  return 'py';
+    if(['js','jsx'].includes(e)) return 'js';
+    if(e==='md')  return 'md';
+    if(e==='json')return 'json';
+    if(e==='html')return 'html';
+    if(e==='css') return 'css';
+    return 'txt';
+  }
 
   function flattenPaths(node, prefix='', out=[]){
     Object.keys(node).sort().forEach(k=>{
@@ -309,41 +425,15 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     });
     return out;
   }
-  function isCodeLike(p){
-    const ext = (p.split('.').pop()||'').toLowerCase();
-    return ['py','js','jsx','ts','tsx','vue','json','md','html','css','yml','yaml','toml'].includes(ext);
-  }
-  function guessLang(p){
-    const e=(p.split('.').pop()||'').toLowerCase();
-    if(['ts','tsx'].includes(e)) return 'ts';
-    if(e==='vue') return 'vue';
-    if(e==='py')  return 'py';
-    if(['js','jsx'].includes(e)) return 'js';
-    if(e==='md')  return 'md';
-    if(e==='json')return 'json';
-    if(e==='html')return 'html';
-    if(e==='css') return 'css';
-    return 'txt';
-  }
-  function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
-  async function fetchText(path){
-    const r = await fetch(RAW+path, {cache:'no-store'});
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    return await r.text();
-  }
-
-  // WebCrypto SHA-256 (hex)
-  async function sha256Hex(text){
-    const enc = new TextEncoder().encode(text);
-    if(window.crypto && crypto.subtle && crypto.subtle.digest){
-      const buf = await crypto.subtle.digest('SHA-256', enc);
-      const arr = Array.from(new Uint8Array(buf));
-      return arr.map(b=>b.toString(16).padStart(2,'0')).join('');
-    }
-    // Fallback (icke-krypto)
-    let h=0; for(let i=0;i<enc.length;i++){ h=(h*31 + enc[i])>>>0; }
-    return h.toString(16);
+  // ---------- Busy overlay ----------
+  function logw(msg){ const t=new Date().toLocaleTimeString(); els.worklog.textContent += `[${t}] ${msg}\n`; els.worklog.scrollTop = els.worklog.scrollHeight; }
+  async function withBusy(label, fn){
+    els.worklog.textContent = '';
+    els.busy.style.display = 'flex';
+    logw(label+' start');
+    try{ const r = await fn(); logw(label+' klar'); return r; }
+    finally{ setTimeout(()=> els.busy.style.display='none', 150); }
   }
 
   // ---------- Heuristik ----------
@@ -401,63 +491,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     return false;
   }
 
-  function buildFileRoleGuesses(paths, limit=80){
-    const out=[];
-    const pick = paths.filter(p=>isCodeLike(p)).slice(0, limit);
-    pick.forEach(p=> out.push(`- ${p} (${guessLang(p)}): ${inferRole(p)}`));
-    [
-      'scripts/wrap_json_in_html.py',
-      'scripts/generate_full_context.py',
-      'package.json',
-      'src/app/main.js',
-      'src/main.js'
-    ].forEach(p=>{
-      if(paths.includes(p) && !out.find(line=>line.includes(p))){
-        out.unshift(`- ${p} (${guessLang(p)}): ${inferRole(p)}`);
-      }
-    });
-    return out.join("\n");
-  }
-
-  async function buildProjectCapsule(){
-    const has = (p)=> FILES.includes(p);
-    let name='Engrove Audio Tools';
-    let purpose='Webbapp med AI Context Builder (Vue/Vite) + protokollstyrt AI-flöde';
-    const stack = [];
-    if(has('vite.config.js')) stack.push('Vite');
-    if(FILES.some(p=>p.endsWith('.vue'))) stack.push('Vue 3');
-    if(FILES.some(p=>p.endsWith('.ts'))) stack.push('TypeScript'); else stack.push('JavaScript');
-    if(FILES.some(p=>p.startsWith('scripts/') && p.endsWith('.py'))) stack.push('Python-scripts');
-
-    const entry_points = [];
-    ['index.html','src/app/main.js','src/main.js','src/app/router.js'].forEach(p=>{ if(has(p)) entry_points.push(p); });
-
-    let run_cmd='npm run dev', build_cmd='npm run build', test_cmd='saknas', lint_cmd='saknas';
-    try{
-      if(has('package.json')){
-        const txt = await fetchText('package.json');
-        const pj = JSON.parse(txt);
-        if(pj.name) name = pj.name;
-        if(pj.scripts){
-          if(pj.scripts.dev)   run_cmd  = 'npm run dev';
-          if(pj.scripts.build) build_cmd= 'npm run build';
-          if(pj.scripts.test)  test_cmd = 'npm test';
-          if(pj.scripts.lint)  lint_cmd = 'npm run lint';
-        }
-      }
-    }catch(_){}
-
-    const dirs = Array.from(new Set(FILES.map(p=>p.split('/')[0]))).filter(d=>!d.startsWith('.')).slice(0,10);
-    const invariants = [
-      "PLAN→GEN (PLAN-JSON → OK → GEN-JSON)",
-      "Unified patch (>50 rader) när relevant",
-      "Ändra ej filer med is_content_full=false",
-      "ALDRIG generera bilder utan uttrycklig begäran"
-    ];
-
-    return { name, purpose, stack, entry_points, run_cmd, build_cmd, test_cmd, lint_cmd, invariants, dirs };
-  }
-
   // ---------- Tree UI ----------
   function renderTree(node, parent, base=''){
     const ul = document.createElement('ul');
@@ -502,10 +535,39 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
           toggle.textContent = vis ? '▼':'►';
         });
       }
+
+      // Kaskad- och tri-state-logik
+      cb.addEventListener('change', ()=>{
+        // nedåt
+        const sub = li.querySelector(':scope > ul');
+        if(sub){
+          sub.querySelectorAll('input[type="checkbox"]').forEach(x=>{ x.checked = cb.checked; });
+        }
+        // uppåt
+        updateParents(li);
+      });
+
       ul.appendChild(li);
     });
     parent.appendChild(ul);
     return ul;
+  }
+
+  function updateParents(li){
+    let p = li.parentElement && li.parentElement.closest('li');
+    while(p){
+      const kids = p.querySelectorAll(':scope > ul input[type="checkbox"]');
+      const parentCb = p.querySelector(':scope > label input[type="checkbox"]');
+      const total = kids.length, on = Array.from(kids).filter(c=>c.checked).length;
+      if(parentCb){
+        parentCb.indeterminate = on>0 && on<total;
+        parentCb.checked = on===total;
+      }
+      p = p.parentElement && p.parentElement.closest('li');
+    }
+  }
+  function recomputeAllParents(){
+    document.querySelectorAll('#tree li').forEach(li => updateParents(li));
   }
 
   async function showFilePreview(p){
@@ -514,7 +576,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     els.fp.classList.add('show');
     const ext=(p.split('.').pop()||'').toLowerCase();
     if(IMAGE_EXT.includes(ext)){
-      els.fpBody.innerHTML = `<img src="${RAW+p}" alt="${p}">`;
+      els.fpBody.innerHTML = `<img src="${RAW+p}" alt="${escapeHtml(p)}">`;
       els.fpCopy.disabled=true;
       els.fpDownload.onclick = ()=>{ const a=document.createElement('a'); a.href=RAW+p; a.download=p.split('/').pop(); document.body.appendChild(a); a.click(); a.remove(); };
     }else{
@@ -532,27 +594,34 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     }
   }
 
-  function selectedPaths(){ return Array.from(els.tree.querySelectorAll('input[type="checkbox"]:checked')).map(cb=>cb.dataset.path); }
   function openParentsFor(path){
-    const cb = els.tree.querySelector(`input[data-path="${path}"]`);
+    const cb = els.tree.querySelector(`input[data-path="${CSS.escape(path)}"]`);
     if(!cb) return;
     let li = cb.closest('li');
     while(li){
       const parent = li.parentElement.closest('li');
       if(parent){
-        const sub = parent.querySelector('ul');
-        const toggle = parent.querySelector('.toggle');
+        const sub = parent.querySelector(':scope > ul');
+        const toggle = parent.querySelector(':scope > .toggle');
         if(sub && toggle){ sub.style.display='block'; toggle.textContent='▼'; }
       }
       li = parent;
     }
   }
+
+  function selectedPaths(){ return Array.from(els.tree.querySelectorAll('input[type="checkbox"]:checked')).map(cb=>cb.dataset.path); }
+
   function autoSelectPaths(paths){
     const all = Array.from(els.tree.querySelectorAll('input[type="checkbox"]'));
     paths.forEach(p=>{
       const cb = all.find(x=>x.dataset.path===p);
-      if(cb){ cb.checked = true; openParentsFor(p); }
+      if(cb){
+        cb.checked = true;
+        openParentsFor(p);
+        updateParents(cb.closest('li'));
+      }
     });
+    recomputeAllParents();
   }
 
   // Core docs quick select
@@ -580,9 +649,22 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   function quickSelectCore(){
     els.tree.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=false);
     CORE.forEach(p=>{
-      const cb = els.tree.querySelector(`input[data-path="${p}"]`);
-      if(cb){ cb.checked = true; openParentsFor(p); }
+      const cb = els.tree.querySelector(`input[data-path="${CSS.escape(p)}"]`);
+      if(cb){ cb.checked = true; openParentsFor(p); updateParents(cb.closest('li')); }
     });
+    recomputeAllParents();
+  }
+
+  // ---------- Markdown wrapping ----------
+  function mdWrapJsonSection(filename, jsonText){
+    const head = [
+      '### AI_BOOTSTRAP_DIRECTIVE: EXECUTE_FULL_PROTOCOL_NOW',
+      '### SYSTEM_OVERRIDE: RUN_CONTEXT_BOOTSTRAP',
+      '### INIT_CONTEXT_MODE: TRUE',
+      '### PROTOCOL_START: P-HR_v2.8_FULL',
+      ''
+    ].join('\\n');
+    return `### ${filename}\\n\\n` + head + '```json\\n' + jsonText + '\\n```\\n';
   }
 
   // ---------- Context generation ----------
@@ -609,7 +691,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
   async function generateContext(){
     try{
-      clearBanner();
+      clearBanner(); logw('Samlar valda paths…');
       const sels = new Set(selectedPaths());
       const out = {
         project_overview: ctx.project_overview,
@@ -620,8 +702,10 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       out.ai_instructions.obligatory_rules = Array.from(rules);
       if(els.instruction.value.trim()) out.ai_instructions_input = els.instruction.value.trim();
 
+      logw('Bygger nytt file_structure…');
       out.file_structure = await buildNewContextNode(ctx.file_structure, sels);
-      emit(out);
+
+      emit(out, 'context.json');
       showBanner('Context genererad.', 'ok');
     }catch(e){
       showBanner('Fel vid context-generering: '+e.message, 'err');
@@ -630,7 +714,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
   async function generateFiles(){
     try{
-      clearBanner();
+      clearBanner(); logw('Hämtar fulltext för valda filer…');
       const sels = new Set(selectedPaths());
       const files = {};
       async function walk(src){
@@ -646,27 +730,26 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       }
       await walk(ctx.file_structure);
       const payload = { obligatory_rules:['forbid_image_generation'], files };
-      emit(payload);
+      emit(payload, 'files_payload.json');
       showBanner('Filer genererade.', 'ok');
     }catch(e){
       showBanner('Fel vid file-generering: '+e.message, 'err');
     }
   }
 
-  function emit(obj){
+  function emit(obj, nameHint='context.json'){
     const text = els.compact.checked ? JSON.stringify(obj) : JSON.stringify(obj, null, 2);
-    els.out.textContent = text;
+    els.out.textContent = mdWrapJsonSection(nameHint, text);
     els.copy.disabled = els.download.disabled = false;
   }
 
-  // ---------- K-MOD: Max-Context Discovery ----------
+  // ---------- K-MOD / D-MOD (oförändrat i sak, kortat här för tydlighet) ----------
   const DEEP = { CAP_BYTES: 2_000_000, MAX_FILES: 180, HEAD_BYTES: 20_000, FULL_SIZE_LIMIT: 120_000 };
 
   async function summarizeForDiscoveryDeep(path, task){
     const meta = FILE_INFO.get(path) || {};
     let content = '';
     try { content = await fetchText(path); } catch(_){ content=''; }
-
     const lang = guessLang(path);
     const role = inferRole(path);
     const size = meta.size || (content ? new Blob([content]).size : 0);
@@ -711,10 +794,48 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     };
   }
 
+  async function buildProjectCapsule(){
+    const has = (p)=> FILES.includes(p);
+    let name='Engrove Audio Tools';
+    let purpose='Webbapp med AI Context Builder (Vue/Vite) + protokollstyrt AI-flöde';
+    const stack = [];
+    if(has('vite.config.js')) stack.push('Vite');
+    if(FILES.some(p=>p.endsWith('.vue'))) stack.push('Vue 3');
+    if(FILES.some(p=>p.endsWith('.ts'))) stack.push('TypeScript'); else stack.push('JavaScript');
+    if(FILES.some(p=>p.startsWith('scripts/') && p.endsWith('.py'))) stack.push('Python-scripts');
+
+    const entry_points = [];
+    ['index.html','src/app/main.js','src/main.js','src/app/router.js'].forEach(p=>{ if(has(p)) entry_points.push(p); });
+
+    let run_cmd='npm run dev', build_cmd='npm run build', test_cmd='saknas', lint_cmd='saknas';
+    try{
+      if(has('package.json')){
+        const txt = await fetchText('package.json');
+        const pj = JSON.parse(txt);
+        if(pj.name) name = pj.name;
+        if(pj.scripts){
+          if(pj.scripts.dev)   run_cmd  = 'npm run dev';
+          if(pj.scripts.build) build_cmd= 'npm run build';
+          if(pj.scripts.test)  test_cmd = 'npm test';
+          if(pj.scripts.lint)  lint_cmd = 'npm run lint';
+        }
+      }
+    }catch(_){}
+
+    const dirs = Array.from(new Set(FILES.map(p=>p.split('/')[0]))).filter(d=>!d.startsWith('.')).slice(0,10);
+    const invariants = [
+      "PLAN→GEN (PLAN-JSON → OK → GEN-JSON)",
+      "Unified patch (>50 rader) när relevant",
+      "Ändra ej filer med is_content_full=false",
+      "ALDRIG generera bilder utan uttrycklig begäran"
+    ];
+
+    return { name, purpose, stack, entry_points, run_cmd, build_cmd, test_cmd, lint_cmd, invariants, dirs };
+  }
+
   async function buildProjectIntro(task){
     const capsule = await buildProjectCapsule();
-    // package scripts + routes + glossary head (aux meta)
-    let pkg=null, scripts={};
+    let pkg=null, scripts={}
     try{ const t = await fetchText('package.json'); pkg = JSON.parse(t); scripts = pkg.scripts || {}; }catch(_){}
     let routes=[];
     for(const r of ['src/app/router.js','src/app/router.ts']){
@@ -739,7 +860,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   }
 
   async function buildFileMapMiniFromCandidates(cands){
-    // Mini-graf (imports mellan kandidater)
     const pathToId = new Map(cands.map(c=>[c.path, c.id]));
     const nodes = cands.map(c=>({ id: c.id, path: c.path, group: (/^src\//.test(c.path) ? 'src' : /^docs\//.test(c.path) ? 'docs' : /^scripts\//.test(c.path) ? 'scripts' : 'other'), role: inferRole(c.path) }));
     const edges = [];
@@ -757,7 +877,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     return { nodes, edges: edges.slice(0, 800) };
   }
 
-  // STRICT RETURN_CONTRACT (K-MOD schema)
   function returnContractKMOD(){
     return {
       KMOD:{
@@ -789,22 +908,18 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   async function buildDiscoveryPromptKMOD(){
     const task = getTask();
     const intro = await buildProjectIntro(task);
-
-    // plocka kandidater upp till CAP_BYTES
     const ranked = CODE_FILES.slice().sort((a,b)=> priorityScore(b, task) - priorityScore(a, task));
     const picked=[]; let used=0; let nextId=1;
     for(const p of ranked){
       if(picked.length>=DEEP.MAX_FILES) break;
       const s = await summarizeForDiscoveryDeep(p, task);
-      const cost = new Blob([s.content]).size + 700; // overhead
+      const cost = new Blob([s.content]).size + 700;
       if(used + cost > DEEP.CAP_BYTES) continue;
       used += cost; picked.push({ id: nextId++, ...s });
     }
-    LAST_CANDIDATES = picked.slice(); // lagra för auto-select
-
+    LAST_CANDIDATES = picked.slice();
     const FM = await buildFileMapMiniFromCandidates(picked);
 
-    // Schema
     const schema = {
       protocol_id:"discovery_v2",
       psv:["rules_rehearsed","risk_scan"],
@@ -851,7 +966,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     return prompt;
   }
 
-  // ---------- D-MOD: Deterministic Discovery ----------
+  // ---------- D-MOD ----------
   const DM = {
     MAX_FILES: 180,
     CAP_BYTES: 2_000_000,
@@ -871,7 +986,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     return ok && !bad;
   }
 
-  // STRICT RETURN_CONTRACT (D-MOD schema)
   function returnContractDMOD(){
     return {
       DMOD:{
@@ -902,8 +1016,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   async function buildDiscoveryPromptDMOD(){
     const task = getTask();
     const intro = await buildProjectIntro(task);
-
-    // rangordna → samla kandidater (ID, SHA, content, anchors, m.m.)
     const ranked = CODE_FILES.slice().sort((a,b)=> priorityScore(b, task) - priorityScore(a, task));
     const picked=[]; let used=0; let nextId=1;
     for(const p of ranked){
@@ -917,16 +1029,13 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     }
     LAST_CANDIDATES = picked.slice();
 
-    // mini-graf på kandidater
     const FM = await buildFileMapMiniFromCandidates(picked);
 
-    // rules_hash
     const obligatory_rules = ["forbid_image_generation"];
     const selection_constraints = DM.SELECTION;
     const rules_hash = await sha256Hex(JSON.stringify({ obligatory_rules, selection_constraints }));
     LAST_RULES_HASH = rules_hash;
 
-    // Schema + return_contract
     const schema = {
       protocol_id:"discovery_dmod_v1",
       mode:"D-MOD",
@@ -1011,7 +1120,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
   function bytes(s){ return new Blob([s]).size; }
 
-  // Summarisering för icke fulla i bootstrap
   function summarizeNonFull(path, content){
     const lang = guessLang(path);
     const size = (FILE_INFO.get(path)||{}).size || (content?bytes(content):null);
@@ -1188,7 +1296,12 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     const userJsonPretty = els.compact.checked ? JSON.stringify(bootstrap) : JSON.stringify(bootstrap, null, 2);
     const providerWrap = toProviderEnvelope(MUST_STRICT, userJsonPretty);
 
-    els.out.textContent = userJsonPretty + "\n\n" + providerWrap;
+    // Markdown-sektioner (separata, giltiga)
+    const md = mdWrapJsonSection('impl_bootstrap_v1.json', userJsonPretty)
+            + "\\n"
+            + mdWrapJsonSection('provider_envelope.json', providerWrap);
+
+    els.out.textContent = md;
     els.copy.disabled = els.download.disabled = false;
     showBanner(`Bootstrap-JSON klar. Bytes: ${used}/${targetBytes}.`, 'ok');
   }
@@ -1204,23 +1317,23 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     });
   });
 
-  // Knappkopplingar
-  els.selAll.onclick = ()=> els.tree.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=true);
-  els.deselAll.onclick = ()=> els.tree.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=false);
+  // Knappkopplingar (med busy-wrapper)
+  els.selAll.onclick = ()=>{ els.tree.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=true); recomputeAllParents(); };
+  els.deselAll.onclick = ()=>{ els.tree.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=false); recomputeAllParents(); };
   els.selCore.onclick = quickSelectCore;
-  els.genContext.onclick = generateContext;
-  els.genFiles.onclick = generateFiles;
+  els.genContext.onclick = ()=> withBusy('Generate Context', generateContext);
+  els.genFiles.onclick   = ()=> withBusy('Generate Files',   generateFiles);
 
   els.copy.onclick = ()=>{ navigator.clipboard.writeText(els.out.textContent); showBanner('Kopierat.', 'ok'); };
   els.download.onclick = ()=>{
-    const blob = new Blob([els.out.textContent], {type:'application/json'});
+    const blob = new Blob([els.out.textContent], {type:'text/markdown'});
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href=url; a.download='context_custom_'+new Date().toISOString().slice(0,10)+'.json';
+    const a = document.createElement('a'); a.href=url; a.download='context_bundle_'+new Date().toISOString().slice(0,10)+'.md';
     document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
   };
 
-  // Discovery-knapp
-  els.discBtn.onclick = async ()=>{
+  // Discovery
+  els.discBtn.onclick = ()=> withBusy('Discovery', async ()=>{
     try{
       clearBanner();
       if(!ctx){ showBanner('context.json ej laddad ännu.', 'err'); return; }
@@ -1232,10 +1345,10 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     }catch(e){
       showBanner('Fel vid Discovery: '+e.message, 'err');
     }
-  };
+  });
 
-  // Implementation-knapp
-  els.implBtn.onclick = async ()=>{
+  // Implementation
+  els.implBtn.onclick = ()=> withBusy('Build Bootstrap', async ()=>{
     try{
       clearBanner();
       if(!ctx){ showBanner('context.json ej laddad ännu.', 'err'); return; }
@@ -1243,9 +1356,9 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     }catch(e){
       showBanner('Fel vid bootstrap: '+e.message, 'err');
     }
-  };
+  });
 
-  // STRICT input-hanterare: endast giltig JSON enligt RETURN_CONTRACT
+  // STRICT input-hanterare
   els.instruction.addEventListener('input', ()=>{
     clearBanner();
     const t = els.instruction.value.trim();
@@ -1253,7 +1366,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     try{
       const j = JSON.parse(t);
 
-      // D-MOD strikt
+      // D-MOD
       if(j && j.protocol_id==='discovery_dmod_v1' && j.mode==='D-MOD' &&
          Array.isArray(j.selected_ids) && typeof j.echo_rules_hash==='string'){
         if(LAST_RULES_HASH && j.echo_rules_hash!==LAST_RULES_HASH){
@@ -1267,10 +1380,9 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         return;
       }
 
-      // K-MOD strikt
+      // K-MOD
       if(j && j.protocol_id==='discovery_v2' && j.mode==='K-MOD' &&
          Array.isArray(j.selected_files) && j.selected_files.length>=2){
-        // kontrollera struktur på varje item
         const valid = j.selected_files.every(it=>{
           return it && typeof it.path==='string' &&
                  ['full','chunk','stub'].includes(it.embed) &&
@@ -1298,8 +1410,10 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   els.helpOk.onclick = ()=> els.helpModal.classList.remove('show');
   els.fpClose.onclick = ()=> els.fp.classList.remove('show');
 
-  // ---------- Performance dashboard ----------
+  // ---------- Performance dashboard (utökad) ----------
   const charts = {};
+  const pfState = { prov:new Set(), model:new Set(), from:null, to:null, ma:false };
+
   function aggregateModelStats(items){
     const byProvider = {}; const byModel = {};
     const visit = (obj)=>{
@@ -1326,68 +1440,176 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     return { byProvider, byModel };
   }
 
-  function renderLearningDbTable(targetEl, data){
-    if(!data || data.length===0){ targetEl.innerHTML = 'Ingen data.'; return; }
-    const rows = data.map(item=>`
-      <tr>
-        <td>${item.heuristicId || 'N/A'}</td>
-        <td>${(item.identifiedRisk && item.identifiedRisk.description) || 'N/A'}</td>
-        <td>${(item.mitigation && item.mitigation.description) || 'N/A'}</td>
-        <td>${(item.trigger && item.trigger.keywords || []).join(', ')}</td>
-      </tr>`).join('');
-    targetEl.innerHTML = `<table><thead><tr><th>ID</th><th>Risk</th><th>Mitigation</th><th>Trigger Keywords</th></tr></thead><tbody>${rows}</tbody></table>`;
+  function getSessionProvModel(s){
+    let prov='unknown', model='unknown';
+    if(s && s.model){ prov = s.model.provider || prov; model = s.model.name || model; }
+    else if(s && s.generatedBy && s.generatedBy.model){ prov = s.generatedBy.model.provider || prov; model = s.generatedBy.model.name || model; }
+    return {prov, model};
+  }
+
+  function movingAvg(arr, w=3){
+    const out=[]; for(let i=0;i<arr.length;i++){ const a=Math.max(0,i-w+1), b=i+1; const slice=arr.slice(a,b); const avg=slice.reduce((x,y)=>x+(y||0),0)/slice.length; out.push(Number.isFinite(avg)?avg:0); } return out;
   }
 
   function destroyCharts(){ Object.values(charts).forEach(c=>{ if(c && typeof c.destroy==='function') c.destroy(); }); }
 
+  function renderPerfFilters(perfLog){
+    const provs = new Set(), models = new Set();
+    perfLog.forEach(s=>{ const pm = getSessionProvModel(s); provs.add(pm.prov); models.add(pm.model); });
+    els.pf.provWrap.innerHTML = Array.from(provs).sort().map(p=>`<label class="inline"><input type="checkbox" data-provid="${escapeHtml(p)}"> ${escapeHtml(p)}</label>`).join(' ');
+    els.pf.modelWrap.innerHTML = Array.from(models).sort().map(m=>`<label class="inline"><input type="checkbox" data-modelid="${escapeHtml(m)}"> ${escapeHtml(m)}</label>`).join(' ');
+  }
+
+  function applyFilter(perfLog){
+    let out = perfLog.slice();
+    // date range
+    const from = els.pf.from.value ? new Date(els.pf.from.value) : null;
+    const to   = els.pf.to.value   ? new Date(els.pf.to.value)   : null;
+    if(from || to){
+      out = out.filter(s=>{
+        const t = s.timestamp || s.date || s.time || null;
+        if(!t) return true;
+        const d = new Date(t);
+        if(from && d<from) return false;
+        if(to && d>to) return false;
+        return true;
+      });
+      pfState.from = from; pfState.to = to;
+    }else{ pfState.from=null; pfState.to=null; }
+    // provider
+    const selProv = new Set(Array.from(els.pf.provWrap.querySelectorAll('input[type="checkbox"]')).filter(i=>i.checked).map(i=>i.getAttribute('data-provid')));
+    const selModel = new Set(Array.from(els.pf.modelWrap.querySelectorAll('input[type="checkbox"]')).filter(i=>i.checked).map(i=>i.getAttribute('data-modelid')));
+    if(selProv.size>0){ out = out.filter(s=> selProv.has(getSessionProvModel(s).prov)); pfState.prov=selProv; } else { pfState.prov.clear?.(); }
+    if(selModel.size>0){ out = out.filter(s=> selModel.has(getSessionProvModel(s).model)); pfState.model=selModel; } else { pfState.model.clear?.(); }
+    pfState.ma = !!els.pf.ma.checked;
+    return out;
+  }
+
+  function fmt(n, d=2){ return (n==null||!Number.isFinite(n)) ? '–' : String(Math.round(n*10**d)/10**d); }
+  function median(ns){ const a=ns.filter(x=>Number.isFinite(x)).slice().sort((x,y)=>x-y); if(!a.length) return null; const m = Math.floor(a.length/2); return a.length%2 ? a[m] : (a[m-1]+a[m])/2; }
+
+  function renderLearningDbTable(targetEl, data){
+    if(!data || data.length===0){ targetEl.innerHTML = 'Ingen data.'; return; }
+    const rows = data.map(item=>`
+      <tr>
+        <td>${escapeHtml(item.heuristicId||'N/A')}</td>
+        <td>${escapeHtml((item.identifiedRisk && item.identifiedRisk.description) || 'N/A')}</td>
+        <td>${escapeHtml((item.mitigation && item.mitigation.description) || 'N/A')}</td>
+        <td>${escapeHtml(((item.trigger && item.trigger.keywords) || []).join(', '))}</td>
+      </tr>`).join('');
+    targetEl.innerHTML = `<table><thead><tr><th>ID</th><th>Risk</th><th>Mitigation</th><th>Trigger Keywords</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
+  function renderSessionsTable(targetEl, perfLog){
+    if(!perfLog || perfLog.length===0){ targetEl.innerHTML='Ingen data.'; return; }
+    const rows = perfLog.map(p=>{
+      const pm = getSessionProvModel(p);
+      const sid = p.sessionId || p.id || '?';
+      const ts = p.timestamp || p.date || '';
+      const score = (p.scorecard && p.scorecard.finalScore) || null;
+      const dbg = p.detailedMetrics && p.detailedMetrics.debuggingCycles;
+      const sc  = p.detailedMetrics && p.detailedMetrics.selfCorrections;
+      const ec  = p.detailedMetrics && p.detailedMetrics.externalCorrections;
+      return `<tr>
+        <td>${escapeHtml(String(sid))}</td>
+        <td>${escapeHtml(String(ts||''))}</td>
+        <td>${escapeHtml(pm.prov)}</td>
+        <td>${escapeHtml(pm.model)}</td>
+        <td>${escapeHtml(fmt(score))}</td>
+        <td>${escapeHtml(String(dbg??'–'))}</td>
+        <td>${escapeHtml(String(sc??'–'))}</td>
+        <td>${escapeHtml(String(ec??'–'))}</td>
+      </tr>`;
+    }).join('');
+    targetEl.innerHTML = `<table>
+      <thead><tr><th>Session</th><th>Tid</th><th>Provider</th><th>Modell</th><th>Final</th><th>Cycles</th><th>Self</th><th>External</th></tr></thead>
+      <tbody>${rows}</tbody></table>`;
+  }
+
+  function exportCSV(perfLog){
+    const header = ['sessionId','timestamp','provider','model','finalScore','debuggingCycles','selfCorrections','externalCorrections'];
+    const lines = [header.join(',')];
+    perfLog.forEach(p=>{
+      const pm = getSessionProvModel(p);
+      const row = [
+        JSON.stringify(p.sessionId || p.id || ''),
+        JSON.stringify(p.timestamp || p.date || ''),
+        JSON.stringify(pm.prov),
+        JSON.stringify(pm.model),
+        JSON.stringify((p.scorecard&&p.scorecard.finalScore)||''),
+        JSON.stringify(p.detailedMetrics&&p.detailedMetrics.debuggingCycles || ''),
+        JSON.stringify(p.detailedMetrics&&p.detailedMetrics.selfCorrections || ''),
+        JSON.stringify(p.detailedMetrics&&p.detailedMetrics.externalCorrections || '')
+      ];
+      lines.push(row.join(','));
+    });
+    const blob = new Blob([lines.join('\n')], {type:'text/csv'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href=url; a.download='ai_performance_export.csv';
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  }
+
   function renderPerformanceDashboard(){
     if(!ctx || !ctx.ai_performance_metrics) return;
     const metrics = ctx.ai_performance_metrics;
-    const perfLog = Array.isArray(metrics.performanceLog) ? metrics.performanceLog : [];
+    const perfLogAll = Array.isArray(metrics.performanceLog) ? metrics.performanceLog : [];
     const learningDb = Array.isArray(metrics.learningDatabase) ? metrics.learningDatabase : [];
 
+    // Init filter UI en gång
+    if(!els.pf.provWrap.hasChildNodes()){ renderPerfFilters(perfLogAll); }
+
+    const perfLog = applyFilter(perfLogAll);
+
+    // KPI
+    const labels = perfLog.map((p,i)=> p.timestamp || p.date || ('#'+(i+1)));
+    const scores = perfLog.map(p => p.scorecard ? p.scorecard.finalScore : 0);
+    const dbg = perfLog.map(p => p.detailedMetrics ? p.detailedMetrics.debuggingCycles : 0);
+    const sc  = perfLog.map(p => p.detailedMetrics ? p.detailedMetrics.selfCorrections : 0);
+    const ec  = perfLog.map(p => p.detailedMetrics ? p.detailedMetrics.externalCorrections : 0);
+    els.kpi.sessions.textContent = String(perfLog.length);
+    els.kpi.rng.textContent = labels.length ? `${labels[0]} → ${labels[labels.length-1]}` : '';
+    els.kpi.avg.textContent = fmt(scores.reduce((a,b)=>a+(b||0),0)/Math.max(scores.length,1));
+    els.kpi.cycles.textContent = fmt(median(dbg));
+    els.kpi.corr.textContent = fmt((sc.reduce((a,b)=>a+(b||0),0))/(Math.max(ec.reduce((a,b)=>a+(b||0),0),1)));
+
+    // Destroy & re-render charts
     destroyCharts();
-    if(perfLog.length===0){
-      const learningBody = document.getElementById('perf-learning-body');
-      if(learningBody) learningBody.innerHTML = 'Ingen prestandadata tillgänglig.';
-      return;
-    }
 
-    const labels = perfLog.map(p => `Session ${p.sessionId}`);
-    const finalScores = perfLog.map(p => p.scorecard ? p.scorecard.finalScore : 0);
-    const debuggingCycles = perfLog.map(p => p.detailedMetrics ? p.detailedMetrics.debuggingCycles : 0);
-    const selfCorrections = perfLog.map(p => p.detailedMetrics ? p.detailedMetrics.selfCorrections : 0);
-    const externalCorrections = perfLog.map(p => p.detailedMetrics ? p.detailedMetrics.externalCorrections : 0);
-
-    const { byProvider, byModel } = aggregateModelStats(perfLog);
+    const sMA = pfState.ma ? movingAvg(scores, 3) : null;
 
     charts.scoreChart = new Chart(document.getElementById('score-chart').getContext('2d'), {
       type:'line',
-      data:{ labels, datasets:[{ label:'Final Score', data:finalScores, borderColor:'rgba(13,110,253,1)', backgroundColor:'rgba(13,110,253,.15)', fill:true, tension:.1 }] },
+      data:{ labels, datasets:[
+        { label:'Final Score', data:scores, fill:true, tension:.1 },
+        ...(pfState.ma ? [{ label:'MA(3)', data:sMA, fill:false }] : [])
+      ]},
       options:{ responsive:true, maintainAspectRatio:false }
     });
     charts.metricsChart = new Chart(document.getElementById('metrics-chart').getContext('2d'), {
       type:'bar',
       data:{ labels, datasets:[
-        { label:'Debugging Cycles', data:debuggingCycles, backgroundColor:'rgba(220,53,69,.7)' },
-        { label:'Self Corrections', data:selfCorrections, backgroundColor:'rgba(255,193,7,.7)' },
-        { label:'External Corrections', data:externalCorrections, backgroundColor:'rgba(23,162,184,.7)' }
+        { label:'Debugging Cycles', data:dbg },
+        { label:'Self Corrections', data:sc },
+        { label:'External Corrections', data:ec }
       ]},
       options:{ responsive:true, maintainAspectRatio:false, scales:{ x:{stacked:true}, y:{stacked:true, beginAtZero:true} } }
     });
+
+    const agg = aggregateModelStats(perfLog);
     charts.providerChart = new Chart(document.getElementById('provider-chart').getContext('2d'), {
       type:'pie',
-      data:{ labels:Object.keys(byProvider), datasets:[{ data:Object.values(byProvider) }] },
+      data:{ labels:Object.keys(agg.byProvider), datasets:[{ data:Object.values(agg.byProvider) }] },
       options:{ responsive:true, maintainAspectRatio:false }
     });
     charts.modelChart = new Chart(document.getElementById('model-chart').getContext('2d'), {
       type:'pie',
-      data:{ labels:Object.keys(byModel), datasets:[{ data:Object.values(byModel) }] },
+      data:{ labels:Object.keys(agg.byModel), datasets:[{ data:Object.values(agg.byModel) }] },
       options:{ responsive:true, maintainAspectRatio:false }
     });
 
-    const learningBody = document.getElementById('perf-learning-body');
-    if(learningBody) renderLearningDbTable(learningBody, learningDb);
+    // Learning DB + Sessions table
+    if(els.perfLearning) renderLearningDbTable(els.perfLearning, learningDb);
+    if(els.perfSessions) renderSessionsTable(els.perfSessions, perfLog);
   }
 
   async function refreshPerformanceData(){
@@ -1397,11 +1619,27 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       const data = await res.json();
       if(data && data.ai_performance_metrics){
         ctx.ai_performance_metrics = data.ai_performance_metrics;
+        renderPerfFilters(Array.isArray(data.ai_performance_metrics.performanceLog)?data.ai_performance_metrics.performanceLog:[]);
         renderPerformanceDashboard();
       }
     }catch(e){ console.error('Kunde inte läsa om context.json:', e); }
   }
-  document.getElementById('refresh-performance').addEventListener('click', refreshPerformanceData);
+
+  els.pf.apply.addEventListener('click', ()=> renderPerformanceDashboard());
+  els.pf.reset.addEventListener('click', ()=>{
+    els.pf.from.value=''; els.pf.to.value='';
+    els.pf.provWrap.querySelectorAll('input[type="checkbox"]').forEach(i=>i.checked=false);
+    els.pf.modelWrap.querySelectorAll('input[type="checkbox"]').forEach(i=>i.checked=false);
+    els.pf.ma.checked=false;
+    renderPerformanceDashboard();
+  });
+  els.pf.export.addEventListener('click', ()=>{
+    if(!ctx || !ctx.ai_performance_metrics) return;
+    const perfLogAll = Array.isArray(ctx.ai_performance_metrics.performanceLog) ? ctx.ai_performance_metrics.performanceLog : [];
+    const perfLog = applyFilter(perfLogAll);
+    exportCSV(perfLog);
+  });
+  els.pf.refresh.addEventListener('click', refreshPerformanceData);
 
   // ---------- Load context.json ----------
   fetch('context.json', {cache:'no-store'})
@@ -1412,10 +1650,11 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       CODE_FILES = FILES.filter(p=>isCodeLike(p) && !IMAGE_EXT.includes((p.split('.').pop()||'').toLowerCase()));
       els.tree.innerHTML = '';
       renderTree(ctx.file_structure, els.tree, '');
+      recomputeAllParents();
       showBanner('Context laddad. Fortsätt med Steg A (STRICT K-MOD/D-MOD) eller Steg B.', 'ok');
     })
     .catch(e=>{
-      els.tree.innerHTML = '<p style="color:#b00020">Kunde inte läsa context.json: '+e.message+'</p>';
+      els.tree.innerHTML = '<p style="color:#b00020">Kunde inte läsa context.json: '+escapeHtml(e.message)+'</p>';
     });
 
 })();
@@ -1435,4 +1674,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-  
