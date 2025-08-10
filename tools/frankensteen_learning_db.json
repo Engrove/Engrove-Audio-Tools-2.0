@@ -2252,66 +2252,6 @@
     }
   },
   {
-    "heuristicId": "H-20250810-01",
-    "trigger": {
-      "type": "code_generation",
-      "scope": [
-        "python"
-      ],
-      "keywords": [
-        "re",
-        "regex",
-        "[]"
-      ]
-    },
-    "identifiedRisk": {
-      "riskId": "RISK_INVALID_REGEX_SYNTAX",
-      "description": "Risken att leverera ett reguljärt uttryck med en ogiltig teckenuppsättning (t.ex. `\\->`), vilket orsakar ett `re.error` vid körning."
-    },
-    "mitigation": {
-      "protocolId": "PSV-MIT-REGEX-VALIDATE",
-      "description": "Under PSV-steget måste jag utföra en specifik mental validering av alla reguljära uttryck. Specialtecken inuti en teckenklass, särskilt bindestreck (`-`), måste antingen placeras i slutet av klassen eller escapas korrekt (`\\-`) för att tolkas bokstavligt."
-    },
-    "metadata": {
-      "originSessionId": "45",
-      "createdAt": "2025-08-10T00:00:00Z",
-      "status": "active",
-      "sourceLogFiles": [
-        "docs/Chatthistorik.json"
-      ]
-    }
-  },
-  {
-    "heuristicId": "H-20250810-02",
-    "trigger": {
-      "type": "user_request",
-      "scope": [
-        "workflow"
-      ],
-      "keywords": [
-        "liten ändring",
-        "kodfragment",
-        "onödigt"
-      ]
-    },
-    "identifiedRisk": {
-      "riskId": "RISK_CONTEXT_FRAGMENTATION",
-      "description": "Risken att leverera kodfragment istället för kompletta filer, vilket ökar risken för integrationsfel och bryter mot principen om att leverera verifierade, kompletta enheter."
-    },
-    "mitigation": {
-      "protocolId": "PROTOCOL_SURGICAL_PATCH",
-      "description": "Aktivera 'Kirurgisk Patch i Full Kontext'-protokollet. Leverera alltid en komplett fil, men använd ett standardiserat kommentarsformat (`=== START/SLUT ÄNDRING ===`) för att med kirurgisk precision markera exakt vilka rader som har ändrats och varför."
-    },
-    "metadata": {
-      "originSessionId": "45",
-      "createdAt": "2025-08-10T00:00:00Z",
-      "status": "active",
-      "sourceLogFiles": [
-        "docs/Chatthistorik.json"
-      ]
-    }
-  },
-  {
     "heuristicId": "H-20250809-09",
     "trigger": {
       "type": "post_failure_user_query",

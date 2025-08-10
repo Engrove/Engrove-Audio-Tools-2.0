@@ -2632,47 +2632,6 @@
     }
   },
   {
-    "sessionId": "45",
-    "date": "2025-08-10T00:00:00Z",
-    "aiQualitativeSummary": "En mycket lyckad session där ett kritiskt byggfel löstes och en fundamental förbättring av vårt arbetsflöde etablerades. Min förmåga att snabbt anpassa mina Kärndirektiv baserat på din feedback var en styrka. PFS-processen för att korrigera mitt regex-fel fungerade som avsett.",
-    "scorecard": {
-      "efficacy": {
-        "score": 95,
-        "weight": 0.4,
-        "weightedScore": 38
-      },
-      "efficiency": {
-        "score": 80,
-        "weight": 0.3,
-        "weightedScore": 24
-      },
-      "robustness": {
-        "score": 90,
-        "weight": 0.3,
-        "weightedScore": 27
-      }
-    },
-    "detailedMetrics": {
-      "missionCompleted": true,
-      "debuggingCycles": 1,
-      "selfCorrections": 2,
-      "externalCorrections": 1,
-      "protocolActivations": {
-        "psv": 6,
-        "helpMeGod": 0,
-        "stalemate": 0
-      },
-      "heuristicsTriggered": [
-        "H-20250810-01",
-        "H-20250810-02"
-      ]
-    },
-    "improvementSuggestion": {
-      "pattern": "AI:n kan föreslå arkitektoniska lösningar (som diff-protokollet) som är tekniskt sunda men skapar onödig friktion för användaren. En bättre balans mellan teknisk renhet och praktisk användbarhet behövs.",
-      "proposedHeuristicId": "H-20250810-02"
-    }
-  },
-  {
     "sessionId": "42b",
     "generatedBy": {
       "speakerName": "Frankensteen",
