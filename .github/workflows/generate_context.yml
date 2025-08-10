@@ -29,7 +29,7 @@ env:
   HTML_FILE: 'index.html'
   METADATA_FILE: 'metadata.json'
   # Valfritt: injicera plugin (t.ex. Patch Center). Lämna tom om inget plugin ska bäddas in.
-  PLUGIN_PATH: 'plugins/patch_center.py'
+  PLUGIN_PATH: 'scripts/plugins/patch_center.py'
 
 jobs:
   validate-and-build:
