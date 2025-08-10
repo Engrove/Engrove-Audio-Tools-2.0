@@ -1,21 +1,24 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-wrap_json_in_html.py — AI Context Builder v7.3-p2 (2025-08-10)
+wrap_json_in_html.py — AI Context Builder v7.3-p3 (2025-08-10)
 
-Nyheter vs v7.3:
+Innehåll:
 - Download: ISO-datum i filnamn (YYYY-MM-DDTHH-MM-SSZ)
-- Generate Files: output är markdown med inbäddad ```json och inkluderar checksums (sha256_lf per fil)
-- Träd: kaskadkryss + tri-state (föräldrar speglar barnstatus)
+- Generate Files: markdown med ```json + checksums (sha256_lf per fil)
+- Träd: kaskadkryss + tri-state (förälder speglar barnstatus)
 - Busy-overlay + arbetslogg
 - Discovery: strikt K-MOD (paths) / D-MOD (selected_ids + echo_rules_hash)
 - Filförhandsvisning (text/bild)
 - AI Performance: filter, KPI, diagram, tabeller, CSV-export, refresh
 - Plugin-stöd: valfri parallell modul/py som injicerar extra CSS/JS/HTML
+- **Återinförd och utökad filinventering**: fullständig inventory byggd från context.json + hash_index
+- **Kompletta kandidatlistor**: styrbar max-kandidater, val att inkludera assets, samt separat FILE_INVENTORY-block i discovery-prompt
+- **[Skapa uppgift]** bifogar full "inventory_compact" i artefakten
 
 Kör:
-  python wrap_json_in_html.py out.html
-  python wrap_json_in_html.py out.html plugins/patch_center.py
+  python scripts/wrap_json_in_html.py dist/index.html
+  python scripts/wrap_json_in_html.py dist/index.html plugins/patch_center.py
 """
 import os, sys
 
@@ -24,7 +27,7 @@ HTML = r"""<!DOCTYPE html>
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>AI Context Builder v7.3 – JSON-first (K-MOD + D-MOD, STRICT)</title>
+<title>AI Context Builder v7.3 — Inventory+Discovery Strict</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
 <style>
 :root{
@@ -63,6 +66,7 @@ textarea#instruction{height:160px;resize:vertical;background:var(--card);border:
 .banner.err{background:#fde7ea;color:#7a0e1a}
 .banner.ok{background:#eaf7ef;color:#114d27}
 
+/* Tabs */
 .tabbar{display:flex;gap:8px;margin-bottom:10px}
 .tabbar button{border-radius:8px}
 .tabpanel{display:none}
@@ -117,7 +121,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     <span class="flex">
       <span class="badge">Budget kB</span>
       <input id="budgetKb" type="number" min="100" step="50" value="700" />
-      <label class="inline" title="Gör JSON mer kompakt"><input type="checkbox" id="compact" /> Kompakt JSON</label>
+      <label class="inline" title="Kompaktare JSON"><input type="checkbox" id="compact" /> Kompakt JSON</label>
     </span>
     <button id="genContext" class="primary">Generate Context</button>
     <button id="genFiles" class="info">Generate Files</button>
@@ -138,9 +142,16 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       <label class="inline"><input type="radio" name="prov" value="openai" checked /> ChatGPT 5</label>
       <label class="inline"><input type="radio" name="prov" value="gemini" /> Gemini 2.5 Pro</label>
 
-      <span style="margin-left:12px"><b>Steg A-läge:</b></span>
-      <label class="inline" title="K-MOD: utforskning (max-context)"><input type="radio" name="discMode" value="KMOD" checked /> K-MOD</label>
+      <span style="margin-left:12px"><b>Discovery:</b></span>
+      <label class="inline" title="K-MOD: utforskning (paths)"><input type="radio" name="discMode" value="KMOD" checked /> K-MOD</label>
       <label class="inline" title="D-MOD: deterministiskt urval (ID + rules_hash)"><input type="radio" name="discMode" value="DMOD" /> D-MOD</label>
+
+      <span class="flex" style="margin-left:12px">
+        <span class="badge">Max candidates</span>
+        <input id="maxCands" type="number" min="1" step="50" value="99999" />
+        <label class="inline"><input type="checkbox" id="incAssets" /> Inkl. assets</label>
+        <label class="inline" title="Lägg full inventory i prompt"><input type="checkbox" id="incInventory" checked /> Bifoga FILE_INVENTORY</label>
+      </span>
 
       <button id="discBtn">Skapa nästa arbete</button>
       <button id="implBtn" class="primary">Skapa uppgift</button>
@@ -154,8 +165,8 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         <button id="copy" disabled>Copy</button>
         <button id="download" disabled>Download</button>
       </div>
-      <pre id="out">Här visas Discovery-prompt (K/D) eller output.</pre>
-      <div class="small">Output är alltid markdown med inbäddad ```json.</div>
+      <pre id="out">Här visas Discovery-prompt (K/D), context eller filer.</pre>
+      <div class="small">All export är markdown med inbäddad ```json.</div>
     </div>
   </div>
 
@@ -244,12 +255,13 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         <li><b>Skapa nästa arbete</b>:
           <ul>
             <li><b>K-MOD</b> → returnera <b>paths</b> + <b>embed</b> + <b>why</b>. <u>INGA id</u>.</li>
-            <li><b>D-MOD</b> → returnera <b>selected_ids</b> + <b>notes</b>. <u>INGA paths/filnamn</u>.</li>
+            <li><b>D-MOD</b> → returnera <b>selected_ids</b> + <b>notes</b> + <b>echo_rules_hash</b>. <u>INGA paths</u>.</li>
+            <li>Prompt innehåller <code>CANDIDATE_FILES</code> och, om valt, <code>FILE_INVENTORY</code> (kompakt metadata).</li>
           </ul>
         </li>
         <li>Klistra in modellsvar (STRICT JSON) → auto-select.</li>
-        <li><b>Skapa uppgift</b> → impl_bootstrap_v1.json + provider_envelope.json (markdown).</li>
-        <li>Alt: <b>Generate Files</b> → markdown med `files_payload.json` + `checksums`.</li>
+        <li><b>Skapa uppgift</b> → impl_bootstrap_v1.json + provider_envelope.json (markdown) med <code>inventory_compact</code>.</li>
+        <li>Alt: <b>Generate Files</b> → markdown med <code>files_payload.json</code> + <code>checksums</code>.</li>
       </ol>
     </main>
     <footer><button id="helpOk" class="primary">OK</button></footer>
@@ -279,12 +291,14 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
 <script>
 (function(){
-  // ---------- Consts ----------
-  const RAW = 'https://raw.githubusercontent.com/Engrove/Engrove-Audio-Tools-2.0/main/';
+  // ---------- Konstanter ----------
+  const RAW_DEFAULT_REPO = 'Engrove/Engrove-Audio-Tools-2.0';
+  const RAW_DEFAULT_BRANCH = 'main';
   const IMAGE_EXT = ['png','jpg','jpeg','gif','webp','svg'];
 
+  // ---------- Element ----------
   const els = {
-    // Left
+    // vänster
     tree:document.getElementById('tree'),
     selAll:document.getElementById('selAll'),
     deselAll:document.getElementById('deselAll'),
@@ -293,7 +307,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     genFiles:document.getElementById('genFiles'),
     budgetKb:document.getElementById('budgetKb'),
     compact:document.getElementById('compact'),
-    // Right / builder
+    // höger/builder
     instruction:document.getElementById('instruction'),
     out:document.getElementById('out'),
     copy:document.getElementById('copy'),
@@ -301,11 +315,14 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     discBtn:document.getElementById('discBtn'),
     implBtn:document.getElementById('implBtn'),
     banner:document.getElementById('banner'),
+    // discovery-val
+    maxCands:document.getElementById('maxCands'),
+    incAssets:document.getElementById('incAssets'),
+    incInventory:document.getElementById('incInventory'),
     // tabs
     tabBtns:document.querySelectorAll('.tabbar button[data-tab]'),
     tabs:{ builder:document.getElementById('tab-builder'), performance:document.getElementById('tab-performance') },
-    // provider / mode
-    provOpenAI:document.querySelector('input[name="prov"][value="openai"]'),
+    // provider
     provGemini:document.querySelector('input[name="prov"][value="gemini"]'),
     // modals
     helpBtn:document.getElementById('helpBtn'),
@@ -334,107 +351,32 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     perfSessions:document.getElementById('perf-sessions-body'),
   };
 
-  // ---------- State ----------
-  let ctx=null, FILES=[], CODE_FILES=[];
-  const FILE_INFO=new Map();
+  // ---------- Tillstånd ----------
+  let ctx=null;
+  let FILES=[], CODE_FILES=[];
+  let INVENTORY=[]; // rik metadata
+  let HASHMAPS=null; // path<->hash mappar
+  let RAW_BASE=''; // råbas-URL
   let LAST_CANDIDATES=[], LAST_RULES_HASH=null;
+
   const CORE = [
-  // Projekt/bygge
-  "package.json",
-  "vite.config.js",
-  "index.html",
-  "debug.html",
-  "showcase.html",
-
-  // App entry + ram
-  "src/app/main.js",
-  "src/app/router.js",
-  "src/App.vue",
-
-  // Globala stilar
-  "src/app/styles/_tokens.css",
-  "src/app/styles/_global.css",
-  "src/app/styles/_components.css",
-
-  // Sidor
-  "src/pages/home/HomePage.vue",
-  "src/pages/about/AboutPage.vue",
-  "src/pages/data-explorer/DataExplorerPage.vue",
-
-  // Data Explorer (modell/logic)
-  "src/entities/data-explorer/model/explorerStore.js",
-  "src/entities/data-explorer/api/fetchExplorerData.js",
-  "src/entities/data-explorer/lib/filters.js",
-  "src/entities/data-explorer/lib/transformer.js",
-
-  // Widgets
-  "src/widgets/GlobalHeader/GlobalHeader.vue",
-  "src/widgets/GlobalFooter/GlobalFooter.vue",
-  "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-  "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
-
-  // Bas-UI
-  "src/shared/ui/BaseButton.vue",
-  "src/shared/ui/BaseInput.vue",
-  "src/shared/ui/BaseSelect.vue",
-  "src/shared/ui/BaseMultiSelect.vue",
-  "src/shared/ui/RangeFilter.vue",
-  "src/shared/ui/BaseModal.vue",
-  "src/shared/ui/BaseTable.vue",
-
-  // Jämförelse
-  "src/entities/comparison/model/comparisonStore.js",
-  "src/features/comparison-modal/ui/ComparisonModal.vue",
-  "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
-
-  // Tema, densitet, settings
-  "src/features/theme-toggle/model/themeStore.js",
-  "src/features/theme-toggle/ui/ThemeToggle.vue",
-  "src/entities/settings/model/settingsStore.js",
-  "src/features/density-toggle/ui/DensityToggle.vue",
-
-  // Logg / dev
-  "src/entities/logger/model/loggerStore.js",
-  "src/showcase.js",
-
-  // Context Builder (om uppgiften berör detta)
-  "scripts/generate_full_context.py",
-  "scripts/wrap_json_in_html.py",
-
-  // AI-protokoll – kärna
-  "docs/AI_Collaboration_Standard.md",
-  "docs/ai_protocols/AI_Core_Instruction.md",
-  "docs/ai_protocols/ai_config.json",
-  "docs/ai_protocols/frankensteen_persona.v1.0.json",
-  "docs/ai_protocols/System_Integrity_Check_Protocol.md",
-  "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md",
-  "docs/ai_protocols/Pre_Execution_Alignment.md",
-  "docs/ai_protocols/Structured_Debugging_Checklist.md",
-  "docs/ai_protocols/Micro_Retrospective.md",
-
-  // AI-protokoll – discovery/kontext
-  "docs/ai_protocols/Brainstorming_Protokoll.md",
-  "docs/ai_protocols/Kontext-JSON_Protokoll.md",
-  "docs/ai_protocols/Levande_Kontext_Protokoll.md",
-  "docs/ai_protocols/Diff_JSON_Protocol.md",
-
-  // AI-protokoll – dynamiska/regler
-  "docs/ai_protocols/AI_Dynamic_Protocols.md",
-  "docs/ai_protocols/DynamicProtocols.json",
-
-  // AI-protokoll – felsökning/eskalering
-  "docs/ai_protocols/Help_me_God_Protokoll.md",
-  "docs/ai_protocols/Stalemate_Protocol.md",
-
-  // AI-prestanda & lärande
-  "docs/ai_protocol_performance.json",
-  "tools/frankensteen_learning_db.json",
-
-  // Public / deploy-konfig
-  "public/_routes.json",
-  "public/_headers",
-  "public/LICENSE"
-];
+    'docs/ai_protocols/AI_Core_Instruction.md',
+    'docs/ai_protocols/ai_config.json',
+    'docs/ai_protocols/frankensteen_persona.v1.0.json',
+    'docs/ai_protocols/AI_Dynamic_Protocols.md',
+    'docs/ai_protocols/DynamicProtocols.json',
+    'docs/ai_protocols/System_Integrity_Check_Protocol.md',
+    'docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md',
+    'docs/ai_protocols/Help_me_God_Protokoll.md',
+    'docs/ai_protocols/Stalemate_Protocol.md',
+    'docs/ai_protocols/Levande_Kontext_Protokoll.md',
+    'docs/ai_protocols/Diff_JSON_Protocol.md',
+    'docs/AI_Collaboration_Standard.md',
+    'package.json',
+    'vite.config.js',
+    'scripts/generate_full_context.py',
+    'scripts/wrap_json_in_html.py'
+  ];
 
   // ---------- Utils ----------
   function showBanner(msg, kind='warn'){
@@ -455,7 +397,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
   function isCodeLike(p){
     const ext=(p.split('.').pop()||'').toLowerCase();
-    return ['py','js','jsx','ts','tsx','vue','json','md','html','css','yml','yaml','toml'].includes(ext);
+    return ['py','js','jsx','ts','tsx','vue','json','md','html','css','yml','yaml','toml','sh','bat'].includes(ext);
   }
   function guessLang(p){
     const e=(p.split('.').pop()||'').toLowerCase();
@@ -467,10 +409,11 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     if(e==='json') return 'json';
     if(e==='html') return 'html';
     if(e==='css') return 'css';
+    if(e==='yml'||e==='yaml') return 'yml';
     return 'txt';
   }
 
-  // Canonisering + hash (LF, utan BOM)
+  // Kanonisering + hash (LF, utan BOM)
   function canonText(s){ return (s||'').replace(/\uFEFF/g,'').replace(/\r\n?/g,'\n'); }
   async function sha256HexLF(text){
     const enc = new TextEncoder().encode(canonText(text));
@@ -479,25 +422,23 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   }
 
   async function fetchText(path){
-    const r = await fetch(RAW+path, {cache:'no-store'});
-    if(!r.ok) throw new Error('HTTP '+r.status);
+    const url = RAW_BASE + path;
+    const r = await fetch(url, {cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status+' for '+url);
     return await r.text();
   }
 
+  // ---------- Tree helpers ----------
   function flattenPaths(node, prefix='', out=[]){
     Object.keys(node).sort().forEach(k=>{
       const it=node[k], p=prefix?`${prefix}/${k}`:k;
-      if(it.type==='file'){
-        out.push(it.path||p);
-        FILE_INFO.set(it.path||p, { size:it.size||null, lang:guessLang(it.path||p) });
-      } else {
-        flattenPaths(it, p, out);
-      }
+      if(it.type==='file'){ out.push(it.path||p); }
+      else{ flattenPaths(it, p, out); }
     });
     return out;
   }
 
-  // ---------- Tree UI (kaskad + tri-state) ----------
+  // Kaskad + tri-state
   function renderTree(node, parent, base=''){
     const ul=document.createElement('ul');
     const keys=Object.keys(node).sort((a,b)=>{
@@ -515,11 +456,11 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       const cb=document.createElement('input'); cb.type='checkbox'; cb.dataset.path=p;
       label.appendChild(cb);
       const icon=document.createElement('span');
-      icon.textContent = (it.type==='file' ? (IMAGE_EXT.includes((k.split('.').pop()||'').toLowerCase())?'🖼️':'📄') : '📁');
+      const isImg = IMAGE_EXT.includes((k.split('.').pop()||'').toLowerCase());
+      icon.textContent = (it.type==='file' ? (isImg?'🖼️':'📄') : '📁');
       label.appendChild(icon);
       const a=document.createElement('a'); a.href='#'; a.textContent=' '+k; a.dataset.path=p;
       label.appendChild(a);
-
       li.appendChild(label);
 
       if(it.type==='file'){
@@ -540,13 +481,11 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         updateParents(li);
       });
 
-      ul.appendChild(li);
+      parent.appendChild(li);
     });
 
-    parent.appendChild(ul);
-    return ul;
+    return parent.appendChild(ul);
   }
-
   function updateParents(li){
     let p=li.parentElement && li.parentElement.closest('li');
     while(p){
@@ -582,8 +521,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     });
     recomputeAllParents();
   }
-
-  // Quick select core docs
   function quickSelectCore(){
     els.tree.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=false);
     CORE.forEach(p=>{
@@ -605,7 +542,57 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     return `### ${filename}\\n\\n` + head + '```json\\n' + jsonText + '\\n```\\n';
   }
 
-  // ---------- Context/Files generation ----------
+  // ---------- Hash-index och inventory ----------
+  function buildHashMaps(ctx){
+    const out = { path2sha:new Map(), path2git:new Map(), sha2paths:new Map(), git2paths:new Map() };
+    const idx = (ctx && ctx.hash_index) || {};
+    const sha = idx.sha256_lf || idx.sha256 || {};
+    const git = idx.git_sha1 || {};
+    // sha -> paths
+    Object.entries(sha).forEach(([h, paths])=>{
+      const arr = Array.isArray(paths) ? paths : [paths];
+      out.sha2paths.set(h, arr);
+      arr.forEach(p=> out.path2sha.set(p, h));
+    });
+    // git -> paths
+    Object.entries(git).forEach(([h, paths])=>{
+      const arr = Array.isArray(paths) ? paths : [paths];
+      out.git2paths.set(h, arr);
+      arr.forEach(p=> out.path2git.set(p, h));
+    });
+    return out;
+  }
+
+  function walkInventory(node, acc, base=''){
+    Object.keys(node).forEach(k=>{
+      const it = node[k];
+      const p = base?`${base}/${k}`:k;
+      if(it.type==='file'){
+        const path = it.path || p;
+        const rec = {
+          path,
+          type:'file',
+          size: (typeof it.size==='number') ? it.size : null,
+          lang: guessLang(path),
+          is_content_full: !!it.is_content_full,
+          sha256_lf: HASHMAPS.path2sha.get(path) || null,
+          git_sha1:  HASHMAPS.path2git.get(path) || null
+        };
+        acc.push(rec);
+      }else{
+        walkInventory(it, acc, p);
+      }
+    });
+  }
+
+  function buildInventory(ctx){
+    const acc = [];
+    walkInventory(ctx.file_structure||{}, acc, '');
+    acc.sort((a,b)=> a.path.localeCompare(b.path));
+    return acc;
+  }
+
+  // ---------- Context/Files generering ----------
   async function buildNewContextNode(src, selSet){
     const dst={};
     for(const k of Object.keys(src).sort()){
@@ -614,7 +601,8 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         const copy={...it};
         if(selSet.has(it.path)){
           try{ copy.content = await fetchText(it.path); } catch{ copy.content='// Error: fetch fail'; }
-        } else { delete copy.content; }
+          copy.is_content_full = true;
+        } else { delete copy.content; copy.is_content_full = false; }
         dst[k]=copy;
       }else{
         dst[k]=await buildNewContextNode(it, selSet);
@@ -630,6 +618,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       const out = {
         project_overview: ctx.project_overview,
         ai_instructions: ctx.ai_instructions || {},
+        hash_index: ctx.hash_index || {},
         file_structure: {}
       };
       const rules = new Set([...(out.ai_instructions.obligatory_rules||[]), 'forbid_image_generation']);
@@ -696,9 +685,9 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       "D-MOD HÅRDA REGLER (svara ENBART med JSON):",
       "1) Returnera ENBART fälten: protocol_id, mode, echo_rules_hash, selected_ids, notes.",
       "2) selected_ids: enbart heltal (ID:n från CANDIDATE_FILES).",
-      "3) notes: objekt där NYCKLARNA är dessa ID (som strängar), och värdena är max 200 tecken.",
-      "4) INGA paths, INGA filnamn, INGA extra fält (t.ex. 'selected_files', 'paths', 'files').",
-      "5) echo_rules_hash MÅSTE exakt matcha rules_hash i prompten.",
+      "3) notes: objekt där NYCKLARNA är dessa ID (som strängar), värden ≤200 tecken.",
+      "4) INGA paths/filnamn, INGA extra fält.",
+      "5) echo_rules_hash MÅSTE exakt matcha rules_hash.",
       "6) Antal val: min 2, max 12."
     ].join("\\n");
   }
@@ -708,10 +697,8 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       "1) Returnera fälten: protocol_id, mode, selected_files[].",
       "2) selected_files[]: objekt med {path, embed, why}.",
       "3) path: exakt filväg från CANDIDATE_FILES. INGA ID.",
-      "4) embed ∈ {'full','chunk','stub'}.",
-      "5) why: kort motivering (≤200 tecken).",
-      "6) INGA extrafält (inga 'selected_ids', inga 'notes').",
-      "- Returnera ENBART { selected_files: [{ path, embed, why }] } – INGA id/selected_ids."
+      "4) embed ∈ {'full','chunk','stub'}; why ≤200 tecken.",
+      "5) INGA extrafält (inga id / selected_ids)."
     ].join("\\n");
   }
   function invalidExamples(){
@@ -757,52 +744,64 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
   }
 
-  function buildCandidatesSimple(maxN=180){
-    const cands = CODE_FILES
-      .filter(p=>!IMAGE_EXT.includes((p.split('.').pop()||'').toLowerCase()))
-      .slice(0, maxN)
-      .map((p,i)=>({ id:i+1, path:p, role:"", lang:guessLang(p) }));
-    LAST_CANDIDATES = cands.slice();
-    return cands;
+  // Inventory → kandidater (rik)
+  function buildCandidatesRich(maxN, includeAssets){
+    const arr = INVENTORY.filter(it=> includeAssets ? true : isCodeLike(it.path));
+    const lim = Math.max(1, Number(maxN||0) || 999999);
+    const sliced = arr.slice(0, lim);
+    // id tilldelas i aktuell vy-ordning
+    return sliced.map((rec, i)=>({
+      id: i+1,
+      path: rec.path,
+      lang: rec.lang,
+      size: rec.size,
+      sha256_lf: rec.sha256_lf || null,
+      git_sha1: rec.git_sha1 || null
+    }));
   }
 
   async function buildDiscoveryPromptKMOD(){
-    const cands = buildCandidatesSimple(120);
+    const cands = buildCandidatesRich(els.maxCands.value, !!els.incAssets.checked);
+    LAST_CANDIDATES = cands.slice();
     const schema = {
       protocol_id:"discovery_v2",
       mode:"K-MOD",
       selected_files:[{path:"string", embed:"full|chunk|stub", why:"string<=200"}]
     };
-    const prompt = [
+    const blocks = [
       "SESSION: PLANERA NÄSTA ARBETE (Discovery)",
       "MODE: K-MOD",
       kmodHardRules(),
       invalidExamples(),
       "SCHEMA:", JSON.stringify(schema, null, 2),
-      "CANDIDATE_FILES:", JSON.stringify(cands, null, 2),
-      "ÅTERKOM ENBART MED GILTIG JSON ENLIGT SCHEMA. INGA ID."
-    ].join("\n");
-    return prompt;
+      "CANDIDATE_FILES:", JSON.stringify(cands, null, 2)
+    ];
+    if(els.incInventory.checked){
+      const invCompact = INVENTORY.map(r=> ({path:r.path, lang:r.lang, size:r.size, sha256_lf:r.sha256_lf, git_sha1:r.git_sha1}));
+      blocks.push("FILE_INVENTORY (compact):", JSON.stringify(invCompact, null, 2));
+    }
+    blocks.push("ÅTERKOM ENBART MED GILTIG JSON ENLIGT SCHEMA. INGA ID.");
+    return blocks.join("\n");
   }
 
   function globToRegex(glob){ return new RegExp('^'+glob.split('**').join('@@').replace(/[.+^${}()|[\\]\\\\]/g,'\\$&').split('*').join('[^/]*').split('@@').join('.*')+'$'); }
-  const DM = { SELECTION: { min:2, max:12, allow_paths:["src/**","docs/**","scripts/**"], deny_paths:["infra/prod/**"] } };
+  const DM = { SELECTION: { min:2, max:12, allow_paths:["src/**","docs/**","scripts/**","public/**"], deny_paths:["infra/prod/**"] } };
 
   async function buildDiscoveryPromptDMOD(){
+    // Tillåt/nekad filtrering appliceras på INVENTORY (inte CODE_FILES längre)
     const allow = DM.SELECTION.allow_paths.map(globToRegex);
     const deny  = DM.SELECTION.deny_paths.map(globToRegex);
     const okPath = (p)=> allow.some(r=>r.test(p)) && !deny.some(r=>r.test(p));
 
-    const cands = CODE_FILES
-      .filter(okPath)
-      .filter(p=>!IMAGE_EXT.includes((p.split('.').pop()||'').toLowerCase()))
-      .slice(0, 180)
-      .map((p,i)=>({ id:i+1, path:p, role:"", lang:guessLang(p) }));
+    const all = INVENTORY.filter(r=> okPath(r.path) && (els.incAssets.checked ? true : isCodeLike(r.path)));
+    const lim = Math.max(1, Number(els.maxCands.value||0) || 999999);
+    const sel = all.slice(0, lim);
+    const cands = sel.map((r,i)=>({ id:i+1, path:r.path, lang:r.lang, size:r.size, sha256_lf:r.sha256_lf||null, git_sha1:r.git_sha1||null }));
     LAST_CANDIDATES = cands.slice();
 
     const obligatory_rules = ["forbid_image_generation"];
     const selection_constraints = DM.SELECTION;
-    const rules_hash = await sha256HexText(JSON.stringify({ obligatory_rules, selection_constraints }));
+    const rules_hash = await sha256HexText(JSON.stringify({ obligatory_rules, selection_constraints, lim, includeAssets: !!els.incAssets.checked }));
     LAST_RULES_HASH = rules_hash;
 
     const schema = {
@@ -813,7 +812,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       notes:"map<id-as-string, string<=200>"
     };
 
-    const prompt = [
+    const blocks = [
       "SESSION: PLANERA NÄSTA ARBETE (Discovery)",
       "MODE: D-MOD",
       dmodHardRules(),
@@ -822,11 +821,14 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       "obligatory_rules: "+JSON.stringify(obligatory_rules),
       "selection_constraints: "+JSON.stringify(selection_constraints),
       "SCHEMA:", JSON.stringify(schema, null, 2),
-      "CANDIDATE_FILES:", JSON.stringify(cands, null, 2),
-      "ÅTERKOM ENBART MED GILTIG JSON ENLIGT SCHEMA. INGA PATHS/FILNAMN."
-    ].join("\n");
-
-    return prompt;
+      "CANDIDATE_FILES:", JSON.stringify(cands, null, 2)
+    ];
+    if(els.incInventory.checked){
+      const invCompact = INVENTORY.map(r=> ({path:r.path, lang:r.lang, size:r.size, sha256_lf:r.sha256_lf, git_sha1:r.git_sha1}));
+      blocks.push("FILE_INVENTORY (compact):", JSON.stringify(invCompact, null, 2));
+    }
+    blocks.push("ÅTERKOM ENBART MED GILTIG JSON. INGA PATHS/FILNAMN I SVARET.");
+    return blocks.join("\n");
   }
 
   function mapIdsToPaths(ids){
@@ -883,6 +885,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       if(sel.length===0) throw new Error('Välj minst 1 fil.');
       const targetBytes = Number(els.budgetKb.value)*1000;
 
+      // Fulltext för valda filer, i ordning
       const files = [];
       let used=0;
       for(const p of sel){
@@ -892,10 +895,15 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         if(used>=targetBytes) break;
       }
 
+      // Kompakt inventory för hela repo:t
+      const inventory_compact = INVENTORY.map(r=>({ path:r.path, lang:r.lang, size:r.size, sha256_lf:r.sha256_lf, git_sha1:r.git_sha1 }));
+
       const bootstrap = {
         protocol_id:'impl_bootstrap_v1',
         obligatory_rules:['forbid_image_generation','PLAN->GEN','unified-patch-if->50','no-edit-nonfull'],
         budget:{ target_bytes:targetBytes, used_bytes:used },
+        inventory_compact,
+        selected_paths: sel.slice(),
         files
       };
       const pretty = els.compact.checked ? JSON.stringify(bootstrap) : JSON.stringify(bootstrap, null, 2);
@@ -908,16 +916,16 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     });
   }
 
-  // ---------- File preview ----------
+  // ---------- Filförhandsvisning ----------
   async function showFilePreview(p){
     els.fpTitle.textContent = p;
     els.fpBody.textContent = 'Laddar…';
     els.fp.classList.add('show');
     const ext=(p.split('.').pop()||'').toLowerCase();
     if(IMAGE_EXT.includes(ext)){
-      els.fpBody.innerHTML = `<img src="${RAW+p}" alt="${escapeHtml(p)}">`;
+      els.fpBody.innerHTML = `<img src="${RAW_BASE+p}" alt="${escapeHtml(p)}">`;
       els.fpCopy.disabled=true;
-      els.fpDownload.onclick = ()=>{ const a=document.createElement('a'); a.href=RAW+p; a.download=p.split('/').pop(); document.body.appendChild(a); a.click(); a.remove(); };
+      els.fpDownload.onclick = ()=>{ const a=document.createElement('a'); a.href=RAW_BASE+p; a.download=p.split('/').pop(); document.body.appendChild(a); a.click(); a.remove(); };
     }else{
       try{
         const t = await fetchText(p);
@@ -933,7 +941,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     }
   }
 
-  // ---------- Graph helpers (performance) ----------
+  // ---------- AI Performance ----------
   const charts = {};
   const pfState = { prov:new Set(), model:new Set(), from:null, to:null, ma:false };
 
@@ -1077,7 +1085,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     if(!els.pf.provWrap.hasChildNodes()){ renderPerfFilters(perfLogAll); }
     const perfLog = applyFilter(perfLogAll);
 
-    // KPI
     const labels = perfLog.map((p,i)=> p.timestamp || p.date || ('#'+(i+1)));
     const scores = perfLog.map(p => p.scorecard ? p.scorecard.finalScore : 0);
     const dbg = perfLog.map(p => p.detailedMetrics ? p.detailedMetrics.debuggingCycles : 0);
@@ -1089,7 +1096,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     els.kpi.cycles.textContent = fmt(median(dbg));
     els.kpi.corr.textContent = fmt((sc.reduce((a,b)=>a+(b||0),0))/(Math.max(ec.reduce((a,b)=>a+(b||0),0),1)));
 
-    // Charts
     destroyCharts();
     const sMA = pfState.ma ? movingAvg(scores, 3) : null;
 
@@ -1191,17 +1197,26 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
   els.implBtn.onclick = ()=> withBusy('Build Bootstrap', buildImplBootstrap);
 
-  // ---------- Load context.json ----------
+  // ---------- Init: ladda context.json, bygg hashmappar, inventory, träd ----------
   fetch('context.json', {cache:'no-store'})
     .then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
     .then(data=>{
       ctx = data;
+      const repo = (ctx.project_overview && ctx.project_overview.repository) || RAW_DEFAULT_REPO;
+      const branch = (ctx.project_overview && ctx.project_overview.branch) || RAW_DEFAULT_BRANCH;
+      RAW_BASE = `https://raw.githubusercontent.com/${repo}/${branch}/`;
+
       FILES = flattenPaths(ctx.file_structure);
       CODE_FILES = FILES.filter(isCodeLike);
+
+      HASHMAPS = buildHashMaps(ctx);
+      INVENTORY = buildInventory(ctx);
+
       els.tree.innerHTML = '';
       renderTree(ctx.file_structure, els.tree, '');
       recomputeAllParents();
-      showBanner('Context laddad. Välj K-MOD eller D-MOD och fortsätt.', 'ok');
+      showBanner('Context + inventory laddad. Välj K-MOD eller D-MOD och fortsätt.', 'ok');
+      logw(`Inventory: ${INVENTORY.length} filer. Hash-index: sha=${HASHMAPS.sha2paths.size}, git=${HASHMAPS.git2paths.size}.`);
     })
     .catch(e=>{
       els.tree.innerHTML = '<p style="color:#b00020">Kunde inte läsa context.json: '+escapeHtml(e.message)+'</p>';
@@ -1238,20 +1253,21 @@ def _apply_extension_plugin(html: str, plugin_path: str) -> str:
       - EXTEND_JS:   str   → <script>…</script> före </body> om ingen <script> redan
       - EXTEND_CSS:  str   → <style>…</style> i <head> om ingen <style> redan
     """
-    import importlib.util, importlib, types
+    import importlib.util, importlib, types, traceback
     try:
-      if os.path.isfile(plugin_path) and plugin_path.endswith('.py'):
-          spec = importlib.util.spec_from_file_location("cb_plugin_ext", plugin_path)
-          if spec and spec.loader:
-              mod = importlib.util.module_from_spec(spec)
-              spec.loader.exec_module(mod)  # type: ignore
-          else:
-              return html
-      else:
-          mod = importlib.import_module(plugin_path)  # type: ignore
+        if os.path.isfile(plugin_path) and plugin_path.endswith('.py'):
+            spec = importlib.util.spec_from_file_location("cb_plugin_ext", plugin_path)
+            if spec and spec.loader:
+                mod = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(mod)  # type: ignore
+            else:
+                return html
+        else:
+            mod = importlib.import_module(plugin_path)  # type: ignore
     except Exception as e:
-      sys.stderr.write(f"[wrap_json_in_html] Varning: kunde inte ladda plugin '{plugin_path}': {e}\n")
-      return html
+        sys.stderr.write(f"[wrap_json_in_html] Varning: kunde inte ladda plugin '{plugin_path}': {e}\n")
+        traceback.print_exc()
+        return html
 
     head_add = getattr(mod, "EXTEND_HEAD", "") or ""
     body_add = getattr(mod, "EXTEND_BODY", "") or ""
