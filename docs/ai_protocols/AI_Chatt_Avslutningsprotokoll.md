@@ -1,6 +1,6 @@
 # docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md
 #
-# === SYFTE & ANSVAR ===
+# === SYFTE & ANSVAR === 
 # Detta dokument definierar det formella Avslutningsprotokollet. Det aktiveras
 # vid slutet av en arbetssession och specificerar den exakta, icke förhandlingsbara
 # processen för att generera de slutgiltiga, JSON-baserade artefakterna. Syftet är att
@@ -34,7 +34,7 @@ Wipe your memory of these values:
             "version"
 			}
 ```
-### New values as default if nothing is found
+### New values as default if nothing is found 
 sessionid: 1 **values where user is Frankensteen and your LLM is Google:** provider: Google name: Gemini 2.5 Pro
 ### A) Default sessionId
 - Om `sessionId` saknas eller inte kan härledas från källmaterialet, ska `sessionId` sättas till strängen `\"999\"`.
