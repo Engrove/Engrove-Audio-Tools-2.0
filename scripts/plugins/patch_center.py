@@ -1,8 +1,6 @@
 # plugins/patch_center.py
-# Patch Center plugin för AI Context Builder
-# - Klistra/Ladda upp diff.json (diff_json_v1)
-# - Automatisk match via sha256_lf (primärt), git_sha1 (sekundärt), path (fallback)
-# - Apply → verifiering → redigerbar preview → Copy/Download (exakt kod)
+# Patch Center plugin – inbyggd schema-validering + checksum-match + Apply + preview + Copy/Download
+# Körs via wrap_json_in_html.py som injicerar EXTEND_* i HTML.
 
 EXTEND_CSS = r"""
 #plug-patch-modal .box{max-width:1100px}
@@ -42,6 +40,7 @@ EXTEND_BODY = r"""
         <span class="badge">base_sha256: <span id="plug-target-sha256">–</span></span>
         <span class="badge">git_sha1: <span id="plug-target-gitsha">–</span></span>
         <span class="badge">Källa: <span id="plug-target-source">–</span></span>
+        <span class="badge" id="plug-schema-ok" style="display:none;background:#eaf7ef;border-color:#bfe3cc;color:#114d27">Schema OK</span>
       </div>
 
       <div class="flex" style="gap:8px;margin-top:10px">
@@ -61,17 +60,15 @@ EXTEND_BODY = r"""
 
 EXTEND_JS = r"""
 (function(){
-  // UI hooks
+  // ---- UI refs ----
   function q(id){ return document.getElementById(id); }
-  const bar = document.querySelector('#right .output .bar');
-  if(!bar) return;
+  const bar = document.querySelector('#right .output .bar'); if(!bar) return;
 
   // Lägg Patch-knapp i output-bar
   const openBtn = document.createElement('button');
   openBtn.id='plug-patch-open'; openBtn.textContent='Patch';
   bar.appendChild(openBtn);
 
-  // Modal element
   const modal = q('plug-patch-modal');
   const closeBtn = q('plug-patch-close');
   const srcTA = q('plug-patch-source');
@@ -87,8 +84,8 @@ EXTEND_JS = r"""
   const tgtShaEl = q('plug-target-sha256');
   const tgtGitEl = q('plug-target-gitsha');
   const tgtSrcEl = q('plug-target-source');
+  const schemaOK = q('plug-schema-ok');
 
-  // Busy overlay / logg (återanvänd bas)
   const busy = document.getElementById('busy');
   const worklog = document.getElementById('worklog');
   function log(m){ const t=new Date().toLocaleTimeString(); logEl.textContent += `[patch ${t}] ${m}\n`; logEl.scrollTop=logEl.scrollHeight; if(worklog){ worklog.textContent += `[patch ${t}] ${m}\n`; worklog.scrollTop=worklog.scrollHeight; } }
@@ -114,166 +111,110 @@ EXTEND_JS = r"""
     log(`Läste fil: ${f.name} (${f.size} B)`);
   };
 
-  // --- Diff JSON v1 schema (char-baserad) ---
-  // {
-  //   "protocol_id":"diff_json_v1",
-  //   "target":{ "path":"...", "base_checksum_sha256":"<64hex>", "git_sha1":"optional" },
-  //   "ops":[ { "op":"replace","at":N,"del":M,"ins":"..." } | {"op":"insert","at":N,"ins":"..."} | {"op":"delete","at":N,"del":M} ]
-  // }
+  // ---- Schema (inbyggd) ----
+  const DIFF_SCHEMA = {
+    "$schema":"https://json-schema.org/draft/2020-12/schema",
+    "title":"Diff JSON v1",
+    "type":"object",
+    "additionalProperties": false,
+    "required":["protocol_id","target","ops"],
+    "properties":{
+      "protocol_id":{"const":"diff_json_v1"},
+      "target":{
+        "type":"object",
+        "additionalProperties": false,
+        "required":["base_checksum_sha256"],
+        "properties":{
+          "path":{"type":"string","minLength":1},
+          "base_checksum_sha256":{"type":"string","pattern":"^[0-9a-fA-F]{64}$"},
+          "git_sha1":{"type":"string","pattern":"^[0-9a-fA-F]{40}$"}
+        }
+      },
+      "ops":{
+        "type":"array",
+        "minItems":1,
+        "items":{
+          "oneOf":[
+            {"type":"object","additionalProperties":false,"required":["op","at","ins"],"properties":{
+              "op":{"const":"insert"},"at":{"type":"integer","minimum":0},"ins":{"type":"string"}}},
+            {"type":"object","additionalProperties":false,"required":["op","at","del"],"properties":{
+              "op":{"const":"delete"},"at":{"type":"integer","minimum":0},"del":{"type":"integer","minimum":1}}},          
+            {"type":"object","additionalProperties":false,"required":["op","at","del","ins"],"properties":{
+              "op":{"const":"replace"},"at":{"type":"integer","minimum":0},"del":{"type":"integer","minimum":0},"ins":{"type":"string"}}}
+          ]
+        }
+      },
+      "result_sha256":{"type":"string","pattern":"^[0-9a-fA-F]{64}$"},
+      "meta":{"type":"object"}
+    }
+  };
 
+  // Minimal generisk validator för just detta schema (ingen extern lib)
+  function isObj(x){ return x && typeof x==='object' && !Array.isArray(x); }
+  function isInt(x){ return Number.isInteger(x); }
+  function matchRegex(s, re){ return typeof s==='string' && new RegExp(re).test(s); }
+
+  function validateAgainstSchema(j){
+    const errs = [];
+    if(!isObj(j)) { errs.push('root: måste vara object'); return errs; }
+    const req = ['protocol_id','target','ops'];
+    req.forEach(k=>{ if(!(k in j)) errs.push(`root.required: ${k}`); });
+    if(j.protocol_id!=='diff_json_v1') errs.push('protocol_id måste vara "diff_json_v1"');
+    if(!isObj(j.target)) errs.push('target: måste vara object');
+    else {
+      const t=j.target;
+      if(!matchRegex(t.base_checksum_sha256||'', '^[0-9a-fA-F]{64}$')) errs.push('target.base_checksum_sha256: 64 hex krävs');
+      if('git_sha1' in t && !matchRegex(t.git_sha1, '^[0-9a-fA-F]{40}$')) errs.push('target.git_sha1: 40 hex');
+      if('path' in t && !(typeof t.path==='string' && t.path.length>0)) errs.push('target.path: string>0');
+      const extraT = Object.keys(t).filter(k=>!['path','base_checksum_sha256','git_sha1'].includes(k));
+      if(extraT.length) errs.push('target.additionalProperties: '+extraT.join(','));
+    }
+    if(!Array.isArray(j.ops) || j.ops.length<1) errs.push('ops: array med minst 1 post krävs');
+    else{
+      let lastAt = -1;
+      j.ops.forEach((op,i)=>{
+        if(!isObj(op)) { errs.push(`ops[${i}]: måste vara object`); return; }
+        const typ = op.op;
+        const at  = op.at;
+        if(!isInt(at) || at<0) errs.push(`ops[${i}].at: int>=0`);
+        if(at<lastAt) errs.push('ops måste vara sorterade i stigande at');
+        if(typ==='insert'){
+          if(!('ins' in op) || typeof op.ins!=='string') errs.push(`ops[${i}].ins saknas (insert)`);
+          const extra=Object.keys(op).filter(k=>!['op','at','ins'].includes(k));
+          if(extra.length) errs.push(`ops[${i}].additionalProperties: ${extra.join(',')}`);
+        }else if(typ==='delete'){
+          if(!('del' in op) || !isInt(op.del) || op.del<=0) errs.push(`ops[${i}].del>0 krävs (delete)`);
+          const extra=Object.keys(op).filter(k=>!['op','at','del'].includes(k));
+          if(extra.length) errs.push(`ops[${i}].additionalProperties: ${extra.join(',')}`);
+        }else if(typ==='replace'){
+          if(!('del' in op) || !isInt(op.del) || op.del<0) errs.push(`ops[${i}].del>=0 krävs (replace)`);
+          if(!('ins' in op) || typeof op.ins!=='string') errs.push(`ops[${i}].ins saknas (replace)`);
+          const extra=Object.keys(op).filter(k=>!['op','at','del','ins'].includes(k));
+          if(extra.length) errs.push(`ops[${i}].additionalProperties: ${extra.join(',')}`);
+        }else{
+          errs.push(`ops[${i}].op okänd: ${typ}`);
+        }
+        lastAt = at;
+      });
+    }
+    const allowedRoot = ['protocol_id','target','ops','result_sha256','meta'];
+    const extraRoot = Object.keys(j).filter(k=>!allowedRoot.includes(k));
+    if(extraRoot.length) errs.push('root.additionalProperties: '+extraRoot.join(','));
+    if('result_sha256' in j && !matchRegex(j.result_sha256,'^[0-9a-fA-F]{64}$')) errs.push('result_sha256: 64 hex');
+    if('meta' in j && !isObj(j.meta)) errs.push('meta: måste vara object');
+    return errs;
+  }
+
+  // ---- Diff JSON (semantisk) ----
   function canonText(s){ return (s||'').replace(/\uFEFF/g,'').replace(/\r\n?/g, '\n'); }
-
   async function sha256HexLF(text){
     const enc = new TextEncoder().encode(canonText(text));
     const buf = await crypto.subtle.digest('SHA-256', enc);
     return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
   }
-
   function parseJsonSafe(s){
     try{ return JSON.parse(s); } catch(e){ return { _err:String(e&&e.message||e) }; }
   }
-  function isHex64(x){ return typeof x==='string' && /^[0-9a-f]{64}$/i.test(x); }
-
-  function validateDiffJson(j){
-    if(!j || typeof j!=='object') return 'JSON-objekt saknas.';
-    if(j.protocol_id !== 'diff_json_v1') return 'Fel protocol_id (kräver diff_json_v1).';
-    if(!j.target || typeof j.target!=='object') return 'target saknas.';
-    if(!isHex64(j.target.base_checksum_sha256)) return 'target.base_checksum_sha256 saknas/ogiltig.';
-    if(!Array.isArray(j.ops) || j.ops.length===0) return 'ops saknas eller tom.';
-    // Kontrollera struktur + ordning
-    let lastAt = -1;
-    for(const op of j.ops){
-      if(!op || typeof op!=='object') return 'ogiltig op i ops.';
-      if(op.op==='insert'){
-        if(typeof op.at!=='number' || op.at<0) return 'insert.at ogiltig.';
-        if(typeof op.ins!=='string') return 'insert.ins saknas.';
-      } else if(op.op==='delete'){
-        if(typeof op.at!=='number' || op.at<0) return 'delete.at ogiltig.';
-        if(typeof op.del!=='number' || op.del<=0) return 'delete.del ogiltig.';
-      } else if(op.op==='replace'){
-        if(typeof op.at!=='number' || op.at<0) return 'replace.at ogiltig.';
-        if(typeof op.del!=='number' || op.del<0) return 'replace.del ogiltig.';
-        if(typeof op.ins!=='string') return 'replace.ins saknas.';
-      } else {
-        return `okänd op: ${op.op}`;
-      }
-      if(op.at < lastAt) return 'ops måste vara sorterade i stigande at.';
-      lastAt = op.at;
-    }
-    return null;
-  }
-
-  // Context.json hash-index
-  async function fetchContext(){
-    const r = await fetch('context.json', {cache:'no-store'});
-    if(!r.ok) throw new Error('context.json saknas ('+r.status+')');
-    return await r.json();
-  }
-
-  function buildHashMaps(ctx){
-    const out = { sha256:new Map(), gitsha:new Map(), byPath:new Map() };
-    const idx = (ctx.hash_index)||{};
-    const s256 = idx.sha256_lf || idx.sha256 || {};
-    const gsha = idx.git_sha1 || {};
-    for(const [k,v] of Object.entries(s256)){ if(Array.isArray(v)) v.forEach(p=> out.sha256.set(k, p)); else if(typeof v==='string') out.sha256.set(k,v); }
-    for(const [k,v] of Object.entries(gsha)){ if(Array.isArray(v)) v.forEach(p=> out.gitsha.set(k, p)); else if(typeof v==='string') out.gitsha.set(k,v); }
-    // byPath (för snabb lookup)
-    (function walk(node){
-      if(node && typeof node==='object'){
-        if(node.type==='file' && node.path){ out.byPath.set(node.path, node); }
-        else { Object.values(node).forEach(walk); }
-      }
-    })(ctx.file_structure||{});
-    return out;
-  }
-
-  async function fetchRaw(path){
-    // Försök hämta via GitHub RAW; repo anges i context.json.project_overview
-    try{
-      const ctx = await fetchContext();
-      const repo = (ctx.project_overview&&ctx.project_overview.repository) || 'Engrove/Engrove-Audio-Tools-2.0';
-      const branch = (ctx.project_overview&&ctx.project_overview.branch) || 'main';
-      const url = `https://raw.githubusercontent.com/${repo}/${branch}/${path}`;
-      const r = await fetch(url, {cache:'no-store'});
-      if(!r.ok) throw new Error('HTTP '+r.status);
-      return await r.text();
-    }catch(e){
-      throw new Error('RAW fetch misslyckades: '+e.message);
-    }
-  }
-
-  function parseFilesPayloadFromOut(){
-    // Försök hitta inbäddad JSON i #out
-    const outTxt = document.getElementById('out')?.textContent || '';
-    const m = outTxt.match(/```json([\s\S]*?)```/);
-    if(!m) return null;
-    try{
-      const obj = JSON.parse(m[1]);
-      // förväntad struktur: { files: {path:content,...}, checksums?: {path:sha,...} }
-      if(obj && obj.files && typeof obj.files==='object'){
-        // kanoniserad checksum on-the-fly om saknas
-        return obj;
-      }
-    }catch(_){}
-    return null;
-  }
-
-  async function findBaseText(diffJ, maps){
-    const need = diffJ.target.base_checksum_sha256.toLowerCase();
-    // 1) context.hash_index (sha256_lf)
-    if(maps.sha256.has(need)){
-      const p = maps.sha256.get(need);
-      return { path:p, source:'context.hash_index.sha256_lf', text: await resolveTextFromMapsOrRaw(p, maps) };
-    }
-    // 2) files_payload i #out
-    const payload = parseFilesPayloadFromOut();
-    if(payload){
-      const files = payload.files||{};
-      // checksums finns?
-      if(payload.checksums && payload.checksums[diffJ.target.path||'']){
-        if(payload.checksums[diffJ.target.path] && payload.checksums[diffJ.target.path].toLowerCase()===need){
-          return { path:diffJ.target.path, source:'files_payload.checksums', text: canonText(String(files[diffJ.target.path]||'')) };
-        }
-      }
-      // annars beräkna per fil
-      const keys = Object.keys(files);
-      for(let i=0;i<keys.length;i++){
-        const p = keys[i];
-        const t = canonText(String(files[p]||''));
-        const h = await sha256HexLF(t);
-        if(h===need){ return { path:p, source:'files_payload.computed', text:t }; }
-      }
-    }
-    // 3) git_sha1 → path (context)
-    if(diffJ.target.git_sha1 && maps.gitsha.has(diffJ.target.git_sha1)){
-      const p = maps.gitsha.get(diffJ.target.git_sha1);
-      const t = await resolveTextFromMapsOrRaw(p, maps);
-      const h = await sha256HexLF(t);
-      if(h===need){ return { path:p, source:'git_sha1->RAW', text:t }; }
-      // mismatch → inte godkänt
-      throw new Error('git_sha1 hittad men base_checksum_sha256 matchar inte innehållet.');
-    }
-    // 4) path fallback (om specificerad)
-    if(diffJ.target.path){
-      const p = diffJ.target.path;
-      const t = await resolveTextFromMapsOrRaw(p, maps);
-      const h = await sha256HexLF(t);
-      if(h===need){ return { path:p, source:'path->RAW', text:t }; }
-      throw new Error('Path fanns men base_checksum_sha256 matchar inte. Avbryter.');
-    }
-    throw new Error('Kunde inte hitta basfil via checksum/git_sha1/path.');
-  }
-
-  async function resolveTextFromMapsOrRaw(path, maps){
-    // Om context redan bär content på filnoden (is_content_full) använd den; annars hämta RAW
-    const node = maps.byPath.get(path);
-    if(node && node.is_content_full && typeof node.content==='string'){
-      return canonText(node.content);
-    }
-    const t = await fetchRaw(path);
-    return canonText(t);
-  }
-
   function checkOpsRanges(baseLen, ops){
     let last = -1;
     for(const op of ops){
@@ -289,14 +230,10 @@ EXTEND_JS = r"""
     }
     return null;
   }
-
   function applyOps(base, ops){
-    // Ops definierade mot original-index: håll en running offset
-    let s = base;
-    let shift = 0;
+    let s = base, shift = 0;
     for(const op of ops){
-      const at = op.at|0;
-      const idx = at + shift;
+      const at = op.at|0, idx = at + shift;
       if(op.op==='insert'){
         const ins = op.ins||'';
         s = s.slice(0, idx) + ins + s.slice(idx);
@@ -316,15 +253,100 @@ EXTEND_JS = r"""
     return s;
   }
 
-  function isoName(){ return new Date().toISOString().replace(/:/g,'-').replace(/\..+Z$/,'Z'); }
+  // ---- context.json + index ----
+  async function fetchContext(){
+    const r = await fetch('context.json', {cache:'no-store'});
+    if(!r.ok) throw new Error('context.json saknas ('+r.status+')');
+    return await r.json();
+  }
+  function buildHashMaps(ctx){
+    const out = { sha256:new Map(), gitsha:new Map(), byPath:new Map() };
+    const idx = (ctx.hash_index)||{};
+    const s256 = idx.sha256_lf || idx.sha256 || {};
+    const gsha = idx.git_sha1 || {};
+    for(const [k,v] of Object.entries(s256)){ if(Array.isArray(v)) v.forEach(p=> out.sha256.set(k, p)); else if(typeof v==='string') out.sha256.set(k,v); }
+    for(const [k,v] of Object.entries(gsha)){ if(Array.isArray(v)) v.forEach(p=> out.gitsha.set(k, p)); else if(typeof v==='string') out.gitsha.set(k,v); }
+    (function walk(node){
+      if(node && typeof node==='object'){
+        if(node.type==='file' && node.path){ out.byPath.set(node.path, node); }
+        else { Object.values(node).forEach(walk); }
+      }
+    })(ctx.file_structure||{});
+    return out;
+  }
+  async function fetchRawFromContextPath(path){
+    const ctx = window.__CTX__ || await fetchContext();
+    if(!window.__CTX__) window.__CTX__ = ctx;
+    const repo = (ctx.project_overview&&ctx.project_overview.repository) || 'Engrove/Engrove-Audio-Tools-2.0';
+    const branch = (ctx.project_overview&&ctx.project_overview.branch) || 'main';
+    const url = `https://raw.githubusercontent.com/${repo}/${branch}/${path}`;
+    const r = await fetch(url, {cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    return await r.text();
+  }
+  async function resolveTextFromMapsOrRaw(path, maps){
+    const node = maps.byPath.get(path);
+    if(node && node.is_content_full && typeof node.content==='string'){
+      return canonText(node.content);
+    }
+    const t = await fetchRawFromContextPath(path);
+    return canonText(t);
+  }
+  function parseFilesPayloadFromOut(){
+    const outTxt = document.getElementById('out')?.textContent || '';
+    const m = outTxt.match(/```json([\s\S]*?)```/);
+    if(!m) return null;
+    try{
+      const obj = JSON.parse(m[1]);
+      if(obj && obj.files && typeof obj.files==='object'){ return obj; }
+    }catch(_){}
+    return null;
+  }
+  async function findBaseText(diffJ, maps){
+    const need = diffJ.target.base_checksum_sha256.toLowerCase();
+    if(maps.sha256.has(need)){
+      const p = maps.sha256.get(need);
+      return { path:p, source:'context.hash_index.sha256_lf', text: await resolveTextFromMapsOrRaw(p, maps) };
+    }
+    const payload = parseFilesPayloadFromOut();
+    if(payload){
+      const files = payload.files||{};
+      if(payload.checksums && payload.checksums[diffJ.target.path||'']){
+        if(payload.checksums[diffJ.target.path].toLowerCase()===need){
+          return { path:diffJ.target.path, source:'files_payload.checksums', text: canonText(String(files[diffJ.target.path]||'')) };
+        }
+      }
+      const keys = Object.keys(files);
+      for(let i=0;i<keys.length;i++){
+        const p = keys[i];
+        const t = canonText(String(files[p]||''));
+        const h = await sha256HexLF(t);
+        if(h===need){ return { path:p, source:'files_payload.computed', text:t }; }
+      }
+    }
+    if(diffJ.target.git_sha1 && maps.gitsha.has(diffJ.target.git_sha1)){
+      const p = maps.gitsha.get(diffJ.target.git_sha1);
+      const t = await resolveTextFromMapsOrRaw(p, maps);
+      const h = await sha256HexLF(t);
+      if(h===need){ return { path:p, source:'git_sha1->RAW', text:t }; }
+      throw new Error('git_sha1 hittad men base_checksum_sha256 matchar inte innehållet.');
+    }
+    if(diffJ.target.path){
+      const p = diffJ.target.path;
+      const t = await resolveTextFromMapsOrRaw(p, maps);
+      const h = await sha256HexLF(t);
+      if(h===need){ return { path:p, source:'path->RAW', text:t }; }
+      throw new Error('Path fanns men base_checksum_sha256 matchar inte. Avbryter.');
+    }
+    throw new Error('Kunde inte hitta basfil via checksum/git_sha1/path.');
+  }
 
-  // Tillstånd
-  let lastDiff = null;
-  let lastBase = null;
-  let lastPath = null;
+  // ---- Tillstånd ----
+  let lastDiff = null, lastBase = null, lastPath = null;
 
+  // ---- Validate-knappen ----
   validateBtn.onclick = ()=> withBusy('Validate diff.json', async ()=>{
-    logEl.textContent = '';
+    logEl.textContent = ''; schemaOK.style.display='none';
     applyBtn.disabled = true; copyBtn.disabled = true; dlBtn.disabled = true; previewTA.value = '';
     tgtPathEl.textContent='–'; tgtShaEl.textContent='–'; tgtGitEl.textContent='–'; tgtSrcEl.textContent='–';
 
@@ -332,11 +354,16 @@ EXTEND_JS = r"""
     if(!txt){ log('Ingen JSON.'); return; }
     const j = parseJsonSafe(txt);
     if(j._err){ log('JSON-fel: '+j._err); return; }
-    const err = validateDiffJson(j);
-    if(err){ log('Validering: '+err); return; }
 
+    // 1) Formell schema-validering
+    const schemaErrs = validateAgainstSchema(j);
+    if(schemaErrs.length){ log('Schemafel:\n- '+schemaErrs.join('\n- ')); return; }
+    schemaOK.style.display='inline-block';
+
+    // 2) Leta upp bas via checksum
     try{
-      const ctx = await fetchContext();
+      const ctx = window.__CTX__ || await fetchContext();
+      if(!window.__CTX__) window.__CTX__ = ctx;
       const maps = buildHashMaps(ctx);
       const target = await findBaseText(j, maps);
       lastDiff = j; lastBase = target.text; lastPath = target.path;
@@ -351,6 +378,7 @@ EXTEND_JS = r"""
     }
   });
 
+  // ---- Apply ----
   applyBtn.onclick = ()=> withBusy('Apply', async ()=>{
     if(!lastDiff || !lastBase){ log('Kör Validate först.'); return; }
     const base = lastBase;
@@ -363,7 +391,6 @@ EXTEND_JS = r"""
     }catch(e){
       log('Apply-fel: '+e.message); return;
     }
-    // Verifiera base_checksum stämde (redan gjort), verifiera ev. result_sha256 om finns
     if(typeof lastDiff.result_sha256 === 'string' && lastDiff.result_sha256.length===64){
       const got = await sha256HexLF(out);
       if(got.toLowerCase() !== lastDiff.result_sha256.toLowerCase()){
@@ -377,12 +404,12 @@ EXTEND_JS = r"""
     log('Patch applicerad. Förhandsvisning klar.');
   });
 
+  // ---- Copy/Download exakt preview ----
   copyBtn.onclick = ()=>{
     const s = previewTA.value;
     navigator.clipboard.writeText(s);
     log('Copy: OK (exakt innehåll i rutan).');
   };
-
   dlBtn.onclick = ()=>{
     const s = previewTA.value;
     if(!s){ log('Inget att ladda ner.'); return; }
@@ -390,9 +417,8 @@ EXTEND_JS = r"""
     const blob = new Blob([s], {type:'text/plain'});
     const url = URL.createObjectURL(blob);
     a.href = url;
-    // Filnamn = ursprunglig path:s basename (exakt kod i filen)
     const base = (lastPath || 'patched.txt').split('/').pop();
-    a.download = base; // enligt krav: exakt kodinnehåll; filnamn oförändrat
+    a.download = base; // exakt filnamn
     document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
     log('Download: OK (exakt innehåll).');
   };
