@@ -2765,6 +2765,58 @@
     "projectStatus": "Projektets meta-system, specifikt kontextgenererings-pipelinen, har genomgått en fundamental uppgradering och är nu betydligt mer robust och transparent. Alla kända processfel är åtgärdade. Systemet är stabilt och redo att verifiera att den korrigerade pipelinen nu fungerar som avsett."
   },
   {
+    "sessionId": "46",
+    "date": "2025-08-10T12:00:00Z",
+    "summary": "Infört JSON-first-flöde (discovery_v2 → impl_bootstrap_v1), levererat wrap_json_in_html.py v6.1, definierat autodokumentering (daglig/veckovis) och policy/guardrails.",
+    "actions": [
+      {
+        "title": "Context Builder – komplett leverans",
+        "files": [
+          {
+            "path": "scripts/wrap_json_in_html.py",
+            "changeDescription": "Fullständig omarbetning: discovery v2, impl_bootstrap v1, project_capsule, file_map, budget, hjälpmodal, performance, no-images-regel."
+          }
+        ],
+        "result": "Script redo för bruk."
+      },
+      {
+        "title": "Tvåstegs-pipeline för dokumentation",
+        "files": [
+          {
+            "path": "tools/docbot.py",
+            "changeDescription": "PLAN→GEN (doc_plan_v1/doc_gen_v1) bundlar help/tech-MD med whitelist-commit."
+          },
+          {
+            "path": "tools/docbot.policy.yml",
+            "changeDescription": "Whitelist, denylist, limits, gates (markdownlint/Vale/linkcheck), merge-policy."
+          }
+        ],
+        "result": "Daglig körning möjlig inom ≤50 API-anrop/dygn."
+      },
+      {
+        "title": "Veckorapport och audit",
+        "files": [
+          {
+            "path": "tools/weeklybot.py",
+            "changeDescription": "PLAN/GEN för weekly_report_<ISO-vecka>.md + artefakter (git/test/lint/sast/audit)."
+          }
+        ],
+        "result": "Proaktiv granskning och sammanfattning etablerad."
+      },
+      {
+        "title": "Hårda protokollregler",
+        "files": [
+          {
+            "path": "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md",
+            "changeDescription": "Bindande no-images, modelltaggning, schema, Steg 6 (nya dynamiska protokoll)."
+          }
+        ],
+        "result": "Kontraktsstyrd leverans och spårbarhet."
+      }
+    ],
+    "projectStatus": "Stabilt. Nästa steg: checka in script/policy, sätt cron, aktivera CI-gates."
+  },
+  {
     "sessionId": "42b",
     "date": "2025-08-09T17:15:00Z",
     "summary": "En meta-granskningssession genomfördes där AI-partnern ombads att verifiera sitt eget föregående svar (från session 41) mot de etablerade protokollen. AI:n genomförde en korrekt, detaljerad analys och bekräftade att dess tidigare output var i enlighet med protokoll v4.2. Sessionen avslutades sedan planenligt.",

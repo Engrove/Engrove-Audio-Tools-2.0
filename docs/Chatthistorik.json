@@ -10918,6 +10918,55 @@
     ]
   },
   {
+    "sessionId": "46",
+    "interactions": [
+      {
+        "speakerName": "Jan-Eric Enlund",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Jan-Eric Enlund (human:operator@unknown)",
+        "summary": "Initierar analys av regelverk/AI-protokoll och krav på teknisk arkitektur."
+      },
+      {
+        "speakerName": "Assistant",
+        "model": {
+          "provider": "unknown",
+          "name": "unknown",
+          "version": "unknown"
+        },
+        "speaker": "Assistant (unknown:unknown@unknown)",
+        "summary": "Föreslår JSON-first, K-MOD i Steg A, no-images-regel, två knappar."
+      },
+      {
+        "speakerName": "Jan-Eric Enlund",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Jan-Eric Enlund (human:operator@unknown)",
+        "summary": "Krav: lokalt LM, nattliga lärpass, hantering av hela kodbasen, API-budget."
+      },
+      {
+        "speakerName": "Assistant",
+        "model": {
+          "provider": "unknown",
+          "name": "unknown",
+          "version": "unknown"
+        },
+        "speaker": "Assistant (unknown:unknown@unknown)",
+        "summary": "Levererar komplett wrap_json_in_html.py och doc/weekly-botar + policy."
+      }
+    ],
+    "note": {
+      "coverage": "partial",
+      "coverageReason": "Fullständig turn-förteckning kan inte återskapas här; plattformslogg krävs."
+    }
+  },
+  {
     "sessionId": "42b",
     "interactions": [
       {

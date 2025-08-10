@@ -2632,6 +2632,57 @@
     }
   },
   {
+    "sessionId": "46",
+    "generatedBy": {
+      "speakerName": "Frankensteen",
+      "model": {
+        "provider": "unknown",
+        "name": "unknown",
+        "version": "unknown"
+      },
+      "speaker": "Frankensteen (unknown:unknown@unknown)"
+    },
+    "date": "2025-08-10T12:00:00Z",
+    "aiQualitativeSummary": "Målet uppnått: kontraktsstyrd JSON-first, tydliga guardrails, låg anropsbudget.",
+    "scorecard": {
+      "efficacy": {
+        "score": 85,
+        "weight": 0.4,
+        "weightedScore": 34.0
+      },
+      "efficiency": {
+        "score": 80,
+        "weight": 0.3,
+        "weightedScore": 24.0
+      },
+      "robustness": {
+        "score": 78,
+        "weight": 0.3,
+        "weightedScore": 23.4
+      },
+      "finalScore": 81.4
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 2,
+      "selfCorrections": 2,
+      "externalCorrections": 0,
+      "protocolActivations": {
+        "psv": 1,
+        "helpMeGod": 0,
+        "stalemate": 0
+      },
+      "heuristicsTriggered": [
+        "H-20250810-01",
+        "H-20250810-02"
+      ]
+    },
+    "improvementSuggestion": {
+      "pattern": "Automatisk discovery kan missa kritiska filer om prioritering enbart är storleksbaserad.",
+      "proposedHeuristicId": "H-20250810-03"
+    }
+  },
+  {
     "sessionId": "42b",
     "generatedBy": {
       "speakerName": "Frankensteen",
