@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-wrap_json_in_html.py — AI Context Builder v7.0 (JSON-first, K-MOD + D-MOD)
+wrap_json_in_html.py — AI Context Builder v7.2 (JSON-first, K-MOD + D-MOD, STRICT RETURN_CONTRACT)
 
 Kör:
   python wrap_json_in_html.py out.html
@@ -14,15 +14,13 @@ Läser lokal context.json (skapas av generate_full_context.py) med fält:
   "ai_performance_metrics": {... valfritt ...}
 }
 
-Nyheter v7.0:
-- Discovery Steg A har två lägen:
-  • K-MOD (utforskning) — Max-Context Discovery (upp till ~2 MB med head/fulltext)
-  • D-MOD (Deterministic) — kandidatlista med ID:n, SHA256, constraints + rules_hash
-- D-MOD return-kontrakt och validering (echo_rules_hash, selected_ids, notes).
-- Auto-select i UI från både K-MOD (selected_files) och D-MOD (selected_ids).
-- Alltid bildförbud: obligatory_rules += "forbid_image_generation".
-
-OBS: RAW läsning pekar mot GitHub main-branch; justera RAW om du kör lokalt file://.
+Nyheter v7.2:
+- STRICT RETURN_CONTRACT inbakat i Discovery-prompt (K-MOD & D-MOD).
+- Strikt JSON-validering för auto-select (inga regexp).
+- K-MOD: Max-Context Discovery (~2 MB), kandidater med faktisk content.
+- D-MOD: deterministisk kandidatuppsättning med ID, SHA, constraints + rules_hash.
+- Auto-select från både paths (K-MOD) och IDs (D-MOD).
+- Hård bildförbudsregel i alla lägen: "forbid_image_generation".
 """
 import os, sys
 
@@ -31,7 +29,7 @@ HTML = r"""<!DOCTYPE html>
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>AI Context Builder v7.0 – JSON-first (K-MOD + D-MOD)</title>
+<title>AI Context Builder v7.2 – JSON-first (K-MOD + D-MOD, STRICT)</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 :root{
@@ -137,7 +135,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       <button id="implBtn" class="primary">Skapa uppgift</button>
     </div>
 
-    <textarea id="instruction" placeholder="Kort mål (≤200 tecken) ELLER klistra in Discovery-svar (JSON)…"></textarea>
+    <textarea id="instruction" placeholder="Kort mål (≤200 tecken) ELLER klistra in Discovery-svar (STRICT JSON)…"></textarea>
     <div id="banner" class="banner"></div>
 
     <div class="output">
@@ -145,7 +143,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         <button id="copy" disabled>Copy</button>
         <button id="download" disabled>Download</button>
       </div>
-      <pre id="out">Här visas genererad Discovery-prompt (K-MOD/D-MOD) eller impl_bootstrap JSON.</pre>
+      <pre id="out">Här visas genererad Discovery-prompt (STRICT K-MOD/D-MOD) eller impl_bootstrap JSON.</pre>
       <div class="small">JSON här är avsett som <b>första prompt</b> i en ny “dum” modelsession utan kontext.</div>
     </div>
   </div>
@@ -191,11 +189,11 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       <ol>
         <li><b>Skapa nästa arbete</b>:
           <ul>
-            <li><b>K-MOD</b>: Max-Context Discovery (intro + candidates med content + mini-graf).</li>
-            <li><b>D-MOD</b>: Deterministiskt urval (ID:n, SHA256, constraints, rules_hash). Modellen returnerar <code>selected_ids</code> + <code>notes</code>.</li>
+            <li><b>K-MOD</b>: Max-Context Discovery (intro + candidates med content + mini-graf + STRICT RETURN_CONTRACT).</li>
+            <li><b>D-MOD</b>: Deterministiskt urval (ID:n, SHA256, constraints, rules_hash + STRICT RETURN_CONTRACT).</li>
           </ul>
         </li>
-        <li>Klistra in modellsvar i rutan → auto-validering och auto-select.</li>
+        <li>Klistra in modellsvar i rutan → strikt validering och auto-select.</li>
         <li><b>Skapa uppgift</b>: genererar <i>impl_bootstrap_v1</i> med full/chunk/stub + file_map.</li>
         <li>Starta ny tom modelsession med bootstrap-JSON. Flöde: PLAN-JSON → “OK” → GEN-JSON (patch/tester).</li>
       </ol>
@@ -221,7 +219,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
 <script>
 (function(){
-  // Justera RAW-källa vid behov:
+  // Justera RAW-källa vid behov (GitHub Pages → raw.githubusercontent):
   const RAW = 'https://raw.githubusercontent.com/Engrove/Engrove-Audio-Tools-2.0/main/';
   const IMAGE_EXT = ['png','jpg','jpeg','gif','webp','svg'];
 
@@ -275,7 +273,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
   // MUST-regler inkl. bildförbud
   const MUST_STRICT = [
-    "no-images",
+    "forbid_image_generation",
     "PLAN->GEN",
     "unified-patch-if->50",
     "no-edit-nonfull",
@@ -283,7 +281,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     "add-tests-run-cmds"
   ];
 
-  const KMOD_BANNER = "MODE: K-MOD (Brainstorming/Discovery). Ingen kod. Endast JSON enligt schema.";
+  const KMOD_BANNER = "MODE: K-MOD (Brainstorming/Discovery). Ingen kod. Endast JSON enligt schema och RETURN_CONTRACT.";
   const DMOD_BANNER = "MODE: D-MOD (Deterministic Discovery). Ingen kod. Endast JSON enligt return_contract.";
   const IMAGE_GUARD_BANNER = "BILDREGEL: ALDRIG generera bilder i denna session om det inte uttryckligen efterfrågas.";
 
@@ -343,7 +341,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       const arr = Array.from(new Uint8Array(buf));
       return arr.map(b=>b.toString(16).padStart(2,'0')).join('');
     }
-    // Fallback (inte kryptografiskt, men undantagsvis)
+    // Fallback (icke-krypto)
     let h=0; for(let i=0;i<enc.length;i++){ h=(h*31 + enc[i])>>>0; }
     return h.toString(16);
   }
@@ -549,6 +547,13 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       li = parent;
     }
   }
+  function autoSelectPaths(paths){
+    const all = Array.from(els.tree.querySelectorAll('input[type="checkbox"]'));
+    paths.forEach(p=>{
+      const cb = all.find(x=>x.dataset.path===p);
+      if(cb){ cb.checked = true; openParentsFor(p); }
+    });
+  }
 
   // Core docs quick select
   const CORE = [
@@ -734,7 +739,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   }
 
   async function buildFileMapMiniFromCandidates(cands){
-    // Skapa enkel graf (imports mellan kandidater). ID redan satt på cands.
+    // Mini-graf (imports mellan kandidater)
     const pathToId = new Map(cands.map(c=>[c.path, c.id]));
     const nodes = cands.map(c=>({ id: c.id, path: c.path, group: (/^src\//.test(c.path) ? 'src' : /^docs\//.test(c.path) ? 'docs' : /^scripts\//.test(c.path) ? 'scripts' : 'other'), role: inferRole(c.path) }));
     const edges = [];
@@ -752,6 +757,35 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     return { nodes, edges: edges.slice(0, 800) };
   }
 
+  // STRICT RETURN_CONTRACT (K-MOD schema)
+  function returnContractKMOD(){
+    return {
+      KMOD:{
+        type:"object",
+        required:["protocol_id","mode","selected_files"],
+        properties:{
+          protocol_id:{ const:"discovery_v2" },
+          mode:{ const:"K-MOD" },
+          selected_files:{
+            type:"array",
+            minItems:2,
+            items:{
+              type:"object",
+              required:["path","embed","why"],
+              properties:{
+                path:{ type:"string" },
+                embed:{ enum:["full","chunk","stub"] },
+                why:{ type:"string", maxLength:200 }
+              },
+              additionalProperties:false
+            }
+          }
+        },
+        additionalProperties:true
+      }
+    };
+  }
+
   async function buildDiscoveryPromptKMOD(){
     const task = getTask();
     const intro = await buildProjectIntro(task);
@@ -766,7 +800,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       if(used + cost > DEEP.CAP_BYTES) continue;
       used += cost; picked.push({ id: nextId++, ...s });
     }
-    LAST_CANDIDATES = picked.slice(); // lagra för auto-select från K-MOD om modellen svarar med paths
+    LAST_CANDIDATES = picked.slice(); // lagra för auto-select
 
     const FM = await buildFileMapMiniFromCandidates(picked);
 
@@ -786,20 +820,22 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       risks:[],
       test_plan:[],
       done_when:["tests_green","lint_ok","types_ok"],
-      _note:"Välj endast från candidate_files. Sätt embed={'full','chunk','stub'}. Motivera kort varje val."
+      _note:"Välj endast objekt från candidate_files. Sätt embed={'full','chunk','stub'}. Motivera kort varje val."
     };
 
     const prompt = [
       "SESSION: PLANERA NÄSTA ARBETE (Discovery)",
       KMOD_BANNER,
       IMAGE_GUARD_BANNER,
-      "KRAV: Svara ENBART med giltig JSON enligt schema. Ingen kod.",
+      "KRAV: Svara ENBART med giltig JSON enligt schema och RETURN_CONTRACT. Ingen kod.",
       "- Välj ENDAST objekt från CANDIDATE_FILES.",
       "- Inga placeholders eller påhittade vägar.",
       "- Minst 2 objekt i 'selected_files'.",
       "- 'embed' ∈ {'full','chunk','stub'}.",
       "SCHEMA:",
       JSON.stringify(schema, null, 2),
+      "RETURN_CONTRACT:",
+      JSON.stringify(returnContractKMOD(), null, 2),
       "PROJECT_INTRO:",
       JSON.stringify(intro, null, 2),
       "CANDIDATE_FILES:",
@@ -824,6 +860,35 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     SELECTION: { only_ids: true, min: 2, max: 12, allow_paths: ["src/**","docs/**","scripts/**"], deny_paths: ["infra/prod/**"] }
   };
 
+  function globToRegex(glob){
+    return new RegExp('^'+glob.split('**').join('@@').replace(/[.+^${}()|[\]\\]/g,'\\$&').split('*').join('[^/]*').split('@@').join('.*')+'$');
+  }
+  function pathAllowed(p){
+    const allow = DM.SELECTION.allow_paths.map(globToRegex);
+    const deny  = DM.SELECTION.deny_paths.map(globToRegex);
+    const ok = allow.some(r=>r.test(p));
+    const bad = deny.some(r=>r.test(p));
+    return ok && !bad;
+  }
+
+  // STRICT RETURN_CONTRACT (D-MOD schema)
+  function returnContractDMOD(){
+    return {
+      DMOD:{
+        type:"object",
+        required:["protocol_id","mode","echo_rules_hash","selected_ids","notes"],
+        properties:{
+          protocol_id:{ const:"discovery_dmod_v1" },
+          mode:{ const:"D-MOD" },
+          echo_rules_hash:{ type:"string" },
+          selected_ids:{ type:"array", minItems:2, items:{ type:"integer" } },
+          notes:{ type:"object", additionalProperties:{ type:"string", maxLength:200 } }
+        },
+        additionalProperties:false
+      }
+    };
+  }
+
   function dmodHardRules(){
     return [
       "HÅRDA D-MOD-REGLER:",
@@ -832,19 +897,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       "- Antal val: min="+DM.SELECTION.min+", max="+DM.SELECTION.max+".",
       "- Echo 'rules_hash' oförändrat."
     ].join("\n");
-  }
-
-  function globToRegex(glob){
-    // enkel glob: ** -> .*, * -> [^/]*, . escapas
-    return new RegExp('^'+glob.split('**').join('@@').replace(/[.+^${}()|[\]\\]/g,'\\$&').split('*').join('[^/]*').split('@@').join('.*')+'$');
-  }
-
-  function pathAllowed(p){
-    const allow = DM.SELECTION.allow_paths.map(globToRegex);
-    const deny  = DM.SELECTION.deny_paths.map(globToRegex);
-    const ok = allow.some(r=>r.test(p));
-    const bad = deny.some(r=>r.test(p));
-    return ok && !bad;
   }
 
   async function buildDiscoveryPromptDMOD(){
@@ -857,7 +909,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     for(const p of ranked){
       if(picked.length>=DM.MAX_FILES) break;
       if(!pathAllowed(p)) continue;
-      const meta = FILE_INFO.get(p)||{};
       const s = await summarizeForDiscoveryDeep(p, task);
       const sizeCost = new Blob([s.content]).size + 900;
       if(used + sizeCost > DM.CAP_BYTES) continue;
@@ -873,7 +924,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     const obligatory_rules = ["forbid_image_generation"];
     const selection_constraints = DM.SELECTION;
     const rules_hash = await sha256Hex(JSON.stringify({ obligatory_rules, selection_constraints }));
-
     LAST_RULES_HASH = rules_hash;
 
     // Schema + return_contract
@@ -900,6 +950,8 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       dmodHardRules(),
       "SCHEMA:",
       JSON.stringify(schema, null, 2),
+      "RETURN_CONTRACT:",
+      JSON.stringify(returnContractDMOD(), null, 2),
       "PROJECT_INTRO:",
       JSON.stringify(intro, null, 2),
       "CANDIDATE_FILES:",
@@ -918,7 +970,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       "- 'echo_rules_hash' måste exakt matcha 'rules_hash'."
     ].join("\n");
 
-    // Ersätt placeholder i SCHEMA med faktisk hash (i prompten)
     return prompt.replace('"rules_hash":"<compute_and_echo_this>"', '"rules_hash":"'+rules_hash+'"');
   }
 
@@ -1008,7 +1059,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   }
 
   async function buildFileMap(nodesList){
-    // Reuse K-MOD mini-graf men utan ID-krav
     const idByPath = new Map();
     const nodes = [];
     nodesList.forEach((n, idx)=>{
@@ -1178,7 +1228,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       const prompt = (mode==='DMOD') ? await buildDiscoveryPromptDMOD() : await buildDiscoveryPromptKMOD();
       els.out.textContent = prompt;
       els.copy.disabled = els.download.disabled = false;
-      showBanner((mode==='DMOD'?'D-MOD':'K-MOD')+' Discovery-prompt skapad. Kör i modell, klistra svaret här.', 'ok');
+      showBanner((mode==='DMOD'?'D-MOD':'K-MOD')+' Discovery-prompt skapad. Kör i modell, klistra STRICT JSON-svaret här.', 'ok');
     }catch(e){
       showBanner('Fel vid Discovery: '+e.message, 'err');
     }
@@ -1195,50 +1245,52 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     }
   };
 
-  // Tolka input (task- eller Discovery-svar)
-  els.instruction.addEventListener('input', async ()=>{
+  // STRICT input-hanterare: endast giltig JSON enligt RETURN_CONTRACT
+  els.instruction.addEventListener('input', ()=>{
     clearBanner();
-    const text = els.instruction.value.trim();
-    if(!text) return;
+    const t = els.instruction.value.trim();
+    if(!t) return;
     try{
-      const parsed = JSON.parse(text);
+      const j = JSON.parse(t);
 
-      // D-MOD svar?
-      if(parsed && parsed.protocol_id==='discovery_dmod_v1' && Array.isArray(parsed.selected_ids)){
-        const hashOk = (parsed.echo_rules_hash && LAST_RULES_HASH && parsed.echo_rules_hash===LAST_RULES_HASH);
-        if(!hashOk) showBanner('Varning: echo_rules_hash matchar inte rules_hash från prompten.', 'warn');
-        const ids = new Set(parsed.selected_ids);
-        const paths = LAST_CANDIDATES.filter(c=>ids.has(c.id)).map(c=>c.path);
+      // D-MOD strikt
+      if(j && j.protocol_id==='discovery_dmod_v1' && j.mode==='D-MOD' &&
+         Array.isArray(j.selected_ids) && typeof j.echo_rules_hash==='string'){
+        if(LAST_RULES_HASH && j.echo_rules_hash!==LAST_RULES_HASH){
+          showBanner('echo_rules_hash ≠ rules_hash (från prompten).', 'warn');
+        }
+        const idset = new Set(j.selected_ids);
+        const paths = LAST_CANDIDATES.filter(c=>idset.has(c.id)).map(c=>c.path);
+        if(paths.length===0){ showBanner('D-MOD: Inga matchande ID:n i senaste kandidatuppsättning.', 'err'); return; }
         autoSelectPaths(paths);
-        showBanner(`D-MOD val: ${paths.length} filer auto-valda.`, 'ok');
+        showBanner(`D-MOD: ${paths.length} filer auto-valda.`, 'ok');
         return;
       }
 
-      // K-MOD-kompatibelt (selected_files med path/objekt)
-      if(parsed && Array.isArray(parsed.selected_files)){
-        const paths = parsed.selected_files.map(o => (typeof o==='string') ? o : o.path).filter(Boolean);
+      // K-MOD strikt
+      if(j && j.protocol_id==='discovery_v2' && j.mode==='K-MOD' &&
+         Array.isArray(j.selected_files) && j.selected_files.length>=2){
+        // kontrollera struktur på varje item
+        const valid = j.selected_files.every(it=>{
+          return it && typeof it.path==='string' &&
+                 ['full','chunk','stub'].includes(it.embed) &&
+                 typeof it.why==='string';
+        });
+        if(!valid){ showBanner('K-MOD: selected_files har fel struktur.', 'err'); return; }
+
+        const paths = j.selected_files.map(o=>o.path);
+        const unknown = paths.filter(p=>!FILES.includes(p));
+        if(unknown.length){ showBanner('Okända paths: '+unknown.slice(0,5).join(', '), 'warn'); }
         autoSelectPaths(paths);
-        showBanner(`K-MOD val: ${paths.length} filer auto-valda.`, 'ok');
+        showBanner(`K-MOD: ${paths.length} filer auto-valda.`, 'ok');
         return;
       }
 
-      // Äldre schema (filesToSelect)
-      if(parsed && Array.isArray(parsed.filesToSelect)){
-        autoSelectPaths(parsed.filesToSelect);
-        showBanner(`Val: ${parsed.filesToSelect.length} filer auto-valda.`, 'ok');
-        return;
-      }
-      // Annars tolka som “task” sträng — inget att göra
-    }catch(_){ /* tolka som task-text */ }
+      showBanner('JSON är giltig men matchar inte K-MOD/DMOD RETURN_CONTRACT.', 'warn');
+    }catch(e){
+      showBanner('Ogiltig JSON: '+e.message, 'err');
+    }
   });
-
-  function autoSelectPaths(paths){
-    const all = Array.from(els.tree.querySelectorAll('input[type="checkbox"]'));
-    paths.forEach(p=>{
-      const cb = all.find(x=>x.dataset.path===p);
-      if(cb){ cb.checked = true; openParentsFor(p); }
-    });
-  }
 
   // Hjälpmodal
   els.helpBtn.onclick = ()=> els.helpModal.classList.add('show');
@@ -1360,7 +1412,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       CODE_FILES = FILES.filter(p=>isCodeLike(p) && !IMAGE_EXT.includes((p.split('.').pop()||'').toLowerCase()));
       els.tree.innerHTML = '';
       renderTree(ctx.file_structure, els.tree, '');
-      showBanner('Context laddad. Fortsätt med Steg A (K-MOD/D-MOD) eller Steg B.', 'ok');
+      showBanner('Context laddad. Fortsätt med Steg A (STRICT K-MOD/D-MOD) eller Steg B.', 'ok');
     })
     .catch(e=>{
       els.tree.innerHTML = '<p style="color:#b00020">Kunde inte läsa context.json: '+e.message+'</p>';
