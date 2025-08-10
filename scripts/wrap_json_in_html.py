@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-wrap_json_in_html.py — AI Context Builder v7.2 (JSON-first, K-MOD + D-MOD, STRICT RETURN_CONTRACT)
+wrap_json_in_html.py — AI Context Builder v7.3 (CTA for all JSON, K-MOD + D-MOD, STRICT)
 
 Kör:
-  python wrap_json_in_html.py out.html
+  python scripts/wrap_json_in_html.py out.html
 
 Läser lokal context.json (skapas av generate_full_context.py) med fält:
 {
@@ -14,13 +14,14 @@ Läser lokal context.json (skapas av generate_full_context.py) med fält:
   "ai_performance_metrics": {... valfritt ...}
 }
 
-Nyheter v7.2:
-- STRICT RETURN_CONTRACT inbakat i Discovery-prompt (K-MOD & D-MOD).
-- Strikt JSON-validering för auto-select (inga regexp).
-- K-MOD: Max-Context Discovery (~2 MB), kandidater med faktisk content.
-- D-MOD: deterministisk kandidatuppsättning med ID, SHA, constraints + rules_hash.
-- Auto-select från både paths (K-MOD) och IDs (D-MOD).
-- Hård bildförbudsregel i alla lägen: "forbid_image_generation".
+v7.3:
+- CTA-feature inbäddad i alla JSON-utdata: {"call_to_action": "...", "json_only": true}.
+- Discovery: producerar både bootstrap.md (CTA först) och bootstrap.json (STRICT).
+- D-MOD: rules_hash + echo-verifiering, endast IDs.
+- K-MOD: paths, embed-validation.
+- Implementation: impl_bootstrap_v1.json + impl_bootstrap_v1.md med CTA.
+- Strikt JSON-validering i input (inga regexp).
+- Bildförbud som obligatorisk regel i alla flöden.
 """
 import os, sys
 
@@ -29,7 +30,7 @@ HTML = r"""<!DOCTYPE html>
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>AI Context Builder v7.2 – JSON-first (K-MOD + D-MOD, STRICT)</title>
+<title>AI Context Builder v7.3 – CTA JSON-first (K-MOD + D-MOD)</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 :root{
@@ -143,7 +144,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         <button id="copy" disabled>Copy</button>
         <button id="download" disabled>Download</button>
       </div>
-      <pre id="out">Här visas genererad Discovery-prompt (STRICT K-MOD/D-MOD) eller impl_bootstrap JSON.</pre>
+      <pre id="out">Här visas genererad Discovery (bootstrap.md + bootstrap.json) eller impl_bootstrap (md + json).</pre>
       <div class="small">JSON här är avsett som <b>första prompt</b> i en ny “dum” modelsession utan kontext.</div>
     </div>
   </div>
@@ -194,7 +195,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
           </ul>
         </li>
         <li>Klistra in modellsvar i rutan → strikt validering och auto-select.</li>
-        <li><b>Skapa uppgift</b>: genererar <i>impl_bootstrap_v1</i> med full/chunk/stub + file_map.</li>
+        <li><b>Skapa uppgift</b>: genererar <i>impl_bootstrap_v1</i> (md + json) med full/chunk/stub + file_map.</li>
         <li>Starta ny tom modelsession med bootstrap-JSON. Flöde: PLAN-JSON → “OK” → GEN-JSON (patch/tester).</li>
       </ol>
     </main>
@@ -219,7 +220,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
 <script>
 (function(){
-  // Justera RAW-källa vid behov (GitHub Pages → raw.githubusercontent):
   const RAW = 'https://raw.githubusercontent.com/Engrove/Engrove-Audio-Tools-2.0/main/';
   const IMAGE_EXT = ['png','jpg','jpeg','gif','webp','svg'];
 
@@ -255,23 +255,22 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     compact:   document.getElementById('compact')
   };
 
-  // Discovery mode (radio)
+  // Discovery mode radio
   function currentDiscMode(){
-    const el = document.querySelector('input[name="discMode"]:checked');
-    return el ? el.value : 'KMOD';
+    const el = document.querySelector('input[name="discMode"]:checked'); return el ? el.value : 'KMOD';
   }
 
   // State
   let ctx = null;
   let FILES = [];
   let CODE_FILES = [];
-  let FILE_INFO = new Map(); // path -> {size, sha256?, lang?}
+  let FILE_INFO = new Map();
 
-  // För D-MOD: senaste kandidater och rules_hash
-  let LAST_CANDIDATES = []; // [{id, path, ...}]
+  // För D-MOD
+  let LAST_CANDIDATES = [];
   let LAST_RULES_HASH = null;
 
-  // MUST-regler inkl. bildförbud
+  // MUST-regler
   const MUST_STRICT = [
     "forbid_image_generation",
     "PLAN->GEN",
@@ -286,23 +285,15 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   const IMAGE_GUARD_BANNER = "BILDREGEL: ALDRIG generera bilder i denna session om det inte uttryckligen efterfrågas.";
 
   // ---------- Utils ----------
-  function showBanner(msg, kind='warn'){
-    els.banner.textContent = msg;
-    els.banner.className = 'banner ' + (kind==='err'?'err':kind==='ok'?'ok':'');
-    els.banner.style.display = 'block';
-  }
-  function clearBanner(){ els.banner.style.display = 'none'; els.banner.textContent=''; els.banner.className='banner'; }
+  function showBanner(msg, kind='warn'){ els.banner.textContent=msg; els.banner.className='banner '+(kind==='err'?'err':kind==='ok'?'ok':''); els.banner.style.display='block'; }
+  function clearBanner(){ els.banner.style.display='none'; els.banner.textContent=''; els.banner.className='banner'; }
 
   function flattenPaths(node, prefix='', out=[]){
     Object.keys(node).sort().forEach(k=>{
       const it = node[k], p = prefix ? `${prefix}/${k}` : k;
       if(it.type==='file'){
         out.push(it.path || p);
-        FILE_INFO.set(it.path || p, {
-          size: it.size || null,
-          sha256: it.sha256 || null,
-          lang: guessLang(it.path || p)
-        });
+        FILE_INFO.set(it.path || p, { size: it.size || null, sha256: it.sha256 || null, lang: guessLang(it.path || p) });
       }else{
         flattenPaths(it, p, out);
       }
@@ -310,7 +301,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     return out;
   }
   function isCodeLike(p){
-    const ext = (p.split('.').pop()||'').toLowerCase();
+    const ext=(p.split('.').pop()||'').toLowerCase();
     return ['py','js','jsx','ts','tsx','vue','json','md','html','css','yml','yaml','toml'].includes(ext);
   }
   function guessLang(p){
@@ -328,22 +319,16 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
   async function fetchText(path){
-    const r = await fetch(RAW+path, {cache:'no-store'});
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    return await r.text();
+    const r = await fetch(RAW+path, {cache:'no-store'}); if(!r.ok) throw new Error('HTTP '+r.status); return await r.text();
   }
 
-  // WebCrypto SHA-256 (hex)
   async function sha256Hex(text){
     const enc = new TextEncoder().encode(text);
-    if(window.crypto && crypto.subtle && crypto.subtle.digest){
+    if(window.crypto && crypto.subtle){
       const buf = await crypto.subtle.digest('SHA-256', enc);
-      const arr = Array.from(new Uint8Array(buf));
-      return arr.map(b=>b.toString(16).padStart(2,'0')).join('');
+      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
     }
-    // Fallback (icke-krypto)
-    let h=0; for(let i=0;i<enc.length;i++){ h=(h*31 + enc[i])>>>0; }
-    return h.toString(16);
+    let h=0; for(let i=0;i<enc.length;i++){ h=(h*31 + enc[i])>>>0; } return h.toString(16);
   }
 
   // ---------- Heuristik ----------
@@ -389,11 +374,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   function isCriticalForTask(path, task){
     const t=(task||'').toLowerCase();
     const p=path.toLowerCase();
-    const critSub = [
-      'comparison','compare','data-explorer','explorer',
-      'filters.js','transformer.js','comparisonstore','comparisonmodal.vue',
-      'dataexplorerpage.vue','explorerstore.js','state.js'
-    ];
+    const critSub = ['comparison','compare','data-explorer','explorer','filters.js','transformer.js','comparisonstore','comparisonmodal.vue','dataexplorerpage.vue','explorerstore.js','state.js'];
     if(critSub.some(k=>p.includes(k))) return true;
     if(['package.json','vite.config.js','index.html','src/app/main.js','src/main.js','src/app/router.js'].includes(path)) return true;
     const first = (t.split(/\s+/)[0]||'').replace(/[^a-z0-9]/g,'');
@@ -402,35 +383,24 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   }
 
   function buildFileRoleGuesses(paths, limit=80){
-    const out=[];
-    const pick = paths.filter(p=>isCodeLike(p)).slice(0, limit);
+    const out=[]; const pick = paths.filter(p=>isCodeLike(p)).slice(0, limit);
     pick.forEach(p=> out.push(`- ${p} (${guessLang(p)}): ${inferRole(p)}`));
-    [
-      'scripts/wrap_json_in_html.py',
-      'scripts/generate_full_context.py',
-      'package.json',
-      'src/app/main.js',
-      'src/main.js'
-    ].forEach(p=>{
-      if(paths.includes(p) && !out.find(line=>line.includes(p))){
-        out.unshift(`- ${p} (${guessLang(p)}): ${inferRole(p)}`);
-      }
+    ['scripts/wrap_json_in_html.py','scripts/generate_full_context.py','package.json','src/app/main.js','src/main.js'].forEach(p=>{
+      if(paths.includes(p) && !out.find(line=>line.includes(p))){ out.unshift(`- ${p} (${guessLang(p)}): ${inferRole(p)}`); }
     });
     return out.join("\n");
   }
 
   async function buildProjectCapsule(){
-    const has = (p)=> FILES.includes(p);
+    const has=(p)=>FILES.includes(p);
     let name='Engrove Audio Tools';
     let purpose='Webbapp med AI Context Builder (Vue/Vite) + protokollstyrt AI-flöde';
-    const stack = [];
-    if(has('vite.config.js')) stack.push('Vite');
+    const stack=[]; if(has('vite.config.js')) stack.push('Vite');
     if(FILES.some(p=>p.endsWith('.vue'))) stack.push('Vue 3');
     if(FILES.some(p=>p.endsWith('.ts'))) stack.push('TypeScript'); else stack.push('JavaScript');
-    if(FILES.some(p=>p.startsWith('scripts/') && p.endsWith('.py'))) stack.push('Python-scripts');
+    if(FILES.some(p=>p.startswith && p.startswith('scripts/')) || FILES.some(p=>p.startswith?false:p)) stack.push('Python-scripts')
 
-    const entry_points = [];
-    ['index.html','src/app/main.js','src/main.js','src/app/router.js'].forEach(p=>{ if(has(p)) entry_points.push(p); });
+    const entry_points=[]; ['index.html','src/app/main.js','src/main.js','src/app/router.js'].forEach(p=>{ if(has(p)) entry_points.push(p); });
 
     let run_cmd='npm run dev', build_cmd='npm run build', test_cmd='saknas', lint_cmd='saknas';
     try{
@@ -446,15 +416,8 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         }
       }
     }catch(_){}
-
     const dirs = Array.from(new Set(FILES.map(p=>p.split('/')[0]))).filter(d=>!d.startsWith('.')).slice(0,10);
-    const invariants = [
-      "PLAN→GEN (PLAN-JSON → OK → GEN-JSON)",
-      "Unified patch (>50 rader) när relevant",
-      "Ändra ej filer med is_content_full=false",
-      "ALDRIG generera bilder utan uttrycklig begäran"
-    ];
-
+    const invariants = ["PLAN→GEN (PLAN-JSON → OK → GEN-JSON)","Unified patch (>50 rader) när relevant","Ändra ej filer med is_content_full=false","ALDRIG generera bilder utan uttrycklig begäran"];
     return { name, purpose, stack, entry_points, run_cmd, build_cmd, test_cmd, lint_cmd, invariants, dirs };
   }
 
@@ -463,44 +426,28 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     const ul = document.createElement('ul');
     const keys = Object.keys(node).sort((a,b)=>{
       const aF = node[a].type==='file', bF = node[b].type==='file';
-      if(aF && !bF) return 1;
-      if(!aF && bF) return -1;
-      return a.localeCompare(b);
+      if(aF && !bF) return 1; if(!aF && bF) return -1; return a.localeCompare(b);
     });
     keys.forEach(k=>{
       const it = node[k];
       const p = base ? `${base}/${k}` : k;
       const li = document.createElement('li');
 
-      const label = document.createElement('label');
-      label.className = 'fileline';
-
-      const cb = document.createElement('input');
-      cb.type='checkbox'; cb.dataset.path = p;
-      label.appendChild(cb);
-
+      const label = document.createElement('label'); label.className='fileline';
+      const cb = document.createElement('input'); cb.type='checkbox'; cb.dataset.path=p; label.appendChild(cb);
       const icon = document.createElement('span');
-      icon.textContent = (it.type==='file'
-        ? (IMAGE_EXT.includes((k.split('.').pop()||'').toLowerCase())?'🖼️':'📄')
-        : '📁');
+      icon.textContent = (it.type==='file' ? (IMAGE_EXT.includes((k.split('.').pop()||'').toLowerCase())?'🖼️':'📄') : '📁');
       label.appendChild(icon);
-
-      const txt = document.createElement('a'); txt.href='#'; txt.textContent = ' '+k; txt.dataset.path=p;
-      label.appendChild(txt);
-
+      const txt = document.createElement('a'); txt.href='#'; txt.textContent=' '+k; txt.dataset.path=p; label.appendChild(txt);
       li.appendChild(label);
+
       if(it.type==='file'){
-        txt.addEventListener('click', async (e)=>{
-          e.preventDefault(); showFilePreview(p);
-        });
+        txt.addEventListener('click', async (e)=>{ e.preventDefault(); showFilePreview(p); });
       }else{
         const toggle = document.createElement('span'); toggle.className='toggle'; toggle.textContent='►';
         li.insertBefore(toggle, label);
         const sub = renderTree(it, li, p); sub.style.display='none'; li.appendChild(sub);
-        toggle.addEventListener('click', ()=>{
-          const vis = sub.style.display==='none'; sub.style.display = vis?'block':'none';
-          toggle.textContent = vis ? '▼':'►';
-        });
+        toggle.addEventListener('click', ()=>{ const vis=sub.style.display==='none'; sub.style.display=vis?'block':'none'; toggle.textContent = vis?'▼':'►'; });
       }
       ul.appendChild(li);
     });
@@ -509,9 +456,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   }
 
   async function showFilePreview(p){
-    els.fpTitle.textContent = p;
-    els.fpBody.textContent = 'Laddar…';
-    els.fp.classList.add('show');
+    els.fpTitle.textContent = p; els.fpBody.textContent = 'Laddar…'; els.fp.classList.add('show');
     const ext=(p.split('.').pop()||'').toLowerCase();
     if(IMAGE_EXT.includes(ext)){
       els.fpBody.innerHTML = `<img src="${RAW+p}" alt="${p}">`;
@@ -523,39 +468,27 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         els.fpBody.innerHTML = `<pre style="white-space:pre-wrap">${escapeHtml(t)}</pre>`;
         els.fpCopy.disabled=false;
         els.fpCopy.onclick = ()=> navigator.clipboard.writeText(t);
-        els.fpDownload.onclick = ()=>{
-          const blob = new Blob([t], {type:'text/plain'});
-          const url = URL.createObjectURL(blob);
-          const a=document.createElement('a'); a.href=url; a.download=p.split('/').pop(); document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-        };
-      }catch(_){ els.fpBody.textContent = 'Kunde inte läsa fil.'; }
+        els.fpDownload.onclick = ()=>{ const blob=new Blob([t],{type:'text/plain'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=p.split('/').pop(); document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); };
+      }catch(_){ els.fpBody.textContent='Kunde inte läsa fil.'; }
     }
   }
 
   function selectedPaths(){ return Array.from(els.tree.querySelectorAll('input[type="checkbox"]:checked')).map(cb=>cb.dataset.path); }
   function openParentsFor(path){
-    const cb = els.tree.querySelector(`input[data-path="${path}"]`);
-    if(!cb) return;
+    const cb = els.tree.querySelector(`input[data-path="${path}"]`); if(!cb) return;
     let li = cb.closest('li');
     while(li){
       const parent = li.parentElement.closest('li');
-      if(parent){
-        const sub = parent.querySelector('ul');
-        const toggle = parent.querySelector('.toggle');
-        if(sub && toggle){ sub.style.display='block'; toggle.textContent='▼'; }
-      }
+      if(parent){ const sub=parent.querySelector('ul'); const toggle=parent.querySelector('.toggle'); if(sub&&toggle){ sub.style.display='block'; toggle.textContent='▼'; } }
       li = parent;
     }
   }
   function autoSelectPaths(paths){
     const all = Array.from(els.tree.querySelectorAll('input[type="checkbox"]'));
-    paths.forEach(p=>{
-      const cb = all.find(x=>x.dataset.path===p);
-      if(cb){ cb.checked = true; openParentsFor(p); }
-    });
+    paths.forEach(p=>{ const cb = all.find(x=>x.dataset.path===p); if(cb){ cb.checked=true; openParentsFor(p); }});
   }
 
-  // Core docs quick select
+  // Core quick select
   const CORE = [
     'docs/ai_protocols/AI_Core_Instruction.md',
     'docs/ai_protocols/ai_config.json',
@@ -579,26 +512,27 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   ];
   function quickSelectCore(){
     els.tree.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=false);
-    CORE.forEach(p=>{
-      const cb = els.tree.querySelector(`input[data-path="${p}"]`);
-      if(cb){ cb.checked = true; openParentsFor(p); }
-    });
+    CORE.forEach(p=>{ const cb=els.tree.querySelector(`input[data-path="${p}"]`); if(cb){ cb.checked=true; openParentsFor(p); }});
   }
 
-  // ---------- Context generation ----------
+  // ---------- Context generation (med CTA) ----------
+  function emitBundle(named1, content1, named2=NoneText, content2=''){
+    let out = '';
+    if(named1){ out += `### ${named1}\n\n${content1}\n`; }
+    if(named2){ out += `\n\n### ${named2}\n\n${content2}\n`; }
+    els.out.textContent = out;
+    els.copy.disabled = els.download.disabled = false;
+  }
+
   async function buildNewContextNode(src, selSet){
-    const dst = {};
-    const keys = Object.keys(src).sort();
+    const dst={}; const keys=Object.keys(src).sort();
     for(const k of keys){
       const it = src[k];
       if(it.type==='file'){
         const copy = {...it};
         if(selSet.has(it.path)){
-          try{ copy.content = await fetchText(it.path); }
-          catch(_){ copy.content = `// Error: failed to fetch ${it.path}`; }
-        }else{
-          delete copy.content;
-        }
+          try{ copy.content = await fetchText(it.path); }catch(_){ copy.content = `// Error: failed to fetch ${it.path}`; }
+        }else{ delete copy.content; }
         dst[k] = copy;
       }else{
         dst[k] = await buildNewContextNode(it, selSet);
@@ -612,20 +546,21 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       clearBanner();
       const sels = new Set(selectedPaths());
       const out = {
+        call_to_action: "READ_AND_WAIT",             // CTA-Feature även här (neutral)
+        json_only: true,
+        return_contract_hint: "none",
         project_overview: ctx.project_overview,
         ai_instructions: ctx.ai_instructions || {},
+        obligatory_rules: ["forbid_image_generation"],
         file_structure: {}
       };
-      const rules = new Set([...(out.ai_instructions.obligatory_rules||[]), 'forbid_image_generation']);
-      out.ai_instructions.obligatory_rules = Array.from(rules);
       if(els.instruction.value.trim()) out.ai_instructions_input = els.instruction.value.trim();
-
       out.file_structure = await buildNewContextNode(ctx.file_structure, sels);
-      emit(out);
-      showBanner('Context genererad.', 'ok');
-    }catch(e){
-      showBanner('Fel vid context-generering: '+e.message, 'err');
-    }
+
+      const text = els.compact.checked ? JSON.stringify(out) : JSON.stringify(out, null, 2);
+      emitBundle("context.json", text);
+      showBanner('Context genererad (med CTA fält).', 'ok');
+    }catch(e){ showBanner('Fel vid context-generering: '+e.message, 'err'); }
   }
 
   async function generateFiles(){
@@ -637,36 +572,29 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         for(const k of Object.keys(src)){
           const it = src[k];
           if(it.type==='file' && sels.has(it.path)){
-            try{ files[it.path] = await fetchText(it.path); }
-            catch(_){ files[it.path] = `// Error: failed to fetch ${it.path}`; }
-          }else if(it.type!=='file'){
-            await walk(it);
-          }
+            try{ files[it.path] = await fetchText(it.path); }catch(_){ files[it.path] = `// Error: failed to fetch ${it.path}`; }
+          }else if(it.type!=='file'){ await walk(it); }
         }
       }
       await walk(ctx.file_structure);
-      const payload = { obligatory_rules:['forbid_image_generation'], files };
-      emit(payload);
-      showBanner('Filer genererade.', 'ok');
-    }catch(e){
-      showBanner('Fel vid file-generering: '+e.message, 'err');
-    }
+      const payload = {
+        call_to_action: "READ_AND_WAIT",             // CTA-Feature (neutral)
+        json_only: true,
+        obligatory_rules:['forbid_image_generation'],
+        files
+      };
+      const text = els.compact.checked ? JSON.stringify(payload) : JSON.stringify(payload, null, 2);
+      emitBundle("files_payload.json", text);
+      showBanner('Filer genererade (med CTA fält).', 'ok');
+    }catch(e){ showBanner('Fel vid file-generering: '+e.message, 'err'); }
   }
 
-  function emit(obj){
-    const text = els.compact.checked ? JSON.stringify(obj) : JSON.stringify(obj, null, 2);
-    els.out.textContent = text;
-    els.copy.disabled = els.download.disabled = false;
-  }
-
-  // ---------- K-MOD: Max-Context Discovery ----------
+  // ---------- K-MOD: Discovery ----------
   const DEEP = { CAP_BYTES: 2_000_000, MAX_FILES: 180, HEAD_BYTES: 20_000, FULL_SIZE_LIMIT: 120_000 };
 
   async function summarizeForDiscoveryDeep(path, task){
     const meta = FILE_INFO.get(path) || {};
-    let content = '';
-    try { content = await fetchText(path); } catch(_){ content=''; }
-
+    let content=''; try{ content = await fetchText(path); }catch(_){ content=''; }
     const lang = guessLang(path);
     const role = inferRole(path);
     const size = meta.size || (content ? new Blob([content]).size : 0);
@@ -713,197 +641,117 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
   async function buildProjectIntro(task){
     const capsule = await buildProjectCapsule();
-    // package scripts + routes + glossary head (aux meta)
-    let pkg=null, scripts={};
-    try{ const t = await fetchText('package.json'); pkg = JSON.parse(t); scripts = pkg.scripts || {}; }catch(_){}
-    let routes=[];
-    for(const r of ['src/app/router.js','src/app/router.ts']){
-      if(FILES.includes(r)){
-        try{ const t = await fetchText(r); routes = Array.from(t.matchAll(/path:\s*['"]([^'"]+)['"]/g)).map(m=>m[1]); break; }
-        catch(_){}
-      }
-    }
-    let glossary_head='';
-    if(FILES.includes('docs/glossary.md')){
-      try{ glossary_head = (await fetchText('docs/glossary.md')).slice(0, 8000); }catch(_){}
-    }
+    let pkg=null, scripts={}; try{ const t=await fetchText('package.json'); pkg=JSON.parse(t); scripts=pkg.scripts||{} }catch(_){}
+    let routes=[]; for(const r of ['src/app/router.js','src/app/router.ts']){ if(FILES.includes(r)){ try{ const t=await fetchText(r); routes = Array.from(t.matchAll(/path:\s*['"]([^'"]+)['"]/g)).map(m=>m[1]); break; }catch(_){}}}
+    let glossary_head=''; if(FILES.includes('docs/glossary.md')){ try{ glossary_head=(await fetchText('docs/glossary.md')).slice(0, 8000); }catch(_){} }
     return {
-      name: capsule.name,
-      purpose: capsule.purpose,
-      stack: capsule.stack,
-      goal_for_this_session: task,
-      invariants: capsule.invariants,
-      package_scripts: scripts,
-      routes, glossary_head
+      name: capsule.name, purpose: capsule.purpose, stack: capsule.stack,
+      goal_for_this_session: task, invariants: capsule.invariants,
+      package_scripts: scripts, routes, glossary_head
     };
   }
 
   async function buildFileMapMiniFromCandidates(cands){
-    // Mini-graf (imports mellan kandidater)
     const pathToId = new Map(cands.map(c=>[c.path, c.id]));
-    const nodes = cands.map(c=>({ id: c.id, path: c.path, group: (/^src\//.test(c.path) ? 'src' : /^docs\//.test(c.path) ? 'docs' : /^scripts\//.test(c.path) ? 'scripts' : 'other'), role: inferRole(c.path) }));
-    const edges = [];
+    const nodes = cands.map(c=>({ id:c.id, path:c.path, group:(/^src\//.test(c.path)?'src':/^docs\//.test(c.path)?'docs':/^scripts\//.test(c.path)?'scripts':'other'), role: inferRole(c.path) }));
+    const edges=[];
     for(const c of cands){
-      const base = c.path.split('/').slice(0,-1).join('/');
+      const base=c.path.split('/').slice(0,-1).join('/');
       (c.imports||[]).forEach(im=>{
         if(im.startsWith('./')||im.startsWith('../')){
-          const abs = base + '/' + im;
-          const guesses = [abs, abs+'.js', abs+'.ts', abs+'.vue', abs.replace(/\/index$/,'/index.js'), abs.replace(/\/index$/,'/index.ts')];
-          const to = guesses.find(g=> pathToId.has(g));
-          if(to){ edges.push({from:c.id, to:pathToId.get(to), rel:'imports'}); }
+          const abs = base+'/'+im;
+          const guesses=[abs,abs+'.js',abs+'.ts',abs+'.vue',abs.replace(/\/index$/,'/index.js'),abs.replace(/\/index$/,'/index.ts')];
+          const to=guesses.find(g=>pathToId.has(g));
+          if(to){ edges.push({from:c.id,to:pathToId.get(to),rel:'imports'}); }
         }
       });
     }
-    return { nodes, edges: edges.slice(0, 800) };
+    return { nodes, edges: edges.slice(0,800) };
   }
 
-  // STRICT RETURN_CONTRACT (K-MOD schema)
-  function returnContractKMOD(){
-    return {
-      KMOD:{
-        type:"object",
-        required:["protocol_id","mode","selected_files"],
-        properties:{
-          protocol_id:{ const:"discovery_v2" },
-          mode:{ const:"K-MOD" },
-          selected_files:{
-            type:"array",
-            minItems:2,
-            items:{
-              type:"object",
-              required:["path","embed","why"],
-              properties:{
-                path:{ type:"string" },
-                embed:{ enum:["full","chunk","stub"] },
-                why:{ type:"string", maxLength:200 }
-              },
-              additionalProperties:false
-            }
-          }
-        },
-        additionalProperties:true
-      }
-    };
-  }
+  function returnContractKMOD(){ return { KMOD:{ type:"object", required:["protocol_id","mode","selected_files"], properties:{ protocol_id:{const:"discovery_v2"}, mode:{const:"K-MOD"}, selected_files:{ type:"array", minItems:2, items:{ type:"object", required:["path","embed","why"], properties:{ path:{type:"string"}, embed:{enum:["full","chunk","stub"]}, why:{type:"string",maxLength:200} }, additionalProperties:false } } }, additionalProperties:true } }; }
+  function ctaTextKMOD(){ return "KÖR NU (STRICT): Läs dokumentet och returnera ENDAST JSON som uppfyller RETURN_CONTRACT.KMOD. Inga ord, bara JSON."; }
 
-  async function buildDiscoveryPromptKMOD(){
+  async function buildDiscoveryKMOD(){
     const task = getTask();
     const intro = await buildProjectIntro(task);
-
-    // plocka kandidater upp till CAP_BYTES
     const ranked = CODE_FILES.slice().sort((a,b)=> priorityScore(b, task) - priorityScore(a, task));
     const picked=[]; let used=0; let nextId=1;
     for(const p of ranked){
       if(picked.length>=DEEP.MAX_FILES) break;
       const s = await summarizeForDiscoveryDeep(p, task);
-      const cost = new Blob([s.content]).size + 700; // overhead
+      const cost = new Blob([s.content]).size + 700;
       if(used + cost > DEEP.CAP_BYTES) continue;
       used += cost; picked.push({ id: nextId++, ...s });
     }
-    LAST_CANDIDATES = picked.slice(); // lagra för auto-select
-
+    LAST_CANDIDATES = picked.slice();
     const FM = await buildFileMapMiniFromCandidates(picked);
 
-    // Schema
     const schema = {
-      protocol_id:"discovery_v2",
-      psv:["rules_rehearsed","risk_scan"],
-      mode:"K-MOD",
-      obligatory_rules:["forbid_image_generation"],
-      task,
-      project_intro:{},
-      candidate_files:[],
-      file_map_mini:{},
-      selected_files:[],
-      requires_chunks:[],
-      api_contracts_touched:[],
-      risks:[],
-      test_plan:[],
-      done_when:["tests_green","lint_ok","types_ok"],
-      _note:"Välj endast objekt från candidate_files. Sätt embed={'full','chunk','stub'}. Motivera kort varje val."
+      call_to_action:"RETURN_JSON_NOW", json_only:true, return_contract_version:"2025-08-10",
+      protocol_id:"discovery_v2", psv:["rules_rehearsed","risk_scan"], mode:"K-MOD",
+      obligatory_rules:["forbid_image_generation"], task,
+      project_intro:{}, candidate_files:[], file_map_mini:{},
+      selected_files:[], requires_chunks:[], api_contracts_touched:[], risks:[], test_plan:[],
+      done_when:["tests_green","lint_ok","types_ok"], _note:"Välj endast från candidate_files. Motivera varje val."
     };
 
-    const prompt = [
-      "SESSION: PLANERA NÄSTA ARBETE (Discovery)",
-      KMOD_BANNER,
-      IMAGE_GUARD_BANNER,
-      "KRAV: Svara ENBART med giltig JSON enligt schema och RETURN_CONTRACT. Ingen kod.",
-      "- Välj ENDAST objekt från CANDIDATE_FILES.",
-      "- Inga placeholders eller påhittade vägar.",
-      "- Minst 2 objekt i 'selected_files'.",
-      "- 'embed' ∈ {'full','chunk','stub'}.",
-      "SCHEMA:",
+    const md = [
+      ctaTextKMOD(),
+      "",
+      "```json",
       JSON.stringify(schema, null, 2),
-      "RETURN_CONTRACT:",
+      "```",
+      "",
+      "SCHEMA • RETURN_CONTRACT.KMOD:",
+      "```json",
       JSON.stringify(returnContractKMOD(), null, 2),
+      "```",
+      "",
       "PROJECT_INTRO:",
+      "```json",
       JSON.stringify(intro, null, 2),
+      "```",
+      "",
       "CANDIDATE_FILES:",
+      "```json",
       JSON.stringify(picked, null, 2),
+      "```",
+      "",
       "FILE_MAP_MINI:",
+      "```json",
       JSON.stringify(FM, null, 2),
+      "```",
+      "",
       "KONTEXT-RÅD:",
       "- Prioritera målkomponenter/kontrakt = embed:'full'.",
-      "- Övrigt = 'chunk' (content inkluderad) eller 'stub' om endast metadata krävs.",
-      "- Fyll 'selected_files' med objekt (inkl. path, embed, why)."
+      "- Övrigt = 'chunk' eller 'stub' efter behov."
     ].join("\n");
 
-    return prompt;
+    const json = JSON.stringify({
+      call_to_action:"RETURN_JSON_NOW", json_only:true, return_contract_version:"2025-08-10",
+      RETURN_CONTRACT: returnContractKMOD(),
+      protocol_id:"discovery_v2", psv:["rules_rehearsed","risk_scan"], mode:"K-MOD",
+      obligatory_rules:["forbid_image_generation"], task,
+      project_intro:intro, candidate_files:picked, file_map_mini:FM,
+      selected_files:[], requires_chunks:[], api_contracts_touched:[], risks:[], test_plan:[],
+      done_when:["tests_green","lint_ok","types_ok"], _note:"Välj endast från candidate_files."
+    }, null, els.compact.checked?0:2);
+
+    return { md, json };
   }
 
-  // ---------- D-MOD: Deterministic Discovery ----------
-  const DM = {
-    MAX_FILES: 180,
-    CAP_BYTES: 2_000_000,
-    HEAD_BYTES: 20_000,
-    FULL_SIZE_LIMIT: 120_000,
-    SELECTION: { only_ids: true, min: 2, max: 12, allow_paths: ["src/**","docs/**","scripts/**"], deny_paths: ["infra/prod/**"] }
-  };
+  // ---------- D-MOD ----------
+  const DM = { MAX_FILES:180, CAP_BYTES:2_000_000, HEAD_BYTES:20_000, FULL_SIZE_LIMIT:120_000,
+               SELECTION:{ only_ids:true, min:2, max:12, allow_paths:["src/**","docs/**","scripts/**"], deny_paths:["infra/prod/**"] } };
+  function globToRegex(glob){ return new RegExp('^'+glob.split('**').join('@@').replace(/[.+^${}()|[\]\\]/g,'\\$&').split('*').join('[^/]*').split('@@').join('.*')+'$'); }
+  function pathAllowed(p){ const allow=DM.SELECTION.allow_paths.map(globToRegex), deny=DM.SELECTION.deny_paths.map(globToRegex); return allow.some(r=>r.test(p)) && !deny.some(r=>r.test(p)); }
+  function returnContractDMOD(){ return { DMOD:{ type:"object", required:["protocol_id","mode","echo_rules_hash","selected_ids","notes"], properties:{ protocol_id:{const:"discovery_dmod_v1"}, mode:{const:"D-MOD"}, echo_rules_hash:{type:"string"}, selected_ids:{type:"array",minItems:2,items:{type:"integer"}}, notes:{type:"object",additionalProperties:{type:"string",maxLength:200}} }, additionalProperties:false } }; }
+  function ctaTextDMOD(){ return "KÖR NU (STRICT): Läs dokumentet och returnera ENDAST JSON som uppfyller RETURN_CONTRACT.DMOD. Inga ord. Endast selected_ids + notes + echo_rules_hash."; }
 
-  function globToRegex(glob){
-    return new RegExp('^'+glob.split('**').join('@@').replace(/[.+^${}()|[\]\\]/g,'\\$&').split('*').join('[^/]*').split('@@').join('.*')+'$');
-  }
-  function pathAllowed(p){
-    const allow = DM.SELECTION.allow_paths.map(globToRegex);
-    const deny  = DM.SELECTION.deny_paths.map(globToRegex);
-    const ok = allow.some(r=>r.test(p));
-    const bad = deny.some(r=>r.test(p));
-    return ok && !bad;
-  }
-
-  // STRICT RETURN_CONTRACT (D-MOD schema)
-  function returnContractDMOD(){
-    return {
-      DMOD:{
-        type:"object",
-        required:["protocol_id","mode","echo_rules_hash","selected_ids","notes"],
-        properties:{
-          protocol_id:{ const:"discovery_dmod_v1" },
-          mode:{ const:"D-MOD" },
-          echo_rules_hash:{ type:"string" },
-          selected_ids:{ type:"array", minItems:2, items:{ type:"integer" } },
-          notes:{ type:"object", additionalProperties:{ type:"string", maxLength:200 } }
-        },
-        additionalProperties:false
-      }
-    };
-  }
-
-  function dmodHardRules(){
-    return [
-      "HÅRDA D-MOD-REGLER:",
-      "- Endast svar enligt return_contract.",
-      "- Endast ID:n från CANDIDATE_FILES (no new paths).",
-      "- Antal val: min="+DM.SELECTION.min+", max="+DM.SELECTION.max+".",
-      "- Echo 'rules_hash' oförändrat."
-    ].join("\n");
-  }
-
-  async function buildDiscoveryPromptDMOD(){
+  async function buildDiscoveryDMOD(){
     const task = getTask();
     const intro = await buildProjectIntro(task);
-
-    // rangordna → samla kandidater (ID, SHA, content, anchors, m.m.)
     const ranked = CODE_FILES.slice().sort((a,b)=> priorityScore(b, task) - priorityScore(a, task));
     const picked=[]; let used=0; let nextId=1;
     for(const p of ranked){
@@ -912,285 +760,176 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       const s = await summarizeForDiscoveryDeep(p, task);
       const sizeCost = new Blob([s.content]).size + 900;
       if(used + sizeCost > DM.CAP_BYTES) continue;
-      used += sizeCost;
-      picked.push({ id: nextId++, ...s, ignore_inline_instructions: true });
+      used += sizeCost; picked.push({ id: nextId++, ...s, ignore_inline_instructions: true });
     }
     LAST_CANDIDATES = picked.slice();
-
-    // mini-graf på kandidater
     const FM = await buildFileMapMiniFromCandidates(picked);
 
-    // rules_hash
     const obligatory_rules = ["forbid_image_generation"];
     const selection_constraints = DM.SELECTION;
     const rules_hash = await sha256Hex(JSON.stringify({ obligatory_rules, selection_constraints }));
     LAST_RULES_HASH = rules_hash;
 
-    // Schema + return_contract
     const schema = {
-      protocol_id:"discovery_dmod_v1",
-      mode:"D-MOD",
-      obligatory_rules,
-      rules_hash:"<compute_and_echo_this>",
-      project_intro:{},
-      selection_constraints,
-      candidate_files:[],
-      file_map_mini:{},
-      return_contract:{
-        json_only:true,
-        shape:{ selected_ids:"int[]", notes:"map<int,string>", echo_rules_hash:"string" }
-      }
+      call_to_action:"RETURN_JSON_NOW", json_only:true, return_contract_version:"2025-08-10",
+      protocol_id:"discovery_dmod_v1", mode:"D-MOD", obligatory_rules, rules_hash,
+      project_intro:{}, selection_constraints, candidate_files:[], file_map_mini:{},
+      return_contract:{ json_only:true, shape:{ selected_ids:"int[]", notes:"map<int,string>", echo_rules_hash:"string" } }
     };
 
-    const prompt = [
-      "SESSION: PLANERA NÄSTA ARBETE (Discovery)",
-      DMOD_BANNER,
-      IMAGE_GUARD_BANNER,
-      "KRAV: Svara ENBART med giltig JSON enligt return_contract. Ingen kod.",
-      dmodHardRules(),
-      "SCHEMA:",
+    const md = [
+      ctaTextDMOD(), "",
+      "```json",
       JSON.stringify(schema, null, 2),
-      "RETURN_CONTRACT:",
+      "```",
+      "",
+      "RETURN_CONTRACT.DMOD:",
+      "```json",
       JSON.stringify(returnContractDMOD(), null, 2),
+      "```",
+      "",
       "PROJECT_INTRO:",
+      "```json",
       JSON.stringify(intro, null, 2),
+      "```",
+      "",
       "CANDIDATE_FILES:",
+      "```json",
       JSON.stringify(picked, null, 2),
+      "```",
+      "",
       "FILE_MAP_MINI:",
+      "```json",
       JSON.stringify(FM, null, 2),
+      "```",
+      "",
       "RETURN_EXAMPLE:",
-      JSON.stringify({
-        protocol_id:"discovery_dmod_v1",
-        echo_rules_hash: rules_hash,
-        selected_ids: [1,2],
-        notes: { "1":"Källsanning för state.", "2":"UI-händelser kopplade till felet." }
-      }, null, 2),
-      "INSTRUKTION:",
-      "- Returnera endast objekt enligt example. Inga extra fält.",
-      "- 'echo_rules_hash' måste exakt matcha 'rules_hash'."
+      "```json",
+      JSON.stringify({ protocol_id:"discovery_dmod_v1", mode:"D-MOD", echo_rules_hash: rules_hash, selected_ids:[1,2], notes:{ "1":"Källsanning.","2":"UI-trigger." } }, null, 2),
+      "```"
     ].join("\n");
 
-    return prompt.replace('"rules_hash":"<compute_and_echo_this>"', '"rules_hash":"'+rules_hash+'"');
+    const json = JSON.stringify({
+      call_to_action:"RETURN_JSON_NOW", json_only:true, return_contract_version:"2025-08-10",
+      RETURN_CONTRACT: returnContractDMOD(),
+      protocol_id:"discovery_dmod_v1", mode:"D-MOD", obligatory_rules, rules_hash,
+      project_intro:intro, selection_constraints, candidate_files:picked, file_map_mini:FM
+    }, null, els.compact.checked?0:2);
+
+    return { md, json };
   }
 
   // ---------- Implementation bootstrap ----------
   function toOpenAI(systemText, userJson){
-    return {
-      provider:"openai",
-      model:"gpt-5",
-      auto_start:true,
-      messages:[
-        {role:"system", content:systemText},
-        {role:"user",   content:userJson}
-      ]
-    };
+    return { provider:"openai", model:"gpt-5", auto_start:true, messages:[ {role:"system", content:systemText}, {role:"user", content:userJson} ] };
   }
   function toGemini(systemText, userJson){
-    return {
-      provider:"google",
-      model:"gemini-2.5-pro",
-      auto_start:true,
-      system_instruction:systemText,
-      contents:[{role:"user", parts:[{text:userJson}]}]
-    };
+    return { provider:"google", model:"gemini-2.5-pro", auto_start:true, system_instruction:systemText, contents:[{role:"user", parts:[{text:userJson}]}] };
   }
   function toProviderEnvelope(systemRules, userJsonPretty){
-    const sys = Array.isArray(systemRules) ? systemRules.join("\\n") : String(systemRules||'');
-    const user = userJsonPretty;
+    const sys = Array.isArray(systemRules) ? systemRules.join("\\n") : String(systemRules||''); const user = userJsonPretty;
     return (document.querySelector('input[name="prov"][value="gemini"]').checked)
       ? JSON.stringify(toGemini(sys, user), null, els.compact.checked?0:2)
       : JSON.stringify(toOpenAI(sys, user), null, els.compact.checked?0:2);
   }
 
   function getTask(){
-    const t = els.instruction.value.trim();
-    return (t && (()=>{ try{ JSON.parse(t); return false; }catch(_){ return true; } })() && t.length<=400)
-      ? t
-      : "Beskriv kort mål i en mening.";
+    const t=els.instruction.value.trim();
+    return (t && (()=>{ try{ JSON.parse(t); return false; }catch(_){ return true; } })() && t.length<=400) ? t : "Beskriv kort mål i en mening.";
   }
-
   function bytes(s){ return new Blob([s]).size; }
 
-  // Summarisering för icke fulla i bootstrap
   function summarizeNonFull(path, content){
-    const lang = guessLang(path);
-    const size = (FILE_INFO.get(path)||{}).size || (content?bytes(content):null);
-    const lines = (content||'').split(/\r?\n/);
-    const anchors = [];
-    for(let i=0;i<lines.length && anchors.length<5;i++){
-      const L = lines[i];
-      if(/^\s*(export|def|class|function|const|let|props|emits|interface|type|data:|methods:|setup\(|mounted\(|created\()/.test(L) || /TODO|FIXME|@/.test(L)){
-        anchors.push({line: i+1, text: L.trim().slice(0,120)});
-      }
-    }
-    const imports=[], exports=[];
-    (content||'').split(/\r?\n/).forEach((L)=>{
-      let m;
-      if((m=L.match(/^\s*import\s+.*?from\s+['"]([^'"]+)['"]/))) imports.push(m[1]);
-      if((m=L.match(/^\s*export\s+(?:default\s+)?(?:function|class|const|let|var|interface|type)\s+([A-Za-z0-9_]+)/))) exports.push(m[1]);
-      if((m=L.match(/module\.exports\s*=\s*([A-Za-z0-9_]+)/))) exports.push(m[1]);
-    });
-    const key_symbols = [];
-    (content||'').split(/\r?\n/).forEach(L=>{
-      let m;
-      if((m=L.match(/^\s*(?:export\s+)?(?:function|class)\s+([A-Za-z0-9_]+)/))) key_symbols.push(m[1]);
-      if((m=L.match(/^\s*const\s+([A-Za-z0-9_]+)\s*=\s*(?:\(.*\)\s*=>|function)/))) key_symbols.push(m[1]);
-      if((m=L.match(/^\s*def\s+([A-Za-z0-9_]+)\s*\(/))) key_symbols.push(m[1]);
-    });
-    const role = inferRole(path);
-    const sha = (FILE_INFO.get(path)||{}).sha256 || null;
-    const loc = (content||'').split(/\r?\n/).length || null;
-
-    return {
-      path, lang, size_bytes: size || null,
-      role,
-      key_symbols: Array.from(new Set(key_symbols)).slice(0,12),
-      imports_exports: { imports: imports.slice(0,12), exports: exports.slice(0,12) },
-      call_graph_outline: [],
-      data_flow: [],
-      invariants: [],
-      known_issues: [],
-      change_impact: "Risk för regress vid felaktiga kontrakt.",
-      test_hooks: [],
-      anchor_lines: anchors,
-      sha256: sha,
-      loc: loc
-    };
+    const lang=guessLang(path); const size=(FILE_INFO.get(path)||{}).size || (content?bytes(content):null);
+    const lines=(content||'').split(/\r?\n/);
+    const anchors=[]; for(let i=0;i<lines.length && anchors.length<5;i++){ const L=lines[i]; if(/^\s*(export|def|class|function|const|let|props|emits|interface|type|data:|methods:|setup\(|mounted\(|created\()/.test(L) || /TODO|FIXME|@/.test(L)){ anchors.push({line:i+1, text:L.trim().slice(0,120)}); } }
+    const imports=[], exports=[]; (content||'').split(/\r?\n/).forEach(L=>{ let m; if((m=L.match(/^\s*import\s+.*?from\s+['"]([^'"]+)['"]/))) imports.push(m[1]); if((m=L.match(/^\s*export\s+(?:default\s+)?(?:function|class|const|let|var|interface|type)\s+([A-Za-z0-9_]+)/))) exports.push(m[1]); if((m=L.match(/module\.exports\s*=\s*([A-Za-z0-9_]+)/))) exports.push(m[1]); });
+    const key_symbols=[]; (content||'').split(/\r?\n/).forEach(L=>{ let m; if((m=L.match(/^\s*(?:export\s+)?(?:function|class)\s+([A-Za-z0-9_]+)/))) key_symbols.push(m[1]); if((m=L.match(/^\s*const\s+([A-Za-z0-9_]+)\s*=\s*(?:\(.*\)\s*=>|function)/))) key_symbols.push(m[1]); if((m=L.match(/^\s*def\s+([A-Za-z0-9_]+)\s*\(/))) key_symbols.push(m[1]); });
+    const role=inferRole(path); const sha=(FILE_INFO.get(path)||{}).sha256 || null; const loc=(content||'').split(/\r?\n/).length || null;
+    return { path, lang, size_bytes:size||null, role, key_symbols:key_symbols.slice(0,12), imports_exports:{imports:imports.slice(0,12), exports:exports.slice(0,12)}, call_graph_outline:[], data_flow:[], invariants:[], known_issues:[], change_impact:"Risk för regress vid felaktiga kontrakt.", test_hooks:[], anchor_lines:anchors, sha256:sha, loc:loc };
   }
 
   async function buildFileMap(nodesList){
-    const idByPath = new Map();
-    const nodes = [];
-    nodesList.forEach((n, idx)=>{
-      const id = idx+1; idByPath.set(n.path, id);
-      nodes.push({
-        id, path: n.path, lang: guessLang(n.path),
-        role: inferRole(n.path),
-        is_content_full: !!n.is_content_full,
-        sha256: (FILE_INFO.get(n.path)||{}).sha256 || null,
-        size_bytes: (FILE_INFO.get(n.path)||{}).size || null,
-        group: (/^src\//.test(n.path) ? 'src' : /^docs\//.test(n.path) ? 'docs' : /^scripts\//.test(n.path) ? 'scripts' : 'other')
-      });
-    });
-
-    const edges = [];
+    const idByPath=new Map(); const nodes=[];
+    nodesList.forEach((n,idx)=>{ const id=idx+1; idByPath.set(n.path,id); nodes.push({ id, path:n.path, lang:guessLang(n.path), role:inferRole(n.path), is_content_full:!!n.is_content_full, sha256:(FILE_INFO.get(n.path)||{}).sha256||null, size_bytes:(FILE_INFO.get(n.path)||{}).size||null, group:(/^src\//.test(n.path)?'src':/^docs\//.test(n.path)?'docs':/^scripts\//.test(n.path)?'scripts':'other') }); });
+    const edges=[];
     for(const n of nodesList){
-      const content = n.content || '';
-      const fromId = idByPath.get(n.path);
-      if(!fromId) continue;
+      const content = n.content || ''; const fromId = idByPath.get(n.path); if(!fromId) continue;
       const base = n.path.split('/').slice(0,-1).join('/');
-
-      content.split(/\r?\n/).forEach((L, i)=>{
-        const m=L.match(/^\s*import\s+.*?from\s+['"]([^'"]+)['"]/);
-        if(m){
-          let to = m[1];
-          if(to.startsWith('./') || to.startsWith('../')){
-            const candList = [to, to+'.js', to+'.ts', to+'.vue'].map(x=> base+'/'+x);
-            const cand = candList.find(p=> idByPath.has(p));
-            if(cand) edges.push({from: fromId, to: idByPath.get(cand), rel: 'imports', anchors:[{path:n.path,line:i+1}]});
-          }
-        }
-      });
+      content.split(/\r?\n/).forEach((L,i)=>{ const m=L.match(/^\s*import\s+.*?from\s+['"]([^'"]+)['"]/); if(m){ let to=m[1]; if(to.startsWith('./')||to.startsWith('../')){ const candList=[to,to+'.js',to+'.ts',to+'.vue'].map(x=>base+'/'+x); const cand=candList.find(p=>idByPath.has(p)); if(cand) edges.push({from:fromId,to:idByPath.get(cand),rel:'imports',anchors:[{path:n.path,line:i+1}]}); } } });
     }
-
-    const views = {
-      module_graph: { root_ids: nodes.filter(n=>/main\.(js|ts)$/.test(n.path)).map(n=>n.id), edge_types: ["imports","requires"] },
-      runtime_flow: { sequence: nodes.map(n=>n.id).slice(0,12) }
-    };
-    const metrics = {
-      degree_top: nodes.map(n=>({id:n.id,deg: edges.filter(e=>e.from===n.id||e.to===n.id).length})).sort((a,b)=>b.deg-a.deg).slice(0,8)
-    };
-    return {
-      budget: { target_bytes: Number(els.budgetKb.value)*1000, used_bytes: 0, max_nodes: 400, max_edges: 1200 },
-      nodes, edges, views, metrics
-    };
+    const views={ module_graph:{ root_ids:nodes.filter(n=>/main\.(js|ts)$/.test(n.path)).map(n=>n.id), edge_types:["imports","requires"] }, runtime_flow:{ sequence:nodes.map(n=>n.id).slice(0,12) } };
+    const metrics={ degree_top:nodes.map(n=>({id:n.id,deg:edges.filter(e=>e.from===n.id||e.to===n.id).length})).sort((a,b)=>b.deg-a.deg).slice(0,8) };
+    return { budget:{ target_bytes:Number(els.budgetKb.value)*1000, used_bytes:0, max_nodes:400, max_edges:1200 }, nodes, edges, views, metrics };
   }
 
   async function buildImplBootstrap(){
     const task = getTask();
     const targetBytes = Number(els.budgetKb.value)*1000;
-    const sel = selectedPaths();
-    if(sel.length===0){ throw new Error('Välj minst 1 fil.'); }
+    const sel = selectedPaths(); if(sel.length===0){ throw new Error('Välj minst 1 fil.'); }
 
-    const mustFull = new Set(sel);
+    const mustFull=new Set(sel);
     if(FILES.includes('package.json')) mustFull.add('package.json');
-    const entry = ['src/app/main.js','src/main.js','index.html'].filter(p=>FILES.includes(p));
-    if(entry[0]) mustFull.add(entry[0]);
+    const entry=['src/app/main.js','src/main.js','index.html'].filter(p=>FILES.includes(p)); if(entry[0]) mustFull.add(entry[0]);
 
-    const sorted = Array.from(new Set([...mustFull, ...sel])).sort((a,b)=> priorityScore(b, task)-priorityScore(a, task));
-    const filesOut = [];
-    let used = 0;
+    const sorted=Array.from(new Set([...mustFull,...sel])).sort((a,b)=> priorityScore(b, task)-priorityScore(a, task));
+    const filesOut=[]; let used=0;
 
     for(const p of sorted){
-      const meta = FILE_INFO.get(p) || {};
-      const size = meta.size || 0;
-      const lang = guessLang(p);
-      if(used + size <= targetBytes || mustFull.has(p)){
-        let content='';
-        try{ content = await fetchText(p); }catch(_){ content='// Failed to fetch'; }
-        filesOut.push({
-          path: p, lang, size_bytes: size||bytes(content)||null, role: inferRole(p),
-          is_content_full: true, embed: "full", content
-        });
+      const meta=FILE_INFO.get(p)||{}; const size=meta.size||0; const lang=guessLang(p);
+      if(used+size<=targetBytes || mustFull.has(p)){
+        let content=''; try{ content=await fetchText(p); }catch(_){ content='// Failed to fetch'; }
+        filesOut.push({ path:p, lang, size_bytes:size||bytes(content)||null, role:inferRole(p), is_content_full:true, embed:"full", content });
         used += bytes(content);
       }else{
-        let content='';
-        try{ content = await fetchText(p); }catch(_){ content=''; }
-        const headLimit = Math.min(4000, Math.max(2000, targetBytes*0.01|0));
-        const chunk = content.slice(0, headLimit);
-        const summary = summarizeNonFull(p, content);
-        summary.embed = "chunk";
-        summary.is_content_full = false;
-        summary.chunk_spec = `head:${headLimit}`;
-        summary.content = chunk;
-        filesOut.push(summary);
-        used += bytes(chunk) + bytes(JSON.stringify(summary, null, 0)) - bytes(JSON.stringify({content:''}, null, 0));
+        let content=''; try{ content=await fetchText(p); }catch(_){ content=''; }
+        const headLimit=Math.min(4000, Math.max(2000, targetBytes*0.01|0));
+        const chunk=content.slice(0, headLimit);
+        const summary=summarizeNonFull(p, content); summary.embed="chunk"; summary.is_content_full=false; summary.chunk_spec=`head:${headLimit}`; summary.content=chunk;
+        filesOut.push(summary); used += bytes(chunk) + bytes(JSON.stringify(summary,0,0)) - bytes(JSON.stringify({content:''},0,0));
       }
       if(used>=targetBytes) break;
     }
-
     for(const p of sel){
       if(!filesOut.find(x=>x.path===p)){
-        let content='';
-        try{ content = await fetchText(p); }catch(_){ content=''; }
-        const stub = summarizeNonFull(p, content);
-        stub.embed = "stub";
-        stub.is_content_full = false;
-        filesOut.push(stub);
-        used += bytes(JSON.stringify(stub));
-        if(used>=targetBytes) break;
+        let content=''; try{ content=await fetchText(p); }catch(_){ content=''; }
+        const stub=summarizeNonFull(p, content); stub.embed="stub"; stub.is_content_full=false; filesOut.push(stub); used += bytes(JSON.stringify(stub)); if(used>=targetBytes) break;
       }
     }
 
-    const nodesList = filesOut.map(x=>({path:x.path, is_content_full: !!x.is_content_full, content: x.content||''}));
-    const fMap = await buildFileMap(nodesList);
-    const capsule = await buildProjectCapsule();
+    const nodesList=filesOut.map(x=>({path:x.path, is_content_full:!!x.is_content_full, content:x.content||''}));
+    const fMap=await buildFileMap(nodesList);
+    const capsule=await buildProjectCapsule();
 
     const bootstrap = {
-      protocol_id: "impl_bootstrap_v1",
-      task,
-      obligatory_rules: MUST_STRICT,
-      budget: { target_bytes: targetBytes, used_bytes: used, policy: "full_by_priority_then_chunk_then_stub" },
-      project_capsule: capsule,
-      files: filesOut,
-      file_map: fMap,
-      api_contracts_touched: [],
-      test_plan: [
-        "Unit: kritiska render/logic paths",
-        "E2E: användarflöde relaterat till uppgiften",
-        "A11y: ARIA/fokus",
-        "Property: idempotens där relevant"
-      ],
-      done_when: ["tests_green","lint_ok","types_ok"],
-      response_contract: { phase: "PLAN", return: ["plan_json_only"], next_phase_on: "OK" }
+      call_to_action:"RETURN_JSON_NOW", json_only:true, return_contract_version:"2025-08-10",
+      protocol_id:"impl_bootstrap_v1", task, obligatory_rules:MUST_STRICT,
+      budget:{ target_bytes:targetBytes, used_bytes:used, policy:"full_by_priority_then_chunk_then_stub" },
+      project_capsule:capsule, files:filesOut, file_map:fMap,
+      api_contracts_touched:[], test_plan:["Unit: kritiska render/logic paths","E2E: användarflöde kopplat till uppgiften","A11y: ARIA/fokus","Property: idempotens där relevant"],
+      done_when:["tests_green","lint_ok","types_ok"],
+      response_contract:{ phase:"PLAN", return:["plan_json_only"], next_phase_on:"OK" }
     };
 
     const userJsonPretty = els.compact.checked ? JSON.stringify(bootstrap) : JSON.stringify(bootstrap, null, 2);
     const providerWrap = toProviderEnvelope(MUST_STRICT, userJsonPretty);
 
-    els.out.textContent = userJsonPretty + "\n\n" + providerWrap;
-    els.copy.disabled = els.download.disabled = false;
-    showBanner(`Bootstrap-JSON klar. Bytes: ${used}/${targetBytes}.`, 'ok');
+    // MD-variant med CTA överst
+    const md = [
+      "KÖR NU (STRICT): Läs dokumentet och returnera ENDAST JSON för PLAN-fasen (plan_json_only). Inga ord.",
+      "",
+      "```json",
+      userJsonPretty,
+      "```",
+      "",
+      "PROVIDER-ENVELOPE:",
+      "```json",
+      providerWrap,
+      "```"
+    ].join("\n");
+
+    emitBundle("impl_bootstrap.md", md, "impl_bootstrap.json", userJsonPretty + "\n\n" + providerWrap);
+    showBanner(`Bootstrap-JSON klar (med CTA). Bytes: ${used}/${targetBytes}.`, 'ok');
   }
 
   // ---------- Tabs ----------
@@ -1213,9 +952,9 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
   els.copy.onclick = ()=>{ navigator.clipboard.writeText(els.out.textContent); showBanner('Kopierat.', 'ok'); };
   els.download.onclick = ()=>{
-    const blob = new Blob([els.out.textContent], {type:'application/json'});
+    const blob = new Blob([els.out.textContent], {type:'text/plain'});
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href=url; a.download='context_custom_'+new Date().toISOString().slice(0,10)+'.json';
+    const a = document.createElement('a'); a.href=url; a.download='context_bundle_'+new Date().toISOString().slice(0,10)+'.txt';
     document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
   };
 
@@ -1225,71 +964,43 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       clearBanner();
       if(!ctx){ showBanner('context.json ej laddad ännu.', 'err'); return; }
       const mode = currentDiscMode();
-      const prompt = (mode==='DMOD') ? await buildDiscoveryPromptDMOD() : await buildDiscoveryPromptKMOD();
-      els.out.textContent = prompt;
-      els.copy.disabled = els.download.disabled = false;
-      showBanner((mode==='DMOD'?'D-MOD':'K-MOD')+' Discovery-prompt skapad. Kör i modell, klistra STRICT JSON-svaret här.', 'ok');
-    }catch(e){
-      showBanner('Fel vid Discovery: '+e.message, 'err');
-    }
+      const pack = (mode==='DMOD') ? await buildDiscoveryDMOD() : await buildDiscoveryKMOD();
+      emitBundle("bootstrap.md", pack.md, "bootstrap.json", pack.json);
+      showBanner((mode==='DMOD'?'D-MOD':'K-MOD')+' Discovery: md + json (med CTA). Klistra md/json i modell.', 'ok');
+    }catch(e){ showBanner('Fel vid Discovery: '+e.message, 'err'); }
   };
 
   // Implementation-knapp
-  els.implBtn.onclick = async ()=>{
-    try{
-      clearBanner();
-      if(!ctx){ showBanner('context.json ej laddad ännu.', 'err'); return; }
-      await buildImplBootstrap();
-    }catch(e){
-      showBanner('Fel vid bootstrap: '+e.message, 'err');
-    }
-  };
+  els.implBtn.onclick = async ()=>{ try{ clearBanner(); if(!ctx){ showBanner('context.json ej laddad ännu.', 'err'); return; } await buildImplBootstrap(); }catch(e){ showBanner('Fel vid bootstrap: '+e.message, 'err'); } };
 
-  // STRICT input-hanterare: endast giltig JSON enligt RETURN_CONTRACT
+  // STRICT input-hanterare (auto-select)
   els.instruction.addEventListener('input', ()=>{
     clearBanner();
-    const t = els.instruction.value.trim();
-    if(!t) return;
+    const t = els.instruction.value.trim(); if(!t) return;
     try{
       const j = JSON.parse(t);
 
-      // D-MOD strikt
-      if(j && j.protocol_id==='discovery_dmod_v1' && j.mode==='D-MOD' &&
+      // D-MOD
+      if(j && j.protocol_id==='discovery_dmod_v1' && (j.mode==='D-MOD' || !j.mode) &&
          Array.isArray(j.selected_ids) && typeof j.echo_rules_hash==='string'){
-        if(LAST_RULES_HASH && j.echo_rules_hash!==LAST_RULES_HASH){
-          showBanner('echo_rules_hash ≠ rules_hash (från prompten).', 'warn');
-        }
-        const idset = new Set(j.selected_ids);
-        const paths = LAST_CANDIDATES.filter(c=>idset.has(c.id)).map(c=>c.path);
+        if(LAST_RULES_HASH && j.echo_rules_hash!==LAST_RULES_HASH){ showBanner('echo_rules_hash ≠ rules_hash (från prompten).', 'warn'); }
+        const idset=new Set(j.selected_ids); const paths=LAST_CANDIDATES.filter(c=>idset.has(c.id)).map(c=>c.path);
         if(paths.length===0){ showBanner('D-MOD: Inga matchande ID:n i senaste kandidatuppsättning.', 'err'); return; }
-        autoSelectPaths(paths);
-        showBanner(`D-MOD: ${paths.length} filer auto-valda.`, 'ok');
-        return;
+        autoSelectPaths(paths); showBanner(`D-MOD: ${paths.length} filer auto-valda.`, 'ok'); return;
       }
 
-      // K-MOD strikt
-      if(j && j.protocol_id==='discovery_v2' && j.mode==='K-MOD' &&
+      // K-MOD
+      if(j && j.protocol_id==='discovery_v2' && (j.mode==='K-MOD' || !j.mode) &&
          Array.isArray(j.selected_files) && j.selected_files.length>=2){
-        // kontrollera struktur på varje item
-        const valid = j.selected_files.every(it=>{
-          return it && typeof it.path==='string' &&
-                 ['full','chunk','stub'].includes(it.embed) &&
-                 typeof it.why==='string';
-        });
+        const valid = j.selected_files.every(it=> it && typeof it.path==='string' && ['full','chunk','stub'].includes(it.embed) && typeof it.why==='string' );
         if(!valid){ showBanner('K-MOD: selected_files har fel struktur.', 'err'); return; }
-
-        const paths = j.selected_files.map(o=>o.path);
-        const unknown = paths.filter(p=>!FILES.includes(p));
+        const paths = j.selected_files.map(o=>o.path); const unknown = paths.filter(p=>!FILES.includes(p));
         if(unknown.length){ showBanner('Okända paths: '+unknown.slice(0,5).join(', '), 'warn'); }
-        autoSelectPaths(paths);
-        showBanner(`K-MOD: ${paths.length} filer auto-valda.`, 'ok');
-        return;
+        autoSelectPaths(paths); showBanner(`K-MOD: ${paths.length} filer auto-valda.`, 'ok'); return;
       }
 
       showBanner('JSON är giltig men matchar inte K-MOD/DMOD RETURN_CONTRACT.', 'warn');
-    }catch(e){
-      showBanner('Ogiltig JSON: '+e.message, 'err');
-    }
+    }catch(e){ showBanner('Ogiltig JSON: '+e.message, 'err'); }
   });
 
   // Hjälpmodal
@@ -1305,15 +1016,11 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     const visit = (obj)=>{
       if(obj && typeof obj === 'object'){
         if(obj.model && typeof obj.model === 'object'){
-          const prov = obj.model.provider || 'unknown';
-          const name = obj.model.name || 'unknown';
-          byProvider[prov] = (byProvider[prov] || 0) + 1;
-          const key = `${prov}:${name}`; byModel[key] = (byModel[key] || 0) + 1;
+          const prov = obj.model.provider || 'unknown'; const name = obj.model.name || 'unknown';
+          byProvider[prov] = (byProvider[prov] || 0) + 1; const key = `${prov}:${name}`; byModel[key] = (byModel[key] || 0) + 1;
         }else if(obj.generatedBy && obj.generatedBy.model){
-          const prov = obj.generatedBy.model.provider || 'unknown';
-          const name = obj.generatedBy.model.name || 'unknown';
-          byProvider[prov] = (byProvider[prov] || 0) + 1;
-          const key = `${prov}:${name}`; byModel[key] = (byModel[key] || 0) + 1;
+          const prov = obj.generatedBy.model.provider || 'unknown'; const name = obj.generatedBy.model.name || 'unknown';
+          byProvider[prov] = (byProvider[prov] || 0) + 1; const key = `${prov}:${name}`; byModel[key] = (byModel[key] || 0) + 1;
         }
         for(const k in obj){
           const v = obj[k];
@@ -1407,16 +1114,10 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   fetch('context.json', {cache:'no-store'})
     .then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
     .then(data=>{
-      ctx = data;
-      FILES = flattenPaths(ctx.file_structure);
-      CODE_FILES = FILES.filter(p=>isCodeLike(p) && !IMAGE_EXT.includes((p.split('.').pop()||'').toLowerCase()));
-      els.tree.innerHTML = '';
-      renderTree(ctx.file_structure, els.tree, '');
-      showBanner('Context laddad. Fortsätt med Steg A (STRICT K-MOD/D-MOD) eller Steg B.', 'ok');
+      ctx = data; FILES = flattenPaths(ctx.file_structure); CODE_FILES = FILES.filter(p=>isCodeLike(p) && !IMAGE_EXT.includes((p.split('.').pop()||'').toLowerCase()));
+      els.tree.innerHTML = ''; renderTree(ctx.file_structure, els.tree, ''); showBanner('Context laddad. Fortsätt med Steg A (STRICT K-MOD/D-MOD) eller Steg B.', 'ok');
     })
-    .catch(e=>{
-      els.tree.innerHTML = '<p style="color:#b00020">Kunde inte läsa context.json: '+e.message+'</p>';
-    });
+    .catch(e=>{ els.tree.innerHTML = '<p style="color:#b00020">Kunde inte läsa context.json: '+e.message+'</p>'; });
 
 })();
 </script>
@@ -1435,4 +1136,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-  
+```0
