@@ -1,26 +1,28 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-wrap_json_in_html.py — AI Context Builder v6.1 (JSON-first)
+wrap_json_in_html.py — AI Context Builder v7.0 (JSON-first, K-MOD + D-MOD)
 
 Kör:
   python wrap_json_in_html.py out.html
 
-Läser en lokal context.json (skapas av ditt repo-crawler-skript) med fält:
-  {
-    "file_structure": { ... nested ... },
-    "project_overview": {... valfritt ...},
-    "ai_instructions": {... valfritt ...},
-    "ai_performance_metrics": {... valfritt ...}
-  }
+Läser lokal context.json (skapas av generate_full_context.py) med fält:
+{
+  "file_structure": { ... nested ... },
+  "project_overview": {... valfritt ...},
+  "ai_instructions": {... valfritt ...},
+  "ai_performance_metrics": {... valfritt ...}
+}
 
-Producerar en fristående HTML som:
-- Skapar Discovery v2-prompt (JSON-first) med PROJECT_CAPSULE, FILE_ROLE_GUESSES, CANDIDATE_PATHS och hårda regler.
-- Skapar impl_bootstrap_v1 (JSON-first) med budgetstyrd inbäddning: full → chunk → stub, rika sammanfattningar och file_map.
-- Inkluderar hjälpmodal, prestandaflik (Chart.js), filförhandsvisning och validering/auto-select.
-- K-MOD och “Bädda in fulltext” default ON. Alltid bildförbud i reglerna.
+Nyheter v7.0:
+- Discovery Steg A har två lägen:
+  • K-MOD (utforskning) — Max-Context Discovery (upp till ~2 MB med head/fulltext)
+  • D-MOD (Deterministic) — kandidatlista med ID:n, SHA256, constraints + rules_hash
+- D-MOD return-kontrakt och validering (echo_rules_hash, selected_ids, notes).
+- Auto-select i UI från både K-MOD (selected_files) och D-MOD (selected_ids).
+- Alltid bildförbud: obligatory_rules += "forbid_image_generation".
 
-OBS: RAW-läsning pekar mot GitHub main-branch (justera vid behov).
+OBS: RAW läsning pekar mot GitHub main-branch; justera RAW om du kör lokalt file://.
 """
 import os, sys
 
@@ -29,7 +31,7 @@ HTML = r"""<!DOCTYPE html>
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>AI Context Builder v6.1 – JSON-first</title>
+<title>AI Context Builder v7.0 – JSON-first (K-MOD + D-MOD)</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 :root{
@@ -124,13 +126,18 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       <span><b>Provider:</b></span>
       <label class="inline"><input type="radio" name="prov" value="openai" checked /> ChatGPT 5</label>
       <label class="inline"><input type="radio" name="prov" value="gemini" /> Gemini 2.5 Pro</label>
-      <label class="inline" title="Discovery-läge (ingen kod) i Steg A"><input type="checkbox" id="kmod" checked /> K-MOD i Steg A</label>
+
+      <span style="margin-left:12px"><b>Steg A-läge:</b></span>
+      <label class="inline" title="K-MOD: utforskning (max-context)"><input type="radio" name="discMode" value="KMOD" checked /> K-MOD</label>
+      <label class="inline" title="D-MOD: deterministiskt urval (ID:n + rules_hash)"><input type="radio" name="discMode" value="DMOD" /> D-MOD</label>
+
+      <label class="inline" title="Discovery-läge (ingen kod) i Steg A"><input type="checkbox" id="kmod" checked /> K-MOD flagga</label>
       <label class="inline" title="Bäddar in full text för valda filer i bootstrap-prompten"><input type="checkbox" id="embed" checked /> Bädda in fulltext</label>
       <button id="discBtn">Skapa nästa arbete</button>
       <button id="implBtn" class="primary">Skapa uppgift</button>
     </div>
 
-    <textarea id="instruction" placeholder="Kort mål (≤200 tecken) ELLER klistra in Discovery-JSON här…"></textarea>
+    <textarea id="instruction" placeholder="Kort mål (≤200 tecken) ELLER klistra in Discovery-svar (JSON)…"></textarea>
     <div id="banner" class="banner"></div>
 
     <div class="output">
@@ -138,7 +145,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         <button id="copy" disabled>Copy</button>
         <button id="download" disabled>Download</button>
       </div>
-      <pre id="out">Här visas genererad Discovery-prompt / impl_bootstrap JSON.</pre>
+      <pre id="out">Här visas genererad Discovery-prompt (K-MOD/D-MOD) eller impl_bootstrap JSON.</pre>
       <div class="small">JSON här är avsett som <b>första prompt</b> i en ny “dum” modelsession utan kontext.</div>
     </div>
   </div>
@@ -176,15 +183,20 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 <div id="helpModal" class="modal">
   <div class="box">
     <header>
-      <b>Hjälp – Rätt arbetssekvens</b>
+      <b>Hjälp – Arbetssekvens</b>
       <button id="helpClose">✕</button>
     </header>
     <main>
       <div class="small">Obligatoriskt: <b>aldrig</b> generera bilder om inte användaren uttryckligen ber om det.</div>
       <ol>
-        <li><b>Skapa nästa arbete</b> (Discovery v2, K-MOD): genererar prompt (JSON-first) som inkluderar PROJECT_CAPSULE, FILE_ROLE_GUESSES, CANDIDATE_PATHS och schema med hårda regler.</li>
-        <li>Kör prompten i modellen → få Discovery-JSON. Klistra in den här. Buildern validerar och auto-väljer filer.</li>
-        <li>Justera val, sätt budget och kör <b>Skapa uppgift</b> → impl_bootstrap_v1 (JSON) med full/chunk/stub, rika sammanfattningar och file_map.</li>
+        <li><b>Skapa nästa arbete</b>:
+          <ul>
+            <li><b>K-MOD</b>: Max-Context Discovery (intro + candidates med content + mini-graf).</li>
+            <li><b>D-MOD</b>: Deterministiskt urval (ID:n, SHA256, constraints, rules_hash). Modellen returnerar <code>selected_ids</code> + <code>notes</code>.</li>
+          </ul>
+        </li>
+        <li>Klistra in modellsvar i rutan → auto-validering och auto-select.</li>
+        <li><b>Skapa uppgift</b>: genererar <i>impl_bootstrap_v1</i> med full/chunk/stub + file_map.</li>
         <li>Starta ny tom modelsession med bootstrap-JSON. Flöde: PLAN-JSON → “OK” → GEN-JSON (patch/tester).</li>
       </ol>
     </main>
@@ -209,6 +221,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
 <script>
 (function(){
+  // Justera RAW-källa vid behov:
   const RAW = 'https://raw.githubusercontent.com/Engrove/Engrove-Audio-Tools-2.0/main/';
   const IMAGE_EXT = ['png','jpg','jpeg','gif','webp','svg'];
 
@@ -225,7 +238,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     download:  document.getElementById('download'),
     discBtn:   document.getElementById('discBtn'),
     implBtn:   document.getElementById('implBtn'),
-    kmod:      document.getElementById('kmod'),
+    kmodFlag:  document.getElementById('kmod'),
     embed:     document.getElementById('embed'),
     banner:    document.getElementById('banner'),
     helpBtn:   document.getElementById('helpBtn'),
@@ -241,14 +254,24 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     fpDownload:document.getElementById('fpDownload'),
     fpClose:   document.getElementById('fpClose'),
     budgetKb:  document.getElementById('budgetKb'),
-    compact:   document.getElementById('compact'),
+    compact:   document.getElementById('compact')
   };
+
+  // Discovery mode (radio)
+  function currentDiscMode(){
+    const el = document.querySelector('input[name="discMode"]:checked');
+    return el ? el.value : 'KMOD';
+  }
 
   // State
   let ctx = null;
   let FILES = [];
   let CODE_FILES = [];
   let FILE_INFO = new Map(); // path -> {size, sha256?, lang?}
+
+  // För D-MOD: senaste kandidater och rules_hash
+  let LAST_CANDIDATES = []; // [{id, path, ...}]
+  let LAST_RULES_HASH = null;
 
   // MUST-regler inkl. bildförbud
   const MUST_STRICT = [
@@ -261,6 +284,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   ];
 
   const KMOD_BANNER = "MODE: K-MOD (Brainstorming/Discovery). Ingen kod. Endast JSON enligt schema.";
+  const DMOD_BANNER = "MODE: D-MOD (Deterministic Discovery). Ingen kod. Endast JSON enligt return_contract.";
   const IMAGE_GUARD_BANNER = "BILDREGEL: ALDRIG generera bilder i denna session om det inte uttryckligen efterfrågas.";
 
   // ---------- Utils ----------
@@ -311,6 +335,19 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     return await r.text();
   }
 
+  // WebCrypto SHA-256 (hex)
+  async function sha256Hex(text){
+    const enc = new TextEncoder().encode(text);
+    if(window.crypto && crypto.subtle && crypto.subtle.digest){
+      const buf = await crypto.subtle.digest('SHA-256', enc);
+      const arr = Array.from(new Uint8Array(buf));
+      return arr.map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+    // Fallback (inte kryptografiskt, men undantagsvis)
+    let h=0; for(let i=0;i<enc.length;i++){ h=(h*31 + enc[i])>>>0; }
+    return h.toString(16);
+  }
+
   // ---------- Heuristik ----------
   function inferRole(path){
     if(path==='package.json') return 'Scripts & beroenden; kör-/bygg-/lint-/testkommandon';
@@ -335,7 +372,38 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     return 'Kod-/textfil';
   }
 
-  function buildFileRoleGuesses(paths, limit=60){
+  function priorityScore(path, task){
+    let score = 0;
+    const low = path.toLowerCase();
+    if(task){
+      const first = (task.split(/\s+/)[0]||'').toLowerCase();
+      if(first && low.includes(first)) score += 5;
+    }
+    if(['package.json','vite.config.js','index.html'].includes(path)) score += 5;
+    if(/src\/(app\/)?main\.(js|ts)$/.test(path)) score += 5;
+    if(/^docs\/ai_protocols\//.test(path) || /\.spec\./.test(path) || /\.test\./.test(path)) score += 3;
+    const meta = FILE_INFO.get(path)||{};
+    const sz = meta.size || 0;
+    if(sz>100*1024) score -= Math.floor((sz-100*1024)/(50*1024));
+    return score;
+  }
+
+  function isCriticalForTask(path, task){
+    const t=(task||'').toLowerCase();
+    const p=path.toLowerCase();
+    const critSub = [
+      'comparison','compare','data-explorer','explorer',
+      'filters.js','transformer.js','comparisonstore','comparisonmodal.vue',
+      'dataexplorerpage.vue','explorerstore.js','state.js'
+    ];
+    if(critSub.some(k=>p.includes(k))) return true;
+    if(['package.json','vite.config.js','index.html','src/app/main.js','src/main.js','src/app/router.js'].includes(path)) return true;
+    const first = (t.split(/\s+/)[0]||'').replace(/[^a-z0-9]/g,'');
+    if(first && p.includes(first)) return true;
+    return false;
+  }
+
+  function buildFileRoleGuesses(paths, limit=80){
     const out=[];
     const pick = paths.filter(p=>isCodeLike(p)).slice(0, limit);
     pick.forEach(p=> out.push(`- ${p} (${guessLang(p)}): ${inferRole(p)}`));
@@ -381,7 +449,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       }
     }catch(_){}
 
-    const dirs = Array.from(new Set(FILES.map(p=>p.split('/')[0]))).filter(d=>!d.startsWith('.')).slice(0,8);
+    const dirs = Array.from(new Set(FILES.map(p=>p.split('/')[0]))).filter(d=>!d.startsWith('.')).slice(0,10);
     const invariants = [
       "PLAN→GEN (PLAN-JSON → OK → GEN-JSON)",
       "Unified patch (>50 rader) när relevant",
@@ -389,9 +457,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       "ALDRIG generera bilder utan uttrycklig begäran"
     ];
 
-    return {
-      name, purpose, stack, entry_points, run_cmd, build_cmd, test_cmd, lint_cmd, invariants, dirs
-    };
+    return { name, purpose, stack, entry_points, run_cmd, build_cmd, test_cmd, lint_cmd, invariants, dirs };
   }
 
   // ---------- Tree UI ----------
@@ -427,8 +493,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       li.appendChild(label);
       if(it.type==='file'){
         txt.addEventListener('click', async (e)=>{
-          e.preventDefault();
-          try{ showFilePreview(p); }catch(e){ /* noop */ }
+          e.preventDefault(); showFilePreview(p);
         });
       }else{
         const toggle = document.createElement('span'); toggle.className='toggle'; toggle.textContent='►';
@@ -502,13 +567,10 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     'docs/ai_protocols/context_bootstrap_instruction.md',
     'docs/AI_Collaboration_Standard.md',
     'docs/Mappstruktur_och_Arbetsflöde.md',
-    'docs/Blueprint_för_Migrering_v1_till_v2.md',
-    'docs/Engrove_Audio_Toolkit_v2.0_Analys.md',
     'package.json',
     'vite.config.js',
     'scripts/generate_full_context.py',
-    'scripts/wrap_json_in_html.py',
-    'scripts/history/historical_reconstruction_builder.py'
+    'scripts/wrap_json_in_html.py'
   ];
   function quickSelectCore(){
     els.tree.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=false);
@@ -592,81 +654,272 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     els.copy.disabled = els.download.disabled = false;
   }
 
-  // ---------- Discovery v2 ----------
-  function buildDiscoverySchema(task){
+  // ---------- K-MOD: Max-Context Discovery ----------
+  const DEEP = { CAP_BYTES: 2_000_000, MAX_FILES: 180, HEAD_BYTES: 20_000, FULL_SIZE_LIMIT: 120_000 };
+
+  async function summarizeForDiscoveryDeep(path, task){
+    const meta = FILE_INFO.get(path) || {};
+    let content = '';
+    try { content = await fetchText(path); } catch(_){ content=''; }
+
+    const lang = guessLang(path);
+    const role = inferRole(path);
+    const size = meta.size || (content ? new Blob([content]).size : 0);
+    const importance = priorityScore(path, task);
+    const takeFull = size>0 && (size <= DEEP.FULL_SIZE_LIMIT || isCriticalForTask(path, task));
+    const head = takeFull ? content : content.slice(0, DEEP.HEAD_BYTES);
+
+    const lines = head.split(/\r?\n/);
+    const anchors=[];
+    for(let i=0;i<lines.length && anchors.length<12;i++){
+      const L=lines[i];
+      if(/^\s*(export|def|class|function|const|let|props|emits|interface|type|setup\(|data:|methods:)\b/.test(L) || /TODO|FIXME|@/.test(L)){
+        anchors.push({line:i+1, text:L.trim().slice(0,160)});
+      }
+    }
+    const imports=[], exports=[];
+    head.split(/\r?\n/).forEach(L=>{
+      let m;
+      if((m=L.match(/^\s*import\s+.*?from\s+['"]([^'"]+)['"]/))) imports.push(m[1]);
+      if((m=L.match(/^\s*export\s+(?:default\s+)?(?:function|class|const|let|var|interface|type)\s+([A-Za-z0-9_]+)/))) exports.push(m[1]);
+      if((m=L.match(/module\.exports\s*=\s*([A-Za-z0-9_]+)/))) exports.push(m[1]);
+    });
+    const key_symbols=[];
+    head.split(/\r?\n/).forEach(L=>{
+      let m;
+      if((m=L.match(/^\s*(?:export\s+)?(?:function|class)\s+([A-Za-z0-9_]+)/))) key_symbols.push(m[1]);
+      if((m=L.match(/^\s*const\s+([A-Za-z0-9_]+)\s*=\s*(?:\(.*\)\s*=>|function)/))) key_symbols.push(m[1]);
+      if((m=L.match(/^\s*def\s+([A-Za-z0-9_]+)\s*\(/))) key_symbols.push(m[1]);
+    });
+
     return {
+      path, role, lang,
+      size_bytes: size || null,
+      sha256: (FILE_INFO.get(path)||{}).sha256 || null,
+      importance,
+      anchors,
+      key_symbols: Array.from(new Set(key_symbols)).slice(0,20),
+      imports: Array.from(new Set(imports)).slice(0,20),
+      exports: Array.from(new Set(exports)).slice(0,20),
+      embed: takeFull ? "full" : "chunk",
+      content: head
+    };
+  }
+
+  async function buildProjectIntro(task){
+    const capsule = await buildProjectCapsule();
+    // package scripts + routes + glossary head (aux meta)
+    let pkg=null, scripts={};
+    try{ const t = await fetchText('package.json'); pkg = JSON.parse(t); scripts = pkg.scripts || {}; }catch(_){}
+    let routes=[];
+    for(const r of ['src/app/router.js','src/app/router.ts']){
+      if(FILES.includes(r)){
+        try{ const t = await fetchText(r); routes = Array.from(t.matchAll(/path:\s*['"]([^'"]+)['"]/g)).map(m=>m[1]); break; }
+        catch(_){}
+      }
+    }
+    let glossary_head='';
+    if(FILES.includes('docs/glossary.md')){
+      try{ glossary_head = (await fetchText('docs/glossary.md')).slice(0, 8000); }catch(_){}
+    }
+    return {
+      name: capsule.name,
+      purpose: capsule.purpose,
+      stack: capsule.stack,
+      goal_for_this_session: task,
+      invariants: capsule.invariants,
+      package_scripts: scripts,
+      routes, glossary_head
+    };
+  }
+
+  async function buildFileMapMiniFromCandidates(cands){
+    // Skapa enkel graf (imports mellan kandidater). ID redan satt på cands.
+    const pathToId = new Map(cands.map(c=>[c.path, c.id]));
+    const nodes = cands.map(c=>({ id: c.id, path: c.path, group: (/^src\//.test(c.path) ? 'src' : /^docs\//.test(c.path) ? 'docs' : /^scripts\//.test(c.path) ? 'scripts' : 'other'), role: inferRole(c.path) }));
+    const edges = [];
+    for(const c of cands){
+      const base = c.path.split('/').slice(0,-1).join('/');
+      (c.imports||[]).forEach(im=>{
+        if(im.startsWith('./')||im.startsWith('../')){
+          const abs = base + '/' + im;
+          const guesses = [abs, abs+'.js', abs+'.ts', abs+'.vue', abs.replace(/\/index$/,'/index.js'), abs.replace(/\/index$/,'/index.ts')];
+          const to = guesses.find(g=> pathToId.has(g));
+          if(to){ edges.push({from:c.id, to:pathToId.get(to), rel:'imports'}); }
+        }
+      });
+    }
+    return { nodes, edges: edges.slice(0, 800) };
+  }
+
+  async function buildDiscoveryPromptKMOD(){
+    const task = getTask();
+    const intro = await buildProjectIntro(task);
+
+    // plocka kandidater upp till CAP_BYTES
+    const ranked = CODE_FILES.slice().sort((a,b)=> priorityScore(b, task) - priorityScore(a, task));
+    const picked=[]; let used=0; let nextId=1;
+    for(const p of ranked){
+      if(picked.length>=DEEP.MAX_FILES) break;
+      const s = await summarizeForDiscoveryDeep(p, task);
+      const cost = new Blob([s.content]).size + 700; // overhead
+      if(used + cost > DEEP.CAP_BYTES) continue;
+      used += cost; picked.push({ id: nextId++, ...s });
+    }
+    LAST_CANDIDATES = picked.slice(); // lagra för auto-select från K-MOD om modellen svarar med paths
+
+    const FM = await buildFileMapMiniFromCandidates(picked);
+
+    // Schema
+    const schema = {
       protocol_id:"discovery_v2",
       psv:["rules_rehearsed","risk_scan"],
-      mode: "K-MOD",
+      mode:"K-MOD",
       obligatory_rules:["forbid_image_generation"],
       task,
-      project_capsule:{},
-      file_role_guesses:[],
-      selected_files: [],
+      project_intro:{},
+      candidate_files:[],
+      file_map_mini:{},
+      selected_files:[],
       requires_chunks:[],
       api_contracts_touched:[],
       risks:[],
       test_plan:[],
       done_when:["tests_green","lint_ok","types_ok"],
-      _note:"Lista bara det som krävs. Motivera varje post i requires_full_files i notes (≤200 tecken)."
+      _note:"Välj endast från candidate_files. Sätt embed={'full','chunk','stub'}. Motivera kort varje val."
     };
-  }
-  function discoveryHardRules(){
-    return [
-      "HÅRDA REGLER:",
-      "- Välj ENDAST paths från CANDIDATE_PATHS.",
+
+    const prompt = [
+      "SESSION: PLANERA NÄSTA ARBETE (Discovery)",
+      KMOD_BANNER,
+      IMAGE_GUARD_BANNER,
+      "KRAV: Svara ENBART med giltig JSON enligt schema. Ingen kod.",
+      "- Välj ENDAST objekt från CANDIDATE_FILES.",
       "- Inga placeholders eller påhittade vägar.",
-      "- Minst 2 paths i 'selected_files'.",
-      "- 'embed' ∈ {'full','chunk','stub'}."
+      "- Minst 2 objekt i 'selected_files'.",
+      "- 'embed' ∈ {'full','chunk','stub'}.",
+      "SCHEMA:",
+      JSON.stringify(schema, null, 2),
+      "PROJECT_INTRO:",
+      JSON.stringify(intro, null, 2),
+      "CANDIDATE_FILES:",
+      JSON.stringify(picked, null, 2),
+      "FILE_MAP_MINI:",
+      JSON.stringify(FM, null, 2),
+      "KONTEXT-RÅD:",
+      "- Prioritera målkomponenter/kontrakt = embed:'full'.",
+      "- Övrigt = 'chunk' (content inkluderad) eller 'stub' om endast metadata krävs.",
+      "- Fyll 'selected_files' med objekt (inkl. path, embed, why)."
+    ].join("\n");
+
+    return prompt;
+  }
+
+  // ---------- D-MOD: Deterministic Discovery ----------
+  const DM = {
+    MAX_FILES: 180,
+    CAP_BYTES: 2_000_000,
+    HEAD_BYTES: 20_000,
+    FULL_SIZE_LIMIT: 120_000,
+    SELECTION: { only_ids: true, min: 2, max: 12, allow_paths: ["src/**","docs/**","scripts/**"], deny_paths: ["infra/prod/**"] }
+  };
+
+  function dmodHardRules(){
+    return [
+      "HÅRDA D-MOD-REGLER:",
+      "- Endast svar enligt return_contract.",
+      "- Endast ID:n från CANDIDATE_FILES (no new paths).",
+      "- Antal val: min="+DM.SELECTION.min+", max="+DM.SELECTION.max+".",
+      "- Echo 'rules_hash' oförändrat."
     ].join("\n");
   }
 
-  function validateDiscoveryJSON(obj){
-    const err = [];
-    const set = new Set(FILES);
-    const sf = Array.isArray(obj.selected_files)?obj.selected_files:[];
-    if(sf.length < 2) err.push("Minst 2 paths i selected_files.");
-    for(const it of sf){
-      if(!set.has(it.path)) err.push(`Okänd path: ${it.path}`);
-      if(!['full','chunk','stub'].includes(it.embed)) err.push(`Ogiltig embed: ${it.path}`);
-    }
-    return err;
+  function globToRegex(glob){
+    // enkel glob: ** -> .*, * -> [^/]*, . escapas
+    return new RegExp('^'+glob.split('**').join('@@').replace(/[.+^${}()|[\]\\]/g,'\\$&').split('*').join('[^/]*').split('@@').join('.*')+'$');
   }
 
-  function autoSelectFromDiscovery(sf){
-    const all = Array.from(els.tree.querySelectorAll('input[type="checkbox"]'));
-    sf.forEach(o=>{
-      const cb = all.find(x=>x.dataset.path===o.path);
-      if(cb){ cb.checked = true; openParentsFor(o.path); }
-    });
+  function pathAllowed(p){
+    const allow = DM.SELECTION.allow_paths.map(globToRegex);
+    const deny  = DM.SELECTION.deny_paths.map(globToRegex);
+    const ok = allow.some(r=>r.test(p));
+    const bad = deny.some(r=>r.test(p));
+    return ok && !bad;
   }
 
-  function buildCandidateBlock(){ return "CANDIDATE_PATHS:\n"+ FILES.map(p=>`- ${p}`).join("\n"); }
-
-  function buildDiscoveryPrompt(){
+  async function buildDiscoveryPromptDMOD(){
     const task = getTask();
-    return Promise.all([buildProjectCapsule()]).then(([capsule])=>{
-      const schema = buildDiscoverySchema(task);
-      const roleGuesses = buildFileRoleGuesses(CODE_FILES, 80);
-      const prompt = [
-        "SESSION: PLANERA NÄSTA ARBETE (Discovery)",
-        KMOD_BANNER,
-        IMAGE_GUARD_BANNER,
-        "KRAV: Svara ENBART med giltig JSON enligt schema. Ingen kod.",
-        discoveryHardRules(),
-        "SCHEMA:",
-        JSON.stringify(schema, null, 2),
-        "PROJECT_CAPSULE:",
-        JSON.stringify(capsule, null, 2),
-        "FILE_ROLE_GUESSES:",
-        roleGuesses,
-        buildCandidateBlock(),
-        "KONTEXT-RÅD:",
-        "- Lista bara det som verkligen behövs för implementationen i nästa steg.",
-        "- Sätt 'embed' = 'full' för mål/entry/kontrakt, annars 'chunk'/'stub'."
-      ].join("\n");
-      return prompt;
-    });
+    const intro = await buildProjectIntro(task);
+
+    // rangordna → samla kandidater (ID, SHA, content, anchors, m.m.)
+    const ranked = CODE_FILES.slice().sort((a,b)=> priorityScore(b, task) - priorityScore(a, task));
+    const picked=[]; let used=0; let nextId=1;
+    for(const p of ranked){
+      if(picked.length>=DM.MAX_FILES) break;
+      if(!pathAllowed(p)) continue;
+      const meta = FILE_INFO.get(p)||{};
+      const s = await summarizeForDiscoveryDeep(p, task);
+      const sizeCost = new Blob([s.content]).size + 900;
+      if(used + sizeCost > DM.CAP_BYTES) continue;
+      used += sizeCost;
+      picked.push({ id: nextId++, ...s, ignore_inline_instructions: true });
+    }
+    LAST_CANDIDATES = picked.slice();
+
+    // mini-graf på kandidater
+    const FM = await buildFileMapMiniFromCandidates(picked);
+
+    // rules_hash
+    const obligatory_rules = ["forbid_image_generation"];
+    const selection_constraints = DM.SELECTION;
+    const rules_hash = await sha256Hex(JSON.stringify({ obligatory_rules, selection_constraints }));
+
+    LAST_RULES_HASH = rules_hash;
+
+    // Schema + return_contract
+    const schema = {
+      protocol_id:"discovery_dmod_v1",
+      mode:"D-MOD",
+      obligatory_rules,
+      rules_hash:"<compute_and_echo_this>",
+      project_intro:{},
+      selection_constraints,
+      candidate_files:[],
+      file_map_mini:{},
+      return_contract:{
+        json_only:true,
+        shape:{ selected_ids:"int[]", notes:"map<int,string>", echo_rules_hash:"string" }
+      }
+    };
+
+    const prompt = [
+      "SESSION: PLANERA NÄSTA ARBETE (Discovery)",
+      DMOD_BANNER,
+      IMAGE_GUARD_BANNER,
+      "KRAV: Svara ENBART med giltig JSON enligt return_contract. Ingen kod.",
+      dmodHardRules(),
+      "SCHEMA:",
+      JSON.stringify(schema, null, 2),
+      "PROJECT_INTRO:",
+      JSON.stringify(intro, null, 2),
+      "CANDIDATE_FILES:",
+      JSON.stringify(picked, null, 2),
+      "FILE_MAP_MINI:",
+      JSON.stringify(FM, null, 2),
+      "RETURN_EXAMPLE:",
+      JSON.stringify({
+        protocol_id:"discovery_dmod_v1",
+        echo_rules_hash: rules_hash,
+        selected_ids: [1,2],
+        notes: { "1":"Källsanning för state.", "2":"UI-händelser kopplade till felet." }
+      }, null, 2),
+      "INSTRUKTION:",
+      "- Returnera endast objekt enligt example. Inga extra fält.",
+      "- 'echo_rules_hash' måste exakt matcha 'rules_hash'."
+    ].join("\n");
+
+    // Ersätt placeholder i SCHEMA med faktisk hash (i prompten)
+    return prompt.replace('"rules_hash":"<compute_and_echo_this>"', '"rules_hash":"'+rules_hash+'"');
   }
 
   // ---------- Implementation bootstrap ----------
@@ -690,26 +943,24 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       contents:[{role:"user", parts:[{text:userJson}]}]
     };
   }
+  function toProviderEnvelope(systemRules, userJsonPretty){
+    const sys = Array.isArray(systemRules) ? systemRules.join("\\n") : String(systemRules||'');
+    const user = userJsonPretty;
+    return (document.querySelector('input[name="prov"][value="gemini"]').checked)
+      ? JSON.stringify(toGemini(sys, user), null, els.compact.checked?0:2)
+      : JSON.stringify(toOpenAI(sys, user), null, els.compact.checked?0:2);
+  }
 
   function getTask(){
     const t = els.instruction.value.trim();
-    return (t && t.length<=200) ? t : "Beskriv kort mål i en mening.";
+    return (t && (()=>{ try{ JSON.parse(t); return false; }catch(_){ return true; } })() && t.length<=400)
+      ? t
+      : "Beskriv kort mål i en mening.";
   }
 
   function bytes(s){ return new Blob([s]).size; }
 
-  function priorityScore(path, task){
-    let score = 0;
-    const low = path.toLowerCase();
-    if(task && low.includes((task.split(/\s+/)[0]||'').toLowerCase())) score += 5;
-    if(['package.json','vite.config.js','index.html'].includes(path)) score += 5;
-    if(/src\/(app\/)?main\.(js|ts)$/.test(path)) score += 5;
-    if(/^docs\/ai_protocols\//.test(path) || /\.spec\./.test(path) || /\.test\./.test(path)) score += 3;
-    const sz = (FILE_INFO.get(path)||{}).size || 0;
-    if(sz>100*1024) score -= Math.floor((sz-100*1024)/(50*1024));
-    return score;
-  }
-
+  // Summarisering för icke fulla i bootstrap
   function summarizeNonFull(path, content){
     const lang = guessLang(path);
     const size = (FILE_INFO.get(path)||{}).size || (content?bytes(content):null);
@@ -728,33 +979,25 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       if((m=L.match(/^\s*export\s+(?:default\s+)?(?:function|class|const|let|var|interface|type)\s+([A-Za-z0-9_]+)/))) exports.push(m[1]);
       if((m=L.match(/module\.exports\s*=\s*([A-Za-z0-9_]+)/))) exports.push(m[1]);
     });
-    const key_symbols = exports.slice(0,12);
-    const interfaces = [];
-    if(lang==='js' || lang==='ts' || lang==='vue'){
-      key_symbols.forEach(s=>interfaces.push(`${s}(...)`));
-    }
-    if(lang==='py'){
-      (content||'').split(/\r?\n/).forEach((L)=>{
-        const m=L.match(/^\s*def\s+([A-Za-z0-9_]+)\s*\(([^)]*)\)/);
-        if(m) interfaces.push(`${m[1]}(${m[2]})`);
-      });
-    }
+    const key_symbols = [];
+    (content||'').split(/\r?\n/).forEach(L=>{
+      let m;
+      if((m=L.match(/^\s*(?:export\s+)?(?:function|class)\s+([A-Za-z0-9_]+)/))) key_symbols.push(m[1]);
+      if((m=L.match(/^\s*const\s+([A-Za-z0-9_]+)\s*=\s*(?:\(.*\)\s*=>|function)/))) key_symbols.push(m[1]);
+      if((m=L.match(/^\s*def\s+([A-Za-z0-9_]+)\s*\(/))) key_symbols.push(m[1]);
+    });
     const role = inferRole(path);
-    const why = "Kopplad via imports/exports och påverkar flöde enligt file_map.";
-    const inv = [];
-    if(/json$/i.test(path)) inv.push("Nycklar och scheman styr körflöde");
-    if(/\.vue$/.test(path)) inv.push("Fokus/ARIA/props stabila");
     const sha = (FILE_INFO.get(path)||{}).sha256 || null;
     const loc = (content||'').split(/\r?\n/).length || null;
 
     return {
       path, lang, size_bytes: size || null,
-      role, why,
-      key_symbols, interfaces,
+      role,
+      key_symbols: Array.from(new Set(key_symbols)).slice(0,12),
       imports_exports: { imports: imports.slice(0,12), exports: exports.slice(0,12) },
       call_graph_outline: [],
       data_flow: [],
-      invariants: inv,
+      invariants: [],
       known_issues: [],
       change_impact: "Risk för regress vid felaktiga kontrakt.",
       test_hooks: [],
@@ -765,18 +1008,17 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   }
 
   async function buildFileMap(nodesList){
+    // Reuse K-MOD mini-graf men utan ID-krav
     const idByPath = new Map();
     const nodes = [];
     nodesList.forEach((n, idx)=>{
-      const meta = FILE_INFO.get(n.path) || {};
-      const id = idx+1;
-      idByPath.set(n.path, id);
+      const id = idx+1; idByPath.set(n.path, id);
       nodes.push({
         id, path: n.path, lang: guessLang(n.path),
         role: inferRole(n.path),
         is_content_full: !!n.is_content_full,
-        sha256: meta.sha256 || null,
-        size_bytes: meta.size || null,
+        sha256: (FILE_INFO.get(n.path)||{}).sha256 || null,
+        size_bytes: (FILE_INFO.get(n.path)||{}).size || null,
         group: (/^src\//.test(n.path) ? 'src' : /^docs\//.test(n.path) ? 'docs' : /^scripts\//.test(n.path) ? 'scripts' : 'other')
       });
     });
@@ -786,96 +1028,46 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       const content = n.content || '';
       const fromId = idByPath.get(n.path);
       if(!fromId) continue;
-
-      const addEdge = (toPath, rel, why, anchorLine)=>{
-        const toId = idByPath.get(toPath);
-        if(!toId) return;
-        edges.push({
-          from: fromId, to: toId, rel, weight: 5,
-          why, anchors: anchorLine?[{path:n.path,line:anchorLine,text:''}]:[]
-        });
-      };
+      const base = n.path.split('/').slice(0,-1).join('/');
 
       content.split(/\r?\n/).forEach((L, i)=>{
         const m=L.match(/^\s*import\s+.*?from\s+['"]([^'"]+)['"]/);
         if(m){
           let to = m[1];
           if(to.startsWith('./') || to.startsWith('../')){
-            const base = n.path.split('/').slice(0,-1).join('/');
-            const cand = [to, to+'.js', to+'.ts', to+'.vue'].map(x=> base+'/'+x).find(p=> idByPath.has(p));
-            if(cand) addEdge(cand,'imports','import', i+1);
+            const candList = [to, to+'.js', to+'.ts', to+'.vue'].map(x=> base+'/'+x);
+            const cand = candList.find(p=> idByPath.has(p));
+            if(cand) edges.push({from: fromId, to: idByPath.get(cand), rel: 'imports', anchors:[{path:n.path,line:i+1}]});
           }
-        }
-      });
-
-      if(/\.vue$/.test(n.path)){
-        const comps = content.match(/<([A-Z][A-Za-z0-9]+)/g) || [];
-        const uniq = Array.from(new Set(comps.map(x=>x.slice(1)))).slice(0,20);
-        uniq.forEach(name=>{
-          const to = nodesList.find(x=> x.path.endsWith('/'+name+'.vue'));
-          if(to) addEdge(to.path,'renders','template uses component', null);
-        });
-      }
-
-      if(/selectedItem|store|pinia|vuex/.test(content)){
-        nodesList.forEach(other=>{
-          if(/store/i.test(other.path) && other.path!==n.path){
-            addEdge(other.path,'uses_store','state usage', null);
-          }
-        });
-      }
-
-      content.split(/\r?\n/).forEach((L,i)=>{
-        if(/fetch\(|axios\./.test(L)){
-          const api = nodesList.find(x=> /\/api\//.test(x.path));
-          if(api) addEdge(api.path,'calls_api','http request', i+1);
         }
       });
     }
 
     const views = {
       module_graph: { root_ids: nodes.filter(n=>/main\.(js|ts)$/.test(n.path)).map(n=>n.id), edge_types: ["imports","requires"] },
-      runtime_flow: { sequence: nodes.map(n=>n.id).slice(0,8) },
-      ui_tree: { mount: nodes.find(n=>/pages\/.+\.vue$/.test(n.path))?.id || null, children: nodes.filter(n=>/features\/.+\.vue$/.test(n.path)).map(n=>n.id) },
-      api_map: edges.filter(e=>e.rel==='calls_api').map(e=>({ file_id: e.from, method: "GET", url: "/api/…" })),
-      data_flow: edges.filter(e=>e.rel==='uses_store').map(e=>({ from: e.from, to: e.to, rel: "transforms" })),
-      test_map: []
+      runtime_flow: { sequence: nodes.map(n=>n.id).slice(0,12) }
     };
-
     const metrics = {
-      degree_top: nodes.map(n=>({id:n.id,deg: edges.filter(e=>e.from===n.id||e.to===n.id).length})).sort((a,b)=>b.deg-a.deg).slice(0,5),
-      clusters: [{ id:"ui", nodes:nodes.filter(n=>n.group==='src' && /\.vue$/.test(n.path)).map(n=>n.id) }]
+      degree_top: nodes.map(n=>({id:n.id,deg: edges.filter(e=>e.from===n.id||e.to===n.id).length})).sort((a,b)=>b.deg-a.deg).slice(0,8)
     };
-
     return {
-      budget: { target_bytes: Number(els.budgetKb.value)*1000, used_bytes: 0, max_nodes: 200, max_edges: 600 },
+      budget: { target_bytes: Number(els.budgetKb.value)*1000, used_bytes: 0, max_nodes: 400, max_edges: 1200 },
       nodes, edges, views, metrics
     };
-  }
-
-  // ---------- Implementation builder ----------
-  function toProviderEnvelope(systemRules, userJsonPretty){
-    const sys = Array.isArray(systemRules) ? systemRules.join("\\n") : String(systemRules||'');
-    const user = userJsonPretty;
-    return (document.querySelector('input[name="prov"][value="gemini"]').checked)
-      ? JSON.stringify(toGemini(sys, user), null, els.compact.checked?0:2)
-      : JSON.stringify(toOpenAI(sys, user), null, els.compact.checked?0:2);
   }
 
   async function buildImplBootstrap(){
     const task = getTask();
     const targetBytes = Number(els.budgetKb.value)*1000;
     const sel = selectedPaths();
-    if(sel.length===0){
-      throw new Error('Välj minst 1 fil.');
-    }
+    if(sel.length===0){ throw new Error('Välj minst 1 fil.'); }
+
     const mustFull = new Set(sel);
     if(FILES.includes('package.json')) mustFull.add('package.json');
     const entry = ['src/app/main.js','src/main.js','index.html'].filter(p=>FILES.includes(p));
     if(entry[0]) mustFull.add(entry[0]);
 
     const sorted = Array.from(new Set([...mustFull, ...sel])).sort((a,b)=> priorityScore(b, task)-priorityScore(a, task));
-
     const filesOut = [];
     let used = 0;
 
@@ -962,6 +1154,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     });
   });
 
+  // Knappkopplingar
   els.selAll.onclick = ()=> els.tree.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=true);
   els.deselAll.onclick = ()=> els.tree.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=false);
   els.selCore.onclick = quickSelectCore;
@@ -978,12 +1171,17 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
   // Discovery-knapp
   els.discBtn.onclick = async ()=>{
-    clearBanner();
-    if(!ctx){ showBanner('context.json ej laddad ännu.', 'err'); return; }
-    const prompt = await buildDiscoveryPrompt();
-    els.out.textContent = prompt;
-    els.copy.disabled = els.download.disabled = false;
-    showBanner('Discovery-prompt skapad. Kör i modell, klistra svaret här.', 'ok');
+    try{
+      clearBanner();
+      if(!ctx){ showBanner('context.json ej laddad ännu.', 'err'); return; }
+      const mode = currentDiscMode();
+      const prompt = (mode==='DMOD') ? await buildDiscoveryPromptDMOD() : await buildDiscoveryPromptKMOD();
+      els.out.textContent = prompt;
+      els.copy.disabled = els.download.disabled = false;
+      showBanner((mode==='DMOD'?'D-MOD':'K-MOD')+' Discovery-prompt skapad. Kör i modell, klistra svaret här.', 'ok');
+    }catch(e){
+      showBanner('Fel vid Discovery: '+e.message, 'err');
+    }
   };
 
   // Implementation-knapp
@@ -997,24 +1195,50 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     }
   };
 
-  // Instruction input (task eller Discovery-JSON)
-  els.instruction.addEventListener('input', ()=>{
+  // Tolka input (task- eller Discovery-svar)
+  els.instruction.addEventListener('input', async ()=>{
     clearBanner();
     const text = els.instruction.value.trim();
     if(!text) return;
     try{
       const parsed = JSON.parse(text);
-      if(parsed && Array.isArray(parsed.selected_files)){
-        const errs = validateDiscoveryJSON(parsed);
-        if(errs.length) showBanner('Discovery-JSON varningar: '+errs.join(' | '), 'warn');
-        autoSelectFromDiscovery(parsed.selected_files);
-      }else if(parsed && Array.isArray(parsed.filesToSelect)){
-        const errs = validateDiscoveryJSON({selected_files: parsed.filesToSelect.map(p=>({path:p, embed:'full'}))});
-        if(errs.length) showBanner('Varningar: '+errs.join(' | '), 'warn');
-        autoSelectFromDiscovery(parsed.filesToSelect.map(p=>({path:p})));
+
+      // D-MOD svar?
+      if(parsed && parsed.protocol_id==='discovery_dmod_v1' && Array.isArray(parsed.selected_ids)){
+        const hashOk = (parsed.echo_rules_hash && LAST_RULES_HASH && parsed.echo_rules_hash===LAST_RULES_HASH);
+        if(!hashOk) showBanner('Varning: echo_rules_hash matchar inte rules_hash från prompten.', 'warn');
+        const ids = new Set(parsed.selected_ids);
+        const paths = LAST_CANDIDATES.filter(c=>ids.has(c.id)).map(c=>c.path);
+        autoSelectPaths(paths);
+        showBanner(`D-MOD val: ${paths.length} filer auto-valda.`, 'ok');
+        return;
       }
+
+      // K-MOD-kompatibelt (selected_files med path/objekt)
+      if(parsed && Array.isArray(parsed.selected_files)){
+        const paths = parsed.selected_files.map(o => (typeof o==='string') ? o : o.path).filter(Boolean);
+        autoSelectPaths(paths);
+        showBanner(`K-MOD val: ${paths.length} filer auto-valda.`, 'ok');
+        return;
+      }
+
+      // Äldre schema (filesToSelect)
+      if(parsed && Array.isArray(parsed.filesToSelect)){
+        autoSelectPaths(parsed.filesToSelect);
+        showBanner(`Val: ${parsed.filesToSelect.length} filer auto-valda.`, 'ok');
+        return;
+      }
+      // Annars tolka som “task” sträng — inget att göra
     }catch(_){ /* tolka som task-text */ }
   });
+
+  function autoSelectPaths(paths){
+    const all = Array.from(els.tree.querySelectorAll('input[type="checkbox"]'));
+    paths.forEach(p=>{
+      const cb = all.find(x=>x.dataset.path===p);
+      if(cb){ cb.checked = true; openParentsFor(p); }
+    });
+  }
 
   // Hjälpmodal
   els.helpBtn.onclick = ()=> els.helpModal.classList.add('show');
@@ -1062,9 +1286,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     targetEl.innerHTML = `<table><thead><tr><th>ID</th><th>Risk</th><th>Mitigation</th><th>Trigger Keywords</th></tr></thead><tbody>${rows}</tbody></table>`;
   }
 
-  function destroyCharts(){
-    Object.values(charts).forEach(c=>{ if(c && typeof c.destroy==='function') c.destroy(); });
-  }
+  function destroyCharts(){ Object.values(charts).forEach(c=>{ if(c && typeof c.destroy==='function') c.destroy(); }); }
 
   function renderPerformanceDashboard(){
     if(!ctx || !ctx.ai_performance_metrics) return;
@@ -1138,7 +1360,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       CODE_FILES = FILES.filter(p=>isCodeLike(p) && !IMAGE_EXT.includes((p.split('.').pop()||'').toLowerCase()));
       els.tree.innerHTML = '';
       renderTree(ctx.file_structure, els.tree, '');
-      showBanner('Context laddad. Fortsätt med Steg A eller B.', 'ok');
+      showBanner('Context laddad. Fortsätt med Steg A (K-MOD/D-MOD) eller Steg B.', 'ok');
     })
     .catch(e=>{
       els.tree.innerHTML = '<p style="color:#b00020">Kunde inte läsa context.json: '+e.message+'</p>';
@@ -1161,3 +1383,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+  
