@@ -2316,6 +2316,97 @@
     }
   },
   {
+    "heuristicId": "H-20250810-STRICT-RETURN",
+    "trigger": {
+      "type": "schema",
+      "scope": [
+        "discovery"
+      ],
+      "keywords": [
+        "STRICT JSON",
+        "RETURN_CONTRACT"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "R-STRICT-01",
+      "description": "LLM svarar med fri text → Builder kan inte auto-selecta."
+    },
+    "mitigation": {
+      "protocolId": "discovery_v2",
+      "description": "Kräv strikt JSON med explicit schema och validera client-side."
+    },
+    "metadata": {
+      "originSessionId": "46.1",
+      "createdAt": "2025-08-10T11:42:39Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250810-DMOD-ECHOHASH",
+    "trigger": {
+      "type": "contract",
+      "scope": [
+        "discovery"
+      ],
+      "keywords": [
+        "D-MOD",
+        "rules_hash",
+        "selected_ids"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "R-DMOD-01",
+      "description": "Kandidatval baserat på gamla regler → orepeterbar selektion."
+    },
+    "mitigation": {
+      "protocolId": "discovery_dmod_v1",
+      "description": "LLM måste echa 'rules_hash' och välja endast ID:n från CANDIDATE_FILES."
+    },
+    "metadata": {
+      "originSessionId": "46.1",
+      "createdAt": "2025-08-10T11:42:39Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250810-CHATLOG-CI",
+    "trigger": {
+      "type": "process",
+      "scope": [
+        "logging"
+      ],
+      "keywords": [
+        "Chatthistorik",
+        "CI export"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "R-LOG-01",
+      "description": "Ofullständig Chatthistorik bryter valideringsgate och spårbarhet."
+    },
+    "mitigation": {
+      "protocolId": "logging_v1",
+      "description": "Exportera varje tur till JSON i CI och bifoga vid avslut."
+    },
+    "metadata": {
+      "originSessionId": "46.1",
+      "createdAt": "2025-08-10T11:42:39Z",
+      "status": "active",
+      "sourceLogFiles": [
+        "docs/ByggLogg.json",
+        "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
     "heuristicId": "H-20250809-09",
     "trigger": {
       "type": "post_failure_user_query",

@@ -2683,6 +2683,48 @@
     }
   },
   {
+    "sessionId": "46.1",
+    "date": "2025-08-10T11:42:39Z",
+    "aiQualitativeSummary": "Strict JSON-flöde minskade tolkningsfel och förbättrade reproducerbarhet för filval.",
+    "scorecard": {
+      "efficacy": {
+        "score": 85,
+        "weight": 0.4,
+        "weightedScore": 34.0
+      },
+      "efficiency": {
+        "score": 70,
+        "weight": 0.3,
+        "weightedScore": 21.0
+      },
+      "robustness": {
+        "score": 80,
+        "weight": 0.3,
+        "weightedScore": 24.0
+      },
+      "finalScore": 79.0
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 3,
+      "selfCorrections": 5,
+      "externalCorrections": 1,
+      "protocolActivations": {
+        "psv": 2,
+        "helpMeGod": 0,
+        "stalemate": 0
+      },
+      "heuristicsTriggered": [
+        "H-20250810-STRICT-RETURN",
+        "H-20250810-DMOD-ECHOHASH"
+      ]
+    },
+    "improvementSuggestion": {
+      "pattern": "Automatisera fullständig chattloggning för Chatthistorik via CI-hook.",
+      "proposedHeuristicId": "H-20250810-CHATLOG-CI"
+    }
+  },
+  {
     "sessionId": "42b",
     "generatedBy": {
       "speakerName": "Frankensteen",

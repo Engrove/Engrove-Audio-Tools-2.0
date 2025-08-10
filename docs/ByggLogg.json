@@ -2817,6 +2817,44 @@
     "projectStatus": "Stabilt. Nästa steg: checka in script/policy, sätt cron, aktivera CI-gates."
   },
   {
+    "sessionId": "46.1",
+    "date": "2025-08-10T11:42:39Z",
+    "summary": "Införde strikt JSON-baserat Discovery (K-MOD/D-MOD) med auto-select, förbättrad bootstrap-kontext och bildförbudsregel. Levererade komplett wrap_json_in_html.py.",
+    "actions": [
+      {
+        "title": "Uppgradera AI Context Builder till STRICT JSON",
+        "files": [
+          {
+            "path": "scripts/wrap_json_in_html.py",
+            "changeDescription": "Implementerade RETURN_CONTRACT för K-MOD/D-MOD, strikt JSON-validering (utan regexp), auto-select via paths/ID:n, rules_hash-echo, kandidaturval med innehåll, mini file-map, bootstrap (full/chunk/stub) + provider-envelopes (ChatGPT 5/Gemini), hjälpmodal och prestandapanel."
+          }
+        ],
+        "result": "Discovery-prompt ger nu full projektintro, kandidater med innehåll och deterministisk återkoppling som Buildern kan tolka direkt."
+      },
+      {
+        "title": "Bilden förbjuden som default",
+        "files": [
+          {
+            "path": "scripts/wrap_json_in_html.py",
+            "changeDescription": "Lade till 'forbid_image_generation' i obligatoriska regler; injicerat i alla lägen."
+          }
+        ],
+        "result": "Förhindrar oönskad bildgenerering i discovery/planeringsfaser."
+      },
+      {
+        "title": "Bootstrap-kontext för tom modell",
+        "files": [
+          {
+            "path": "scripts/wrap_json_in_html.py",
+            "changeDescription": "Projektkapsel (name/purpose/stack/routes/scripts), filsammanfattningar och relationer exporteras till impl_bootstrap_v1."
+          }
+        ],
+        "result": "Ny LLM-session kan startas utan extern kontext."
+      }
+    ],
+    "projectStatus": "Discovery→Bootstrap klart. Rekommenderad nästa åtgärd: integrera Buildern i CI + validera D-MOD auto-select mot real repo."
+  },
+  {
     "sessionId": "42b",
     "date": "2025-08-09T17:15:00Z",
     "summary": "En meta-granskningssession genomfördes där AI-partnern ombads att verifiera sitt eget föregående svar (från session 41) mot de etablerade protokollen. AI:n genomförde en korrekt, detaljerad analys och bekräftade att dess tidigare output var i enlighet med protokoll v4.2. Sessionen avslutades sedan planenligt.",

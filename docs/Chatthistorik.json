@@ -10967,6 +10967,33 @@
     }
   },
   {
+    "sessionId": "46.1",
+    "interactions": [
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Begärde körning av avslutningsprotokoll för session 46.1."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "unknown",
+          "name": "unknown",
+          "version": "unknown"
+        },
+        "speaker": "Frankensteen (unknown:unknown@unknown)",
+        "summary": "Körde protokollets steg; genererade konsoliderad artefakt och next_session.json enligt schema."
+      }
+    ],
+    "coverage": "partial",
+    "coverageReason": "Fullständig tur-för-tur-logg saknas i källmaterialet; endast nyckelhändelser sammanfattade."
+  },
+  {
     "sessionId": "42b",
     "interactions": [
       {
