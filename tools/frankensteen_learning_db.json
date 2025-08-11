@@ -2407,6 +2407,117 @@
     }
   },
   {
+    "heuristicId": "H-20250811-03",
+    "trigger": {
+      "type": "patch_generation",
+      "scope": [
+        "*"
+      ],
+      "keywords": [
+        "patch",
+        "diff",
+        "checksum",
+        "anchor_diff_v2.1"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "RISK_PATCH_ON_STALE_CONTEXT",
+      "description": "Risken att generera en patch baserad på en inaktuell filversion från en tidigare del av sessionen, vilket leder till ett oundvikligt checksum-misslyckande och slöseri med tid."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-FRESH-HASH",
+      "description": "Innan en patch genereras, måste AI:n explicit verifiera att den `base_checksum_sha256` som används kommer från den allra senaste `context_bundle` eller `files_payload`. Om det finns någon osäkerhet, måste AI:n vägra att generera patchen och istället be om en ny, otvetydig filversion för att kunna beräkna en färsk hash."
+    },
+    "metadata": {
+      "originSessionId": "S-20250811-D",
+      "createdAt": "2025-08-11T11:04:00Z"
+    }
+  },
+  {
+    "heuristicId": "H-20250811-04",
+    "trigger": {
+      "type": "patch_generation",
+      "scope": [
+        "*.md",
+        "*.js",
+        "*.vue",
+        "*.py"
+      ],
+      "keywords": [
+        "patch",
+        "diff",
+        "anchor_diff_v2.1"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "RISK_SILENT_CODE_CHANGE_NO_HISTORY",
+      "description": "Risken att en kodändring genomförs utan att en motsvarande post läggs till i filens HISTORIK-sektion, vilket bryter spårbarheten och gör det omöjligt att förstå varför en ändring gjordes."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-ATOMIC_HISTORY_UPDATE",
+      "description": "Varje patch som genereras för en fil med en HISTORIK-sektion MÅSTE innehålla en `op_group` dedikerad till att lägga till en ny, tidsenlig versionspost. Ändringen och historikuppdateringen måste ske atomärt i samma patch."
+    },
+    "metadata": {
+      "originSessionId": "S-20250811-D",
+      "createdAt": "2025-08-11T11:04:00Z"
+    }
+  },
+  {
+    "heuristicId": "H-20250811-05",
+    "trigger": {
+      "type": "data_processing",
+      "scope": [
+        "*"
+      ],
+      "keywords": [
+        "bootstrap",
+        "initial",
+        "comprehensive",
+        "all files",
+        "full context"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "RISK_DATA_SOURCE_REGRESSION",
+      "description": "Risken att återgå till en mindre, förårad eller standardiserad datakälla för en uppgift efter att en plan explicit har uppdaterats för att använda en nyare, mer omfattande källa. Detta leder till inkompletta och felaktiga resultat."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-VERIFY_SOURCE_SCOPE",
+      "description": "Som en del av PSV-processen för en datagenereringsuppgift måste jag explicit ange källan och omfattningen av den data jag kommer att bearbeta. Exempel: 'Jag kommer nu att generera `core_file_info.json` genom att iterera över alla 215 filer som tillhandahålls i den senaste `files_payload.json`.' Detta tvingar fram en mental kontroll mot den överenskomna planen."
+    },
+    "metadata": {
+      "originSessionId": "S-20250811-D",
+      "createdAt": "2025-08-11T11:04:00Z"
+    }
+  },
+  {
+    "heuristicId": "H-20250811-06",
+    "trigger": {
+      "type": "complex_task_completion",
+      "scope": [
+        "*"
+      ],
+      "keywords": [
+        "Operation",
+        "slutförd",
+        "klar",
+        "färdig"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "RISK_OPERATION_INCOMPLETE_FINALIZATION",
+      "description": "Risken att ett eller flera initiala steg i en komplex, flerstegsplan (t.ex. en 'Operation') glöms bort vid slutet av implementationen, vilket leder till ett ofullständigt slutförande."
+    },
+    "mitigation": {
+      "protocolId": "PROTOCOL_FINAL_AUDIT_AGAINST_BLUEPRINT",
+      "description": "När en namngiven operation förklaras slutförd, MÅSTE jag utföra en slutgiltig, explicit granskning. Detta innebär att jag återger den ursprungliga, fullständiga planen från K-MOD-fasen och skapar en checklista för att verifiera att varje enskild punkt i den planen har adresserats."
+    },
+    "metadata": {
+      "originSessionId": "S-20250811-D",
+      "createdAt": "2025-08-11T11:04:00Z"
+    }
+  },
+  {
     "heuristicId": "H-20250811-02",
     "trigger": {
       "type": "file_modification_and_delivery",
