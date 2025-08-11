@@ -42,17 +42,18 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           
-          # Synkronisera med fjärr-repo FÖRE commit för att undvika race conditions
+          # STEG 1: Synkronisera med fjärr-repo FÖRST, innan några ändringar görs lokalt
           git pull --rebase origin main
 
-          # Lägg till ALLA genererade filer från båda skripten
+          # STEG 2: Lägg TILL ALLA genererade filer från båda skripten
           git add docs/ByggLogg.json
           git add docs/Chatthistorik.json
           git add docs/ai_protocol_performance.json
           git add tools/frankensteen_learning_db.json
           git add docs/ai_protocols/DynamicProtocols.json
-          git add docs/core_file_info.json
+          git add docs-core_file_info.json
 
+          # STEG 3: Committa och pusha endast om det finns ändringar
           if ! git diff --staged --quiet; then
             echo "Ändringar upptäcktes. Förbereder att checka in..."
             git commit -m "Chore: Automatiskt uppdatera sessionsdata och dokumentation" -m "Genererat av process_session_data.yml workflow för commit ${{ github.sha }}."
