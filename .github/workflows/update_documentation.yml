@@ -31,7 +31,12 @@ jobs:
         run: |
           git config --global user.name 'Frankensteen (Bot)'
           git config --global user.email 'frankensteen-bot@users.noreply.github.com'
+          
+          # Synkronisera med fjärr-repo för att undvika race conditions
+          git pull --rebase origin main
+
           git add docs/core_file_info.json
+          
           # Commit only if there are staged changes
           if ! git diff --staged --quiet; then
             git commit -m "docs: Automatiskt uppdatera core_file_info.json"
