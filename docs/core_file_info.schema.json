@@ -1,4 +1,3 @@
-// docs/core_file_info.schema.json
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Core File Information Database",
