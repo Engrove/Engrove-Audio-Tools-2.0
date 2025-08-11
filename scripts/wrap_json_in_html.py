@@ -1349,10 +1349,12 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     function parseJsonSafe(s){ try{ return JSON.parse(s); } catch(e){ return { _err:String(e&&e.message||e) }; } }
 
     function normalizeText(text, mode = 'exact') {
-        if (mode === 'ignore_whitespace') {
-            return text.replace(/\s+/g, '');
-        }
-        return text;
+        // Symmetrisk kanonisering + normalisering
+        let s = canonText(String(text || ''));
+        try { s = s.normalize('NFC'); } catch (_) {}
+        s = s.replace(/\u00A0/g, ' ').replace(/[\u200B\u2060]/g, '');
+        if (mode === 'ignore_whitespace') { s = s.replace(/\s+/g, ''); }
+        return s;
     }
 
     async function findBaseText(diffJ, maps){
@@ -1361,12 +1363,12 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         const p = maps.sha2paths.get(need);
         const node = maps.byPath.get(p);
         if(node && node.is_content_full && typeof node.content === 'string') return { path:p, source:'context.file_structure', text: canonText(node.content) };
-        return { path:p, source:'context.hash_index.sha256_lf', text: await fetchText(p) };
+        return { path:p, source:'context.hash_index.sha256_lf', text: canonText(await fetchText(p)) };
       }
       if(diffJ.target.path){
         const p = diffJ.target.path;
         const t = await fetchText(p);
-        if((await sha256HexLF(t)) === need){ return { path:p, source:'path->RAW', text:t }; }
+        if((await sha256HexLF(t)) === need){ return { path:p, source:'path->RAW', text: canonText(t) }; }
         throw new Error('Path fanns men base_checksum_sha256 matchar inte.');
       }
       throw new Error('Kunde inte hitta basfil via checksum/path.');
