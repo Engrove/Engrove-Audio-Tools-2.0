@@ -19,45 +19,40 @@ jobs:
   build-and-commit-session-artifacts:
     runs-on: ubuntu-latest
     steps:
+      # STEG 1: Checka ut repositoryt som vanligt
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # STEG 2: Sätt upp Python och installera beroenden
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
           cache: 'pip'
-
       - name: Install Dependencies
         run: pip install -r requirements.txt
 
+      # STEG 3: Kör båda skripten för att generera/modifiera filer lokalt
       - name: Run Historical Reconstruction Builder
         run: python scripts/history/historical_reconstruction_builder.py sessions/ .
 
       - name: Run Core Documentation Update Script
         run: python scripts/update_core_info.py sessions/ docs/core_file_info.json ${{ github.sha }}
 
-      - name: Commit and Push Changes
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+      # STEG 4: Använd en specialiserad Action för att checka in ändringarna
+      - name: Commit Files
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          # Commit-meddelandet
+          commit_message: "Chore: Automatiskt uppdatera sessionsdata och dokumentation"
           
-          # STEG 1: Synkronisera med fjärr-repo FÖRST, innan några ändringar görs lokalt
-          git pull --rebase origin main
-
-          # STEG 2: Lägg TILL ALLA genererade filer från båda skripten
-          git add docs/ByggLogg.json
-          git add docs/Chatthistorik.json
-          git add docs/ai_protocol_performance.json
-          git add tools/frankensteen_learning_db.json
-          git add docs/ai_protocols/DynamicProtocols.json
-          git add docs-core_file_info.json
-
-          # STEG 3: Committa och pusha endast om det finns ändringar
-          if ! git diff --staged --quiet; then
-            echo "Ändringar upptäcktes. Förbereder att checka in..."
-            git commit -m "Chore: Automatiskt uppdatera sessionsdata och dokumentation" -m "Genererat av process_session_data.yml workflow för commit ${{ github.sha }}."
-            git push
-          else
-            echo "Inga ändringar att checka in."
-          fi
+          # Lång beskrivning för commiten
+          commit_options: '--message="Genererat av process_session_data.yml workflow för commit ${{ github.sha }}."'
+          
+          # Användaren som ska visas som författare till commiten
+          commit_user_name: 'Frankensteen (Bot)'
+          commit_user_email: 'frankensteen-bot@users.noreply.github.com'
+          
+          # Filerna som ska inkluderas i commiten.
+          # Detta säkerställer att endast de förväntade filerna läggs till.
+          file_pattern: 'docs/ByggLogg.json docs/Chatthistorik.json docs/ai_protocol_performance.json tools/frankensteen_learning_db.json docs/ai_protocols/DynamicProtocols.json docs/core_file_info.json'
