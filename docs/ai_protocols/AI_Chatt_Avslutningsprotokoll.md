@@ -29,7 +29,7 @@
 Detta dokument definierar det formella Avslutningsprotokollet. Det aktiveras vid slutet av en arbetssession och specificerar den exakta processen för att generera en enda, konsoliderad JSON-artefakt. Syftet är att säkerställa perfekt kontextöverföring, spårbarhet och systematisk självförbättring.
 
 ## 2. Process
-Vid slutet av en session ska en enda fil med namnet `[SESSIONID].json` genereras. Denna fil måste vara en giltig JSON-fil som följer specifikationen nedan.
+Vid slutet av en session ska en enda fil med namnet `[SESSIONID].json` genereras där SESSIONID har formen `S-[CURRENT DATETIMESTAMP]`. Denna fil måste vara en giltig JSON-fil som följer specifikationen nedan.
 
 **Nytt Steg: Insamling av Dynamiska Protokoll**
 Före generering av JSON-filen måste du skanna igenom hela den aktuella chattsessionen för att identifiera:
