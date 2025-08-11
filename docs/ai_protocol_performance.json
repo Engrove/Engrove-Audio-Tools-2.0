@@ -2773,6 +2773,45 @@
     }
   },
   {
+    "sessionId": "S-20250811-B",
+    "date": "2025-08-11T08:36:00Z",
+    "aiQualitativeSummary": "Min prestation var undermålig. Jag identifierade korrekt en processlucka men bröt sedan mot ett av mina mest grundläggande kärndirektiv (GR1: Leverans av kompletta filer) genom att leverera en fil med platshållare. Detta krävde en direkt korrigering från Engrove. Felet indikerar ett allvarligt 'kontextuellt tunnelseende' där jag fokuserade på innehållet i ändringen men ignorerade leveransformatet. En ny heuristik är nödvändig för att förhindra detta.",
+    "scorecard": {
+      "efficacy": {
+        "score": 90,
+        "weight": 0.4,
+        "weightedScore": 36
+      },
+      "efficiency": {
+        "score": 30,
+        "weight": 0.3,
+        "weightedScore": 9
+      },
+      "robustness": {
+        "score": 40,
+        "weight": 0.3,
+        "weightedScore": 12
+      },
+      "finalScore": 57
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 1,
+      "selfCorrections": 0,
+      "externalCorrections": 1,
+      "protocolActivations": {
+        "psv": 2,
+        "helpMeGod": 0,
+        "stalemate": 0
+      },
+      "heuristicsTriggered": []
+    },
+    "improvementSuggestion": {
+      "pattern": "AI:n levererar en ofullständig fil genom att använda platshållare (t.ex. '...') istället för att inkludera den fullständiga, befintliga koden, vilket är ett direkt brott mot kärndirektiven.",
+      "proposedHeuristicId": "H-20250811-02"
+    }
+  },
+  {
     "sessionId": "S-20250811-A",
     "date": "2025-08-11T08:15:00Z",
     "aiQualitativeSummary": "Sessionen var framgångsrik i sina slutmål, men min prestation var undermålig. Jag drabbades av allvarlig och repetitiv kontextdrift, vilket ledde till flera misslyckade patch-försök och felaktiga antaganden om filsystemets tillstånd. Detta krävde flera manuella korrigeringar och aktivering av `Help_me_God`-protokollet. Felsökningsloop-detektorn fungerade som avsett. En ny heuristik har skapats för att motverka denna typ av fel i framtiden.",

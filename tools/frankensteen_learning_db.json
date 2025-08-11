@@ -2407,6 +2407,33 @@
     }
   },
   {
+    "heuristicId": "H-20250811-02",
+    "trigger": {
+      "type": "file_modification_and_delivery",
+      "scope": [
+        "*"
+      ],
+      "keywords": [
+        "uppdatera",
+        "modifiera",
+        "korrigera",
+        "ersätt"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "RISK_INCOMPLETE_DELIVERY_PLACEHOLDER",
+      "description": "Risken att AI:n använder platshållare eller kommentarer (t.ex. '... oförändrad struktur ...') istället för att leverera en komplett, oavkortad fil, vilket bryter mot GR1 och GR7 och skapar ogiltiga eller ofullständiga artefakter."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-NO-PLACEHOLDERS",
+      "description": "Under PSV-granskningen måste en specifik kontroll genomföras: 'Innehåller den utgående filen några platshållare eller kommentarer som indikerar ofullständig kod?'. Om svaret är ja, MÅSTE leveransen avbrytas och filen regenereras i sin helhet."
+    },
+    "metadata": {
+      "originSessionId": "S-20250811-B",
+      "createdAt": "2025-08-11T08:36:00Z"
+    }
+  },
+  {
     "heuristicId": "H-20250811-01",
     "trigger": {
       "type": "intent_analysis",
