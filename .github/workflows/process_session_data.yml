@@ -40,8 +40,11 @@ jobs:
       - name: Commit Files
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Chore: Automatiskt uppdatera sessionsdata och dokumentation"
-          commit_options: '--message="${{ format('Genererat av process_session_data.yml workflow för commit {0}.', github.sha) }}"'
+          # KORRIGERING: Hela meddelandet, inklusive brödtext, definieras här.
+          commit_message: |
+            Chore: Automatiskt uppdatera sessionsdata och dokumentation
+
+            Genererat av process_session_data.yml workflow för commit ${{ github.sha }}.
           commit_user_name: 'Frankensteen (Bot)'
           commit_user_email: 'frankensteen-bot@users.noreply.github.com'
           file_pattern: 'docs/ByggLogg.json docs/Chatthistorik.json docs/ai_protocol_performance.json tools/frankensteen_learning_db.json docs/ai_protocols/DynamicProtocols.json docs/core_file_info.json'
