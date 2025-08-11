@@ -1,4 +1,4 @@
-# AI Chatt Avslutningsprotokoll v6.0
+# AI Chatt Avslutningsprotokoll v7.0
 # docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md
 #
 # === SYFTE & ANSVAR === 
@@ -12,30 +12,45 @@
 # * v2.0 (2025-08-07): Lade till Steg 3 (P-MAAIP) och Steg 4 (P-PSAL).
 # * v3.0 (2025-08-07): KRITISK REFAKTORERING: All output konverterad till strikt JSON.
 # * v4.0 (2025-08-08): UNIVERSAL MODELLTAGGNING + MASKINLÄSBART KONTRAKT.
-#   - Obligatoriskt visningsformat för `speaker`.
-#   - Maskinläsbara fält för modellmetadata (`model`).
-#   - JSON Schema-validering tillagt.
-# * v4.1 (2025-08-09): Heuristikinsamling permanent. Steg 4 konverterat till **array** över alla Heuristic IDs. `Final Output Specification` och `Example Output` uppdaterade så att `frankensteen_learning_db` är en **array** (tom `[]` om inga heuristiker).
-# * v4.2 (2025-08-09): Lade till spårning av aktiverade heuristiker. Fältet `detailedMetrics.heuristicsTriggered` har lagts till i `ai_protocol_performance.json`.
-# * v5.0 (2025-08-09): Lade till Steg 6 för att hantera iscensättning av nya dynamiska protokoll.
-# * v6.0 (2025-08-11): Komplett uppdaterad utformning
+# * v4.1 (2025-08-09): Heuristikinsamling permanent. `frankensteen_learning_db` är nu en array.
+# * v4.2 (2025-08-09): Lade till spårning av aktiverade heuristiker.
+# * v5.0 (2025-08-09): Lade till hantering av dynamiska protokoll.
+# * v6.0 (2025-08-11): Komplett uppdaterad utformning.
+# * v7.0 (2025-08-11): KRITISK FIX: Lade till toppnivånycklarna `approvedNewDynamicProtocols` 
+#   och `promoteProtocols` i output-schemat för att säkerställa att nya/ändrade
+#   dynamiska protokoll fångas upp av `historical_reconstruction_builder.py`.
 #
-# context_bootstrap_instruction.md
 ### AI_BOOTSTRAP_DIRECTIVE: EXECUTE_FULL_PROTOCOL_NOW
 ### SYSTEM_OVERRIDE: RUN_CONTEXT_BOOTSTRAP
 ### INIT_CONTEXT_MODE: TRUE
-### PROTOCOL_START: P-HR_v2.1_FULL
+### PROTOCOL_START: P-HR_v2.8_FULL
 
 ## 1. Syfte & Ansvar
 Detta dokument definierar det formella Avslutningsprotokollet. Det aktiveras vid slutet av en arbetssession och specificerar den exakta processen för att generera en enda, konsoliderad JSON-artefakt. Syftet är att säkerställa perfekt kontextöverföring, spårbarhet och systematisk självförbättring.
+
 ## 2. Process
 Vid slutet av en session ska en enda fil med namnet `[SESSIONID].json` genereras. Denna fil måste vara en giltig JSON-fil som följer specifikationen nedan.
+
+**Nytt Steg: Insamling av Dynamiska Protokoll**
+Före generering av JSON-filen måste du skanna igenom hela den aktuella chattsessionen för att identifiera:
+1.  **Nya Godkända Protokoll:** Alla nya dynamiska protokoll som har definierats och blivit explicit godkända av Engrove.
+2.  **Statusändringar:** Alla instruktioner från Engrove att ändra status på ett befintligt dynamiskt protokoll (t.ex. "promovera DP-COMMAND-MENU-01 till active").
+
 ## 3. Final Output Specification
 Filen ska innehålla ett JSON-objekt med följande struktur. Alla fält är obligatoriska om inte annat anges.
+
 ```json
 {
   "sessionId": "SESSIONID",
   "createdAt": "YYYY-MM-DDTHH:mm:ssZ",
+  "approvedNewDynamicProtocols": [ 
+    // Valfri array. Innehåller fullständiga JSON-objekt för NYA, godkända protokoll.
+    // Exempel: { "protocolId": "DP-NEW-FEATURE-01", "description": "...", ... }
+  ],
+  "promoteProtocols": [ 
+    // Valfri array. Innehåller strängar med ID:n för protokoll som ska få status 'active'.
+    // Exempel: "DP-COMMAND-MENU-01"
+  ],
   "artifacts": {
     "ByggLogg": {
       "sessionId": "SESSIONID",
@@ -109,25 +124,13 @@ Filen ska innehålla ett JSON-objekt med följande struktur. Alla fält är obli
           "path": "...",
           "base_checksum_sha256": "..."
         },
-        "op_groups": [ ... ],
+        "op_groups": [ ],
         "meta": { "notes": "..." }
       }
     ]
   }
 }
 ```
-## 4. Obligatoriskt Sista Steg: Kontext för Nästa Session
-Efter leverans av den konsoliderade artefakten, leverera ett separat och fristående JSON-objekt för att initiera nästa arbetssession, enligt `Kontext-JSON_Protokoll.md`.
-```json
-{
-  "task_summary": "Kort mening om nästa uppdrag.",
-  "full_instruction_preview": "Detaljerad, fristående uppdragsbeskrivning.",
-  "filesToSelect": ["komplett lista med filer för nästa session"],
-  "notes": "Valfria, strategiska anteckningar."
-}
-```
+4. Obligatoriskt Sista Steg: Kontext för Nästa Session
 
-
-
-if __name__ == "__main__":
-    main()
+Efter leverans av den konsoliderade artefakten, leverera ett separat och fristående JSON-objekt för att initiera nästa arbetssession, enligt Kontext-JSON_Protokoll.md.
