@@ -1,0 +1,62 @@
+# .github/workflows/process_session_data.yml
+name: Process and Document Session Data
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'sessions/**.json'
+      - '.github/workflows/process_session_data.yml'
+      - 'scripts/history/historical_reconstruction_builder.py'
+      - 'scripts/update_core_info.py'
+      - 'requirements.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-commit-session-artifacts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Historical Reconstruction Builder
+        run: python scripts/history/historical_reconstruction_builder.py sessions/ .
+
+      - name: Run Core Documentation Update Script
+        run: python scripts/update_core_info.py sessions/ docs/core_file_info.json ${{ github.sha }}
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          # Synkronisera med fjärr-repo FÖRE commit för att undvika race conditions
+          git pull --rebase origin main
+
+          # Lägg till ALLA genererade filer från båda skripten
+          git add docs/ByggLogg.json
+          git add docs/Chatthistorik.json
+          git add docs/ai_protocol_performance.json
+          git add tools/frankensteen_learning_db.json
+          git add docs/ai_protocols/DynamicProtocols.json
+          git add docs/core_file_info.json
+
+          if ! git diff --staged --quiet; then
+            echo "Ändringar upptäcktes. Förbereder att checka in..."
+            git commit -m "Chore: Automatiskt uppdatera sessionsdata och dokumentation" -m "Genererat av process_session_data.yml workflow för commit ${{ github.sha }}."
+            git push
+          else
+            echo "Inga ändringar att checka in."
+          fi
