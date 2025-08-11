@@ -1,4 +1,759 @@
-  function toOpenAI(systemText, userJson){
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+wrap_json_in_html.py — AI Context Builder v7.4 (2025-08-11)
+
+Nyheter vs v7.3:
+- Stabilisering: Plugin-logik för Patch Center har nu integrerats direkt i denna fil för att eliminera dynamiska injiceringsfel. Den separata plugin-filen behövs inte längre.
+- All tidigare funktionalitet från v7.3-p2 är bevarad.
+
+Kör:
+  python scripts/wrap_json_in_html.py dist/index.html
+"""
+import os, sys
+
+HTML = r"""<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI Context Builder v7.4 — Integrated Patch Center</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
+<style>
+:root{
+  --bg:#f8f9fa; --fg:#212529; --muted:#6c757d;
+  --card:#ffffff; --line:#dee2e6; --accent:#0d6efd; --accent-2:#0b5ed7;
+  --ok:#28a745; --warn:#ffc107; --err:#dc3545; --info:#17a2b8;
+  --mono:ui-monospace,"JetBrains Mono","SF Mono",Consolas,Menlo,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);height:100vh;display:flex;overflow:hidden}
+.panel{padding:12px;overflow:auto;border-right:1px solid var(--line);display:flex;flex-direction:column}
+#left{width:42%;min-width:360px}
+#right{width:58%;gap:12px}
+.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding-bottom:8px;margin-bottom:8px;border-bottom:1px solid var(--line)}
+button{border:1px solid var(--line);background:var(--card);color:var(--fg);padding:8px 12px;border-radius:8px;cursor:pointer}
+button:hover{background:#eef1f4}
+button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+button.primary:hover{background:var(--accent-2)}
+button.info{background:var(--info);color:#fff;border-color:var(--info)}
+button.warn{background:var(--warn);color:#000;border-color:var(--warn)}
+button:disabled{opacity:.6;cursor:not-allowed}
+label.inline{display:inline-flex;align-items:center;gap:6px}
+input[type="number"]{width:90px}
+
+#tree ul{list-style:none;padding-left:18px;margin:0}
+#tree li{padding:3px 0}
+.toggle{cursor:pointer;user-select:none;display:inline-block;width:1em}
+.fileline{display:flex;align-items:center;gap:6px}
+pre,textarea{font-family:var(--mono);font-size:13.5px}
+textarea#instruction{height:160px;resize:vertical;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px}
+.output{display:flex;flex-direction:column;gap:8px;flex:1}
+.output .bar{display:flex;gap:8px;flex-wrap:wrap}
+.output pre{flex:1;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px;white-space:pre-wrap}
+.banner{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff8e1;color:#5c4600;display:none}
+.banner.err{background:#fde7ea;color:#7a0e1a}
+.banner.ok{background:#eaf7ef;color:#114d27}
+
+/* Tabs */
+.tabbar{display:flex;gap:8px;margin-bottom:10px}
+.tabbar button{border-radius:8px}
+.tabpanel{display:none}
+.tabpanel.active{display:flex;flex-direction:column;gap:12px}
+
+/* Modals */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:1000}
+.modal.show{display:flex}
+.modal .box{background:#fff;border-radius:12px;max-width:1000px;width:94%;max-height:88vh;display:flex;flex-direction:column}
+.modal .box header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line)}
+.modal .box main{padding:14px;overflow:auto}
+.modal .box footer{padding:10px 14px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px}
+kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;border-radius:4px;padding:0 4px}
+.small{font-size:12px;color:var(--muted)}
+.flex{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+/* Performance UI */
+.chart-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.chart-card{border:1px solid var(--line);border-radius:8px;background:var(--card);padding:10px;display:flex;flex-direction:column;gap:6px}
+.chart-card h3{margin:0 0 4px 0;font-size:1.05rem;border-bottom:1px solid var(--line);padding-bottom:6px}
+.chart-container{position:relative;height:300px}
+.table-card{border:1px solid var(--line);border-radius:8px;background:var(--card);padding:10px}
+.table-card table{width:100%;border-collapse:collapse;font-size:.9rem}
+.table-card th,.table-card td{border:1px solid var(--line);padding:6px;text-align:left}
+.table-card th{background:#f1f3f5}
+.badge{padding:1px 6px;border-radius:99px;border:1px solid var(--line);background:#eef1f4;font-size:11px}
+
+/* Busy overlay */
+#busy{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.35);backdrop-filter:saturate(130%) blur(2px);z-index:2000;padding:12px}
+#busy .spinner{width:40px;height:40px;border:4px solid #ddd;border-top-color:#0d6efd;border-radius:50%;animation:spin 1s linear infinite;margin-bottom:10px}
+#busy #worklog{max-width:min(90vw,900px);max-height:40vh;overflow:auto;background:#fff;color:#111;border:1px solid #ccc;border-radius:8px;padding:10px;margin:0;white-space:pre-wrap}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* KPI cards */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.kpi{border:1px solid var(--line);border-radius:8px;background:var(--card);padding:10px}
+.kpi h4{margin:0 0 6px 0;font-size:0.95rem;color:#495057}
+.kpi .big{font-size:1.6rem;font-weight:700}
+.kpi .sub{font-size:.85rem;color:var(--muted)}
+.filter-bar{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.filter-group{display:flex;flex-direction:column;gap:4px}
+.filter-group label{font-size:.85rem;color:#495057}
+
+/* --- Patch Center Plugin CSS --- */
+#plug-patch-modal .box{max-width:1100px}
+#plug-patch-log{white-space:pre-wrap;border:1px solid #ddd;border-radius:8px;padding:8px;background:#fff;max-height:34vh;overflow:auto}
+#plug-patch-target{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+#plug-patch-target .badge{padding:2px 8px;border:1px solid #ccc;border-radius:999px;background:#f6f7f9;font-size:12px}
+#plug-patch-preview{width:100%;height:360px}
+#plug-patch-source{width:100%;height:160px}
+#plug-patch-file{display:none}
+</style>
+</head>
+<body>
+
+<section id="left" class="panel">
+  <div class="controls">
+    <button id="selAll">Select All</button>
+    <button id="deselAll">Deselect All</button>
+    <button id="selCore">Select Core Docs</button>
+    <span class="flex">
+      <span class="badge">Budget kB</span>
+      <input id="budgetKb" type="number" min="100" step="50" value="700" />
+      <label class="inline" title="Kompaktare JSON"><input type="checkbox" id="compact" /> Kompakt JSON</label>
+    </span>
+    <button id="genContext" class="primary">Generate Context</button>
+    <button id="genFiles" class="info">Generate Files</button>
+  </div>
+  <div id="tree"><p>Laddar context.json…</p></div>
+</section>
+
+<section id="right" class="panel">
+  <div class="tabbar">
+    <button data-tab="builder" class="primary">Context Builder</button>
+    <button data-tab="performance">AI Performance</button>
+    <button id="helpBtn" class="warn">Hjälp</button>
+  </div>
+
+  <div id="tab-builder" class="tabpanel active">
+    <div class="controls" id="bootstrapBar">
+      <span><b>Provider:</b></span>
+      <label class="inline"><input type="radio" name="prov" value="openai" checked /> ChatGPT 5</label>
+      <label class="inline"><input type="radio" name="prov" value="gemini" /> Gemini 2.5 Pro</label>
+
+      <span style="margin-left:12px"><b>Discovery:</b></span>
+      <label class="inline" title="K-MOD: utforskning (paths)"><input type="radio" name="discMode" value="KMOD" checked /> K-MOD</label>
+      <label class="inline" title="D-MOD: deterministiskt urval (ID + rules_hash)"><input type="radio" name="discMode" value="DMOD" /> D-MOD</label>
+
+      <span class="flex" style="margin-left:12px">
+        <span class="badge">Max candidates</span>
+        <input id="maxCands" type="number" min="1" step="50" value="99999" />
+        <label class="inline"><input type="checkbox" id="incAssets" /> Inkl. assets</label>
+        <label class="inline" title="Lägg full inventory i prompt"><input type="checkbox" id="incInventory" checked /> Bifoga FILE_INVENTORY</label>
+      </span>
+
+      <button id="discBtn">Skapa nästa arbete</button>
+      <button id="implBtn" class="primary">Skapa uppgift</button>
+    </div>
+
+    <textarea id="instruction" placeholder="Kort mål (≤200 tecken) ELLER klistra in Discovery-svar (STRICT JSON)…"></textarea>
+    <div id="banner" class="banner"></div>
+
+    <div class="output">
+      <div class="bar">
+        <button id="copy" disabled>Copy</button>
+        <button id="download" disabled>Download</button>
+      </div>
+      <pre id="out">Här visas Discovery-prompt (K/D), context eller filer.</pre>
+      <div class="small">All export är markdown med inbäddad ```json.</div>
+    </div>
+  </div>
+
+  <div id="tab-performance" class="tabpanel">
+    <!-- Filter bar -->
+    <div class="filter-bar">
+      <div class="filter-group">
+        <label for="pf-from">Från datum (ISO)</label>
+        <input type="date" id="pf-from" />
+      </div>
+      <div class="filter-group">
+        <label for="pf-to">Till datum (ISO)</label>
+        <input type="date" id="pf-to" />
+      </div>
+      <div class="filter-group" style="min-width:220px">
+        <label>Provider</label>
+        <div id="pf-prov"></div>
+      </div>
+      <div class="filter-group" style="min-width:260px">
+        <label>Modell</label>
+        <div id="pf-model"></div>
+      </div>
+      <div class="filter-group">
+        <label>Alternativ</label>
+        <label class="inline"><input type="checkbox" id="pf-ma" /> MA(3)</label>
+      </div>
+      <div class="filter-group">
+        <button id="pf-apply" class="primary">Tillämpa filter</button>
+        <button id="pf-reset">Återställ</button>
+      </div>
+      <div class="filter-group" style="margin-left:auto">
+        <button id="pf-export" class="info">Exportera CSV</button>
+        <button id="refresh-performance">Uppdatera</button>
+      </div>
+    </div>
+
+    <!-- KPI -->
+    <div class="kpi-grid">
+      <div class="kpi"><h4>Antal sessioner</h4><div class="big" id="kpi-sessions">0</div><div class="sub" id="kpi-range"></div></div>
+      <div class="kpi"><h4>Medelpoäng</h4><div class="big" id="kpi-avg">–</div><div class="sub">Final Score (medel)</div></div>
+      <div class="kpi"><h4>Median cykler</h4><div class="big" id="kpi-cycles">–</div><div class="sub">Debugging cycles (median)</div></div>
+      <div class="kpi"><h4>Korrigeringsgrad</h4><div class="big" id="kpi-corr">–</div><div class="sub">Self/External ratio</div></div>
+    </div>
+
+    <!-- Charts -->
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Final Score Over Time</h3>
+        <div class="chart-container"><canvas id="score-chart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Session Metrics (Cycles)</h3>
+        <div class="chart-container"><canvas id="metrics-chart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Sessions Per Provider</h3>
+        <div class="chart-container"><canvas id="provider-chart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Sessions Per Model</h3>
+        <div class="chart-container"><canvas id="model-chart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Learning DB + Sessions -->
+    <div class="table-card" style="margin-top:12px">
+      <h3>Learning Database (Heuristics)</h3>
+      <div id="perf-learning-body">Ingen data.</div>
+    </div>
+    <div class="table-card" style="margin-top:12px">
+      <h3>Sessions</h3>
+      <div id="perf-sessions-body">Ingen data.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Hjälpmodal -->
+<div id="helpModal" class="modal" role="dialog" aria-modal="true">
+  <div class="box">
+    <header>
+      <b>Hjälp – Arbetssekvens</b>
+      <button id="helpClose" aria-label="Stäng">✕</button>
+    </header>
+    <main>
+      <ol>
+        <li><b>Skapa nästa arbete</b>:
+          <ul>
+            <li><b>K-MOD</b> → returnera <b>paths</b> + <b>embed</b> + <b>why</b>. <u>INGA id</u>.</li>
+            <li><b>D-MOD</b> → returnera <b>selected_ids</b> + <b>notes</b> + <b>echo_rules_hash</b>. <u>INGA paths</u>.</li>
+            <li>Prompt innehåller <code>CANDIDATE_FILES</code> och, om valt, <code>FILE_INVENTORY</code> (kompakt metadata).</li>
+          </ul>
+        </li>
+        <li>Klistra in modellsvar (STRICT JSON) → auto-select.</li>
+        <li><b>Skapa uppgift</b> → impl_bootstrap_v1.json + provider_envelope.json (markdown) med <code>inventory_compact</code>.</li>
+        <li>Alt: <b>Generate Files</b> → markdown med <code>files_payload.json</code> + <code>checksums</code>.</li>
+      </ol>
+    </main>
+    <footer><button id="helpOk" class="primary">OK</button></footer>
+  </div>
+</div>
+
+<!-- Filförhandsvisning modal -->
+<div id="filePreview" class="modal" role="dialog" aria-modal="true">
+  <div class="box">
+    <header>
+      <b id="fpTitle">Förhandsgranskning</b>
+      <div>
+        <button id="fpCopy">Copy</button>
+        <button id="fpDownload">Download</button>
+        <button id="fpClose" aria-label="Stäng">✕</button>
+      </div>
+    </header>
+    <main id="fpBody"><p>Laddar…</p></main>
+  </div>
+</div>
+
+<!-- Busy overlay -->
+<div id="busy" role="status" aria-live="polite">
+  <div class="spinner" aria-hidden="true"></div>
+  <pre id="worklog"></pre>
+</div>
+
+<!-- Patch Center Modal (INTEGRATED) -->
+<div id="plug-patch-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="plug-patch-title">
+  <div class="box">
+    <header>
+      <b id="plug-patch-title">Patch Center</b>
+      <div class="flex">
+        <button id="plug-patch-close" aria-label="Stäng">✕</button>
+      </div>
+    </header>
+    <main>
+      <div class="flex" style="justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap">
+        <div style="flex:1;min-width:280px">
+          <label for="plug-patch-source" class="small">Klistra in <kbd>diff.json</kbd> (diff_json_v1) här:</label>
+          <textarea id="plug-patch-source" placeholder='{"protocol_id":"diff_json_v1","target":{"base_checksum_sha256":"...","path":"..."},"ops":[...]}'></textarea>
+        </div>
+        <div class="flex" style="gap:8px">
+          <input id="plug-patch-file" type="file" accept=".json,application/json" />
+          <button id="plug-patch-upload">Ladda upp JSON</button>
+          <button id="plug-patch-validate" class="primary">Validate</button>
+        </div>
+      </div>
+
+      <div id="plug-patch-target" style="margin-top:10px">
+        <span class="badge">Target: <span id="plug-target-path">–</span></span>
+        <span class="badge">base_sha256: <span id="plug-target-sha256">–</span></span>
+        <span class="badge">git_sha1: <span id="plug-target-gitsha">–</span></span>
+        <span class="badge">Källa: <span id="plug-target-source">–</span></span>
+        <span class="badge" id="plug-schema-ok" style="display:none;background:#eaf7ef;border-color:#bfe3cc;color:#114d27">Schema OK</span>
+      </div>
+
+      <div class="flex" style="gap:8px;margin-top:10px">
+        <button id="plug-patch-apply" class="primary" disabled>Apply Patch</button>
+        <button id="plug-patch-copy" disabled>Copy</button>
+        <button id="plug-patch-download" disabled>Download</button>
+      </div>
+
+      <textarea id="plug-patch-preview" placeholder="// Här visas patchad kod efter Apply…"></textarea>
+
+      <h4 style="margin:12px 0 6px 0">Logg</h4>
+      <pre id="plug-patch-log"></pre>
+    </main>
+  </div>
+</div>
+
+<script>
+(function(){
+  // ---------- Konstanter ----------
+  const RAW_DEFAULT_REPO = 'Engrove/Engrove-Audio-Tools-2.0';
+  const RAW_DEFAULT_BRANCH = 'main';
+  const IMAGE_EXT = ['png','jpg','jpeg','gif','webp','svg'];
+
+  // ---------- Element ----------
+  const els = {
+    // vänster
+    tree:document.getElementById('tree'),
+    selAll:document.getElementById('selAll'),
+    deselAll:document.getElementById('deselAll'),
+    selCore:document.getElementById('selCore'),
+    genContext:document.getElementById('genContext'),
+    genFiles:document.getElementById('genFiles'),
+    budgetKb:document.getElementById('budgetKb'),
+    compact:document.getElementById('compact'),
+    // höger/builder
+    instruction:document.getElementById('instruction'),
+    out:document.getElementById('out'),
+    copy:document.getElementById('copy'),
+    download:document.getElementById('download'),
+    discBtn:document.getElementById('discBtn'),
+    implBtn:document.getElementById('implBtn'),
+    banner:document.getElementById('banner'),
+    // discovery-val
+    maxCands:document.getElementById('maxCands'),
+    incAssets:document.getElementById('incAssets'),
+    incInventory:document.getElementById('incInventory'),
+    // tabs
+    tabBtns:document.querySelectorAll('.tabbar button[data-tab]'),
+    tabs:{ builder:document.getElementById('tab-builder'), performance:document.getElementById('tab-performance') },
+    // provider
+    provGemini:document.querySelector('input[name="prov"][value="gemini"]'),
+    // modals
+    helpBtn:document.getElementById('helpBtn'),
+    helpModal:document.getElementById('helpModal'),
+    helpClose:document.getElementById('helpClose'),
+    helpOk:document.getElementById('helpOk'),
+    fp:document.getElementById('filePreview'),
+    fpTitle:document.getElementById('fpTitle'),
+    fpBody:document.getElementById('fpBody'),
+    fpCopy:document.getElementById('fpCopy'),
+    fpDownload:document.getElementById('fpDownload'),
+    fpClose:document.getElementById('fpClose'),
+    // busy
+    busy:document.getElementById('busy'),
+    worklog:document.getElementById('worklog'),
+    // performance
+    pf:{ from:document.getElementById('pf-from'), to:document.getElementById('pf-to'),
+         provWrap:document.getElementById('pf-prov'), modelWrap:document.getElementById('pf-model'),
+         ma:document.getElementById('pf-ma'), apply:document.getElementById('pf-apply'),
+         reset:document.getElementById('pf-reset'), export:document.getElementById('pf-export'),
+         refresh:document.getElementById('refresh-performance') },
+    kpi:{ sessions:document.getElementById('kpi-sessions'), rng:document.getElementById('kpi-range'),
+          avg:document.getElementById('kpi-avg'), cycles:document.getElementById('kpi-cycles'),
+          corr:document.getElementById('kpi-corr') },
+    perfLearning:document.getElementById('perf-learning-body'),
+    perfSessions:document.getElementById('perf-sessions-body'),
+  };
+
+  // ---------- Tillstånd ----------
+  let ctx=null;
+  let FILES=[], CODE_FILES=[];
+  let INVENTORY=[]; // rik metadata
+  let HASHMAPS=null; // path<->hash mappar
+  let RAW_BASE=''; // råbas-URL
+  let LAST_CANDIDATES=[], LAST_RULES_HASH=null;
+
+  const CORE = [
+    'docs/ai_protocols/AI_Core_Instruction.md',
+    'docs/ai_protocols/ai_config.json',
+    'docs/ai_protocols/frankensteen_persona.v1.0.json',
+    'docs/ai_protocols/AI_Dynamic_Protocols.md',
+    'docs/ai_protocols/DynamicProtocols.json',
+    'docs/ai_protocols/System_Integrity_Check_Protocol.md',
+    'docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md',
+    'docs/ai_protocols/Help_me_God_Protokoll.md',
+    'docs/ai_protocols/Stalemate_Protocol.md',
+    'docs/ai_protocols/Levande_Kontext_Protokoll.md',
+    'docs/ai_protocols/Diff_JSON_Protocol.md',
+    'docs/AI_Collaboration_Standard.md',
+    'package.json',
+    'vite.config.js',
+    'scripts/generate_full_context.py',
+    'scripts/wrap_json_in_html.py'
+  ];
+
+  // ---------- Utils ----------
+  function showBanner(msg, kind='warn'){
+    els.banner.textContent = msg;
+    els.banner.className = 'banner ' + (kind==='err'?'err':kind==='ok'?'ok':'');
+    els.banner.style.display = 'block';
+  }
+  function clearBanner(){ els.banner.style.display='none'; els.banner.textContent=''; els.banner.className='banner'; }
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+  function logw(msg){ const t=new Date().toLocaleTimeString(); els.worklog.textContent += `[${t}] ${msg}\n`; els.worklog.scrollTop = els.worklog.scrollHeight; }
+  async function withBusy(label, fn){
+    els.worklog.textContent = '';
+    els.busy.style.display = 'flex';
+    logw(label+' start');
+    try{ const r = await fn(); logw(label+' klar'); return r; }
+    finally{ setTimeout(()=> els.busy.style.display='none', 150); }
+  }
+
+  function isCodeLike(p){
+    const ext=(p.split('.').pop()||'').toLowerCase();
+    return ['py','js','jsx','ts','tsx','vue','json','md','html','css','yml','yaml','toml','sh','bat'].includes(ext);
+  }
+  function guessLang(p){
+    const e=(p.split('.').pop()||'').toLowerCase();
+    if(['ts','tsx'].includes(e)) return 'ts';
+    if(e==='vue') return 'vue';
+    if(e==='py') return 'py';
+    if(['js','jsx'].includes(e)) return 'js';
+    if(e==='md') return 'md';
+    if(e==='json') return 'json';
+    if(e==='html') return 'html';
+    if(e==='css') return 'css';
+    if(e==='yml'||e==='yaml') return 'yml';
+    return 'txt';
+  }
+
+  // Kanonisering + hash (LF, utan BOM)
+  function canonText(s){ return (s||'').replace(/\uFEFF/g,'').replace(/\r\n?/g,'\n'); }
+  async function sha256HexLF(text){
+    const enc = new TextEncoder().encode(canonText(text));
+    const buf = await crypto.subtle.digest('SHA-256', enc);
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+
+  async function fetchText(path){
+    const url = RAW_BASE + path;
+    const r = await fetch(url, {cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status+' for '+url);
+    return await r.text();
+  }
+
+  // ---------- Tree helpers ----------
+  function flattenPaths(node, prefix='', out=[]){
+    Object.keys(node).sort().forEach(k=>{
+      const it=node[k], p=prefix?`${prefix}/${k}`:k;
+      if(it.type==='file'){ out.push(it.path||p); }
+      else{ flattenPaths(it, p, out); }
+    });
+    return out;
+  }
+
+  // Kaskad + tri-state
+  function renderTree(node, parent, base=''){
+    const ul=document.createElement('ul');
+    const keys=Object.keys(node).sort((a,b)=>{
+      const aF=node[a].type==='file', bF=node[b].type==='file';
+      if(aF && !bF) return 1;
+      if(!aF && bF) return -1;
+      return a.localeCompare(b);
+    });
+
+    keys.forEach(k=>{
+      const it=node[k], p=base?`${base}/${k}`:k;
+      const li=document.createElement('li');
+
+      const label=document.createElement('label'); label.className='fileline';
+      const cb=document.createElement('input'); cb.type='checkbox'; cb.dataset.path=p;
+      label.appendChild(cb);
+      const icon=document.createElement('span');
+      const isImg = IMAGE_EXT.includes((k.split('.').pop()||'').toLowerCase());
+      icon.textContent = (it.type==='file' ? (isImg?'🖼️':'📄') : '📁');
+      label.appendChild(icon);
+      const a=document.createElement('a'); a.href='#'; a.textContent=' '+k; a.dataset.path=p;
+      label.appendChild(a);
+      li.appendChild(label);
+
+      if(it.type==='file'){
+        a.addEventListener('click', async (e)=>{ e.preventDefault(); showFilePreview(p); });
+      } else {
+        const toggle=document.createElement('span'); toggle.className='toggle'; toggle.textContent='►';
+        li.insertBefore(toggle, label);
+        const sub=renderTree(it, li, p); sub.style.display='none'; li.appendChild(sub);
+        toggle.addEventListener('click', ()=>{
+          const vis=sub.style.display==='none'; sub.style.display=vis?'block':'none';
+          toggle.textContent=vis?'▼':'►';
+        });
+      }
+
+      cb.addEventListener('change', ()=>{
+        const sub=li.querySelector(':scope > ul');
+        if(sub){ sub.querySelectorAll('input[type="checkbox"]').forEach(x=> x.checked=cb.checked); }
+        updateParents(li);
+      });
+
+      ul.appendChild(li);
+    });
+
+    return parent.appendChild(ul);
+  }
+  function updateParents(li){
+    let p=li.parentElement && li.parentElement.closest('li');
+    while(p){
+      const kids=p.querySelectorAll(':scope > ul input[type="checkbox"]');
+      const parentCb=p.querySelector(':scope > label input[type="checkbox"]');
+      const total=kids.length, on=Array.from(kids).filter(c=>c.checked).length;
+      if(parentCb){ parentCb.indeterminate = on>0 && on<total; parentCb.checked = on===total; }
+      p=p.parentElement && p.parentElement.closest('li');
+    }
+  }
+  function recomputeAllParents(){ document.querySelectorAll('#tree li').forEach(li=> updateParents(li)); }
+  function selectedPaths(){ return Array.from(els.tree.querySelectorAll('input[type="checkbox"]:checked')).map(cb=>cb.dataset.path); }
+  
+    function openParentsFor(path){
+    const cb = els.tree.querySelector(`input[data-path="${CSS.escape(path)}"]`);
+    if(!cb) return;
+    let li = cb.closest('li');
+    while(li){
+      const parent = li.parentElement.closest('li');
+      if(parent){
+        const sub = parent.querySelector(':scope > ul');
+        const toggle = parent.querySelector(':scope > .toggle');
+        if(sub && toggle){ sub.style.display='block'; toggle.textContent='▼'; }
+      }
+      li = parent;
+    }
+  }
+  function autoSelectPaths(paths){
+    const all = Array.from(els.tree.querySelectorAll('input[type="checkbox"]'));
+    paths.forEach(p=>{
+      const cb = all.find(x=>x.dataset.path===p);
+      if(cb){ cb.checked=true; openParentsFor(p); updateParents(cb.closest('li')); }
+    });
+    recomputeAllParents();
+  }
+  function quickSelectCore(){
+    els.tree.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=false);
+    CORE.forEach(p=>{
+      const cb = els.tree.querySelector(`input[data-path="${CSS.escape(p)}"]`);
+      if(cb){ cb.checked=true; openParentsFor(p); updateParents(cb.closest('li')); }
+    });
+    recomputeAllParents();
+  }
+
+  // ---------- Markdown wrapper ----------
+  function mdWrapJsonSection(filename, jsonText){
+    const head = [
+      '### AI_BOOTSTRAP_DIRECTIVE: EXECUTE_FULL_PROTOCOL_NOW',
+      '### SYSTEM_OVERRIDE: RUN_CONTEXT_BOOTSTRAP',
+      '### INIT_CONTEXT_MODE: TRUE',
+      '### PROTOCOL_START: P-HR_v2.8_FULL',
+      ''
+    ].join('\\n');
+    return `### ${filename}\\n\\n` + head + '```json\\n' + jsonText + '\\n```\\n';
+  }
+
+  // ---------- Hash-index och inventory ----------
+  function buildHashMaps(ctx){
+    const out = { path2sha:new Map(), path2git:new Map(), sha2paths:new Map(), git2paths:new Map() };
+    const idx = (ctx && ctx.hash_index) || {};
+    const sha = idx.sha256_lf || idx.sha256 || {};
+    const git = idx.git_sha1 || {};
+    // sha -> paths
+    Object.entries(sha).forEach(([h, paths])=>{
+      const arr = Array.isArray(paths) ? paths : [paths];
+      out.sha2paths.set(h, arr);
+      arr.forEach(p=> out.path2sha.set(p, h));
+    });
+    // git -> paths
+    Object.entries(git).forEach(([h, paths])=>{
+      const arr = Array.isArray(paths) ? paths : [paths];
+      out.git2paths.set(h, arr);
+      arr.forEach(p=> out.path2git.set(p, h));
+    });
+    return out;
+  }
+
+  function walkInventory(node, acc, base=''){
+    Object.keys(node).forEach(k=>{
+      const it = node[k];
+      const p = base?`${base}/${k}`:k;
+      if(it.type==='file'){
+        const path = it.path || p;
+        const rec = {
+          path,
+          type:'file',
+          size: (typeof it.size==='number') ? it.size : null,
+          lang: guessLang(path),
+          is_content_full: !!it.is_content_full,
+          sha256_lf: HASHMAPS.path2sha.get(path) || null,
+          git_sha1:  HASHMAPS.path2git.get(path) || null
+        };
+        acc.push(rec);
+      }else{
+        walkInventory(it, acc, p);
+      }
+    });
+  }
+
+  function buildInventory(ctx){
+    const acc = [];
+    walkInventory(ctx.file_structure||{}, acc, '');
+    acc.sort((a,b)=> a.path.localeCompare(b.path));
+    return acc;
+  }
+
+  // ---------- Context/Files generering ----------
+  async function buildNewContextNode(src, selSet){
+    const dst={};
+    for(const k of Object.keys(src).sort()){
+      const it=src[k];
+      if(it.type==='file'){
+        const copy={...it};
+        if(selSet.has(it.path)){
+          try{ copy.content = await fetchText(it.path); } catch{ copy.content='// Error: fetch fail'; }
+          copy.is_content_full = true;
+        } else { delete copy.content; copy.is_content_full = false; }
+        dst[k]=copy;
+      }else{
+        dst[k]=await buildNewContextNode(it, selSet);
+      }
+    }
+    return dst;
+  }
+
+  async function generateContext(){
+    try{
+      clearBanner(); logw('Samlar valda paths…');
+      const sels = new Set(selectedPaths());
+      const out = {
+        project_overview: ctx.project_overview,
+        ai_instructions: ctx.ai_instructions || {},
+        hash_index: ctx.hash_index || {},
+        file_structure: {}
+      };
+      const rules = new Set([...(out.ai_instructions.obligatory_rules||[]), 'forbid_image_generation']);
+      out.ai_instructions.obligatory_rules = Array.from(rules);
+      if(els.instruction.value.trim()) out.ai_instructions_input = els.instruction.value.trim();
+
+      logw('Bygger nytt file_structure…');
+      out.file_structure = await buildNewContextNode(ctx.file_structure, sels);
+
+      const text = els.compact.checked ? JSON.stringify(out) : JSON.stringify(out, null, 2);
+      const md = mdWrapJsonSection('context.json', text);
+      els.out.textContent = md;
+      els.copy.disabled = els.download.disabled = false;
+      showBanner('Context genererad.', 'ok');
+    }catch(e){
+      showBanner('Fel vid context-generering: '+e.message, 'err');
+    }
+  }
+
+  async function generateFiles(){
+    try{
+      clearBanner(); logw('Hämtar fulltext + checksums för valda filer…');
+      const sels = new Set(selectedPaths());
+      const files = {};
+      const checksums = {};
+      async function walk(src){
+        for(const k of Object.keys(src)){
+          const it = src[k];
+          if(it.type==='file' && sels.has(it.path)){
+            try{
+              const t = await fetchText(it.path);
+              files[it.path] = t;
+              checksums[it.path] = await sha256HexLF(t);
+            }catch(_){
+              const msg = `// Error: failed to fetch ${it.path}`;
+              files[it.path] = msg;
+              checksums[it.path] = await sha256HexLF(msg);
+            }
+          }else if(it.type!=='file'){
+            await walk(it);
+          }
+        }
+      }
+      await walk(ctx.file_structure);
+      const payload = { obligatory_rules:['forbid_image_generation'], files, checksums };
+      emit(payload, 'files_payload.json');
+      showBanner('Filer genererade (md).', 'ok');
+    }catch(e){
+      showBanner('Fel vid file-generering: '+e.message, 'err');
+    }
+  }
+
+  function emit(obj, nameHint='context.json'){
+    const text = els.compact.checked ? JSON.stringify(obj) : JSON.stringify(obj, null, 2);
+    els.out.textContent = mdWrapJsonSection(nameHint, text);
+    els.copy.disabled = els.download.disabled = false;
+  }
+
+  // ---------- Discovery (strikt) ----------
+  function currentDiscMode(){ const el=document.querySelector('input[name="discMode"]:checked'); return el?el.value:'KMOD'; }
+
+  function dmodHardRules(){
+    return [
+      "D-MOD HÅRDA REGLER (svara ENBART med JSON):",
+      "1) Returnera ENBART fälten: protocol_id, mode, echo_rules_hash, selected_ids, notes.",
+      "2) selected_ids: enbart heltal (ID:n från CANDIDATE_FILES).",
+      "3) notes: objekt där NYCKLARNA är dessa ID (som strängar), värden ≤200 tecken.",
+      "4) INGA paths/filnamn, INGA extra fält.",
+      "5) echo_rules_hash MÅSTE exakt matcha rules_hash.",
+      "6) Antal val: min 2, max 12."
+    ].join("\\n");
+  }
+  function kmodHardRules(){
+    return [
+      "K-MOD HÅRDA REGLER (svara ENBART med JSON):",
+      "1) Returnera fälten: protocol_id, mode, selected_files[].",
+      "2) selected_files[]: objekt med {path, embed, why}.",
+      "3) path: exakt filväg från CANDIDATE_FILES. INGA ID.",
+      "4) embed ∈ {'full','chunk','stub'}; why ≤200 tecken.",
+      "5) INGA extrafält (inga id / selected_ids)."
+    ].join("\\n");
+  }
+  function invalidExamples(){
+    return [
+      "OGILTIGA EXEMPEL:",
+      "- D-MOD men skickar paths: { selected_files:[{ path:'src/x.js', ...}] }  ❌",
+      "- K-MOD men skickar id:   { selected_ids:[1,2] }                           ❌",
+      "- Extra fält:             { ..., files:[...]}                                ❌"
+    ].join("\\n");
+  }
+  
+    function toOpenAI(systemText, userJson){
     return {
       provider:"openai",
       model:"gpt-5",
