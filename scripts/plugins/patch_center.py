@@ -1,4 +1,4 @@
-# plugins/patch_center.py
+# scripts/plugins/patch_center.py
 # Patch Center plugin – inbyggd schema-validering + checksum-match + Apply + preview + Copy/Download
 # Körs via wrap_json_in_html.py som injicerar EXTEND_* i HTML.
 
