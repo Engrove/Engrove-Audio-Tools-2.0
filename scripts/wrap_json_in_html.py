@@ -1008,7 +1008,35 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     return [masterProtocol, ...blocks].join("\n\n---\n\n");
   }
 
-  function globToRegex(glob){ return new RegExp('^'+glob.split('**').join('@@').replace(/[.+^${}()|[\\]\\\\]/g,'\\$&').split('*').join('[^/]*').split('@@').join('.*')+'$'); }
+  function globToRegex(glob){
+  async function buildMenuFirstMD(){
+    if(!ctx){ throw new Error('ctx saknas'); }
+    if(!Array.isArray(INVENTORY) || INVENTORY.length===0){
+      HASHMAPS = buildHashMaps(ctx);
+      INVENTORY = buildInventory(ctx);
+    }
+    const cands = buildCandidatesRich(els.maxCands.value, !!els.incAssets.checked);
+    LAST_CANDIDATES = cands.slice();
+    let payload = { CANDIDATE_FILES: cands };
+    if(els.incInventory.checked){
+      const invCompact = INVENTORY.map(r=> ({path:r.path, lang:r.lang, size:r.size, sha256_lf:r.sha256_lf || null, git_sha1:r.git_sha1 || null}));
+      payload.inventory_compact = invCompact;
+    }
+    const header = [
+      "### MENU_FIRST_DISCOVERY_PROMPT",
+      "",
+      "### MENU_DISCOVERY_v1 (obligatoriskt förstasteg)",
+      "- Du får CANDIDATE_FILES (+ ev. inventory_compact).",
+      "- Steg 1: Skapa en NUMRERAD meny (≤8) över kategorier: app-kod, build-config, backend/functions, tests, data/mock, docs/övrigt.",
+      "- Varje rad: nummer, label, count, confidence, include_globs, exclude_globs (+ ev. embed:\"stub\").",
+      "- Markera rekommenderade med ★ (max 2).",
+      "- Osäkerhet: om ingen tydlig dominans eller recommended tom → ställ EN extra ja/nej-fråga innan val.",
+      "- Svara ENBART med JSON: {\\\"menu\\\":[...], \\\"recommended\\\":[...], \\\"question\\\":\\\"...\\\"}."
+    ].join("\n");
+    return header + "\n```json\n" + JSON.stringify(payload, null, 2) + "\n```\n";
+  }
+
+   return new RegExp('^'+glob.split('**').join('@@').replace(/[.+^${}()|[\\]\\\\]/g,'\\$&').split('*').join('[^/]*').split('@@').join('.*')+'$'); }
   const DM = { SELECTION: { min:2, max:12, allow_paths:["src/**","docs/**","scripts/**","public/**"], deny_paths:["infra/prod/**"] } };
 
   async function buildDiscoveryPromptDMOD(){
