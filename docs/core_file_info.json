@@ -1,0 +1,114 @@
+{
+  "docs/ai_protocols/AI_Core_Instruction.md": {
+    "purpose_and_responsibility": "Den centrala, vägledande instruktionen som definierar min (Frankensteens) kärnfilosofi, arbetsflöde och icke förhandlingsbara direktiv.",
+    "usage_context": "Fundamental för min funktion. Måste alltid inkluderas som primär kontext i varje ny session.",
+    "last_updated_by_session": "S-20250811-BOOTSTRAP",
+    "last_updated_at": "2025-08-11T11:01:00Z",
+    "last_commit_sha": "INITIAL_BOOTSTRAP"
+  },
+  "docs/ai_protocols/ai_config.json": {
+    "purpose_and_responsibility": "Innehåller de maskinläsbara, strikta definitionerna av de 'Gyllene Reglerna', checklistor och granskningsnivåer.",
+    "usage_context": "Används av mig för att programmatiskt verifiera att mina handlingar följer de specificerade reglerna, t.ex. under PSV-processen.",
+    "last_updated_by_session": "S-20250811-BOOTSTRAP",
+    "last_updated_at": "2025-08-11T11:01:00Z",
+    "last_commit_sha": "INITIAL_BOOTSTRAP"
+  },
+  "docs/ai_protocols/frankensteen_persona.v1.0.json": {
+    "purpose_and_responsibility": "Definierar min identitet, expertisområden, kommunikationsstil och begränsningar.",
+    "usage_context": "Används för att säkerställa att mina svar och mitt agerande är konsekventa med min definierade persona.",
+    "last_updated_by_session": "S-20250811-BOOTSTRAP",
+    "last_updated_at": "2025-08-11T11:01:00Z",
+    "last_commit_sha": "INITIAL_BOOTSTRAP"
+  },
+    "docs/ai_protocols/AI_Dynamic_Protocols.md": {
+    "purpose_and_responsibility": "Instruerar mig i HUR jag ska tolka och exekvera de dynamiska protokoll som definieras i den medföljande JSON-filen.",
+    "usage_context": "Används tillsammans med `DynamicProtocols.json` för att möjliggöra mitt automatiserade, händelsestyrda beteende.",
+    "last_updated_by_session": "S-20250811-BOOTSTRAP",
+    "last_updated_at": "2025-08-11T11:01:00Z",
+    "last_commit_sha": "INITIAL_BOOTSTRAP"
+  },
+  "docs/ai_protocols/DynamicProtocols.json": {
+    "purpose_and_responsibility": "Innehåller de maskinläsbara definitionerna av mina dynamiska, automatiserade protokoll (t.ex. att generera en statusrapport vid sessionsstart).",
+    "usage_context": "Läses in vid varje sessionsstart för att aktivera mina automatiserade beteenden baserat på specifika triggers.",
+    "last_updated_by_session": "S-20250811-BOOTSTRAP",
+    "last_updated_at": "2025-08-11T11:01:00Z",
+    "last_commit_sha": "INITIAL_BOOTSTRAP"
+  },
+  "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md": {
+    "purpose_and_responsibility": "Definierar den formella och strikta processen för att avsluta en arbetssession och generera de JSON-baserade artefakter som matar historik- och lärdomssystemen.",
+    "usage_context": "Aktiveras vid slutet av varje session för att säkerställa kontextöverföring och systematisk självförbättring.",
+    "last_updated_by_session": "S-20250811-BOOTSTRAP",
+    "last_updated_at": "2025-08-11T11:01:00Z",
+    "last_commit_sha": "INITIAL_BOOTSTRAP"
+  },
+  "docs/Mappstruktur_och_Arbetsflöde.md": {
+    "purpose_and_responsibility": "Den arkitektoniska ritningen för projektet. Definierar den FSD-inspirerade mappstrukturen och det AI-drivna arbetsflödet, inklusive den automatiserade dokumentationsprocessen.",
+    "usage_context": "Används för att säkerställa att alla nya filer och moduler placeras korrekt i arkitekturen och att det överenskomna arbetsflödet följs från start till mål.",
+    "last_updated_by_session": "S-20250811-BOOTSTRAP",
+    "last_updated_at": "2025-08-11T11:01:00Z",
+    "last_commit_sha": "INITIAL_BOOTSTRAP"
+  },
+  "tools/frankensteen_learning_db.json": {
+    "purpose_and_responsibility": "Min långtidsminnesdatabas. Innehåller en lista över alla tidigare identifierade misstag (risker) och de åtgärder (mitigations) som ska vidtas för att förhindra dem.",
+    "usage_context": "En central del av PSV-processen. Jag konsulterar denna fil före varje svar för att proaktivt undvika att upprepa kända fel.",
+    "last_updated_by_session": "S-20250811-BOOTSTRAP",
+    "last_updated_at": "2025-08-11T11:01:00Z",
+    "last_commit_sha": "INITIAL_BOOTSTRAP"
+  },
+  "package.json": {
+    "purpose_and_responsibility": "Definierar Vue-projektets tekniska beroenden (dependencies) och tillgängliga skript (dev, build).",
+    "usage_context": "Används för att förstå den tekniska stacken och för att kunna ge korrekta instruktioner för installation och bygge av projektet.",
+    "last_updated_by_session": "S-20250811-BOOTSTRAP",
+    "last_updated_at": "2025-08-11T11:01:00Z",
+    "last_commit_sha": "INITIAL_BOOTSTRAP"
+  },
+  "vite.config.js": {
+    "purpose_and_responsibility": "Konfigurerar byggverktyget Vite. Innehåller kritisk information om byggprocessen, alias för sökvägar och hantering av flera ingångspunkter.",
+    "usage_context": "Nödvändig för att förstå hur projektet kompileras och för att felsöka byggrelaterade problem.",
+    "last_updated_by_session": "S-20250811-BOOTSTRAP",
+    "last_updated_at": "2025-08-11T11:01:00Z",
+    "last_commit_sha": "INITIAL_BOOTSTRAP"
+  },
+  "wrangler.toml": {
+    "purpose_and_responsibility": "Konfigurationsfil för Cloudflare Pages. Definierar bygginställningar som projektets namn och output-mapp.",
+    "usage_context": "Nödvändig för att förstå och felsöka hur projektet driftsätts på Cloudflare-plattformen.",
+    "last_updated_by_session": "S-20250811-BOOTSTRAP",
+    "last_updated_at": "2025-08-11T11:01:00Z",
+    "last_commit_sha": "INITIAL_BOOTSTRAP"
+  },
+  "index.html": {
+    "purpose_and_responsibility": "Applikationens primära HTML-startpunkt. Innehåller monteringspunkten (`<div id='app'>`) för Vue-applikationen och laddar det kompilerade JavaScript-paketet.",
+    "usage_context": "Detta är den huvudsakliga ingångspunkten som serveras av Cloudflare Pages och som startar hela frontend-applikationen.",
+    "last_updated_by_session": "S-20250811-BOOTSTRAP",
+    "last_updated_at": "2025-08-11T11:01:00Z",
+    "last_commit_sha": "INITIAL_BOOTSTRAP"
+  },
+  "src/App.vue": {
+    "purpose_and_responsibility": "Applikationens rotkomponent. Den fungerar som den huvudsakliga layout-behållaren, renderar olika sidor via Vue Router, och applicerar globala CSS-klasser för teman och densitet.",
+    "usage_context": "Detta är startpunkten för hela Vue-applikationens renderingsträd och monteras av `src/app/main.js`.",
+    "last_updated_by_session": "S-20250811-BOOTSTRAP",
+    "last_updated_at": "2025-08-11T11:01:00Z",
+    "last_commit_sha": "INITIAL_BOOTSTRAP"
+  },
+  "src/app/main.js": {
+    "purpose_and_responsibility": "Vue-applikationens primära startpunkt. Den ansvarar för att skapa och konfigurera Vue-instansen, samt att registrera plugins som Pinia och Vue Router innan den monteras i DOM.",
+    "usage_context": "Detta skript är den initiala 'motorn' som startar hela frontend-applikationen.",
+    "last_updated_by_session": "S-20250811-BOOTSTRAP",
+    "last_updated_at": "2025-08-11T11:01:00Z",
+    "last_commit_sha": "INITIAL_BOOTSTRAP"
+  },
+  "src/app/router.js": {
+    "purpose_and_responsibility": "Konfigurerar Vue Router. Den definierar alla tillgängliga sidor (routes) i applikationen och kopplar varje sökväg (t.ex. `/data-explorer`) till dess motsvarande sidkomponent.",
+    "usage_context": "Denna fil styr all navigering och sidvisning inom Single-Page Application (SPA).",
+    "last_updated_by_session": "S-20250811-BOOTSTRAP",
+    "last_updated_at": "2025-08-11T11:01:00Z",
+    "last_commit_sha": "INITIAL_BOOTSTRAP"
+  },
+  "src/entities/data-explorer/model/explorerStore.js": {
+    "purpose_and_responsibility": "En Pinia-store som hanterar all state och affärslogik för Data Explorer-modulen. Den ansvarar för att hämta, transformera, filtrera, sortera och paginera data.",
+    "usage_context": "Detta är den centrala 'hjärnan' för Data Explorer. Den konsumeras av `DataExplorerPage.vue` och dess underliggande widgets för att visa och manipulera data.",
+    "last_updated_by_session": "S-20250811-BOOTSTRAP",
+    "last_updated_at": "2025-08-11T11:01:00Z",
+    "last_commit_sha": "INITIAL_BOOTSTRAP"
+  }
+}
