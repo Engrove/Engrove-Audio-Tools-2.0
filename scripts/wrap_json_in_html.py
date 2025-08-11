@@ -4,8 +4,8 @@
 wrap_json_in_html.py — AI Context Builder v7.4 (2025-08-11)
 
 Nyheter vs v7.3:
-- Stabilisering: Plugin-logik för Patch Center har nu integrerats direkt i denna fil för att eliminera dynamiska injiceringsfel. Den separata plugin-filen behövs inte längre.
-- All tidigare funktionalitet från v7.3-p2 är bevarad.
+- v7.5 (2025-08-11): Optimerat CORE-konstanten för att minska initial kontextstorlek och förlita sig på en dynamiskt uppdaterad `docs/core_file_info.json`.
+- Stabilisering: Plugin-logik för Patch Center har nu integrerats direkt i denna fil för att eliminera dynamiska injiceringsfel.
 
 Kör:
   python scripts/wrap_json_in_html.py dist/index.html
@@ -406,19 +406,13 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     'docs/ai_protocols/AI_Core_Instruction.md',
     'docs/ai_protocols/ai_config.json',
     'docs/ai_protocols/frankensteen_persona.v1.0.json',
-    'docs/ai_protocols/AI_Dynamic_Protocols.md',
-    'docs/ai_protocols/DynamicProtocols.json',
-    'docs/ai_protocols/System_Integrity_Check_Protocol.md',
-    'docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md',
-    'docs/ai_protocols/Help_me_God_Protokoll.md',
-    'docs/ai_protocols/Stalemate_Protocol.md',
-    'docs/ai_protocols/Levande_Kontext_Protokoll.md',
-    'docs/ai_protocols/Diff_JSON_Protocol.md',
-    'docs/AI_Collaboration_Standard.md',
     'package.json',
     'vite.config.js',
-    'scripts/generate_full_context.py',
-    'scripts/wrap_json_in_html.py'
+    'docs/Mappstruktur_och_Arbetsflöde.md',
+    'tools/frankensteen_learning_db.json',
+    'docs/ai_protocols/AI_Dynamic_Protocols.md',
+    'docs/ai_protocols/DynamicProtocols.json',
+    'docs/core_file_info.json'
   ];
 
   // ---------- Utils ----------
