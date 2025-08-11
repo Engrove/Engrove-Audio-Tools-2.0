@@ -1526,8 +1526,8 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       try { ctx.core_info_data = await (await fetchText('docs/core_file_info.json').then(JSON.parse)); } catch(e) { console.warn('Kunde inte ladda core_file_info.json', e); ctx.core_info_data={}; }
       try { ctx.persona_data = await (await fetchText('docs/ai_protocols/frankensteen_persona.v1.0.json').then(JSON.parse)); } catch(e) { console.warn('Kunde inte ladda frankensteen_persona.v1.0.json', e); ctx.persona_data=null; }
       ctx = data;
-      const repo = (ctx.project_overview && ctx.project_overview.repository) || RAW_DEFAULT_REPO;
-      const branch = (ctx.project_overview && ctx.project_overview.branch) || RAW_DEFAULT_BRANCH;
+      // const repo = (ctx.project_overview && ctx.project_overview.repository) || RAW_DEFAULT_REPO;
+      // const branch = (ctx.project_overview && ctx.project_overview.branch) || RAW_DEFAULT_BRANCH;
       RAW_BASE = `https://raw.githubusercontent.com/${repo}/${branch}/`;
 
       FILES = flattenPaths(ctx.file_structure);
