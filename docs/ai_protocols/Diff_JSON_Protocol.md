@@ -24,7 +24,7 @@
 - **Teckenkodning**: UTF-8
 - **BOM**: Måste tas bort.
 - **Radslut**: Alla radslut (CRLF/CR) måste normaliseras till LF (`\n`).
-- **`base_checksum_sha256`**: Är en 64-tecken hex-sträng som representerar SHA-256-hashen av den *kanoniserade* bastexten.
+- **`base_checksum_sha256`**: Är en 64-tecken hex-sträng som representerar basfilens SHA-256-hash.
 
 ## 3. JSON-Struktur
 ```json
@@ -61,7 +61,7 @@
 
 - **`target`** (objekt, krävs):
     - **`path`** (sträng, rekommenderas): Den relativa sökvägen till målfilen.
-    - **`base_checksum_sha256`** (sträng, krävs): SHA-256-hashen av basfilen efter kanonisering.
+    - **`base_checksum_sha256`** (sträng, krävs): SHA-256-hashen av basfilen.
 
 - **`op_groups`** (array, krävs): En lista av operationsgrupper. Varje grupp är en logisk operation som utgår från ett ankare.
     - **`anchor`** (objekt, krävs): Definierar en unik referenspunkt i basfilen.
