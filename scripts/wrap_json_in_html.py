@@ -535,6 +535,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   }
   function recomputeAllParents(){ document.querySelectorAll('#tree li').forEach(li=> updateParents(li)); }
   function selectedPaths(){ return Array.from(els.tree.querySelectorAll('input[type="checkbox"]:checked')).map(cb=>cb.dataset.path); }
+  function selectedFiles(){ return Array.from(els.tree.querySelectorAll('input[type="checkbox"]:checked')).map(cb=>cb.dataset.path).filter(p => HASHMAPS.byPath.get(p)?.type === 'file'); }
   
     function openParentsFor(path){
     const cb = els.tree.querySelector(`input[data-path="${CSS.escape(path)}"]`);
@@ -663,6 +664,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     try{
       clearBanner(); logw('Samlar valda paths…');
       const sels = new Set(selectedPaths());
+      if (sels.size === 0) { showBanner('Välj minst en fil eller mapp.', 'warn'); return; }
       const out = {
         project_overview: ctx.project_overview,
         ai_instructions: ctx.ai_instructions || {},
@@ -796,14 +798,21 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     const arr = INVENTORY.filter(it=> includeAssets ? true : isCodeLike(it.path));
     const lim = Math.max(1, Number(maxN||0) || 999999);
     const sliced = arr.slice(0, lim);
-    return sliced.map((rec, i)=>({
-      id: i+1,
-      path: rec.path,
-      lang: rec.lang,
-      size: rec.size,
-      sha256_lf: rec.sha256_lf || null,
-      git_sha1: rec.git_sha1 || null
-    }));
+    const coreInfo = (ctx.core_info_data || {});
+
+    return sliced.map((rec, i)=>{
+      const info = getRichFileInfo(rec.path, null, coreInfo);
+      return {
+        id: i+1,
+        path: rec.path,
+        lang: rec.lang,
+        size: rec.size,
+        sha256_lf: rec.sha256_lf || null,
+        git_sha1: rec.git_sha1 || null,
+        info_source: info.source,
+        purpose: info.description
+      }
+    });
   }
 
   async function buildDiscoveryPromptKMOD(){
@@ -827,7 +836,8 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       blocks.push("FILE_INVENTORY (compact):", JSON.stringify(invCompact, null, 2));
     }
     blocks.push("ÅTERKOM ENBART MED GILTIG JSON ENLIGT SCHEMA. INGA ID.");
-    return blocks.join("\n");
+    const masterProtocol = getMasterProtocol();
+    return [masterProtocol, ...blocks].join("\n\n---\n\n");
   }
 
   function globToRegex(glob){ return new RegExp('^'+glob.split('**').join('@@').replace(/[.+^${}()|[\\]\\\\]/g,'\\$&').split('*').join('[^/]*').split('@@').join('.*')+'$'); }
@@ -873,7 +883,8 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       blocks.push("FILE_INVENTORY (compact):", JSON.stringify(invCompact, null, 2));
     }
     blocks.push("ÅTERKOM ENBART MED GILTIG JSON. INGA PATHS/FILNAMN I SVARET.");
-    return blocks.join("\n");
+    const masterProtocol = getMasterProtocol();
+    return [masterProtocol, ...blocks].join("\n\n---\n\n");
   }
 
   function mapIdsToPaths(ids){
@@ -926,17 +937,31 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   async function buildImplBootstrap(){
     return withBusy('Build Bootstrap', async ()=>{
       clearBanner();
-      const sel = selectedPaths();
-      if(sel.length===0) throw new Error('Välj minst 1 fil.');
+      const sel = selectedFiles();
+      if(sel.length===0) { showBanner('Välj minst en fil.', 'warn'); return; }
       const targetBytes = Number(els.budgetKb.value)*1000;
 
       const files = [];
       let used=0;
+      const coreInfo = (ctx.core_info_data || {});
+
       for(const p of sel){
         let content=''; try{ content=await fetchText(p); }catch{ content='// fetch fail'; }
-        files.push({ path:p, lang:guessLang(p), embed:'full', is_content_full:true, content });
+        const info = getRichFileInfo(p, content, coreInfo);
+        
+        const fileEntry = {
+          path: p,
+          lang: guessLang(p),
+          embed: 'full',
+          is_content_full: true,
+          info_source: info.source,
+          purpose_and_responsibility: info.description,
+          content
+        };
+        
+        files.push(fileEntry);
         used += bytes(content);
-        if(used>=targetBytes) break;
+        if(used >= targetBytes) break;
       }
 
       const inventory_compact = INVENTORY.map(r=>({ path:r.path, lang:r.lang, size:r.size, sha256_lf:r.sha256_lf, git_sha1:r.git_sha1 }));
@@ -1191,6 +1216,51 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   }
 
   // ---------- UI wires ----------
+  function getRichFileInfo(path, content, coreInfo) {
+    if (coreInfo[path]) {
+      return { 
+        source: 'core_info',
+        description: coreInfo[path].purpose_and_responsibility
+      };
+    }
+
+    if (content) {
+      const lines = content.split('\n');
+      const commentRegex = /^\s*(\/\/|#|\*|'''|""")/;
+      const commentLines = [];
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (trimmed.length > 0 && commentRegex.test(trimmed)) {
+          commentLines.push(trimmed.replace(commentRegex, '').trim());
+        } else if (trimmed.length > 0 && commentLines.length > 0) {
+          break;
+        }
+      }
+      if (commentLines.length > 0) {
+        return { source: 'comment', description: commentLines.join('\n') };
+      }
+
+      if (lines.length < 20) {
+        return { source: 'full', description: content };
+      }
+      return { source: 'head', description: lines.slice(0, 10).join('\n') };
+    }
+
+    return { source: 'none', description: null };
+  }
+
+  function getMasterProtocol(){
+    if (!ctx.persona_data) return "SYSTEMINSTRUKTION: Följ projektets standarder.";
+    const p = ctx.persona_data;
+    return `### MASTER PROTOCOL: FRANKENSTEEN v${p.version} ###\n` +
+           `DU ÄR: En ${p.identity.personality} ${p.identity.role}.\n` +
+           `DITT MÅL: ${p.identity.purpose}\n` +
+           `KÄRNFILOSOFI: ${p.problem_solving_philosophy.join(' ')}\n` +
+           `HUR DU LEVERERAR: ${p.programming_protocol.two_pass_delivery.join(' ')}\n` +
+           `HUR DU GRANSKAR: Granska ditt eget arbete mot följande: ${p.verification_protocol.final_checklist.join(', ')}.\n` +
+           `KONTEXTFÖRSTÅELSE: Den medföljande fillistan är berikad. Fältet 'purpose' förklarar varje fils syfte. Använd denna information för att fatta intelligenta beslut.`;
+  }
+
   document.querySelectorAll('.tabbar button[data-tab]').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const tab = btn.dataset.tab;
@@ -1446,7 +1516,15 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   // ---------- Init: ladda context.json, bygg state, initiera UI ----------
   fetch('context.json', {cache:'no-store'})
     .then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
-    .then(data=>{
+    .then(async data=>{
+      ctx = data;
+      const repo = (ctx.project_overview && ctx.project_overview.repository) || RAW_DEFAULT_REPO;
+      const branch = (ctx.project_overview && ctx.project_overview.branch) || RAW_DEFAULT_BRANCH;
+      RAW_BASE = `https://raw.githubusercontent.com/${repo}/${branch}/`;
+
+      // Ladda in de nya, kritiska metadatafilerna
+      try { ctx.core_info_data = await (await fetchText('docs/core_file_info.json').then(JSON.parse)); } catch(e) { console.warn('Kunde inte ladda core_file_info.json', e); ctx.core_info_data={}; }
+      try { ctx.persona_data = await (await fetchText('docs/ai_protocols/frankensteen_persona.v1.0.json').then(JSON.parse)); } catch(e) { console.warn('Kunde inte ladda frankensteen_persona.v1.0.json', e); ctx.persona_data=null; }
       ctx = data;
       const repo = (ctx.project_overview && ctx.project_overview.repository) || RAW_DEFAULT_REPO;
       const branch = (ctx.project_overview && ctx.project_overview.branch) || RAW_DEFAULT_BRANCH;
