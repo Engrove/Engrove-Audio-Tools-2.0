@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-wrap_json_in_html.py — AI Context Builder v7.3-p3 (2025-08-10)
+wrap_json_in_html.py — AI Context Builder v7.3-p2 (2025-08-10)
 
-Innehåll:
+Nyheter vs v7.3:
 - Download: ISO-datum i filnamn (YYYY-MM-DDTHH-MM-SSZ)
-- Generate Files: markdown med ```json + checksums (sha256_lf per fil)
-- Träd: kaskadkryss + tri-state (förälder speglar barnstatus)
+- Generate Files: output är markdown med inbäddad ```json och inkluderar checksums (sha256_lf per fil)
+- Träd: kaskadkryss + tri-state (föräldrar speglar barnstatus)
 - Busy-overlay + arbetslogg
 - Discovery: strikt K-MOD (paths) / D-MOD (selected_ids + echo_rules_hash)
 - Filförhandsvisning (text/bild)
@@ -409,7 +409,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     if(e==='json') return 'json';
     if(e==='html') return 'html';
     if(e==='css') return 'css';
-    if(e==='yml'||e==='yaml') return 'yml';
     return 'txt';
   }
 
@@ -461,6 +460,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       label.appendChild(icon);
       const a=document.createElement('a'); a.href='#'; a.textContent=' '+k; a.dataset.path=p;
       label.appendChild(a);
+
       li.appendChild(label);
 
       if(it.type==='file'){
@@ -481,7 +481,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         updateParents(li);
       });
 
-      parent.appendChild(li);
+      ul.appendChild(li);
     });
 
     return parent.appendChild(ul);
@@ -498,7 +498,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   }
   function recomputeAllParents(){ document.querySelectorAll('#tree li').forEach(li=> updateParents(li)); }
   function selectedPaths(){ return Array.from(els.tree.querySelectorAll('input[type="checkbox"]:checked')).map(cb=>cb.dataset.path); }
-
   function openParentsFor(path){
     const cb = els.tree.querySelector(`input[data-path="${CSS.escape(path)}"]`);
     if(!cb) return;
@@ -521,6 +520,8 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     });
     recomputeAllParents();
   }
+
+  // Quick select core docs
   function quickSelectCore(){
     els.tree.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=false);
     CORE.forEach(p=>{
@@ -542,57 +543,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     return `### ${filename}\\n\\n` + head + '```json\\n' + jsonText + '\\n```\\n';
   }
 
-  // ---------- Hash-index och inventory ----------
-  function buildHashMaps(ctx){
-    const out = { path2sha:new Map(), path2git:new Map(), sha2paths:new Map(), git2paths:new Map() };
-    const idx = (ctx && ctx.hash_index) || {};
-    const sha = idx.sha256_lf || idx.sha256 || {};
-    const git = idx.git_sha1 || {};
-    // sha -> paths
-    Object.entries(sha).forEach(([h, paths])=>{
-      const arr = Array.isArray(paths) ? paths : [paths];
-      out.sha2paths.set(h, arr);
-      arr.forEach(p=> out.path2sha.set(p, h));
-    });
-    // git -> paths
-    Object.entries(git).forEach(([h, paths])=>{
-      const arr = Array.isArray(paths) ? paths : [paths];
-      out.git2paths.set(h, arr);
-      arr.forEach(p=> out.path2git.set(p, h));
-    });
-    return out;
-  }
-
-  function walkInventory(node, acc, base=''){
-    Object.keys(node).forEach(k=>{
-      const it = node[k];
-      const p = base?`${base}/${k}`:k;
-      if(it.type==='file'){
-        const path = it.path || p;
-        const rec = {
-          path,
-          type:'file',
-          size: (typeof it.size==='number') ? it.size : null,
-          lang: guessLang(path),
-          is_content_full: !!it.is_content_full,
-          sha256_lf: HASHMAPS.path2sha.get(path) || null,
-          git_sha1:  HASHMAPS.path2git.get(path) || null
-        };
-        acc.push(rec);
-      }else{
-        walkInventory(it, acc, p);
-      }
-    });
-  }
-
-  function buildInventory(ctx){
-    const acc = [];
-    walkInventory(ctx.file_structure||{}, acc, '');
-    acc.sort((a,b)=> a.path.localeCompare(b.path));
-    return acc;
-  }
-
-  // ---------- Context/Files generering ----------
+  // ---------- Context/Files generation ----------
   async function buildNewContextNode(src, selSet){
     const dst={};
     for(const k of Object.keys(src).sort()){
@@ -753,13 +704,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     return sliced.map((rec, i)=>({
       id: i+1,
       path: rec.path,
-      lang: rec.lang,
-      size: rec.size,
-      sha256_lf: rec.sha256_lf || null,
-      git_sha1: rec.git_sha1 || null
-    }));
-  }
-
+      lang: rec.lang,...
   async function buildDiscoveryPromptKMOD(){
     const cands = buildCandidatesRich(els.maxCands.value, !!els.incAssets.checked);
     LAST_CANDIDATES = cands.slice();
@@ -1126,7 +1071,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     });
     charts.modelChart = new Chart(document.getElementById('model-chart').getContext('2d'), {
       type:'pie',
-      data:{ labels:Object.keys(agg.byModel), datasets:[{ data:Object.values(agg.byModel) }] },
+      data:{ labels:Object.keys(byModel), datasets:[{ data:Object.values(byModel) }] },
       options:{ responsive:true, maintainAspectRatio:false }
     });
 
@@ -1219,7 +1164,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       logw(`Inventory: ${INVENTORY.length} filer. Hash-index: sha=${HASHMAPS.sha2paths.size}, git=${HASHMAPS.git2paths.size}.`);
     })
     .catch(e=>{
-      els.tree.innerHTML = '<p style="color:#b00020">Kunde inte läsa context.json: '+escapeHtml(e.message)+'</p>';
+      els.tree.innerHTML = '<p style="color:#b00020">Kunde inte läsa context.json: '+e.message+'</p>';
     });
 
   // Export/refresh (performance)
@@ -1265,7 +1210,7 @@ def _apply_extension_plugin(html: str, plugin_path: str) -> str:
         else:
             mod = importlib.import_module(plugin_path)  # type: ignore
     except Exception as e:
-        sys.stderr.write(f"[wrap_json_in_html] Varning: kunde inte ladda plugin '{plugin_path}': {e}\n")
+        sys.stderr.write(f"[wrap_json_in_html] Varning: kunde inte ladda plugin '{plugin_path}': {e}\\n")
         traceback.print_exc()
         return html
 
@@ -1275,8 +1220,8 @@ def _apply_extension_plugin(html: str, plugin_path: str) -> str:
     css_add  = getattr(mod, "EXTEND_CSS", "")  or ""
 
     if css_add and "<style" not in css_add.lower():
-        css_add = f"<style>\n{css_add}\n</style>"
-    head_inject = (head_add or "") + (("\n"+css_add) if css_add else "")
+        css_add = f"<style>\\n{css_add}\\n</style>"
+    head_inject = (head_add or "") + (("\\n"+css_add) if css_add else "")
     if head_inject:
         idx = html.lower().rfind("</head>")
         if idx != -1:
@@ -1285,9 +1230,9 @@ def _apply_extension_plugin(html: str, plugin_path: str) -> str:
     body_inject = body_add or ""
     if js_add:
         if "<script" not in js_add.lower():
-            body_inject += f"\n<script>\n{js_add}\n</script>"
+            body_inject += f"\\n<script>\\n{js_add}\\n</script>"
         else:
-            body_inject += "\n" + js_add
+            body_inject += "\\n" + js_add
     if body_inject:
         idx2 = html.lower().rfind("</body>")
         if idx2 != -1:
@@ -1311,3 +1256,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+      size: rec.size,
+      sha256_lf: rec.sha256_lf || null,
+      git_sha1: rec.git_sha1 || null
+    }));
+  }
