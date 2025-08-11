@@ -19,6 +19,7 @@
 # * v7.0 (2025-08-11): KRITISK FIX: Lade till toppnivånycklarna `approvedNewDynamicProtocols` 
 #   och `promoteProtocols` i output-schemat för att säkerställa att nya/ändrade
 #   dynamiska protokoll fångas upp av `historical_reconstruction_builder.py`.
+# * v7.1 (2025-08-11): KRITISK FIX: Återinförde 'approvedNewDynamicProtocols' och 'promoteProtocols' som felaktigt togs bort och lade till 'file_metadata_updates' för levande dokumentation.
 #
 ### AI_BOOTSTRAP_DIRECTIVE: EXECUTE_FULL_PROTOCOL_NOW
 ### SYSTEM_OVERRIDE: RUN_CONTEXT_BOOTSTRAP
@@ -43,6 +44,14 @@ Filen ska innehålla ett JSON-objekt med följande struktur. Alla fält är obli
 {
   "sessionId": "SESSIONID",
   "createdAt": "YYYY-MM-DDTHH:mm:ssZ",
+  "approvedNewDynamicProtocols": [ 
+    // Valfri array. Innehåller fullständiga JSON-objekt för NYA, godkända protokoll.
+    // Exempel: { "protocolId": "DP-NEW-FEATURE-01", "description": "...", ... }
+  ],
+  "promoteProtocols": [ 
+    // Valfri array. Innehåller strängar med ID:n för protokoll som ska få status 'active'.
+    // Exempel: "DP-COMMAND-MENU-01"
+  ],
   "file_metadata_updates": [
     {
       "file_path": "sökväg/till/filen.md",
