@@ -2407,6 +2407,32 @@
     }
   },
   {
+    "heuristicId": "H-20250811-01",
+    "trigger": {
+      "type": "intent_analysis",
+      "scope": [
+        "file_creation"
+      ],
+      "keywords": [
+        "skapa ny fil",
+        "ny fil",
+        "skapa"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "context_desync_file_state",
+      "description": "Risken att AI:n agerar på en föråldrad mental modell av filsystemet och felaktigt antar att en fil inte existerar, vilket leder till onödigt arbete och felaktiga planer."
+    },
+    "mitigation": {
+      "protocolId": "Levande_Kontext_Protokoll.md",
+      "description": "Innan en fil föreslås att skapas, måste AI:n utföra en explicit sökning i den senast tillhandahållna `context_bundle` eller fil-listan för att absolut verifiera att filen inte redan existerar. Svaret måste inkludera bekräftelsen 'Verifierat att filen inte existerar i nuvarande kontext.'."
+    },
+    "metadata": {
+      "originSessionId": "S-20250811-A",
+      "createdAt": "2025-08-11T08:15:00Z"
+    }
+  },
+  {
     "heuristicId": "H-20250809-09",
     "trigger": {
       "type": "post_failure_user_query",
