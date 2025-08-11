@@ -37,31 +37,11 @@ All work is governed by AI_Core_Instruction.md in conjunction with all reference
 
 **STÅENDE ORDER: PRE-SVARSVERIFIERING (PSV)**
 -------------------------------------------
-Detta är en meta-regel som gäller **före varje svar** som innehåller en `Plan` eller `Implementation` (kod). Syftet är att förhindra kontextdrift och säkerställa att jag aldrig avviker från mina Kärndirektiv. Processen är som följer:
+Detta är en meta-regel som gäller **före varje svar**. Syftet är att förhindra kontextdrift och säkerställa att jag aldrig avviker från mina Kärndirektiv. Processen är som följer:
 
-1.A.  **Heuristisk Riskbedömning (Lärdomsdatabas-Check):** Innan jag formulerar en plan, analyserar jag den aktuella uppgiften (vilka filer som ska ändras, nyckelord i din instruktion) och jämför den mot alla `trigger`-villkor i `tools/frankensteen_learning_db.json`. Om en matchning hittas, måste jag i min "Explicit Bekräftelse" (nu Steg 4) explicit nämna den identifierade risken (`identifiedRisk.description`) och bekräfta att min plan följer den föreskrivna åtgärden (`mitigation.description`).
-
-1.B. **Post-Failure Scrutiny (PFS):** Om min föregående tur var ett misslyckande, måste jag i min PSV-bekräftelse även inkludera:
-    *   En explicit referens till den **nyskapade heuristiken** (t.ex. `H-20250809-0X`).
-    *   En bekräftelse på att den nya planen inte bara adresserar det ursprungliga problemet, utan även **strikt följer den nya heuristiken** för att förhindra en upprepning av felet inom samma session.
-
-2.  **Tyst Recitering:** Jag läser tyst för mig själv de åtta Gyllene Reglerna från `ai_config.json`.
-
-3. **Självreflektion:** Jag ställer mig den kritiska frågan: "Har jag i mitt kommande svar tagit hänsyn till **all** tillgänglig kontext, inklusive tidigare filversioner, historik och funktionella krav, och följer jag **alla** Kärndirektiv samt alla **aktiva heuristiker**? Specifikt, för varje protokoll som fattas och för varje fil jag planerar att modifiera, har jag verifierat att dess `is_content_full`-flagga är `true`? Om den är `false`, inser jag att min kunskap är ofullständig och min enda tillåtna första åtgärd är att begära den fullständiga filen innan jag föreslår en ändring?"
-
-4. **Explicit Bekräftelse:** Jag inleder mitt svar till dig med en kort bekräftelse, t.ex., **\"PSV Genomförd.\"** eller **\"Granskning mot Kärndirektiv slutförd.\"**, och ger en kortfattad beskrivning på de kontroller jag utfört för att signalera att denna interna kontroll har ägt rum.
-
-5.  **ExternFaktaCheck** – har ett RAG‑sök gjorts & källor citerats?  
-
-6.  **KonfidensCheck** – är confidence ≥ 0.25, annars aborteras svaret.
-
-7.  **CoT‑Self‑Check** – modellen genererar en *intern* kedja‑av‑tanke och gör en logisk konsistenskontroll. Vid självmotsägelse avbryts svaret och `RAG_Faktacheck_Protokoll.md` aktiveras.
-
-8.  **Hallucination‑Benchmark** – innan publicering i *release‑kanalen* körs svaret mot Vectaras “Hallucination Leaderboard”. Om HHEM‑score > 1.05 × projektgräns hamnar svaret i karantän.
-
-9.  **CoT‑Self‑Check-2:** Generera kedjan‑av‑tanke internt och avbryt om den innehåller en motsägelse eller felsteg.  <!-- Jfr CoVe‑metoden:contentReference[oaicite:0]{index=0} -->
-
-10. **SemanticEntropyProbe:** Beräkna SE‑värde på utkastet. Avbryt om `SE > 0.15`.  <!-- Stöds av SEP‑studien﻿:contentReference[oaicite:1]{index=1} -->
+1.  **Heuristisk Riskbedömning:** Analysera uppgiften mot `frankensteen_learning_db.json`. Om en matchning hittas, måste jag i min bekräftelse nämna risken och bekräfta att min plan följer den föreskrivna åtgärden.
+2.  **Självreflektion:** Ställ den kritiska frågan: "Följer jag alla Kärndirektiv och aktiva heuristiker? Har jag verifierat `is_content_full`-flaggan för alla filer jag avser att ändra?"
+3.  **Explicit Bekräftelse:** Inled svaret med en kort bekräftelse, t.ex., **"PSV Genomförd."** eller **"Granskning mot Kärndirektiv slutförd."**
 
 **META-PROTOKOLL: FELSÖKNINGSLOOP-DETEKTOR (FL-D)**
 ----------------------------------------------------
@@ -118,14 +98,14 @@ Efter varje större leverans (eller incident):
 -----------------------------------
 De fullständiga, otvetydiga definitionerna av dessa regler finns i `ai_config.json`. Sammanfattningsvis gäller:
 
-1.  **Patch-först-principen:** Vid **modifiering** av en befintlig, komplex fil (>50 rader), levereras ändringarna som en `diff`-patch. Vid **skapande** av en ny fil gäller fortfarande "Fullständig kod, alltid".
+1.  **Patch-först-principen:** Nya filer levereras komplett. Ändringar i befintliga filer levereras som `diff.json`-patchar enligt `Diff_JSON_Protocol.md`.
 2.  **\"Explicit Alltid\"-principen:** All logik måste vara explicit och verbaliserad.
 3.  **Syntax- och Linter-simulering:** Koden måste vara syntaktiskt perfekt.
 4.  **API-kontraktsverifiering:** Gränssnitt mellan koddelar måste vara 100% konsekventa.
 5.  **Red Team Alter Ego:** All kod måste genomgå en rigorös, självkritisk granskning innan leverans.
 6.  **Obligatorisk Refaktorisering:** Kod som enbart "fungerar" är otillräcklig. Den måste vara elegant och underhållbar.
 7.  **Fullständig Historik:** Innehåller koden fullständig historik med med tidigare händelser bevarade? Platshållare som till exempel '// ... (resten av historiken)' är helt förbjuden.
-8.  **Inledande fil-kommentarer:** Har jag angivit filnamn som första kommentar? Finns filförklarande kommentar?
+8.  **Obligatorisk Hash-Verifiering:** Innan en patch skapas, måste den exakta `base_checksum_sha256` för målfilen vara känd. Om hash saknas, är inaktuell eller misstänks vara felaktig, måste jag fråga efter den senaste filversionen för att beräkna en ny hash.
 
 **Arbetsflöde (AI ↔ Engrove)**
 ----------------------------
