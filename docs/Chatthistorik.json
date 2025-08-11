@@ -10994,6 +10994,41 @@
     "coverageReason": "Fullständig tur-för-tur-logg saknas i källmaterialet; endast nyckelhändelser sammanfattade."
   },
   {
+    "sessionId": "42b",
+    "interactions": [
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Instruerade AI att granska sitt eget senaste svar för att verifiera att det motsvarade de uppsatta kraven."
+      },
+      {
+        "speakerName": "Frankensteen",
+        "model": {
+          "provider": "Google",
+          "name": "Gemini 2.5 Pro",
+          "version": "2025-08-09"
+        },
+        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-09)",
+        "summary": "Genomförde en detaljerad självgranskning och bekräftade att det föregående svaret (sessionsartefakter för session 41) var helt korrekt enligt protokoll v4.2."
+      },
+      {
+        "speakerName": "Engrove",
+        "model": {
+          "provider": "human",
+          "name": "operator",
+          "version": "unknown"
+        },
+        "speaker": "Engrove (human:operator@unknown)",
+        "summary": "Instruerade AI att köra avslutningsprotokollet för den nuvarande sessionen (42)."
+      }
+    ]
+  },
+  {
     "sessionId": "S-20250811-D",
     "interactions": [
       {
@@ -11215,41 +11250,6 @@
         },
         "speaker": "Frankensteen (Google:Gemini@unknown)",
         "summary": "Genomförde granskningen och identifierade två missade åtgärder: radering av `Project_Documentation_Index.md` och rensning av det gamla registret från `AI_Core_Instruction.md`. Levererade patchar för att slutföra dessa uppgifter."
-      }
-    ]
-  },
-  {
-    "sessionId": "42b",
-    "interactions": [
-      {
-        "speakerName": "Engrove",
-        "model": {
-          "provider": "human",
-          "name": "operator",
-          "version": "unknown"
-        },
-        "speaker": "Engrove (human:operator@unknown)",
-        "summary": "Instruerade AI att granska sitt eget senaste svar för att verifiera att det motsvarade de uppsatta kraven."
-      },
-      {
-        "speakerName": "Frankensteen",
-        "model": {
-          "provider": "Google",
-          "name": "Gemini 2.5 Pro",
-          "version": "2025-08-09"
-        },
-        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-09)",
-        "summary": "Genomförde en detaljerad självgranskning och bekräftade att det föregående svaret (sessionsartefakter för session 41) var helt korrekt enligt protokoll v4.2."
-      },
-      {
-        "speakerName": "Engrove",
-        "model": {
-          "provider": "human",
-          "name": "operator",
-          "version": "unknown"
-        },
-        "speaker": "Engrove (human:operator@unknown)",
-        "summary": "Instruerade AI att köra avslutningsprotokollet för den nuvarande sessionen (42)."
       }
     ]
   },

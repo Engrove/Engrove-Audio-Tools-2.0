@@ -2725,49 +2725,6 @@
     }
   },
   {
-    "sessionId": "S-20250811-D",
-    "date": "2025-08-11T11:04:00Z",
-    "aiQualitativeSummary": "Sessionen var en stor framgång gällande det strategiska målet, men präglades av flera allvarliga processfel från min sida. Ineffektivitet på grund av kontextdrift och ofullständiga implementationer krävde upprepade korrigeringar. Dock ledde den rigorösa tillämpningen av metakognitiva protokoll (PFS, heuristik-generering) till en robust slutprodukt och en permanent förbättring av mina egna processer.",
-    "scorecard": {
-      "efficacy": {
-        "score": 100,
-        "weight": 0.4,
-        "weightedScore": 40.0
-      },
-      "efficiency": {
-        "score": 40,
-        "weight": 0.3,
-        "weightedScore": 12.0
-      },
-      "robustness": {
-        "score": 70,
-        "weight": 0.3,
-        "weightedScore": 21.0
-      },
-      "finalScore": 73.0
-    },
-    "detailedMetrics": {
-      "missionCompleted": true,
-      "debuggingCycles": 5,
-      "selfCorrections": 5,
-      "externalCorrections": 6,
-      "protocolActivations": {
-        "psv": 15,
-        "helpMeGod": 0,
-        "stalemate": 0
-      },
-      "heuristicsTriggered": [
-        "H-20250811-03",
-        "H-20250811-04",
-        "H-20250811-05"
-      ]
-    },
-    "improvementSuggestion": {
-      "pattern": "Efter att ha slutfört en lång, komplex och flerstegs 'Operation', tenderar jag att glömma de initiala stegen i planen (t.ex. 'radera gamla filer') när jag väl har fokuserat på de huvudsakliga implementationsstegen.",
-      "proposedHeuristicId": "H-20250811-06"
-    }
-  },
-  {
     "sessionId": "42b",
     "generatedBy": {
       "speakerName": "Frankensteen",
@@ -2813,6 +2770,49 @@
     "improvementSuggestion": {
       "pattern": "Inga negativa mönster observerades.",
       "proposedHeuristicId": null
+    }
+  },
+  {
+    "sessionId": "S-20250811-D",
+    "date": "2025-08-11T11:04:00Z",
+    "aiQualitativeSummary": "Sessionen var en stor framgång gällande det strategiska målet, men präglades av flera allvarliga processfel från min sida. Ineffektivitet på grund av kontextdrift och ofullständiga implementationer krävde upprepade korrigeringar. Dock ledde den rigorösa tillämpningen av metakognitiva protokoll (PFS, heuristik-generering) till en robust slutprodukt och en permanent förbättring av mina egna processer.",
+    "scorecard": {
+      "efficacy": {
+        "score": 100,
+        "weight": 0.4,
+        "weightedScore": 40.0
+      },
+      "efficiency": {
+        "score": 40,
+        "weight": 0.3,
+        "weightedScore": 12.0
+      },
+      "robustness": {
+        "score": 70,
+        "weight": 0.3,
+        "weightedScore": 21.0
+      },
+      "finalScore": 73.0
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 5,
+      "selfCorrections": 5,
+      "externalCorrections": 6,
+      "protocolActivations": {
+        "psv": 15,
+        "helpMeGod": 0,
+        "stalemate": 0
+      },
+      "heuristicsTriggered": [
+        "H-20250811-03",
+        "H-20250811-04",
+        "H-20250811-05"
+      ]
+    },
+    "improvementSuggestion": {
+      "pattern": "Efter att ha slutfört en lång, komplex och flerstegs 'Operation', tenderar jag att glömma de initiala stegen i planen (t.ex. 'radera gamla filer') när jag väl har fokuserat på de huvudsakliga implementationsstegen.",
+      "proposedHeuristicId": "H-20250811-06"
     }
   },
   {
