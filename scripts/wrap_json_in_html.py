@@ -460,7 +460,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       label.appendChild(icon);
       const a=document.createElement('a'); a.href='#'; a.textContent=' '+k; a.dataset.path=p;
       label.appendChild(a);
-
       li.appendChild(label);
 
       if(it.type==='file'){
@@ -498,7 +497,8 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   }
   function recomputeAllParents(){ document.querySelectorAll('#tree li').forEach(li=> updateParents(li)); }
   function selectedPaths(){ return Array.from(els.tree.querySelectorAll('input[type="checkbox"]:checked')).map(cb=>cb.dataset.path); }
-  function openParentsFor(path){
+  
+    function openParentsFor(path){
     const cb = els.tree.querySelector(`input[data-path="${CSS.escape(path)}"]`);
     if(!cb) return;
     let li = cb.closest('li');
@@ -541,6 +541,56 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       ''
     ].join('\\n');
     return `### ${filename}\\n\\n` + head + '```json\\n' + jsonText + '\\n```\\n';
+  }
+
+  // ---------- Hash-index och inventory ----------
+  function buildHashMaps(ctx){
+    const out = { path2sha:new Map(), path2git:new Map(), sha2paths:new Map(), git2paths:new Map() };
+    const idx = (ctx && ctx.hash_index) || {};
+    const sha = idx.sha256_lf || idx.sha256 || {};
+    const git = idx.git_sha1 || {};
+    // sha -> paths
+    Object.entries(sha).forEach(([h, paths])=>{
+      const arr = Array.isArray(paths) ? paths : [paths];
+      out.sha2paths.set(h, arr);
+      arr.forEach(p=> out.path2sha.set(p, h));
+    });
+    // git -> paths
+    Object.entries(git).forEach(([h, paths])=>{
+      const arr = Array.isArray(paths) ? paths : [paths];
+      out.git2paths.set(h, arr);
+      arr.forEach(p=> out.path2git.set(p, h));
+    });
+    return out;
+  }
+
+  function walkInventory(node, acc, base=''){
+    Object.keys(node).forEach(k=>{
+      const it = node[k];
+      const p = base?`${base}/${k}`:k;
+      if(it.type==='file'){
+        const path = it.path || p;
+        const rec = {
+          path,
+          type:'file',
+          size: (typeof it.size==='number') ? it.size : null,
+          lang: guessLang(path),
+          is_content_full: !!it.is_content_full,
+          sha256_lf: HASHMAPS.path2sha.get(path) || null,
+          git_sha1:  HASHMAPS.path2git.get(path) || null
+        };
+        acc.push(rec);
+      }else{
+        walkInventory(it, acc, p);
+      }
+    });
+  }
+
+  function buildInventory(ctx){
+    const acc = [];
+    walkInventory(ctx.file_structure||{}, acc, '');
+    acc.sort((a,b)=> a.path.localeCompare(b.path));
+    return acc;
   }
 
   // ---------- Context/Files generation ----------
@@ -660,8 +710,8 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       "- Extra fält:             { ..., files:[...]}                                ❌"
     ].join("\\n");
   }
-
-  function toOpenAI(systemText, userJson){
+  
+    function toOpenAI(systemText, userJson){
     return {
       provider:"openai",
       model:"gpt-5",
@@ -704,7 +754,13 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     return sliced.map((rec, i)=>({
       id: i+1,
       path: rec.path,
-      lang: rec.lang,...
+      lang: rec.lang,
+      size: rec.size,
+      sha256_lf: rec.sha256_lf || null,
+      git_sha1: rec.git_sha1 || null
+    }));
+  }
+
   async function buildDiscoveryPromptKMOD(){
     const cands = buildCandidatesRich(els.maxCands.value, !!els.incAssets.checked);
     LAST_CANDIDATES = cands.slice();
@@ -1164,7 +1220,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       logw(`Inventory: ${INVENTORY.length} filer. Hash-index: sha=${HASHMAPS.sha2paths.size}, git=${HASHMAPS.git2paths.size}.`);
     })
     .catch(e=>{
-      els.tree.innerHTML = '<p style="color:#b00020">Kunde inte läsa context.json: '+e.message+'</p>';
+      els.tree.innerHTML = '<p style="color:#b00020">Kunde inte läsa context.json: '+escapeHtml(e.message)+'</p>';
     });
 
   // Export/refresh (performance)
@@ -1256,4 +1312,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
