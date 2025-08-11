@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+9#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 wrap_json_in_html.py — AI Context Builder v7.4 (2025-08-11)
@@ -1226,7 +1226,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
     if (content) {
       const lines = content.split('\n');
-      const commentRegex = /^\s*(\/\/|#|\*|'''|\"\"\")/;
+      const commentRegex = /^\s*(\/\/|#|\*|'''|\\"\\"\\")/;
       const commentLines = [];
       for (const line of lines) {
         const trimmed = line.trim();
