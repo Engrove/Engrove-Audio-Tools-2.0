@@ -1256,8 +1256,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-      size: rec.size,
-      sha256_lf: rec.sha256_lf || null,
-      git_sha1: rec.git_sha1 || null
-    }));
-  }
+
