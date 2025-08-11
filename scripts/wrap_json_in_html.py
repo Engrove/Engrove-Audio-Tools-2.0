@@ -1466,19 +1466,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   };
 
   // Discovery
-  els.discBtn.onclick = ()=> withBusy('Discovery', async ()=>{
-    try{
-      clearBanner();
-      if(!ctx){ showBanner('context.json ej laddad ännu.', 'err'); return; }
-      const mode = currentDiscMode();
-      const prompt = (mode==='DMOD') ? await buildDiscoveryPromptDMOD() : await buildDiscoveryPromptKMOD();
-      els.out.textContent = prompt;
-      els.copy.disabled = els.download.disabled = false;
-      showBanner((mode==='DMOD'?'D-MOD':'K-MOD')+' Discovery-prompt skapad. Kör i modell, klistra STRICT JSON-svaret här.', 'ok');
-    }catch(e){
-      showBanner('Discovery-fel: '+e.message, 'err');
-    }
-  });
+  els.discBtn.onclick = ()=> withBusy('Skapa nästa arbete', buildMenuFirstPrompt);
 
   els.implBtn.onclick = ()=> withBusy('Build Bootstrap', buildImplBootstrap);
 
