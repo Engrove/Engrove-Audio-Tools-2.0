@@ -98,7 +98,7 @@ Efter varje större leverans (eller incident):
 -----------------------------------
 De fullständiga, otvetydiga definitionerna av dessa regler finns i `ai_config.json`. Sammanfattningsvis gäller:
 
-1.  **Patch-först-principen:** Nya filer levereras komplett. Ändringar i befintliga filer levereras som `diff.json`-patchar enligt `Diff_JSON_Protocol.md`.
+1.  **Leverans av Nya Filer:** All ny kod levereras som kompletta, körbara filer.
 2.  **\"Explicit Alltid\"-principen:** All logik måste vara explicit och verbaliserad.
 3.  **Syntax- och Linter-simulering:** Koden måste vara syntaktiskt perfekt.
 4.  **API-kontraktsverifiering:** Gränssnitt mellan koddelar måste vara 100% konsekventa.
