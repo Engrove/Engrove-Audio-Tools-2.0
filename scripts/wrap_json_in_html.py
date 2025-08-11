@@ -758,6 +758,40 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   }
 
   // ---------- Discovery (strikt) ----------
+  // ---- Menu-first Discovery Prompt (obligatoriskt första steg) ----
+  function buildMenuFirstPrompt(){
+    try{
+      clearBanner();
+      const inv = INVENTORY || [];
+      // Begränsa kandidater till kodnära artefakter
+      const cands = inv.filter(r=> isCodeLike(r.path)).map(r=> ({ path:r.path, lang:r.lang, size:r.size||null }));
+      const payload = { CANDIDATE_FILES: cands };
+      if(els.incInventory && els.incInventory.checked){
+        payload.inventory_compact = inv.map(r=>({ path:r.path, lang:r.lang, size:r.size||null, sha256_lf:r.sha256_lf||null, git_sha1:r.git_sha1||null }));
+      }
+      const hdr = [
+        '### MENU_DISCOVERY_v1 (obligatoriskt förstasteg)',
+        '- Du får CANDIDATE_FILES (+ ev. inventory_compact).',
+        '- Steg 1: Skapa en NUMRERAD meny (≤8) över kategorier: app-kod, build-config, backend/functions, tests, data/mock, docs/övrigt.',
+        '- Varje rad: nummer, label, count, confidence, include_globs, exclude_globs (+ ev. embed:"stub").',
+        '- Markera rekommenderade med ★ (max 2).',
+        '- Osäkerhet: om ingen tydlig dominans eller recommended tom → ställ EN extra ja/nej-fråga innan val.',
+        '- Svara ENBART med JSON: {"menu":[...], "recommended":[...], "question":"..."}.',
+        '',
+        '### EFTER_VAL',
+        '- När jag svarat med nummer: generera **K-MOD discovery_v2** strikt (endast {protocol_id, mode, selected_files[]}).',
+        '- Begränsa urvalet enligt include/exclude-globs från mitt val; `docs/**` → "stub" om inte uttryckligen valt.',
+        '- Är du fortfarande osäker: ställ exakt EN följdfråga och invänta svar, producera sedan discovery-JSON.',
+        ''
+      ].join('\n');
+      const pretty = els.compact && els.compact.checked ? JSON.stringify(payload) : JSON.stringify(payload, null, 2);
+      const md = '### MENU_FIRST_DISCOVERY_PROMPT\n\n' + hdr + '```json\n' + pretty + '\n```\n';
+      els.out.textContent = md;
+      els.copy.disabled = els.download.disabled = false;
+      showBanner('Menu-first discovery prompt genererad.', 'ok');
+    }catch(e){ showBanner('Fel vid menu-first: '+e.message, 'err'); }
+  }
+
   // ---- Menu Discovery (kategori-heuristik + MD/JSON) ----
   function _count(inv, pred){ let n=0; for(const it of inv){ if(pred(it)) n++; } return n; }
   function _has(inv, pred){ for(const it of inv){ if(pred(it)) return true; } return false; }
@@ -1399,6 +1433,8 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   els.genFiles.onclick   = ()=> withBusy('Generate Files',   generateFiles);
   els.genBootstrap.onclick = ()=> withBusy('Generate Bootstrap.md', buildBootstrapMd);
   els.genMenu.onclick = ()=> withBusy('Menu Discovery', buildMenuDiscovery);
+  // Standardisera: Menu-first i "Skapa nästa arbete"
+  els.discBtn.onclick = ()=> withBusy('Skapa nästa arbete', buildMenuFirstPrompt);
 
   els.copy.onclick = ()=>{ navigator.clipboard.writeText(els.out.textContent); showBanner('Kopierat.', 'ok'); };
   els.download.onclick = ()=>{
