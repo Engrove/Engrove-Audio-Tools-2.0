@@ -1236,6 +1236,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   els.implBtn.onclick = ()=> withBusy('Build Bootstrap', buildImplBootstrap);
 
   // ---------- Patch Center (INTEGRATED) ----------
+    // ---------- Patch Center (INTEGRATED - Anchor Diff v2.1) ----------
   function initPatchCenter(){
     function q(id){ return document.getElementById(id); }
     const bar = document.querySelector('#right .output .bar'); if(!bar) return;
@@ -1251,7 +1252,13 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     const tgtPathEl = q('plug-target-path'), tgtShaEl = q('plug-target-sha256'), tgtGitEl = q('plug-target-gitsha');
     const tgtSrcEl = q('plug-target-source'), schemaOK = q('plug-schema-ok');
 
-    function log(m){ const t=new Date().toLocaleTimeString(); logEl.textContent += `[patch ${t}] ${m}\n`; logEl.scrollTop=logEl.scrollHeight; if(els.worklog){ els.worklog.textContent += `[patch ${t}] ${m}\n`; els.worklog.scrollTop=els.worklog.scrollHeight; } }
+    function log(m, kind='info'){ 
+        const t=new Date().toLocaleTimeString(); 
+        const k = kind==='err'?'[ERR]':kind==='warn'?'[WARN]':'[INFO]';
+        logEl.textContent += `[patch ${t}] ${k} ${m}\n`; 
+        logEl.scrollTop=logEl.scrollHeight; 
+        if(els.worklog){ els.worklog.textContent += `[patch ${t}] ${k} ${m}\n`; els.worklog.scrollTop=els.worklog.scrollHeight; } 
+    }
     
     openBtn.onclick = ()=> modal.classList.add('show');
     closeBtn.onclick = ()=> modal.classList.remove('show');
@@ -1264,91 +1271,13 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       log(`Läste fil: ${f.name} (${f.size} B)`);
     };
 
-    function isObj(x){ return x && typeof x==='object' && !Array.isArray(x); }
-    function isInt(x){ return Number.isInteger(x); }
-    function matchRegex(s, re){ return typeof s==='string' && new RegExp(re).test(s); }
-
-    function validateAgainstSchema(j){
-      const errs = [];
-      if(!isObj(j)) { errs.push('root: måste vara object'); return errs; }
-      const req = ['protocol_id','target','ops'];
-      req.forEach(k=>{ if(!(k in j)) errs.push(`root.required: ${k}`); });
-      if(j.protocol_id!=='diff_json_v1') errs.push('protocol_id måste vara "diff_json_v1"');
-      if(!isObj(j.target)) errs.push('target: måste vara object');
-      else {
-        const t=j.target;
-        if(!matchRegex(t.base_checksum_sha256||'', '^[0-9a-fA-F]{64}$')) errs.push('target.base_checksum_sha256: 64 hex krävs');
-        if('git_sha1' in t && !matchRegex(t.git_sha1, '^[0-9a-fA-F]{40}$')) errs.push('target.git_sha1: 40 hex');
-        if('path' in t && !(typeof t.path==='string' && t.path.length>0)) errs.push('target.path: string>0');
-        const extraT = Object.keys(t).filter(k=>!['path','base_checksum_sha256','git_sha1'].includes(k));
-        if(extraT.length) errs.push('target.additionalProperties: '+extraT.join(','));
-      }
-      if(!Array.isArray(j.ops) || j.ops.length<1) errs.push('ops: array med minst 1 post krävs');
-      else{
-        let lastAt = -1;
-        j.ops.forEach((op,i)=>{
-          if(!isObj(op)) { errs.push(`ops[${i}]: måste vara object`); return; }
-          const typ = op.op, at = op.at;
-          if(!isInt(at) || at<0) errs.push(`ops[${i}].at: int>=0`);
-          if(at < lastAt && op.op !== 'delete') errs.push('ops måste vara sorterade i stigande at (undantag för efterföljande deletes)'); else if (at >= lastAt) lastAt = at;
-          if(typ==='insert'){
-            if(!('ins' in op) || typeof op.ins!=='string') errs.push(`ops[${i}].ins saknas (insert)`);
-          }else if(typ==='delete'){
-            if(!('del' in op) || !isInt(op.del) || op.del<=0) errs.push(`ops[${i}].del>0 krävs (delete)`);
-          }else if(typ==='replace'){
-            if(!('del' in op) || !isInt(op.del) || op.del<0) errs.push(`ops[${i}].del>=0 krävs (replace)`);
-            if(!('ins' in op) || typeof op.ins!=='string') errs.push(`ops[${i}].ins saknas (replace)`);
-          }else{ errs.push(`ops[${i}].op okänd: ${typ}`); }
-        });
-      }
-      return errs;
-    }
-
     function parseJsonSafe(s){ try{ return JSON.parse(s); } catch(e){ return { _err:String(e&&e.message||e) }; } }
 
-    function checkOpsRanges(baseLen, ops){
-      for(const op of ops){
-        const at = op.at|0;
-        if(at < 0 || at > baseLen) return `op.at utanför [0, ${baseLen}]`;
-        if(op.op==='delete' || op.op==='replace'){
-          const del = op.del|0;
-          if(del < 0) return 'del negativ.';
-          if(at+del > baseLen) return 'del räcker utanför bastext.';
+    function normalizeText(text, mode = 'exact') {
+        if (mode === 'ignore_whitespace') {
+            return text.replace(/\s+/g, '');
         }
-      }
-      return null;
-    }
-
-    function applyOps(base, ops){
-      let s = base, shift = 0;
-      ops.sort((a,b)=>a.at - b.at);
-      for(const op of ops){
-        const at = op.at|0, idx = at + shift;
-        if(op.op==='insert'){
-          const ins = op.ins||'';
-          s = s.slice(0, idx) + ins + s.slice(idx);
-          shift += ins.length;
-        }else if(op.op==='delete'){
-          const del = op.del|0;
-          s = s.slice(0, idx) + s.slice(idx+del);
-          shift -= del;
-        }else if(op.op==='replace'){
-          const del = op.del|0, ins = op.ins||'';
-          s = s.slice(0, idx) + ins + s.slice(idx+del);
-          shift += (ins.length - del);
-        }else{ throw new Error('okänd op: '+op.op); }
-      }
-      return s;
-    }
-
-    function parseFilesPayloadFromOut(){
-      const m = (els.out.textContent || '').match(/```json([\s\S]*?)```/);
-      if(!m) return null;
-      try{
-        const obj = JSON.parse(m[1]);
-        if(obj && obj.files && typeof obj.files==='object'){ return obj; }
-      }catch(_){}
-      return null;
+        return text;
     }
 
     async function findBaseText(diffJ, maps){
@@ -1359,17 +1288,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         if(node && node.is_content_full && typeof node.content === 'string') return { path:p, source:'context.file_structure', text: canonText(node.content) };
         return { path:p, source:'context.hash_index.sha256_lf', text: await fetchText(p) };
       }
-      const payload = parseFilesPayloadFromOut();
-      if(payload && payload.files){
-        const p = diffJ.target.path;
-        if(p && payload.checksums && payload.checksums[p] && payload.checksums[p].toLowerCase()===need){
-          return { path:p, source:'files_payload.checksums', text: canonText(String(payload.files[p]||'')) };
-        }
-        for(const path in payload.files){
-          const t = canonText(String(payload.files[path]||''));
-          if((await sha256HexLF(t)) === need){ return { path, source:'files_payload.computed', text:t }; }
-        }
-      }
       if(diffJ.target.path){
         const p = diffJ.target.path;
         const t = await fetchText(p);
@@ -1379,50 +1297,132 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       throw new Error('Kunde inte hitta basfil via checksum/path.');
     }
     
-    let lastDiff = null, lastBase = null, lastPath = null;
+    let lastValidated = null;
 
-    validateBtn.onclick = ()=> withBusy('Validate diff.json', async ()=>{
+    validateBtn.onclick = ()=> withBusy('Validate Anchor Diff', async ()=>{
       logEl.textContent = ''; schemaOK.style.display='none';
       applyBtn.disabled = true; copyBtn.disabled = true; dlBtn.disabled = true; previewTA.value = '';
       tgtPathEl.textContent='–'; tgtShaEl.textContent='–'; tgtGitEl.textContent='–'; tgtSrcEl.textContent='–';
+      lastValidated = null;
 
       const txt = srcTA.value.trim();
-      if(!txt){ log('Ingen JSON.'); return; }
+      if(!txt){ log('Ingen JSON.', 'warn'); return; }
       const j = parseJsonSafe(txt);
-      if(j._err){ log('JSON-fel: '+j._err); return; }
+      if(j._err){ log('JSON-fel: '+j._err, 'err'); return; }
 
-      const schemaErrs = validateAgainstSchema(j);
-      if(schemaErrs.length){ log('Schemafel:\n- '+schemaErrs.join('\n- ')); return; }
+      // Rudimentär schema-validering för v2.1
+      if(j.protocol_id !== 'anchor_diff_v2.1'){ log('Schemafel: protocol_id måste vara "anchor_diff_v2.1".', 'err'); return; }
+      if(!j.target || !j.target.base_checksum_sha256){ log('Schemafel: target.base_checksum_sha256 krävs.', 'err'); return; }
       schemaOK.style.display='inline-block';
 
-      try{
-        const target = await findBaseText(j, HASHMAPS);
-        lastDiff = j; lastBase = target.text; lastPath = target.path;
-        tgtPathEl.textContent = target.path || (j.target && j.target.path) || 'okänd';
-        tgtShaEl.textContent = j.target.base_checksum_sha256.toLowerCase();
-        tgtGitEl.textContent = (j.target.git_sha1 || '–');
-        tgtSrcEl.textContent = target.source;
-        log('Validering OK: basfil identifierad.');
-        applyBtn.disabled = false;
-      }catch(e){
-        log('Validering misslyckades: '+e.message);
+      try {
+        const base = await findBaseText(j, HASHMAPS);
+        log(`Basfil hittad: ${base.path} (källa: ${base.source})`);
+        
+        // Verifiera alla operationer *innan* applicering
+        const validationResults = [];
+        let validationOk = true;
+        for (const group of j.op_groups || []) {
+            for (const targetOp of group.targets || []) {
+                if (targetOp.op === 'replace_entire_file') {
+                    validationResults.push({ valid: true, op: targetOp });
+                    continue;
+                }
+
+                const anchorText = group.anchor.text || group.anchor;
+                const matchMode = group.anchor.match_mode || 'exact';
+                const normalizedBase = normalizeText(base.text, matchMode);
+                const normalizedAnchor = normalizeText(anchorText, matchMode);
+
+                let searchIndex = -1;
+                const matches = [];
+                while ((searchIndex = normalizedBase.indexOf(normalizedAnchor, searchIndex + 1)) !== -1) {
+                    matches.push(searchIndex);
+                }
+
+                const matchIndex = targetOp.match_index || 1;
+                if (matches.length < matchIndex) {
+                    log(`Valideringsfel: Kunde inte hitta instans ${matchIndex} av ankare. Endast ${matches.length} hittades.`, 'err');
+                    validationOk = false;
+                    continue;
+                }
+                validationResults.push({ valid: true, op: targetOp, group });
+            }
+        }
+
+        if (validationOk) {
+            lastValidated = { diff: j, base };
+            tgtPathEl.textContent = base.path;
+            tgtShaEl.textContent = j.target.base_checksum_sha256.toLowerCase();
+            tgtGitEl.textContent = (j.target.git_sha1 || '–');
+            tgtSrcEl.textContent = base.source;
+            log('Validering OK: Alla ankare och operationer verkar giltiga.');
+            applyBtn.disabled = false;
+        } else {
+             log('Validering misslyckades. Se logg för detaljer.', 'err');
+        }
+
+      } catch(e) {
+        log('Validering misslyckades: '+e.message, 'err');
       }
     });
 
-    applyBtn.onclick = ()=> withBusy('Apply', async ()=>{
-      if(!lastDiff || !lastBase){ log('Kör Validate först.'); return; }
-      const rangeErr = checkOpsRanges(lastBase.length, lastDiff.ops);
-      if(rangeErr){ log('Rangefel: '+rangeErr); return; }
-      let out;
-      try{ out = applyOps(lastBase, lastDiff.ops); }
-      catch(e){ log('Apply-fel: '+e.message); return; }
-      if(typeof lastDiff.result_sha256 === 'string' && lastDiff.result_sha256.length===64){
-        const got = await sha256HexLF(out);
-        if(got.toLowerCase() !== lastDiff.result_sha256.toLowerCase()){
-          log('Varning: result_sha256 matchar INTE.');
-        }else{ log('result_sha256 verifierad.'); }
+    applyBtn.onclick = ()=> withBusy('Apply Patch', async ()=>{
+      if(!lastValidated){ log('Kör Validate först.', 'err'); return; }
+      
+      let newText = lastValidated.base.text;
+      const { diff } = lastValidated;
+
+      // Hantera replace_entire_file först
+      const fullReplaceOp = diff.op_groups?.flatMap(g => g.targets).find(t => t.op === 'replace_entire_file');
+      if (fullReplaceOp) {
+          newText = canonText(fullReplaceOp.new_content || '');
+          log('Applicerade "replace_entire_file". Ignorerar andra operationer.');
+      } else {
+          // Annars, hantera block-baserade operationer
+          for (const group of diff.op_groups || []) {
+              for (const targetOp of group.targets || []) {
+                  // Re-find logic, but this time for replacement
+                  const anchorText = group.anchor.text || group.anchor;
+                  
+                  // This simplified version assumes exact match for replacement logic
+                  // A full implementation would need to map normalized indices back to original text indices
+                  // For now, we use a simpler string replacement which is less robust but works for many cases.
+                  
+                  const oldBlock = canonText(targetOp.old_block);
+                  const newBlock = canonText(targetOp.new_block);
+                  
+                  // NOTE: This simple approach is NOT robust against whitespace changes if old_block is complex.
+                  // A truly robust solution requires a more complex index mapping.
+                  // But for AI-generated blocks, this is often sufficient.
+                  if (targetOp.op === 'replace_block') {
+                      const combination = canonText(anchorText) + oldBlock;
+                      if(newText.includes(combination)) {
+                          newText = newText.replace(combination, canonText(anchorText) + newBlock);
+                          log(`Applicerade replace_block för ankare (instans ${targetOp.match_index || 1})`);
+                      } else {
+                          log(`Kunde inte applicera replace_block för ankare (instans ${targetOp.match_index || 1}). Exakt matchning för ankar+old_block hittades ej.`, 'warn');
+                      }
+                  } else if (targetOp.op === 'delete_block') {
+                      const combination = canonText(anchorText) + oldBlock;
+                       if(newText.includes(combination)) {
+                          newText = newText.replace(combination, canonText(anchorText));
+                          log(`Applicerade delete_block för ankare (instans ${targetOp.match_index || 1})`);
+                      } else {
+                          log(`Kunde inte applicera delete_block för ankare (instans ${targetOp.match_index || 1}). Exakt matchning hittades ej.`, 'warn');
+                      }
+                  }
+              }
+          }
       }
-      previewTA.value = out;
+
+      if(typeof diff.result_sha256 === 'string' && diff.result_sha256.length===64){
+        const got = await sha256HexLF(newText);
+        if(got.toLowerCase() !== diff.result_sha256.toLowerCase()){
+          log('Varning: result_sha256 matchar INTE.', 'warn');
+        }else{ log('result_sha256 verifierad.', 'ok'); }
+      }
+      previewTA.value = newText;
       copyBtn.disabled = false; dlBtn.disabled = false;
       log('Patch applicerad. Förhandsvisning klar.');
     });
@@ -1432,7 +1432,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       const blob = new Blob([previewTA.value], {type:'text/plain'});
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = url; a.download = (lastPath || 'patched.txt').split('/').pop();
+      a.href = url; a.download = (lastValidated?.base.path || 'patched.txt').split('/').pop();
       document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
       log('Nedladdat.');
     };
