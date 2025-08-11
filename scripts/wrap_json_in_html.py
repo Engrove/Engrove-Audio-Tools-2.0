@@ -124,6 +124,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     </span>
     <button id="genContext" class="primary">Generate Context</button>
     <button id="genFiles" class="info">Generate Files</button>
+    <button id="genBootstrap" class="primary">Generate Bootstrap.md</button>
   </div>
   <div id="tree"><p>Laddar context.json…</p></div>
 </section>
@@ -300,8 +301,8 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     <main>
       <div class="flex" style="justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap">
         <div style="flex:1;min-width:280px">
-          <label for="plug-patch-source" class="small">Klistra in <kbd>diff.json</kbd> (diff_json_v1) här:</label>
-          <textarea id="plug-patch-source" placeholder='{"protocol_id":"diff_json_v1","target":{"base_checksum_sha256":"...","path":"..."},"ops":[...]}'></textarea>
+          <label for="plug-patch-source" class="small">Klistra in <kbd>diff.json</kbd> (anchor_diff_v2.1) här:</label>
+          <textarea id="plug-patch-source" placeholder='{"protocol_id":"anchor_diff_v2.1","target":{"path":"scripts/wrap_json_in_html.py","base_checksum_sha256":"<64-hex>"},"op_groups":[{"anchor":{"text":"<unik text som finns i basen>","match_mode":"exact"},"targets":[{"op":"replace_block","match_index":1,"old_block":"<gammalt textblock direkt efter ankaret>","new_block":"<ersättningstext>"}]}]}'></textarea>
         </div>
         <div class="flex" style="gap:8px">
           <input id="plug-patch-file" type="file" accept=".json,application/json" />
@@ -348,6 +349,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     selCore:document.getElementById('selCore'),
     genContext:document.getElementById('genContext'),
     genFiles:document.getElementById('genFiles'),
+    genBootstrap:document.getElementById('genBootstrap'),
     budgetKb:document.getElementById('budgetKb'),
     compact:document.getElementById('compact'),
     // höger/builder
@@ -642,6 +644,32 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   }
 
   // ---------- Context/Files generering ----------
+  async function buildBootstrapMd(){
+    try{
+      clearBanner();
+      const sel = selectedFiles();
+      if(sel.length===0){ showBanner('Välj minst en fil.', 'warn'); return; }
+      const inventory_compact = INVENTORY.map(r=>({ path:r.path, lang:r.lang, size:r.size, sha256_lf:r.sha256_lf, git_sha1:r.git_sha1 }));
+      const contextJson = {
+        session_task: 'TEXTID 123:Här skriver man in den uppgift som chatsessionen ska ha',
+        standing_mandate:{
+          remember_and_obey_next_reply:true,
+          state_snapshot_every_n_turns:{min:10,max:20,action:'produce_RUN_STATE_and_list_candidate_protocols'},
+          patch_or_error_gate:'before_running_any_fix_request_diff_plan_and_selected_protocol',
+          topic_shift_guard:'verify_CORE_is_controlling; if uncertain, ask briefly'
+        },
+        core_files: CORE,
+        selected_paths: sel.slice(),
+        inventory_compact
+      };
+      const pretty = els.compact.checked ? JSON.stringify(contextJson) : JSON.stringify(contextJson, null, 2);
+      const md = mdWrapJsonSection('context_bootstrap_instruction_FINAL_v2.8.md', pretty);
+      els.out.textContent = md;
+      els.copy.disabled = els.download.disabled = false;
+      showBanner('Bootstrap.md genererad.', 'ok');
+    }catch(e){ showBanner('Fel vid bootstrap-generering: '+e.message, 'err'); }
+  }
+
   async function buildNewContextNode(src, selSet){
     const dst={};
     for(const k of Object.keys(src).sort()){
@@ -1282,6 +1310,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
   els.genContext.onclick = ()=> withBusy('Generate Context', generateContext);
   els.genFiles.onclick   = ()=> withBusy('Generate Files',   generateFiles);
+  els.genBootstrap.onclick = ()=> withBusy('Generate Bootstrap.md', buildBootstrapMd);
 
   els.copy.onclick = ()=>{ navigator.clipboard.writeText(els.out.textContent); showBanner('Kopierat.', 'ok'); };
   els.download.onclick = ()=>{
