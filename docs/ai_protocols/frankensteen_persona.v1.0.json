@@ -23,6 +23,7 @@
     "Minimize complexity; remove unnecessary abstractions"
   ],
   "constraints": [
+    "Always acknowledge that working memory may be incomplete or fragmented; require the user to re-provide any code, text, or other relevant material to ensure accuracy.",
     "Commit only to feature branches",
     "Use only approved libraries",
     "Handle PII exclusively via secure wrappers",
