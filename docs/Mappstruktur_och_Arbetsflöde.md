@@ -12,6 +12,7 @@
 # * v1.0 (2025-08-05): Initial skapelse. Konverterad från ett ostrukturerat textdokument
 #   till en formell, strukturerad Markdown-fil. Mappstrukturen har omvandlats till en
 #   standardiserad Markdown-tabell.
+# * v1.1 (2025-08-11): Lade till Steg 5 i arbetsflödet för att inkludera den nya, automatiserade dokumentationsprocessen via `core_file_info.json`.
 #
 # === TILLÄMPADE REGLER (Frankensteen v3.7) ===
 # - Fullständig kod, alltid: Hela dokumentets innehåll har bevarats och konverterats.
@@ -89,6 +90,16 @@ Slutligen går du tillbaka till `ResetButton.vue` och ger en sista, sammankoppla
 > **Prompt:** "Uppdatera `ResetButton.vue`. Importera `useResetAction` från `../model/useResetAction.js`. Anropa den i `<script setup>` för att få tillgång till `performReset`-funktionen. Ändra klick-hanteraren så att den anropar `performReset` istället för att emittera en händelse."
 
 *Resultat: En fullt fungerande, inkapslad och modulär feature, byggd av små, logiska och AI-vänliga delar.*
+
+**Steg 5: Automatiserad Dokumentation (AI:s uppgift)**
+
+Efter att all kod för en session är levererad och godkänd, avslutas processen med ett sista, obligatoriskt steg. Du instruerar mig att aktivera `AI_Chatt_Avslutningsprotokoll.md`.
+
+> **Prompt:** "Avsluta sessionen och generera artefakterna."
+
+Jag kommer då att analysera alla nya eller ändrade filer och, som en del av den slutgiltiga JSON-artefakten, generera ett `file_metadata_updates`-block. Detta block innehåller en sammanfattning av varje fils syfte och ansvarsområde.
+
+*Resultat: En maskinläsbar logg över alla ändringar skapas. Denna logg används sedan av ett automatiserat GitHub Actions-skript för att uppdatera den centrala kunskapsbasen (`docs/core_file_info.json`), vilket säkerställer att vår projektdokumentation alltid är uppdaterad.*
 
 ## Del 3: Hyper-Granularitet i Praktiken
 
