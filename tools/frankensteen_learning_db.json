@@ -2434,6 +2434,35 @@
     }
   },
   {
+    "heuristicId": "H-20250811-12",
+    "trigger": {
+      "type": "javascript_implementation",
+      "scope": [
+        "*.js",
+        "*.py"
+      ],
+      "keywords": [
+        "fetch",
+        "async",
+        "await",
+        "promise",
+        "then"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "RISK_ASYNC_RACE_CONDITION",
+      "description": "Risken att skriva synkron kod som är beroende av resultatet från ett asynkront anrop, utan att säkerställa att anropet har slutförts och dess data är tillgänglig, vilket leder till att koden agerar på ofullständig eller `undefined` data."
+    },
+    "mitigation": {
+      "protocolId": "PROTOCOL_ENSURE_ASYNC_AWAIT_CHAIN",
+      "description": "Vid all kodning som involverar `fetch` eller andra Promises, måste hela kedjan av beroende operationer kapslas in i en `async`-funktion. Använd `await` för att invänta resultatet av varje asynkront anrop innan någon kod som är beroende av dess resultat exekveras. Verifiera att ingen kritisk initialiseringskod körs utanför denna `async`-kedja."
+    },
+    "metadata": {
+      "originSessionId": "S-20250811-I",
+      "createdAt": "2025-08-11T13:45:00Z"
+    }
+  },
+  {
     "heuristicId": "H-20250811-03",
     "trigger": {
       "type": "patch_generation",
