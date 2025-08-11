@@ -2407,6 +2407,33 @@
     }
   },
   {
+    "heuristicId": "H-20250811-07",
+    "trigger": {
+      "type": "ci_cd_failure_analysis",
+      "scope": [
+        ".github/workflows/*.yml"
+      ],
+      "keywords": [
+        "git push rejected",
+        "fetch first",
+        "race condition",
+        "workflow failed"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "RISK_PARALLEL_WORKFLOW_CONFLICT",
+      "description": "Risken att diagnostisera ett `git push`-fel i CI/CD som ett enkelt synkroniseringsproblem när grundorsaken är två eller flera workflows som exekverar parallellt på samma trigger."
+    },
+    "mitigation": {
+      "protocolId": "PROTOCOL_VERIFY_TRIGGER_UNIQUENESS",
+      "description": "Vid analys av ett `git push`-fel i CI/CD, måste det första steget vara att skanna `.github/workflows`-katalogen för andra workflows som delar exakt samma trigger (`on:`-konfiguration). Om en konflikt hittas är den primära lösningen att konsolidera de konkurrerande workflows till ett enda, sekventiellt jobb."
+    },
+    "metadata": {
+      "originSessionId": "S-20250811-E",
+      "createdAt": "2025-08-11T11:15:00Z"
+    }
+  },
+  {
     "heuristicId": "H-20250811-03",
     "trigger": {
       "type": "patch_generation",
