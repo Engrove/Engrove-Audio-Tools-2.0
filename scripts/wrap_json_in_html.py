@@ -125,6 +125,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     <button id="genContext" class="primary">Generate Context</button>
     <button id="genFiles" class="info">Generate Files</button>
     <button id="genBootstrap" class="primary">Generate Bootstrap.md</button>
+    <button id="genMenu" class="info">Generate Menu Discovery</button>
   </div>
   <div id="tree"><p>Laddar context.json…</p></div>
 </section>
@@ -350,6 +351,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     genContext:document.getElementById('genContext'),
     genFiles:document.getElementById('genFiles'),
     genBootstrap:document.getElementById('genBootstrap'),
+    genMenu:document.getElementById('genMenu'),
     budgetKb:document.getElementById('budgetKb'),
     compact:document.getElementById('compact'),
     // höger/builder
@@ -756,6 +758,60 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   }
 
   // ---------- Discovery (strikt) ----------
+  // ---- Menu Discovery (kategori-heuristik + MD/JSON) ----
+  function _count(inv, pred){ let n=0; for(const it of inv){ if(pred(it)) n++; } return n; }
+  function _has(inv, pred){ for(const it of inv){ if(pred(it)) return true; } return false; }
+  function _ext(p){ const i=p.lastIndexOf('.'); return i>=0?p.slice(i+1).toLowerCase():''; }
+  function _conf(n){ return n>=50?'high':(n>=10?'med':'low'); }
+  function _starts(p, pre){ return p.startsWith(pre); }
+  function _eq(p, s){ return p===s; }
+  function _srcLike(p){ const e=_ext(p); return ['vue','ts','js'].includes(e) && p.startsWith('src/'); }
+  function _router(p){ return p.startsWith('src/router/'); }
+  function _stores(p){ return p.startsWith('src/stores/') || p.startsWith('src/pinia/'); }
+
+  function buildMenuPayload(inv){
+    const cats = [];
+    const c1 = _count(inv, it=> _srcLike(it.path) || _eq(it.path,'package.json') || /^vite\.config\./.test(it.path) || _eq(it.path,'index.html'));
+    cats.push({ n:1, label:'Vue build & appkod', count:c1, conf:_conf(c1), include_globs:['src/**','package.json','vite.config.*','index.html'], exclude_globs:['docs/**','sessions/**','public/data/**'] });
+    const c2 = _count(inv, it=> _srcLike(it.path) || _router(it.path) || _stores(it.path));
+    cats.push({ n:2, label:'Körtidsfel/Router/Pinia', count:c2, conf:_conf(c2), include_globs:['src/**/*.{vue,ts,js}','src/router/**','src/stores/**'], exclude_globs:['docs/**'] });
+    const c3 = _count(inv, it=> _starts(it.path,'functions/') || _starts(it.path,'api/') || _eq(it.path,'public/_routes.json'));
+    cats.push({ n:3, label:'Backend/Routes/CF', count:c3, conf:_conf(c3), include_globs:['functions/**','api/**','public/_routes.json'], exclude_globs:['docs/**'] });
+    const c4 = _count(inv, it=> _starts(it.path,'tests/') || /\/[^/]+\.spec\./.test(it.path));
+    cats.push({ n:4, label:'Tester', count:c4, conf:_conf(c4), include_globs:['tests/**','src/**/*.spec.*'], exclude_globs:['docs/**'] });
+    const c5 = _count(inv, it=> _starts(it.path,'public/data/'));
+    cats.push({ n:5, label:'Data/Mock', count:c5, conf:_conf(c5), include_globs:['public/data/**'], exclude_globs:[] });
+    const c6 = _count(inv, it=> _starts(it.path,'docs/'));
+    cats.push({ n:6, label:'Docs/Protokoll (stub)', count:c6, conf:_conf(c6), include_globs:['docs/**'], exclude_globs:[], embed:'stub' });
+
+    const rec = [];
+    if(c1>0) rec.push(1);
+    if((_has(inv, it=> _router(it.path)||_stores(it.path))) && rec.length<2) rec.push(2);
+    if(rec.length===0 && c3>0) rec.push(3);
+
+    return { menu: cats, recommended: rec, question:'Välj ett eller flera nummer (ex: 1 eller 1,2).' };
+  }
+
+  function buildMenuDiscovery(){
+    const inv = INVENTORY || [];
+    const payload = buildMenuPayload(inv);
+    const lines = [];
+    lines.push('### MENU_DISCOVERY_v1');
+    lines.push('- Skapa en NUMRERAD meny (≤8 val) baserat på filerna.');
+    lines.push('- Ordning: app-kod, build-config, backend/functions, tests, data/mock, docs/övrigt.');
+    lines.push('- Varje rad: nummer, label, count, confidence, include_globs, exclude_globs (+ ev. embed:"stub").');
+    lines.push('- Markera rekommenderade med ★ (max 2) och lista dem i "recommended".');
+    lines.push('- Ställ EN fråga: "Välj ett eller flera nummer …"');
+    lines.push('');
+    const pretty = els.compact.checked ? JSON.stringify(payload) : JSON.stringify(payload, null, 2);
+    lines.push('```json');
+    lines.push(pretty);
+    lines.push('```');
+    els.out.textContent = lines.join('\n');
+    els.copy.disabled = els.download.disabled = false;
+    showBanner('Menu Discovery genererad.', 'ok');
+  }
+
   // Enriched info (async): fetch header/full/head när core_info saknas
   async function getRichFileInfoAsync(path, coreInfo){
     const r0 = getRichFileInfo(path, null, coreInfo);
@@ -1342,6 +1398,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   els.genContext.onclick = ()=> withBusy('Generate Context', generateContext);
   els.genFiles.onclick   = ()=> withBusy('Generate Files',   generateFiles);
   els.genBootstrap.onclick = ()=> withBusy('Generate Bootstrap.md', buildBootstrapMd);
+  els.genMenu.onclick = ()=> withBusy('Menu Discovery', buildMenuDiscovery);
 
   els.copy.onclick = ()=>{ navigator.clipboard.writeText(els.out.textContent); showBanner('Kopierat.', 'ok'); };
   els.download.onclick = ()=>{
