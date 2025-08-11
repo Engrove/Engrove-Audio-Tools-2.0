@@ -289,7 +289,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   <pre id="worklog"></pre>
 </div>
 
-<script>
+
 (function(){
   // ---------- Konstanter ----------
   const RAW_DEFAULT_REPO = 'Engrove/Engrove-Audio-Tools-2.0';
