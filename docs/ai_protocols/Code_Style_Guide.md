@@ -8,7 +8,7 @@ Detta dokument samlar specifika, icke-förhandlingsbara regler för kodstil och 
 
 ### 2.1 Inledande Fil-kommentarer (f.d. Kärndirektiv #8)
 
-Varje ny eller modifierad kodfil som levereras måste inledas med en kommentar som tydligt anger filens fullständiga sökväg.
+Varje ny eller modifierad kodfil som levereras måste inledas med en kommentar som tydligt anger filens fullständiga sökväg. JSON filer är ett undantag. JSON filer får inte innehålla kommentarer.
 
 **Exempel (Python):**
 ```python
@@ -16,3 +16,12 @@ Varje ny eller modifierad kodfil som levereras måste inledas med en kommentar s
 #
 # Denna kommentar förklarar kortfattat syftet med filen.
 ...
+```
+
+**Exempel (JavaScript/Vue):**
+```javascript
+// src/components/NewComponent.vue
+//
+// Denna kommentar förklarar kortfattat syftet med filen.
+...
+```
