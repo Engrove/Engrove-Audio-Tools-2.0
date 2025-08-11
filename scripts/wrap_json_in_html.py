@@ -587,22 +587,33 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
   // ---------- Hash-index och inventory ----------
   function buildHashMaps(ctx){
-    const out = { path2sha:new Map(), path2git:new Map(), sha2paths:new Map(), git2paths:new Map() };
+    const out = { path2sha:new Map(), path2git:new Map(), sha2paths:new Map(), git2paths:new Map(), byPath:new Map() };
     const idx = (ctx && ctx.hash_index) || {};
     const sha = idx.sha256_lf || idx.sha256 || {};
     const git = idx.git_sha1 || {};
-    // sha -> paths
+    
     Object.entries(sha).forEach(([h, paths])=>{
       const arr = Array.isArray(paths) ? paths : [paths];
-      out.sha2paths.set(h, arr);
+      out.sha2paths.set(h, arr[0]); // Lagra bara den primära sökvägen
       arr.forEach(p=> out.path2sha.set(p, h));
     });
-    // git -> paths
+    
     Object.entries(git).forEach(([h, paths])=>{
       const arr = Array.isArray(paths) ? paths : [paths];
-      out.git2paths.set(h, arr);
+      out.git2paths.set(h, arr[0]);
       arr.forEach(p=> out.path2git.set(p, h));
     });
+
+    (function walk(node){
+      if(node && typeof node === 'object'){
+        if(node.type === 'file' && node.path){
+          out.byPath.set(node.path, node);
+        } else {
+          Object.values(node).forEach(walk);
+        }
+      }
+    })(ctx.file_structure || {});
+
     return out;
   }
 
