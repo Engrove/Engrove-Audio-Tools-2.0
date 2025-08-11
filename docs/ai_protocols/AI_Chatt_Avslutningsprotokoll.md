@@ -43,13 +43,12 @@ Filen ska innehålla ett JSON-objekt med följande struktur. Alla fält är obli
 {
   "sessionId": "SESSIONID",
   "createdAt": "YYYY-MM-DDTHH:mm:ssZ",
-  "approvedNewDynamicProtocols": [ 
-    // Valfri array. Innehåller fullständiga JSON-objekt för NYA, godkända protokoll.
-    // Exempel: { "protocolId": "DP-NEW-FEATURE-01", "description": "...", ... }
-  ],
-  "promoteProtocols": [ 
-    // Valfri array. Innehåller strängar med ID:n för protokoll som ska få status 'active'.
-    // Exempel: "DP-COMMAND-MENU-01"
+  "file_metadata_updates": [
+    {
+      "file_path": "sökväg/till/filen.md",
+      "purpose_and_responsibility": "Beskriver filens huvudsakliga syfte och ansvarsområde.",
+      "usage_context": "För protokoll: beskriver när och varför det ska aktiveras eller efterfrågas. För andra filer: beskriver dess roll i arkitekturen."
+    }
   ],
   "artifacts": {
     "ByggLogg": {
