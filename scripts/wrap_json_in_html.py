@@ -756,6 +756,37 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   }
 
   // ---------- Discovery (strikt) ----------
+  // Enriched info (async): fetch header/full/head när core_info saknas
+  async function getRichFileInfoAsync(path, coreInfo){
+    const r0 = getRichFileInfo(path, null, coreInfo);
+    if(r0 && r0.source !== 'none') return r0;
+    if(!isCodeLike(path)) return r0;
+    try{ const txt = await fetchText(path); return getRichFileInfo(path, txt, coreInfo); }catch(_){ return r0; }
+  }
+
+  async function buildCandidatesRichAsync(maxN, includeAssets){
+    const arr = INVENTORY.filter(it=> includeAssets ? true : isCodeLike(it.path));
+    const lim = Math.max(1, Number(maxN||0) || 999999);
+    const sliced = arr.slice(0, lim);
+    const coreInfo = (ctx.core_info_data || {});
+    const items = [];
+    for(let i=0;i<sliced.length;i++){
+      const rec = sliced[i];
+      const info = await getRichFileInfoAsync(rec.path, coreInfo);
+      items.push({
+        id: i+1,
+        path: rec.path,
+        lang: rec.lang,
+        size: rec.size,
+        sha256_lf: rec.sha256_lf || null,
+        git_sha1: rec.git_sha1 || null,
+        info_source: info.source,
+        purpose: info.description
+      });
+    }
+    return items;
+  }
+
   function currentDiscMode(){ const el=document.querySelector('input[name="discMode"]:checked'); return el?el.value:'KMOD'; }
 
   function dmodHardRules(){
@@ -844,7 +875,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   }
 
   async function buildDiscoveryPromptKMOD(){
-    const cands = buildCandidatesRich(els.maxCands.value, !!els.incAssets.checked);
+    const cands = await buildCandidatesRichAsync(els.maxCands.value, !!els.incAssets.checked);
     LAST_CANDIDATES = cands.slice();
     const schema = {
       protocol_id:"discovery_v2",
