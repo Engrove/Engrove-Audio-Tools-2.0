@@ -1226,7 +1226,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
     if (content) {
       const lines = content.split('\n');
-      const commentRegex = /^\s*(\/\/|#|\*|'''|""")/;
+      const commentRegex = /^\s*(\/\/|#|\*|'''|\"\"\")/;
       const commentLines = [];
       for (const line of lines) {
         const trimmed = line.trim();
