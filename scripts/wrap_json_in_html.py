@@ -416,8 +416,27 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     'tools/frankensteen_learning_db.json',
     'docs/ai_protocols/AI_Dynamic_Protocols.md',
     'docs/ai_protocols/DynamicProtocols.json',
-    'docs/core_file_info.json'
+    'docs/core_file_info.json',
+
+    // Felsökning & eskalering
+    'docs/ai_protocols/Escalation_Protocol.md',
+    'docs/ai_protocols/HITL_Interrupt_Points.md',
+    'docs/ai_protocols/Help_me_God_Protokoll.md',
+    'docs/ai_protocols/Stalemate_Protocol.md',
+    'docs/ai_protocols/Structured_Debugging_Checklist.md',
+    'docs/ai_protocols/System_Integrity_Check_Protocol.md',
+    'docs/ai_protocols/Pre_Execution_Alignment.md',
+    'docs/ai_protocols/Levande_Kontext_Protokoll.md',
+    'docs/ai_protocols/Confidence_Protocol.md',
+
+    // Stöd
+    'docs/ai_protocols/Sandbox_Execution_Protokoll.md',
+    'docs/ai_protocols/Multi_Sample_Protokoll.md',
+    'docs/ai_protocols/RAG_Faktacheck_Protokoll.md',
+    'docs/ai_protocols/Stature_Report_Protocol.md',
+    'docs/ai_protocols/Diff_JSON_Protocol.md' // deprekerad; behåll tills Diff_Protocol v3.x finns
   ];
+
 
   // ---------- Utils ----------
   function showBanner(msg, kind='warn'){
