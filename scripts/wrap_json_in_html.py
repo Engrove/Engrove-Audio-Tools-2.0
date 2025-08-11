@@ -1,717 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-wrap_json_in_html.py — AI Context Builder v7.3-p2 (2025-08-10)
-
-Nyheter vs v7.3:
-- Download: ISO-datum i filnamn (YYYY-MM-DDTHH-MM-SSZ)
-- Generate Files: output är markdown med inbäddad ```json och inkluderar checksums (sha256_lf per fil)
-- Träd: kaskadkryss + tri-state (föräldrar speglar barnstatus)
-- Busy-overlay + arbetslogg
-- Discovery: strikt K-MOD (paths) / D-MOD (selected_ids + echo_rules_hash)
-- Filförhandsvisning (text/bild)
-- AI Performance: filter, KPI, diagram, tabeller, CSV-export, refresh
-- Plugin-stöd: valfri parallell modul/py som injicerar extra CSS/JS/HTML
-- **Återinförd och utökad filinventering**: fullständig inventory byggd från context.json + hash_index
-- **Kompletta kandidatlistor**: styrbar max-kandidater, val att inkludera assets, samt separat FILE_INVENTORY-block i discovery-prompt
-- **[Skapa uppgift]** bifogar full "inventory_compact" i artefakten
-
-Kör:
-  python scripts/wrap_json_in_html.py dist/index.html
-  python scripts/wrap_json_in_html.py dist/index.html plugins/patch_center.py
-"""
-import os, sys
-
-HTML = r"""<!DOCTYPE html>
-<html lang="sv">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>AI Context Builder v7.3 — Inventory+Discovery Strict</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
-<style>
-:root{
-  --bg:#f8f9fa; --fg:#212529; --muted:#6c757d;
-  --card:#ffffff; --line:#dee2e6; --accent:#0d6efd; --accent-2:#0b5ed7;
-  --ok:#28a745; --warn:#ffc107; --err:#dc3545; --info:#17a2b8;
-  --mono:ui-monospace,"JetBrains Mono","SF Mono",Consolas,Menlo,monospace;
-  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);height:100vh;display:flex;overflow:hidden}
-.panel{padding:12px;overflow:auto;border-right:1px solid var(--line);display:flex;flex-direction:column}
-#left{width:42%;min-width:360px}
-#right{width:58%;gap:12px}
-.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding-bottom:8px;margin-bottom:8px;border-bottom:1px solid var(--line)}
-button{border:1px solid var(--line);background:var(--card);color:var(--fg);padding:8px 12px;border-radius:8px;cursor:pointer}
-button:hover{background:#eef1f4}
-button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-button.primary:hover{background:var(--accent-2)}
-button.info{background:var(--info);color:#fff;border-color:var(--info)}
-button.warn{background:var(--warn);color:#000;border-color:var(--warn)}
-button:disabled{opacity:.6;cursor:not-allowed}
-label.inline{display:inline-flex;align-items:center;gap:6px}
-input[type="number"]{width:90px}
-
-#tree ul{list-style:none;padding-left:18px;margin:0}
-#tree li{padding:3px 0}
-.toggle{cursor:pointer;user-select:none;display:inline-block;width:1em}
-.fileline{display:flex;align-items:center;gap:6px}
-pre,textarea{font-family:var(--mono);font-size:13.5px}
-textarea#instruction{height:160px;resize:vertical;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px}
-.output{display:flex;flex-direction:column;gap:8px;flex:1}
-.output .bar{display:flex;gap:8px;flex-wrap:wrap}
-.output pre{flex:1;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px;white-space:pre-wrap}
-.banner{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff8e1;color:#5c4600;display:none}
-.banner.err{background:#fde7ea;color:#7a0e1a}
-.banner.ok{background:#eaf7ef;color:#114d27}
-
-/* Tabs */
-.tabbar{display:flex;gap:8px;margin-bottom:10px}
-.tabbar button{border-radius:8px}
-.tabpanel{display:none}
-.tabpanel.active{display:flex;flex-direction:column;gap:12px}
-
-/* Modals */
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:1000}
-.modal.show{display:flex}
-.modal .box{background:#fff;border-radius:12px;max-width:1000px;width:94%;max-height:88vh;display:flex;flex-direction:column}
-.modal .box header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line)}
-.modal .box main{padding:14px;overflow:auto}
-.modal .box footer{padding:10px 14px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px}
-kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;border-radius:4px;padding:0 4px}
-.small{font-size:12px;color:var(--muted)}
-.flex{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-
-/* Performance UI */
-.chart-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
-.chart-card{border:1px solid var(--line);border-radius:8px;background:var(--card);padding:10px;display:flex;flex-direction:column;gap:6px}
-.chart-card h3{margin:0 0 4px 0;font-size:1.05rem;border-bottom:1px solid var(--line);padding-bottom:6px}
-.chart-container{position:relative;height:300px}
-.table-card{border:1px solid var(--line);border-radius:8px;background:var(--card);padding:10px}
-.table-card table{width:100%;border-collapse:collapse;font-size:.9rem}
-.table-card th,.table-card td{border:1px solid var(--line);padding:6px;text-align:left}
-.table-card th{background:#f1f3f5}
-.badge{padding:1px 6px;border-radius:99px;border:1px solid var(--line);background:#eef1f4;font-size:11px}
-
-/* Busy overlay */
-#busy{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.35);backdrop-filter:saturate(130%) blur(2px);z-index:2000;padding:12px}
-#busy .spinner{width:40px;height:40px;border:4px solid #ddd;border-top-color:#0d6efd;border-radius:50%;animation:spin 1s linear infinite;margin-bottom:10px}
-#busy #worklog{max-width:min(90vw,900px);max-height:40vh;overflow:auto;background:#fff;color:#111;border:1px solid #ccc;border-radius:8px;padding:10px;margin:0;white-space:pre-wrap}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* KPI cards */
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-.kpi{border:1px solid var(--line);border-radius:8px;background:var(--card);padding:10px}
-.kpi h4{margin:0 0 6px 0;font-size:0.95rem;color:#495057}
-.kpi .big{font-size:1.6rem;font-weight:700}
-.kpi .sub{font-size:.85rem;color:var(--muted)}
-.filter-bar{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
-.filter-group{display:flex;flex-direction:column;gap:4px}
-.filter-group label{font-size:.85rem;color:#495057}
-</style>
-</head>
-<body>
-
-<section id="left" class="panel">
-  <div class="controls">
-    <button id="selAll">Select All</button>
-    <button id="deselAll">Deselect All</button>
-    <button id="selCore">Select Core Docs</button>
-    <span class="flex">
-      <span class="badge">Budget kB</span>
-      <input id="budgetKb" type="number" min="100" step="50" value="700" />
-      <label class="inline" title="Kompaktare JSON"><input type="checkbox" id="compact" /> Kompakt JSON</label>
-    </span>
-    <button id="genContext" class="primary">Generate Context</button>
-    <button id="genFiles" class="info">Generate Files</button>
-  </div>
-  <div id="tree"><p>Laddar context.json…</p></div>
-</section>
-
-<section id="right" class="panel">
-  <div class="tabbar">
-    <button data-tab="builder" class="primary">Context Builder</button>
-    <button data-tab="performance">AI Performance</button>
-    <button id="helpBtn" class="warn">Hjälp</button>
-  </div>
-
-  <div id="tab-builder" class="tabpanel active">
-    <div class="controls" id="bootstrapBar">
-      <span><b>Provider:</b></span>
-      <label class="inline"><input type="radio" name="prov" value="openai" checked /> ChatGPT 5</label>
-      <label class="inline"><input type="radio" name="prov" value="gemini" /> Gemini 2.5 Pro</label>
-
-      <span style="margin-left:12px"><b>Discovery:</b></span>
-      <label class="inline" title="K-MOD: utforskning (paths)"><input type="radio" name="discMode" value="KMOD" checked /> K-MOD</label>
-      <label class="inline" title="D-MOD: deterministiskt urval (ID + rules_hash)"><input type="radio" name="discMode" value="DMOD" /> D-MOD</label>
-
-      <span class="flex" style="margin-left:12px">
-        <span class="badge">Max candidates</span>
-        <input id="maxCands" type="number" min="1" step="50" value="99999" />
-        <label class="inline"><input type="checkbox" id="incAssets" /> Inkl. assets</label>
-        <label class="inline" title="Lägg full inventory i prompt"><input type="checkbox" id="incInventory" checked /> Bifoga FILE_INVENTORY</label>
-      </span>
-
-      <button id="discBtn">Skapa nästa arbete</button>
-      <button id="implBtn" class="primary">Skapa uppgift</button>
-    </div>
-
-    <textarea id="instruction" placeholder="Kort mål (≤200 tecken) ELLER klistra in Discovery-svar (STRICT JSON)…"></textarea>
-    <div id="banner" class="banner"></div>
-
-    <div class="output">
-      <div class="bar">
-        <button id="copy" disabled>Copy</button>
-        <button id="download" disabled>Download</button>
-      </div>
-      <pre id="out">Här visas Discovery-prompt (K/D), context eller filer.</pre>
-      <div class="small">All export är markdown med inbäddad ```json.</div>
-    </div>
-  </div>
-
-  <div id="tab-performance" class="tabpanel">
-    <!-- Filter bar -->
-    <div class="filter-bar">
-      <div class="filter-group">
-        <label for="pf-from">Från datum (ISO)</label>
-        <input type="date" id="pf-from" />
-      </div>
-      <div class="filter-group">
-        <label for="pf-to">Till datum (ISO)</label>
-        <input type="date" id="pf-to" />
-      </div>
-      <div class="filter-group" style="min-width:220px">
-        <label>Provider</label>
-        <div id="pf-prov"></div>
-      </div>
-      <div class="filter-group" style="min-width:260px">
-        <label>Modell</label>
-        <div id="pf-model"></div>
-      </div>
-      <div class="filter-group">
-        <label>Alternativ</label>
-        <label class="inline"><input type="checkbox" id="pf-ma" /> MA(3)</label>
-      </div>
-      <div class="filter-group">
-        <button id="pf-apply" class="primary">Tillämpa filter</button>
-        <button id="pf-reset">Återställ</button>
-      </div>
-      <div class="filter-group" style="margin-left:auto">
-        <button id="pf-export" class="info">Exportera CSV</button>
-        <button id="refresh-performance">Uppdatera</button>
-      </div>
-    </div>
-
-    <!-- KPI -->
-    <div class="kpi-grid">
-      <div class="kpi"><h4>Antal sessioner</h4><div class="big" id="kpi-sessions">0</div><div class="sub" id="kpi-range"></div></div>
-      <div class="kpi"><h4>Medelpoäng</h4><div class="big" id="kpi-avg">–</div><div class="sub">Final Score (medel)</div></div>
-      <div class="kpi"><h4>Median cykler</h4><div class="big" id="kpi-cycles">–</div><div class="sub">Debugging cycles (median)</div></div>
-      <div class="kpi"><h4>Korrigeringsgrad</h4><div class="big" id="kpi-corr">–</div><div class="sub">Self/External ratio</div></div>
-    </div>
-
-    <!-- Charts -->
-    <div class="chart-grid">
-      <div class="chart-card">
-        <h3>Final Score Over Time</h3>
-        <div class="chart-container"><canvas id="score-chart"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <h3>Session Metrics (Cycles)</h3>
-        <div class="chart-container"><canvas id="metrics-chart"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <h3>Sessions Per Provider</h3>
-        <div class="chart-container"><canvas id="provider-chart"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <h3>Sessions Per Model</h3>
-        <div class="chart-container"><canvas id="model-chart"></canvas></div>
-      </div>
-    </div>
-
-    <!-- Learning DB + Sessions -->
-    <div class="table-card" style="margin-top:12px">
-      <h3>Learning Database (Heuristics)</h3>
-      <div id="perf-learning-body">Ingen data.</div>
-    </div>
-    <div class="table-card" style="margin-top:12px">
-      <h3>Sessions</h3>
-      <div id="perf-sessions-body">Ingen data.</div>
-    </div>
-  </div>
-</section>
-
-<!-- Hjälpmodal -->
-<div id="helpModal" class="modal" role="dialog" aria-modal="true">
-  <div class="box">
-    <header>
-      <b>Hjälp – Arbetssekvens</b>
-      <button id="helpClose" aria-label="Stäng">✕</button>
-    </header>
-    <main>
-      <ol>
-        <li><b>Skapa nästa arbete</b>:
-          <ul>
-            <li><b>K-MOD</b> → returnera <b>paths</b> + <b>embed</b> + <b>why</b>. <u>INGA id</u>.</li>
-            <li><b>D-MOD</b> → returnera <b>selected_ids</b> + <b>notes</b> + <b>echo_rules_hash</b>. <u>INGA paths</u>.</li>
-            <li>Prompt innehåller <code>CANDIDATE_FILES</code> och, om valt, <code>FILE_INVENTORY</code> (kompakt metadata).</li>
-          </ul>
-        </li>
-        <li>Klistra in modellsvar (STRICT JSON) → auto-select.</li>
-        <li><b>Skapa uppgift</b> → impl_bootstrap_v1.json + provider_envelope.json (markdown) med <code>inventory_compact</code>.</li>
-        <li>Alt: <b>Generate Files</b> → markdown med <code>files_payload.json</code> + <code>checksums</code>.</li>
-      </ol>
-    </main>
-    <footer><button id="helpOk" class="primary">OK</button></footer>
-  </div>
-</div>
-
-<!-- Filförhandsvisning modal -->
-<div id="filePreview" class="modal" role="dialog" aria-modal="true">
-  <div class="box">
-    <header>
-      <b id="fpTitle">Förhandsgranskning</b>
-      <div>
-        <button id="fpCopy">Copy</button>
-        <button id="fpDownload">Download</button>
-        <button id="fpClose" aria-label="Stäng">✕</button>
-      </div>
-    </header>
-    <main id="fpBody"><p>Laddar…</p></main>
-  </div>
-</div>
-
-<!-- Busy overlay -->
-<div id="busy" role="status" aria-live="polite">
-  <div class="spinner" aria-hidden="true"></div>
-  <pre id="worklog"></pre>
-</div>
-
-
-(function(){
-  // ---------- Konstanter ----------
-  const RAW_DEFAULT_REPO = 'Engrove/Engrove-Audio-Tools-2.0';
-  const RAW_DEFAULT_BRANCH = 'main';
-  const IMAGE_EXT = ['png','jpg','jpeg','gif','webp','svg'];
-
-  // ---------- Element ----------
-  const els = {
-    // vänster
-    tree:document.getElementById('tree'),
-    selAll:document.getElementById('selAll'),
-    deselAll:document.getElementById('deselAll'),
-    selCore:document.getElementById('selCore'),
-    genContext:document.getElementById('genContext'),
-    genFiles:document.getElementById('genFiles'),
-    budgetKb:document.getElementById('budgetKb'),
-    compact:document.getElementById('compact'),
-    // höger/builder
-    instruction:document.getElementById('instruction'),
-    out:document.getElementById('out'),
-    copy:document.getElementById('copy'),
-    download:document.getElementById('download'),
-    discBtn:document.getElementById('discBtn'),
-    implBtn:document.getElementById('implBtn'),
-    banner:document.getElementById('banner'),
-    // discovery-val
-    maxCands:document.getElementById('maxCands'),
-    incAssets:document.getElementById('incAssets'),
-    incInventory:document.getElementById('incInventory'),
-    // tabs
-    tabBtns:document.querySelectorAll('.tabbar button[data-tab]'),
-    tabs:{ builder:document.getElementById('tab-builder'), performance:document.getElementById('tab-performance') },
-    // provider
-    provGemini:document.querySelector('input[name="prov"][value="gemini"]'),
-    // modals
-    helpBtn:document.getElementById('helpBtn'),
-    helpModal:document.getElementById('helpModal'),
-    helpClose:document.getElementById('helpClose'),
-    helpOk:document.getElementById('helpOk'),
-    fp:document.getElementById('filePreview'),
-    fpTitle:document.getElementById('fpTitle'),
-    fpBody:document.getElementById('fpBody'),
-    fpCopy:document.getElementById('fpCopy'),
-    fpDownload:document.getElementById('fpDownload'),
-    fpClose:document.getElementById('fpClose'),
-    // busy
-    busy:document.getElementById('busy'),
-    worklog:document.getElementById('worklog'),
-    // performance
-    pf:{ from:document.getElementById('pf-from'), to:document.getElementById('pf-to'),
-         provWrap:document.getElementById('pf-prov'), modelWrap:document.getElementById('pf-model'),
-         ma:document.getElementById('pf-ma'), apply:document.getElementById('pf-apply'),
-         reset:document.getElementById('pf-reset'), export:document.getElementById('pf-export'),
-         refresh:document.getElementById('refresh-performance') },
-    kpi:{ sessions:document.getElementById('kpi-sessions'), rng:document.getElementById('kpi-range'),
-          avg:document.getElementById('kpi-avg'), cycles:document.getElementById('kpi-cycles'),
-          corr:document.getElementById('kpi-corr') },
-    perfLearning:document.getElementById('perf-learning-body'),
-    perfSessions:document.getElementById('perf-sessions-body'),
-  };
-
-  // ---------- Tillstånd ----------
-  let ctx=null;
-  let FILES=[], CODE_FILES=[];
-  let INVENTORY=[]; // rik metadata
-  let HASHMAPS=null; // path<->hash mappar
-  let RAW_BASE=''; // råbas-URL
-  let LAST_CANDIDATES=[], LAST_RULES_HASH=null;
-
-  const CORE = [
-    'docs/ai_protocols/AI_Core_Instruction.md',
-    'docs/ai_protocols/ai_config.json',
-    'docs/ai_protocols/frankensteen_persona.v1.0.json',
-    'docs/ai_protocols/AI_Dynamic_Protocols.md',
-    'docs/ai_protocols/DynamicProtocols.json',
-    'docs/ai_protocols/System_Integrity_Check_Protocol.md',
-    'docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md',
-    'docs/ai_protocols/Help_me_God_Protokoll.md',
-    'docs/ai_protocols/Stalemate_Protocol.md',
-    'docs/ai_protocols/Levande_Kontext_Protokoll.md',
-    'docs/ai_protocols/Diff_JSON_Protocol.md',
-    'docs/AI_Collaboration_Standard.md',
-    'package.json',
-    'vite.config.js',
-    'scripts/generate_full_context.py',
-    'scripts/wrap_json_in_html.py'
-  ];
-
-  // ---------- Utils ----------
-  function showBanner(msg, kind='warn'){
-    els.banner.textContent = msg;
-    els.banner.className = 'banner ' + (kind==='err'?'err':kind==='ok'?'ok':'');
-    els.banner.style.display = 'block';
-  }
-  function clearBanner(){ els.banner.style.display='none'; els.banner.textContent=''; els.banner.className='banner'; }
-  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-  function logw(msg){ const t=new Date().toLocaleTimeString(); els.worklog.textContent += `[${t}] ${msg}\n`; els.worklog.scrollTop = els.worklog.scrollHeight; }
-  async function withBusy(label, fn){
-    els.worklog.textContent = '';
-    els.busy.style.display = 'flex';
-    logw(label+' start');
-    try{ const r = await fn(); logw(label+' klar'); return r; }
-    finally{ setTimeout(()=> els.busy.style.display='none', 150); }
-  }
-
-  function isCodeLike(p){
-    const ext=(p.split('.').pop()||'').toLowerCase();
-    return ['py','js','jsx','ts','tsx','vue','json','md','html','css','yml','yaml','toml','sh','bat'].includes(ext);
-  }
-  function guessLang(p){
-    const e=(p.split('.').pop()||'').toLowerCase();
-    if(['ts','tsx'].includes(e)) return 'ts';
-    if(e==='vue') return 'vue';
-    if(e==='py') return 'py';
-    if(['js','jsx'].includes(e)) return 'js';
-    if(e==='md') return 'md';
-    if(e==='json') return 'json';
-    if(e==='html') return 'html';
-    if(e==='css') return 'css';
-    return 'txt';
-  }
-
-  // Kanonisering + hash (LF, utan BOM)
-  function canonText(s){ return (s||'').replace(/\uFEFF/g,'').replace(/\r\n?/g,'\n'); }
-  async function sha256HexLF(text){
-    const enc = new TextEncoder().encode(canonText(text));
-    const buf = await crypto.subtle.digest('SHA-256', enc);
-    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-  }
-
-  async function fetchText(path){
-    const url = RAW_BASE + path;
-    const r = await fetch(url, {cache:'no-store'});
-    if(!r.ok) throw new Error('HTTP '+r.status+' for '+url);
-    return await r.text();
-  }
-
-  // ---------- Tree helpers ----------
-  function flattenPaths(node, prefix='', out=[]){
-    Object.keys(node).sort().forEach(k=>{
-      const it=node[k], p=prefix?`${prefix}/${k}`:k;
-      if(it.type==='file'){ out.push(it.path||p); }
-      else{ flattenPaths(it, p, out); }
-    });
-    return out;
-  }
-
-  // Kaskad + tri-state
-  function renderTree(node, parent, base=''){
-    const ul=document.createElement('ul');
-    const keys=Object.keys(node).sort((a,b)=>{
-      const aF=node[a].type==='file', bF=node[b].type==='file';
-      if(aF && !bF) return 1;
-      if(!aF && bF) return -1;
-      return a.localeCompare(b);
-    });
-
-    keys.forEach(k=>{
-      const it=node[k], p=base?`${base}/${k}`:k;
-      const li=document.createElement('li');
-
-      const label=document.createElement('label'); label.className='fileline';
-      const cb=document.createElement('input'); cb.type='checkbox'; cb.dataset.path=p;
-      label.appendChild(cb);
-      const icon=document.createElement('span');
-      const isImg = IMAGE_EXT.includes((k.split('.').pop()||'').toLowerCase());
-      icon.textContent = (it.type==='file' ? (isImg?'🖼️':'📄') : '📁');
-      label.appendChild(icon);
-      const a=document.createElement('a'); a.href='#'; a.textContent=' '+k; a.dataset.path=p;
-      label.appendChild(a);
-      li.appendChild(label);
-
-      if(it.type==='file'){
-        a.addEventListener('click', async (e)=>{ e.preventDefault(); showFilePreview(p); });
-      } else {
-        const toggle=document.createElement('span'); toggle.className='toggle'; toggle.textContent='►';
-        li.insertBefore(toggle, label);
-        const sub=renderTree(it, li, p); sub.style.display='none'; li.appendChild(sub);
-        toggle.addEventListener('click', ()=>{
-          const vis=sub.style.display==='none'; sub.style.display=vis?'block':'none';
-          toggle.textContent=vis?'▼':'►';
-        });
-      }
-
-      cb.addEventListener('change', ()=>{
-        const sub=li.querySelector(':scope > ul');
-        if(sub){ sub.querySelectorAll('input[type="checkbox"]').forEach(x=> x.checked=cb.checked); }
-        updateParents(li);
-      });
-
-      ul.appendChild(li);
-    });
-
-    return parent.appendChild(ul);
-  }
-  function updateParents(li){
-    let p=li.parentElement && li.parentElement.closest('li');
-    while(p){
-      const kids=p.querySelectorAll(':scope > ul input[type="checkbox"]');
-      const parentCb=p.querySelector(':scope > label input[type="checkbox"]');
-      const total=kids.length, on=Array.from(kids).filter(c=>c.checked).length;
-      if(parentCb){ parentCb.indeterminate = on>0 && on<total; parentCb.checked = on===total; }
-      p=p.parentElement && p.parentElement.closest('li');
-    }
-  }
-  function recomputeAllParents(){ document.querySelectorAll('#tree li').forEach(li=> updateParents(li)); }
-  function selectedPaths(){ return Array.from(els.tree.querySelectorAll('input[type="checkbox"]:checked')).map(cb=>cb.dataset.path); }
-  
-    function openParentsFor(path){
-    const cb = els.tree.querySelector(`input[data-path="${CSS.escape(path)}"]`);
-    if(!cb) return;
-    let li = cb.closest('li');
-    while(li){
-      const parent = li.parentElement.closest('li');
-      if(parent){
-        const sub = parent.querySelector(':scope > ul');
-        const toggle = parent.querySelector(':scope > .toggle');
-        if(sub && toggle){ sub.style.display='block'; toggle.textContent='▼'; }
-      }
-      li = parent;
-    }
-  }
-  function autoSelectPaths(paths){
-    const all = Array.from(els.tree.querySelectorAll('input[type="checkbox"]'));
-    paths.forEach(p=>{
-      const cb = all.find(x=>x.dataset.path===p);
-      if(cb){ cb.checked=true; openParentsFor(p); updateParents(cb.closest('li')); }
-    });
-    recomputeAllParents();
-  }
-
-  // Quick select core docs
-  function quickSelectCore(){
-    els.tree.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=false);
-    CORE.forEach(p=>{
-      const cb = els.tree.querySelector(`input[data-path="${CSS.escape(p)}"]`);
-      if(cb){ cb.checked=true; openParentsFor(p); updateParents(cb.closest('li')); }
-    });
-    recomputeAllParents();
-  }
-
-  // ---------- Markdown wrapper ----------
-  function mdWrapJsonSection(filename, jsonText){
-    const head = [
-      '### AI_BOOTSTRAP_DIRECTIVE: EXECUTE_FULL_PROTOCOL_NOW',
-      '### SYSTEM_OVERRIDE: RUN_CONTEXT_BOOTSTRAP',
-      '### INIT_CONTEXT_MODE: TRUE',
-      '### PROTOCOL_START: P-HR_v2.8_FULL',
-      ''
-    ].join('\\n');
-    return `### ${filename}\\n\\n` + head + '```json\\n' + jsonText + '\\n```\\n';
-  }
-
-  // ---------- Hash-index och inventory ----------
-  function buildHashMaps(ctx){
-    const out = { path2sha:new Map(), path2git:new Map(), sha2paths:new Map(), git2paths:new Map() };
-    const idx = (ctx && ctx.hash_index) || {};
-    const sha = idx.sha256_lf || idx.sha256 || {};
-    const git = idx.git_sha1 || {};
-    // sha -> paths
-    Object.entries(sha).forEach(([h, paths])=>{
-      const arr = Array.isArray(paths) ? paths : [paths];
-      out.sha2paths.set(h, arr);
-      arr.forEach(p=> out.path2sha.set(p, h));
-    });
-    // git -> paths
-    Object.entries(git).forEach(([h, paths])=>{
-      const arr = Array.isArray(paths) ? paths : [paths];
-      out.git2paths.set(h, arr);
-      arr.forEach(p=> out.path2git.set(p, h));
-    });
-    return out;
-  }
-
-  function walkInventory(node, acc, base=''){
-    Object.keys(node).forEach(k=>{
-      const it = node[k];
-      const p = base?`${base}/${k}`:k;
-      if(it.type==='file'){
-        const path = it.path || p;
-        const rec = {
-          path,
-          type:'file',
-          size: (typeof it.size==='number') ? it.size : null,
-          lang: guessLang(path),
-          is_content_full: !!it.is_content_full,
-          sha256_lf: HASHMAPS.path2sha.get(path) || null,
-          git_sha1:  HASHMAPS.path2git.get(path) || null
-        };
-        acc.push(rec);
-      }else{
-        walkInventory(it, acc, p);
-      }
-    });
-  }
-
-  function buildInventory(ctx){
-    const acc = [];
-    walkInventory(ctx.file_structure||{}, acc, '');
-    acc.sort((a,b)=> a.path.localeCompare(b.path));
-    return acc;
-  }
-
-  // ---------- Context/Files generation ----------
-  async function buildNewContextNode(src, selSet){
-    const dst={};
-    for(const k of Object.keys(src).sort()){
-      const it=src[k];
-      if(it.type==='file'){
-        const copy={...it};
-        if(selSet.has(it.path)){
-          try{ copy.content = await fetchText(it.path); } catch{ copy.content='// Error: fetch fail'; }
-          copy.is_content_full = true;
-        } else { delete copy.content; copy.is_content_full = false; }
-        dst[k]=copy;
-      }else{
-        dst[k]=await buildNewContextNode(it, selSet);
-      }
-    }
-    return dst;
-  }
-
-  async function generateContext(){
-    try{
-      clearBanner(); logw('Samlar valda paths…');
-      const sels = new Set(selectedPaths());
-      const out = {
-        project_overview: ctx.project_overview,
-        ai_instructions: ctx.ai_instructions || {},
-        hash_index: ctx.hash_index || {},
-        file_structure: {}
-      };
-      const rules = new Set([...(out.ai_instructions.obligatory_rules||[]), 'forbid_image_generation']);
-      out.ai_instructions.obligatory_rules = Array.from(rules);
-      if(els.instruction.value.trim()) out.ai_instructions_input = els.instruction.value.trim();
-
-      logw('Bygger nytt file_structure…');
-      out.file_structure = await buildNewContextNode(ctx.file_structure, sels);
-
-      const text = els.compact.checked ? JSON.stringify(out) : JSON.stringify(out, null, 2);
-      const md = mdWrapJsonSection('context.json', text);
-      els.out.textContent = md;
-      els.copy.disabled = els.download.disabled = false;
-      showBanner('Context genererad.', 'ok');
-    }catch(e){
-      showBanner('Fel vid context-generering: '+e.message, 'err');
-    }
-  }
-
-  async function generateFiles(){
-    try{
-      clearBanner(); logw('Hämtar fulltext + checksums för valda filer…');
-      const sels = new Set(selectedPaths());
-      const files = {};
-      const checksums = {};
-      async function walk(src){
-        for(const k of Object.keys(src)){
-          const it = src[k];
-          if(it.type==='file' && sels.has(it.path)){
-            try{
-              const t = await fetchText(it.path);
-              files[it.path] = t;
-              checksums[it.path] = await sha256HexLF(t);
-            }catch(_){
-              const msg = `// Error: failed to fetch ${it.path}`;
-              files[it.path] = msg;
-              checksums[it.path] = await sha256HexLF(msg);
-            }
-          }else if(it.type!=='file'){
-            await walk(it);
-          }
-        }
-      }
-      await walk(ctx.file_structure);
-      const payload = { obligatory_rules:['forbid_image_generation'], files, checksums };
-      emit(payload, 'files_payload.json');
-      showBanner('Filer genererade (md).', 'ok');
-    }catch(e){
-      showBanner('Fel vid file-generering: '+e.message, 'err');
-    }
-  }
-
-  function emit(obj, nameHint='context.json'){
-    const text = els.compact.checked ? JSON.stringify(obj) : JSON.stringify(obj, null, 2);
-    els.out.textContent = mdWrapJsonSection(nameHint, text);
-    els.copy.disabled = els.download.disabled = false;
-  }
-
-  // ---------- Discovery (strikt) ----------
-  function currentDiscMode(){ const el=document.querySelector('input[name="discMode"]:checked'); return el?el.value:'KMOD'; }
-
-  function dmodHardRules(){
-    return [
-      "D-MOD HÅRDA REGLER (svara ENBART med JSON):",
-      "1) Returnera ENBART fälten: protocol_id, mode, echo_rules_hash, selected_ids, notes.",
-      "2) selected_ids: enbart heltal (ID:n från CANDIDATE_FILES).",
-      "3) notes: objekt där NYCKLARNA är dessa ID (som strängar), värden ≤200 tecken.",
-      "4) INGA paths/filnamn, INGA extra fält.",
-      "5) echo_rules_hash MÅSTE exakt matcha rules_hash.",
-      "6) Antal val: min 2, max 12."
-    ].join("\\n");
-  }
-  function kmodHardRules(){
-    return [
-      "K-MOD HÅRDA REGLER (svara ENBART med JSON):",
-      "1) Returnera fälten: protocol_id, mode, selected_files[].",
-      "2) selected_files[]: objekt med {path, embed, why}.",
-      "3) path: exakt filväg från CANDIDATE_FILES. INGA ID.",
-      "4) embed ∈ {'full','chunk','stub'}; why ≤200 tecken.",
-      "5) INGA extrafält (inga id / selected_ids)."
-    ].join("\\n");
-  }
-  function invalidExamples(){
-    return [
-      "OGILTIGA EXEMPEL:",
-      "- D-MOD men skickar paths: { selected_files:[{ path:'src/x.js', ...}] }  ❌",
-      "- K-MOD men skickar id:   { selected_ids:[1,2] }                           ❌",
-      "- Extra fält:             { ..., files:[...]}                                ❌"
-    ].join("\\n");
-  }
-  
-    function toOpenAI(systemText, userJson){
+  function toOpenAI(systemText, userJson){
     return {
       provider:"openai",
       model:"gpt-5",
@@ -745,12 +32,10 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
   }
 
-  // Inventory → kandidater (rik)
   function buildCandidatesRich(maxN, includeAssets){
     const arr = INVENTORY.filter(it=> includeAssets ? true : isCodeLike(it.path));
     const lim = Math.max(1, Number(maxN||0) || 999999);
     const sliced = arr.slice(0, lim);
-    // id tilldelas i aktuell vy-ordning
     return sliced.map((rec, i)=>({
       id: i+1,
       path: rec.path,
@@ -789,7 +74,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   const DM = { SELECTION: { min:2, max:12, allow_paths:["src/**","docs/**","scripts/**","public/**"], deny_paths:["infra/prod/**"] } };
 
   async function buildDiscoveryPromptDMOD(){
-    // Tillåt/nekad filtrering appliceras på INVENTORY (inte CODE_FILES längre)
     const allow = DM.SELECTION.allow_paths.map(globToRegex);
     const deny  = DM.SELECTION.deny_paths.map(globToRegex);
     const okPath = (p)=> allow.some(r=>r.test(p)) && !deny.some(r=>r.test(p));
@@ -886,7 +170,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       if(sel.length===0) throw new Error('Välj minst 1 fil.');
       const targetBytes = Number(els.budgetKb.value)*1000;
 
-      // Fulltext för valda filer, i ordning
       const files = [];
       let used=0;
       for(const p of sel){
@@ -896,7 +179,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         if(used>=targetBytes) break;
       }
 
-      // Kompakt inventory för hela repo:t
       const inventory_compact = INVENTORY.map(r=>({ path:r.path, lang:r.lang, size:r.size, sha256_lf:r.sha256_lf, git_sha1:r.git_sha1 }));
 
       const bootstrap = {
@@ -1127,7 +409,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     });
     charts.modelChart = new Chart(document.getElementById('model-chart').getContext('2d'), {
       type:'pie',
-      data:{ labels:Object.keys(byModel), datasets:[{ data:Object.values(byModel) }] },
+      data:{ labels:Object.keys(agg.byModel), datasets:[{ data:Object.values(agg.byModel) }] },
       options:{ responsive:true, maintainAspectRatio:false }
     });
 
@@ -1198,7 +480,210 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
   els.implBtn.onclick = ()=> withBusy('Build Bootstrap', buildImplBootstrap);
 
-  // ---------- Init: ladda context.json, bygg hashmappar, inventory, träd ----------
+  // ---------- Patch Center (INTEGRATED) ----------
+  function initPatchCenter(){
+    function q(id){ return document.getElementById(id); }
+    const bar = document.querySelector('#right .output .bar'); if(!bar) return;
+
+    const openBtn = document.createElement('button');
+    openBtn.id='plug-patch-open'; openBtn.textContent='Patch';
+    bar.appendChild(openBtn);
+
+    const modal = q('plug-patch-modal'), closeBtn = q('plug-patch-close'), srcTA = q('plug-patch-source');
+    const fileInput = q('plug-patch-file'), uploadBtn = q('plug-patch-upload'), validateBtn = q('plug-patch-validate');
+    const applyBtn = q('plug-patch-apply'), copyBtn = q('plug-patch-copy'), dlBtn = q('plug-patch-download');
+    const previewTA = q('plug-patch-preview'), logEl = q('plug-patch-log');
+    const tgtPathEl = q('plug-target-path'), tgtShaEl = q('plug-target-sha256'), tgtGitEl = q('plug-target-gitsha');
+    const tgtSrcEl = q('plug-target-source'), schemaOK = q('plug-schema-ok');
+
+    function log(m){ const t=new Date().toLocaleTimeString(); logEl.textContent += `[patch ${t}] ${m}\n`; logEl.scrollTop=logEl.scrollHeight; if(els.worklog){ els.worklog.textContent += `[patch ${t}] ${m}\n`; els.worklog.scrollTop=els.worklog.scrollHeight; } }
+    
+    openBtn.onclick = ()=> modal.classList.add('show');
+    closeBtn.onclick = ()=> modal.classList.remove('show');
+
+    uploadBtn.onclick = ()=> fileInput.click();
+    fileInput.onchange = async (e)=>{
+      const f = e.target.files && e.target.files[0];
+      if(!f) return;
+      srcTA.value = await f.text();
+      log(`Läste fil: ${f.name} (${f.size} B)`);
+    };
+
+    function isObj(x){ return x && typeof x==='object' && !Array.isArray(x); }
+    function isInt(x){ return Number.isInteger(x); }
+    function matchRegex(s, re){ return typeof s==='string' && new RegExp(re).test(s); }
+
+    function validateAgainstSchema(j){
+      const errs = [];
+      if(!isObj(j)) { errs.push('root: måste vara object'); return errs; }
+      const req = ['protocol_id','target','ops'];
+      req.forEach(k=>{ if(!(k in j)) errs.push(`root.required: ${k}`); });
+      if(j.protocol_id!=='diff_json_v1') errs.push('protocol_id måste vara "diff_json_v1"');
+      if(!isObj(j.target)) errs.push('target: måste vara object');
+      else {
+        const t=j.target;
+        if(!matchRegex(t.base_checksum_sha256||'', '^[0-9a-fA-F]{64}$')) errs.push('target.base_checksum_sha256: 64 hex krävs');
+        if('git_sha1' in t && !matchRegex(t.git_sha1, '^[0-9a-fA-F]{40}$')) errs.push('target.git_sha1: 40 hex');
+        if('path' in t && !(typeof t.path==='string' && t.path.length>0)) errs.push('target.path: string>0');
+        const extraT = Object.keys(t).filter(k=>!['path','base_checksum_sha256','git_sha1'].includes(k));
+        if(extraT.length) errs.push('target.additionalProperties: '+extraT.join(','));
+      }
+      if(!Array.isArray(j.ops) || j.ops.length<1) errs.push('ops: array med minst 1 post krävs');
+      else{
+        let lastAt = -1;
+        j.ops.forEach((op,i)=>{
+          if(!isObj(op)) { errs.push(`ops[${i}]: måste vara object`); return; }
+          const typ = op.op, at = op.at;
+          if(!isInt(at) || at<0) errs.push(`ops[${i}].at: int>=0`);
+          if(at < lastAt && op.op !== 'delete') errs.push('ops måste vara sorterade i stigande at (undantag för efterföljande deletes)'); else if (at >= lastAt) lastAt = at;
+          if(typ==='insert'){
+            if(!('ins' in op) || typeof op.ins!=='string') errs.push(`ops[${i}].ins saknas (insert)`);
+          }else if(typ==='delete'){
+            if(!('del' in op) || !isInt(op.del) || op.del<=0) errs.push(`ops[${i}].del>0 krävs (delete)`);
+          }else if(typ==='replace'){
+            if(!('del' in op) || !isInt(op.del) || op.del<0) errs.push(`ops[${i}].del>=0 krävs (replace)`);
+            if(!('ins' in op) || typeof op.ins!=='string') errs.push(`ops[${i}].ins saknas (replace)`);
+          }else{ errs.push(`ops[${i}].op okänd: ${typ}`); }
+        });
+      }
+      return errs;
+    }
+
+    function parseJsonSafe(s){ try{ return JSON.parse(s); } catch(e){ return { _err:String(e&&e.message||e) }; } }
+
+    function checkOpsRanges(baseLen, ops){
+      for(const op of ops){
+        const at = op.at|0;
+        if(at < 0 || at > baseLen) return `op.at utanför [0, ${baseLen}]`;
+        if(op.op==='delete' || op.op==='replace'){
+          const del = op.del|0;
+          if(del < 0) return 'del negativ.';
+          if(at+del > baseLen) return 'del räcker utanför bastext.';
+        }
+      }
+      return null;
+    }
+
+    function applyOps(base, ops){
+      let s = base, shift = 0;
+      ops.sort((a,b)=>a.at - b.at);
+      for(const op of ops){
+        const at = op.at|0, idx = at + shift;
+        if(op.op==='insert'){
+          const ins = op.ins||'';
+          s = s.slice(0, idx) + ins + s.slice(idx);
+          shift += ins.length;
+        }else if(op.op==='delete'){
+          const del = op.del|0;
+          s = s.slice(0, idx) + s.slice(idx+del);
+          shift -= del;
+        }else if(op.op==='replace'){
+          const del = op.del|0, ins = op.ins||'';
+          s = s.slice(0, idx) + ins + s.slice(idx+del);
+          shift += (ins.length - del);
+        }else{ throw new Error('okänd op: '+op.op); }
+      }
+      return s;
+    }
+
+    function parseFilesPayloadFromOut(){
+      const m = (els.out.textContent || '').match(/```json([\s\S]*?)```/);
+      if(!m) return null;
+      try{
+        const obj = JSON.parse(m[1]);
+        if(obj && obj.files && typeof obj.files==='object'){ return obj; }
+      }catch(_){}
+      return null;
+    }
+
+    async function findBaseText(diffJ, maps){
+      const need = diffJ.target.base_checksum_sha256.toLowerCase();
+      if(maps.sha2paths.has(need)){
+        const p = maps.sha2paths.get(need);
+        const node = maps.byPath.get(p);
+        if(node && node.is_content_full && typeof node.content === 'string') return { path:p, source:'context.file_structure', text: canonText(node.content) };
+        return { path:p, source:'context.hash_index.sha256_lf', text: await fetchText(p) };
+      }
+      const payload = parseFilesPayloadFromOut();
+      if(payload && payload.files){
+        const p = diffJ.target.path;
+        if(p && payload.checksums && payload.checksums[p] && payload.checksums[p].toLowerCase()===need){
+          return { path:p, source:'files_payload.checksums', text: canonText(String(payload.files[p]||'')) };
+        }
+        for(const path in payload.files){
+          const t = canonText(String(payload.files[path]||''));
+          if((await sha256HexLF(t)) === need){ return { path, source:'files_payload.computed', text:t }; }
+        }
+      }
+      if(diffJ.target.path){
+        const p = diffJ.target.path;
+        const t = await fetchText(p);
+        if((await sha256HexLF(t)) === need){ return { path:p, source:'path->RAW', text:t }; }
+        throw new Error('Path fanns men base_checksum_sha256 matchar inte.');
+      }
+      throw new Error('Kunde inte hitta basfil via checksum/path.');
+    }
+    
+    let lastDiff = null, lastBase = null, lastPath = null;
+
+    validateBtn.onclick = ()=> withBusy('Validate diff.json', async ()=>{
+      logEl.textContent = ''; schemaOK.style.display='none';
+      applyBtn.disabled = true; copyBtn.disabled = true; dlBtn.disabled = true; previewTA.value = '';
+      tgtPathEl.textContent='–'; tgtShaEl.textContent='–'; tgtGitEl.textContent='–'; tgtSrcEl.textContent='–';
+
+      const txt = srcTA.value.trim();
+      if(!txt){ log('Ingen JSON.'); return; }
+      const j = parseJsonSafe(txt);
+      if(j._err){ log('JSON-fel: '+j._err); return; }
+
+      const schemaErrs = validateAgainstSchema(j);
+      if(schemaErrs.length){ log('Schemafel:\n- '+schemaErrs.join('\n- ')); return; }
+      schemaOK.style.display='inline-block';
+
+      try{
+        const target = await findBaseText(j, HASHMAPS);
+        lastDiff = j; lastBase = target.text; lastPath = target.path;
+        tgtPathEl.textContent = target.path || (j.target && j.target.path) || 'okänd';
+        tgtShaEl.textContent = j.target.base_checksum_sha256.toLowerCase();
+        tgtGitEl.textContent = (j.target.git_sha1 || '–');
+        tgtSrcEl.textContent = target.source;
+        log('Validering OK: basfil identifierad.');
+        applyBtn.disabled = false;
+      }catch(e){
+        log('Validering misslyckades: '+e.message);
+      }
+    });
+
+    applyBtn.onclick = ()=> withBusy('Apply', async ()=>{
+      if(!lastDiff || !lastBase){ log('Kör Validate först.'); return; }
+      const rangeErr = checkOpsRanges(lastBase.length, lastDiff.ops);
+      if(rangeErr){ log('Rangefel: '+rangeErr); return; }
+      let out;
+      try{ out = applyOps(lastBase, lastDiff.ops); }
+      catch(e){ log('Apply-fel: '+e.message); return; }
+      if(typeof lastDiff.result_sha256 === 'string' && lastDiff.result_sha256.length===64){
+        const got = await sha256HexLF(out);
+        if(got.toLowerCase() !== lastDiff.result_sha256.toLowerCase()){
+          log('Varning: result_sha256 matchar INTE.');
+        }else{ log('result_sha256 verifierad.'); }
+      }
+      previewTA.value = out;
+      copyBtn.disabled = false; dlBtn.disabled = false;
+      log('Patch applicerad. Förhandsvisning klar.');
+    });
+
+    copyBtn.onclick = ()=>{ navigator.clipboard.writeText(previewTA.value); log('Kopierat.'); };
+    dlBtn.onclick = ()=>{
+      const blob = new Blob([previewTA.value], {type:'text/plain'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = (lastPath || 'patched.txt').split('/').pop();
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+      log('Nedladdat.');
+    };
+  }
+
+  // ---------- Init: ladda context.json, bygg state, initiera UI ----------
   fetch('context.json', {cache:'no-store'})
     .then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
     .then(data=>{
@@ -1216,6 +701,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       els.tree.innerHTML = '';
       renderTree(ctx.file_structure, els.tree, '');
       recomputeAllParents();
+      initPatchCenter(); // Initiera patch-logik
       showBanner('Context + inventory laddad. Välj K-MOD eller D-MOD och fortsätt.', 'ok');
       logw(`Inventory: ${INVENTORY.length} filer. Hash-index: sha=${HASHMAPS.sha2paths.size}, git=${HASHMAPS.git2paths.size}.`);
     })
@@ -1223,7 +709,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       els.tree.innerHTML = '<p style="color:#b00020">Kunde inte läsa context.json: '+escapeHtml(e.message)+'</p>';
     });
 
-  // Export/refresh (performance)
   els.pf.export.onclick = ()=> {
     try{
       const metrics = ctx && ctx.ai_performance_metrics;
@@ -1246,69 +731,26 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 </html>
 """
 
-def _apply_extension_plugin(html: str, plugin_path: str) -> str:
-    """
-    Laddar ett parallellt Python-skript/modul och injicerar tillägg i HTML:
-      - EXTEND_HEAD: str   → före </head>
-      - EXTEND_BODY: str   → före </body>
-      - EXTEND_JS:   str   → <script>…</script> före </body> om ingen <script> redan
-      - EXTEND_CSS:  str   → <style>…</style> i <head> om ingen <style> redan
-    """
-    import importlib.util, importlib, types, traceback
-    try:
-        if os.path.isfile(plugin_path) and plugin_path.endswith('.py'):
-            spec = importlib.util.spec_from_file_location("cb_plugin_ext", plugin_path)
-            if spec and spec.loader:
-                mod = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(mod)  # type: ignore
-            else:
-                return html
-        else:
-            mod = importlib.import_module(plugin_path)  # type: ignore
-    except Exception as e:
-        sys.stderr.write(f"[wrap_json_in_html] Varning: kunde inte ladda plugin '{plugin_path}': {e}\\n")
-        traceback.print_exc()
-        return html
-
-    head_add = getattr(mod, "EXTEND_HEAD", "") or ""
-    body_add = getattr(mod, "EXTEND_BODY", "") or ""
-    js_add   = getattr(mod, "EXTEND_JS", "")   or ""
-    css_add  = getattr(mod, "EXTEND_CSS", "")  or ""
-
-    if css_add and "<style" not in css_add.lower():
-        css_add = f"<style>\\n{css_add}\\n</style>"
-    head_inject = (head_add or "") + (("\\n"+css_add) if css_add else "")
-    if head_inject:
-        idx = html.lower().rfind("</head>")
-        if idx != -1:
-            html = html[:idx] + head_inject + html[idx:]
-
-    body_inject = body_add or ""
-    if js_add:
-        if "<script" not in js_add.lower():
-            body_inject += f"\\n<script>\\n{js_add}\\n</script>"
-        else:
-            body_inject += "\\n" + js_add
-    if body_inject:
-        idx2 = html.lower().rfind("</body>")
-        if idx2 != -1:
-            html = html[:idx2] + body_inject + html[idx2:]
-
-    return html
-
-
 def main():
-    if len(sys.argv) not in (2,3):
-        print("Usage: python wrap_json_in_html.py <output_html_path> [optional_extension_module_or_py]", file=sys.stderr)
+    if len(sys.argv) != 2:
+        print("Usage: python wrap_json_in_html.py <output_html_path>", file=sys.stderr)
         sys.exit(1)
-    out = sys.argv[1]
-    plugin = sys.argv[2] if len(sys.argv)==3 else None
+    
+    out_path = sys.argv[1]
+    
+    # Plugin-funktionen är inte längre nödvändig eftersom logiken är integrerad.
+    # Vi kan förenkla main-funktionen avsevärt.
+    
     html_out = HTML
-    if plugin:
-        html_out = _apply_extension_plugin(html_out, plugin)
-    os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
-    with open(out, "w", encoding="utf-8") as f:
-        f.write(html_out)
+    
+    try:
+        os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
+        with open(out_path, "w", encoding="utf-8") as f:
+            f.write(html_out)
+        print(f"Successfully generated integrated HTML to {out_path}")
+    except Exception as e:
+        sys.stderr.write(f"Error writing to {out_path}: {e}\n")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
