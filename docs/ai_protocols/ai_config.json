@@ -3,7 +3,7 @@
   "golden_rules": [
     {
       "id": "GR1",
-      "title": "Fullständig kod, alltid",
+      "title": "Leverans av Nya Filer",
       "description": "All kod levereras som kompletta filer. Inga '...', trunkeringar eller automatiska avslut. Alla taggar skrivs ut i fullständig form.",
       "aliases": ["komplett kod", "inga punkter", "skriv ut allt", "inga förkortningar", "fullständig fil"]
     },
