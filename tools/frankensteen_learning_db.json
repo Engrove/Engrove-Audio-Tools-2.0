@@ -2572,6 +2572,30 @@
     }
   },
   {
+    "heuristicId": "H-20250811-08",
+    "trigger": {
+      "type": "session_start",
+      "scope": [
+        "*"
+      ],
+      "keywords": [
+        "debuggingCycles > 1 in previous session"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "RISK_USER_CONFIDENCE_EROSION",
+      "description": "Efter flera rundor av misslyckade korrigeringar kan användarens förtroende för nästa föreslagna lösning vara lågt, även om AI:n har hög tillförsikt."
+    },
+    "mitigation": {
+      "protocolId": "PROTOCOL_PROACTIVE_CONFIDENCE_BUILDING",
+      "description": "Föreslå proaktivt aktivering av `Help_me_God_Protokoll.md` för den slutgiltiga föreslagna lösningen efter en serie felsökningscykler. Detta fungerar som ett explicit, formellt verifieringssteg som återuppbygger förtroende och säkerställer att den slutgiltiga korrigeringen är exceptionellt robust."
+    },
+    "metadata": {
+      "originSessionId": "S-20250811-F",
+      "createdAt": "2025-08-11T11:45:00Z"
+    }
+  },
+  {
     "heuristicId": "H-20250811-01",
     "trigger": {
       "type": "intent_analysis",
