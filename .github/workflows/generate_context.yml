@@ -28,8 +28,6 @@ env:
   JSON_FILE: 'context.json'
   HTML_FILE: 'index.html'
   METADATA_FILE: 'metadata.json'
-  # Valfritt: injicera plugin (t.ex. Patch Center). Lämna tom om inget plugin ska bäddas in.
-  PLUGIN_PATH: 'scripts/plugins/patch_center.py'
 
 jobs:
   validate-and-build:
@@ -71,17 +69,12 @@ jobs:
             exit 1
           fi
 
-      - name: Create HTML Wrapper (optional plugin)
+      - name: Create HTML Wrapper (Integrated)
         id: create-html
         if: steps.generate-json.outputs.success == 'true'
         run: |
           set -e
-          if [ -n "${{ env.PLUGIN_PATH }}" ] && [ -f "${{ env.PLUGIN_PATH }}" ]; then
-            echo "Using plugin: ${{ env.PLUGIN_PATH }}"
-            python scripts/wrap_json_in_html.py "${{ env.SITE_DIR }}/${{ env.HTML_FILE }}" "${{ env.PLUGIN_PATH }}"
-          else
-            python scripts/wrap_json_in_html.py "${{ env.SITE_DIR }}/${{ env.HTML_FILE }}"
-          fi
+          python scripts/wrap_json_in_html.py "${{ env.SITE_DIR }}/${{ env.HTML_FILE }}"
           echo "success=true" >> "$GITHUB_OUTPUT"
 
       - name: Create Metadata
