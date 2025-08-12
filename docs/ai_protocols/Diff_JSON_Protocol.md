@@ -77,6 +77,7 @@
         - **`new_block`** (sträng, krävs för `replace_block`): Den nya texten som ska infogas.
         - **`new_content`** (sträng, krävs för `replace_entire_file`): Det nya, fullständiga filinnehållet.
 
-- **`result_sha256`** (sträng, valfri): SHA-256-hash. För framtida ändamål. Lämnas tom.
+- **`result_sha256`** (sträng, valfri): SHA-256-hashen av filen *efter* att alla operationer har applicerats. Används för verifiering.
+
 - **`meta`** (objekt, valfri): Innehåller metadata om patchen.
 ```
