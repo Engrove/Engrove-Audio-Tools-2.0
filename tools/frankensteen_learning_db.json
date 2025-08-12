@@ -497,42 +497,6 @@
     }
   },
   {
-    "heuristicId": "H-20250731-01",
-    "trigger": {
-      "type": "code_generation",
-      "scope": [
-        "vite.config.js",
-        "src/app/main.js",
-        "*.env*"
-      ],
-      "keywords": [
-        "debug",
-        "env",
-        "mode",
-        "initialize",
-        "pinia",
-        "plugin"
-      ]
-    },
-    "identifiedRisk": {
-      "riskId": "ENV_CONFIG_ASSUMPTION",
-      "description": "AI assumes build-time environment variables or framework initializations will work as documented without verifying the specific project configuration, leading to non-functional code that is difficult to debug."
-    },
-    "mitigation": {
-      "protocolId": "PSV-MIT-ENV-CHECK",
-      "description": "Before using environment variables (e.g., import.meta.env) or framework plugins (e.g., Pinia), explicitly ask the user to provide the contents of the relevant configuration files (vite.config.js, main.js) and deployment environment settings for verification."
-    },
-    "metadata": {
-      "originSessionId": "13",
-      "createdAt": "2025-07-31T21:00:00Z",
-      "status": "active",
-      "sourceLogFiles": [
-        "docs/ByggLogg.json",
-        "docs/Chatthistorik.json"
-      ]
-    }
-  },
-  {
     "heuristicId": "H-20250808-01",
     "trigger": {
       "type": "debugging_cycle",
@@ -657,37 +621,6 @@
     "metadata": {
       "originSessionId": "17",
       "createdAt": "2025-08-02T18:00:00Z",
-      "status": "active",
-      "sourceLogFiles": [
-        "docs/ByggLogg.json",
-        "docs/Chatthistorik.json"
-      ]
-    }
-  },
-  {
-    "heuristicId": "H-20250803-01",
-    "trigger": {
-      "type": "file_generation",
-      "scope": [
-        "*.json"
-      ],
-      "keywords": [
-        "json",
-        "comment",
-        "syntax"
-      ]
-    },
-    "identifiedRisk": {
-      "riskId": "INVALID_JSON_GENERATION",
-      "description": "AI-modellen kan generera JSON-filer som innehåller kommentarer, vilket gör dem ogiltiga och orsakar parser-fel i efterföljande system."
-    },
-    "mitigation": {
-      "protocolId": "PSV-LINT-01",
-      "description": "Före leverans av en JSON-fil, simulera en linter-pass som specifikt verifierar att inga kommentarer (// eller /* */) finns i filen. Om kommentarer upptäcks, ta bort dem automatiskt och logga en intern varning om självkorrigering."
-    },
-    "metadata": {
-      "originSessionId": "18",
-      "createdAt": "2025-08-03T23:59:59Z",
       "status": "active",
       "sourceLogFiles": [
         "docs/ByggLogg.json",
@@ -1512,39 +1445,6 @@
   {
     "heuristicId": "H-20250809-01",
     "trigger": {
-      "type": "crawler_mediawiki_redirect_and_taxonomy",
-      "scope": [
-        "generic_crawler_v3_8.py",
-        "ScrapingProfile.v3_8.json"
-      ],
-      "keywords": [
-        "force_https",
-        "allow_redirects=False",
-        "Kategorie:Tonabnehmer",
-        "Category:Cartridges",
-        "WDQS SPARQL"
-      ]
-    },
-    "identifiedRisk": {
-      "riskId": "MEDIAWIKI_HTTP_DOWNGRADE_AND_CATEGORY_MISMATCH",
-      "description": "MediaWiki-instans på .de svarar med 301 till http och annan språklig kategori-titel; naiv klient följer redirect och/eller frågar fel kategori, vilket ger 0 sidor."
-    },
-    "mitigation": {
-      "protocolId": "PSV-MIT-HTTPS-I18N-CAT",
-      "description": "1) Blockera http-downgrade, återförsök med strikt https. 2) Språkmedveten kategori-upplösning (de:Kategorie X ↔ en:Category Y) via konfig eller auto-detektion av 'siteinfo.lang'. 3) WDQS-fråga med explicit P31/P279* och label-service på begärda språk."
-    },
-    "metadata": {
-      "originSessionId": "33",
-      "createdAt": "2025-08-09T09:12:00Z",
-      "status": "active",
-      "sourceLogFiles": [
-        "logs/crawler.txt"
-      ]
-    }
-  },
-  {
-    "heuristicId": "H-20250809-01",
-    "trigger": {
       "type": "bug_fix_delivery",
       "scope": [
         "*"
@@ -1573,35 +1473,6 @@
     }
   },
   {
-    "heuristicId": "H-20250809-02",
-    "trigger": {
-      "type": "response_generation",
-      "scope": [
-        "*"
-      ],
-      "keywords": [
-        "här är filen",
-        "levererar nu koden"
-      ]
-    },
-    "identifiedRisk": {
-      "riskId": "RISK_PROMISED_CODE_OMISSION",
-      "description": "Risken att AI:n beskriver en lösning och lovar att leverera kod, men sedan misslyckas med att inkludera själva kodblocket i sitt slutgiltiga svar."
-    },
-    "mitigation": {
-      "protocolId": "PSV-MIT-DELIVERY-VERIFICATION",
-      "description": "Som ett sista, obligatoriskt steg i PSV-processen, verifiera att ett komplett kodblock faktiskt existerar i svaret om ett sådant har utlovats."
-    },
-    "metadata": {
-      "originSessionId": "34",
-      "createdAt": "2025-08-09T08:15:00Z",
-      "status": "active",
-      "sourceLogFiles": [
-        "docs/ByggLogg.json"
-      ]
-    }
-  },
-  {
     "heuristicId": "H-20250809-03",
     "trigger": {
       "type": "tool_code_generation",
@@ -1619,63 +1490,6 @@
     "mitigation": {
       "protocolId": "PSV-MIT-TOOLCODE-VALIDATION",
       "description": "Före leverans måste `tool_code`-blockets innehåll vara 100% ren, direkt exekverbar Python-kod. All förklarande text måste placeras utanför blocket."
-    },
-    "metadata": {
-      "originSessionId": "34",
-      "createdAt": "2025-08-09T08:15:00Z",
-      "status": "active",
-      "sourceLogFiles": [
-        "docs/ByggLogg.json"
-      ]
-    }
-  },
-  {
-    "heuristicId": "H-20250809-04",
-    "trigger": {
-      "type": "code_generation",
-      "scope": [
-        "*"
-      ],
-      "keywords": [
-        "if __name__ == \"__main__\"",
-        "sys.argv"
-      ]
-    },
-    "identifiedRisk": {
-      "riskId": "RISK_SCRIPT_EXECUTION_IN_SNIPPET_ENV",
-      "description": "Risken att försöka exekvera ett skript som kräver kommandoradsargument i en miljö som inte tillhandahåller dem."
-    },
-    "mitigation": {
-      "protocolId": "PSV-MIT-OUTPUT_VS_EXECUTE",
-      "description": "Om syftet är att leverera innehållet i en skriptfil, måste hela skriptets text alltid kapslas in i ett `print()`-anrop som en multiline-sträng. Skriptet ska visas som output, inte exekveras."
-    },
-    "metadata": {
-      "originSessionId": "34",
-      "createdAt": "2025-08-09T08:15:00Z",
-      "status": "active",
-      "sourceLogFiles": [
-        "docs/ByggLogg.json"
-      ]
-    }
-  },
-  {
-    "heuristicId": "H-20250809-05",
-    "trigger": {
-      "type": "tool_code_generation",
-      "scope": [
-        "*"
-      ],
-      "keywords": [
-        "print(\"\"\""
-      ]
-    },
-    "identifiedRisk": {
-      "riskId": "RISK_NESTED_QUOTES_IN_LITERAL",
-      "description": "Risken att använda `print(\"\"\"...\"\"\")` för att skriva ut innehåll som självt innehåller `\"\"\"`, vilket orsakar ett `SyntaxError`."
-    },
-    "mitigation": {
-      "protocolId": "PSV-MIT-SAFE_STRING_ASSIGNMENT",
-      "description": "För att skriva ut en fil, måste innehållet först tilldelas till en variabel med hjälp av triple-quotes. Därefter ska variabeln skrivas ut. `script_content = ''''...''''; print(script_content)`."
     },
     "metadata": {
       "originSessionId": "34",
@@ -1781,39 +1595,6 @@
       "sourceLogFiles": [
         "docs/ByggLogg.json",
         "docs/Chatthistorik.json"
-      ]
-    }
-  },
-  {
-    "heuristicId": "H-20250809-01",
-    "trigger": {
-      "type": "crawler_mediawiki_redirect_and_taxonomy",
-      "scope": [
-        "generic_crawler_v3_8.py",
-        "ScrapingProfile.v3_8.json"
-      ],
-      "keywords": [
-        "force_https",
-        "allow_redirects=False",
-        "Kategorie:Tonabnehmer",
-        "Category:Cartridges",
-        "WDQS SPARQL"
-      ]
-    },
-    "identifiedRisk": {
-      "riskId": "MEDIAWIKI_HTTP_DOWNGRADE_AND_CATEGORY_MISMATCH",
-      "description": "MediaWiki-instans på .de svarar med 301 till http och annan språklig kategori-titel; naiv klient följer redirect och/eller frågar fel kategori, vilket ger 0 sidor."
-    },
-    "mitigation": {
-      "protocolId": "PSV-MIT-HTTPS-I18N-CAT",
-      "description": "1) Blockera http-downgrade, återförsök med strikt https. 2) Språkmedveten kategori-upplösning (de:Kategorie X ↔ en:Category Y) via konfig eller auto-detektion av 'siteinfo.lang'. 3) WDQS-fråga med explicit P31/P279* och label-service på begärda språk."
-    },
-    "metadata": {
-      "originSessionId": "33",
-      "createdAt": "2025-08-09T09:12:00Z",
-      "status": "active",
-      "sourceLogFiles": [
-        "logs/crawler.txt"
       ]
     }
   },
@@ -2093,36 +1874,6 @@
     "metadata": {
       "originSessionId": "43",
       "createdAt": "2025-08-09T22:58:32Z",
-      "status": "active",
-      "sourceLogFiles": [
-        "docs/Chatthistorik.json"
-      ]
-    }
-  },
-  {
-    "heuristicId": "H-20250809-24",
-    "trigger": {
-      "type": "file_generation",
-      "scope": [
-        "*.json"
-      ],
-      "keywords": [
-        "json",
-        "comment",
-        "schema"
-      ]
-    },
-    "identifiedRisk": {
-      "riskId": "RISK_INVALID_JSON_SYNTAX_COMMENTS",
-      "description": "Risken att oavsiktligt inkludera kommentarer i en JSON-fil, vilket gör den ogiltig och orsakar tysta fel i automatiserade pipelines."
-    },
-    "mitigation": {
-      "protocolId": "PSV-MIT-LINT-JSON",
-      "description": "Före leverans av någon `.json`-fil måste en obligatorisk linter-simulering genomföras för att verifiera och ta bort alla förekomster av `//` och `/* */`."
-    },
-    "metadata": {
-      "originSessionId": "44",
-      "createdAt": "2025-08-09T23:15:00Z",
       "status": "active",
       "sourceLogFiles": [
         "docs/Chatthistorik.json"
@@ -2639,7 +2390,7 @@
     },
     "identifiedRisk": {
       "riskId": "context_desync_file_state",
-      "description": "Risken att AI:n agerar på en föråldrad mental modell av filsystemet och felaktigt antar att en fil inte existerar, vilket leder till onödigt arbete och felaktiga planer."
+      "description": "Risken att AI:n agerar på en förårad mental modell av filsystemet och felaktigt antar att en fil inte existerar, vilket leder till onödigt arbete och felaktiga planer."
     },
     "mitigation": {
       "protocolId": "Levande_Kontext_Protokoll.md",
@@ -2715,6 +2466,37 @@
       "sourceLogFiles": [
         "docs/ByggLogg.json",
         "docs/Chatthistorik.json"
+      ]
+    }
+  },
+  {
+    "heuristicId": "H-20250812-01",
+    "trigger": {
+      "type": "tool_code_generation",
+      "scope": [
+        "*"
+      ],
+      "keywords": [
+        "print",
+        "script",
+        "file content"
+      ]
+    },
+    "identifiedRisk": {
+      "riskId": "RISK_UNSAFE_FILE_CONTENT_PRINTING",
+      "description": "Risken att direkt exekvera ett skript eller orsaka syntaxfel vid försök att skriva ut filinnehåll som innehåller specialtecken eller kräver kommandoradsargument."
+    },
+    "mitigation": {
+      "protocolId": "PSV-MIT-SAFE_STRING_ASSIGNMENT",
+      "description": "Vid utskrift av filinnehåll via `tool_code`, tilldela alltid innehållet till en variabel med trippla citattecken och skriv sedan ut variabeln. Detta förhindrar både oavsiktlig exekvering och syntaxfel."
+    },
+    "metadata": {
+      "originSessionId": "S-20250812-A",
+      "createdAt": "2025-08-12T02:05:00Z",
+      "status": "active",
+      "consolidates": [
+        "H-20250809-04",
+        "H-20250809-05"
       ]
     }
   }
