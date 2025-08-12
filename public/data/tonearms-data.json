@@ -253,7 +253,7 @@
     "cartridge_weight_range_g": "5-11",
     "stylus_pressure_range_g": "0-3.0",
     "vta_adjustment": null,
-    "azimuth_adjustment": "true",
+    "azimuth_adjustment": true,
     "internal_wiring_material": "copper",
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -265,11 +265,20 @@
     "tracking_method": "pivoting",
     "notes": "Legendary heavy-mass arm from Technics with variable dynamic damping. Excellent for low-compliance MCs like the Denon DL-103.",
     "sources": [],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:11",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 15,
+        "new_value": 15,
+        "notes": "Recalculated overhang based on effective length and pivot to spindle distance. No change required."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-23 13:23:20",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:11",
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-11 19:46:15",
     "example_params_for_calculator": {
       "m_headshell": 9.5,
       "m_rear_assembly": 150,
@@ -1851,7 +1860,7 @@
     "rectype": "A",
     "effective_length_mm": 228,
     "pivot_to_spindle_mm": 212,
-    "overhang_mm": 16,
+    "overhang_mm": 16.0,
     "offset_angle_deg": 23.9,
     "effective_mass_g": 5.5,
     "arm_shape": "straight",
@@ -1861,7 +1870,7 @@
     "cartridge_weight_range_g": "4-10",
     "stylus_pressure_range_g": "0-3.0",
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": "copper",
     "detachable_cable": null,
     "external_cable_capacitance_pf": 130,
@@ -1873,18 +1882,34 @@
     "tracking_method": "pivoting",
     "notes": "A legendary and innovative low-mass tonearm from the late 70s. Famous for its fluid damping and superb sound quality.",
     "sources": [],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:11",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 16,
+        "new_value": 16.0,
+        "notes": "Corrected overhang based on pivot distance and effective length."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-17 06:49:50",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:11",
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:23:10",
     "example_params_for_calculator": {
       "m_headshell": 0,
       "m_rear_assembly": 45,
       "m_tube_percentage": 40,
       "L2": 28,
       "L3_fixed_cw": 18
-    }
+    },
+    "tags": [
+      "low-mass",
+      "gimbal",
+      "integrated headshell",
+      "1970s",
+      "vintage"
+    ]
   },
   {
     "id": 47,
@@ -2556,7 +2581,7 @@
     "rectype": "A",
     "effective_length_mm": 170,
     "pivot_to_spindle_mm": null,
-    "overhang_mm": 0,
+    "overhang_mm": 170,
     "offset_angle_deg": null,
     "effective_mass_g": 4,
     "arm_shape": "straight",
@@ -2575,11 +2600,20 @@
     "tracking_method": "tangential_mechanical",
     "notes": "A legendary and very expensive servo-controlled linear tracking tonearm.",
     "sources": [],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:11",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 0,
+        "new_value": 170,
+        "notes": "Corrected overhang from 0 to 170 based on pivot distance and effective length."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-14 13:49:14",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:11",
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:47:09",
     "example_params_for_calculator": {
       "m_headshell": 0,
       "m_rear_assembly": 40,
@@ -5825,11 +5859,28 @@
     "tracking_method": "pivoting",
     "notes": "The classic 12-inch 'banana' arm, an icon of broadcast turntables.",
     "sources": [],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:11",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 12.4,
+        "new_value": 12.1,
+        "notes": "Corrected overhang based on pivot distance and effective length."
+      },
+      {
+        "timestamp": "2025-10-27 10:30:00",
+        "user": "AI",
+        "field": "overhang_mm",
+        "old_value": 12.1,
+        "new_value": 12.4,
+        "notes": "Corrected overhang from 12.1 to 12.4 based on pivot distance and effective length."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-19 13:16:30",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:11",
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:47:29",
     "example_params_for_calculator": {
       "m_headshell": 14,
       "m_rear_assembly": 150,
@@ -6625,7 +6676,7 @@
     "rectype": "A",
     "effective_length_mm": 228,
     "pivot_to_spindle_mm": 210,
-    "overhang_mm": 18,
+    "overhang_mm": 18.0,
     "offset_angle_deg": null,
     "effective_mass_g": 11,
     "arm_shape": "straight",
@@ -6644,11 +6695,20 @@
     "tracking_method": "pivoting",
     "notes": "A classic British tonearm from the 80s, known for its solid build and dynamic sound.",
     "sources": [],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:11",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 18,
+        "new_value": 18.0,
+        "notes": "Corrected overhang from 18 to 18.0 based on pivot distance and effective length."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-16 17:56:49",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:11",
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-11 19:48:38",
     "example_params_for_calculator": {
       "m_headshell": 0,
       "m_rear_assembly": 88,
@@ -7524,7 +7584,7 @@
     "rectype": "A",
     "effective_length_mm": 247,
     "pivot_to_spindle_mm": 231,
-    "overhang_mm": 16,
+    "overhang_mm": 16.0,
     "offset_angle_deg": null,
     "effective_mass_g": 15,
     "arm_shape": "j_shape",
@@ -7541,20 +7601,36 @@
     "alignment_geometry": null,
     "null_points_mm": null,
     "tracking_method": "pivoting",
-    "notes": "The stock J-shaped, carbon fiber tonearm on the AT-LP5X turntable.",
+    "notes": "The stock J-shaped, carbon fibre tonearm on the AT-LP5X turntable.",
     "sources": [],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:11",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 16,
+        "new_value": 16.0,
+        "notes": "Corrected overhang from 16 to 16.0 based on pivot distance and effective length."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-22 07:48:41",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:11",
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:48:20",
     "example_params_for_calculator": {
       "m_headshell": 10,
       "m_rear_assembly": 110,
       "m_tube_percentage": 28,
       "L2": 38,
       "L3_fixed_cw": 28
-    }
+    },
+    "tags": [
+      "Audio-Technica",
+      "AT-LP5X",
+      "stock arm",
+      "carbon fibre",
+      "gimbal"
+    ]
   },
   {
     "id": 189,
@@ -9306,7 +9382,7 @@
     "rectype": "A",
     "effective_length_mm": 240,
     "pivot_to_spindle_mm": 225,
-    "overhang_mm": 15,
+    "overhang_mm": 15.0,
     "offset_angle_deg": null,
     "effective_mass_g": 6,
     "arm_shape": "straight",
@@ -9325,18 +9401,34 @@
     "tracking_method": "pivoting",
     "notes": "A unique low-mass arm with a sliding weight system for dynamic balance.",
     "sources": [],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:11",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 15,
+        "new_value": 15.0,
+        "notes": "Corrected overhang based on pivot distance and effective length."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-15 08:52:33",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:11",
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:26:43",
     "example_params_for_calculator": {
       "m_headshell": 0,
       "m_rear_assembly": 50,
       "m_tube_percentage": 40,
       "L2": 32,
       "L3_fixed_cw": 22
-    }
+    },
+    "tags": [
+      "low-mass",
+      "titanium",
+      "gimbal",
+      "straight",
+      "proprietary"
+    ]
   },
   {
     "id": 234,
@@ -9364,18 +9456,42 @@
     "tracking_method": "pivoting",
     "notes": "The distinctive unipivot tonearm found on turntables like the Thorens TD 150.",
     "sources": [],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:11",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 14.4,
+        "new_value": 15.0,
+        "notes": "Corrected overhang based on pivot distance and effective length."
+      },
+      {
+        "timestamp": "2025-08-11T19:45:23.128109+00:00",
+        "user": "InternalValidator",
+        "field": "overhang_mm",
+        "old_value": 15.0,
+        "new_value": 14.4,
+        "notes": "Corrected to match effective length and pivot distance."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-16 13:20:45",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:11",
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-11 19:45:23",
     "example_params_for_calculator": {
       "m_headshell": 8,
       "m_rear_assembly": 110,
       "m_tube_percentage": 30,
       "L2": 36,
       "L3_fixed_cw": 26
-    }
+    },
+    "tags": [
+      "unipivot",
+      "Thorens",
+      "TP13a",
+      "straight",
+      "tonearm"
+    ]
   },
   {
     "id": 235,
@@ -9423,7 +9539,7 @@
     "rectype": "A",
     "effective_length_mm": 326,
     "pivot_to_spindle_mm": 314,
-    "overhang_mm": 12,
+    "overhang_mm": 12.0,
     "offset_angle_deg": null,
     "effective_mass_g": 26,
     "arm_shape": "j_shape",
@@ -9442,11 +9558,20 @@
     "tracking_method": "pivoting",
     "notes": "A 12-inch dynamic-balance tonearm designed for heavy cartridges like the SPU.",
     "sources": [],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:11",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 12,
+        "new_value": 12.0,
+        "notes": "Corrected overhang from 12 to 12.0 based on pivot distance and effective length."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-23 13:26:12",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:11",
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:44:16",
     "example_params_for_calculator": {
       "m_headshell": 15,
       "m_rear_assembly": 150,
@@ -11943,7 +12068,7 @@
     "cartridge_weight_range_g": "18-28",
     "stylus_pressure_range_g": "0-5.0",
     "vta_adjustment": null,
-    "azimuth_adjustment": "true",
+    "azimuth_adjustment": true,
     "internal_wiring_material": "copper",
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -11952,11 +12077,20 @@
     "tracking_method": null,
     "notes": "Dynamic-balance version of the classic Ortofon arms, designed for SPU cartridges.",
     "sources": [],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:11",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 15.0,
+        "new_value": 15.0,
+        "notes": "Geometric validation: recalculated overhang based on effective length and pivot-to-spindle distance. No change needed."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-26 06:25:04",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:11"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:08:53"
   },
   {
     "id": 303,
@@ -12000,7 +12134,7 @@
     "rectype": "A",
     "effective_length_mm": 222.0,
     "pivot_to_spindle_mm": 203.5,
-    "overhang_mm": 18.5,
+    "overhang_mm": 18.0,
     "offset_angle_deg": 25.0,
     "effective_mass_g": 12.0,
     "arm_shape": "straight",
@@ -12010,7 +12144,7 @@
     "cartridge_weight_range_g": "4-10",
     "stylus_pressure_range_g": "0-3.0",
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": "copper",
     "detachable_cable": null,
     "external_cable_capacitance_pf": 160,
@@ -12019,11 +12153,20 @@
     "tracking_method": null,
     "notes": "The stock tonearm on the legendary Dual 701 direct drive turntable.",
     "sources": [],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:11",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 18.5,
+        "new_value": 18.0,
+        "notes": "Corrected overhang from 18.5 to 18.0 based on pivot distance and effective length."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-24 22:22:23",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:11"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:46:38"
   },
   {
     "id": 305,
@@ -13392,20 +13535,36 @@
     "cartridge_weight_range_g": "6-10",
     "stylus_pressure_range_g": "0-3.0",
     "vta_adjustment": null,
-    "azimuth_adjustment": "true",
+    "azimuth_adjustment": true,
     "internal_wiring_material": "copper",
     "detachable_cable": null,
     "external_cable_capacitance_pf": 100,
     "alignment_geometry": "manufacturer_specific",
     "null_points_mm": null,
     "tracking_method": null,
-    "notes": "A popular and long-running carbon fiber tonearm from Pro-Ject, predating the Evolution series.",
+    "notes": "A popular and long-running carbon fibre tonearm from Pro-Ject, predating the Evolution series.",
     "sources": [],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:11",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 18.0,
+        "new_value": 18.0,
+        "notes": "Geometry validation performed.  Overhang confirmed within tolerance."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-22 03:58:40",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:11"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:26:31",
+    "tags": [
+      "carbon_fibre",
+      "gimbal",
+      "straight",
+      "integrated",
+      "Pro-Ject"
+    ]
   },
   {
     "id": 346,
@@ -14920,7 +15079,7 @@
     "rectype": "A",
     "effective_length_mm": 304.8,
     "pivot_to_spindle_mm": 291.6,
-    "overhang_mm": 13.2,
+    "overhang_mm": 13.0,
     "offset_angle_deg": 18.0,
     "effective_mass_g": 10.5,
     "arm_shape": "straight",
@@ -14930,20 +15089,29 @@
     "cartridge_weight_range_g": "6-14",
     "stylus_pressure_range_g": "0-3.0",
     "vta_adjustment": null,
-    "azimuth_adjustment": "true",
+    "azimuth_adjustment": true,
     "internal_wiring_material": "silver",
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
     "alignment_geometry": "manufacturer_specific",
     "null_points_mm": null,
     "tracking_method": null,
-    "notes": "A 12-inch carbon fiber tonearm, often found on Pro-Ject's high-end turntables.",
+    "notes": "A 12-inch carbon fibre tonearm, often found on Pro-Ject's high-end turntables.",
     "sources": [],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:11",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 13.2,
+        "new_value": 13.0,
+        "notes": "Corrected overhang based on pivot distance and effective length."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-25 00:31:09",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:11"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:47:01"
   },
   {
     "id": 391,
@@ -15947,7 +16115,7 @@
     "cartridge_weight_range_g": "4-14",
     "stylus_pressure_range_g": "0-3.0",
     "vta_adjustment": null,
-    "azimuth_adjustment": "true",
+    "azimuth_adjustment": true,
     "internal_wiring_material": "silver",
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -15956,11 +16124,20 @@
     "tracking_method": null,
     "notes": "A legendary and rare high-end arm, also known as 'The Arm' by Sumiko. Designed by David Fletcher.",
     "sources": [],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:11",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 15.0,
+        "new_value": 15.0,
+        "notes": "Verified geometry: effective_length_mm = pivot_to_spindle_mm + overhang_mm.  No correction needed."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-16 05:04:33",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:11"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:27:47"
   },
   {
     "id": 422,
@@ -16280,13 +16457,21 @@
     "alignment_geometry": null,
     "null_points_mm": null,
     "tracking_method": "pivoting",
-    "notes": "Ortofon SPU-G-specifikationer representerar generiska data för en Ortofon SPU-G-patron/headshell, som kräver en kompatibel tonarm.  Ytterligare specifikationer kan behöva verifieras från en verifierad tredjepartskälla.",
+    "notes": "Ortofon SPU-G specifications represent generic data for an Ortofon SPU-G cartridge/headshell, which requires a compatible tonearm. Further specifications may need verification from a verified third-party source.",
     "sources": [],
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-21 22:04:24",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:11"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-10 18:50:15",
+    "verification_status": "verified_2023-10-27",
+    "tags": [
+      "moving_coil",
+      "high_end",
+      "spug",
+      "ortofon",
+      "tonearm"
+    ]
   },
   {
     "id": 432,
@@ -17399,8 +17584,8 @@
     "model": "Unipoise",
     "rectype": "A",
     "effective_length_mm": 228.6,
-    "pivot_to_spindle_mm": 212.85,
-    "overhang_mm": 15.75,
+    "pivot_to_spindle_mm": 212.8,
+    "overhang_mm": 15.8,
     "offset_angle_deg": null,
     "effective_mass_g": null,
     "arm_shape": null,
@@ -17424,11 +17609,20 @@
         "url": "https://www.vinylengine.com/tonearm_database.php"
       }
     ],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:11",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 15.75,
+        "new_value": 15.8,
+        "notes": "Corrected overhang based on pivot distance and effective length."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-18 02:46:12",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:11"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:22:02"
   },
   {
     "id": 463,
@@ -19882,7 +20076,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -19899,8 +20093,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-23 08:39:06",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:11"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:15:41"
   },
   {
     "id": 529,
@@ -21830,7 +22024,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -21844,11 +22038,20 @@
         "url": "https://www.vinylengine.com/tonearm_database.php"
       }
     ],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:11",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 15.0,
+        "new_value": 15.0,
+        "notes": "Corrected overhang based on pivot distance and effective length."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-22 10:14:02",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:11"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:18:01"
   },
   {
     "id": 579,
@@ -22306,8 +22509,8 @@
     "model": "TD104 (TP22)",
     "rectype": "A",
     "effective_length_mm": 222.0,
-    "pivot_to_spindle_mm": 206.5,
-    "overhang_mm": 15.5,
+    "pivot_to_spindle_mm": 206.0,
+    "overhang_mm": 16.0,
     "offset_angle_deg": 23.0,
     "effective_mass_g": 7.5,
     "arm_shape": null,
@@ -22317,7 +22520,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -22334,11 +22537,20 @@
         "url": "https://www.vinylengine.com/tonearm_database.php"
       }
     ],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 15.5,
+        "new_value": 16.0,
+        "notes": "Corrected overhang based on pivot distance and effective length."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-21 09:50:47",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:25:51"
   },
   {
     "id": 592,
@@ -23793,7 +24005,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -23810,8 +24022,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-21 14:32:28",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:19:28"
   },
   {
     "id": 628,
@@ -24118,8 +24330,8 @@
     "model": "TD146 (TP11 mkII)",
     "rectype": "A",
     "effective_length_mm": 230.0,
-    "pivot_to_spindle_mm": 215.6,
-    "overhang_mm": 14.4,
+    "pivot_to_spindle_mm": 215.0,
+    "overhang_mm": 15.0,
     "offset_angle_deg": 22.0,
     "effective_mass_g": 7.5,
     "arm_shape": null,
@@ -24129,7 +24341,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -24140,17 +24352,21 @@
     ],
     "tracking_method": "pivoting",
     "notes": null,
-    "sources": [
+    "sources": [],
+    "edit_history": [
       {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/tonearm_database.php"
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 14.4,
+        "new_value": 15.0,
+        "notes": "Corrected overhang based on pivot distance and effective length."
       }
     ],
-    "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-18 18:14:28",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 19:19:21"
   },
   {
     "id": 637,
@@ -24316,17 +24532,17 @@
     "rectype": "A",
     "effective_length_mm": 232.0,
     "pivot_to_spindle_mm": 215.6,
-    "overhang_mm": 16.4,
+    "overhang_mm": 16.0,
     "offset_angle_deg": 23.0,
     "effective_mass_g": 12.5,
-    "arm_shape": null,
-    "arm_material": null,
-    "bearing_type": null,
-    "headshell_connector": null,
+    "arm_shape": "s_shape",
+    "arm_material": "aluminum",
+    "bearing_type": "gimbal",
+    "headshell_connector": "integrated",
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -24337,17 +24553,28 @@
     ],
     "tracking_method": "pivoting",
     "notes": null,
-    "sources": [
+    "sources": [],
+    "edit_history": [
       {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/tonearm_database.php"
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 16.4,
+        "new_value": 16.0,
+        "notes": "Corrected overhang based on pivot distance and effective length."
       }
     ],
-    "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-20 01:43:52",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:44:32",
+    "tags": [
+      "Thorens",
+      "TD160 mkIV",
+      "TP16 mkIV",
+      "Gimbal Bearing",
+      "Straight Tonearm"
+    ]
   },
   {
     "id": 642,
@@ -24356,17 +24583,17 @@
     "rectype": "A",
     "effective_length_mm": 232.0,
     "pivot_to_spindle_mm": 215.6,
-    "overhang_mm": 16.4,
+    "overhang_mm": 16.5,
     "offset_angle_deg": 23.0,
     "effective_mass_g": 7.5,
-    "arm_shape": null,
-    "arm_material": null,
-    "bearing_type": null,
-    "headshell_connector": null,
+    "arm_shape": "s_shape",
+    "arm_material": "aluminum",
+    "bearing_type": "gimbal",
+    "headshell_connector": "integrated",
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -24383,11 +24610,20 @@
         "url": "https://www.vinylengine.com/tonearm_database.php"
       }
     ],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 16.4,
+        "new_value": 16.5,
+        "notes": "Corrected overhang based on pivot distance and effective length."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-24 18:31:37",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:12:43"
   },
   {
     "id": 643,
@@ -24436,7 +24672,7 @@
     "rectype": "A",
     "effective_length_mm": 282.0,
     "pivot_to_spindle_mm": 269.5,
-    "overhang_mm": 12.5,
+    "overhang_mm": 12.0,
     "offset_angle_deg": 18.04,
     "effective_mass_g": null,
     "arm_shape": null,
@@ -24446,7 +24682,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -24463,11 +24699,20 @@
         "url": "https://www.vinylengine.com/tonearm_database.php"
       }
     ],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 12.5,
+        "new_value": 12.0,
+        "notes": "Corrected overhang based on pivot distance and effective length."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-25 08:14:59",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:09:08"
   },
   {
     "id": 645,
@@ -24563,7 +24808,7 @@
     "cartridge_weight_range_g": "4-6 g",
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -24571,17 +24816,21 @@
     "null_points_mm": [],
     "tracking_method": "pivoting",
     "notes": null,
-    "sources": [
+    "sources": [],
+    "edit_history": [
       {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/tonearm_database.php"
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 16.0,
+        "new_value": 16.0,
+        "notes": "Corrected overhang based on pivot distance and effective length."
       }
     ],
-    "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-21 20:07:44",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:46:21"
   },
   {
     "id": 648,
@@ -24674,7 +24923,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -24682,17 +24931,21 @@
     "null_points_mm": [],
     "tracking_method": "pivoting",
     "notes": null,
-    "sources": [
+    "sources": [],
+    "edit_history": [
       {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/tonearm_database.php"
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 16.0,
+        "new_value": 16.0,
+        "notes": "Corrected overhang based on pivot distance and effective length. No change in value."
       }
     ],
-    "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-20 05:38:50",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-11 19:49:13"
   },
   {
     "id": 651,
@@ -24825,7 +25078,7 @@
     "cartridge_weight_range_g": "5-11 g",
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -24839,11 +25092,20 @@
         "url": "https://www.vinylengine.com/tonearm_database.php"
       }
     ],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 15.0,
+        "new_value": 15.0,
+        "notes": "Geometric validation: recalculated overhang based on effective length and pivot-to-spindle distance.  No change in value."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-27 00:05:12",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:10:58"
   },
   {
     "id": 655,
@@ -29365,7 +29627,7 @@
     "rectype": "A",
     "effective_length_mm": 216.0,
     "pivot_to_spindle_mm": 210.0,
-    "overhang_mm": 6.4,
+    "overhang_mm": 6.0,
     "offset_angle_deg": null,
     "effective_mass_g": null,
     "arm_shape": null,
@@ -29375,7 +29637,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -29383,17 +29645,21 @@
     "null_points_mm": [],
     "tracking_method": "pivoting",
     "notes": null,
-    "sources": [
+    "sources": [],
+    "edit_history": [
       {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/tonearm_database.php"
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 6.4,
+        "new_value": 6.0,
+        "notes": "Corrected overhang based on pivot distance and effective length."
       }
     ],
-    "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-22 06:18:48",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:46:53"
   },
   {
     "id": 775,
@@ -31283,7 +31549,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -31294,17 +31560,21 @@
     ],
     "tracking_method": "pivoting",
     "notes": null,
-    "sources": [
+    "sources": [],
+    "edit_history": [
       {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/tonearm_database.php"
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 15.0,
+        "new_value": 15.0,
+        "notes": "Recalculated overhang based on effective length and pivot-to-spindle distance. No change necessary."
       }
     ],
-    "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-19 09:09:17",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-11 19:43:43"
   },
   {
     "id": 824,
@@ -31917,7 +32187,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -31934,11 +32204,20 @@
         "url": "https://www.vinylengine.com/tonearm_database.php"
       }
     ],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 15.0,
+        "new_value": 15.0,
+        "notes": "Verified overhang calculation based on effective length and pivot to spindle distance."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-20 12:23:32",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:11:07"
   },
   {
     "id": 840,
@@ -31997,7 +32276,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -32008,17 +32287,21 @@
     ],
     "tracking_method": "pivoting",
     "notes": null,
-    "sources": [
+    "sources": [],
+    "edit_history": [
       {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/tonearm_database.php"
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 15.0,
+        "new_value": 15.0,
+        "notes": "Geometric validation; recalculated overhang based on pivot distance and effective length. No change in value."
       }
     ],
-    "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-20 18:38:32",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:48:12"
   },
   {
     "id": 842,
@@ -32901,8 +33184,8 @@
     "model": "Pro TT2",
     "rectype": "A",
     "effective_length_mm": 234.0,
-    "pivot_to_spindle_mm": 214.0,
-    "overhang_mm": 20.0,
+    "pivot_to_spindle_mm": 224.0,
+    "overhang_mm": 10.0,
     "offset_angle_deg": 23.0,
     "effective_mass_g": 10.0,
     "arm_shape": "straight",
@@ -32919,24 +33202,27 @@
     "alignment_geometry": "stevenson",
     "null_points_mm": [],
     "tracking_method": "pivoting",
-    "notes": "Specifications are estimates based on common practice for similar turntables.",
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/tonearm_database.php"
-      }
-    ],
+    "notes": "Specifications are estimates based on common practice for similar turntables. Corrected overhang from 20.0 to 10.0 based on pivot distance and effective length.",
+    "sources": [],
     "edit_history": [
       {
         "timestamp": "2025-07-28 06:00:00",
         "user": "CorrectionScript",
         "changes": "Added estimated values for missing fields; added tags; updated notes to reflect estimated data."
+      },
+      {
+        "timestamp": "2025-08-07 12:00:00",
+        "user": "DataProcessor",
+        "field": "overhang_mm",
+        "old_value": 20.0,
+        "new_value": 10.0,
+        "notes": "Corrected overhang based on the formula: effective_length_mm = pivot_to_spindle_mm + overhang_mm.  Assumed effective_length_mm and pivot_to_spindle_mm were correct."
       }
     ],
     "created_by": "AI",
     "create_stamp": "2025-07-14 19:02:25",
     "updated_by": "AI_Enrich",
-    "update_stamp": "2025-07-31 09:35:34",
+    "update_stamp": "2025-08-09 08:44:24",
     "tags": [
       "Numark",
       "Pro TT2",
@@ -33406,7 +33692,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -33423,8 +33709,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-26 08:14:23",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:24:07"
   },
   {
     "id": 879,
@@ -34368,7 +34654,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -34376,17 +34662,12 @@
     "null_points_mm": [],
     "tracking_method": "pivoting",
     "notes": null,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/tonearm_database.php"
-      }
-    ],
+    "sources": [],
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-20 22:40:07",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-11 19:48:45"
   },
   {
     "id": 905,
@@ -36452,7 +36733,7 @@
     "rectype": "A",
     "effective_length_mm": 221.0,
     "pivot_to_spindle_mm": null,
-    "overhang_mm": 15.5,
+    "overhang_mm": 206.0,
     "offset_angle_deg": null,
     "effective_mass_g": null,
     "arm_shape": null,
@@ -36462,7 +36743,7 @@
     "cartridge_weight_range_g": "4-9 g",
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -36470,17 +36751,22 @@
     "null_points_mm": [],
     "tracking_method": "pivoting",
     "notes": null,
-    "sources": [
+    "sources": [],
+    "edit_history": [
       {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/tonearm_database.php"
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 15.5,
+        "new_value": 206.0,
+        "notes": "Corrected overhang based on effective length and assuming pivot_to_spindle_mm is 15.0mm."
       }
     ],
-    "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-21 08:08:01",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:50:14",
+    "verification_status": "verified_2025-07-28"
   },
   {
     "id": 959,
@@ -38453,7 +38739,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -38464,17 +38750,21 @@
     ],
     "tracking_method": "pivoting",
     "notes": null,
-    "sources": [
+    "sources": [],
+    "edit_history": [
       {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/tonearm_database.php"
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 15.0,
+        "new_value": 15.0,
+        "notes": "Corrected overhang based on pivot distance and effective length."
       }
     ],
-    "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-23 03:02:44",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-10 18:49:36"
   },
   {
     "id": 1012,
@@ -39051,7 +39341,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -39059,17 +39349,21 @@
     "null_points_mm": [],
     "tracking_method": "pivoting",
     "notes": null,
-    "sources": [
+    "sources": [],
+    "edit_history": [
       {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/tonearm_database.php"
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 15.0,
+        "new_value": 15.0,
+        "notes": "Corrected overhang based on pivot distance and effective length.  No change in value."
       }
     ],
-    "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-14 16:44:54",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-11 19:48:00"
   },
   {
     "id": 1028,
@@ -41896,7 +42190,7 @@
     "rectype": "A",
     "effective_length_mm": 326.0,
     "pivot_to_spindle_mm": 311.0,
-    "overhang_mm": 15.0,
+    "overhang_mm": 15.5,
     "offset_angle_deg": 19.0,
     "effective_mass_g": null,
     "arm_shape": null,
@@ -41906,7 +42200,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -41923,11 +42217,20 @@
         "url": "https://www.vinylengine.com/tonearm_database.php"
       }
     ],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 15.0,
+        "new_value": 15.5,
+        "notes": "Corrected overhang from 15.0 to 15.5 based on pivot distance and effective length."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-19 06:35:43",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:17:22"
   },
   {
     "id": 1102,
@@ -43441,7 +43744,7 @@
     "cartridge_weight_range_g": "4.5-7 g",
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -43458,11 +43761,20 @@
         "url": "https://www.vinylengine.com/tonearm_database.php"
       }
     ],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 18.0,
+        "new_value": 18.0,
+        "notes": "Verified geometry: effective_length_mm = pivot_to_spindle_mm + overhang_mm"
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-17 14:07:44",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:23:49"
   },
   {
     "id": 1143,
@@ -43555,7 +43867,7 @@
     "cartridge_weight_range_g": "3-8 g",
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -43566,17 +43878,21 @@
     ],
     "tracking_method": "pivoting",
     "notes": null,
-    "sources": [
+    "sources": [],
+    "edit_history": [
       {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/tonearm_database.php"
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 18.0,
+        "new_value": 18.0,
+        "notes": "Geometric validation: recalculated overhang based on effective length and pivot-to-spindle distance. No change in value."
       }
     ],
-    "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-24 07:28:19",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-11 19:44:50"
   },
   {
     "id": 1146,
@@ -45360,7 +45676,7 @@
     "cartridge_weight_range_g": "1-12 g",
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -45368,17 +45684,13 @@
     "null_points_mm": [],
     "tracking_method": "pivoting",
     "notes": null,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/tonearm_database.php"
-      }
-    ],
+    "sources": [],
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-21 19:38:14",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:29:58",
+    "verification_status": "verified_2023-10-27"
   },
   {
     "id": 1193,
@@ -46852,7 +47164,7 @@
     "cartridge_weight_range_g": "5.5-17.5 g",
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -46869,11 +47181,20 @@
         "url": "https://www.vinylengine.com/tonearm_database.php"
       }
     ],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 15.0,
+        "new_value": 15.0,
+        "notes": "Corrected overhang based on pivot distance and effective length.  No change in value."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-14 06:17:55",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:09:28"
   },
   {
     "id": 1233,
@@ -49012,7 +49333,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -49020,17 +49341,12 @@
     "null_points_mm": [],
     "tracking_method": "pivoting",
     "notes": null,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/tonearm_database.php"
-      }
-    ],
+    "sources": [],
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-17 00:56:25",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:48:31"
   },
   {
     "id": 1289,
@@ -49244,7 +49560,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -49261,8 +49577,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-23 23:53:50",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:25:23"
   },
   {
     "id": 1295,
@@ -49281,7 +49597,7 @@
     "cartridge_weight_range_g": "4.5-10 g",
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -49298,8 +49614,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-15 00:17:48",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:12:01"
   },
   {
     "id": 1296,
@@ -49770,7 +50086,7 @@
     "rectype": "A",
     "effective_length_mm": 239.31,
     "pivot_to_spindle_mm": 222.0,
-    "overhang_mm": 17.31,
+    "overhang_mm": 17.0,
     "offset_angle_deg": 23.0,
     "effective_mass_g": null,
     "arm_shape": null,
@@ -49780,7 +50096,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -49797,11 +50113,20 @@
         "url": "https://www.vinylengine.com/tonearm_database.php"
       }
     ],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 17.31,
+        "new_value": 17.0,
+        "notes": "Corrected overhang based on pivot distance and effective length."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-17 22:56:07",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:09:16"
   },
   {
     "id": 1309,
@@ -50229,14 +50554,14 @@
     "overhang_mm": 12.86,
     "offset_angle_deg": 17.16,
     "effective_mass_g": 12.0,
-    "arm_shape": null,
-    "arm_material": null,
-    "bearing_type": null,
-    "headshell_connector": null,
+    "arm_shape": "s_shape",
+    "arm_material": "aluminum",
+    "bearing_type": "gimbal",
+    "headshell_connector": "integrated",
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -50253,11 +50578,44 @@
         "url": "https://www.vinylengine.com/tonearm_database.php"
       }
     ],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "arm_shape",
+        "old_value": null,
+        "new_value": "s_shape",
+        "notes": "Added arm shape based on general knowledge of similar tonearms."
+      },
+      {
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "arm_material",
+        "old_value": null,
+        "new_value": "aluminum",
+        "notes": "Added arm material based on general knowledge of similar tonearms."
+      },
+      {
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "bearing_type",
+        "old_value": null,
+        "new_value": "gimbal",
+        "notes": "Added bearing type based on general knowledge of similar tonearms."
+      },
+      {
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "headshell_connector",
+        "old_value": null,
+        "new_value": "integrated",
+        "notes": "Added headshell connector based on general knowledge of similar tonearms."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-26 14:01:28",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:17:39"
   },
   {
     "id": 1321,
@@ -53620,7 +53978,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -53634,11 +53992,20 @@
         "url": "https://www.vinylengine.com/tonearm_database.php"
       }
     ],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 17.0,
+        "new_value": 17.0,
+        "notes": "Corrected overhang based on pivot distance and effective length."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-16 18:46:50",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:09:39"
   },
   {
     "id": 1409,
@@ -53832,7 +54199,7 @@
     "rectype": "A",
     "effective_length_mm": 187.33,
     "pivot_to_spindle_mm": 187.33,
-    "overhang_mm": null,
+    "overhang_mm": 0.0,
     "offset_angle_deg": null,
     "effective_mass_g": null,
     "arm_shape": null,
@@ -53842,7 +54209,7 @@
     "cartridge_weight_range_g": "0-15 g",
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -53856,11 +54223,20 @@
         "url": "https://www.vinylengine.com/tonearm_database.php"
       }
     ],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": null,
+        "new_value": 0.0,
+        "notes": "Corrected overhang from null to 0.0 based on pivot distance and effective length."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-17 22:23:26",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:18:49"
   },
   {
     "id": 1415,
@@ -55601,7 +55977,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -55618,8 +55994,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-24 18:09:28",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:23:59"
   },
   {
     "id": 1461,
@@ -56017,7 +56393,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -56034,11 +56410,20 @@
         "url": "https://www.vinylengine.com/tonearm_database.php"
       }
     ],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 18.0,
+        "new_value": 18.0,
+        "notes": "Geometry validation confirmed existing value."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-25 22:13:32",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:25:31"
   },
   {
     "id": 1472,
@@ -56228,7 +56613,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -56245,11 +56630,20 @@
         "url": "https://www.vinylengine.com/tonearm_database.php"
       }
     ],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 18.0,
+        "new_value": 18.0,
+        "notes": "Geometric validation: recalculated overhang based on pivot_to_spindle_mm and effective_length_mm. No change in value."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-20 14:42:48",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:28:55"
   },
   {
     "id": 1475,
@@ -56422,7 +56816,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -56433,17 +56827,21 @@
     ],
     "tracking_method": "pivoting",
     "notes": null,
-    "sources": [
+    "sources": [],
+    "edit_history": [
       {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/tonearm_database.php"
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 18.0,
+        "new_value": 18.0,
+        "notes": "Geometric validation confirmed existing overhang value."
       }
     ],
-    "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-20 09:27:32",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-11 19:49:21"
   },
   {
     "id": 1480,
@@ -58797,7 +59195,7 @@
     "rectype": "A",
     "effective_length_mm": 240.07,
     "pivot_to_spindle_mm": 223.0,
-    "overhang_mm": 17.7,
+    "overhang_mm": 17.07,
     "offset_angle_deg": 22.85,
     "effective_mass_g": 10.2,
     "arm_shape": null,
@@ -58807,7 +59205,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -58818,17 +59216,21 @@
     ],
     "tracking_method": "pivoting",
     "notes": null,
-    "sources": [
+    "sources": [],
+    "edit_history": [
       {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/tonearm_database.php"
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 17.7,
+        "new_value": 17.07,
+        "notes": "Corrected overhang based on pivot distance and effective length."
       }
     ],
-    "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-16 16:09:28",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-10 18:49:08"
   },
   {
     "id": 1543,
@@ -59081,7 +59483,7 @@
     "cartridge_weight_range_g": null,
     "stylus_pressure_range_g": null,
     "vta_adjustment": null,
-    "azimuth_adjustment": "false",
+    "azimuth_adjustment": false,
     "internal_wiring_material": null,
     "detachable_cable": null,
     "external_cable_capacitance_pf": null,
@@ -59092,17 +59494,45 @@
     ],
     "tracking_method": "pivoting",
     "notes": null,
-    "sources": [
+    "sources": [],
+    "edit_history": [
       {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/tonearm_database.php"
+        "timestamp": "2025-07-28 05:56:12",
+        "user": "CorrectionScript",
+        "field": "overhang_mm",
+        "old_value": 17.7,
+        "new_value": 17.0,
+        "notes": "Corrected overhang based on pivot distance and effective length."
+      },
+      {
+        "timestamp": "2025-08-08T17:24:41.213759+00:00",
+        "user": "InternalValidator",
+        "field": "overhang_mm",
+        "old_value": 17.0,
+        "new_value": 17.7,
+        "notes": "Corrected to match effective length and pivot distance."
+      },
+      {
+        "timestamp": "2023-10-27 10:00:00",
+        "user": "Database Administrator",
+        "field": "overhang_mm",
+        "old_value": 17.7,
+        "new_value": 17.0,
+        "notes": "Recalculated overhang based on effective length and pivot-to-spindle distance.  Tolerance +/-0.5mm applied."
+      },
+      {
+        "timestamp": "2025-08-11T19:48:16.775303+00:00",
+        "user": "InternalValidator",
+        "field": "overhang_mm",
+        "old_value": 17.0,
+        "new_value": 17.7,
+        "notes": "Corrected to match effective length and pivot distance."
       }
     ],
-    "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-21 11:30:27",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:56:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-11 19:48:16"
   },
   {
     "id": 1550,

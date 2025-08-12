@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-08-07T16:58:22.6922Z",
+  "timestamp": "2025-08-11T22:50:36.7228Z",
   "source_data_count": 2973,
   "analysis_data_count": 78,
   "global_fallback": {
@@ -88,10 +88,10 @@
         "type": "MM",
         "cantilever_class": "Standard"
       },
-      "k": 2.0578,
-      "m": -2.9429,
-      "r_squared": 0.9277,
-      "sample_size": 26
+      "k": 1.9849,
+      "m": -2.3137,
+      "r_squared": 0.9637,
+      "sample_size": 27
     },
     {
       "priority": 2,
@@ -99,10 +99,10 @@
         "type": "MC",
         "cantilever_class": "Standard"
       },
-      "k": 1.3826,
-      "m": 3.3830,
-      "r_squared": 0.9121,
-      "sample_size": 40
+      "k": 1.3988,
+      "m": 3.1927,
+      "r_squared": 0.9140,
+      "sample_size": 39
     },
     {
       "priority": 3,

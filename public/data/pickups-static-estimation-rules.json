@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-08-07T16:58:22.9369Z",
+  "timestamp": "2025-08-11T22:50:36.8652Z",
   "source_data_count": 2973,
   "analysis_data_count": 191,
   "global_fallback": {
@@ -85,17 +85,6 @@
     {
       "priority": 2,
       "conditions": {
-        "type": "MM",
-        "cantilever_class": "Standard"
-      },
-      "k": 0.6652,
-      "m": 1.9618,
-      "r_squared": 0.9137,
-      "sample_size": 77
-    },
-    {
-      "priority": 2,
-      "conditions": {
         "type": "MC",
         "cantilever_class": "Standard"
       },
@@ -103,6 +92,17 @@
       "m": 0.4384,
       "r_squared": 0.8960,
       "sample_size": 13
+    },
+    {
+      "priority": 2,
+      "conditions": {
+        "type": "MM",
+        "cantilever_class": "Standard"
+      },
+      "k": 0.6659,
+      "m": 2.7635,
+      "r_squared": 0.8412,
+      "sample_size": 77
     },
     {
       "priority": 3,

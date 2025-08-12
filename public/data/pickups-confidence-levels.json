@@ -1,12 +1,12 @@
 {
   "B1": {
     "confidence": 68,
-    "sampleSize": 186,
+    "sampleSize": 185,
     "description": "Based on static compliance and matching type, cantilever_class, stylus_family."
   },
   "B2": {
     "confidence": 70,
-    "sampleSize": 189,
+    "sampleSize": 188,
     "description": "Based on static compliance and matching type, cantilever_class."
   },
   "B3": {

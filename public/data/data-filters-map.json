@@ -136,6 +136,10 @@
             "label": "Engaging"
           },
           {
+            "value": "Fast",
+            "label": "Fast"
+          },
+          {
             "value": "Forgiving",
             "label": "Forgiving"
           },
@@ -154,6 +158,10 @@
           {
             "value": "Neutral",
             "label": "Neutral"
+          },
+          {
+            "value": "Powerful",
+            "label": "Powerful"
           },
           {
             "value": "Precise",

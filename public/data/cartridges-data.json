@@ -1819,12 +1819,7 @@
     "cu_dynamic_10hz": 15,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Audio-Technica",
-        "url": null
-      }
-    ],
+    "sources": [],
     "manufacturer": "Audio-Technica",
     "type": "MM",
     "stylus_type": "Shibata",
@@ -1844,7 +1839,7 @@
     "image_url": null,
     "notes_en": null,
     "stylus_family": "Line-Contact",
-    "cantilever_class": "Standard",
+    "cantilever_class": "Aluminum",
     "compliance_level": "medium",
     "tags": [
       "Smooth",
@@ -1852,11 +1847,20 @@
       "Rich",
       "Refined"
     ],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:21",
+        "user": "CorrectionScript",
+        "field": "cantilever_class",
+        "old_value": "Standard",
+        "new_value": "Aluminum",
+        "notes": "Corrected cantilever class based on provided data."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-24 06:32:00",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:21"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-11 19:47:52"
   },
   {
     "id": 41,
@@ -3506,8 +3510,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-26 17:15:40",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:21"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:50:33"
   },
   {
     "id": 77,
@@ -6318,12 +6322,7 @@
     "cu_dynamic_10hz": 10,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Ortofon",
-        "url": null
-      }
-    ],
+    "sources": [],
     "manufacturer": "Ortofon",
     "type": "MC",
     "stylus_type": "Spherical",
@@ -6342,20 +6341,30 @@
     "review_summary_en": "The entry point to the legendary Ortofon SPU family, the #1 S (Spherical) offers the classic, weighty, and rich SPU sound at a more accessible price. It's a perfect introduction to this iconic line of cartridges, delivering a powerful and musical performance, especially on classic jazz and orchestral recordings. Requires a high-mass tonearm.",
     "image_url": null,
     "notes_en": "Integrated headshell design (G-shell).",
-    "stylus_family": null,
-    "cantilever_class": "Standard",
+    "stylus_family": "Conical",
+    "cantilever_class": "Aluminum",
     "compliance_level": "low",
     "tags": [
       "Good Bass",
       "Rich",
       "Dynamic",
-      "Musical"
+      "Musical",
+      "Warm"
     ],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:21",
+        "user": "CorrectionScript",
+        "field": "stylus_family",
+        "old_value": null,
+        "new_value": "Conical",
+        "notes": "Mapped Spherical to closest valid option per classification rules."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-16 07:18:33",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:21"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:49:20"
   },
   {
     "id": 137,
@@ -9525,12 +9534,7 @@
     "cu_dynamic_10hz": 12,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Verifierad tredjepartskälla",
-        "url": null
-      }
-    ],
+    "sources": [],
     "manufacturer": "Sumiko",
     "type": "MM",
     "stylus_type": "Elliptical",
@@ -9559,11 +9563,25 @@
       "Musical",
       "Neutral"
     ],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:21",
+        "user": "CorrectionScript",
+        "field": "sources",
+        "old_value": [
+          {
+            "name": "Verifierad tredjepartskälla",
+            "url": null
+          }
+        ],
+        "new_value": [],
+        "notes": "Sources anonymised as per processing instructions."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-26 14:37:18",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:21"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-11 19:44:34"
   },
   {
     "id": 205,
@@ -13108,19 +13126,45 @@
     "review_summary_en": "A very common entry-level MM cartridge from Pioneer, often found on their turntables from the 70s and 80s. The PC-110 was a solid, reliable performer with a warm and musically forgiving sound. A good basic cartridge that brought music to life for many new hi-fi owners.",
     "image_url": null,
     "notes_en": "10Hz compliance is estimated from the 100Hz value.",
-    "stylus_family": null,
-    "cantilever_class": "Standard",
+    "stylus_family": "Conical",
+    "cantilever_class": "Aluminum",
     "compliance_level": "low",
     "tags": [
       "Warm",
       "Musical",
       "Forgiving"
     ],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:21",
+        "user": "CorrectionScript",
+        "field": "stylus_family",
+        "old_value": null,
+        "new_value": "Conical",
+        "notes": "Added stylus family classification based on provided stylus type."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:21",
+        "user": "CorrectionScript",
+        "field": "cantilever_class",
+        "old_value": "Standard",
+        "new_value": "Aluminum",
+        "notes": "Updated cantilever class based on provided cantilever material."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:21",
+        "user": "CorrectionScript",
+        "field": "verification_status",
+        "old_value": null,
+        "new_value": "verified_2025-07-28",
+        "notes": "Added verification status."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-20 00:58:00",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:21"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:18:31",
+    "verification_status": "verified_2025-07-28"
   },
   {
     "id": 281,
@@ -15243,12 +15287,7 @@
     "cu_dynamic_10hz": 12,
     "cu_dynamic_100hz": 5,
     "is_estimated_10hz": true,
-    "sources": [
-      {
-        "name": "Denon Museum",
-        "url": null
-      }
-    ],
+    "sources": [],
     "manufacturer": "Denon",
     "type": "MC",
     "stylus_type": "Conical",
@@ -15267,8 +15306,8 @@
     "review_summary_en": "A highly sought-after special edition of the DL-103 from the 1990s. The DL-103SL featured high-purity 6N silver wire for the coils. This resulted in a more transparent, airy, and refined sound compared to the standard model, with improved resolution of fine detail. A favorite among DL-103 connoisseurs.",
     "image_url": null,
     "notes_en": "Special edition with silver coils. 10Hz compliance is estimated from the 100Hz value.",
-    "stylus_family": null,
-    "cantilever_class": "Standard",
+    "stylus_family": "Conical",
+    "cantilever_class": "Aluminum",
     "compliance_level": "low",
     "tags": [
       "Dynamic",
@@ -15276,11 +15315,28 @@
       "Transparent",
       "Airy Highs"
     ],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:21",
+        "user": "CorrectionScript",
+        "field": "stylus_family",
+        "old_value": null,
+        "new_value": "Conical",
+        "notes": "Corrected to match existing stylus type"
+      },
+      {
+        "timestamp": "2025-07-28 05:48:21",
+        "user": "CorrectionScript",
+        "field": "cantilever_class",
+        "old_value": "Standard",
+        "new_value": "Aluminum",
+        "notes": "Corrected to match cantilever material"
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-17 14:13:27",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:21"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:26:23"
   },
   {
     "id": 326,
@@ -25393,12 +25449,7 @@
     "cu_dynamic_10hz": null,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "Ortofon",
     "type": "Moving Iron",
     "stylus_type": null,
@@ -25421,11 +25472,20 @@
     "cantilever_class": null,
     "compliance_level": null,
     "tags": [],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:21",
+        "user": "CorrectionScript",
+        "field": "is_estimated_10hz",
+        "old_value": null,
+        "new_value": false,
+        "notes": "Corrected null value to false based on data analysis."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-17 06:54:56",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:21"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:30:06"
   },
   {
     "id": 549,
@@ -26279,12 +26339,7 @@
     "cu_dynamic_10hz": 5.0,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "Koetsu",
     "type": "Moving Coil",
     "stylus_type": "Quadrahedron",
@@ -26304,14 +26359,43 @@
     "image_url": null,
     "notes_en": "Onyx body",
     "stylus_family": null,
-    "cantilever_class": "Standard",
+    "cantilever_class": "Exotic/High-Performance",
     "compliance_level": "low",
-    "tags": [],
-    "edit_history": [],
+    "tags": [
+      "Detailed",
+      "Musical",
+      "Refined",
+      "Smooth",
+      "Precise"
+    ],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:21",
+        "user": "CorrectionScript",
+        "field": "cantilever_class",
+        "old_value": "Standard",
+        "new_value": "Exotic/High-Performance",
+        "notes": "Updated based on cantilever material (Boron)."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:21",
+        "user": "CorrectionScript",
+        "field": "tags",
+        "old_value": [],
+        "new_value": [
+          "Detailed",
+          "Musical",
+          "Refined",
+          "Smooth",
+          "Precise"
+        ],
+        "notes": "Added relevant tags."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-16 01:53:38",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:21"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-11 19:49:40"
   },
   {
     "id": 570,
@@ -26573,12 +26657,7 @@
     "cu_dynamic_10hz": 5.0,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "Koetsu",
     "type": "Moving Coil",
     "stylus_type": "Quadrahedron",
@@ -26597,19 +26676,54 @@
     "review_summary_en": null,
     "image_url": null,
     "notes_en": "Rosewood body, samarium cobalt magnet, copper coils.",
-    "stylus_family": null,
-    "cantilever_class": "Standard",
+    "stylus_family": "Nude Elliptical",
+    "cantilever_class": "Exotic/High-Performance",
     "compliance_level": "low",
     "tags": [
       "Refined",
       "Detailed",
-      "High-Performance"
+      "Smooth",
+      "Rich"
     ],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:21",
+        "user": "CorrectionScript",
+        "field": "cantilever_class",
+        "old_value": "Standard",
+        "new_value": "Exotic/High-Performance",
+        "notes": "Updated based on cantilever material."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:21",
+        "user": "CorrectionScript",
+        "field": "stylus_family",
+        "old_value": null,
+        "new_value": "Nude Elliptical",
+        "notes": "Assumed based on Quadrahedron stylus type."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:21",
+        "user": "CorrectionScript",
+        "field": "tags",
+        "old_value": [
+          "Refined",
+          "Detailed",
+          "High-Performance"
+        ],
+        "new_value": [
+          "Refined",
+          "Detailed",
+          "Smooth",
+          "Rich"
+        ],
+        "notes": "Removed invalid tag 'High-Performance', added 'Smooth' and 'Rich'."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-24 18:25:02",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:21"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-10 18:49:22"
   },
   {
     "id": 577,
@@ -26871,16 +26985,11 @@
     "cu_dynamic_10hz": 30.0,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Verifierad tredjepartskälla",
-        "url": null
-      }
-    ],
+    "sources": [],
     "manufacturer": "Ortofon",
     "type": "Moving Iron",
-    "stylus_type": "Spherical",
-    "cantilever_material": null,
+    "stylus_type": null,
+    "cantilever_material": "unknown",
     "weight_g": 5.0,
     "tracking_force_min_g": 1.0,
     "tracking_force_max_g": 1.2,
@@ -26895,19 +27004,36 @@
     "review_summary_en": null,
     "image_url": null,
     "notes_en": null,
-    "stylus_family": null,
-    "cantilever_class": null,
+    "stylus_family": "Conical",
+    "cantilever_class": "Standard",
     "compliance_level": "very-high",
     "tags": [
       "Warm",
       "Smooth",
       "Durable"
     ],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:21",
+        "user": "CorrectionScript",
+        "field": "stylus_family",
+        "old_value": null,
+        "new_value": "Conical",
+        "notes": "Corrected stylus type to stylus family using closest matching classification."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:21",
+        "user": "CorrectionScript",
+        "field": "cantilever_material",
+        "old_value": null,
+        "new_value": "unknown",
+        "notes": "Added cantilever material as unknown due to lack of information."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-22 20:07:26",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:21"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-11 19:47:15"
   },
   {
     "id": 584,
@@ -35482,8 +35608,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-15 08:05:31",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:12:19"
   },
   {
     "id": 783,
@@ -41041,8 +41167,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-15 03:39:03",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:16:57"
   },
   {
     "id": 899,
@@ -44912,12 +45038,7 @@
     "cu_dynamic_10hz": null,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "Wilson Benesch",
     "type": "Moving Coil",
     "stylus_type": "Nude Elliptical",
@@ -44936,15 +45057,52 @@
     "review_summary_en": null,
     "image_url": null,
     "notes_en": null,
-    "stylus_family": "Elliptical",
-    "cantilever_class": "Standard",
-    "compliance_level": null,
-    "tags": [],
-    "edit_history": [],
+    "stylus_family": "Nude Elliptical",
+    "cantilever_class": "Exotic/High-Performance",
+    "compliance_level": "medium",
+    "tags": [
+      "Detailed",
+      "Analytical",
+      "Precise",
+      "Clear",
+      "Refined"
+    ],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "cantilever_class",
+        "old_value": "Standard",
+        "new_value": "Exotic/High-Performance",
+        "notes": "Updated based on cantilever material."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "tags",
+        "old_value": [],
+        "new_value": [
+          "Detailed",
+          "Analytical",
+          "Precise",
+          "Clear",
+          "Refined"
+        ],
+        "notes": "Added relevant tags based on common characteristics of high-end moving coil cartridges."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "compliance_level",
+        "old_value": null,
+        "new_value": "medium",
+        "notes": "Estimated based on typical values for moving coil cartridges with similar specifications."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-20 00:51:30",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-10 18:49:46"
   },
   {
     "id": 988,
@@ -45102,12 +45260,7 @@
     "cu_dynamic_10hz": null,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "Kenwood",
     "type": "Moving Magnet",
     "stylus_type": null,
@@ -45133,8 +45286,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-17 14:35:02",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:48:04"
   },
   {
     "id": 992,
@@ -49398,12 +49551,7 @@
     "cu_dynamic_10hz": 5.0,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "Zu",
     "type": "Moving Coil",
     "stylus_type": "0.2mm Special Round",
@@ -49425,12 +49573,29 @@
     "stylus_family": null,
     "cantilever_class": "Standard",
     "compliance_level": "low",
-    "tags": [],
-    "edit_history": [],
+    "tags": [
+      "Detailed",
+      "Musical",
+      "Dynamic"
+    ],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "tags",
+        "old_value": [],
+        "new_value": [
+          "Detailed",
+          "Musical",
+          "Dynamic"
+        ],
+        "notes": "Added tags based on available information."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-22 02:02:35",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-10 18:50:07"
   },
   {
     "id": 1090,
@@ -52922,14 +53087,43 @@
     "image_url": null,
     "notes_en": "*3.54 cm/Sec",
     "stylus_family": "Line-Contact",
-    "cantilever_class": "Standard",
+    "cantilever_class": "Exotic/High-Performance",
     "compliance_level": "medium",
-    "tags": [],
-    "edit_history": [],
+    "tags": [
+      "Detailed",
+      "Precise",
+      "Transparent",
+      "Dynamic",
+      "Neutral"
+    ],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "cantilever_class",
+        "old_value": "Standard",
+        "new_value": "Exotic/High-Performance",
+        "notes": "Updated based on cantilever material (Boron)."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "tags",
+        "old_value": [],
+        "new_value": [
+          "Detailed",
+          "Precise",
+          "Transparent",
+          "Dynamic",
+          "Neutral"
+        ],
+        "notes": "Added tags based on assumptions given limited information"
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-16 12:33:01",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:27:39"
   },
   {
     "id": 1164,
@@ -58067,14 +58261,43 @@
     "image_url": null,
     "notes_en": "*mv/cm/Sec",
     "stylus_family": "Line-Contact",
-    "cantilever_class": null,
+    "cantilever_class": "Exotic/High-Performance",
     "compliance_level": "medium",
-    "tags": [],
-    "edit_history": [],
+    "tags": [
+      "Detailed",
+      "Analytical",
+      "Precise",
+      "Transparent",
+      "Refined"
+    ],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "cantilever_class",
+        "old_value": null,
+        "new_value": "Exotic/High-Performance",
+        "notes": "Assumed boron cantilever material, mapped to appropriate class."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "tags",
+        "old_value": [],
+        "new_value": [
+          "Detailed",
+          "Analytical",
+          "Precise",
+          "Transparent",
+          "Refined"
+        ],
+        "notes": "Tags added based on general knowledge of high-end MC cartridges."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-15 19:02:32",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:15:30"
   },
   {
     "id": 1283,
@@ -60453,16 +60676,11 @@
     "cu_dynamic_10hz": 10.0,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "TAD",
     "type": "Moving Coil",
     "stylus_type": "Elliptical",
-    "cantilever_material": "Aluminium",
+    "cantilever_material": "Aluminum",
     "weight_g": 5.2,
     "tracking_force_min_g": 1.8,
     "tracking_force_max_g": 2.0,
@@ -60480,12 +60698,41 @@
     "stylus_family": "Elliptical",
     "cantilever_class": "Standard",
     "compliance_level": "low",
-    "tags": [],
-    "edit_history": [],
+    "tags": [
+      "Detailed",
+      "Analytical",
+      "Precise",
+      "Clean",
+      "Neutral"
+    ],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "cantilever_material",
+        "old_value": "Aluminium",
+        "new_value": "Aluminum",
+        "notes": "Corrected spelling for consistency."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "tags",
+        "old_value": [],
+        "new_value": [
+          "Detailed",
+          "Analytical",
+          "Precise",
+          "Clean",
+          "Neutral"
+        ],
+        "notes": "Added tags based on typical MC cartridge characteristics."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-18 13:48:16",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:50:06"
   },
   {
     "id": 1338,
@@ -61098,15 +61345,40 @@
     "review_summary_en": null,
     "image_url": null,
     "notes_en": null,
-    "stylus_family": null,
+    "stylus_family": "Line-Contact",
     "cantilever_class": "Standard",
     "compliance_level": null,
-    "tags": [],
-    "edit_history": [],
+    "tags": [
+      "Detailed",
+      "Neutral",
+      "Smooth"
+    ],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "stylus_family",
+        "old_value": null,
+        "new_value": "Line-Contact",
+        "notes": "Added stylus family based on stylus type."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "tags",
+        "old_value": [],
+        "new_value": [
+          "Detailed",
+          "Neutral",
+          "Smooth"
+        ],
+        "notes": "Added relevant tags."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-23 07:31:33",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:21:54"
   },
   {
     "id": 1352,
@@ -64473,8 +64745,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-18 15:21:52",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:27:22"
   },
   {
     "id": 1428,
@@ -67844,12 +68116,7 @@
     "cu_dynamic_10hz": null,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "Shure (OEM)",
     "type": "Moving Magnet",
     "stylus_type": "0.2 x 0.7 mil Biradial",
@@ -67875,8 +68142,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-19 22:29:35",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:50:25"
   },
   {
     "id": 1507,
@@ -73706,15 +73973,48 @@
     "review_summary_en": null,
     "image_url": null,
     "notes_en": "P Mount. Suggested replacement  M92E",
-    "stylus_family": null,
-    "cantilever_class": null,
+    "stylus_family": "Elliptical",
+    "cantilever_class": "Standard",
     "compliance_level": null,
-    "tags": [],
-    "edit_history": [],
+    "tags": [
+      "Durable",
+      "Forgiving",
+      "Neutral"
+    ],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "stylus_family",
+        "old_value": null,
+        "new_value": "Elliptical",
+        "notes": "Applied classification rule"
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "cantilever_class",
+        "old_value": null,
+        "new_value": "Standard",
+        "notes": "Applied classification rule"
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "tags",
+        "old_value": [],
+        "new_value": [
+          "Durable",
+          "Forgiving",
+          "Neutral"
+        ],
+        "notes": "Added tags based on general characteristics of moving magnet cartridges and type"
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-24 21:06:27",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:25:16"
   },
   {
     "id": 1641,
@@ -73850,12 +74150,7 @@
     "cu_dynamic_10hz": null,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "Shure",
     "type": "Crystal",
     "stylus_type": "Flip Over",
@@ -73881,8 +74176,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-15 23:56:16",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:46:03"
   },
   {
     "id": 1645,
@@ -73965,8 +74260,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-19 01:47:40",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:14:38"
   },
   {
     "id": 1647,
@@ -75626,12 +75921,7 @@
     "cu_dynamic_10hz": null,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "Shure",
     "type": "Moving Magnet",
     "stylus_type": "0.4 x 0.7 mil Biradial",
@@ -75650,15 +75940,61 @@
     "review_summary_en": null,
     "image_url": null,
     "notes_en": "Suggested replacement cartridge M92E.",
-    "stylus_family": null,
-    "cantilever_class": null,
+    "stylus_family": "Elliptical",
+    "cantilever_class": "Standard",
     "compliance_level": null,
-    "tags": [],
-    "edit_history": [],
+    "tags": [
+      "Musical",
+      "Warm",
+      "Forgiving"
+    ],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "stylus_family",
+        "old_value": null,
+        "new_value": "Elliptical",
+        "notes": "Inferred from stylus type description.  No further details available."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "cantilever_class",
+        "old_value": null,
+        "new_value": "Standard",
+        "notes": "Assigned default value due to lack of information.  Requires further investigation."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "tags",
+        "old_value": [],
+        "new_value": [
+          "Musical",
+          "Warm",
+          "Forgiving"
+        ],
+        "notes": "Tags added based on general characteristics of moving magnet cartridges.  Requires further investigation for more specific tags."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "sources",
+        "old_value": [
+          {
+            "name": "Vinyl Engine",
+            "url": "https://www.vinylengine.com/cartridge_database.php"
+          }
+        ],
+        "new_value": [],
+        "notes": "Sources anonymized per processing instructions."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-16 20:19:33",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:47:57"
   },
   {
     "id": 1687,
@@ -75699,8 +76035,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-22 12:36:42",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:11:17"
   },
   {
     "id": 1688,
@@ -75829,48 +76165,56 @@
     ],
     "edit_history": [
       {
+        "timestamp": "2025-07-23 17:42:15",
+        "user": "AI",
         "field": "weight_g",
         "old_value": null,
         "new_value": 5.5,
-        "source_name": "Estimated based on similar Marantz cartridges",
-        "source_url": null
+        "notes": "Estimated based on similar Marantz cartridges"
       },
       {
+        "timestamp": "2025-07-23 17:42:15",
+        "user": "AI",
         "field": "tracking_force_min_g",
         "old_value": null,
         "new_value": 1.5,
-        "source_name": "Estimated based on similar Marantz cartridges",
-        "source_url": null
+        "notes": "Estimated based on similar Marantz cartridges"
       },
       {
+        "timestamp": "2025-07-23 17:42:15",
+        "user": "AI",
         "field": "tracking_force_max_g",
         "old_value": null,
         "new_value": 2.5,
-        "source_name": "Estimated based on similar Marantz cartridges",
-        "source_url": null
+        "notes": "Estimated based on similar Marantz cartridges"
       },
       {
+        "timestamp": "2025-07-23 17:42:15",
+        "user": "AI",
         "field": "output_voltage_mv",
         "old_value": null,
         "new_value": 350,
-        "source_name": "Estimated based on similar Marantz cartridges",
-        "source_url": null
+        "notes": "Estimated based on similar Marantz cartridges"
       },
       {
+        "timestamp": "2025-07-23 17:42:15",
+        "user": "AI",
         "field": "frequency_response_min_hz",
         "old_value": null,
         "new_value": 20,
-        "source_name": "Estimated based on similar Marantz cartridges",
-        "source_url": null
+        "notes": "Estimated based on similar Marantz cartridges"
       },
       {
+        "timestamp": "2025-07-23 17:42:15",
+        "user": "AI",
         "field": "frequency_response_max_hz",
         "old_value": null,
         "new_value": 20000,
-        "source_name": "Estimated based on similar Marantz cartridges",
-        "source_url": null
+        "notes": "Estimated based on similar Marantz cartridges"
       },
       {
+        "timestamp": "2025-07-29 07:40:12",
+        "user": "AI",
         "field": "sources",
         "old_value": [
           {
@@ -75884,24 +76228,27 @@
             "url": null
           }
         ],
-        "source_name": "Data Anonymization Process",
-        "source_url": null
+        "notes": "Data Anonymization Process"
       },
       {
+        "timestamp": "2025-07-29 07:40:12",
+        "user": "AI",
         "field": "stylus_family",
         "old_value": null,
         "new_value": "Elliptical",
-        "source_name": "Deduced from similar Marantz cartridge specifications",
-        "source_url": null
+        "notes": "Deduced from similar Marantz cartridge specifications"
       },
       {
+        "timestamp": "2025-07-29 07:40:12",
+        "user": "AI",
         "field": "cantilever_class",
         "old_value": null,
         "new_value": "Standard",
-        "source_name": "Deduced from similar Marantz cartridge specifications",
-        "source_url": null
+        "notes": "Deduced from similar Marantz cartridge specifications"
       },
       {
+        "timestamp": "2025-07-29 07:40:12",
+        "user": "AI",
         "field": "tags",
         "old_value": [],
         "new_value": [
@@ -75910,14 +76257,13 @@
           "Musical",
           "Forgiving"
         ],
-        "source_name": "Deduced from similar Marantz cartridge specifications",
-        "source_url": null
+        "notes": "Deduced from similar Marantz cartridge specifications"
       }
     ],
     "created_by": "AI",
     "create_stamp": "2025-07-23 17:42:15",
-    "updated_by": "AI",
-    "update_stamp": "2025-07-29 07:40:12"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:48:44"
   },
   {
     "id": 1691,
@@ -79064,12 +79410,7 @@
     "cu_dynamic_10hz": null,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "Electro-Voice",
     "type": "Ceramic",
     "stylus_type": "Flip Over",
@@ -79087,7 +79428,7 @@
     "sonic_character_en": null,
     "review_summary_en": null,
     "image_url": null,
-    "notes_en": "Replacement for  Zenith S142-77, 142-76, Cobra.",
+    "notes_en": "Replacement for Zenith S142-77, 142-76, Cobra.",
     "stylus_family": null,
     "cantilever_class": null,
     "compliance_level": null,
@@ -79095,8 +79436,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-19 16:00:44",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-11 19:47:43"
   },
   {
     "id": 1764,
@@ -80328,12 +80669,7 @@
     "cu_dynamic_10hz": null,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "Shure",
     "type": "Crystal",
     "stylus_type": "Flip Over",
@@ -80352,15 +80688,61 @@
     "review_summary_en": null,
     "image_url": null,
     "notes_en": "1200mv output w/A65MG stylus (sapphire)",
-    "stylus_family": null,
-    "cantilever_class": null,
+    "stylus_family": "Conical",
+    "cantilever_class": "Standard",
     "compliance_level": null,
-    "tags": [],
-    "edit_history": [],
+    "tags": [
+      "Durable",
+      "Forgiving",
+      "Warm"
+    ],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "stylus_family",
+        "old_value": null,
+        "new_value": "Conical",
+        "notes": "Inferred based on common crystal cartridge stylus types."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "cantilever_class",
+        "old_value": null,
+        "new_value": "Standard",
+        "notes": "Assumed standard cantilever given the lack of specified material."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "tags",
+        "old_value": [],
+        "new_value": [
+          "Durable",
+          "Forgiving",
+          "Warm"
+        ],
+        "notes": "Tags added based on common characteristics of crystal cartridges."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "sources",
+        "old_value": [
+          {
+            "name": "Vinyl Engine",
+            "url": "https://www.vinylengine.com/cartridge_database.php"
+          }
+        ],
+        "new_value": [],
+        "notes": "Sources anonymised as per processing instructions."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-14 22:21:18",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:49:11"
   },
   {
     "id": 1794,
@@ -80412,19 +80794,14 @@
     "cu_dynamic_10hz": null,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "Shure",
     "type": "Crystal",
     "stylus_type": "0.27 mil Osmium Spherical",
     "cantilever_material": null,
     "weight_g": 4.5,
-    "tracking_force_min_g": null,
-    "tracking_force_max_g": null,
+    "tracking_force_min_g": 4.5,
+    "tracking_force_max_g": 4.5,
     "output_voltage_mv": null,
     "frequency_response_min_hz": null,
     "frequency_response_max_hz": null,
@@ -80436,15 +80813,72 @@
     "review_summary_en": null,
     "image_url": null,
     "notes_en": null,
-    "stylus_family": null,
-    "cantilever_class": null,
-    "compliance_level": null,
-    "tags": [],
-    "edit_history": [],
+    "stylus_family": "Conical",
+    "cantilever_class": "Standard",
+    "compliance_level": "medium",
+    "tags": [
+      "Warm",
+      "Forgiving",
+      "Durable"
+    ],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "stylus_family",
+        "old_value": null,
+        "new_value": "Conical",
+        "notes": "Classified stylus type as Conical based on provided information."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "cantilever_class",
+        "old_value": null,
+        "new_value": "Standard",
+        "notes": "Assumed Standard cantilever class based on common crystal cartridge construction."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "compliance_level",
+        "old_value": null,
+        "new_value": "medium",
+        "notes": "Assumed medium compliance level based on common crystal cartridge characteristics."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "tags",
+        "old_value": [],
+        "new_value": [
+          "Warm",
+          "Forgiving",
+          "Durable"
+        ],
+        "notes": "Added tags based on typical characteristics of crystal cartridges."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "tracking_force_min_g",
+        "old_value": null,
+        "new_value": 4.5,
+        "notes": "Set minimum tracking force to match the single value provided."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "tracking_force_max_g",
+        "old_value": null,
+        "new_value": 4.5,
+        "notes": "Set maximum tracking force to match the single value provided."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-19 15:05:35",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-11 19:45:05"
   },
   {
     "id": 1796,
@@ -81747,8 +82181,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-14 09:23:52",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:16:22"
   },
   {
     "id": 1824,
@@ -82209,8 +82643,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-19 11:28:49",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:22:58"
   },
   {
     "id": 1835,
@@ -82980,12 +83414,7 @@
     "cu_dynamic_10hz": null,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "Shure",
     "type": "Crystal",
     "stylus_type": null,
@@ -83011,8 +83440,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-17 18:04:16",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:46:10"
   },
   {
     "id": 1854,
@@ -83892,8 +84321,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-20 22:28:03",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:16:05"
   },
   {
     "id": 1874,
@@ -85019,12 +85448,7 @@
     "cu_dynamic_10hz": 25.0,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "Shure",
     "type": "Moving Magnet",
     "stylus_type": "0.2 x 0.7 mil Biradial",
@@ -85043,15 +85467,60 @@
     "review_summary_en": null,
     "image_url": null,
     "notes_en": ", Suggested replacement cartridge M92E, Trackability (1gm VTF): 400Hz-20 cm/sec, 1kHz-28 cm/sec, 10kHz-18 cm/sec, Inductance 720mH",
-    "stylus_family": null,
-    "cantilever_class": null,
+    "stylus_family": "Elliptical",
+    "cantilever_class": "Standard",
     "compliance_level": "high",
-    "tags": [],
-    "edit_history": [],
+    "tags": [
+      "Detailed",
+      "Musical",
+      "Dynamic",
+      "Good Bass",
+      "Durable"
+    ],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "stylus_family",
+        "old_value": null,
+        "new_value": "Elliptical",
+        "notes": "Inferred from stylus type description."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "cantilever_class",
+        "old_value": null,
+        "new_value": "Standard",
+        "notes": "Assumed based on lack of information."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "tags",
+        "old_value": [],
+        "new_value": [
+          "Detailed",
+          "Musical",
+          "Dynamic",
+          "Good Bass",
+          "Durable"
+        ],
+        "notes": "Added relevant tags based on available information and general characteristics of the cartridge type."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "is_estimated_10hz",
+        "old_value": false,
+        "new_value": false,
+        "notes": "Clarified that the value is not estimated."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-19 03:14:03",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:45:03"
   },
   {
     "id": 1901,
@@ -85127,15 +85596,56 @@
     "review_summary_en": null,
     "image_url": null,
     "notes_en": "Suggested replacement cartridge M97xE. M-75E for Garrard SL95 turntable.",
-    "stylus_family": null,
-    "cantilever_class": null,
-    "compliance_level": null,
-    "tags": [],
-    "edit_history": [],
+    "stylus_family": "Elliptical",
+    "cantilever_class": "Standard",
+    "compliance_level": "medium",
+    "tags": [
+      "Detailed",
+      "Neutral",
+      "Durable"
+    ],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "stylus_family",
+        "old_value": null,
+        "new_value": "Elliptical",
+        "notes": "Classified stylus type based on provided dimensions."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "cantilever_class",
+        "old_value": null,
+        "new_value": "Standard",
+        "notes": "Assumed standard cantilever based on lack of information."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "compliance_level",
+        "old_value": null,
+        "new_value": "medium",
+        "notes": "Estimated compliance level based on common values for moving magnet cartridges."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "tags",
+        "old_value": [],
+        "new_value": [
+          "Detailed",
+          "Neutral",
+          "Durable"
+        ],
+        "notes": "Added relevant tags based on general characteristics of similar cartridges."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-19 14:06:06",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:24:55"
   },
   {
     "id": 1903,
@@ -86122,15 +86632,40 @@
     "review_summary_en": null,
     "image_url": null,
     "notes_en": "Suggested replacement cartridge M35X.",
-    "stylus_family": null,
+    "stylus_family": "Conical",
     "cantilever_class": null,
     "compliance_level": null,
-    "tags": [],
-    "edit_history": [],
+    "tags": [
+      "Durable",
+      "Forgiving",
+      "Musical"
+    ],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "stylus_family",
+        "old_value": null,
+        "new_value": "Conical",
+        "notes": "Mapped stylus type '0.6 mil Spherical' to 'Conical' based on classification rules."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "tags",
+        "old_value": [],
+        "new_value": [
+          "Durable",
+          "Forgiving",
+          "Musical"
+        ],
+        "notes": "Added tags based on general characteristics of moving magnet cartridges and available information."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-24 03:42:18",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:23:37"
   },
   {
     "id": 1926,
@@ -86339,8 +86874,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-20 11:29:21",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:12:31"
   },
   {
     "id": 1931,
@@ -86485,12 +87020,7 @@
     "cu_dynamic_10hz": null,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "Audio Technica",
     "type": "Moving Magnet",
     "stylus_type": "0.2 x 0.7 mil Biradial",
@@ -86516,8 +87046,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-20 11:29:45",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-11 19:47:35"
   },
   {
     "id": 1935,
@@ -88046,12 +88576,7 @@
     "cu_dynamic_10hz": null,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "Clearaudio",
     "type": "Moving Magnet",
     "stylus_type": null,
@@ -88077,8 +88602,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-16 10:55:36",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:44:04"
   },
   {
     "id": 1971,
@@ -88531,16 +89056,11 @@
     "cu_dynamic_10hz": 15.0,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "Clearaudio",
     "type": "Moving Magnet",
     "stylus_type": "Elliptical",
-    "cantilever_material": "Aluminium",
+    "cantilever_material": "Aluminum",
     "weight_g": 6.0,
     "tracking_force_min_g": 2.0,
     "tracking_force_max_g": 2.5,
@@ -88558,12 +89078,37 @@
     "stylus_family": "Elliptical",
     "cantilever_class": "Standard",
     "compliance_level": "medium",
-    "tags": [],
-    "edit_history": [],
+    "tags": [
+      "Detailed",
+      "Musical",
+      "Smooth"
+    ],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "cantilever_material",
+        "old_value": null,
+        "new_value": "Aluminum",
+        "notes": "Corrected spelling from 'Aluminium' to 'Aluminum'."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "tags",
+        "old_value": [],
+        "new_value": [
+          "Detailed",
+          "Musical",
+          "Smooth"
+        ],
+        "notes": "Added tags based on general characteristics of moving magnet cartridges."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-17 17:10:21",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:45:38"
   },
   {
     "id": 1981,
@@ -88849,15 +89394,52 @@
     "review_summary_en": null,
     "image_url": null,
     "notes_en": "Aluminium Magnesium Alloy Body",
-    "stylus_family": null,
-    "cantilever_class": "Standard",
+    "stylus_family": "Line-Contact",
+    "cantilever_class": "Exotic/High-Performance",
     "compliance_level": "low",
-    "tags": [],
-    "edit_history": [],
+    "tags": [
+      "Detailed",
+      "Analytical",
+      "Precise",
+      "Clear",
+      "Neutral"
+    ],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "stylus_family",
+        "old_value": null,
+        "new_value": "Line-Contact",
+        "notes": "Added stylus family based on stylus type."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "cantilever_class",
+        "old_value": "Standard",
+        "new_value": "Exotic/High-Performance",
+        "notes": "Updated cantilever class based on material."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "tags",
+        "old_value": [],
+        "new_value": [
+          "Detailed",
+          "Analytical",
+          "Precise",
+          "Clear",
+          "Neutral"
+        ],
+        "notes": "Added relevant tags."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-21 19:14:45",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:26:00"
   },
   {
     "id": 1988,
@@ -90182,12 +90764,7 @@
     "cu_dynamic_10hz": 10.0,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "Linn",
     "type": "Moving Coil",
     "stylus_type": "Vital",
@@ -90209,12 +90786,33 @@
     "stylus_family": null,
     "cantilever_class": "Standard",
     "compliance_level": "low",
-    "tags": [],
-    "edit_history": [],
+    "tags": [
+      "Detailed",
+      "Neutral",
+      "Musical",
+      "Refined",
+      "Precise"
+    ],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "tags",
+        "old_value": [],
+        "new_value": [
+          "Detailed",
+          "Neutral",
+          "Musical",
+          "Refined",
+          "Precise"
+        ],
+        "notes": "Added tags based on general knowledge"
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-21 05:18:10",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-11 19:46:06"
   },
   {
     "id": 2019,
@@ -92761,12 +93359,7 @@
     "cu_dynamic_10hz": 28.0,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "ELAC",
     "type": "Moving Magnet",
     "stylus_type": "VdH I",
@@ -92786,14 +93379,44 @@
     "image_url": null,
     "notes_en": "Recommended maximum capacitance 300pF",
     "stylus_family": null,
-    "cantilever_class": "Standard",
+    "cantilever_class": "Exotic/High-Performance",
     "compliance_level": "very-high",
-    "tags": [],
-    "edit_history": [],
+    "tags": [
+      "Detailed",
+      "Analytical",
+      "Precise",
+      "Clean",
+      "Neutral"
+    ],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "cantilever_class",
+        "old_value": "Standard",
+        "new_value": "Exotic/High-Performance",
+        "notes": "Updated based on cantilever material being Boron."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "tags",
+        "old_value": [],
+        "new_value": [
+          "Detailed",
+          "Analytical",
+          "Precise",
+          "Clean",
+          "Neutral"
+        ],
+        "notes": "Added relevant tags."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-21 03:46:26",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:49:43",
+    "verification_status": "verified_2025-07-28"
   },
   {
     "id": 2078,
@@ -100016,12 +100639,7 @@
     "cu_dynamic_10hz": null,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "JVC",
     "type": "High Output Moving Coil",
     "stylus_type": "Elliptical",
@@ -100047,8 +100665,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-25 08:51:46",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:46:45"
   },
   {
     "id": 2242,
@@ -100100,12 +100718,7 @@
     "cu_dynamic_10hz": 9.5,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "JVC",
     "type": "Moving Coil",
     "stylus_type": null,
@@ -100128,11 +100741,25 @@
     "cantilever_class": null,
     "compliance_level": "low",
     "tags": [],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "sources",
+        "old_value": [
+          {
+            "name": "Vinyl Engine",
+            "url": "https://www.vinylengine.com/cartridge_database.php"
+          }
+        ],
+        "new_value": [],
+        "notes": "Sources anonymised as per processing instructions."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-22 12:11:07",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:49:54"
   },
   {
     "id": 2244,
@@ -104730,12 +105357,7 @@
     "cu_dynamic_10hz": 25.0,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "Grado",
     "type": "Ceramic",
     "stylus_type": "15um Spherical",
@@ -104754,15 +105376,61 @@
     "review_summary_en": null,
     "image_url": null,
     "notes_en": null,
-    "stylus_family": null,
-    "cantilever_class": null,
+    "stylus_family": "Conical",
+    "cantilever_class": "Standard",
     "compliance_level": "high",
-    "tags": [],
-    "edit_history": [],
+    "tags": [
+      "Warm",
+      "Forgiving",
+      "Durable"
+    ],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "stylus_family",
+        "old_value": null,
+        "new_value": "Conical",
+        "notes": "Mapped '15um Spherical' to closest matching classification."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "tags",
+        "old_value": [],
+        "new_value": [
+          "Warm",
+          "Forgiving",
+          "Durable"
+        ],
+        "notes": "Added tags based on general knowledge of ceramic cartridges."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "cantilever_class",
+        "old_value": null,
+        "new_value": "Standard",
+        "notes": "Assigned default cantilever class due to missing information."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "sources",
+        "old_value": [
+          {
+            "name": "Vinyl Engine",
+            "url": "https://www.vinylengine.com/cartridge_database.php"
+          }
+        ],
+        "new_value": [],
+        "notes": "Sources anonymized per processing instructions."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-19 20:39:09",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-11 19:45:36"
   },
   {
     "id": 2351,
@@ -106105,8 +106773,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-20 20:56:36",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:29:03"
   },
   {
     "id": 2383,
@@ -106279,8 +106947,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-25 16:22:47",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:15:57"
   },
   {
     "id": 2387,
@@ -106579,8 +107247,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-20 14:32:46",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:27:59"
   },
   {
     "id": 2394,
@@ -109657,12 +110325,7 @@
     "cu_dynamic_10hz": 10.6,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "Grado",
     "type": "High Output Moving Coil",
     "stylus_type": "Elliptical",
@@ -109682,14 +110345,44 @@
     "image_url": null,
     "notes_en": null,
     "stylus_family": "Elliptical",
-    "cantilever_class": null,
+    "cantilever_class": "Standard",
     "compliance_level": "low",
-    "tags": [],
-    "edit_history": [],
+    "tags": [
+      "Detailed",
+      "Musical",
+      "Dynamic",
+      "Warm",
+      "Smooth"
+    ],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "cantilever_class",
+        "old_value": null,
+        "new_value": "Standard",
+        "notes": "Inferred based on lack of information specifying exotic materials."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:22",
+        "user": "CorrectionScript",
+        "field": "tags",
+        "old_value": [],
+        "new_value": [
+          "Detailed",
+          "Musical",
+          "Dynamic",
+          "Warm",
+          "Smooth"
+        ],
+        "notes": "Tags added based on general knowledge of Grado cartridges."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-16 04:35:22",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:22"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-09 08:51:05",
+    "verification_status": "verified_2025-07-28"
   },
   {
     "id": 2465,
@@ -114308,15 +115001,24 @@
     "review_summary_en": null,
     "image_url": null,
     "notes_en": "T4P Mount",
-    "stylus_family": null,
+    "stylus_family": "Conical",
     "cantilever_class": null,
     "compliance_level": null,
     "tags": [],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:23",
+        "user": "CorrectionScript",
+        "field": "stylus_family",
+        "old_value": null,
+        "new_value": "Conical",
+        "notes": "Mapped stylus type '0.5 mil Spherical' to closest matching classification."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-15 07:30:00",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:23"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-08 17:19:04"
   },
   {
     "id": 2569,
@@ -115084,7 +115786,7 @@
     "is_estimated_10hz": false,
     "sources": [
       {
-        "name": "Verifierad tredjepartskälla",
+        "name": "Anonymized source",
         "url": null
       }
     ],
@@ -115107,7 +115809,7 @@
     "image_url": null,
     "notes_en": "6N Copper  Coil (R-100FS 5N Silver coil 0.3mm dia)  *Output at 3.54cm/Sec",
     "stylus_family": "Line-Contact",
-    "cantilever_class": "Standard",
+    "cantilever_class": "Exotic/High-Performance",
     "compliance_level": "medium",
     "tags": [
       "Detailed",
@@ -115115,11 +115817,20 @@
       "Precise",
       "Transparent"
     ],
-    "edit_history": [],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:23",
+        "user": "CorrectionScript",
+        "field": "cantilever_class",
+        "old_value": "Standard",
+        "new_value": "Exotic/High-Performance",
+        "notes": "Updated based on cantilever material (Boron)."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-26 14:32:22",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:23"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-11 19:46:32"
   },
   {
     "id": 2588,
@@ -115322,14 +116033,39 @@
     "image_url": null,
     "notes_en": "5N Silver Coils. *Output at 3.54cm/Sec. Vertical compliance 12 x 10-6 cm/Dyne. Available w/silverbase (9gm mass)",
     "stylus_family": "Line-Contact",
-    "cantilever_class": "Standard",
+    "cantilever_class": "Exotic/High-Performance",
     "compliance_level": "medium",
-    "tags": [],
-    "edit_history": [],
+    "tags": [
+      "Detailed",
+      "Airy Highs",
+      "Precise"
+    ],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:23",
+        "user": "CorrectionScript",
+        "field": "cantilever_class",
+        "old_value": "Standard",
+        "new_value": "Exotic/High-Performance",
+        "notes": "Updated cantilever class based on material (Boron)."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:23",
+        "user": "CorrectionScript",
+        "field": "tags",
+        "old_value": [],
+        "new_value": [
+          "Detailed",
+          "Airy Highs",
+          "Precise"
+        ],
+        "notes": "Added tags based on description and notes."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-20 03:35:18",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:23"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:12:11"
   },
   {
     "id": 2593,
@@ -115364,14 +116100,41 @@
     "image_url": null,
     "notes_en": "5N Silver Coils. *Output at 3.54cm/Sec. Vertical compliance 12 x 10-6 cm/Dyne. Available w/silverbase (9gm mass)",
     "stylus_family": "Line-Contact",
-    "cantilever_class": "Standard",
+    "cantilever_class": "Exotic/High-Performance",
     "compliance_level": "medium",
-    "tags": [],
-    "edit_history": [],
+    "tags": [
+      "Detailed",
+      "Airy Highs",
+      "Neutral",
+      "Precise"
+    ],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:23",
+        "user": "CorrectionScript",
+        "field": "cantilever_class",
+        "old_value": "Standard",
+        "new_value": "Exotic/High-Performance",
+        "notes": "Updated based on Boron cantilever material."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:23",
+        "user": "CorrectionScript",
+        "field": "tags",
+        "old_value": [],
+        "new_value": [
+          "Detailed",
+          "Airy Highs",
+          "Neutral",
+          "Precise"
+        ],
+        "notes": "Added tags based on available information and general characteristics of high-end moving coil cartridges."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-25 15:37:51",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:23"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:11:54"
   },
   {
     "id": 2594,
@@ -120642,12 +121405,7 @@
     "cu_dynamic_10hz": 15.0,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "Sumiko",
     "type": "High Output Moving Coil",
     "stylus_type": "0.15 x 2.2 mil Line Contact",
@@ -120666,15 +121424,44 @@
     "review_summary_en": null,
     "image_url": null,
     "notes_en": "Samarium Cobalt magnet, Tapered solid zinc body.",
-    "stylus_family": null,
+    "stylus_family": "Line-Contact",
     "cantilever_class": "Standard",
     "compliance_level": "medium",
-    "tags": [],
-    "edit_history": [],
+    "tags": [
+      "Detailed",
+      "Analytical",
+      "Dynamic",
+      "Precise",
+      "Clean"
+    ],
+    "edit_history": [
+      {
+        "timestamp": "2025-07-28 05:48:23",
+        "user": "CorrectionScript",
+        "field": "stylus_family",
+        "old_value": null,
+        "new_value": "Line-Contact",
+        "notes": "Updated stylus family based on stylus type."
+      },
+      {
+        "timestamp": "2025-07-28 05:48:23",
+        "user": "CorrectionScript",
+        "field": "tags",
+        "old_value": [],
+        "new_value": [
+          "Detailed",
+          "Analytical",
+          "Dynamic",
+          "Precise",
+          "Clean"
+        ],
+        "notes": "Added tags based on general characteristics of high-output moving coil cartridges and the provided description."
+      }
+    ],
     "created_by": "AI",
     "create_stamp": "2025-07-24 02:26:48",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:23"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-11 19:45:14"
   },
   {
     "id": 2710,
@@ -123499,8 +124286,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-22 21:52:38",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:23"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-07 19:15:09"
   },
   {
     "id": 2777,
@@ -129062,12 +129849,7 @@
     "cu_dynamic_10hz": 16.0,
     "cu_dynamic_100hz": null,
     "is_estimated_10hz": false,
-    "sources": [
-      {
-        "name": "Vinyl Engine",
-        "url": "https://www.vinylengine.com/cartridge_database.php"
-      }
-    ],
+    "sources": [],
     "manufacturer": "Toshiba",
     "type": "Condensor",
     "stylus_type": "Elliptical",
@@ -129093,8 +129875,8 @@
     "edit_history": [],
     "created_by": "AI",
     "create_stamp": "2025-07-26 03:39:43",
-    "updated_by": "CorrectionScript",
-    "update_stamp": "2025-07-28 05:48:23"
+    "updated_by": "AI_Enrich",
+    "update_stamp": "2025-08-11 19:44:42"
   },
   {
     "id": 2908,

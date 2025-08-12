@@ -189,6 +189,21 @@
         "id": "balanced",
         "name": "Balanced",
         "description": "Automatically added by script."
+      },
+      {
+        "id": "fast",
+        "name": "Fast",
+        "description": "Automatically added by script."
+      },
+      {
+        "id": "bold",
+        "name": "Bold",
+        "description": "Automatically added by script."
+      },
+      {
+        "id": "powerful",
+        "name": "Powerful",
+        "description": "Automatically added by script."
       }
     ]
   }

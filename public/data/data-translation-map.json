@@ -16,8 +16,8 @@
     },
     "cantilever_class": {
       "Standard": "Standard Materials",
-      "Exotic/High-Performance": "Exotic / High-Performance",
-      "Aluminum": "Aluminum"
+      "Aluminum": "Aluminum",
+      "Exotic/High-Performance": "Exotic / High-Performance"
     },
     "tags": {
       "Neutral": "Neutral",
@@ -36,6 +36,7 @@
       "Smooth": "Smooth",
       "Refined": "Refined",
       "Precise": "Precise",
+      "Fast": "Fast",
       "Bright": "Bright",
       "Balanced": "Balanced",
       "Transparent": "Transparent",
@@ -43,7 +44,8 @@
       "Clean": "Clean",
       "Rich": "Rich",
       "DJ": "DJ",
-      "Durable": "Durable"
+      "Durable": "Durable",
+      "Powerful": "Powerful"
     }
   },
   "tonearms": {
