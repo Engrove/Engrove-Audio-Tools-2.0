@@ -1,0 +1,74 @@
+{
+  "autoArchivePolicy": {
+    "enabled": true,
+    "usageThreshold": 0,
+    "analysisWindowDays": 21,
+    "analysisWindowSessions": 50,
+    "protectedHeuristics": [
+      "H-20250809-06",
+      "H-20250811-02",
+      "GR1",
+      "GR7"
+    ]
+  },
+  "archiveHeuristics": [
+    {
+      "heuristicId": "H-20250803-01",
+      "originSessionId": "18",
+      "reason": "Redundant. Ersatt av H-20250809-24 (samma funktion)."
+    },
+    {
+      "heuristicId": "H-20250809-02",
+      "originSessionId": "34",
+      "reason": "Överflödig. Täcks nu av Kärndirektiv GR1."
+    },
+    {
+      "heuristicId": "H-20250809-04",
+      "originSessionId": "34",
+      "reason": "Konsoliderad till H-20250812-C01."
+    },
+    {
+      "heuristicId": "H-20250809-05",
+      "originSessionId": "34",
+      "reason": "Konsoliderad till H-20250812-C01."
+    },
+    {
+      "heuristicId": "H-20250809-01",
+      "originSessionId": "33",
+      "reason": "För specifik. Täcks av den mer generella regeln för API-verifiering."
+    }
+  ],
+  "addHeuristics": [
+    {
+      "heuristicId": "H-20250812-C01",
+      "trigger": {
+        "type": "tool_code_generation",
+        "scope": [
+          "*"
+        ],
+        "keywords": [
+          "print",
+          "script",
+          "file content"
+        ]
+      },
+      "identifiedRisk": {
+        "riskId": "RISK_UNSAFE_FILE_CONTENT_PRINTING",
+        "description": "Risken att direkt exekvera ett skript eller orsaka syntaxfel vid försök att skriva ut filinnehåll som innehåller specialtecken eller kräver kommandoradsargument."
+      },
+      "mitigation": {
+        "protocolId": "PSV-MIT-SAFE_STRING_ASSIGNMENT",
+        "description": "Vid utskrift av filinnehåll via `tool_code`, tilldela alltid innehållet till en variabel med trippla citattecken och skriv sedan ut variabeln. Detta förhindrar både oavsiktlig exekvering och syntaxfel."
+      },
+      "metadata": {
+        "originSessionId": "S-20250812-B",
+        "createdAt": "2025-08-12T14:55:00Z",
+        "status": "active",
+        "consolidates": [
+          "H-20250809-04",
+          "H-20250809-05"
+        ]
+      }
+    }
+  ]
+}
