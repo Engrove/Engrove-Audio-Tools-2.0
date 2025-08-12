@@ -1,4 +1,4 @@
-9#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 wrap_json_in_html.py — AI Context Builder v7.4 (2025-08-11)
@@ -781,33 +781,55 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   function buildMenuFirstPrompt(){
     try{
       clearBanner();
-      const inv = INVENTORY || [];
-      // Begränsa kandidater till kodnära artefakter
-      const cands = inv.filter(r=> isCodeLike(r.path)).map(r=> ({ path:r.path, lang:r.lang, size:r.size||null }));
+      if(!ctx){ showBanner('context.json ej laddad ännu.', 'err'); return; }
+      if(!Array.isArray(INVENTORY) || INVENTORY.length===0){
+        HASHMAPS = buildHashMaps(ctx);
+        INVENTORY = buildInventory(ctx);
+      }
+      const inv = INVENTORY;
+
+      // RIKA kandidater (purpose, info_source, checksums)
+      const cands = buildCandidatesRich(els.maxCands.value, !!els.incAssets.checked);
+      LAST_CANDIDATES = cands.slice();
+
+      // FÖRGENERERAD MENY (stabil ordning + rekommendationer)
+      const menuPayload = buildMenuPayload(inv);
+
+      // Payload till modellen (kandidater + ev. inventory)
       const payload = { CANDIDATE_FILES: cands };
       if(els.incInventory && els.incInventory.checked){
         payload.inventory_compact = inv.map(r=>({ path:r.path, lang:r.lang, size:r.size||null, sha256_lf:r.sha256_lf||null, git_sha1:r.git_sha1||null }));
       }
+
       const hdr = [
         '### MENU_DISCOVERY_v1 (obligatoriskt förstasteg)',
-        '- Du får CANDIDATE_FILES (+ ev. inventory_compact).',
-        '- Steg 1: Skapa en NUMRERAD meny (≤8) över kategorier: app-kod, build-config, backend/functions, tests, data/mock, docs/övrigt.',
-        '- Varje rad: nummer, label, count, confidence, include_globs, exclude_globs (+ ev. embed:"stub").',
-        '- Markera rekommenderade med ★ (max 2).',
-        '- Osäkerhet: om ingen tydlig dominans eller recommended tom → ställ EN extra ja/nej-fråga innan val.',
+        '- Nedan finns en färdig MENY (DISCOVERED_MENU). Välj nummer (ex: 1 eller 1,2).',
+        '- Om du ändå är osäker: ställ EN kort ja/nej-fråga innan val.',
         '- Svara ENBART med JSON: {"menu":[...], "recommended":[...], "question":"..."}.',
         '',
         '### EFTER_VAL',
         '- När jag svarat med nummer: generera **K-MOD discovery_v2** strikt (endast {protocol_id, mode, selected_files[]}).',
-        '- Begränsa urvalet enligt include/exclude-globs från mitt val; `docs/**` → "stub" om inte uttryckligen valt.',
-        '- Är du fortfarande osäker: ställ exakt EN följdfråga och invänta svar, producera sedan discovery-JSON.',
-        ''
+        '- Begränsa urval enligt include/exclude-globs från mitt val; `docs/**` → "stub" om inte uttryckligen valt.'
       ].join('\n');
-      const pretty = els.compact && els.compact.checked ? JSON.stringify(payload) : JSON.stringify(payload, null, 2);
-      const md = '### MENU_FIRST_DISCOVERY_PROMPT\n\n' + hdr + '```json\n' + pretty + '\n```\n';
+
+      const prettyMenu = els.compact && els.compact.checked ? JSON.stringify(menuPayload) : JSON.stringify(menuPayload, null, 2);
+      const prettyCand = els.compact && els.compact.checked ? JSON.stringify(payload) : JSON.stringify(payload, null, 2);
+
+      const md = [
+        '### MENU_FIRST_DISCOVERY_PROMPT',
+        '',
+        hdr,
+        '```json',
+        prettyMenu,
+        '```',
+        '```json',
+        prettyCand,
+        '```'
+      ].join('\n');
+
       els.out.textContent = md;
       els.copy.disabled = els.download.disabled = false;
-      showBanner('Menu-first discovery prompt genererad.', 'ok');
+      showBanner('Menu-first discovery prompt (med meny + rika kandidater) genererad.', 'ok');
     }catch(e){ showBanner('Fel vid menu-first: '+e.message, 'err'); }
   }
 
