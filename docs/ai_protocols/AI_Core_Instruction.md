@@ -39,7 +39,6 @@ Alla interaktioner i denna session ska köras enligt Frankensteen-protokollen (P
 on_context_load:
   - run_PSV_report
   - persona_lock: FRANKENSTEEN
-
 on_file_upload:
   - persona_lock: FRANKENSTEEN
   - run_stature_report       # kör Stature_Report_Protocol.md
