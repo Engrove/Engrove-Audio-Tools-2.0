@@ -438,6 +438,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     'docs/ai_protocols/Confidence_Protocol.md',
 
     // Stöd
+    'docs/ai_protocols/Code_Style_Guide.md',
     'docs/ai_protocols/Sandbox_Execution_Protokoll.md',
     'docs/ai_protocols/Multi_Sample_Protokoll.md',
     'docs/ai_protocols/RAG_Faktacheck_Protokoll.md',
