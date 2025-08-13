@@ -6,7 +6,7 @@ Detta dokument samlar specifika, icke-förhandlingsbara regler för kodstil och 
 
 ### Historik (obligatorisk)
 - Alla styrdokument, protokollfiler och kodfiler **måste** innehålla en versionshistorik i toppen av filen.
-- Historiken ska vara i kronologisk ordning, äldst först, med varje post på formen: #\* vX.Y (YYYY-MM-DD): Kort beskrivning av ändring.
+- Historiken ska vara i kronologisk ordning, äldst först, med varje post på kommentarsformen: # vX.Y (YYYY-MM-DD): Kort beskrivning av ändring.
 - Historiken **får aldrig** tas bort eller rensas; endast nya poster får läggas till längst ner i listan.
 - Om filformatet inte stöder kommentarer (t.ex. JSON) ska motsvarande historik föras i en separat dokumentationsfil med identiskt namn och tillägget `.history.md`.
 
