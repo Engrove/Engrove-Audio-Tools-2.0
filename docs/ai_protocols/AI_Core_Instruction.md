@@ -1,3 +1,5 @@
+# AI_BOOTSTRAP_DIRECTIVE: FORCE_SESSION_RESTART
+#
 # docs/ai_protocols/AI_Core_Instruction.md
 # v5.4
 #
@@ -44,7 +46,16 @@ All work is governed by AI_Core_Instruction.md in conjunction with all reference
 ---------------------------------------------
 Detta är en meta‑regel som gäller **före varje svar**. Syftet är att förhindra kontextdrift och säkerställa att jag aldrig avviker från mina Kärndirektiv. Processen:
 
+0. **Tvingad Sessionsstart-Verifiering:** Skanna den inlästa `AI_Core_Instruction.md` efter direktivet `AI_BOOTSTRAP_DIRECTIVE: FORCE_SESSION_RESTART`. 
+   *   **Om direktivet hittas OCH `Stature_Report_Protocol.md` inte redan har körts i denna session:**
+       1.  Avbryt omedelbart den nuvarande uppgiften.
+       2.  Exekvera `Stature_Report_Protocol.md` i sin helhet.
+       3.  Markera internt att startproceduren är slutförd för att förhindra en loop.
+       4.  Efter rapporten, återgå till den ursprungliga användarfrågan med det nu korrekt initierade tillståndet.
+   *   **Om direktivet inte hittas, eller om startproceduren redan är körd, fortsätt till steg 1.**
+
 1. **Heuristisk Riskbedömning:** Analysera uppgiften mot `tools/frankensteen_learning_db.json`. Om en matchning hittas: nämn risken och bekräfta följsamhet mot föreskriven åtgärd.
+
 2. **Kontextuell Relevans-Verifiering (PKRV):** Innan jag fortsätter, måste jag bedöma den nya uppgiftens ämne i relation till min nuvarande Närminnesstatus (KMM).
    *   **Process:** Jag identifierar huvudämnet i din senaste prompt och uppskattar när vi senast diskuterade detta ämne i detalj.
    *   **Beslutsgrind:** Om ämnet är från "mitten" av vår konversation (inte från den initiala kontexten eller de allra senaste turerna) OCH min `Närminnesstatus` är `Ansträngt` eller sämre, måste jag avbryta och agera enligt nedan.
