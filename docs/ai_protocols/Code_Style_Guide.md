@@ -13,7 +13,7 @@ Detta dokument samlar specifika, icke-förhandlingsbara regler för kodstil och 
 
 ## 2. Regler
 ### 2.1 Inledande Fil-kommentarer
-Varje ny eller modifierad kodfil som levereras måste inledas med en kommentar som tydligt anger filens fullständiga sökväg efterföljt av en kommentar som förklarar kortfattat syftet med filen. JSON filer är ett undantag. JSON filer får inte innehålla kommentarer.
+Varje ny eller modifierad kodfil som levereras måste inledas med en kommentar som tydligt anger filens fullständiga sökväg efterföljt av en eller flera kommentarer som med några få meningar beskriver filens huvudsakliga syfte, relation till andra filer och kontext. JSON filer är ett undantag. JSON filer får inte innehålla kommentarer.
 Vid segmenterad leverans ska filhuvudet (filstig) ingå i Del 1:s koddel, inte i ett separat meta-block.
 
 **Exempel (Python):**
