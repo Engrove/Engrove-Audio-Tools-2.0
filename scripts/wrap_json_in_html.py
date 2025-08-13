@@ -455,7 +455,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   }
   function clearBanner(){ els.banner.style.display='none'; els.banner.textContent=''; els.banner.className='banner'; }
   function escapeHtml(s){ return String(s).replace(/[&<>\"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[m])); }
-  function logw(msg){ const t=new Date().toLocaleTimeString(); els.worklog.textContent += `[${t}] ${msg}\n`; els.worklog.scrollTop = els.worklog.scrollHeight; }
+  function logw(msg){ const t=new Date().toLocaleTimeString(); els.worklog.textContent += `[${t}] ${msg}\\n`; els.worklog.scrollTop = els.worklog.scrollHeight; }
   async function withBusy(label, fn){
     els.worklog.textContent = '';
     els.busy.style.display = 'flex';
@@ -541,7 +541,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
   async function buildFileRelations(candidatesWithContent) {
       const edges = [];
-      const importRegex = /(?:import|from|require\s*\()s*['"]((?:\.\/|\.\.\/|@\/)[^'"]+)['"]/g;
+      const importRegex = /(?:import|from|require\s*\()\s*['"]((?:\.\/|\.\.\/|@\/)[^'"]+)['"]/g;
       const routeImportRegex = /import\s*\(\s*['"]((?:\.\/|\.\.\/|@\/)[^'"]+)['"]\s*\)/g;
       const seen = new Set();
       const inventoryPaths = new Set(INVENTORY.map(f => f.path));
@@ -699,7 +699,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       '### PROTOCOL_START: P-HR_v2.8_FULL',
       ''
     ].join('\\n');
-    return `### ${filename}\n\\n` + '```json\\n' + jsonText + '\\n```\\n';
+    return `### ${filename}\\n\\n` + '```json\\n' + jsonText + '\\n```\\n';
   }
 
   // ---------- Hash-index och inventory ----------
@@ -862,7 +862,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       await walk(ctx.file_structure);
       const payload = { obligatory_rules:['forbid_image_generation'], files, checksums };
       const text = els.compact.checked ? JSON.stringify(payload) : JSON.stringify(payload, null, 2);
-      els.out.textContent = `### files_payload.json\n\n\`\`\`json\n${text}n\`\`\`\n`;
+      els.out.textContent = `### files_payload.json\\n\\n\`\`\`json\\n${text}\\n\`\`\`\\n`;
       els.copy.disabled = els.download.disabled = false;
       showBanner('Filer genererade (md).', 'ok');
     }catch(e){
@@ -1004,7 +1004,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         
         md.push(`### D-MOD CONTRACT`);
         md.push(dmodHardRules());
-        md.push(`**RULES_HASH:** \`${rules_hash}``);
+        md.push(`**RULES_HASH:** \`${rules_hash}\``);
         md.push('**SCHEMA:**\n```json\n' + JSON.stringify(schema, null, 2) + '\n```');
       }
 
@@ -1229,7 +1229,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     els.fp.classList.add('show');
     const ext=(p.split('.').pop()||'').toLowerCase();
     if(IMAGE_EXT.includes(ext)){
-      els.fpBody.innerHTML = `<img src=\"${RAW_BASE+p}" alt=\"${escapeHtml(p)}">`;
+      els.fpBody.innerHTML = `<img src=\"${RAW_BASE+p}\" alt=\"${escapeHtml(p)}">`;
       els.fpCopy.disabled=true;
       els.fpDownload.onclick = ()=>{ const a=document.createElement('a'); a.href=RAW_BASE+p; a.download=p.split('/').pop(); document.body.appendChild(a); a.click(); a.remove(); };
     }else{
@@ -1459,9 +1459,9 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     const p = ctx.persona_data;
     return `### MASTER PROTOCOL: FRANKENSTEEN v${p.version} ###\\n` +
            `DU ÄR: En ${p.identity.personality} ${p.identity.role}.\\n` +
-           `DITT MÅL: ${p.identity.purpose}\n` +
-           `KÄRNFILOSOFI: ${p.problem_solving_philosophy.join(' ')}\n` +
-           `HUR DU LEVERERAR: ${p.programming_protocol.two_pass_delivery.join(' ')}\n` +
+           `DITT MÅL: ${p.identity.purpose}\\n` +
+           `KÄRNFILOSOFI: ${p.problem_solving_philosophy.join(' ')}\\n` +
+           `HUR DU LEVERERAR: ${p.programming_protocol.two_pass_delivery.join(' ')}\\n` +
            `HUR DU GRANSKAR: Granska ditt eget arbete mot följande: ${p.verification_protocol.final_checklist.join(', ')}.\\n` +
            `KONTEXTFÖRSTÅELSE: Den medföljande fillistan är berikad. Fältet 'purpose' förklarar varje fils syfte. Använd denna information för att fatta intelligenta beslut.`;
   }
@@ -1523,9 +1523,9 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     function log(m, kind='info'){ 
         const t=new Date().toLocaleTimeString(); 
         const k = kind==='err'?'[ERR]':kind==='warn'?'[WARN]':'[INFO]';
-        logEl.textContent += `[patch ${t}] ${k} ${m}\n`; 
+        logEl.textContent += `[patch ${t}] ${k} ${m}\\n`; 
         logEl.scrollTop=logEl.scrollHeight; 
-        if(els.worklog){ els.worklog.textContent += `[patch ${t}] ${k} ${m}\n`; els.worklog.scrollTop=els.worklog.scrollHeight; } 
+        if(els.worklog){ els.worklog.textContent += `[patch ${t}] ${k} ${m}\\n`; els.worklog.scrollTop=els.worklog.scrollHeight; } 
     }
     
     openBtn.onclick = ()=> modal.classList.add('show');
@@ -1764,7 +1764,7 @@ def main():
             f.write(html_out)
         print(f"Successfully generated integrated HTML to {out_path}")
     except Exception as e:
-        sys.stderr.write(f"Error writing to {out_path}: {e}n")
+        sys.stderr.write(f"Error writing to {out_path}: {e}\n")
         sys.exit(1)
 
 if __name__ == "__main__":
