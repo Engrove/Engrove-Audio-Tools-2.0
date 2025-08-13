@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-wrap_json_in_html.py — AI Context Builder v7.4 (2025-08-11)
+wrap_json_in_html.py — AI Context Builder v7.4 (2025-08-11) (update)
 
 Nyheter vs v7.3:
 - v7.5 (2025-08-11): Optimerat CORE-konstanten för att minska initial kontextstorlek och förlita sig på en dynamiskt uppdaterad `docs/core_file_info.json`.
