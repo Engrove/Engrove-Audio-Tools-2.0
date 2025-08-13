@@ -454,7 +454,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     els.banner.style.display = 'block';
   }
   function clearBanner(){ els.banner.style.display='none'; els.banner.textContent=''; els.banner.className='banner'; }
-  function escapeHtml(s){ return String(s).replace(/[&<>\"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[m])); }
+  function escapeHtml(s){ return String(s).replace(/[&<>\"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[m])); }
   function logw(msg){ const t=new Date().toLocaleTimeString(); els.worklog.textContent += `[${t}] ${msg}\\n`; els.worklog.scrollTop = els.worklog.scrollHeight; }
   async function withBusy(label, fn){
     els.worklog.textContent = '';
