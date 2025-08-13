@@ -76,7 +76,7 @@ jobs:
       - name: Prepare Output Directory
         run: mkdir -p "${{ env.SITE_DIR }}"
 
-      - name: STEP 1: Process Session Data (if needed)
+      - name: STEP 1 Process Session Data (if needed)
         id: process-sessions
         env:
           COMMIT_SHA: ${{ github.sha }}
@@ -86,7 +86,7 @@ jobs:
           python scripts/update_core_info.py sessions/ docs/core_file_info.json $COMMIT_SHA
           echo "Session processing complete."
 
-      - name: STEP 2: Generate AI Context JSON
+      - name: STEP 2 Generate AI Context JSON
         id: generate-json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -101,7 +101,7 @@ jobs:
             exit 1
           fi
 
-      - name: STEP 3: Create HTML Wrapper
+      - name: STEP 3 Create HTML Wrapper
         id: create-html
         if: steps.generate-json.outputs.success == 'true'
         run: |
@@ -109,7 +109,7 @@ jobs:
           python scripts/wrap_json_in_html.py "${{ env.SITE_DIR }}/${{ env.HTML_FILE }}"
           echo "success=true" >> "$GITHUB_OUTPUT"
 
-      - name: STEP 4: Create Metadata for Deployment
+      - name: STEP 4 Create Metadata for Deployment
         if: steps.create-html.outputs.success == 'true'
         run: |
           cat > "${{ env.SITE_DIR }}/${{ env.METADATA_FILE }}" << EOF
@@ -121,13 +121,13 @@ jobs:
           }
           EOF
 
-      - name: STEP 5: Upload Pages Artifact
+      - name: STEP 5 Upload Pages Artifact
         if: steps.create-html.outputs.success == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ${{ env.SITE_DIR }}
       
-      - name: STEP 6: Commit Documentation and Session Artifacts
+      - name: STEP 6 Commit Documentation and Session Artifacts
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: |
