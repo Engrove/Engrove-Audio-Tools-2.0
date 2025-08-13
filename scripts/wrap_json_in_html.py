@@ -455,7 +455,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   }
   function clearBanner(){ els.banner.style.display='none'; els.banner.textContent=''; els.banner.className='banner'; }
   function escapeHtml(s){ return String(s).replace(/[&<>\"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[m])); }
-  function logw(msg){ const t=new Date().toLocaleTimeString(); els.worklog.textContent += `[${t}] ${msg}\\n`; els.worklog.scrollTop = els.worklog.scrollHeight; }
+  function logw(msg){ const t=new Date().toLocaleTimeString(); els.worklog.textContent += `[${t}] ${msg}\n`; els.worklog.scrollTop = els.worklog.scrollHeight; }
   async function withBusy(label, fn){
     els.worklog.textContent = '';
     els.busy.style.display = 'flex';
@@ -660,7 +660,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   function selectedFiles(){ return Array.from(els.tree.querySelectorAll('input[type=\"checkbox\"]:checked')).map(cb=>cb.dataset.path).filter(p => HASHMAPS.byPath.get(p)?.type === 'file'); }
   
     function openParentsFor(path){
-    const cb = els.tree.querySelector(`input[data-path=\"${CSS.escape(path)}\"]`);
+    const cb = els.tree.querySelector(`input[data-path=\"${CSS.escape(path)}"]`);
     if(!cb) return;
     let li = cb.closest('li');
     while(li){
@@ -684,7 +684,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   function quickSelectCore(){
     els.tree.querySelectorAll('input[type=\"checkbox\"]').forEach(cb=>cb.checked=false);
     CORE.forEach(p=>{
-      const cb = els.tree.querySelector(`input[data-path=\"${CSS.escape(p)}\"]`);
+      const cb = els.tree.querySelector(`input[data-path=\"${CSS.escape(p)}"]`);
       if(cb){ cb.checked=true; openParentsFor(p); updateParents(cb.closest('li')); }
     });
     recomputeAllParents();
@@ -699,7 +699,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       '### PROTOCOL_START: P-HR_v2.8_FULL',
       ''
     ].join('\\n');
-    return `### ${filename}\\n\\n` + '```json\\n' + jsonText + '\\n```\\n';
+    return `### ${filename}\n\\n` + '```json\\n' + jsonText + '\\n```\\n';
   }
 
   // ---------- Hash-index och inventory ----------
@@ -862,7 +862,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       await walk(ctx.file_structure);
       const payload = { obligatory_rules:['forbid_image_generation'], files, checksums };
       const text = els.compact.checked ? JSON.stringify(payload) : JSON.stringify(payload, null, 2);
-      els.out.textContent = `### files_payload.json\n\n\`\`\`json\n${text}\n\`\`\`\n`;
+      els.out.textContent = `### files_payload.json\n\n\`\`\`json\n${text}n\`\`\`\n`;
       els.copy.disabled = els.download.disabled = false;
       showBanner('Filer genererade (md).', 'ok');
     }catch(e){
@@ -1004,7 +1004,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         
         md.push(`### D-MOD CONTRACT`);
         md.push(dmodHardRules());
-        md.push(`**RULES_HASH:** \`${rules_hash}\``);
+        md.push(`**RULES_HASH:** \`${rules_hash}``);
         md.push('**SCHEMA:**\n```json\n' + JSON.stringify(schema, null, 2) + '\n```');
       }
 
@@ -1229,7 +1229,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     els.fp.classList.add('show');
     const ext=(p.split('.').pop()||'').toLowerCase();
     if(IMAGE_EXT.includes(ext)){
-      els.fpBody.innerHTML = `<img src=\"${RAW_BASE+p}\" alt=\"${escapeHtml(p)}\">`;
+      els.fpBody.innerHTML = `<img src=\"${RAW_BASE+p}" alt=\"${escapeHtml(p)}">`;
       els.fpCopy.disabled=true;
       els.fpDownload.onclick = ()=>{ const a=document.createElement('a'); a.href=RAW_BASE+p; a.download=p.split('/').pop(); document.body.appendChild(a); a.click(); a.remove(); };
     }else{
@@ -1294,8 +1294,8 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   function renderPerfFilters(perfLog){
     const provs = new Set(), models = new Set();
     perfLog.forEach(s=>{ const pm = getSessionProvModel(s); provs.add(pm.prov); models.add(pm.model); });
-    els.pf.provWrap.innerHTML = Array.from(provs).sort().map(p=>`<label class=\"inline\"><input type=\"checkbox\" data-provid=\"${escapeHtml(p)}\"> ${escapeHtml(p)}</label>`).join(' ');
-    els.pf.modelWrap.innerHTML = Array.from(models).sort().map(m=>`<label class=\"inline\"><input type=\"checkbox\" data-modelid=\"${escapeHtml(m)}\"> ${escapeHtml(m)}</label>`).join(' ');
+    els.pf.provWrap.innerHTML = Array.from(provs).sort().map(p=>`<label class=\"inline\"><input type=\"checkbox\" data-provid=\"${escapeHtml(p)}"> ${escapeHtml(p)}</label>`).join(' ');
+    els.pf.modelWrap.innerHTML = Array.from(models).sort().map(m=>`<label class=\"inline\"><input type=\"checkbox\" data-modelid=\"${escapeHtml(m)}"> ${escapeHtml(m)}</label>`).join(' ');
   }
 
   function applyFilter(perfLog){
@@ -1419,7 +1419,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       data:{ labels, datasets:[
         { label:'Debugging Cycles', data:dbg },
         { label:'Self Corrections', data:sc },
-        { label:'External Corrections', data:ec }\
+        { label:'External Corrections', data:ec }
       ]},
       options:{ responsive:true, maintainAspectRatio:false, scales:{ x:{stacked:true}, y:{stacked:true, beginAtZero:true} } }
     });
@@ -1459,9 +1459,9 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     const p = ctx.persona_data;
     return `### MASTER PROTOCOL: FRANKENSTEEN v${p.version} ###\\n` +
            `DU ÄR: En ${p.identity.personality} ${p.identity.role}.\\n` +
-           `DITT MÅL: ${p.identity.purpose}\\n` +
-           `KÄRNFILOSOFI: ${p.problem_solving_philosophy.join(' ')}\\n` +
-           `HUR DU LEVERERAR: ${p.programming_protocol.two_pass_delivery.join(' ')}\\n` +
+           `DITT MÅL: ${p.identity.purpose}\n` +
+           `KÄRNFILOSOFI: ${p.problem_solving_philosophy.join(' ')}\n` +
+           `HUR DU LEVERERAR: ${p.programming_protocol.two_pass_delivery.join(' ')}\n` +
            `HUR DU GRANSKAR: Granska ditt eget arbete mot följande: ${p.verification_protocol.final_checklist.join(', ')}.\\n` +
            `KONTEXTFÖRSTÅELSE: Den medföljande fillistan är berikad. Fältet 'purpose' förklarar varje fils syfte. Använd denna information för att fatta intelligenta beslut.`;
   }
@@ -1506,7 +1506,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
   // ---------- Patch Center (INTEGRATED - Anchor Diff v2.1) ----------
   function initPatchCenter(){
-    function q(id){ return document.getElementById(id); }\
+    function q(id){ return document.getElementById(id); }
     const bar = document.querySelector('#right .output .bar'); if(!bar) return;
 
     const openBtn = document.createElement('button');
@@ -1523,9 +1523,9 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     function log(m, kind='info'){ 
         const t=new Date().toLocaleTimeString(); 
         const k = kind==='err'?'[ERR]':kind==='warn'?'[WARN]':'[INFO]';
-        logEl.textContent += `[patch ${t}] ${k} ${m}\\n`; 
+        logEl.textContent += `[patch ${t}] ${k} ${m}\n`; 
         logEl.scrollTop=logEl.scrollHeight; 
-        if(els.worklog){ els.worklog.textContent += `[patch ${t}] ${k} ${m}\\n`; els.worklog.scrollTop=els.worklog.scrollHeight; } 
+        if(els.worklog){ els.worklog.textContent += `[patch ${t}] ${k} ${m}\n`; els.worklog.scrollTop=els.worklog.scrollHeight; } 
     }
     
     openBtn.onclick = ()=> modal.classList.add('show');
@@ -1729,7 +1729,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       const metrics = ctx && ctx.ai_performance_metrics;
       const all = Array.isArray(metrics && metrics.performanceLog) ? metrics.performanceLog : [];
       exportCSV(applyFilter(all));
-    }catch(e){ showBanner('CSV-export fel: '+e.message, 'err'); }\
+    }catch(e){ showBanner('CSV-export fel: '+e.message, 'err'); }
   };
   els.pf.reset.onclick = ()=>{
     els.pf.from.value=''; els.pf.to.value=''; els.pf.ma.checked=false;
@@ -1764,7 +1764,7 @@ def main():
             f.write(html_out)
         print(f"Successfully generated integrated HTML to {out_path}")
     except Exception as e:
-        sys.stderr.write(f"Error writing to {out_path}: {e}\n")
+        sys.stderr.write(f"Error writing to {out_path}: {e}n")
         sys.exit(1)
 
 if __name__ == "__main__":
