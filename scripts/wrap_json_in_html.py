@@ -1031,12 +1031,16 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
       // 4. Rika kandidater + Dynamisk Kontext
       logw('Bygger berikade filkandidater och dynamisk kontext...');
-      const { candidates } = await buildCandidatesRichAsync(els.maxCands.value, !!els.incAssets.checked);
+      const { candidates, contentForRelations } = await buildCandidatesRichAsync(els.maxCands.value, !!els.incAssets.checked);
       LAST_CANDIDATES = candidates.slice();
+
+      logw('Bygger filrelationsmatris...');
+      const fileRelations = await buildFileRelations(contentForRelations);
       
       const payload = { 
           CANDIDATE_FILES: candidates,
-          DYNAMIC_CONTEXT_SOURCES: dynamicContextSources
+          DYNAMIC_CONTEXT_SOURCES: dynamicContextSources,
+          file_relations: fileRelations
       };
 
       if(els.incInventory.checked){
