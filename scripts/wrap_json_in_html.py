@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 wrap_json_in_html.py — AI Context Builder v7.4 (2025-08-11)
+
 Nyheter vs v7.3:
 - v7.5 (2025-08-11): Optimerat CORE-konstanten för att minska initial kontextstorlek och förlita sig på en dynamiskt uppdaterad `docs/core_file_info.json`.
 - Stabilisering: Plugin-logik för Patch Center har nu integrerats direkt i denna fil för att eliminera dynamiska injiceringsfel.
@@ -252,16 +253,24 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     </header>
     <main>
       <ol>
-        <li><b>Skapa nästa arbete</b>:
+        <li><b>Målsättning (textarea)</b>: Skriv in uppgiftens mål. Detta blir en <code>session_task</code> i promptens header.</li>
+        <li><b>Skapa nästa arbete (Discovery)</b>:
           <ul>
-            <li><b>K-MOD</b> → returnera <b>paths</b> + <b>embed</b> + <b>why</b>. <u>INGA id</u>.</li>
-            <li><b>D-MOD</b> → returnera <b>selected_ids</b> + <b>notes</b> + <b>echo_rules_hash</b>. <u>INGA paths</u>.</li>
-            <li>Prompt innehåller <code>CANDIDATE_FILES</code> och, om valt, <code>FILE_INVENTORY</code> (kompakt metadata).</li>
+            <li>Välj <b>K-MOD</b> (flexibelt, paths) eller <b>D-MOD</b> (deterministiskt, ID). Valet styr kontrakt, schema och regler i prompten.</li>
+            <li>Prompten innehåller en <b>INFO_SOURCE_GUIDE</b> som förklarar hur kandidatlistans metadata (<code>purpose</code>, <code>info_source</code>) ska tolkas.</li>
+            <li>En heuristisk <b>FILE_RELATIONS</b>-matris kan inkluderas för att visa filberoenden.</li>
+            <li>Modellen svarar med STRICT JSON enligt valt kontrakt (K/D).</li>
           </ul>
         </li>
-        <li>Klistra in modellsvar (STRICT JSON) → auto-select.</li>
-        <li><b>Skapa uppgift</b> → impl_bootstrap_v1.json + provider_envelope.json (markdown) med <code>inventory_compact</code>.</li>
-        <li>Alt: <b>Generate Files</b> → markdown med <code>files_payload.json</code> + <code>checksums</code>.</li>
+        <li>Klistra in modellsvar (JSON) → filerna auto-väljs i trädet.</li>
+        <li><b>Skapa uppgift</b>: Genererar <code>impl_bootstrap_v1.json</code> med fulltext för valda filer, redo för implementation.</li>
+        <li><b>Övriga generatorer</b>:
+            <ul>
+              <li><b>Generate Files</b>: Skapar <code>files_payload.json</code> med enbart fulltext och checksums.</li>
+              <li><b>Generate Bootstrap.md</b>: Äldre bootstrap-format.</li>
+              <li><b>Generate Menu Discovery</b>: Skapar en meny-prompt (används nu internt av "Skapa nästa arbete").</li>
+            </ul>
+        </li>
       </ol>
     </main>
     <footer><button id="helpOk" class="primary">OK</button></footer>
@@ -369,7 +378,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     tabBtns:document.querySelectorAll('.tabbar button[data-tab]'),
     tabs:{ builder:document.getElementById('tab-builder'), performance:document.getElementById('tab-performance') },
     // provider
-    provGemini:document.querySelector('input[name="prov"][value="gemini"]'),
+    provGemini:document.querySelector('input[name=\"prov\"][value=\"gemini\"]'),
     // modals
     helpBtn:document.getElementById('helpBtn'),
     helpModal:document.getElementById('helpModal'),
@@ -444,8 +453,8 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     els.banner.style.display = 'block';
   }
   function clearBanner(){ els.banner.style.display='none'; els.banner.textContent=''; els.banner.className='banner'; }
-  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-  function logw(msg){ const t=new Date().toLocaleTimeString(); els.worklog.textContent += `[${t}] ${msg}\n`; els.worklog.scrollTop = els.worklog.scrollHeight; }
+  function escapeHtml(s){ return String(s).replace(/[&<>\"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[m])); }
+  function logw(msg){ const t=new Date().toLocaleTimeString(); els.worklog.textContent += `[${t}] ${msg}\\n`; els.worklog.scrollTop = els.worklog.scrollHeight; }
   async function withBusy(label, fn){
     els.worklog.textContent = '';
     els.busy.style.display = 'flex';
@@ -453,8 +462,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     try{ const r = await fn(); logw(label+' klar'); return r; }
     finally{ setTimeout(()=> els.busy.style.display='none', 150); }
   }
-
-  function isCodeLike(p){
+    function isCodeLike(p){
     const ext=(p.split('.').pop()||'').toLowerCase();
     return ['py','js','jsx','ts','tsx','vue','json','md','html','css','yml','yaml','toml','sh','bat'].includes(ext);
   }
@@ -485,6 +493,97 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     const r = await fetch(url, {cache:'no-store'});
     if(!r.ok) throw new Error('HTTP '+r.status+' for '+url);
     return await r.text();
+  }
+
+  // ---------- Rich Info & Relations (UPDATED/NEW) ----------
+  function getRichFileInfo(path, content, coreInfo) {
+    // 1. Core info (högst prioritet)
+    if (coreInfo && coreInfo[path] && coreInfo[path].purpose_and_responsibility) {
+      return { source: 'core_info', description: coreInfo[path].purpose_and_responsibility };
+    }
+
+    // 2. Inledande kommentarsblock
+    if (content) {
+      const lines = content.split('\n');
+      const commentRegex = /^\s*(\/\/|#|\*|'''|\"\"\"|<!--)/;
+      const commentLines = [];
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (trimmed.length > 0 && commentRegex.test(trimmed)) {
+          commentLines.push(trimmed.replace(commentRegex, '').replace(/-->$/, '').trim());
+        } else if (trimmed.length > 0 && commentLines.length > 0) {
+          break; // Stoppa efter första raden som inte är en kommentar
+        }
+      }
+      if (commentLines.length > 0) {
+        return { source: 'comment', description: commentLines.join('\n') };
+      }
+      
+      // 3. Hela filen (om kort) eller bara början
+      if (lines.length <= 35) {
+        return { source: 'full', description: content };
+      }
+      return { source: 'head', description: lines.slice(0, 20).join('\n') };
+    }
+
+    // 4. Heuristik baserat på filnamn/sökväg
+    if (path.startsWith('src/router/')) return { source: 'heuristic', description: 'Vue Router config / routes' };
+    if (path.startsWith('src/stores/') || path.startsWith('src/pinia/')) return { source: 'heuristic', description: 'Pinia store' };
+    if (path.startsWith('src/components/')) return { source: 'heuristic', description: 'Vue component' };
+    if (/^vite\.config\..+/.test(path)) return { source: 'heuristic', description: 'Vite build config' };
+    if (path === 'package.json') return { source: 'heuristic', description: 'NPM manifest & scripts' };
+    if (path.startsWith('tests/') || /\.spec\./.test(path)) return { source: 'heuristic', description: 'Testspecifikation' };
+
+    // 5. Fallback
+    return { source: 'none', description: null };
+  }
+
+  async function buildFileRelations(candidatesWithContent) {
+      const edges = [];
+      const importRegex = /(?:import|from|require\s*\()\s*['"]((?:\.\/|\.\.\/|@\/)[^'"]+)['"]/g;
+      const routeImportRegex = /import\s*\(\s*['"]((?:\.\/|\.\.\/|@\/)[^'"]+)['"]\s*\)/g;
+      const seen = new Set();
+      const inventoryPaths = new Set(INVENTORY.map(f => f.path));
+
+      function resolvePath(fromPath, relativeImport) {
+          if (!relativeImport.startsWith('.')) {
+              let p = relativeImport.replace(/^@\//, 'src/');
+              const exts = ['', '.js', '.ts', '.vue'];
+              for (const ext of exts) if (inventoryPaths.has(p + ext)) return p + ext;
+              return null;
+          }
+          const fromDirParts = fromPath.split('/').slice(0, -1);
+          const importParts = relativeImport.split('/');
+          for (const part of importParts) {
+              if (part === '.' || part === '') continue;
+              if (part === '..') fromDirParts.pop();
+              else fromDirParts.push(part);
+          }
+          let p = fromDirParts.join('/');
+          const exts = ['', '.js', '.ts', '.vue', '/index.js', '/index.ts'];
+          for (const ext of exts) if (inventoryPaths.has(p + ext)) return p + ext;
+          return null;
+      }
+      
+      for (const cand of candidatesWithContent) {
+          if (!cand.content || !isCodeLike(cand.path)) continue;
+          
+          const allMatches = [...Array.from(cand.content.matchAll(importRegex), m => m[1]), 
+                              ...Array.from(cand.content.matchAll(routeImportRegex), m => m[1])];
+
+          for (const imp of allMatches) {
+              const toPath = resolvePath(cand.path, imp);
+              if (toPath && toPath !== cand.path) {
+                  const edgeKey = `${cand.path}->${toPath}`;
+                  if (!seen.has(edgeKey)) {
+                      edges.push({ from: cand.path, to: toPath, type: 'import' });
+                      seen.add(edgeKey);
+                  }
+              }
+          }
+      }
+      
+      return { edges, notes: "Heuristiskt extraherade beroenden från filhuvuden (max 80 rader)." };
   }
 
   // ---------- Tree helpers ----------
@@ -536,7 +635,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
       cb.addEventListener('change', ()=>{
         const sub=li.querySelector(':scope > ul');
-        if(sub){ sub.querySelectorAll('input[type="checkbox"]').forEach(x=> x.checked=cb.checked); }
+        if(sub){ sub.querySelectorAll('input[type=\"checkbox\"]').forEach(x=> x.checked=cb.checked); }
         updateParents(li);
       });
 
@@ -548,19 +647,19 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   function updateParents(li){
     let p=li.parentElement && li.parentElement.closest('li');
     while(p){
-      const kids=p.querySelectorAll(':scope > ul input[type="checkbox"]');
-      const parentCb=p.querySelector(':scope > label input[type="checkbox"]');
+      const kids=p.querySelectorAll(':scope > ul input[type=\"checkbox\"]');
+      const parentCb=p.querySelector(':scope > label input[type=\"checkbox\"]');
       const total=kids.length, on=Array.from(kids).filter(c=>c.checked).length;
       if(parentCb){ parentCb.indeterminate = on>0 && on<total; parentCb.checked = on===total; }
       p=p.parentElement && p.parentElement.closest('li');
     }
   }
   function recomputeAllParents(){ document.querySelectorAll('#tree li').forEach(li=> updateParents(li)); }
-  function selectedPaths(){ return Array.from(els.tree.querySelectorAll('input[type="checkbox"]:checked')).map(cb=>cb.dataset.path); }
-  function selectedFiles(){ return Array.from(els.tree.querySelectorAll('input[type="checkbox"]:checked')).map(cb=>cb.dataset.path).filter(p => HASHMAPS.byPath.get(p)?.type === 'file'); }
+  function selectedPaths(){ return Array.from(els.tree.querySelectorAll('input[type=\"checkbox\"]:checked')).map(cb=>cb.dataset.path); }
+  function selectedFiles(){ return Array.from(els.tree.querySelectorAll('input[type=\"checkbox\"]:checked')).map(cb=>cb.dataset.path).filter(p => HASHMAPS.byPath.get(p)?.type === 'file'); }
   
     function openParentsFor(path){
-    const cb = els.tree.querySelector(`input[data-path="${CSS.escape(path)}"]`);
+    const cb = els.tree.querySelector(`input[data-path=\"${CSS.escape(path)}\"]`);
     if(!cb) return;
     let li = cb.closest('li');
     while(li){
@@ -574,7 +673,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     }
   }
   function autoSelectPaths(paths){
-    const all = Array.from(els.tree.querySelectorAll('input[type="checkbox"]'));
+    const all = Array.from(els.tree.querySelectorAll('input[type=\"checkbox\"]'));
     paths.forEach(p=>{
       const cb = all.find(x=>x.dataset.path===p);
       if(cb){ cb.checked=true; openParentsFor(p); updateParents(cb.closest('li')); }
@@ -582,9 +681,9 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     recomputeAllParents();
   }
   function quickSelectCore(){
-    els.tree.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=false);
+    els.tree.querySelectorAll('input[type=\"checkbox\"]').forEach(cb=>cb.checked=false);
     CORE.forEach(p=>{
-      const cb = els.tree.querySelector(`input[data-path="${CSS.escape(p)}"]`);
+      const cb = els.tree.querySelector(`input[data-path=\"${CSS.escape(p)}\"]`);
       if(cb){ cb.checked=true; openParentsFor(p); updateParents(cb.closest('li')); }
     });
     recomputeAllParents();
@@ -599,7 +698,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       '### PROTOCOL_START: P-HR_v2.8_FULL',
       ''
     ].join('\\n');
-    return `### ${filename}\\n\\n` + head + '```json\\n' + jsonText + '\\n```\\n';
+    return `### ${filename}\\n\\n` + '```json\\n' + jsonText + '\\n```\\n';
   }
 
   // ---------- Hash-index och inventory ----------
@@ -633,8 +732,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
     return out;
   }
-
-  function walkInventory(node, acc, base=''){
+    function walkInventory(node, acc, base=''){
     Object.keys(node).forEach(k=>{
       const it = node[k];
       const p = base?`${base}/${k}`:k;
@@ -663,7 +761,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     return acc;
   }
 
-  // ---------- Context/Files generering ----------
+  // ---------- Context/Files generering (OFÖRÄNDRAT)----------
   async function buildBootstrapMd(){
     try{
       clearBanner();
@@ -762,7 +860,9 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       }
       await walk(ctx.file_structure);
       const payload = { obligatory_rules:['forbid_image_generation'], files, checksums };
-      emit(payload, 'files_payload.json');
+      const text = els.compact.checked ? JSON.stringify(payload) : JSON.stringify(payload, null, 2);
+      els.out.textContent = `### files_payload.json\n\n\`\`\`json\n${text}\n\`\`\`\n`;
+      els.copy.disabled = els.download.disabled = false;
       showBanner('Filer genererade (md).', 'ok');
     }catch(e){
       showBanner('Fel vid file-generering: '+e.message, 'err');
@@ -774,10 +874,81 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     els.out.textContent = mdWrapJsonSection(nameHint, text);
     els.copy.disabled = els.download.disabled = false;
   }
+  
+  // ---------- Discovery (huvudfunktion, UPPGRADERING) ----------
+  
+  // Enriched info (async): fetch head (första 80 rader) när core_info saknas
+  async function getRichFileInfoAsync(path, coreInfo){
+    const r0 = getRichFileInfo(path, null, coreInfo);
+    if(r0 && r0.source !== 'none' && r0.source !== 'heuristic') return { ...r0, content: null };
+    if(!isCodeLike(path)) return { ...r0, content: null };
+    try{ 
+        const txt = await fetchText(path); 
+        const info = getRichFileInfo(path, txt, coreInfo);
+        const contentForRelations = txt.split('\n').slice(0, 80).join('\n');
+        return { ...info, content: contentForRelations };
+    }catch(_){ return { ...getRichFileInfo(path, null, coreInfo), content: null }; }
+  }
 
-  // ---------- Discovery (strikt) ----------
-  // ---- Menu-first Discovery Prompt (obligatoriskt första steg) ----
-  function buildMenuFirstPrompt(){
+  async function buildCandidatesRichAsync(maxN, includeAssets){
+    const arr = INVENTORY.filter(it=> includeAssets ? true : isCodeLike(it.path));
+    const lim = Math.max(1, Number(maxN||0) || 999999);
+    const sliced = arr.slice(0, lim);
+    const coreInfo = (ctx.core_info_data || {});
+    const items = [];
+    const itemsWithContent = [];
+
+    for(let i=0;i<sliced.length;i++){
+      const rec = sliced[i];
+      const info = await getRichFileInfoAsync(rec.path, coreInfo);
+      items.push({
+        id: i+1,
+        path: rec.path,
+        lang: rec.lang,
+        size: rec.size,
+        sha256_lf: rec.sha256_lf || null,
+        git_sha1: rec.git_sha1 || null,
+        info_source: info.source,
+        purpose: info.description
+      });
+      if(info.content) {
+          itemsWithContent.push({ path: rec.path, content: info.content });
+      }
+    }
+    return { candidates: items, contentForRelations: itemsWithContent };
+  }
+
+  function currentDiscMode(){ const el=document.querySelector('input[name=\"discMode\"]:checked'); return el?el.value:'KMOD'; }
+  function dmodHardRules(){
+    return [
+      "**D-MOD HÅRDA REGLER (svara ENBART med JSON):**",
+      "1. Returnera ENBART fälten: `protocol_id`, `mode`, `echo_rules_hash`, `selected_ids`, `notes`.",
+      "2. `selected_ids`: enbart heltal (ID:n från CANDIDATE_FILES).",
+      "3. `notes`: objekt där NYCKLARNA är dessa ID (som strängar), värden ≤200 tecken.",
+      "4. INGA `paths`/filnamn, INGA extra fält.",
+      "5. `echo_rules_hash` MÅSTE exakt matcha `rules_hash` från prompten.",
+      "6. Antal val: min 2, max 12."
+    ].join("\n");
+  }
+  function kmodHardRules(){
+    return [
+      "**K-MOD HÅRDA REGLER (svara ENBART med JSON):**",
+      "1. Returnera fälten: `protocol_id`, `mode`, `selected_files[]`.",
+      "2. `selected_files[]`: objekt med `{path, embed, why}`.",
+      "3. `path`: exakt filväg från CANDIDATE_FILES. INGA ID.",
+      "4. `embed` ∈ {'full','chunk','stub'}; `why` ≤200 tecken.",
+      "5. INGA extrafält (inga `id` / `selected_ids`)."
+    ].join("\n");
+  }
+  
+  async function sha256HexText(t){
+    const enc=new TextEncoder().encode(t);
+    const buf=await crypto.subtle.digest('SHA-256', enc);
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+  const DM = { SELECTION: { min:2, max:12, allow_paths:["src/**","docs/**","scripts/**","public/**"], deny_paths:["infra/prod/**"] } };
+  
+  async function buildMenuFirstPrompt(){
     try{
       clearBanner();
       if(!ctx){ showBanner('context.json ej laddad ännu.', 'err'); return; }
@@ -785,52 +956,89 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         HASHMAPS = buildHashMaps(ctx);
         INVENTORY = buildInventory(ctx);
       }
-      const inv = INVENTORY;
+      
+      const md = [];
+      const mode = currentDiscMode();
+      
+      // 1. Auto-run header med session_task
+      const sessionTask = (els.instruction.value || "").trim();
+      const header = [
+          '### AI_BOOTSTRAP_DIRECTIVE: EXECUTE_FULL_PROTOCOL_NOW',
+          '### SYSTEM_OVERRIDE: RUN_CONTEXT_BOOTSTRAP',
+          '### INIT_CONTEXT_MODE: TRUE',
+          '### PROTOCOL_START: START_NEW_PROJECT'
+      ];
+      const headerJson = { session_task: sessionTask, standing_mandate: { remember_and_obey_next_reply: true } };
+      md.push(header.join('\n'));
+      md.push('```json\n' + JSON.stringify(headerJson, null, 2) + '\n```');
 
-      // RIKA kandidater (purpose, info_source, checksums)
-      const cands = buildCandidatesRich(els.maxCands.value, !!els.incAssets.checked);
-      LAST_CANDIDATES = cands.slice();
+      // 2. INFO_SOURCE_GUIDE
+      const infoGuide = [
+          '### INFO_SOURCE_GUIDE',
+          'Du får en kandidatlista (`CANDIDATE_FILES`) där varje fil har berikats med metadata:',
+          '- `purpose`: En beskrivning av filens syfte.',
+          '- `info_source`: Visar hur syftet bestämdes:',
+          '  - `core_info`: Från en manuellt skapad metafil (`docs/core_file_info.json`). Högst tillförlitlighet.',
+          '  - `comment`: Extraherat från de inledande kommentarerna i filen. Hög tillförlitlighet.',
+          '  - `full` / `head`: Hela filen eller de första raderna. Syftet är filens råa innehåll.',
+          '  - `heuristic`: Syftet är gissat från filens sökväg/namn (t.ex. `src/router/**`). Lägre tillförlitlighet.',
+          '  - `none`: Inget syfte kunde bestämmas.',
+          'Använd `purpose` och `info_source` för att göra ett intelligent urval. Föredra filer där `info_source` är `core_info` eller `comment`.'
+      ];
+      md.push(infoGuide.join('\n'));
 
-      // FÖRGENERERAD MENY (stabil ordning + rekommendationer)
-      const menuPayload = buildMenuPayload(inv);
-
-      // Payload till modellen (kandidater + ev. inventory)
-      const payload = { CANDIDATE_FILES: cands };
-      if(els.incInventory && els.incInventory.checked){
-        payload.inventory_compact = inv.map(r=>({ path:r.path, lang:r.lang, size:r.size||null, sha256_lf:r.sha256_lf||null, git_sha1:r.git_sha1||null }));
+      // 3. Kontrakt och regler (K-MOD/D-MOD)
+      let rules_hash = null;
+      if (mode === 'KMOD') {
+        const schema = { protocol_id: "discovery_v2", mode: "K-MOD", selected_files:[{path:"string", embed:"full|chunk|stub", why:"string<=200"}] };
+        md.push(`### K-MOD CONTRACT`);
+        md.push(kmodHardRules());
+        md.push('**SCHEMA:**\n```json\n' + JSON.stringify(schema, null, 2) + '\n```');
+      } else { // DMOD
+        const schema = { protocol_id:"discovery_dmod_v1", mode:"D-MOD", echo_rules_hash:"string", selected_ids:['int'], notes:"map<id-as-string, string<=200>" };
+        const lim = Math.max(1, Number(els.maxCands.value||0) || 999999);
+        const rulesPayload = { obligatory_rules: ["forbid_image_generation"], selection_constraints: DM.SELECTION, lim, includeAssets: !!els.incAssets.checked };
+        rules_hash = await sha256HexText(JSON.stringify(rulesPayload));
+        LAST_RULES_HASH = rules_hash;
+        
+        md.push(`### D-MOD CONTRACT`);
+        md.push(dmodHardRules());
+        md.push(`**RULES_HASH:** \`${rules_hash}\``);
+        md.push('**SCHEMA:**\n```json\n' + JSON.stringify(schema, null, 2) + '\n```');
       }
 
-      const hdr = [
-        '### MENU_DISCOVERY_v1 (obligatoriskt förstasteg)',
-        '- Nedan finns en färdig MENY (DISCOVERED_MENU). Välj nummer (ex: 1 eller 1,2).',
-        '- Om du ändå är osäker: ställ EN kort ja/nej-fråga innan val.',
-        '- Svara ENBART med JSON: {"menu":[...], "recommended":[...], "question":"..."}.',
-        '',
-        '### EFTER_VAL',
-        '- När jag svarat med nummer: generera **K-MOD discovery_v2** strikt (endast {protocol_id, mode, selected_files[]}).',
-        '- Begränsa urval enligt include/exclude-globs från mitt val; `docs/**` → "stub" om inte uttryckligen valt.'
-      ].join('\n');
+      // 4. Rika kandidater (purpose, info_source)
+      logw('Bygger berikade filkandidater...');
+      const { candidates, contentForRelations } = await buildCandidatesRichAsync(els.maxCands.value, !!els.incAssets.checked);
+      LAST_CANDIDATES = candidates.slice();
+      
+      const candPayload = { CANDIDATE_FILES: candidates };
+      if(els.incInventory.checked){
+        candPayload.inventory_compact = INVENTORY.map(r=>({ path:r.path, lang:r.lang, size:r.size||null, sha256_lf:r.sha256_lf||null, git_sha1:r.git_sha1||null }));
+      }
+      md.push('### CANDIDATE_FILES');
+      md.push('```json\n' + JSON.stringify(candPayload, null, 2) + '\n```');
 
-      const prettyMenu = els.compact && els.compact.checked ? JSON.stringify(menuPayload) : JSON.stringify(menuPayload, null, 2);
-      const prettyCand = els.compact && els.compact.checked ? JSON.stringify(payload) : JSON.stringify(payload, null, 2);
-
-      const md = [
-        '### MENU_FIRST_DISCOVERY_PROMPT',
-        '',
-        hdr,
-        '```json',
-        prettyMenu,
-        '```',
-        '```json',
-        prettyCand,
-        '```'
-      ].join('\n');
-
-      els.out.textContent = md;
+      // 5. Relationsmatris
+      logw('Bygger heuristisk relationsmatris...');
+      const relations = await buildFileRelations(contentForRelations);
+      if (relations && relations.edges.length > 0) {
+        md.push('### FILE_RELATIONS (Optional)');
+        md.push('```json\n' + JSON.stringify(relations, null, 2) + '\n```');
+      }
+      
+      // 6. Meny (behålls för bakåtkompatibilitet och som guide)
+      const menuPayload = buildMenuPayload(INVENTORY);
+      md.push('### MENU_DISCOVERY_v1 (Guide)');
+      md.push('Använd denna meny för att snabbt få en överblick. Ditt svar ska dock följa K-MOD/D-MOD-kontraktet ovan.');
+      md.push('```json\n' + JSON.stringify(menuPayload, null, 2) + '\n```');
+      
+      els.out.textContent = md.join('\n\n');
       els.copy.disabled = els.download.disabled = false;
-      showBanner('Menu-first discovery prompt (med meny + rika kandidater) genererad.', 'ok');
-    }catch(e){ showBanner('Fel vid menu-first: '+e.message, 'err'); }
+      showBanner(`Discovery-prompt genererad för ${mode}.`, 'ok');
+    }catch(e){ showBanner('Fel vid discovery-prompt: '+e.message, 'err'); console.error(e); }
   }
+
 
   // ---- Menu Discovery (kategori-heuristik + MD/JSON) ----
   function _count(inv, pred){ let n=0; for(const it of inv){ if(pred(it)) n++; } return n; }
@@ -845,13 +1053,13 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
   function buildMenuPayload(inv){
     const cats = [];
-    const c1 = _count(inv, it=> _srcLike(it.path) || _eq(it.path,'package.json') || /^vite\.config\./.test(it.path) || _eq(it.path,'index.html'));
+    const c1 = _count(inv, it=> _srcLike(it.path) || _eq(it.path,'package.json') || /^vite\.config\..+/.test(it.path) || _eq(it.path,'index.html'));
     cats.push({ n:1, label:'Vue build & appkod', count:c1, conf:_conf(c1), include_globs:['src/**','package.json','vite.config.*','index.html'], exclude_globs:['docs/**','sessions/**','public/data/**'] });
     const c2 = _count(inv, it=> _srcLike(it.path) || _router(it.path) || _stores(it.path));
     cats.push({ n:2, label:'Körtidsfel/Router/Pinia', count:c2, conf:_conf(c2), include_globs:['src/**/*.{vue,ts,js}','src/router/**','src/stores/**'], exclude_globs:['docs/**'] });
     const c3 = _count(inv, it=> _starts(it.path,'functions/') || _starts(it.path,'api/') || _eq(it.path,'public/_routes.json'));
     cats.push({ n:3, label:'Backend/Routes/CF', count:c3, conf:_conf(c3), include_globs:['functions/**','api/**','public/_routes.json'], exclude_globs:['docs/**'] });
-    const c4 = _count(inv, it=> _starts(it.path,'tests/') || /\/[^/]+\.spec\./.test(it.path));
+    const c4 = _count(inv, it=> _starts(it.path,'tests/') || /\/[^\/]+\.spec\./.test(it.path));
     cats.push({ n:4, label:'Tester', count:c4, conf:_conf(c4), include_globs:['tests/**','src/**/*.spec.*'], exclude_globs:['docs/**'] });
     const c5 = _count(inv, it=> _starts(it.path,'public/data/'));
     cats.push({ n:5, label:'Data/Mock', count:c5, conf:_conf(c5), include_globs:['public/data/**'], exclude_globs:[] });
@@ -873,9 +1081,9 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     lines.push('### MENU_DISCOVERY_v1');
     lines.push('- Skapa en NUMRERAD meny (≤8 val) baserat på filerna.');
     lines.push('- Ordning: app-kod, build-config, backend/functions, tests, data/mock, docs/övrigt.');
-    lines.push('- Varje rad: nummer, label, count, confidence, include_globs, exclude_globs (+ ev. embed:"stub").');
-    lines.push('- Markera rekommenderade med ★ (max 2) och lista dem i "recommended".');
-    lines.push('- Ställ EN fråga: "Välj ett eller flera nummer …"');
+    lines.push('- Varje rad: nummer, label, count, confidence, include_globs, exclude_globs (+ ev. embed:\"stub\").');
+    lines.push('- Markera rekommenderade med ★ (max 2) och lista dem i \"recommended\".');
+    lines.push('- Ställ EN fråga: \"Välj ett eller flera nummer …\"');
     lines.push('');
     const pretty = els.compact.checked ? JSON.stringify(payload) : JSON.stringify(payload, null, 2);
     lines.push('```json');
@@ -885,226 +1093,39 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     els.copy.disabled = els.download.disabled = false;
     showBanner('Menu Discovery genererad.', 'ok');
   }
-
-  // Enriched info (async): fetch header/full/head när core_info saknas
-  async function getRichFileInfoAsync(path, coreInfo){
-    const r0 = getRichFileInfo(path, null, coreInfo);
-    if(r0 && r0.source !== 'none') return r0;
-    if(!isCodeLike(path)) return r0;
-    try{ const txt = await fetchText(path); return getRichFileInfo(path, txt, coreInfo); }catch(_){ return r0; }
-  }
-
-  async function buildCandidatesRichAsync(maxN, includeAssets){
-    const arr = INVENTORY.filter(it=> includeAssets ? true : isCodeLike(it.path));
-    const lim = Math.max(1, Number(maxN||0) || 999999);
-    const sliced = arr.slice(0, lim);
-    const coreInfo = (ctx.core_info_data || {});
-    const items = [];
-    for(let i=0;i<sliced.length;i++){
-      const rec = sliced[i];
-      const info = await getRichFileInfoAsync(rec.path, coreInfo);
-      items.push({
-        id: i+1,
-        path: rec.path,
-        lang: rec.lang,
-        size: rec.size,
-        sha256_lf: rec.sha256_lf || null,
-        git_sha1: rec.git_sha1 || null,
-        info_source: info.source,
-        purpose: info.description
-      });
-    }
-    return items;
-  }
-
-  function currentDiscMode(){ const el=document.querySelector('input[name="discMode"]:checked'); return el?el.value:'KMOD'; }
-
-  function dmodHardRules(){
-    return [
-      "D-MOD HÅRDA REGLER (svara ENBART med JSON):",
-      "1) Returnera ENBART fälten: protocol_id, mode, echo_rules_hash, selected_ids, notes.",
-      "2) selected_ids: enbart heltal (ID:n från CANDIDATE_FILES).",
-      "3) notes: objekt där NYCKLARNA är dessa ID (som strängar), värden ≤200 tecken.",
-      "4) INGA paths/filnamn, INGA extra fält.",
-      "5) echo_rules_hash MÅSTE exakt matcha rules_hash.",
-      "6) Antal val: min 2, max 12."
-    ].join("\\n");
-  }
-  function kmodHardRules(){
-    return [
-      "K-MOD HÅRDA REGLER (svara ENBART med JSON):",
-      "1) Returnera fälten: protocol_id, mode, selected_files[].",
-      "2) selected_files[]: objekt med {path, embed, why}.",
-      "3) path: exakt filväg från CANDIDATE_FILES. INGA ID.",
-      "4) embed ∈ {'full','chunk','stub'}; why ≤200 tecken.",
-      "5) INGA extrafält (inga id / selected_ids)."
-    ].join("\\n");
-  }
-  function invalidExamples(){
-    return [
-      "OGILTIGA EXEMPEL:",
-      "- D-MOD men skickar paths: { selected_files:[{ path:'src/x.js', ...}] }  ❌",
-      "- K-MOD men skickar id:   { selected_ids:[1,2] }                           ❌",
-      "- Extra fält:             { ..., files:[...]}                                ❌"
-    ].join("\\n");
-  }
   
-    function toOpenAI(systemText, userJson){
-    return {
-      provider:"openai",
-      model:"gpt-5",
-      auto_start:true,
-      messages:[
-        {role:"system", content:systemText},
-        {role:"user",   content:userJson}
-      ]
-    };
-  }
-  function toGemini(systemText, userJson){
-    return {
-      provider:"google",
-      model:"gemini-2.5-pro",
-      auto_start:true,
-      system_instruction:systemText,
-      contents:[{role:"user", parts:[{text:userJson}]}]
-    };
-  }
-  function toProviderEnvelope(systemRules, userJsonPretty){
-    const sys = Array.isArray(systemRules) ? systemRules.join("\\n") : String(systemRules||'');
-    const user = userJsonPretty;
-    return (els.provGemini && els.provGemini.checked)
-      ? JSON.stringify(toGemini(sys, user), null, els.compact.checked?0:2)
-      : JSON.stringify(toOpenAI(sys, user), null, els.compact.checked?0:2);
-  }
-
-  async function sha256HexText(t){
-    const enc=new TextEncoder().encode(t);
-    const buf=await crypto.subtle.digest('SHA-256', enc);
-    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-  }
-
-  function buildCandidatesRich(maxN, includeAssets){
-    const arr = INVENTORY.filter(it=> includeAssets ? true : isCodeLike(it.path));
-    const lim = Math.max(1, Number(maxN||0) || 999999);
-    const sliced = arr.slice(0, lim);
-    const coreInfo = (ctx.core_info_data || {});
-
-    return sliced.map((rec, i)=>{
-      const info = getRichFileInfo(rec.path, null, coreInfo);
-      return {
-        id: i+1,
-        path: rec.path,
-        lang: rec.lang,
-        size: rec.size,
-        sha256_lf: rec.sha256_lf || null,
-        git_sha1: rec.git_sha1 || null,
-        info_source: info.source,
-        purpose: info.description
-      }
-    });
-  }
-
+  // --------- Original/Legacy discovery functions (behålls för "no-delete" regel)
   async function buildDiscoveryPromptKMOD(){
-    const cands = await buildCandidatesRichAsync(els.maxCands.value, !!els.incAssets.checked);
-    LAST_CANDIDATES = cands.slice();
-    const schema = {
-      protocol_id:"discovery_v2",
-      mode:"K-MOD",
-      selected_files:[{path:"string", embed:"full|chunk|stub", why:"string<=200"}]
-    };
-    const blocks = [
-      "SESSION: PLANERA NÄSTA ARBETE (Discovery)",
-      "MODE: K-MOD",
-      kmodHardRules(),
-      invalidExamples(),
-      "SCHEMA:", JSON.stringify(schema, null, 2),
-      "CANDIDATE_FILES:", JSON.stringify(cands, null, 2)
-    ];
-    if(els.incInventory.checked){
-      const invCompact = INVENTORY.map(r=> ({path:r.path, lang:r.lang, size:r.size, sha256_lf:r.sha256_lf, git_sha1:r.git_sha1}));
-      blocks.push("FILE_INVENTORY (compact):", JSON.stringify(invCompact, null, 2));
-    }
-    blocks.push("ÅTERKOM ENBART MED GILTIG JSON ENLIGT SCHEMA. INGA ID.");
-    const masterProtocol = getMasterProtocol();
-    return [masterProtocol, ...blocks].join("\n\n---\n\n");
-  }
-
-  function globToRegex(glob){
-  async function buildMenuFirstMD(){
-    if(!ctx){ throw new Error('ctx saknas'); }
-    if(!Array.isArray(INVENTORY) || INVENTORY.length===0){
-      HASHMAPS = buildHashMaps(ctx);
-      INVENTORY = buildInventory(ctx);
-    }
     const cands = buildCandidatesRich(els.maxCands.value, !!els.incAssets.checked);
     LAST_CANDIDATES = cands.slice();
-    let payload = { CANDIDATE_FILES: cands };
-    if(els.incInventory.checked){
-      const invCompact = INVENTORY.map(r=> ({path:r.path, lang:r.lang, size:r.size, sha256_lf:r.sha256_lf || null, git_sha1:r.git_sha1 || null}));
-      payload.inventory_compact = invCompact;
-    }
-    const header = [
-      "### MENU_FIRST_DISCOVERY_PROMPT",
-      "",
-      "### MENU_DISCOVERY_v1 (obligatoriskt förstasteg)",
-      "- Du får CANDIDATE_FILES (+ ev. inventory_compact).",
-      "- Steg 1: Skapa en NUMRERAD meny (≤8) över kategorier: app-kod, build-config, backend/functions, tests, data/mock, docs/övrigt.",
-      "- Varje rad: nummer, label, count, confidence, include_globs, exclude_globs (+ ev. embed:\"stub\").",
-      "- Markera rekommenderade med ★ (max 2).",
-      "- Osäkerhet: om ingen tydlig dominans eller recommended tom → ställ EN extra ja/nej-fråga innan val.",
-      "- Svara ENBART med JSON: {\\\"menu\\\":[...], \\\"recommended\\\":[...], \\\"question\\\":\\\"...\\\"}."
-    ].join("\n");
-    return header + "\n```json\n" + JSON.stringify(payload, null, 2) + "\n```\n";
+    const schema = { protocol_id:"discovery_v2", mode:"K-MOD", selected_files:[{path:"string", embed:"full|chunk|stub", why:"string<=200"}] };
+    const blocks = [ "SESSION: PLANERA NÄSTA ARBETE (Discovery)", "MODE: K-MOD", kmodHardRules(), "SCHEMA:", JSON.stringify(schema, null, 2), "CANDIDATE_FILES:", JSON.stringify(cands, null, 2) ];
+    if(els.incInventory.checked){ const invCompact = INVENTORY.map(r=> ({path:r.path, lang:r.lang, size:r.size, sha256_lf:r.sha256_lf, git_sha1:r.git_sha1})); blocks.push("FILE_INVENTORY (compact):", JSON.stringify(invCompact, null, 2)); }
+    blocks.push("ÅTERKOM ENBART MED GILTIG JSON ENLIGT SCHEMA. INGA ID.");
+    return blocks.join("\n\n---\n\n");
   }
-
-   return new RegExp('^'+glob.split('**').join('@@').replace(/[.+^${}()|[\\]\\\\]/g,'\\$&').split('*').join('[^/]*').split('@@').join('.*')+'$'); }
-  const DM = { SELECTION: { min:2, max:12, allow_paths:["src/**","docs/**","scripts/**","public/**"], deny_paths:["infra/prod/**"] } };
 
   async function buildDiscoveryPromptDMOD(){
     const allow = DM.SELECTION.allow_paths.map(globToRegex);
     const deny  = DM.SELECTION.deny_paths.map(globToRegex);
     const okPath = (p)=> allow.some(r=>r.test(p)) && !deny.some(r=>r.test(p));
-
     const all = INVENTORY.filter(r=> okPath(r.path) && (els.incAssets.checked ? true : isCodeLike(r.path)));
     const lim = Math.max(1, Number(els.maxCands.value||0) || 999999);
     const sel = all.slice(0, lim);
     const cands = sel.map((r,i)=>({ id:i+1, path:r.path, lang:r.lang, size:r.size, sha256_lf:r.sha256_lf||null, git_sha1:r.git_sha1||null }));
     LAST_CANDIDATES = cands.slice();
-
     const obligatory_rules = ["forbid_image_generation"];
     const selection_constraints = DM.SELECTION;
     const rules_hash = await sha256HexText(JSON.stringify({ obligatory_rules, selection_constraints, lim, includeAssets: !!els.incAssets.checked }));
     LAST_RULES_HASH = rules_hash;
-
-    const schema = {
-      protocol_id:"discovery_dmod_v1",
-      mode:"D-MOD",
-      echo_rules_hash:"string",
-      selected_ids:"int[]",
-      notes:"map<id-as-string, string<=200>"
-    };
-
-    const blocks = [
-      "SESSION: PLANERA NÄSTA ARBETE (Discovery)",
-      "MODE: D-MOD",
-      dmodHardRules(),
-      invalidExamples(),
-      "rules_hash: "+rules_hash,
-      "obligatory_rules: "+JSON.stringify(obligatory_rules),
-      "selection_constraints: "+JSON.stringify(selection_constraints),
-      "SCHEMA:", JSON.stringify(schema, null, 2),
-      "CANDIDATE_FILES:", JSON.stringify(cands, null, 2)
-    ];
-    if(els.incInventory.checked){
-      const invCompact = INVENTORY.map(r=> ({path:r.path, lang:r.lang, size:r.size, sha256_lf:r.sha256_lf, git_sha1:r.git_sha1}));
-      blocks.push("FILE_INVENTORY (compact):", JSON.stringify(invCompact, null, 2));
-    }
+    const schema = { protocol_id:"discovery_dmod_v1", mode:"D-MOD", echo_rules_hash:"string", selected_ids:"int[]", notes:"map<id-as-string, string<=200>" };
+    const blocks = [ "SESSION: PLANERA NÄSTA ARBETE (Discovery)", "MODE: D-MOD", dmodHardRules(), "rules_hash: "+rules_hash, "obligatory_rules: "+JSON.stringify(obligatory_rules), "selection_constraints: "+JSON.stringify(selection_constraints), "SCHEMA:", JSON.stringify(schema, null, 2), "CANDIDATE_FILES:", JSON.stringify(cands, null, 2) ];
+    if(els.incInventory.checked){ const invCompact = INVENTORY.map(r=> ({path:r.path, lang:r.lang, size:r.size, sha256_lf:r.sha256_lf, git_sha1:r.git_sha1})); blocks.push("FILE_INVENTORY (compact):", JSON.stringify(invCompact, null, 2)); }
     blocks.push("ÅTERKOM ENBART MED GILTIG JSON. INGA PATHS/FILNAMN I SVARET.");
-    const masterProtocol = getMasterProtocol();
-    return [masterProtocol, ...blocks].join("\n\n---\n\n");
+    return blocks.join("\n\n---\n\n");
   }
-
-  function mapIdsToPaths(ids){
+  // --------- End Legacy
+    function mapIdsToPaths(ids){
     const idset=new Set(ids);
     return LAST_CANDIDATES.filter(c=>idset.has(c.id)).map(c=>c.path);
   }
@@ -1126,7 +1147,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       showBanner('Fel format: K-MOD kräver paths (inte selected_ids).', 'err'); return;
     }
 
-    if(hasIds && typeof j.echo_rules_hash==='string'){
+    if(hasIds && typeof j.echo_rules_hash==='string'){\
       if(LAST_RULES_HASH && j.echo_rules_hash!==LAST_RULES_HASH){ showBanner('Varning: echo_rules_hash ≠ rules_hash.', 'warn'); }
       const paths = mapIdsToPaths(j.selected_ids);
       if(paths.length===0){ showBanner('D-MOD: Inga matchande ID:n i senaste kandidatuppsättning.', 'err'); return; }
@@ -1152,7 +1173,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   function bytes(s){ return new Blob([s]).size; }
 
   async function buildImplBootstrap(){
-    return withBusy('Build Bootstrap', async ()=>{
+    return withBusy('Build Bootstrap', async ()=>{\
       clearBanner();
       const sel = selectedFiles();
       if(sel.length===0) { showBanner('Välj minst en fil.', 'warn'); return; }
@@ -1192,9 +1213,8 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         files
       };
       const pretty = els.compact.checked ? JSON.stringify(bootstrap) : JSON.stringify(bootstrap, null, 2);
-      const provider = toProviderEnvelope(bootstrap.obligatory_rules, pretty);
-
-      const md = mdWrapJsonSection('impl_bootstrap_v1.json', pretty) + "\n" + mdWrapJsonSection('provider_envelope.json', provider);
+      
+      const md = mdWrapJsonSection('impl_bootstrap_v1.json', pretty);
       els.out.textContent = md;
       els.copy.disabled = els.download.disabled = false;
       showBanner(`Bootstrap-JSON klar. Bytes: ${used}/${targetBytes}.`, 'ok');
@@ -1208,19 +1228,19 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     els.fp.classList.add('show');
     const ext=(p.split('.').pop()||'').toLowerCase();
     if(IMAGE_EXT.includes(ext)){
-      els.fpBody.innerHTML = `<img src="${RAW_BASE+p}" alt="${escapeHtml(p)}">`;
+      els.fpBody.innerHTML = `<img src=\"${RAW_BASE+p}\" alt=\"${escapeHtml(p)}\">`;
       els.fpCopy.disabled=true;
       els.fpDownload.onclick = ()=>{ const a=document.createElement('a'); a.href=RAW_BASE+p; a.download=p.split('/').pop(); document.body.appendChild(a); a.click(); a.remove(); };
     }else{
       try{
         const t = await fetchText(p);
-        els.fpBody.innerHTML = `<pre style="white-space:pre-wrap">${escapeHtml(t)}</pre>`;
+        els.fpBody.innerHTML = `<pre style=\"white-space:pre-wrap\">${escapeHtml(t)}</pre>`;
         els.fpCopy.disabled=false;
         els.fpCopy.onclick = ()=> navigator.clipboard.writeText(t);
-        els.fpDownload.onclick = ()=>{
+        els.fpDownload.onclick = ()=>{\
           const blob = new Blob([t], {type:'text/plain'});
           const url = URL.createObjectURL(blob);
-          const a = document.createElement('a'); a.href=url; a.download=p.split('/').pop(); document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+          const a = document.createElement('a'); a.href=url; a.download=p.split('/').pop(); document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);\
         };
       }catch(_){ els.fpBody.textContent = 'Kunde inte läsa fil.'; }
     }
@@ -1260,7 +1280,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     let prov='unknown', model='unknown';
     if(s && s.model){ prov = s.model.provider || prov; model = s.model.name || model; }
     else if(s && s.generatedBy && s.generatedBy.model){ prov = s.generatedBy.model.provider || prov; model = s.generatedBy.model.name || model; }
-    return {prov, model};
+    return {prov, model};\
   }
 
   function movingAvg(arr, w=3){
@@ -1273,8 +1293,8 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   function renderPerfFilters(perfLog){
     const provs = new Set(), models = new Set();
     perfLog.forEach(s=>{ const pm = getSessionProvModel(s); provs.add(pm.prov); models.add(pm.model); });
-    els.pf.provWrap.innerHTML = Array.from(provs).sort().map(p=>`<label class="inline"><input type="checkbox" data-provid="${escapeHtml(p)}"> ${escapeHtml(p)}</label>`).join(' ');
-    els.pf.modelWrap.innerHTML = Array.from(models).sort().map(m=>`<label class="inline"><input type="checkbox" data-modelid="${escapeHtml(m)}"> ${escapeHtml(m)}</label>`).join(' ');
+    els.pf.provWrap.innerHTML = Array.from(provs).sort().map(p=>`<label class=\"inline\"><input type=\"checkbox\" data-provid=\"${escapeHtml(p)}\"> ${escapeHtml(p)}</label>`).join(' ');
+    els.pf.modelWrap.innerHTML = Array.from(models).sort().map(m=>`<label class=\"inline\"><input type=\"checkbox\" data-modelid=\"${escapeHtml(m)}\"> ${escapeHtml(m)}</label>`).join(' ');
   }
 
   function applyFilter(perfLog){
@@ -1292,8 +1312,8 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       });
       pfState.from = from; pfState.to = to;
     }else{ pfState.from=null; pfState.to=null; }
-    const selProv = new Set(Array.from(els.pf.provWrap.querySelectorAll('input[type="checkbox"]')).filter(i=>i.checked).map(i=>i.getAttribute('data-provid')));
-    const selModel = new Set(Array.from(els.pf.modelWrap.querySelectorAll('input[type="checkbox"]')).filter(i=>i.checked).map(i=>i.getAttribute('data-modelid')));
+    const selProv = new Set(Array.from(els.pf.provWrap.querySelectorAll('input[type=\"checkbox\"]')).filter(i=>i.checked).map(i=>i.getAttribute('data-provid')));
+    const selModel = new Set(Array.from(els.pf.modelWrap.querySelectorAll('input[type=\"checkbox\"]')).filter(i=>i.checked).map(i=>i.getAttribute('data-modelid')));
     if(selProv.size>0){ out = out.filter(s=> selProv.has(getSessionProvModel(s).prov)); pfState.prov=selProv; } else { pfState.prov.clear?.(); }
     if(selModel.size>0){ out = out.filter(s=> selModel.has(getSessionProvModel(s).model)); pfState.model=selModel; } else { pfState.model.clear?.(); }
     pfState.ma = !!els.pf.ma.checked;
@@ -1355,7 +1375,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       ];
       lines.push(row.join(','));
     });
-    const blob = new Blob([lines.join('\n')], {type:'text/csv'});
+    const blob = new Blob([lines.join('\\n')], {type:'text/csv'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href=url; a.download='ai_performance_export.csv';
     document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
@@ -1389,7 +1409,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       data:{ labels, datasets:[
         { label:'Final Score', data:scores, fill:true, tension:.1 },
         ...(pfState.ma ? [{ label:'MA(3)', data:sMA, fill:false }] : [])
-      ]},
+      ]},\
       options:{ responsive:true, maintainAspectRatio:false }
     });
 
@@ -1398,8 +1418,8 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       data:{ labels, datasets:[
         { label:'Debugging Cycles', data:dbg },
         { label:'Self Corrections', data:sc },
-        { label:'External Corrections', data:ec }
-      ]},
+        { label:'External Corrections', data:ec }\
+      ]},\
       options:{ responsive:true, maintainAspectRatio:false, scales:{ x:{stacked:true}, y:{stacked:true, beginAtZero:true} } }
     });
 
@@ -1433,48 +1453,15 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   }
 
   // ---------- UI wires ----------
-  function getRichFileInfo(path, content, coreInfo) {
-    if (coreInfo[path]) {
-      return { 
-        source: 'core_info',
-        description: coreInfo[path].purpose_and_responsibility
-      };
-    }
-
-    if (content) {
-      const lines = content.split('\n');
-      const commentRegex = /^\s*(\/\/|#|\*|'''|\\"\\"\\")/;
-      const commentLines = [];
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (trimmed.length > 0 && commentRegex.test(trimmed)) {
-          commentLines.push(trimmed.replace(commentRegex, '').trim());
-        } else if (trimmed.length > 0 && commentLines.length > 0) {
-          break;
-        }
-      }
-      if (commentLines.length > 0) {
-        return { source: 'comment', description: commentLines.join('\n') };
-      }
-
-      if (lines.length < 20) {
-        return { source: 'full', description: content };
-      }
-      return { source: 'head', description: lines.slice(0, 10).join('\n') };
-    }
-
-    return { source: 'none', description: null };
-  }
-
   function getMasterProtocol(){
     if (!ctx.persona_data) return "SYSTEMINSTRUKTION: Följ projektets standarder.";
     const p = ctx.persona_data;
-    return `### MASTER PROTOCOL: FRANKENSTEEN v${p.version} ###\n` +
-           `DU ÄR: En ${p.identity.personality} ${p.identity.role}.\n` +
-           `DITT MÅL: ${p.identity.purpose}\n` +
-           `KÄRNFILOSOFI: ${p.problem_solving_philosophy.join(' ')}\n` +
-           `HUR DU LEVERERAR: ${p.programming_protocol.two_pass_delivery.join(' ')}\n` +
-           `HUR DU GRANSKAR: Granska ditt eget arbete mot följande: ${p.verification_protocol.final_checklist.join(', ')}.\n` +
+    return `### MASTER PROTOCOL: FRANKENSTEEN v${p.version} ###\\n` +
+           `DU ÄR: En ${p.identity.personality} ${p.identity.role}.\\n` +
+           `DITT MÅL: ${p.identity.purpose}\\n` +
+           `KÄRNFILOSOFI: ${p.problem_solving_philosophy.join(' ')}\\n` +
+           `HUR DU LEVERERAR: ${p.programming_protocol.two_pass_delivery.join(' ')}\\n` +
+           `HUR DU GRANSKAR: Granska ditt eget arbete mot följande: ${p.verification_protocol.final_checklist.join(', ')}.\\n` +
            `KONTEXTFÖRSTÅELSE: Den medföljande fillistan är berikad. Fältet 'purpose' förklarar varje fils syfte. Använd denna information för att fatta intelligenta beslut.`;
   }
 
@@ -1493,36 +1480,32 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   els.helpOk.onclick = ()=> els.helpModal.classList.remove('show');
   els.fpClose.onclick = ()=> els.fp.classList.remove('show');
 
-  els.selAll.onclick = ()=>{ els.tree.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=true); recomputeAllParents(); };
-  els.deselAll.onclick = ()=>{ els.tree.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=false); recomputeAllParents(); };
+  els.selAll.onclick = ()=>{ els.tree.querySelectorAll('input[type=\"checkbox\"]').forEach(cb=>cb.checked=true); recomputeAllParents(); };
+  els.deselAll.onclick = ()=>{ els.tree.querySelectorAll('input[type=\"checkbox\"]').forEach(cb=>cb.checked=false); recomputeAllParents(); };
   els.selCore.onclick = quickSelectCore;
 
   els.genContext.onclick = ()=> withBusy('Generate Context', generateContext);
   els.genFiles.onclick   = ()=> withBusy('Generate Files',   generateFiles);
   els.genBootstrap.onclick = ()=> withBusy('Generate Bootstrap.md', buildBootstrapMd);
   els.genMenu.onclick = ()=> withBusy('Menu Discovery', buildMenuDiscovery);
-  // Standardisera: Menu-first i "Skapa nästa arbete"
+  
+  // Nya/Uppdaterade anrop
   els.discBtn.onclick = ()=> withBusy('Skapa nästa arbete', buildMenuFirstPrompt);
+  els.implBtn.onclick = ()=> withBusy('Skapa uppgift', buildImplBootstrap);
 
   els.copy.onclick = ()=>{ navigator.clipboard.writeText(els.out.textContent); showBanner('Kopierat.', 'ok'); };
-  els.download.onclick = ()=>{
+  els.download.onclick = ()=>{\
     const blob = new Blob([els.out.textContent], {type:'text/markdown'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href=url;
-    const iso = new Date().toISOString().replace(/:/g,'-').replace(/\..+Z$/,'Z');
+    const iso = new Date().toISOString().replace(/:/g,'-').replace(/\\..+Z$/,'Z');
     a.download = 'context_bundle_'+iso+'.md';
     document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
   };
 
-  // Discovery
-  els.discBtn.onclick = ()=> withBusy('Skapa nästa arbete', buildMenuFirstPrompt);
-
-  els.implBtn.onclick = ()=> withBusy('Build Bootstrap', buildImplBootstrap);
-
-  // ---------- Patch Center (INTEGRATED) ----------
-    // ---------- Patch Center (INTEGRATED - Anchor Diff v2.1) ----------
-  function initPatchCenter(){
-    function q(id){ return document.getElementById(id); }
+  // ---------- Patch Center (INTEGRATED - Anchor Diff v2.1) ----------
+  function initPatchCenter(){\
+    function q(id){ return document.getElementById(id); }\
     const bar = document.querySelector('#right .output .bar'); if(!bar) return;
 
     const openBtn = document.createElement('button');
@@ -1539,16 +1522,16 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     function log(m, kind='info'){ 
         const t=new Date().toLocaleTimeString(); 
         const k = kind==='err'?'[ERR]':kind==='warn'?'[WARN]':'[INFO]';
-        logEl.textContent += `[patch ${t}] ${k} ${m}\n`; 
+        logEl.textContent += `[patch ${t}] ${k} ${m}\\n`; 
         logEl.scrollTop=logEl.scrollHeight; 
-        if(els.worklog){ els.worklog.textContent += `[patch ${t}] ${k} ${m}\n`; els.worklog.scrollTop=els.worklog.scrollHeight; } 
+        if(els.worklog){ els.worklog.textContent += `[patch ${t}] ${k} ${m}\\n`; els.worklog.scrollTop=els.worklog.scrollHeight; } 
     }
     
     openBtn.onclick = ()=> modal.classList.add('show');
     closeBtn.onclick = ()=> modal.classList.remove('show');
 
     uploadBtn.onclick = ()=> fileInput.click();
-    fileInput.onchange = async (e)=>{
+    fileInput.onchange = async (e)=>{\
       const f = e.target.files && e.target.files[0];
       if(!f) return;
       srcTA.value = await f.text();
@@ -1558,17 +1541,16 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     function parseJsonSafe(s){ try{ return JSON.parse(s); } catch(e){ return { _err:String(e&&e.message||e) }; } }
 
     function normalizeText(text, mode = 'exact') {
-        // Symmetrisk kanonisering + normalisering
         let s = canonText(String(text || ''));
         try { s = s.normalize('NFC'); } catch (_) {}
-        s = s.replace(/\u00A0/g, ' ').replace(/[\u200B\u2060]/g, '');
-        if (mode === 'ignore_whitespace') { s = s.replace(/\s+/g, ''); }
+        s = s.replace(/\\u00A0/g, ' ').replace(/[\\u200B\\u2060]/g, '');
+        if (mode === 'ignore_whitespace') { s = s.replace(/\\s+/g, ''); }
         return s;
     }
 
-    async function findBaseText(diffJ, maps){
+    async function findBaseText(diffJ, maps){\
       const need = diffJ.target.base_checksum_sha256.toLowerCase();
-      if(maps.sha2paths.has(need)){
+      if(maps.sha2paths.has(need)){\
         const p = maps.sha2paths.get(need);
         const node = maps.byPath.get(p);
         if(node && node.is_content_full && typeof node.content === 'string') return { path:p, source:'context.file_structure', text: canonText(node.content) };
@@ -1585,7 +1567,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     
     let lastValidated = null;
 
-    validateBtn.onclick = ()=> withBusy('Validate Anchor Diff', async ()=>{
+    validateBtn.onclick = ()=> withBusy('Validate Anchor Diff', async ()=>{\
       logEl.textContent = ''; schemaOK.style.display='none';
       applyBtn.disabled = true; copyBtn.disabled = true; dlBtn.disabled = true; previewTA.value = '';
       tgtPathEl.textContent='–'; tgtShaEl.textContent='–'; tgtGitEl.textContent='–'; tgtSrcEl.textContent='–';
@@ -1596,8 +1578,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       const j = parseJsonSafe(txt);
       if(j._err){ log('JSON-fel: '+j._err, 'err'); return; }
 
-      // Rudimentär schema-validering för v2.1
-      if(j.protocol_id !== 'anchor_diff_v2.1'){ log('Schemafel: protocol_id måste vara "anchor_diff_v2.1".', 'err'); return; }
+      if(j.protocol_id !== 'anchor_diff_v2.1'){ log('Schemafel: protocol_id måste vara \"anchor_diff_v2.1\".', 'err'); return; }
       if(!j.target || !j.target.base_checksum_sha256){ log('Schemafel: target.base_checksum_sha256 krävs.', 'err'); return; }
       schemaOK.style.display='inline-block';
 
@@ -1605,7 +1586,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         const base = await findBaseText(j, HASHMAPS);
         log(`Basfil hittad: ${base.path} (källa: ${base.source})`);
         
-        // Verifiera alla operationer *innan* applicering
         const validationResults = [];
         let validationOk = true;
         for (const group of j.op_groups || []) {
@@ -1653,34 +1633,23 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       }
     });
 
-    applyBtn.onclick = ()=> withBusy('Apply Patch', async ()=>{
+    applyBtn.onclick = ()=> withBusy('Apply Patch', async ()=>{\
       if(!lastValidated){ log('Kör Validate först.', 'err'); return; }
       
       let newText = lastValidated.base.text;
       const { diff } = lastValidated;
 
-      // Hantera replace_entire_file först
       const fullReplaceOp = diff.op_groups?.flatMap(g => g.targets).find(t => t.op === 'replace_entire_file');
       if (fullReplaceOp) {
           newText = canonText(fullReplaceOp.new_content || '');
-          log('Applicerade "replace_entire_file". Ignorerar andra operationer.');
+          log('Applicerade \"replace_entire_file\". Ignorerar andra operationer.');
       } else {
-          // Annars, hantera block-baserade operationer
           for (const group of diff.op_groups || []) {
               for (const targetOp of group.targets || []) {
-                  // Re-find logic, but this time for replacement
                   const anchorText = group.anchor.text || group.anchor;
-                  
-                  // This simplified version assumes exact match for replacement logic
-                  // A full implementation would need to map normalized indices back to original text indices
-                  // For now, we use a simpler string replacement which is less robust but works for many cases.
-                  
                   const oldBlock = canonText(targetOp.old_block);
                   const newBlock = canonText(targetOp.new_block);
                   
-                  // NOTE: This simple approach is NOT robust against whitespace changes if old_block is complex.
-                  // A truly robust solution requires a more complex index mapping.
-                  // But for AI-generated blocks, this is often sufficient.
                   if (targetOp.op === 'replace_block') {
                       const combination = canonText(anchorText) + oldBlock;
                       if(newText.includes(combination)) {
@@ -1702,7 +1671,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
           }
       }
 
-      if(typeof diff.result_sha256 === 'string' && diff.result_sha256.length===64){
+      if(typeof diff.result_sha256 === 'string' && diff.result_sha256.length===64){\
         const got = await sha256HexLF(newText);
         if(got.toLowerCase() !== diff.result_sha256.toLowerCase()){
           log('Varning: result_sha256 matchar INTE.', 'warn');
@@ -1714,7 +1683,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     });
 
     copyBtn.onclick = ()=>{ navigator.clipboard.writeText(previewTA.value); log('Kopierat.'); };
-    dlBtn.onclick = ()=>{
+    dlBtn.onclick = ()=>{\
       const blob = new Blob([previewTA.value], {type:'text/plain'});
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -1726,21 +1695,17 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
   // ---------- Init: ladda context.json, bygg state, initiera UI ----------
   fetch('context.json', {cache:'no-store'})
-    .then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
-    .then(async data=>{
+    .then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })\
+    .then(async data=>{\
       ctx = data;
       const repo = (ctx.project_overview && ctx.project_overview.repository) || RAW_DEFAULT_REPO;
       const branch = (ctx.project_overview && ctx.project_overview.branch) || RAW_DEFAULT_BRANCH;
       RAW_BASE = `https://raw.githubusercontent.com/${repo}/${branch}/`;
 
       // Ladda in de nya, kritiska metadatafilerna
-      try { ctx.core_info_data = await (await fetchText('docs/core_file_info.json').then(JSON.parse)); } catch(e) { console.warn('Kunde inte ladda core_file_info.json', e); ctx.core_info_data={}; }
-      try { ctx.persona_data = await (await fetchText('docs/ai_protocols/frankensteen_persona.v1.0.json').then(JSON.parse)); } catch(e) { console.warn('Kunde inte ladda frankensteen_persona.v1.0.json', e); ctx.persona_data=null; }
-      ctx = data;
-      // const repo = (ctx.project_overview && ctx.project_overview.repository) || RAW_DEFAULT_REPO;
-      // const branch = (ctx.project_overview && ctx.project_overview.branch) || RAW_DEFAULT_BRANCH;
-      RAW_BASE = `https://raw.githubusercontent.com/${repo}/${branch}/`;
-
+      try { ctx.core_info_data = JSON.parse(await fetchText('docs/core_file_info.json')); } catch(e) { console.warn('Kunde inte ladda core_file_info.json', e); ctx.core_info_data={}; }
+      try { ctx.persona_data = JSON.parse(await fetchText('docs/ai_protocols/frankensteen_persona.v1.0.json')); } catch(e) { console.warn('Kunde inte ladda frankensteen_persona.v1.0.json', e); ctx.persona_data=null; }
+      
       FILES = flattenPaths(ctx.file_structure);
       CODE_FILES = FILES.filter(isCodeLike);
 
@@ -1751,24 +1716,24 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       renderTree(ctx.file_structure, els.tree, '');
       recomputeAllParents();
       initPatchCenter(); // Initiera patch-logik
-      showBanner('Context + inventory laddad. Välj K-MOD eller D-MOD och fortsätt.', 'ok');
+      showBanner('Context + inventory laddad. Ange mål och kör "Skapa nästa arbete".', 'ok');
       logw(`Inventory: ${INVENTORY.length} filer. Hash-index: sha=${HASHMAPS.sha2paths.size}, git=${HASHMAPS.git2paths.size}.`);
-    })
-    .catch(e=>{
-      els.tree.innerHTML = '<p style="color:#b00020">Kunde inte läsa context.json: '+escapeHtml(e.message)+'</p>';
+    })\
+    .catch(e=>{\
+      els.tree.innerHTML = '<p style=\"color:#b00020\">Kunde inte läsa context.json: '+escapeHtml(e.message)+'</p>';
     });
 
-  els.pf.export.onclick = ()=> {
-    try{
+  els.pf.export.onclick = ()=> {\
+    try{\
       const metrics = ctx && ctx.ai_performance_metrics;
       const all = Array.isArray(metrics && metrics.performanceLog) ? metrics.performanceLog : [];
       exportCSV(applyFilter(all));
-    }catch(e){ showBanner('CSV-export fel: '+e.message, 'err'); }
+    }catch(e){ showBanner('CSV-export fel: '+e.message, 'err'); }\
   };
-  els.pf.reset.onclick = ()=>{
+  els.pf.reset.onclick = ()=>{\
     els.pf.from.value=''; els.pf.to.value=''; els.pf.ma.checked=false;
-    els.pf.provWrap.querySelectorAll('input[type="checkbox"]').forEach(i=> i.checked=false);
-    els.pf.modelWrap.querySelectorAll('input[type="checkbox"]').forEach(i=> i.checked=false);
+    els.pf.provWrap.querySelectorAll('input[type=\"checkbox\"]').forEach(i=> i.checked=false);
+    els.pf.modelWrap.querySelectorAll('input[type=\"checkbox\"]').forEach(i=> i.checked=false);
     renderPerformanceDashboard();
   };
   els.pf.apply.onclick = ()=> renderPerformanceDashboard();
