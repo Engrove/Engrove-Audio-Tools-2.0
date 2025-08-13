@@ -959,7 +959,6 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       }
       
       const md = [];
-      const mode = currentDiscMode();
       
       // 1. Auto-run header med session_task
       const sessionTask = (els.instruction.value || "").trim();
@@ -970,74 +969,81 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
           '### PROTOCOL_START: START_NEW_PROJECT'
       ];
       const headerJson = { session_task: sessionTask, standing_mandate: { remember_and_obey_next_reply: true } };
-      md.push(header.join('\n'));
-      md.push('```json\n' + JSON.stringify(headerJson, null, 2) + '\n```');
+      md.push(header.join('\\n'));
+      md.push('```json\\n' + JSON.stringify(headerJson, null, 2) + '\\n```');
 
-      // 2. INFO_SOURCE_GUIDE
-      const infoGuide = [
-          '### INFO_SOURCE_GUIDE',
-          'Du får en kandidatlista (`CANDIDATE_FILES`) där varje fil har berikats med metadata:',
-          '- `purpose`: En beskrivning av filens syfte.',
-          '- `info_source`: Visar hur syftet bestämdes:',
-          '  - `core_info`: Från en manuellt skapad metafil (`docs/core_file_info.json`). Högst tillförlitlighet.',
-          '  - `comment`: Extraherat från de inledande kommentarerna i filen. Hög tillförlitlighet.',
-          '  - `full` / `head`: Hela filen eller de första raderna. Syftet är filens råa innehåll.',
-          '  - `heuristic`: Syftet är gissat från filens sökväg/namn (t.ex. `src/router/**`). Lägre tillförlitlighet.',
-          '  - `none`: Inget syfte kunde bestämmas.',
-          'Använd `purpose` och `info_source` för att göra ett intelligent urval. Föredra filer där `info_source` är `core_info` eller `comment`.'
-      ];
-      md.push(infoGuide.join('\n'));
-
-      // 3. Kontrakt och regler (K-MOD/D-MOD)
-      let rules_hash = null;
-      if (mode === 'KMOD') {
-        const schema = { protocol_id: "discovery_v2", mode: "K-MOD", selected_files:[{path:"string", embed:"full|chunk|stub", why:"string<=200"}] };
-        md.push(`### K-MOD CONTRACT`);
-        md.push(kmodHardRules());
-        md.push('**SCHEMA:**\n```json\n' + JSON.stringify(schema, null, 2) + '\n```');
-      } else { // DMOD
-        const schema = { protocol_id:"discovery_dmod_v1", mode:"D-MOD", echo_rules_hash:"string", selected_ids:['int'], notes:"map<id-as-string, string<=200>" };
-        const lim = Math.max(1, Number(els.maxCands.value||0) || 999999);
-        const rulesPayload = { obligatory_rules: ["forbid_image_generation"], selection_constraints: DM.SELECTION, lim, includeAssets: !!els.incAssets.checked };
-        rules_hash = await sha256HexText(JSON.stringify(rulesPayload));
-        LAST_RULES_HASH = rules_hash;
-        
-        md.push(`### D-MOD CONTRACT`);
-        md.push(dmodHardRules());
-        md.push(`**RULES_HASH:** \`${rules_hash}\``);
-        md.push('**SCHEMA:**\n```json\n' + JSON.stringify(schema, null, 2) + '\n```');
+      // 2. Dynamisk Kontext-Syntes (SÄKER VERSION)
+      const dynamicContextSources = {};
+      const pkgJson = INVENTORY.find(f => f.path === 'package.json');
+      if (pkgJson) {
+        try {
+            const content = await fetchText(pkgJson.path);
+            const parsed = JSON.parse(content);
+            dynamicContextSources.package_json = { name: parsed.name, version: parsed.version };
+        } catch (e) { console.warn('Kunde inte läsa package.json', e); }
+      }
+      
+      const byggLogg = INVENTORY.find(f => f.path === 'docs/ByggLogg.json');
+      if (byggLogg) {
+          try {
+              const content = await fetchText(byggLogg.path);
+              const logData = JSON.parse(content);
+              if (Array.isArray(logData) && logData.length > 0) {
+                  dynamicContextSources.recent_bygglogg_entries = logData.slice(0, 2).map(entry => ({
+                      sessionId: entry.sessionId,
+                      date: entry.date,
+                      summary: entry.summary
+                  }));
+              }
+          } catch (e) { console.warn('Kunde inte läsa eller tolka ByggLogg.json', e); }
       }
 
-      // 4. Rika kandidater (purpose, info_source)
-      logw('Bygger berikade filkandidater...');
-      const { candidates, contentForRelations } = await buildCandidatesRichAsync(els.maxCands.value, !!els.incAssets.checked);
+      // 3. Slutgiltiga MENU_INSTR-direktiv som reflekterar hela diskussionen
+      const MENU_INSTR = [
+        '### MENU_DISCOVERY_v1 (obligatoriskt förstasteg)',
+        '- Ditt jobb är att skapa en kontextmedveten, tvådelad meny för människan.',
+        '',
+        '**DEL 1: SYNTETISERA OCH VERIFIERA KONTEXT**',
+        '- Analysera `DYNAMIC_CONTEXT_SOURCES`. Den innehåller projektets version och de SENASTE SAMMANFATTNINGARNA från den verifierade byggloggen.',
+        '- Skapa en kort sammanfattning (2-3 punkter) av projektets nuvarande status och senaste aktiviteter.',
+        '- **Inled ditt `question`-fält med denna sammanfattning och en fråga om den stämmer.** Exempel: "Ok, jag ser att vi jobbar på v2.0.8-beta och att senaste sessionen handlade om att fixa CI/CD-pipelinen. Stämmer det? Välj sedan uppdraget nedan:"',
+        '',
+        '**DEL 2: PRESENTERA VAL**',
+        '1. **Filkategorier (`menu`):** Skapa en NUMRERAD meny (≤8) över filkategorier (app-kod, build-config, etc.). Varje rad: {n, label, count, confidence, include_globs, exclude_globs}. Markera rekommenderade med ★ i `recommended`.',
+        '2. **Arbetsläge (`work_modes`):** Inkludera ett fält `work_modes` med exakt dessa 4 alternativ, formaterade som `{id, label, description}`:',
+        '   - a) Buggrättning: Analysera och åtgärda specifika fel.',
+        '   - b) Funktionsutveckling: Implementera ny eller utökad funktionalitet.',
+        '   - c) Kodoptimering: Refaktorera för bättre prestanda, läsbarhet eller struktur.',
+        '   - d) Dokumentation/Analys: Uppdatera dokument eller analysera kod utan att ändra den.',
+        '- **Fråga (`question`):** Efter din kontext-verifiering, be människan välja ETT ELLER FLERA nummer, EN bokstav, och ge en kort uppdragsbeskrivning.',
+        '',
+        '**SVAR:**',
+        '- Svara ENBART med JSON: `{"menu":[...], "work_modes":[...], "recommended":[...], "question":"..."}`.',
+        '',
+        '### EFTER_VAL',
+        '- När människan svarat med val och beskrivning, använd detta för att generera nästa Discovery-svar (K-MOD/D-MOD).'
+      ].join('\\n');
+      md.push(MENU_INSTR);
+
+      // 4. Rika kandidater + Dynamisk Kontext
+      logw('Bygger berikade filkandidater och dynamisk kontext...');
+      const { candidates } = await buildCandidatesRichAsync(els.maxCands.value, !!els.incAssets.checked);
       LAST_CANDIDATES = candidates.slice();
       
-      const candPayload = { CANDIDATE_FILES: candidates };
-      if(els.incInventory.checked){
-        candPayload.inventory_compact = INVENTORY.map(r=>({ path:r.path, lang:r.lang, size:r.size||null, sha256_lf:r.sha256_lf||null, git_sha1:r.git_sha1||null }));
-      }
-      md.push('### CANDIDATE_FILES');
-      md.push('```json\n' + JSON.stringify(candPayload, null, 2) + '\n```');
+      const payload = { 
+          CANDIDATE_FILES: candidates,
+          DYNAMIC_CONTEXT_SOURCES: dynamicContextSources
+      };
 
-      // 5. Relationsmatris
-      logw('Bygger heuristisk relationsmatris...');
-      const relations = await buildFileRelations(contentForRelations);
-      if (relations && relations.edges.length > 0) {
-        md.push('### FILE_RELATIONS (Optional)');
-        md.push('```json\n' + JSON.stringify(relations, null, 2) + '\n```');
+      if(els.incInventory.checked){
+        payload.inventory_compact = INVENTORY.map(r=>({ path:r.path, lang:r.lang, size:r.size||null, sha256_lf:r.sha256_lf||null, git_sha1:r.git_sha1||null }));
       }
+      md.push('```json\\n' + JSON.stringify(payload, null, 2) + '\\n```');
       
-      // 6. Meny (behålls för bakåtkompatibilitet och som guide)
-      const menuPayload = buildMenuPayload(INVENTORY);
-      md.push('### MENU_DISCOVERY_v1 (Guide)');
-      md.push('Använd denna meny för att snabbt få en överblick. Ditt svar ska dock följa K-MOD/D-MOD-kontraktet ovan.');
-      md.push('```json\n' + JSON.stringify(menuPayload, null, 2) + '\n```');
-      
-      els.out.textContent = md.join('\n\n');
+      els.out.textContent = md.join('\\n\\n');
       els.copy.disabled = els.download.disabled = false;
-      showBanner(`Discovery-prompt genererad för ${mode}.`, 'ok');
-    }catch(e){ showBanner('Fel vid discovery-prompt: '+e.message, 'err'); console.error(e); }
+      showBanner(`Menu-first discovery-prompt (med säker dynamisk kontext) genererad.`, 'ok');
+    }catch(e){ showBanner('Fel vid menu-first discovery: '+e.message, 'err'); console.error(e); }
   }
 
 
