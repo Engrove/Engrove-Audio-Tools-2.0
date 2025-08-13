@@ -1,0 +1,146 @@
+# .github/workflows/ci.yml
+# === SYFTE & ANSVAR ===
+# Detta är den enda, konsoliderade CI/CD-pipelinen för projektet.
+# Den ersätter de separata generate_context.yml och process_session_data.yml
+# för att eliminera race conditions och garantera korrekt exekveringsordning.
+#
+# === ARBETSFLÖDE ===
+# 1. Triggas vid push till relevanta filer (källkod, sessionsdata, dokumentation).
+# 2. Bearbetar sessionsdata och uppdaterar dokumentationsfiler (t.ex. core_file_info.json) på runnern.
+# 3. Genererar den fullständiga context.json baserat på det uppdaterade tillståndet.
+# 4. Bygger och laddar upp GitHub Pages-artefakten.
+# 5. Committar de genererade dokumentationsfilerna tillbaka till repot med [skip ci].
+# 6. Driftsätter den nya GitHub Pages-sajten.
+#
+# === HISTORIK ===
+# v1.0 (2025-08-13): Initial skapelse av Frankensteen. Konsoliderar två workflows.
+
+name: Consolidated CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      # Triggers från gamla generate_context.yml
+      - '**.py'
+      - '**.js'
+      - '**.vue'
+      - '**.html'
+      - '**.md'
+      - 'requirements.txt'
+      # Triggers från gamla process_session_data.yml
+      - 'sessions/**.json'
+      # Inkludera denna fil själv
+      - '.github/workflows/ci.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+env:
+  PYTHON_VERSION: '3.11'
+  SITE_DIR: '_site'
+  JSON_FILE: 'context.json'
+  HTML_FILE: 'index.html'
+  METADATA_FILE: 'metadata.json'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      context-generated: ${{ steps.create-html.outputs.success }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: STEP 1: Process Session Data (if needed)
+        id: process-sessions
+        run: |
+          echo "Running session data processing..."
+          python scripts/history/historical_reconstruction_builder.py sessions/ .
+          python scripts/update_core_info.py sessions/ docs/core_file_info.json ${{ github.sha }}
+          echo "Session processing complete."
+
+      - name: STEP 2: Generate AI Context JSON
+        id: generate-json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Generating full context from potentially updated file system..."
+          set -e
+          if python scripts/generate_full_context.py > "${{ env.SITE_DIR }}/${{ env.JSON_FILE }}" 2> generation.log; then
+            echo "success=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "success=false" >> "$GITHUB_OUTPUT"
+            cat generation.log
+            exit 1
+          fi
+
+      - name: STEP 3: Create HTML Wrapper
+        id: create-html
+        if: steps.generate-json.outputs.success == 'true'
+        run: |
+          set -e
+          python scripts/wrap_json_in_html.py "${{ env.SITE_DIR }}/${{ env.HTML_FILE }}"
+          echo "success=true" >> "$GITHUB_OUTPUT"
+
+      - name: STEP 4: Create Metadata for Deployment
+        if: steps.create-html.outputs.success == 'true'
+        run: |
+          mkdir -p "${{ env.SITE_DIR }}"
+          cat > "${{ env.SITE_DIR }}/${{ env.METADATA_FILE }}" << EOF
+          {
+            "generated_at": "$(date -Iseconds)",
+            "workflow_run_id": "${{ github.run_id }}",
+            "commit_sha": "${{ github.sha }}",
+            "repository": "${{ github.repository }}"
+          }
+          EOF
+
+      - name: STEP 5: Upload Pages Artifact
+        if: steps.create-html.outputs.success == 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ env.SITE_DIR }}
+      
+      - name: STEP 6: Commit Documentation and Session Artifacts
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: |
+            chore(docs): Automatiskt uppdatera sessionsdata och dokumentation
+
+            Genererat av ci.yml workflow för commit ${{ github.sha }}.
+
+            [skip ci]
+          commit_user_name: 'Frankensteen (Bot)'
+          commit_user_email: 'frankensteen-bot@users.noreply.github.com'
+          file_pattern: 'docs/ByggLogg.json docs/Chatthistorik.json docs/ai_protocol_performance.json tools/frankensteen_learning_db.json docs/ai_protocols/DynamicProtocols.json docs/core_file_info.json'
+
+  deploy:
+    needs: build
+    if: needs.build.outputs.context-generated == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
