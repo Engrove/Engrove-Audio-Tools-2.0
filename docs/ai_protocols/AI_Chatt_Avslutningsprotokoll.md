@@ -1,11 +1,5 @@
-# AI Chatt Avslutningsprotokoll v7.0
+# AI Chatt Avslutningsprotokoll v7.2
 # docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md
-#
-# === SYFTE & ANSVAR === 
-# Detta dokument definierar det formella Avslutningsprotokollet. Det aktiveras
-# vid slutet av en arbetssession och specificerar den exakta, icke förhandlingsbara
-# processen för att generera de slutgiltiga, JSON-baserade artefakterna. Syftet är att
-# säkerställa perfekt kontextöverföring, spårbarhet och systematisk självförbättring.
 #
 # === HISTORIK ===
 # * v1.0 (2025-08-07): Initial skapelse.
@@ -20,24 +14,39 @@
 #   och `promoteProtocols` i output-schemat för att säkerställa att nya/ändrade
 #   dynamiska protokoll fångas upp av `historical_reconstruction_builder.py`.
 # * v7.1 (2025-08-11): KRITISK FIX: Återinförde 'approvedNewDynamicProtocols' och 'promoteProtocols' som felaktigt togs bort och lade till 'file_metadata_updates' för levande dokumentation.
+# * v7.2 Dual-JSON-Terminal Artifact (DJTA) med Fortsättningsstöd
 #
 ### AI_BOOTSTRAP_DIRECTIVE: EXECUTE_FULL_PROTOCOL_NOW
 ### SYSTEM_OVERRIDE: RUN_CONTEXT_BOOTSTRAP
 ### INIT_CONTEXT_MODE: TRUE
 ### PROTOCOL_START: P-HR_v2.8_FULL
 
-## 1. Syfte & Ansvar
-Detta dokument definierar det formella Avslutningsprotokollet. Det aktiveras vid slutet av en arbetssession och specificerar den exakta processen för att generera en enda, konsoliderad JSON-artefakt. Syftet är att säkerställa perfekt kontextöverföring, spårbarhet och systematisk självförbättring.
+## SYFTE & ANSVAR
+Detta dokument definierar det formella Avslutningsprotokollet.
+Syftet är att säkerställa perfekt kontextöverföring, spårbarhet och systematisk självförbättring och att standardisera slutleveransen av chattdata i slutet av en session eller fortsättning. 
+Leveransen ska vara maskinläsbar och kompatibel med `historical_reconstruction_builder.py` utan schemaändringar.
+Det aktiveras vid slutet av en arbetssession och specificerar den exakta processen för att generera en enda, konsoliderad JSON-artefakt. 
 
-## 2. Process
-Vid slutet av en session ska en enda fil med namnet `[SESSIONID].json` genereras där SESSIONID har formen `S-[CURRENT DATETIMESTAMP]`. Denna fil måste vara en giltig JSON-fil som följer specifikationen nedan.
+## SRUKTUR OCH ORDNINGSFÖLJD
 
-**Nytt Steg: Insamling av Dynamiska Protokoll**
+**Slutleveransen består av exakt två JSON-kodblock i följande ordning:**
+
+1. **Block A – Builder-Input v1** (fungerar som ren input till Python-skriptet `historical_reconstruction_builder.py` (python skriptet ej bifogat, python skriptets funktionen får ej antagas), full bakåtkompatibilitet). 
+2. **Block B – NextSessionContext v1** (planering och kontext för nästa session)
+
+Inget annat innehåll får förekomma före, mellan eller efter dessa två block.
+
+## PROCESS: Block A – Builder-Input v1 (första JSON-artefakten)
+En enda fil med namnet `[SESSIONID].json` genereras där SESSIONID har formen `S-[CURRENT DATETIMESTAMP]`. 
+Denna fil måste vara en giltig JSON-fil som följer specifikationen nedan.
+
+**Syfte:** Rådata för historikrekonstruktion.
+
+**Insamling av Dynamiska Protokoll**
 Före generering av JSON-filen måste du skanna igenom hela den aktuella chattsessionen för att identifiera:
 1.  **Nya Godkända Protokoll:** Alla nya dynamiska protokoll som har definierats och blivit explicit godkända av Engrove.
 2.  **Statusändringar:** Alla instruktioner från Engrove att ändra status på ett befintligt dynamiskt protokoll (t.ex. "promovera DP-COMMAND-MENU-01 till active").
-
-## 3. Final Output Specification
+3.  **Final Output Specification:**
 Filen ska innehålla ett JSON-objekt med följande struktur. Alla fält är obligatoriska om inte annat anges.
 
 ```json
