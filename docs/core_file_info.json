@@ -117,5 +117,12 @@
     "last_updated_by_session": "S-20250811-E",
     "last_updated_at": "2025-08-13T19:08:25.556368+00:00",
     "last_commit_sha": "cb2f396bee911c0573e85feb963bda9e99fb7413"
+  },
+  ".github/workflows/ci.yml": {
+    "purpose_and_responsibility": "Den enda, konsoliderade CI/CD-pipelinen för projektet. Ersätter de tidigare separata workflow-filerna för att eliminera race conditions och garantera korrekt exekveringsordning.",
+    "usage_context": "Triggas vid push till källkod, sessionsdata eller dokumentation för att sekventiellt bearbeta sessionsdata, generera AI-kontext, och driftsätta till GitHub Pages.",
+    "last_updated_by_session": "S-20250813-A",
+    "last_updated_at": "2025-08-13T19:42:58.349016+00:00",
+    "last_commit_sha": "f482c86b9dfad17884939e835d49c4177b7885ca"
   }
 }
