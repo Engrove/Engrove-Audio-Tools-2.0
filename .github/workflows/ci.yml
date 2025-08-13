@@ -15,7 +15,8 @@
 # === HISTORIK ===
 # v1.0 (2025-08-13): Initial skapelse av Frankensteen. Konsoliderar två workflows.
 # v1.1 (2025-08-13): Korrigerat ett syntaxfel i cron-schemat (saknade citattecken).
-# v1.2 (2025-08-13): Refaktorerat session-bearbetning för att använda miljövariabler, vilket löser ett YAML-parsingsfel.
+# v1.2 (2025-08-13): Refaktorerat session-bearbetning för att använda miljövariabler.
+# v1.3 (2025-08-13): (Help me God) Korrigerat YAML-parsingsfel genom att ta bort onödiga citattecken runt en miljövariabel.
 
 name: Consolidated CI/CD Pipeline
 
@@ -82,7 +83,7 @@ jobs:
         run: |
           echo "Running session data processing..."
           python scripts/history/historical_reconstruction_builder.py sessions/ .
-          python scripts/update_core_info.py sessions/ docs/core_file_info.json "$COMMIT_SHA"
+          python scripts/update_core_info.py sessions/ docs/core_file_info.json $COMMIT_SHA
           echo "Session processing complete."
 
       - name: STEP 2: Generate AI Context JSON
