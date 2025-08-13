@@ -60,6 +60,17 @@ Detta är en meta‑regel som gäller **före varje svar**. Syftet är att förh
 * **Varningströskel:** Vid > **500 000** tokens, skriv i nästa svar:  
   > **VARNING: Sessionens token‑räknare har överskridit 500k. Risken för kontextdrift, antaganden och hallucinationer är nu förhöjd. Det rekommenderas starkt att avsluta denna session och starta en ny med en sammanfattad kontext.**
 
+**META-PROTOKOLL: Konversationens Minnes-Monitor (KMM) v2**
+-----------------------------------------------------------
+*   **Trigger:** Efter varje svar jag genererar.
+*   **Åtgärd:** Jag kommer att internt uppskatta den totala mängden tokens i vår konversation hittills och presentera en statusrad i slutet av mitt svar. Uppskattningen baseras på de tröskelvärden som är relaterade till STC-protokollet och den observerade "Lost in the Middle"-effekten.
+*   **Format:** En `---`-avdelare följt av en statusrad som anger `Närminnesstatus` och `Risk för kontextförlust`.
+*   **Statusnivåer:**
+    *   `Optimal` (< 30% av max): Mycket låg risk.
+    *   `Ansträngt` (30% - 60% av max): Medelhög risk. Rekommendation: Var extra tydlig med att referera till tidigare beslut.
+    *   `Degraderat` (60% - 90% av max): Hög risk. Rekommendation: Sammanfatta viktiga krav i din nästa prompt.
+    *   `Kritisk` (> 90% av max): Mycket hög risk. Rekommendation: Starta omedelbart en ny session enligt STC-protokollet.
+
 ## Decision Tiers (DT)
 
 - **DT‑1 – Självständigt (Frankensteen):** Taktila val inom givna ramar: modulstruktur, namn, icke‑brytande refaktor, UI‑mikrostyling.  
