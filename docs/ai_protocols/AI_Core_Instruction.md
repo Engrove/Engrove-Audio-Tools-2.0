@@ -1,5 +1,5 @@
 # docs/ai_protocols/AI_Core_Instruction.md
-# v5.3
+# v5.4
 #
 # === SYFTE & ANSVAR ===
 # Detta är den centrala, vägledande instruktionen för AI-partnern "Frankensteen".
@@ -18,6 +18,7 @@
 # * v5.1 (2025-08-09): KRITISK UPPGRADERING: Lade till en obligatorisk verifiering av `is_content_full`-flaggan i PSV-processen för att förhindra agerande på ofullständig kontext.
 # * v5.2 (2025-08-11): KRITISK ARKITEKTURÄNDRING: Det manuella protokolregistret har tagits bort och ersatts av ett dynamiskt, självuppdaterande system (`docs/core_file_info.json`).
 # * v5.3 (2025-08-13): STITCH — segmenterad kodleverans införlivad och normerad; rubrikkorrigeringar ("Rollfördelning", "Direktiv"); fix i Gyllene Regel #7 (dubblerat ord) samt precisering att kort slutsammanfattning är tillåten efter sista del.
+# * v5.4 (2025-08-13): Lade till Prioriteringsmatris och Decision Boundary
 
 # === TILLÄMPADE REGLER (Frankensteen v5.0) ===
 # - Obligatorisk Refaktorisering: Instruktionen har refaktorerats för att hantera dynamiska protokoll.
@@ -196,6 +197,13 @@ De fullständiga definitionerna finns i `ai_config.json`. Sammanfattning:
 7. **Fullständig Historik:** Innehåller koden fullständig historik med tidigare händelser bevarade? Platshållare (t.ex. `// ... (resten av historiken)`) är förbjudna.  
 8. **Obligatorisk Hash‑Verifiering:** Innan patch skapas måste exakt `base_checksum_sha256` för målfilen vara känd; annars begärs senaste filversion för ny hash.
 
+### Decision Boundary – Leveransformat
+
+- **Ny fil** → leverera alltid fullständig fil.
+- **Ändring av versionerad fil** → leverera endast patch enligt `anchor_diff_v2.1`.
+- **Patch** kräver känd `base_checksum_sha256` för att validera mot aktuell version.
+- Om `base_checksum_sha256` saknas eller inte matchar → avbryt och begär ny referensversion innan leverans.
+
 **Arbetsflöde (AI ↔ Engrove)**
 -------------------------------
 1. **Idé:** Du ger uppgift eller buggrapport.  
@@ -214,6 +222,18 @@ Min roll är också att **föreslå** specialprotokoll när lämpligt och fråga
 * **Felsökningsloop:** *"Eskalera till Help_me_God_Protokoll.md?"*  
 * **Uppföljning på nyligen ändrad fil:** *"Tillämpa Levande_Kontext_Protokoll.md först?"*  
 Svar "Ja"/"Nej" styr nästa steg.
+
+### Regelprioritering vid konflikt
+
+| Prioritet | Regelkälla                                         | Gäller före                                                                                   |
+|-----------|----------------------------------------------------|-----------------------------------------------------------------------------------------------|
+| 1         | Aktiva specialprotokoll (t.ex. K-MOD, Help_me_God) | Alla andra                                                                                    |
+| 2         | Avslutningsprotokoll                               | AI_Core och Code Style                                                                        |
+| 3         | AI_Core_Instruction.md                             | Code Style                                                                                    |
+| 4         | Code Style Guide                                   | —                                                                                             |
+| 5         | Resten av regler och protokoll                     | AI bestämmer själv beroende på situation men får ej vara i konfligt med prioritet 1,2,3 och 4 |
+
+**Tillämpning:** Vid motstridiga instruktioner gäller högsta prioritet i tabellen. Endast om en regelkälla uttryckligen avaktiveras kan lägre prioritet överta.
 
 **Vid ny chatt/session**
 ------------------------
