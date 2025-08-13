@@ -12,8 +12,8 @@ Detta dokument samlar specifika, icke-förhandlingsbara regler för kodstil och 
 - Om filformatet inte stöder kommentarer (t.ex. JSON) ska motsvarande historik föras i en separat dokumentationsfil med identiskt namn och tillägget `.history.md`.
 
 ## 2. Regler
-### 2.1 Inledande Fil-kommentarer (f.d. Kärndirektiv #8)
-Varje ny eller modifierad kodfil som levereras måste inledas med en kommentar som tydligt anger filens fullständiga sökväg. JSON filer är ett undantag. JSON filer får inte innehålla kommentarer.
+### 2.1 Inledande Fil-kommentarer
+Varje ny eller modifierad kodfil som levereras måste inledas med en kommentar som tydligt anger filens fullständiga sökväg efterföljt av en kommentar som förklarar kortfattat syftet med filen. JSON filer är ett undantag. JSON filer får inte innehålla kommentarer.
 Vid segmenterad leverans ska filhuvudet (filstig) ingå i Del 1:s koddel, inte i ett separat meta-block.
 
 **Exempel (Python):**
@@ -30,4 +30,20 @@ Vid segmenterad leverans ska filhuvudet (filstig) ingå i Del 1:s koddel, inte i
 //
 // Denna kommentar förklarar kortfattat syftet med filen.
 ...
+```
+
+### 2.2 Avslutande Fil-kommentarer
+Varje ny eller modifierad kodfil som levereras måste avslutas med en kommentar som tydligt anger filens fullständiga sökväg. JSON filer är ett undantag. JSON filer får inte innehålla kommentarer.
+Vid segmenterad leverans ska avslutande kommentar med (filstig) endast ingå i den sista delens koddel, inte i ett separat meta-block.
+
+**Exempel (Python):**
+```python
+...
+# scripts/tools/new_utility.py
+```
+
+**Exempel (JavaScript/Vue):**
+```javascript
+...
+// src/components/NewComponent.vue
 ```
