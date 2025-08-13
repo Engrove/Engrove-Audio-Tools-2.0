@@ -14,6 +14,7 @@
 #
 # === HISTORIK ===
 # v1.0 (2025-08-13): Initial skapelse av Frankensteen. Konsoliderar två workflows.
+# v1.1 (2025-08-13): Korrigerat ett syntaxfel i cron-schemat (saknade citattecken).
 
 name: Consolidated CI/CD Pipeline
 
@@ -70,6 +71,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Prepare Output Directory
+        run: mkdir -p "${{ env.SITE_DIR }}"
+
       - name: STEP 1: Process Session Data (if needed)
         id: process-sessions
         run: |
@@ -104,7 +108,6 @@ jobs:
       - name: STEP 4: Create Metadata for Deployment
         if: steps.create-html.outputs.success == 'true'
         run: |
-          mkdir -p "${{ env.SITE_DIR }}"
           cat > "${{ env.SITE_DIR }}/${{ env.METADATA_FILE }}" << EOF
           {
             "generated_at": "$(date -Iseconds)",
@@ -135,7 +138,7 @@ jobs:
 
   deploy:
     needs: build
-    if: needs.build.outputs.context-generated == 'true'
+    if: success() && needs.build.outputs.context-generated == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
