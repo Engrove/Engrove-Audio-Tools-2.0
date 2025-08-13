@@ -443,7 +443,10 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     'docs/ai_protocols/Multi_Sample_Protokoll.md',
     'docs/ai_protocols/RAG_Faktacheck_Protokoll.md',
     'docs/ai_protocols/Stature_Report_Protocol.md',
-    'docs/ai_protocols/Diff_JSON_Protocol.md' // deprekerad; behåll tills Diff_Protocol v3.x finns
+    'docs/ai_protocols/Diff_JSON_Protocol.md',
+    
+    //Avslut på sessionen
+    'docs/ai_protocols/Scorecard_Scoring_Guide.md'
   ];
 
 
