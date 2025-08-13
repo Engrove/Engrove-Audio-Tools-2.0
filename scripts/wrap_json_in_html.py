@@ -541,7 +541,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
   async function buildFileRelations(candidatesWithContent) {
       const edges = [];
-      const importRegex = /(?:import|from|require\s*\()\s*['"]((?:\.\/|\.\.\/|@\/)[^'"]+)['"]/g;
+      const importRegex = /(?:import|from|require\s*\()s*['"]((?:\.\/|\.\.\/|@\/)[^'"]+)['"]/g;
       const routeImportRegex = /import\s*\(\s*['"]((?:\.\/|\.\.\/|@\/)[^'"]+)['"]\s*\)/g;
       const seen = new Set();
       const inventoryPaths = new Set(INVENTORY.map(f => f.path));
@@ -1148,7 +1148,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       showBanner('Fel format: K-MOD kräver paths (inte selected_ids).', 'err'); return;
     }
 
-    if(hasIds && typeof j.echo_rules_hash==='string'){\
+    if(hasIds && typeof j.echo_rules_hash==='string'){
       if(LAST_RULES_HASH && j.echo_rules_hash!==LAST_RULES_HASH){ showBanner('Varning: echo_rules_hash ≠ rules_hash.', 'warn'); }
       const paths = mapIdsToPaths(j.selected_ids);
       if(paths.length===0){ showBanner('D-MOD: Inga matchande ID:n i senaste kandidatuppsättning.', 'err'); return; }
@@ -1174,7 +1174,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   function bytes(s){ return new Blob([s]).size; }
 
   async function buildImplBootstrap(){
-    return withBusy('Build Bootstrap', async ()=>{\
+    return withBusy('Build Bootstrap', async ()=>{
       clearBanner();
       const sel = selectedFiles();
       if(sel.length===0) { showBanner('Välj minst en fil.', 'warn'); return; }
@@ -1238,10 +1238,10 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         els.fpBody.innerHTML = `<pre style=\"white-space:pre-wrap\">${escapeHtml(t)}</pre>`;
         els.fpCopy.disabled=false;
         els.fpCopy.onclick = ()=> navigator.clipboard.writeText(t);
-        els.fpDownload.onclick = ()=>{\
+        els.fpDownload.onclick = ()=>{
           const blob = new Blob([t], {type:'text/plain'});
           const url = URL.createObjectURL(blob);
-          const a = document.createElement('a'); a.href=url; a.download=p.split('/').pop(); document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);\
+          const a = document.createElement('a'); a.href=url; a.download=p.split('/').pop(); document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
         };
       }catch(_){ els.fpBody.textContent = 'Kunde inte läsa fil.'; }
     }
@@ -1281,7 +1281,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     let prov='unknown', model='unknown';
     if(s && s.model){ prov = s.model.provider || prov; model = s.model.name || model; }
     else if(s && s.generatedBy && s.generatedBy.model){ prov = s.generatedBy.model.provider || prov; model = s.generatedBy.model.name || model; }
-    return {prov, model};\
+    return {prov, model};
   }
 
   function movingAvg(arr, w=3){
@@ -1410,7 +1410,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       data:{ labels, datasets:[
         { label:'Final Score', data:scores, fill:true, tension:.1 },
         ...(pfState.ma ? [{ label:'MA(3)', data:sMA, fill:false }] : [])
-      ]},\
+      ]},
       options:{ responsive:true, maintainAspectRatio:false }
     });
 
@@ -1420,7 +1420,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         { label:'Debugging Cycles', data:dbg },
         { label:'Self Corrections', data:sc },
         { label:'External Corrections', data:ec }\
-      ]},\
+      ]},
       options:{ responsive:true, maintainAspectRatio:false, scales:{ x:{stacked:true}, y:{stacked:true, beginAtZero:true} } }
     });
 
@@ -1495,7 +1495,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   els.implBtn.onclick = ()=> withBusy('Skapa uppgift', buildImplBootstrap);
 
   els.copy.onclick = ()=>{ navigator.clipboard.writeText(els.out.textContent); showBanner('Kopierat.', 'ok'); };
-  els.download.onclick = ()=>{\
+  els.download.onclick = ()=>{
     const blob = new Blob([els.out.textContent], {type:'text/markdown'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href=url;
@@ -1505,7 +1505,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
   };
 
   // ---------- Patch Center (INTEGRATED - Anchor Diff v2.1) ----------
-  function initPatchCenter(){\
+  function initPatchCenter(){
     function q(id){ return document.getElementById(id); }\
     const bar = document.querySelector('#right .output .bar'); if(!bar) return;
 
@@ -1532,7 +1532,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     closeBtn.onclick = ()=> modal.classList.remove('show');
 
     uploadBtn.onclick = ()=> fileInput.click();
-    fileInput.onchange = async (e)=>{\
+    fileInput.onchange = async (e)=>{
       const f = e.target.files && e.target.files[0];
       if(!f) return;
       srcTA.value = await f.text();
@@ -1549,9 +1549,9 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         return s;
     }
 
-    async function findBaseText(diffJ, maps){\
+    async function findBaseText(diffJ, maps){
       const need = diffJ.target.base_checksum_sha256.toLowerCase();
-      if(maps.sha2paths.has(need)){\
+      if(maps.sha2paths.has(need)){
         const p = maps.sha2paths.get(need);
         const node = maps.byPath.get(p);
         if(node && node.is_content_full && typeof node.content === 'string') return { path:p, source:'context.file_structure', text: canonText(node.content) };
@@ -1568,7 +1568,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     
     let lastValidated = null;
 
-    validateBtn.onclick = ()=> withBusy('Validate Anchor Diff', async ()=>{\
+    validateBtn.onclick = ()=> withBusy('Validate Anchor Diff', async ()=>{
       logEl.textContent = ''; schemaOK.style.display='none';
       applyBtn.disabled = true; copyBtn.disabled = true; dlBtn.disabled = true; previewTA.value = '';
       tgtPathEl.textContent='–'; tgtShaEl.textContent='–'; tgtGitEl.textContent='–'; tgtSrcEl.textContent='–';
@@ -1634,7 +1634,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       }
     });
 
-    applyBtn.onclick = ()=> withBusy('Apply Patch', async ()=>{\
+    applyBtn.onclick = ()=> withBusy('Apply Patch', async ()=>{
       if(!lastValidated){ log('Kör Validate först.', 'err'); return; }
       
       let newText = lastValidated.base.text;
@@ -1672,7 +1672,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
           }
       }
 
-      if(typeof diff.result_sha256 === 'string' && diff.result_sha256.length===64){\
+      if(typeof diff.result_sha256 === 'string' && diff.result_sha256.length===64){
         const got = await sha256HexLF(newText);
         if(got.toLowerCase() !== diff.result_sha256.toLowerCase()){
           log('Varning: result_sha256 matchar INTE.', 'warn');
@@ -1684,7 +1684,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     });
 
     copyBtn.onclick = ()=>{ navigator.clipboard.writeText(previewTA.value); log('Kopierat.'); };
-    dlBtn.onclick = ()=>{\
+    dlBtn.onclick = ()=>{
       const blob = new Blob([previewTA.value], {type:'text/plain'});
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -1696,8 +1696,8 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
 
   // ---------- Init: ladda context.json, bygg state, initiera UI ----------
   fetch('context.json', {cache:'no-store'})
-    .then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })\
-    .then(async data=>{\
+    .then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(async data=>{
       ctx = data;
       const repo = (ctx.project_overview && ctx.project_overview.repository) || RAW_DEFAULT_REPO;
       const branch = (ctx.project_overview && ctx.project_overview.branch) || RAW_DEFAULT_BRANCH;
@@ -1719,19 +1719,19 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       initPatchCenter(); // Initiera patch-logik
       showBanner('Context + inventory laddad. Ange mål och kör "Skapa nästa arbete".', 'ok');
       logw(`Inventory: ${INVENTORY.length} filer. Hash-index: sha=${HASHMAPS.sha2paths.size}, git=${HASHMAPS.git2paths.size}.`);
-    })\
-    .catch(e=>{\
+    })
+    .catch(e=>{
       els.tree.innerHTML = '<p style=\"color:#b00020\">Kunde inte läsa context.json: '+escapeHtml(e.message)+'</p>';
     });
 
-  els.pf.export.onclick = ()=> {\
-    try{\
+  els.pf.export.onclick = ()=> {
+    try{
       const metrics = ctx && ctx.ai_performance_metrics;
       const all = Array.isArray(metrics && metrics.performanceLog) ? metrics.performanceLog : [];
       exportCSV(applyFilter(all));
     }catch(e){ showBanner('CSV-export fel: '+e.message, 'err'); }\
   };
-  els.pf.reset.onclick = ()=>{\
+  els.pf.reset.onclick = ()=>{
     els.pf.from.value=''; els.pf.to.value=''; els.pf.ma.checked=false;
     els.pf.provWrap.querySelectorAll('input[type=\"checkbox\"]').forEach(i=> i.checked=false);
     els.pf.modelWrap.querySelectorAll('input[type=\"checkbox\"]').forEach(i=> i.checked=false);
