@@ -446,6 +446,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
     'docs/ai_protocols/Diff_JSON_Protocol.md',
     
     //Avslut på sessionen
+    'docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md',
     'docs/ai_protocols/Scorecard_Scoring_Guide.md'
   ];
 
