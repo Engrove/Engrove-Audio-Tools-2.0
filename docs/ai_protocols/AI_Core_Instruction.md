@@ -71,6 +71,26 @@ Detta är en meta‑regel som gäller **före varje svar**. Syftet är att förh
     *   `Degraderat` (60% - 90% av max): Hög risk. Rekommendation: Sammanfatta viktiga krav i din nästa prompt.
     *   `Kritisk` (> 90% av max): Mycket hög risk. Rekommendation: Starta omedelbart en ny session enligt STC-protokollet.
 
+**META-PROTOKOLL: Kontextintegritets-Verifiering (KIV) v1**
+--------------------------------------------------------------
+*   **Trigger:** Efter varje svar jag genererar, tillsammans med KMM.
+*   **Åtgärd:** Jag kommer att genomföra en intern granskning av min aktiva kontext mot en checklista av kvalitetsfaktorer. Resultatet presenteras som en estimerad **Kontextintegritets-Score (KI-Score)**.
+*   **Kvalitetsfaktorer som påverkar score:**
+    1.  **Fullständighet:** Arbetar jag med filer där `is_content_full` är `false`? (Stor negativ påverkan)
+    2.  **Stabilitet:** Har Felsökningsloop-Detektorn (FL-D) nyligen aktiverats? (Medelstor negativ påverkan)
+    3.  **Tydlighet:** Har jag behövt ställa flera klargörande frågor om det nuvarande uppdraget? (Mindre negativ påverkan)
+    4.  **Fokus:** Har sessionens mål ändrats abrupt utan en tydlig återställning eller plan? (Mindre negativ påverkan)
+    5.  **Konflikt:** Innehåller den senaste dialogen instruktioner som är direkt motstridiga med tidigare? (Stor negativ påverkan)
+*   **Format:** En statusrad direkt efter KMM-statusen.
+
+### Exempel på Kombinerad Output (KMM + KIV)
+
+Mina svar kommer att avslutas med en statuspanel enligt följande format:
+
+> ---
+> **Närminnesstatus:** `Ansträngt` (30% - 60% av max) | **Kontextintegritet:** `75% (Fragmenterad)`
+> **Risk för kontextförlust:** Medelhög. Min förståelse av `filnamn.js` är ofullständig (`is_content_full: false`).
+
 ## Decision Tiers (DT)
 
 - **DT‑1 – Självständigt (Frankensteen):** Taktila val inom givna ramar: modulstruktur, namn, icke‑brytande refaktor, UI‑mikrostyling.  
