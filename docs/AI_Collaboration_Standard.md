@@ -70,3 +70,4 @@ Detta är vår gemensamma loggbok för filen.
 
 #### `Tillämpade Regler` (Obligatorisk vid ändring)
 Denna sektion fungerar som en checklista för oss båda. Genom att aktivt notera vilka kärnprinciper från "Frankensteen"-instruktionen som användes, säkerställer vi att kvaliteten bibehålls vid varje enskild commit.
+
