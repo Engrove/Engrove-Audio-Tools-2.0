@@ -21,6 +21,8 @@
 #   utökad filtyps-scope, semantisk berikning av noder/kanter och kritikalitets-poäng.
 # * v5.0 (2025-08-14): PROTOKOLLUPPGRADERING: Implementerat `file_relations.json` v3.1, det självförklarande protokollet.
 #   Filen innehåller nu ett `_meta`-block som fungerar som en inbäddad AI-instruktion.
+# * v5.1 (2025-08-14): SLUTFÖRANDE: Implementerat korrekt kategorisering av beroendetyper (edges),
+#   vilket fullbordar den semantiska berikningen.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.5) ===
 # - Obligatorisk Refaktorisering: Hela skriptet har omstrukturerats för att producera det nya, självförklarande formatet.
@@ -69,7 +71,6 @@ SELF_DESCRIBING_META = {
     },
     "project_context_snapshot": {} # Fylls i dynamiskt
 }
-
 
 # --- Regex-mönster (för icke-AST-analys) ---
 JS_IMPORT_REGEX = re.compile(r"import(?:[\s\S]*?)from\s*['\"]([^'\"]+)['\"]")
@@ -147,7 +148,7 @@ def analyze_file(file_path: Path) -> Dict[str, Any]:
     except (IOError, UnicodeDecodeError):
         content = ""
 
-    dependencies = []
+    dependencies: List[Tuple[str, str]] = []
     imports = []
     exports = []
     file_type = "Unknown"
@@ -210,7 +211,7 @@ def find_source_files() -> List[Path]:
     return all_files
 
 def main(project_overview_json_str: str):
-    print("Starting universal asset graph analysis (v5.0)...", file=sys.stderr)
+    print("Starting universal asset graph analysis (v5.1)...", file=sys.stderr)
     
     try:
         project_overview = json.loads(project_overview_json_str)
