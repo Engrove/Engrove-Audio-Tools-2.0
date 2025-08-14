@@ -279,6 +279,48 @@
     }
   },
   {
+    "sessionId": "S-20250814-A",
+    "date": "2025-08-14T06:08:12Z",
+    "aiQualitativeSummary": "Min prestation var blandad. Jag lyckades genomföra en komplex grundorsaksanalys av ett systemiskt fel och designa en robust, långsiktig lösning (`anchor_diff_v3.0`). Däremot var vägen dit ineffektiv och krävde flera korrigeringar på grund av kontextdrift. Jag begick även ett allvarligt, upprepat processfel genom att försöka modifiera en fil som hanteras av den automatiserade pipelinen, vilket indikerar en brist i min interna självgranskning. De interna korrigeringsmekanismerna (PFS, ny heuristik) fungerade dock som avsett till slut.",
+    "scorecard": {
+      "efficacy": {
+        "score": 95,
+        "weight": 0.4,
+        "weightedScore": 38.0
+      },
+      "efficiency": {
+        "score": 40,
+        "weight": 0.3,
+        "weightedScore": 12.0
+      },
+      "robustness": {
+        "score": 60,
+        "weight": 0.3,
+        "weightedScore": 18.0
+      },
+      "finalScore": 68.0
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 2,
+      "selfCorrections": 1,
+      "externalCorrections": 3,
+      "protocolActivations": {
+        "psv": 8,
+        "helpMeGod": 0,
+        "stalemate": 0
+      },
+      "heuristicsTriggered": [
+        "H-20250809-23",
+        "H-20250811-03"
+      ]
+    },
+    "improvementSuggestion": {
+      "pattern": "Ett patch-ankare kan valideras framgångsrikt, men appliceringen misslyckas ändå på grund av en subtil skillnad i `old_block`-innehållet. Detta indikerar att enbart ankaret inte är tillräckligt för att garantera en lyckad operation när kontexten är osäker.",
+      "proposedHeuristicId": "H-20250814-03"
+    }
+  },
+  {
     "sessionId": "44",
     "date": "2025-08-09T23:15:00Z",
     "aiQualitativeSummary": "Sessionen var en framgång i att diagnostisera och åtgärda ett komplext systemfel. Dock präglades den av flera allvarliga processbrott från min sida, inklusive syntaxfel, ofullständig historik och felaktigt leveransformat. Varje fel ledde till skapandet av nya, stärkande heuristiker. Effektiviteten var låg på grund av omarbetet, men systemets robusthet har ökat avsevärt som ett resultat.",
