@@ -1,7 +1,7 @@
 {
   "B1": {
     "confidence": 68,
-    "sampleSize": 185,
+    "sampleSize": 187,
     "description": "Based on static compliance and matching type, cantilever_class, stylus_family."
   },
   "B2": {

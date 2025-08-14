@@ -204,6 +204,11 @@
         "id": "powerful",
         "name": "Powerful",
         "description": "Automatically added by script."
+      },
+      {
+        "id": "rhythmic",
+        "name": "Rhythmic",
+        "description": "Automatically added by script."
       }
     ]
   }

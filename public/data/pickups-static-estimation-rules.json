@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-08-11T22:50:36.8652Z",
+  "timestamp": "2025-08-14T19:42:13.0912Z",
   "source_data_count": 2973,
   "analysis_data_count": 191,
   "global_fallback": {
@@ -11,6 +11,18 @@
     "sample_size": 130
   },
   "segmented_rules": [
+    {
+      "priority": 1,
+      "conditions": {
+        "type": "MM",
+        "cantilever_class": "Standard",
+        "stylus_family": "Conical"
+      },
+      "k": 0.8581,
+      "m": -2.0675,
+      "r_squared": 0.9998,
+      "sample_size": 3
+    },
     {
       "priority": 1,
       "conditions": {
