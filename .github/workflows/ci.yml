@@ -107,15 +107,7 @@ jobs:
             exit 1
           fi
 
-      - name: STEP 3 Create HTML Wrapper
-        id: create-html
-        if: steps.generate-json.outputs.success == 'true'
-        run: |
-          set -e
-          python scripts/wrap_json_in_html.py "${{ env.SITE_DIR }}/${{ env.HTML_FILE }}"
-          echo "success=true" >> "$GITHUB_OUTPUT"
-
-      - name: STEP 4 Create Metadata for Deployment
+      - name: STEP 3 Create Metadata for Deployment
         if: steps.create-html.outputs.success == 'true'
         run: |
           cat > "${{ env.SITE_DIR }}/${{ env.METADATA_FILE }}" << EOF
@@ -127,13 +119,13 @@ jobs:
           }
           EOF
 
-      - name: STEP 5 Upload Pages Artifact
+      - name: STEP 4 Upload Pages Artifact
         if: steps.create-html.outputs.success == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ${{ env.SITE_DIR }}
       
-      - name: STEP 6 Commit Documentation and Session Artifacts
+      - name: STEP 5 Commit Documentation and Session Artifacts
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: |
@@ -145,6 +137,14 @@ jobs:
           commit_user_name: 'Frankensteen (Bot)'
           commit_user_email: 'frankensteen-bot@users.noreply.github.com'
           file_pattern: 'docs/ByggLogg.json docs/Chatthistorik.json docs/ai_protocol_performance.json tools/frankensteen_learning_db.json docs/ai_protocols/DynamicProtocols.json docs/core_file_info.json docs/file_relations.json public/data/schemas/*.schema.json'
+
+      - name: STEP 6 Create HTML Wrapper
+        id: create-html
+        if: steps.generate-json.outputs.success == 'true'
+        run: |
+          set -e
+          python scripts/wrap_json_in_html.py "${{ env.SITE_DIR }}/${{ env.HTML_FILE }}"
+          echo "success=true" >> "$GITHUB_OUTPUT"
   deploy:
     needs: build
     if: success() && needs.build.outputs.context-generated == 'true'
