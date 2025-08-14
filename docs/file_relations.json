@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-14T20:07:32.520726+00:00",
+    "generated_at": "2025-08-14T20:38:30.735744+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -1684,6 +1684,15 @@
         "criticality_score": 0.0
       },
       "docs/ai_protocols/Hallucination_Leaderboard_Check.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/In-Session_Amnesiac_Reset_Protocol.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
