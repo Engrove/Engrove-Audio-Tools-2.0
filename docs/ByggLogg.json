@@ -1689,6 +1689,24 @@
     "projectStatus": "Fullt implementerad. Den nya, intelligenta datainsamlingspipelinen är nu komplett och redo för testning och körning. Alla tre komponenter (`run_scraping.py`, `triage_processor.py`, `ai_10.1.py`) är på plats."
   },
   {
+    "sessionId": "S-20250814T080800Z",
+    "date": "2025-08-14T08:08:00Z",
+    "summary": "Designade och formaliserade en betydande utökning av det dynamiska kommandosystemet (DP-COMMAND-MENU-01), inklusive skapandet av ett nytt protokoll för djup minnesanalys (DP-DEEP-MEMORY-REPORT-01). Sessionen inkluderade en viktig självkorrigering gällande den korrekta, automatiserade processen för uppdatering av protokoll.",
+    "actions": [
+      {
+        "title": "Utökning av Dynamisk Kommandomeny",
+        "files": [
+          {
+            "path": "docs/ai_protocols/DynamicProtocols.json",
+            "changeDescription": "Definierade en ny, utökad version av 'DP-COMMAND-MENU-01' och ett helt nytt protokoll 'DP-DEEP-MEMORY-REPORT-01'. Dessa iscensattes för automatisk integration via avslutningsprotokollet."
+          }
+        ],
+        "result": "Två uppdaterade/nya dynamiska protokoll har genererats och paketerats för automatisk integration, vilket kommer att utöka menysystemets funktionalitet avsevärt."
+      }
+    ],
+    "projectStatus": "Redo för automatisk integration av de nya protokollen."
+  },
+  {
     "sessionId": "23",
     "date": "2025-08-05T12:00:00Z",
     "summary": "En fullständig och systematisk konvertering av projektets samtliga styrande och tekniska dokument till ett standardiserat Markdown-format har genomförts. Samtidigt har AI Context Builder-verktyget fått en betydande UX-förbättring i form av en \"Select Core Docs\"-knapp för att effektivisera uppstarten av nya AI-sessioner.",

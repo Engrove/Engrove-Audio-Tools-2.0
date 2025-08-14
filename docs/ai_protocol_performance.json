@@ -1673,6 +1673,49 @@
     }
   },
   {
+    "sessionId": "S-20250814T080800Z",
+    "date": "2025-08-14T08:08:00Z",
+    "aiQualitativeSummary": "Sessionen var produktiv och resulterade i en betydande förbättring av kommandosystemet. Prestationen drogs dock ner av ett allvarligt processfel där jag felaktigt föreslog en manuell uppdatering av en systemfil, vilket krävde korrigering från användaren. Efter korrigeringen följdes protokollen korrekt.",
+    "scorecard": {
+      "efficacy": {
+        "score": 75,
+        "weight": 0.4,
+        "weightedScore": 30.0
+      },
+      "efficiency": {
+        "score": 50,
+        "weight": 0.3,
+        "weightedScore": 15.0
+      },
+      "robustness": {
+        "score": 50,
+        "weight": 0.3,
+        "weightedScore": 15.0
+      },
+      "finalScore": 60.0
+    },
+    "detailedMetrics": {
+      "missionCompleted": true,
+      "debuggingCycles": 1,
+      "selfCorrections": 2,
+      "externalCorrections": 2,
+      "protocolActivations": {
+        "psv": 7,
+        "helpMeGod": 0,
+        "stalemate": 0,
+        "kMod": 1
+      },
+      "heuristicsTriggered": [
+        "H-20250809-19",
+        "H-20250809-23"
+      ]
+    },
+    "improvementSuggestion": {
+      "pattern": "Föreslår att modifiera en fil som styrs av en automatiserad process manuellt istället för att använda den avsedda artefakt-pipelinen.",
+      "proposedHeuristicId": "H-20250814-01"
+    }
+  },
+  {
     "sessionId": "23",
     "date": "2025-08-05T12:00:00Z",
     "aiQualitativeSummary": "Sessionen var mycket framgångsrik och fokuserade på systematisk dokumentkonvertering och UI-förbättring. AI:n följde instruktionerna exakt och levererade filer sekventiellt efter godkännande. Ett nytt, mer robust arbetsflöde för kod/text-leverans etablerades för att kringgå renderingsproblem i värdplattformen.",
