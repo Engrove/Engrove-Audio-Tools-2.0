@@ -1,69 +1,103 @@
 [
   {
     "protocolId": "DP-COMMAND-MENU-01",
-    "description": "A self-contained protocol that triggers an interactive command menu when the user types '???'. The menu options and their corresponding actions are defined directly within this protocol.",
-    "status": "experimental",
+    "description": "A self-contained protocol that triggers an interactive command menu.",
+    "status": "active",
     "trigger": {
-      "event": "user_input_matches_exact_string",
-      "details": {
-        "string": "???"
-      }
+      "event": "user_input_matches",
+      "details": [
+        {
+          "string": "???",
+          "responseTemplate": "PSV Genomförd. Enligt heuristik H-20250809-19..., presenterar jag följande tillgängliga åtgärder:\n\nVälj en åtgärd genom att svara med motsvarande siffra:"
+        },
+        {
+          "string": "meny",
+          "responseTemplate": "Välj en åtgärd genom att svara med motsvarande siffra:"
+        }
+      ]
     },
     "steps": [
       {
         "action": "PRESENT_AND_EXECUTE_MENU",
         "details": {
-          "header": "Välj en åtgärd genom att svara med motsvarande siffra:",
+          "header": "Välj en åtgärd:",
           "options": [
             {
-              "description": "Kör avslutningsprotokollet för den nuvarande sessionen.",
+              "description": "1. Kör avslutningsprotokollet",
               "actionToExecute": "EXECUTE_PROTOCOL",
               "actionDetails": {
                 "protocolFile": "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md"
               }
             },
             {
-              "description": "Aktivera Kreativitets-läget (K-MOD) för brainstorming.",
+              "description": "2. Aktivera Kreativitets-läget (K-MOD)",
               "actionToExecute": "ACTIVATE_MODE",
               "actionDetails": {
                 "mode": "K-MOD"
               }
             },
             {
-              "description": "Aktivera Help me God-protokollet för en fastlåst situation.",
+              "description": "3. Aktivera Help me God-protokollet",
               "actionToExecute": "EXECUTE_PROTOCOL",
               "actionDetails": {
                 "protocolFile": "docs/ai_protocols/Help_me_God_Protokoll.md"
               }
             },
             {
-              "description": "Generera en ny Stature Report för att verifiera systemets hälsa.",
+              "description": "4. Generera en ny Stature Report",
               "actionToExecute": "EXECUTE_PROTOCOL",
               "actionDetails": {
                 "protocolFile": "docs/ai_protocols/Stature_Report_Protocol.md"
               }
+            },
+            {
+              "description": "5. Visa filinformation",
+              "actionToExecute": "QUERY_FILE_INFO",
+              "actionDetails": {
+                "sourceFile": "docs/core_file_info.json",
+                "prompt": "Ange sökväg till filen:"
+              }
+            },
+            {
+              "description": "6. Skapa ny Feature-struktur",
+              "actionToExecute": "GENERATE_MKDIR_COMMANDS",
+              "actionDetails": {
+                "basePath": "src/features/",
+                "prompt": "Ange namn på ny feature:"
+              }
+            },
+            {
+              "description": "7. Visa kontext-historik",
+              "actionToExecute": "EXECUTE_LIVING_CONTEXT_COMMAND",
+              "actionDetails": {
+                "command": "log"
+              }
+            },
+            {
+              "description": "8. Uppdatera levande kontext (commit)",
+              "actionToExecute": "EXECUTE_LIVING_CONTEXT_COMMAND",
+              "actionDetails": {
+                "command": "commit",
+                "prompt": "Ange commit-meddelande:"
+              }
+            },
+            {
+              "description": "9. Generera Djup Minnesrapport",
+              "actionToExecute": "EXECUTE_DYNAMIC_PROTOCOL",
+              "actionDetails": {
+                "protocolId": "DP-DEEP-MEMORY-REPORT-01"
+              }
             }
           ],
-          "prompt": "Ange ditt val:",
-          "timeoutSeconds": 60
+          "prompt": "Ange ditt val:"
         }
       }
-    ],
-    "schema": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "Schema for DP-COMMAND-MENU-01",
-      "type": "object",
-      "required": [
-        "protocolId",
-        "trigger",
-        "steps"
-      ]
-    }
+    ]
   },
   {
     "protocolId": "DP-STATURE-REPORT-01",
     "description": "Generates a system status and health report at the start of a new session.",
-    "status": "active",
+    "status": "experimental",
     "trigger": {
       "event": "new_session_start"
     },
@@ -109,31 +143,55 @@
               "const": "new_session_start"
             }
           }
-        },
-        "steps": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "type": "object",
-            "required": [
-              "action",
-              "details"
-            ],
-            "properties": {
-              "action": {
-                "type": "string"
-              },
-              "details": {
-                "type": "object"
-              }
-            }
-          }
-        },
-        "schema": {
-          "type": "object",
-          "description": "Self-validating schema for this specific protocol instance."
         }
       }
     }
+  },
+  {
+    "protocolId": "DP-DEEP-MEMORY-REPORT-01",
+    "description": "Generates a detailed, in-session analysis of the AI's memory and context integrity, providing actionable recommendations.",
+    "status": "experimental",
+    "trigger": {
+      "event": "manual_invocation_only"
+    },
+    "steps": [
+      {
+        "action": "GENERATE_DEEP_MEMORY_REPORT",
+        "details": {
+          "reportSections": [
+            {
+              "title": "KMM-analys (Kvantitet)",
+              "points": [
+                "report_token_count_and_percentage",
+                "identify_top_3_context_consumers",
+                "render_timeline_visualization"
+              ]
+            },
+            {
+              "title": "KIV-analys (Kvalitet)",
+              "points": [
+                "breakdown_kiv_score_by_factors",
+                "explain_score_deductions"
+              ]
+            },
+            {
+              "title": "PKRV-analys (Fragmentering)",
+              "points": [
+                "identify_session_main_topics",
+                "estimate_last_focus_timestamp_for_topics",
+                "warn_for_stale_topic_risk"
+              ]
+            },
+            {
+              "title": "Slutgiltig Rekommendation",
+              "points": [
+                "provide_summary_assessment (SÄKER, FÖRSIKTIGHET, KRITISK RISK)",
+                "list_actionable_recommendations"
+              ]
+            }
+          ]
+        }
+      }
+    ]
   }
 ]

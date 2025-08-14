@@ -115,8 +115,8 @@
     "purpose_and_responsibility": "Ett nytt, enhetligt GitHub Actions-workflow som ersätter de tidigare `process_historical_sessions.yml` och `update_documentation.yml`.",
     "usage_context": "Detta workflow agerar som den enda, atomära integrationspunkten. Det körs sekventiellt för att först bearbeta historiska sessionsdata och sedan uppdatera den levande dokumentationen, vilket eliminerar den tidigare race condition-konflikten.",
     "last_updated_by_session": "S-20250811-E",
-    "last_updated_at": "2025-08-14T05:11:50.768484+00:00",
-    "last_commit_sha": "d3cbcf623acef37c915b092cf8a34ff093e3d793"
+    "last_updated_at": "2025-08-14T05:31:20.748269+00:00",
+    "last_commit_sha": "6ee850f13dfdd6b77ddbb4295e1b32e2992a4b85"
   },
   ".github/workflows/ci.yml": {
     "purpose_and_responsibility": "Den enda, konsoliderade CI/CD-pipelinen för projektet. Ersätter de tidigare separata workflow-filerna för att eliminera race conditions och garantera korrekt exekveringsordning.",
