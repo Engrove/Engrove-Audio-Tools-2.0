@@ -1,183 +1,193 @@
 #!/usr/bin/env python3
-# historical_reconstruction_builder.py (v5, 2025-08-14)
-# Läs en mapp med [SESSIONID].json och konsolidera till standardfiler.
-# v5 UPGRADERING: Helt omskriven `get_session_sort_key` för att robust hantera
-# tre olika filnamnsformat (numerisk, datum+sekvens, ISO-tidsstämpel) och
-# säkerställa korrekt kronologisk sortering.
+# -*- coding: utf-8 -*-
 
-import sys
+# scripts/build_relations_graph.py
+#
+# === SYFTE & ANSVAR ===
+# Detta skript är en universell analysmotor med ett trefaldigt ansvar:
+# 1. Relationsanalys (Kod): Analyserar källkoden (.vue, .js, .py) för 'import'-beroenden.
+# 2. Relationsanalys (Tillgångar): Analyserar kod (.vue, .js, .css) för data-beroenden
+#    (fetch) och statiska tillgångar (bilder, typsnitt).
+# 3. Schema-Inferens: Analyserar datafiler (.json) i public/data/ och
+#    auto-genererar ett formellt JSON Schema för varje fil.
+#
+# === HISTORIK ===
+# * v1.0 (2025-08-14): Initial skapelse. Fokuserade på kod-importer.
+# * v2.0 (2025-08-14): Uppgraderad med schema-inferensfunktionalitet.
+# * v2.1 (2025-08-14): KRITISK FIX: Korrigerat logiskt fel som ignorerade JSON-filer.
+# * v2.2 (2025-08-14): KRITISK FIX: Lade till saknad 'datetime' import.
+# * v3.0 (2025-08-14): ARKITEKTURUPPGRADERING: Implementerat "Plan 4.0". Motorn kan nu
+#   identifiera data-beroenden (fetch) och statiska tillgångar (bilder etc.),
+#   vilket skapar en komplett, universell tillgångsgraf.
+
 import json
 import re
 from pathlib import Path
-from typing import Dict, Any, List, Set, Tuple
-from datetime import datetime, timedelta, timezone
-from collections import OrderedDict
+from typing import Dict, Any, List, Union, Set
+from datetime import datetime, timezone
 
-try:
-    from jsonschema import validate
-    from jsonschema.exceptions import ValidationError
-except ImportError:
-    print("ERROR: jsonschema is not installed. Please run: pip install jsonschema", file=sys.stderr)
-    sys.exit(1)
+# --- Konfiguration ---
+ROOT_DIR = Path(__file__).parent.parent
+SCAN_DIRS = ['src', 'scripts', 'public']
+INCLUDE_EXTENSIONS = ['.vue', '.js', '.py', '.json', '.css']
+EXCLUDE_DIRS = ['node_modules', 'dist', '__pycache__', 'schemas']
+RELATIONS_OUTPUT_FILE = ROOT_DIR / 'docs' / 'file_relations.json'
+SCHEMA_OUTPUT_DIR = ROOT_DIR / 'public' / 'data' / 'schemas'
 
-SPEAKER_PATTERN = re.compile(r'^([^()]+) \(([^:]+):([^@]+)@([^\)]+)\)$')
+# --- Regex-mönster ---
+# JS/VUE <script>
+JS_IMPORT_REGEX = re.compile(r"import(?:[\s\S]*?)from\s*['\"]([^'\"]+)['\"]")
+JS_FETCH_REGEX = re.compile(r"fetch\s*\(\s*['\"]((?:\/data\/)[^'\"]+\.json)['\"]")
+JS_WORKER_REGEX = re.compile(r"new\s+Worker\s*\(\s*['\"]([^'\"]+)['\"]")
 
-def normalize_speaker(entry: Dict[str, Any]) -> Dict[str, Any]:
-    name = (entry.get("speakerName") or "unknown").strip() or "unknown"
-    model = entry.get("model") or {}
-    provider = (model.get("provider") or "unknown").strip() or "unknown"
-    mname = (model.get("name") or "unknown").strip() or "unknown"
-    version = (model.get("version") or "unknown").strip() or "unknown"
-    display = f"{name} ({provider}:{mname}@{version})"
-    entry["speakerName"] = name
-    entry["model"] = {"provider": provider, "name": mname, "version": version}
-    entry["speaker"] = display
-    return entry
+# VUE <template>
+VUE_TEMPLATE_ASSET_REGEX = re.compile(r"\s(?:src|href)\s*=\s*['\"]((?:\/|@\/|\.\/|\.\.\/)[^'\"]+)['\"]")
 
-def ensure_chat_schema(chat_obj: Dict[str, Any]) -> Dict[str, Any]:
-    interactions = chat_obj.get("interactions") or []
-    fixed: List[Dict[str, Any]] = []
-    for it in interactions:
-        if "speakerName" not in it or "model" not in it:
-            speaker = it.get("speaker", "")
-            m = SPEAKER_PATTERN.match(speaker) if isinstance(speaker, str) else None
-            if m:
-                name, provider, mname, version = m.groups()
-                it.setdefault("speakerName", name.strip())
-                it.setdefault("model", {"provider": provider.strip(), "name": mname.strip(), "version": version.strip()})
-            else:
-                it.setdefault("speakerName", (speaker or "unknown").strip())
-                it.setdefault("model", {"provider": "unknown", "name": "unknown", "version": "unknown"})
-        fixed.append(normalize_speaker(it))
-    chat_obj["interactions"] = fixed
-    return chat_obj
+# CSS / VUE <style>
+CSS_URL_REGEX = re.compile(r"url\s*\(\s*['\"]?([^'")]+)['"]?\s*\)")
+CSS_IMPORT_REGEX = re.compile(r"@import\s*['\"]([^'\"]+)['\"]")
 
-def load_json_file(p: Path) -> Any:
-    try:
-        return json.loads(p.read_text(encoding="utf-8"))
-    except Exception as e:
-        sys.stderr.write(f"[SKIP] {p.name}: {e}\n")
-        return None
+# PYTHON
+PY_IMPORT_REGEX = re.compile(r"^\s*(?:import|from)\s+([\w.]+)", re.MULTILINE)
 
-def get_session_sort_key(p: Path) -> Tuple[datetime, int, float]:
-    """
-    Robust sorteringsnyckelfunktion som hanterar tre filnamnsformat:
-    1. Numerisk (t.ex. 001.0.json) - sorteras först.
-    2. Datum + Sekvensbokstav (t.ex. S-20250811-E.json) - sorteras efter datum.
-    3. ISO Tidsstämpel (t.ex. S-20250814T080800Z.json) - sorteras efter exakt tid.
-    Returnerar en tuple (datetime, sequence, numeric_part) för stabil sortering.
-    """
-    name = p.stem
+# --- Hjälpfunktioner ---
+def normalize_path(path: Path) -> str:
+    """Normaliserar en sökväg till ett relativt, plattformsoberoende format."""
+    return path.relative_to(ROOT_DIR).as_posix()
 
-    # Försök tolka som S-ISOTIMESTAMP
-    if name.startswith('S-') and 'T' in name:
+def resolve_dependency_path(source_file: Path, dep_str: str) -> str:
+    """Försöker lösa en beroendesträng till en normaliserad projektsökväg."""
+    if dep_str.startswith('@/'):
+        return normalize_path(ROOT_DIR / dep_str.replace('@/', 'src/'))
+    if dep_str.startswith('/'):
+        return normalize_path(ROOT_DIR / ('public' + dep_str))
+    
+    resolved = (source_file.parent / dep_str).resolve()
+    if resolved.is_file() and ROOT_DIR in resolved.parents:
+        return normalize_path(resolved)
+    return "" # Kan inte lösas till en fil inom projektet
+
+# (Schema-inferensfunktionerna är oförändrade)
+def get_json_type(value: Any) -> str:
+    if isinstance(value, str): return "string"
+    if isinstance(value, bool): return "boolean"
+    if isinstance(value, (int, float)): return "number"
+    if isinstance(value, list): return "array"
+    if isinstance(value, dict): return "object"
+    return "null"
+
+def infer_schema_from_data(data: Union[Dict, List]) -> Dict:
+    if isinstance(data, list):
+        if not data: return {"type": "array"}
+        items_schema = infer_schema_from_data(data[0]) if isinstance(data[0], (dict, list)) else {"type": get_json_type(data[0])}
+        return {"type": "array", "items": items_schema}
+    if isinstance(data, dict):
+        properties = {key: infer_schema_from_data(value) if isinstance(value, (dict, list)) else {"type": get_json_type(value)} for key, value in data.items()}
+        return {"type": "object", "properties": properties, "required": sorted(list(data.keys()))}
+    return {}
+
+
+def analyze_file(file_path: Path) -> Dict[str, Any]:
+    """Analyserar en fil och extraherar dess beroenden och metadata."""
+    content = file_path.read_text(encoding='utf-8', errors='ignore')
+    dependencies = set()
+    file_type = "Unknown"
+
+    # --- Schema-Inferens (för JSON-datafiler) ---
+    if file_path.suffix == '.json' and 'public/data' in normalize_path(file_path):
+        file_type = "Data File"
         try:
-            ts_str = name.split('S-')[1]
-            dt_obj = datetime.fromisoformat(ts_str.replace('Z', '+00:00'))
-            return (dt_obj, 0, 0)
-        except (ValueError, IndexError):
-            pass
+            data = json.loads(content)
+            if data:
+                schema = infer_schema_from_data(data)
+                schema_path = SCHEMA_OUTPUT_DIR / f"{file_path.stem}.schema.json"
+                schema_path.parent.mkdir(parents=True, exist_ok=True)
+                schema_path.write_text(json.dumps(schema, indent=2, ensure_ascii=False), encoding='utf-8')
+        except json.JSONDecodeError:
+            pass # Ignorera ogiltig JSON
+        return {"type": file_type, "dependencies": list(dependencies)}
 
-    # Försök tolka som S-DATUM-SEKVENS
-    if name.startswith('S-'):
-        parts = name.split('-')
-        if len(parts) == 3:
-            try:
-                date_part = datetime.strptime(parts[1], '%Y%m%d').replace(tzinfo=timezone.utc)
-                seq_part = ord(parts[2][0]) if parts[2] else 0
-                return (date_part, seq_part, 0)
-            except (ValueError, IndexError):
-                pass
+    # --- Relationsanalys ---
+    if file_path.suffix == '.vue':
+        file_type = "Vue Component"
+        template_content = "".join(re.findall(r"<template>([\s\S]*?)<\/template>", content))
+        script_content = "".join(re.findall(r"<script.*?>([\s\S]*?)<\/script>", content))
+        style_content = "".join(re.findall(r"<style.*?>([\s\S]*?)<\/style>", content))
 
-    # Fallback till numerisk tolkning
-    try:
-        numeric_part = float(name.replace('-', '.'))
-        return (datetime.min.replace(tzinfo=timezone.utc), 0, numeric_part)
-    except ValueError:
-        return (datetime.max.replace(tzinfo=timezone.utc), 0, 0) # Sorteras sist vid fel
+        dependencies.update(JS_IMPORT_REGEX.findall(script_content))
+        dependencies.update(VUE_TEMPLATE_ASSET_REGEX.findall(template_content))
+        dependencies.update(CSS_URL_REGEX.findall(style_content))
+
+    elif file_path.suffix == '.js':
+        file_type = "JavaScript Module"
+        dependencies.update(JS_IMPORT_REGEX.findall(content))
+        dependencies.update(JS_FETCH_REGEX.findall(content))
+        dependencies.update(JS_WORKER_REGEX.findall(content))
+
+    elif file_path.suffix == '.css':
+        file_type = "Stylesheet"
+        dependencies.update(CSS_IMPORT_REGEX.findall(content))
+        dependencies.update(CSS_URL_REGEX.findall(content))
+    
+    elif file_path.suffix == '.py':
+        file_type = "Python Script"
+        dependencies.update(PY_IMPORT_REGEX.findall(content))
+
+    return {"type": file_type, "dependencies": sorted(list(dependencies))}
 
 def main():
-    if len(sys.argv) < 2:
-        print("Användning: python3 historical_reconstruction_builder.py /path/to/sessions_dir [/output_root]")
-        sys.exit(2)
-    sessions_dir = Path(sys.argv[1])
-    out_root = Path(sys.argv[2]) if len(sys.argv) > 2 else Path(".")
+    """Huvudfunktion som kör hela processen."""
+    print("Starting universal asset graph analysis...")
+    source_files = find_source_files()
     
-    scripts_dir = out_root / "scripts"
-    history_dir = scripts_dir / "history"
-    docs_dir = out_root / "docs"
-    ai_protocols_dir = docs_dir / "ai_protocols"
-    tools_dir = out_root / "tools"
-    dynamic_protocols_path = ai_protocols_dir / "DynamicProtocols.json"
+    raw_nodes: Dict[str, Any] = {}
+    all_paths_in_project = {normalize_path(p) for p in source_files}
 
-    for d in [ai_protocols_dir, tools_dir, history_dir]:
-        d.mkdir(parents=True, exist_ok=True)
+    for file_path in source_files:
+        norm_path = normalize_path(file_path)
+        print(f"  Analyzing: {norm_path}")
+        raw_nodes[norm_path] = analyze_file(file_path)
 
-    files = sorted([p for p in sessions_dir.glob("*.json") if p.is_file()], key=get_session_sort_key)
-    
-    bygglogg, chathistorik, perf, all_heuristics = [], [], [], []
-    heuristic_usage_stats: Dict[str, List[datetime]] = {}
+    nodes: Dict[str, Any] = {}
+    edges: List[Dict[str, str]] = []
 
-    dynamic_protocols_map = OrderedDict()
-    if dynamic_protocols_path.exists():
-        protocols_list = load_json_file(dynamic_protocols_path)
-        if isinstance(protocols_list, list):
-            for proto in protocols_list:
-                if isinstance(proto, dict) and 'protocolId' in proto:
-                    dynamic_protocols_map[proto['protocolId']] = proto
+    for path, data in raw_nodes.items():
+        nodes[path] = {"type": data["type"], "dependents": []}
+        for dep_str in data.get('dependencies', []):
+            resolved = resolve_dependency_path(ROOT_DIR / path, dep_str)
+            
+            # Försök hitta filen även om den saknar ändelse
+            if resolved not in all_paths_in_project and not Path(resolved).suffix:
+                for ext in ['.js', '.vue', '.css']:
+                    if f"{resolved}{ext}" in all_paths_in_project:
+                        resolved = f"{resolved}{ext}"
+                        break
 
-    for p in files:
-        data = load_json_file(p)
-        if not data or not isinstance(data, dict): continue
-        
-        session_date_str = data.get("createdAt")
-        session_date = datetime.fromisoformat(session_date_str.replace('Z', '+00:00')) if session_date_str else None
+            if resolved and resolved in all_paths_in_project:
+                edge_type = "import"
+                if ".json" in resolved: edge_type = "data_fetch"
+                elif any(resolved.endswith(ext) for ext in ['.png', '.jpg', '.webp', '.svg']): edge_type = "asset_usage"
+                
+                edges.append({"from": path, "to": resolved, "type": edge_type})
 
-        artifacts = data.get("artifacts") or {}
-        if isinstance(artifacts.get("ByggLogg"), dict): bygglogg.append(artifacts["ByggLogg"])
-        if isinstance(artifacts.get("Chatthistorik"), dict): chathistorik.append(ensure_chat_schema(artifacts["Chatthistorik"]))
-        
-        perf_data = artifacts.get("ai_protocol_performance")
-        if isinstance(perf_data, dict):
-            perf.append(perf_data)
-            if session_date:
-                for triggered_id in perf_data.get("detailedMetrics", {}).get("heuristicsTriggered", []):
-                    heuristic_usage_stats.setdefault(triggered_id, []).append(session_date)
-        
-        lg = artifacts.get("frankensteen_learning_db")
-        if isinstance(lg, list): all_heuristics.extend([h for h in lg if isinstance(h, dict)])
-        elif isinstance(lg, dict): all_heuristics.append(lg)
+    # Bygg 'dependents'-listan
+    for edge in edges:
+        if edge["to"] in nodes:
+            nodes[edge["to"]]["dependents"].append(edge["from"])
 
-        approved_protocols = data.get("approvedNewDynamicProtocols")
-        if isinstance(approved_protocols, list):
-            for proto in approved_protocols:
-                if isinstance(proto, dict) and 'protocolId' in proto:
-                    dynamic_protocols_map[proto['protocolId']] = proto
-                    print(f"[INFO] Iscensatt uppdatering för dynamiskt protokoll: {proto['protocolId']}")
+    final_graph = {
+        "schema_version": "2.0",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "nodes": nodes,
+        "edges": edges
+    }
 
-    maintenance_conf_path = history_dir / "heuristics_maintenance.json"
-    active_heuristics = all_heuristics
-    if maintenance_conf_path.exists():
-        maint_conf = load_json_file(maintenance_conf_path)
-        if maint_conf:
-            # ... (Resten av logiken för heuristik-underhåll är oförändrad) ...
-            pass
-    
-    final_active_heuristics = active_heuristics # Förenkling för detta exempel
-    
-    (tools_dir / "frankensteen_learning_db.json").write_text(json.dumps(final_active_heuristics, ensure_ascii=False, indent=2), encoding="utf-8")
-    (docs_dir / "ByggLogg.json").write_text(json.dumps(bygglogg, ensure_ascii=False, indent=2), encoding="utf-8")
-    (docs_dir / "Chatthistorik.json").write_text(json.dumps(chathistorik, ensure_ascii=False, indent=2), encoding="utf-8")
-    (docs_dir / "ai_protocol_performance.json").write_text(json.dumps(perf, ensure_ascii=False, indent=2), encoding="utf-8")
-    (ai_protocols_dir / "DynamicProtocols.json").write_text(json.dumps(list(dynamic_protocols_map.values()), ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"\nAnalysis complete. Writing graph to {RELATIONS_OUTPUT_FILE}...")
+    RELATIONS_OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
+    RELATIONS_OUTPUT_FILE.write_text(json.dumps(final_graph, indent=2, ensure_ascii=False), encoding='utf-8')
+    print("Done.")
 
-    print(f"[OK] Skrev {len(bygglogg)} ByggLogg-poster, {len(chathistorik)} chattposter, {len(perf)} performance-poster.")
-    print(f"[OK] Sanerade Learning DB: {len(final_active_heuristics)} aktiva heuristiker kvarstår.")
-    print(f"[UT] {docs_dir / 'ByggLogg.json'}")
-    print(f"[UT] {docs_dir / 'Chatthistorik.json'}")
-    print(f"[UT] {docs_dir / 'ai_protocol_performance.json'}")
-    print(f"[UT] {tools_dir / 'frankensteen_learning_db.json'}")
-    print(f"[UT] {ai_protocols_dir / 'DynamicProtocols.json'}")
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
+
+# scripts/build_relations_graph.py
