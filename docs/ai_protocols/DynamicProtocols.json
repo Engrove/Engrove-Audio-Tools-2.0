@@ -245,5 +245,137 @@
       }
     }
   ]
-}
+},
+  {
+    "protocolId": "DP-MAINTAIN-PFR-01",
+    "description": "Maintains the Persistent File Register (PFR) by logging new, modified, or deleted files based on changes in the session's file context.",
+    "status": "active",
+    "trigger": {
+      "event": "file_context_change"
+    },
+    "steps": [
+      {
+        "action": "UPDATE_PFR",
+        "details": {
+          "description": "Analyzes the file change event and creates or updates a corresponding entry in the PFR."
+        }
+      }
+    ],
+    "schema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Protocol Schema for DP-MAINTAIN-PFR-01",
+      "type": "object",
+      "required": ["protocolId", "status", "trigger"],
+      "properties": {
+        "protocolId": { "const": "DP-MAINTAIN-PFR-01" },
+        "status": { "const": "active" },
+        "trigger": {
+          "type": "object",
+          "required": ["event"],
+          "properties": {
+            "event": { "const": "file_context_change" }
+          }
+        }
+      }
+    }
+  },
+  {
+    "protocolId": "DP-MAINTAIN-PHR-01",
+    "description": "Maintains the Persistent Heuristics Register (PHR) by logging any new heuristic that is formulated and approved during a Micro-Retrospective.",
+    "status": "active",
+    "trigger": {
+      "event": "new_heuristic_generated"
+    },
+    "steps": [
+      {
+        "action": "UPDATE_PHR",
+        "details": {
+          "description": "Analyzes the newly generated heuristic and creates a corresponding entry in the PHR."
+        }
+      }
+    ],
+    "schema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Protocol Schema for DP-MAINTAIN-PHR-01",
+      "type": "object",
+      "required": ["protocolId", "status", "trigger"],
+      "properties": {
+        "protocolId": { "const": "DP-MAINTAIN-PHR-01" },
+        "status": { "const": "active" },
+        "trigger": {
+          "type": "object",
+          "required": ["event"],
+          "properties": {
+            "event": { "const": "new_heuristic_generated" }
+          }
+        }
+      }
+    }
+  },
+  {
+    "protocolId": "DP-MAINTAIN-PDR-01",
+    "description": "Maintains the Persistent Decision Register (PDR) by logging significant DT-2 (Sync) or DT-3 (Leadership) decisions made during a session.",
+    "status": "active",
+    "trigger": {
+      "event": "DT2_or_DT3_decision_made"
+    },
+    "steps": [
+      {
+        "action": "UPDATE_PDR",
+        "details": {
+          "description": "Captures the context and outcome of a significant decision and creates a corresponding entry in the PDR."
+        }
+      }
+    ],
+    "schema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Protocol Schema for DP-MAINTAIN-PDR-01",
+      "type": "object",
+      "required": ["protocolId", "status", "trigger"],
+      "properties": {
+        "protocolId": { "const": "DP-MAINTAIN-PDR-01" },
+        "status": { "const": "active" },
+        "trigger": {
+          "type": "object",
+          "required": ["event"],
+          "properties": {
+            "event": { "const": "DT2_or_DT3_decision_made" }
+          }
+        }
+      }
+    }
+  },
+  {
+    "protocolId": "DP-MAINTAIN-PPR-01",
+    "description": "Maintains the Persistent Protocol Register (PPR) by logging the formal approval or significant modification of any dynamic protocol.",
+    "status": "active",
+    "trigger": {
+      "event": "dynamic_protocol_approved_or_modified"
+    },
+    "steps": [
+      {
+        "action": "UPDATE_PPR",
+        "details": {
+          "description": "Identifies the protocol that was changed or approved and creates a corresponding entry in the PPR."
+        }
+      }
+    ],
+    "schema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Protocol Schema for DP-MAINTAIN-PPR-01",
+      "type": "object",
+      "required": ["protocolId", "status", "trigger"],
+      "properties": {
+        "protocolId": { "const": "DP-MAINTAIN-PPR-01" },
+        "status": { "const": "active" },
+        "trigger": {
+          "type": "object",
+          "required": ["event"],
+          "properties": {
+            "event": { "const": "dynamic_protocol_approved_or_modified" }
+          }
+        }
+      }
+    }
+  }
 ]
