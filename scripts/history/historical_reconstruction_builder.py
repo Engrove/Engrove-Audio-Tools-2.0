@@ -10,6 +10,7 @@ import re
 from pathlib import Path
 from typing import Dict, Any, List, Set, Tuple
 from datetime import datetime, timedelta
+from collections import OrderedDict
 
 try:
     from jsonschema import validate
@@ -83,6 +84,8 @@ def main():
     docs_dir = out_root / "docs"
     ai_protocols_dir = docs_dir / "ai_protocols"
     tools_dir = out_root / "tools"
+    dynamic_protocols_path = ai_protocols_dir / "DynamicProtocols.json"
+
     for d in [ai_protocols_dir, tools_dir, history_dir]:
         d.mkdir(parents=True, exist_ok=True)
 
@@ -90,6 +93,15 @@ def main():
     
     bygglogg, chathistorik, perf, all_heuristics = [], [], [], []
     heuristic_usage_stats: Dict[str, List[datetime]] = {}
+
+    # Läs in befintliga dynamiska protokoll
+    dynamic_protocols_map = OrderedDict()
+    if dynamic_protocols_path.exists():
+        protocols_list = load_json_file(dynamic_protocols_path)
+        if isinstance(protocols_list, list):
+            for proto in protocols_list:
+                if isinstance(proto, dict) and 'protocolId' in proto:
+                    dynamic_protocols_map[proto['protocolId']] = proto
 
     for p in files:
         data = load_json_file(p)
@@ -112,6 +124,14 @@ def main():
         lg = artifacts.get("frankensteen_learning_db")
         if isinstance(lg, list): all_heuristics.extend([h for h in lg if isinstance(h, dict)])
         elif isinstance(lg, dict): all_heuristics.append(lg)
+
+        # Bearbeta godkända dynamiska protokoll
+        approved_protocols = data.get("approvedNewDynamicProtocols")
+        if isinstance(approved_protocols, list):
+            for proto in approved_protocols:
+                if isinstance(proto, dict) and 'protocolId' in proto:
+                    dynamic_protocols_map[proto['protocolId']] = proto
+                    print(f"[INFO] Iscensatt uppdatering för dynamiskt protokoll: {proto['protocolId']}")
 
     # --- Sanering och Harmonisering av Heuristiker ---
     maintenance_conf_path = history_dir / "heuristics_maintenance.json"
@@ -161,12 +181,15 @@ def main():
     (docs_dir / "Chatthistorik.json").write_text(json.dumps(chathistorik, ensure_ascii=False, indent=2), encoding="utf-8")
     (docs_dir / "ai_protocol_performance.json").write_text(json.dumps(perf, ensure_ascii=False, indent=2), encoding="utf-8")
 
+    (ai_protocols_dir / "DynamicProtocols.json").write_text(json.dumps(list(dynamic_protocols_map.values()), ensure_ascii=False, indent=2), encoding="utf-8")
+
     print(f"[OK] Skrev {len(bygglogg)} ByggLogg-poster, {len(chathistorik)} chattposter, {len(perf)} performance-poster.")
     print(f"[OK] Sanerade Learning DB: {len(final_active_heuristics)} aktiva heuristiker kvarstår.")
     print(f"[UT] {docs_dir / 'ByggLogg.json'}")
     print(f"[UT] {docs_dir / 'Chatthistorik.json'}")
     print(f"[UT] {docs_dir / 'ai_protocol_performance.json'}")
     print(f"[UT] {tools_dir / 'frankensteen_learning_db.json'}")
+    print(f"[UT] {ai_protocols_dir / 'DynamicProtocols.json'}")
 
 if __name__ == "__main__":
     main()
