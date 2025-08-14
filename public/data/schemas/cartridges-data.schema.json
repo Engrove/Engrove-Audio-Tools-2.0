@@ -107,7 +107,9 @@
       },
       "tags": {
         "type": "array",
-        "items": {}
+        "items": {
+          "type": "string"
+        }
       },
       "edit_history": {
         "type": "array"

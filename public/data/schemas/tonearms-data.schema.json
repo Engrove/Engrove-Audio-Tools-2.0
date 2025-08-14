@@ -68,7 +68,9 @@
       },
       "null_points_mm": {
         "type": "array",
-        "items": {}
+        "items": {
+          "type": "number"
+        }
       },
       "tracking_method": {
         "type": "string"
