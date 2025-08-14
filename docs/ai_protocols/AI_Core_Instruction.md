@@ -280,9 +280,9 @@ De fullständiga definitionerna finns i `ai_config.json`. Sammanfattning:
 ### Decision Boundary – Leveransformat
 
 - **Ny fil** → leverera alltid fullständig fil.
-- **Ändring av versionerad fil** → leverera endast patch enligt `anchor_diff_v2.1`.
-- **Patch** kräver känd `base_checksum_sha256` för att validera mot aktuell version.
-- Om `base_checksum_sha256` saknas eller inte matchar → avbryt och begär ny referensversion innan leverans.
+- **Ändring av versionerad fil** → leverera endast patch enligt `anchor_diff_v3.0`.
+- **Patch** kräver känd och verifierad `base_checksum_sha256` för att validera mot aktuell version.
+- Om `base_checksum_sha256` saknas eller inte matchar → avbryt, rapportera och begär ny referensversion innan leverans.
 
 **Arbetsflöde (AI ↔ Engrove)**
 -------------------------------
