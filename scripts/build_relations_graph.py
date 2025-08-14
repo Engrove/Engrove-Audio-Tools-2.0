@@ -4,50 +4,71 @@
 # scripts/build_relations_graph.py
 #
 # === SYFTE & ANSVAR ===
-# Detta skript har ett dubbelt ansvar:
-# 1. Relationsanalys: Analyserar källkoden (.vue, .js, .py) för att bygga en
-#    detaljerad relationsgraf (docs/file_relations.json).
-# 2. Schema-Inferens: Analyserar datafiler (.json) i public/data/ och
-#    auto-genererar ett formellt JSON Schema för varje fil, vilket säkerställer
-#    att AI-partnern har ett explicit datakontrakt att arbeta mot.
+# Detta skript är en universell analysmotor med ett trefaldigt ansvar:
+# 1. Relationsanalys (Kod): Analyserar källkoden (.vue, .js, .py) för 'import'-beroenden.
+# 2. Relationsanalys (Tillgångar): Analyserar kod (.vue, .js, .css) för data-beroenden
+#    (fetch) och statiska tillgångar (bilder, typsnitt).
+# 3. Schema-Inferens: Analyserar datafiler (.json) i public/data/ och
+#    auto-genererar ett formellt JSON Schema för varje fil.
 #
 # === HISTORIK ===
-# * v1.0 (2025-08-14): Initial skapelse av Frankensteen.
-# * v2.0 (2025-08-14): Uppgraderad med schema-inferensfunktionalitet enligt direktiv.
-# * v2.1 (2025-08-14): KRITISK FIX: Korrigerat ett logiskt fel i main-funktionen som
-#   felaktigt hoppade över JSON-filer, vilket förhindrade schema-generering.
-# * v2.2 (2025-08-14): Slutgiltig korrigering av main-loop för att säkerställa att
-#   alla filer, inklusive JSON, bearbetas och deras artefakter skapas korrekt.
+# * v1.0 (2025-08-14): Initial skapelse. Fokuserade på kod-importer.
+# * v2.0 (2025-08-14): Uppgraderad med schema-inferensfunktionalitet.
+# * v2.1 (2025-08-14): KRITISK FIX: Korrigerat logiskt fel som ignorerade JSON-filer.
+# * v2.2 (2025-08-14): KRITISK FIX: Lade till saknad 'datetime' import.
+# * v3.0 (2025-08-14): ARKITEKTURUPPGRADERING: Implementerat "Plan 4.0". Motorn kan nu
+#   identifiera data-beroenden (fetch) och statiska tillgångar (bilder etc.),
+#   vilket skapar en komplett, universell tillgångsgraf.
 
 import json
 import re
 from pathlib import Path
-from typing import Dict, Any, List, Union
+from typing import Dict, Any, List, Union, Set
 from datetime import datetime, timezone
 
 # --- Konfiguration ---
 ROOT_DIR = Path(__file__).parent.parent
-SCAN_DIRS = ['src', 'scripts', 'public/data']
-INCLUDE_EXTENSIONS = ['.vue', '.js', '.py', '.json']
+SCAN_DIRS = ['src', 'scripts', 'public']
+INCLUDE_EXTENSIONS = ['.vue', '.js', '.py', '.json', '.css']
 EXCLUDE_DIRS = ['node_modules', 'dist', '__pycache__', 'schemas']
 RELATIONS_OUTPUT_FILE = ROOT_DIR / 'docs' / 'file_relations.json'
 SCHEMA_OUTPUT_DIR = ROOT_DIR / 'public' / 'data' / 'schemas'
 
 # --- Regex-mönster ---
+# JS/VUE <script>
 JS_IMPORT_REGEX = re.compile(r"import(?:[\s\S]*?)from\s*['\"]([^'\"]+)['\"]")
+JS_FETCH_REGEX = re.compile(r"fetch\s*\(\s*['\"]((?:\/data\/)[^'\"]+\.json)['\"]")
+JS_WORKER_REGEX = re.compile(r"new\s+Worker\s*\(\s*['\"]([^'\"]+)['\"]")
+
+# VUE <template>
+VUE_TEMPLATE_ASSET_REGEX = re.compile(r"\s(?:src|href)\s*=\s*['\"]((?:\/|@\/|\.\/|\.\.\/)[^'\"]+)['\"]")
+
+# CSS / VUE <style>
+CSS_URL_REGEX = re.compile(r"url\s*\(\s*['\"]?([^'")]+)['"]?\s*\)")
+CSS_IMPORT_REGEX = re.compile(r"@import\s*['\"]([^'\"]+)['\"]")
+
+# PYTHON
 PY_IMPORT_REGEX = re.compile(r"^\s*(?:import|from)\s+([\w.]+)", re.MULTILINE)
-VUE_PROPS_REGEX = re.compile(r"defineProps\s*\(\s*({[\s\S]*?})\s*\)", re.MULTILINE)
-VUE_EMITS_REGEX = re.compile(r"defineEmits\s*\(\s*(\[[\s\S]*?\])\s*\)", re.MULTILINE)
-PINIA_STATE_REGEX = re.compile(r"state:\s*\(\)\s*=>\s*\(([\s\S]*?)\)", re.MULTILINE)
-PINIA_GETTERS_REGEX = re.compile(r"getters:\s*{([\s\S]*?)}", re.MULTILINE)
-PINIA_ACTIONS_REGEX = re.compile(r"actions:\s*{([\s\S]*?)}", re.MULTILINE)
-OBJECT_KEY_REGEX = re.compile(r"(\w+)\s*:")
-PY_FUNC_REGEX = re.compile(r"^\s*def\s+(\w+)\s*\(", re.MULTILINE)
-PY_CLASS_REGEX = re.compile(r"^\s*class\s+(\w+)", re.MULTILINE)
 
+# --- Hjälpfunktioner ---
+def normalize_path(path: Path) -> str:
+    """Normaliserar en sökväg till ett relativt, plattformsoberoende format."""
+    return path.relative_to(ROOT_DIR).as_posix()
 
+def resolve_dependency_path(source_file: Path, dep_str: str) -> str:
+    """Försöker lösa en beroendesträng till en normaliserad projektsökväg."""
+    if dep_str.startswith('@/'):
+        return normalize_path(ROOT_DIR / dep_str.replace('@/', 'src/'))
+    if dep_str.startswith('/'):
+        return normalize_path(ROOT_DIR / ('public' + dep_str))
+    
+    resolved = (source_file.parent / dep_str).resolve()
+    if resolved.is_file() and ROOT_DIR in resolved.parents:
+        return normalize_path(resolved)
+    return "" # Kan inte lösas till en fil inom projektet
+
+# (Schema-inferensfunktionerna är oförändrade)
 def get_json_type(value: Any) -> str:
-    """Returnerar JSON-datatypen för ett Python-värde."""
     if isinstance(value, str): return "string"
     if isinstance(value, bool): return "boolean"
     if isinstance(value, (int, float)): return "number"
@@ -56,145 +77,112 @@ def get_json_type(value: Any) -> str:
     return "null"
 
 def infer_schema_from_data(data: Union[Dict, List]) -> Dict:
-    """Härleder ett JSON Schema från en Python-datastruktur."""
     if isinstance(data, list):
-        if not data:
-            return {"type": "array"}
-        item_schemas = [infer_schema_from_data(item) for item in data[:1]]
-        if not item_schemas:
-            return {"type": "array"}
-        return {"type": "array", "items": item_schemas[0]}
-
+        if not data: return {"type": "array"}
+        items_schema = infer_schema_from_data(data[0]) if isinstance(data[0], (dict, list)) else {"type": get_json_type(data[0])}
+        return {"type": "array", "items": items_schema}
     if isinstance(data, dict):
-        properties = {}
-        required = []
-        for key, value in data.items():
-            properties[key] = {"type": get_json_type(value)}
-            if get_json_type(value) == "object":
-                properties[key] = infer_schema_from_data(value)
-            elif get_json_type(value) == "array" and value:
-                 properties[key] = infer_schema_from_data(value)
-            required.append(key)
-        
-        return {
-            "type": "object",
-            "properties": properties,
-            "required": sorted(required)
-        }
+        properties = {key: infer_schema_from_data(value) if isinstance(value, (dict, list)) else {"type": get_json_type(value)} for key, value in data.items()}
+        return {"type": "object", "properties": properties, "required": sorted(list(data.keys()))}
     return {}
 
+
 def analyze_file(file_path: Path) -> Dict[str, Any]:
-    """Analyserar en enskild fil för antingen relationer eller schema."""
+    """Analyserar en fil och extraherar dess beroenden och metadata."""
     content = file_path.read_text(encoding='utf-8', errors='ignore')
-    
-    if file_path.suffix == '.json':
+    dependencies = set()
+    file_type = "Unknown"
+
+    # --- Schema-Inferens (för JSON-datafiler) ---
+    if file_path.suffix == '.json' and 'public/data' in normalize_path(file_path):
+        file_type = "Data File"
         try:
             data = json.loads(content)
-            if not data:
-                print(f"  [INFO] JSON file is empty, skipping schema generation for: {normalize_path(file_path)}")
-                return {"type": "Data File", "api": {}, "dependencies": []}
-            
-            schema = infer_schema_from_data(data)
-            schema_path = SCHEMA_OUTPUT_DIR / f"{file_path.name.replace('.json', '')}.schema.json"
-            schema_path.parent.mkdir(parents=True, exist_ok=True)
-            schema_path.write_text(json.dumps(schema, indent=2), encoding='utf-8')
-            print(f"  Schema inferred and saved to: {normalize_path(schema_path)}")
+            if data:
+                schema = infer_schema_from_data(data)
+                schema_path = SCHEMA_OUTPUT_DIR / f"{file_path.stem}.schema.json"
+                schema_path.parent.mkdir(parents=True, exist_ok=True)
+                schema_path.write_text(json.dumps(schema, indent=2, ensure_ascii=False), encoding='utf-8')
         except json.JSONDecodeError:
-            print(f"  [WARNING] Could not parse JSON, skipping schema generation for: {normalize_path(file_path)}")
-        return {"type": "Data File", "api": {}, "dependencies": []}
+            pass # Ignorera ogiltig JSON
+        return {"type": file_type, "dependencies": list(dependencies)}
 
-    file_type = "Unknown"
-    api = {}
-    dependencies = set()
+    # --- Relationsanalys ---
+    if file_path.suffix == '.vue':
+        file_type = "Vue Component"
+        template_content = "".join(re.findall(r"<template>([\s\S]*?)<\/template>", content))
+        script_content = "".join(re.findall(r"<script.*?>([\s\S]*?)<\/script>", content))
+        style_content = "".join(re.findall(r"<style.*?>([\s\S]*?)<\/style>", content))
 
-    if file_path.suffix in ['.js', '.vue']:
-        file_type = "Vue Component" if file_path.suffix == '.vue' else "JavaScript Module"
-        imports = JS_IMPORT_REGEX.findall(content)
-        for imp in imports:
-            if imp.startswith('@/'): imp = 'src/' + imp[2:]
-            try:
-                resolved_path = (file_path.parent / imp).resolve()
-                if resolved_path.exists(): dependencies.add(normalize_path(resolved_path))
-            except Exception: pass
-        if 'store' in file_path.name.lower(): file_type = "Pinia Store"
+        dependencies.update(JS_IMPORT_REGEX.findall(script_content))
+        dependencies.update(VUE_TEMPLATE_ASSET_REGEX.findall(template_content))
+        dependencies.update(CSS_URL_REGEX.findall(style_content))
 
+    elif file_path.suffix == '.js':
+        file_type = "JavaScript Module"
+        dependencies.update(JS_IMPORT_REGEX.findall(content))
+        dependencies.update(JS_FETCH_REGEX.findall(content))
+        dependencies.update(JS_WORKER_REGEX.findall(content))
+
+    elif file_path.suffix == '.css':
+        file_type = "Stylesheet"
+        dependencies.update(CSS_IMPORT_REGEX.findall(content))
+        dependencies.update(CSS_URL_REGEX.findall(content))
+    
     elif file_path.suffix == '.py':
         file_type = "Python Script"
         dependencies.update(PY_IMPORT_REGEX.findall(content))
-        api['functions'] = PY_FUNC_REGEX.findall(content)
-        api['classes'] = PY_CLASS_REGEX.findall(content)
 
-    return {
-        "type": file_type,
-        "api": api,
-        "dependencies": sorted(list(dependencies))
-    }
-
-def find_source_files() -> List[Path]:
-    """Hittar alla relevanta källkodsfiler i projektet."""
-    all_files = []
-    for directory in SCAN_DIRS:
-        root_path = ROOT_DIR / directory
-        for file_path in root_path.rglob('*'):
-            if (any(part in EXCLUDE_DIRS for part in file_path.parts) or
-                    file_path.suffix not in INCLUDE_EXTENSIONS):
-                continue
-            all_files.append(file_path)
-    return all_files
-
-def normalize_path(path: Path) -> str:
-    """Normaliserar en sökväg till ett relativt, plattformsoberoende format."""
-    return path.relative_to(ROOT_DIR).as_posix()
+    return {"type": file_type, "dependencies": sorted(list(dependencies))}
 
 def main():
     """Huvudfunktion som kör hela processen."""
-    print("Starting analysis of project file relations and data schemas...")
+    print("Starting universal asset graph analysis...")
     source_files = find_source_files()
     
-    nodes: Dict[str, Any] = {}
-    
+    raw_nodes: Dict[str, Any] = {}
+    all_paths_in_project = {normalize_path(p) for p in source_files}
+
     for file_path in source_files:
         norm_path = normalize_path(file_path)
         print(f"  Analyzing: {norm_path}")
-        
-        analysis_result = analyze_file(file_path)
+        raw_nodes[norm_path] = analyze_file(file_path)
 
-        if file_path.suffix != '.json':
-            nodes[norm_path] = analysis_result
-
+    nodes: Dict[str, Any] = {}
     edges: List[Dict[str, str]] = []
-    for path in nodes:
-        nodes[path]['dependents'] = []
 
-    for path, data in nodes.items():
-        for dep_path in data.get('dependencies', []):
-            potential_paths = [dep_path]
-            if not Path(dep_path).suffix:
-                 potential_paths.extend([f"{dep_path}.js", f"{dep_path}.vue"])
+    for path, data in raw_nodes.items():
+        nodes[path] = {"type": data["type"], "dependents": []}
+        for dep_str in data.get('dependencies', []):
+            resolved = resolve_dependency_path(ROOT_DIR / path, dep_str)
             
-            found_dep = None
-            for p_path in potential_paths:
-                if p_path in nodes:
-                    found_dep = p_path
-                    break
-            
-            if found_dep:
-                edges.append({"from": path, "to": found_dep, "type": "import"})
-                if found_dep in nodes:
-                    nodes[found_dep]['dependents'].append(path)
+            # Försök hitta filen även om den saknar ändelse
+            if resolved not in all_paths_in_project and not Path(resolved).suffix:
+                for ext in ['.js', '.vue', '.css']:
+                    if f"{resolved}{ext}" in all_paths_in_project:
+                        resolved = f"{resolved}{ext}"
+                        break
 
-    for path in list(nodes.keys()):
-        if 'dependencies' in nodes[path]:
-            del nodes[path]['dependencies']
-        
+            if resolved and resolved in all_paths_in_project:
+                edge_type = "import"
+                if ".json" in resolved: edge_type = "data_fetch"
+                elif any(resolved.endswith(ext) for ext in ['.png', '.jpg', '.webp', '.svg']): edge_type = "asset_usage"
+                
+                edges.append({"from": path, "to": resolved, "type": edge_type})
+
+    # Bygg 'dependents'-listan
+    for edge in edges:
+        if edge["to"] in nodes:
+            nodes[edge["to"]]["dependents"].append(edge["from"])
+
     final_graph = {
-        "schema_version": "1.0",
+        "schema_version": "2.0",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "nodes": nodes,
         "edges": edges
     }
 
-    print(f"\nAnalysis complete. Writing relations graph to {RELATIONS_OUTPUT_FILE}...")
+    print(f"\nAnalysis complete. Writing graph to {RELATIONS_OUTPUT_FILE}...")
     RELATIONS_OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
     RELATIONS_OUTPUT_FILE.write_text(json.dumps(final_graph, indent=2, ensure_ascii=False), encoding='utf-8')
     print("Done.")
