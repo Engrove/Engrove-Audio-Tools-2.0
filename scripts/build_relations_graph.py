@@ -19,11 +19,13 @@
 # * v3.1 (2025-08-14): KRITISK FIX: Korrigerat ett SyntaxError i ett reguljärt uttryck (CSS_URL_REGEX).
 # * v4.0 (2025-08-14): OPERATION UNIVERSAL GRAPH v2.0: Fundamental uppgradering till AST-parsing för Python,
 #   utökad filtyps-scope, semantisk berikning av noder/kanter och kritikalitets-poäng.
+# * v5.0 (2025-08-14): PROTOKOLLUPPGRADERING: Implementerat `file_relations.json` v3.1, det självförklarande protokollet.
+#   Filen innehåller nu ett `_meta`-block som fungerar som en inbäddad AI-instruktion.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.5) ===
-# - Obligatorisk Refaktorisering: Hela skriptet har omstrukturerats för att hantera den nya, djupare analysen.
-# - API-kontraktsverifiering: Output-formatet följer det nya, överenskomna `file_relations.json` v3.0-schemat.
-# - Red Team Alter Ego: Analysen har utökats för att täcka fler filtyper och beroendetyper, vilket minskar risken för "blinda fläckar".
+# - Obligatorisk Refaktorisering: Hela skriptet har omstrukturerats för att producera det nya, självförklarande formatet.
+# - API-kontraktsverifiering: Output-formatet följer det nya, överenskomna `file_relations.json` v3.1-schemat.
+# - Red Team Alter Ego: Den nya `_meta`-sektionen har granskats för att säkerställa att den är otvetydig för en AI utan förkunskaper.
 
 import json
 import re
@@ -39,7 +41,35 @@ SCAN_DIRS = ['src', 'scripts', 'public', '.github', 'docs', 'tools']
 INCLUDE_EXTENSIONS = ['.vue', '.js', '.py', '.json', '.css', '.toml', '.yml', '.md', '.txt']
 EXCLUDE_DIRS = ['node_modules', 'dist', '__pycache__', 'schemas']
 RELATIONS_OUTPUT_FILE = ROOT_DIR / 'docs' / 'file_relations.json'
-SCHEMA_OUTPUT_DIR = ROOT_DIR / 'public' / 'data' / 'schemas'
+
+# --- Självförklarande Meta-block ---
+SELF_DESCRIBING_META = {
+    "protocol_id": "FileRelations_v3.1_SelfDescribing",
+    "purpose": "Detta är en maskinläsbar, strukturerad karta över projektets arkitektur. Den fungerar både som rådata och som en instruktion för en AI-assistent. Den beskriver alla relevanta filer, deras roller och deras inbördes beroenden.",
+    "how_to_interpret": {
+        "graph_data": "Detta fält innehåller en representation av projektet som en riktad graf.",
+        "nodes": "Varje nyckel i 'nodes'-objektet representerar en unik fil i projektet. Sökvägen är nyckeln.",
+        "edges": "Varje objekt i 'edges'-arrayen representerar ett beroende från en 'from'-fil till en 'to'-fil."
+    },
+    "key_definitions": {
+        "nodes": {
+            "criticality_score": "Ett mått (0-100) på hur central en fil är. Beräknas baserat på antalet andra filer som är beroende av den (`dependents_count`). Ett högt värde indikerar att ändringar i denna fil har stor potentiell påverkan och kräver extra försiktighet.",
+            "category": "Filens arkitektoniska roll: 'code', 'configuration', 'documentation', eller 'data'.",
+            "exports": "Visar de specifika funktioner/klasser som en fil exponerar (exporterar).",
+            "imports": "Visar de specifika moduler/bibliotek som en fil använder (importerar)."
+        },
+        "edges": {
+            "type": "Typen av beroende, t.ex. 'code_import' (en kodfil importerar en annan), 'configuration_reference' (en config-fil pekar på en annan fil), 'process_execution' (ett CI/CD-jobb kör ett skript)."
+        }
+    },
+    "actionable_intelligence_guide": {
+        "risk_assessment": "Använd `criticality_score` för att bedöma risken med en föreslagen ändring. En fil med hög poäng bör hanteras med extra noggrannhet.",
+        "context_gathering": "När du ombeds modifiera en fil, använd `edges`-grafen för att identifiera och begära alla direkt relaterade filer (både beroenden och de som är beroende av filen) för att säkerställa en komplett kontext.",
+        "architectural_analysis": "Använd grafen för att förstå modulära gränser och identifiera potentiella arkitektoniska problem som cirkulära beroenden eller överdrivet komplexa moduler."
+    },
+    "project_context_snapshot": {} # Fylls i dynamiskt
+}
+
 
 # --- Regex-mönster (för icke-AST-analys) ---
 JS_IMPORT_REGEX = re.compile(r"import(?:[\s\S]*?)from\s*['\"]([^'\"]+)['\"]")
@@ -68,7 +98,6 @@ def resolve_dependency_path(source_file: Path, dep_str: str) -> str:
         return normalize_path(ROOT_DIR / ('public' + dep_str))
     
     resolved = (source_file.parent / dep_str).resolve()
-    # Ensure the path is within the project directory
     if resolved.is_file() and ROOT_DIR.as_posix() in resolved.as_posix():
         return normalize_path(resolved)
     return ""
@@ -93,14 +122,12 @@ def analyze_python_ast(content: str) -> Dict[str, List[Dict[str, Any]]]:
             elif isinstance(node, ast.ClassDef):
                 exports.append({"symbol": node.name, "type": "class"})
     except SyntaxError:
-        pass # Handle files with syntax errors gracefully
+        pass
     return {"imports": imports, "exports": exports}
 
 def analyze_javascript_symbols(content: str) -> Dict[str, List[Dict[str, Any]]]:
-    # Regex-based approximation for JS/Vue symbol extraction
     exports = [{"symbol": match, "type": "unknown"} for match in JS_EXPORT_REGEX.findall(content)]
     return {"exports": exports}
-
 
 def get_file_category(file_path: Path) -> str:
     path_str = normalize_path(file_path)
@@ -146,7 +173,6 @@ def analyze_file(file_path: Path) -> Dict[str, Any]:
         ast_results = analyze_python_ast(content)
         imports = ast_results.get('imports', [])
         exports = ast_results.get('exports', [])
-        # Add module names from imports to dependencies
         dependencies.extend([(imp['source'], 'code_import') for imp in imports])
 
     elif file_path.suffix == '.yml':
@@ -183,8 +209,15 @@ def find_source_files() -> List[Path]:
                  all_files.append(file_path)
     return all_files
 
-def main():
-    print("Starting universal asset graph analysis (v4.0)...", file=sys.stderr)
+def main(project_overview_json_str: str):
+    print("Starting universal asset graph analysis (v5.0)...", file=sys.stderr)
+    
+    try:
+        project_overview = json.loads(project_overview_json_str)
+    except json.JSONDecodeError:
+        print("ERROR: Invalid JSON provided for project_overview.", file=sys.stderr)
+        sys.exit(1)
+
     source_files = find_source_files()
     
     raw_nodes: Dict[str, Any] = {}
@@ -221,20 +254,27 @@ def main():
         node_data["dependents_count"] = count
         node_data["criticality_score"] = round((count / max_dependents) * 100, 2) if max_dependents > 0 else 0
 
+    meta_block = SELF_DESCRIBING_META
+    meta_block["project_context_snapshot"] = project_overview
 
-    final_graph = {
-        "schema_version": "3.0",
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-        "nodes": nodes,
-        "edges": edges
+    final_output = {
+        "_meta": meta_block,
+        "graph_data": {
+            "schema_version": "3.0",
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "nodes": nodes,
+            "edges": edges
+        }
     }
 
     print(f"\nAnalysis complete. Writing graph to {RELATIONS_OUTPUT_FILE}...", file=sys.stderr)
     RELATIONS_OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
-    RELATIONS_OUTPUT_FILE.write_text(json.dumps(final_graph, indent=2, ensure_ascii=False), encoding='utf-8')
+    RELATIONS_OUTPUT_FILE.write_text(json.dumps(final_output, indent=2, ensure_ascii=False), encoding='utf-8')
     print("Done.", file=sys.stderr)
 
 if __name__ == '__main__':
-    main()
-
-# scripts/build_relations_graph.py
+    if len(sys.argv) != 2:
+        print("Usage: python build_relations_graph.py '<project_overview_json>'", file=sys.stderr)
+        print("Example: python build_relations_graph.py '{\"repository\":\"Engrove/Repo\",\"branch\":\"main\"}'", file=sys.stderr)
+        sys.exit(1)
+    main(sys.argv[1])
