@@ -86,6 +86,12 @@ jobs:
           python scripts/update_core_info.py sessions/ docs/core_file_info.json $COMMIT_SHA
           echo "Session processing complete."
 
+      - name: STEP 2 Generate File Relations Graph
+        id: generate-relations
+        run: |
+          echo "Generating file relations graph and data schemas..."
+          python scripts/build_relations_graph.py
+          echo "Graph generation complete."
       - name: STEP 2 Generate AI Context JSON
         id: generate-json
         env:
@@ -138,8 +144,7 @@ jobs:
             [skip ci]
           commit_user_name: 'Frankensteen (Bot)'
           commit_user_email: 'frankensteen-bot@users.noreply.github.com'
-          file_pattern: 'docs/ByggLogg.json docs/Chatthistorik.json docs/ai_protocol_performance.json tools/frankensteen_learning_db.json docs/ai_protocols/DynamicProtocols.json docs/core_file_info.json'
-
+          file_pattern: 'docs/ByggLogg.json docs/Chatthistorik.json docs/ai_protocol_performance.json tools/frankensteen_learning_db.json docs/ai_protocols/DynamicProtocols.json docs/core_file_info.json docs/file_relations.json public/data/schemas/*.schema.json'
   deploy:
     needs: build
     if: success() && needs.build.outputs.context-generated == 'true'
