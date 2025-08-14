@@ -16,11 +16,13 @@
 # * v2.0 (2025-08-14): Uppgraderad med schema-inferensfunktionalitet enligt direktiv.
 # * v2.1 (2025-08-14): KRITISK FIX: Korrigerat ett logiskt fel i main-funktionen som
 #   felaktigt hoppade över JSON-filer, vilket förhindrade schema-generering.
+# * v2.2 (2025-08-14): Slutgiltig korrigering av main-loop för att säkerställa att
+#   alla filer, inklusive JSON, bearbetas och deras artefakter skapas korrekt.
 
 import json
 import re
 from pathlib import Path
-from typing import Dict, Any, Set, List, Union
+from typing import Dict, Any, List, Union
 
 # --- Konfiguration ---
 ROOT_DIR = Path(__file__).parent.parent
@@ -57,8 +59,7 @@ def infer_schema_from_data(data: Union[Dict, List]) -> Dict:
     if isinstance(data, list):
         if not data:
             return {"type": "array"}
-        # Analysera schemat baserat på det första objektet i listan
-        item_schemas = [infer_schema_from_data(item) for item in data[:1]] # Analysera bara första för prestanda
+        item_schemas = [infer_schema_from_data(item) for item in data[:1]]
         if not item_schemas:
             return {"type": "array"}
         return {"type": "array", "items": item_schemas[0]}
@@ -81,7 +82,6 @@ def infer_schema_from_data(data: Union[Dict, List]) -> Dict:
         }
     return {}
 
-
 def analyze_file(file_path: Path) -> Dict[str, Any]:
     """Analyserar en enskild fil för antingen relationer eller schema."""
     content = file_path.read_text(encoding='utf-8', errors='ignore')
@@ -89,6 +89,10 @@ def analyze_file(file_path: Path) -> Dict[str, Any]:
     if file_path.suffix == '.json':
         try:
             data = json.loads(content)
+            if not data:
+                print(f"  [INFO] JSON file is empty, skipping schema generation for: {normalize_path(file_path)}")
+                return {"type": "Data File", "api": {}, "dependencies": []}
+            
             schema = infer_schema_from_data(data)
             schema_path = SCHEMA_OUTPUT_DIR / f"{file_path.name.replace('.json', '')}.schema.json"
             schema_path.parent.mkdir(parents=True, exist_ok=True)
@@ -152,8 +156,6 @@ def main():
         norm_path = normalize_path(file_path)
         print(f"  Analyzing: {norm_path}")
         
-        # KORRIGERING: Anropa analyze_file för ALLA filer.
-        # Funktionen själv avgör om den ska generera schema eller analysera beroenden.
         analysis_result = analyze_file(file_path)
 
         if file_path.suffix != '.json':
@@ -180,15 +182,13 @@ def main():
                 if found_dep in nodes:
                     nodes[found_dep]['dependents'].append(path)
 
-    for path in nodes:
-        del nodes[path]['dependencies']
+    for path in list(nodes.keys()):
+        if 'dependencies' in nodes[path]:
+            del nodes[path]['dependencies']
         
     final_graph = {
         "schema_version": "1.0",
-        "generated_at": json.dumps(
-            Path(__file__).stat().st_mtime, 
-            default=str
-        ).strip('\"'),
+        "generated_at": datetime.now(timezone.utc).isoformat(),
         "nodes": nodes,
         "edges": edges
     }
