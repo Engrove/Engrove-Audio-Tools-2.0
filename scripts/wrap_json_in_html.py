@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+#
 """
 wrap_json_in_html.py — AI Context Builder v7.4 (2025-08-11)
 
