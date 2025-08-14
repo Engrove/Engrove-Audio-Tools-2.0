@@ -14,6 +14,8 @@
 # === HISTORIK ===
 # * v1.0 (2025-08-14): Initial skapelse av Frankensteen.
 # * v2.0 (2025-08-14): Uppgraderad med schema-inferensfunktionalitet enligt direktiv.
+# * v2.1 (2025-08-14): KRITISK FIX: Korrigerat ett logiskt fel i main-funktionen som
+#   felaktigt hoppade över JSON-filer, vilket förhindrade schema-generering.
 
 import json
 import re
@@ -28,7 +30,7 @@ EXCLUDE_DIRS = ['node_modules', 'dist', '__pycache__', 'schemas']
 RELATIONS_OUTPUT_FILE = ROOT_DIR / 'docs' / 'file_relations.json'
 SCHEMA_OUTPUT_DIR = ROOT_DIR / 'public' / 'data' / 'schemas'
 
-# --- Regex-mönster (samma som tidigare) ---
+# --- Regex-mönster ---
 JS_IMPORT_REGEX = re.compile(r"import(?:[\s\S]*?)from\s*['\"]([^'\"]+)['\"]")
 PY_IMPORT_REGEX = re.compile(r"^\s*(?:import|from)\s+([\w.]+)", re.MULTILINE)
 VUE_PROPS_REGEX = re.compile(r"defineProps\s*\(\s*({[\s\S]*?})\s*\)", re.MULTILINE)
@@ -53,12 +55,13 @@ def get_json_type(value: Any) -> str:
 def infer_schema_from_data(data: Union[Dict, List]) -> Dict:
     """Härleder ett JSON Schema från en Python-datastruktur."""
     if isinstance(data, list):
-        if not data or not isinstance(data[0], dict):
+        if not data:
             return {"type": "array"}
-        # Analysera schemat för objekten i listan
-        items_schema = infer_schema_from_data(data[0])
-        # Anta att alla objekt i listan har samma struktur
-        return {"type": "array", "items": items_schema}
+        # Analysera schemat baserat på det första objektet i listan
+        item_schemas = [infer_schema_from_data(item) for item in data[:1]] # Analysera bara första för prestanda
+        if not item_schemas:
+            return {"type": "array"}
+        return {"type": "array", "items": item_schemas[0]}
 
     if isinstance(data, dict):
         properties = {}
@@ -66,7 +69,9 @@ def infer_schema_from_data(data: Union[Dict, List]) -> Dict:
         for key, value in data.items():
             properties[key] = {"type": get_json_type(value)}
             if get_json_type(value) == "object":
-                properties[key] = infer_schema_from_data(value) # Rekursivt anrop
+                properties[key] = infer_schema_from_data(value)
+            elif get_json_type(value) == "array" and value:
+                 properties[key] = infer_schema_from_data(value)
             required.append(key)
         
         return {
@@ -81,7 +86,6 @@ def analyze_file(file_path: Path) -> Dict[str, Any]:
     """Analyserar en enskild fil för antingen relationer eller schema."""
     content = file_path.read_text(encoding='utf-8', errors='ignore')
     
-    # --- NYTT: Schema-Inferens för JSON-filer ---
     if file_path.suffix == '.json':
         try:
             data = json.loads(content)
@@ -92,13 +96,12 @@ def analyze_file(file_path: Path) -> Dict[str, Any]:
             print(f"  Schema inferred and saved to: {normalize_path(schema_path)}")
         except json.JSONDecodeError:
             print(f"  [WARNING] Could not parse JSON, skipping schema generation for: {normalize_path(file_path)}")
-        return {"type": "Data File", "api": {}, "dependencies": []} # JSON-filer har inga källkodsberoenden
+        return {"type": "Data File", "api": {}, "dependencies": []}
 
-    # --- Befintlig Relationsanalys ---
     file_type = "Unknown"
     api = {}
     dependencies = set()
-    # ... (samma logik som i föregående version för .vue, .js, .py) ...
+
     if file_path.suffix in ['.js', '.vue']:
         file_type = "Vue Component" if file_path.suffix == '.vue' else "JavaScript Module"
         imports = JS_IMPORT_REGEX.findall(content)
@@ -148,11 +151,14 @@ def main():
     for file_path in source_files:
         norm_path = normalize_path(file_path)
         print(f"  Analyzing: {norm_path}")
-        # Analys-funktionen hanterar nu både relationsgraf och schema-generering
-        if file_path.suffix != '.json': # Scheman genereras direkt, behöver inte lagras i `nodes`
-            nodes[norm_path] = analyze_file(file_path)
+        
+        # KORRIGERING: Anropa analyze_file för ALLA filer.
+        # Funktionen själv avgör om den ska generera schema eller analysera beroenden.
+        analysis_result = analyze_file(file_path)
 
-    # --- Bygg 'edges'-listan och fyll i 'dependents' (endast för källkod) ---
+        if file_path.suffix != '.json':
+            nodes[norm_path] = analysis_result
+
     edges: List[Dict[str, str]] = []
     for path in nodes:
         nodes[path]['dependents'] = []
