@@ -1,0 +1,153 @@
+{
+  "type": "object",
+  "properties": {
+    "autoArchivePolicy": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "usageThreshold": {
+          "type": "number"
+        },
+        "analysisWindowDays": {
+          "type": "number"
+        },
+        "analysisWindowSessions": {
+          "type": "number"
+        },
+        "protectedHeuristics": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": [
+        "analysisWindowDays",
+        "analysisWindowSessions",
+        "enabled",
+        "protectedHeuristics",
+        "usageThreshold"
+      ]
+    },
+    "archiveHeuristics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "heuristicId": {
+            "type": "string"
+          },
+          "originSessionId": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "heuristicId",
+          "originSessionId",
+          "reason"
+        ]
+      }
+    },
+    "addHeuristics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "heuristicId": {
+            "type": "string"
+          },
+          "trigger": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "scope": {
+                "type": "array",
+                "items": {}
+              },
+              "keywords": {
+                "type": "array",
+                "items": {}
+              }
+            },
+            "required": [
+              "keywords",
+              "scope",
+              "type"
+            ]
+          },
+          "identifiedRisk": {
+            "type": "object",
+            "properties": {
+              "riskId": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "description",
+              "riskId"
+            ]
+          },
+          "mitigation": {
+            "type": "object",
+            "properties": {
+              "protocolId": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "description",
+              "protocolId"
+            ]
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "originSessionId": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "consolidates": {
+                "type": "array",
+                "items": {}
+              }
+            },
+            "required": [
+              "consolidates",
+              "createdAt",
+              "originSessionId",
+              "status"
+            ]
+          }
+        },
+        "required": [
+          "heuristicId",
+          "identifiedRisk",
+          "metadata",
+          "mitigation",
+          "trigger"
+        ]
+      }
+    }
+  },
+  "required": [
+    "addHeuristics",
+    "archiveHeuristics",
+    "autoArchivePolicy"
+  ]
+}

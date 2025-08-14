@@ -1,0 +1,641 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "1755163874.667634",
+  "nodes": {
+    "src/main.js": {
+      "type": "JavaScript Module",
+      "api": {},
+      "dependents": []
+    },
+    "src/debug.js": {
+      "type": "JavaScript Module",
+      "api": {},
+      "dependents": []
+    },
+    "src/App.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": [
+        "src/app/main.js"
+      ]
+    },
+    "src/showcase.js": {
+      "type": "JavaScript Module",
+      "api": {},
+      "dependents": []
+    },
+    "src/widgets/GlobalFooter/GlobalFooter.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": [
+        "src/App.vue"
+      ]
+    },
+    "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": []
+    },
+    "src/widgets/MobileNavMenu/MobileNavMenu.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": [
+        "src/widgets/GlobalHeader/GlobalHeader.vue"
+      ]
+    },
+    "src/widgets/ComparisonTray/ui/ComparisonTray.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": []
+    },
+    "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": []
+    },
+    "src/widgets/GlobalHeader/GlobalHeader.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": [
+        "src/App.vue"
+      ]
+    },
+    "src/app/router.js": {
+      "type": "JavaScript Module",
+      "api": {},
+      "dependents": [
+        "src/app/main.js"
+      ]
+    },
+    "src/app/main.js": {
+      "type": "JavaScript Module",
+      "api": {},
+      "dependents": []
+    },
+    "src/shared/ui/BaseCheckbox.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": [
+        "src/showcase.js"
+      ]
+    },
+    "src/shared/ui/BaseSelect.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": [
+        "src/showcase.js"
+      ]
+    },
+    "src/shared/ui/BaseRadio.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": [
+        "src/showcase.js"
+      ]
+    },
+    "src/shared/ui/BaseInput.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": [
+        "src/showcase.js",
+        "src/shared/ui/RangeFilter.vue"
+      ]
+    },
+    "src/shared/ui/BaseCanvasTextViewer.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": [
+        "src/pages/license/LicensePage.vue"
+      ]
+    },
+    "src/shared/ui/BaseTable.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": []
+    },
+    "src/shared/ui/BaseButton.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": [
+        "src/showcase.js",
+        "src/widgets/GlobalHeader/GlobalHeader.vue",
+        "src/features/density-toggle/ui/DensityToggle.vue",
+        "src/features/theme-toggle/ui/ThemeToggle.vue",
+        "src/pages/home/HomePage.vue",
+        "src/pages/about/AboutPage.vue"
+      ]
+    },
+    "src/shared/ui/Logo.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": [
+        "src/widgets/GlobalHeader/GlobalHeader.vue"
+      ]
+    },
+    "src/shared/ui/BaseMultiSelect.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": []
+    },
+    "src/shared/ui/RangeFilter.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": []
+    },
+    "src/shared/ui/BaseModal.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": [
+        "src/showcase.js",
+        "src/features/license-modal/ui/LicenseModal.vue"
+      ]
+    },
+    "src/shared/ui/BaseToggle.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": [
+        "src/showcase.js"
+      ]
+    },
+    "src/features/item-details/ui/ItemDetailModal.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": []
+    },
+    "src/features/density-toggle/ui/DensityToggle.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": [
+        "src/showcase.js",
+        "src/widgets/GlobalHeader/GlobalHeader.vue"
+      ]
+    },
+    "src/features/mobile-menu-toggle/model/useMobileMenu.js": {
+      "type": "JavaScript Module",
+      "api": {},
+      "dependents": [
+        "src/widgets/MobileNavMenu/MobileNavMenu.vue",
+        "src/widgets/GlobalHeader/GlobalHeader.vue",
+        "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue"
+      ]
+    },
+    "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": [
+        "src/widgets/GlobalHeader/GlobalHeader.vue"
+      ]
+    },
+    "src/features/theme-toggle/model/themeStore.js": {
+      "type": "Pinia Store",
+      "api": {},
+      "dependents": [
+        "src/App.vue",
+        "src/showcase.js",
+        "src/shared/ui/BaseCanvasTextViewer.vue",
+        "src/features/theme-toggle/ui/ThemeToggle.vue",
+        "src/pages/home/HomePage.vue"
+      ]
+    },
+    "src/features/theme-toggle/ui/ThemeToggle.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": [
+        "src/widgets/GlobalHeader/GlobalHeader.vue"
+      ]
+    },
+    "src/features/license-modal/ui/LicenseModal.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": [
+        "src/showcase.js",
+        "src/pages/about/AboutPage.vue"
+      ]
+    },
+    "src/features/comparison-modal/ui/ComparisonModal.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": []
+    },
+    "src/pages/home/HomePage.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": [
+        "src/app/router.js"
+      ]
+    },
+    "src/pages/license/LicensePage.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": []
+    },
+    "src/pages/data-explorer/DataExplorerPage.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": [
+        "src/app/router.js"
+      ]
+    },
+    "src/pages/about/AboutPage.vue": {
+      "type": "Vue Component",
+      "api": {},
+      "dependents": [
+        "src/app/router.js"
+      ]
+    },
+    "src/entities/comparison/model/comparisonStore.js": {
+      "type": "Pinia Store",
+      "api": {},
+      "dependents": []
+    },
+    "src/entities/settings/model/settingsStore.js": {
+      "type": "Pinia Store",
+      "api": {},
+      "dependents": [
+        "src/App.vue",
+        "src/showcase.js",
+        "src/features/density-toggle/ui/DensityToggle.vue"
+      ]
+    },
+    "src/entities/data-explorer/api/fetchExplorerData.js": {
+      "type": "JavaScript Module",
+      "api": {},
+      "dependents": [
+        "src/entities/data-explorer/model/explorerStore.js"
+      ]
+    },
+    "src/entities/data-explorer/model/state.js": {
+      "type": "JavaScript Module",
+      "api": {},
+      "dependents": []
+    },
+    "src/entities/data-explorer/model/explorerStore.js": {
+      "type": "Pinia Store",
+      "api": {},
+      "dependents": []
+    },
+    "src/entities/data-explorer/lib/transformer.js": {
+      "type": "JavaScript Module",
+      "api": {},
+      "dependents": [
+        "src/entities/data-explorer/model/explorerStore.js"
+      ]
+    },
+    "src/entities/data-explorer/lib/filters.js": {
+      "type": "JavaScript Module",
+      "api": {},
+      "dependents": [
+        "src/entities/data-explorer/model/explorerStore.js"
+      ]
+    },
+    "src/entities/logger/model/loggerStore.js": {
+      "type": "Pinia Store",
+      "api": {},
+      "dependents": [
+        "src/debug.js",
+        "src/widgets/GlobalHeader/GlobalHeader.vue"
+      ]
+    },
+    "scripts/wrap_json_in_html.py": {
+      "type": "Python Script",
+      "api": {
+        "functions": [
+          "main"
+        ],
+        "classes": []
+      },
+      "dependents": []
+    },
+    "scripts/update_core_info.py": {
+      "type": "Python Script",
+      "api": {
+        "functions": [
+          "main"
+        ],
+        "classes": []
+      },
+      "dependents": []
+    },
+    "scripts/process_ai_metrics.py": {
+      "type": "Python Script",
+      "api": {
+        "functions": [
+          "load_json_file",
+          "main"
+        ],
+        "classes": []
+      },
+      "dependents": []
+    },
+    "scripts/process_ai_instructions.py": {
+      "type": "Python Script",
+      "api": {
+        "functions": [
+          "log_error",
+          "extract_protocol_register",
+          "main"
+        ],
+        "classes": []
+      },
+      "dependents": []
+    },
+    "scripts/generate_full_context.py": {
+      "type": "Python Script",
+      "api": {
+        "functions": [
+          "log",
+          "is_binary_path",
+          "canon_text",
+          "sha256_lf_from_text",
+          "sha256_bytes",
+          "headers",
+          "api_get",
+          "get_repo_info",
+          "get_tree_recursive",
+          "raw_text",
+          "raw_bytes",
+          "sanitize_comment",
+          "extract_patterns",
+          "run_subprocess_json",
+          "get_processed_ai_config",
+          "get_ai_performance_metrics",
+          "build_file_structure",
+          "build_hash_index",
+          "walk",
+          "main"
+        ],
+        "classes": []
+      },
+      "dependents": []
+    },
+    "scripts/build_relations_graph.py": {
+      "type": "Python Script",
+      "api": {
+        "functions": [
+          "get_json_type",
+          "infer_schema_from_data",
+          "analyze_file",
+          "find_source_files",
+          "normalize_path",
+          "main"
+        ],
+        "classes": []
+      },
+      "dependents": []
+    },
+    "scripts/history/historical_reconstruction_builder.py": {
+      "type": "Python Script",
+      "api": {
+        "functions": [
+          "normalize_speaker",
+          "ensure_chat_schema",
+          "load_json_file",
+          "get_session_sort_key",
+          "main"
+        ],
+        "classes": []
+      },
+      "dependents": []
+    },
+    "scripts/plugins/patch_center.py": {
+      "type": "Python Script",
+      "api": {
+        "functions": [],
+        "classes": []
+      },
+      "dependents": []
+    }
+  },
+  "edges": [
+    {
+      "from": "src/debug.js",
+      "to": "src/entities/logger/model/loggerStore.js",
+      "type": "import"
+    },
+    {
+      "from": "src/App.vue",
+      "to": "src/entities/settings/model/settingsStore.js",
+      "type": "import"
+    },
+    {
+      "from": "src/App.vue",
+      "to": "src/features/theme-toggle/model/themeStore.js",
+      "type": "import"
+    },
+    {
+      "from": "src/App.vue",
+      "to": "src/widgets/GlobalFooter/GlobalFooter.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/App.vue",
+      "to": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/showcase.js",
+      "to": "src/entities/settings/model/settingsStore.js",
+      "type": "import"
+    },
+    {
+      "from": "src/showcase.js",
+      "to": "src/features/density-toggle/ui/DensityToggle.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/showcase.js",
+      "to": "src/features/license-modal/ui/LicenseModal.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/showcase.js",
+      "to": "src/features/theme-toggle/model/themeStore.js",
+      "type": "import"
+    },
+    {
+      "from": "src/showcase.js",
+      "to": "src/shared/ui/BaseButton.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/showcase.js",
+      "to": "src/shared/ui/BaseCheckbox.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/showcase.js",
+      "to": "src/shared/ui/BaseInput.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/showcase.js",
+      "to": "src/shared/ui/BaseModal.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/showcase.js",
+      "to": "src/shared/ui/BaseRadio.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/showcase.js",
+      "to": "src/shared/ui/BaseSelect.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/showcase.js",
+      "to": "src/shared/ui/BaseToggle.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
+      "to": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
+      "type": "import"
+    },
+    {
+      "from": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "to": "src/entities/logger/model/loggerStore.js",
+      "type": "import"
+    },
+    {
+      "from": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "to": "src/features/density-toggle/ui/DensityToggle.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "to": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
+      "type": "import"
+    },
+    {
+      "from": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "to": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "to": "src/features/theme-toggle/ui/ThemeToggle.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "to": "src/shared/ui/BaseButton.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "to": "src/shared/ui/Logo.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "to": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/app/router.js",
+      "to": "src/pages/about/AboutPage.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/app/router.js",
+      "to": "src/pages/data-explorer/DataExplorerPage.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/app/router.js",
+      "to": "src/pages/home/HomePage.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/app/main.js",
+      "to": "src/App.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/app/main.js",
+      "to": "src/app/router.js",
+      "type": "import"
+    },
+    {
+      "from": "src/shared/ui/BaseCanvasTextViewer.vue",
+      "to": "src/features/theme-toggle/model/themeStore.js",
+      "type": "import"
+    },
+    {
+      "from": "src/shared/ui/RangeFilter.vue",
+      "to": "src/shared/ui/BaseInput.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/features/density-toggle/ui/DensityToggle.vue",
+      "to": "src/entities/settings/model/settingsStore.js",
+      "type": "import"
+    },
+    {
+      "from": "src/features/density-toggle/ui/DensityToggle.vue",
+      "to": "src/shared/ui/BaseButton.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
+      "to": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
+      "type": "import"
+    },
+    {
+      "from": "src/features/theme-toggle/ui/ThemeToggle.vue",
+      "to": "src/features/theme-toggle/model/themeStore.js",
+      "type": "import"
+    },
+    {
+      "from": "src/features/theme-toggle/ui/ThemeToggle.vue",
+      "to": "src/shared/ui/BaseButton.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/features/license-modal/ui/LicenseModal.vue",
+      "to": "src/shared/ui/BaseModal.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/pages/home/HomePage.vue",
+      "to": "src/features/theme-toggle/model/themeStore.js",
+      "type": "import"
+    },
+    {
+      "from": "src/pages/home/HomePage.vue",
+      "to": "src/shared/ui/BaseButton.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/pages/license/LicensePage.vue",
+      "to": "src/shared/ui/BaseCanvasTextViewer.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/pages/about/AboutPage.vue",
+      "to": "src/features/license-modal/ui/LicenseModal.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/pages/about/AboutPage.vue",
+      "to": "src/shared/ui/BaseButton.vue",
+      "type": "import"
+    },
+    {
+      "from": "src/entities/data-explorer/model/explorerStore.js",
+      "to": "src/entities/data-explorer/api/fetchExplorerData.js",
+      "type": "import"
+    },
+    {
+      "from": "src/entities/data-explorer/model/explorerStore.js",
+      "to": "src/entities/data-explorer/lib/filters.js",
+      "type": "import"
+    },
+    {
+      "from": "src/entities/data-explorer/model/explorerStore.js",
+      "to": "src/entities/data-explorer/lib/transformer.js",
+      "type": "import"
+    }
+  ]
+}
