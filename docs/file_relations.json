@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-14T19:24:08.007266+00:00",
+    "generated_at": "2025-08-14T19:26:54.885710+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -1557,6 +1557,15 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
+      "docs/ai_protocols/bygglogg_chathistorik.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
       "docs/ai_protocols/Code_Style_Guide.md": {
         "type": "Markdown Document",
         "category": "documentation",
@@ -1579,15 +1588,6 @@
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/ai_protocols/bygglogg_chathistorik.txt": {
-        "type": "Unknown",
-        "category": "documentation",
-        "language": "txt",
         "exports": [],
         "imports": [],
         "dependents_count": 0,
