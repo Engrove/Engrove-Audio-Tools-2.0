@@ -23,6 +23,7 @@ import json
 import re
 from pathlib import Path
 from typing import Dict, Any, List, Union
+from datetime import datetime, timezone
 
 # --- Konfiguration ---
 ROOT_DIR = Path(__file__).parent.parent
