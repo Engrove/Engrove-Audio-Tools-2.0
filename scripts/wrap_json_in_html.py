@@ -1593,7 +1593,7 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       const j = parseJsonSafe(txt);
       if(j._err){ log('JSON-fel: '+j._err, 'err'); return; }
 
-      if(j.protocol_id !== 'anchor_diff_v2.1'){ log('Schemafel: protocol_id måste vara \"anchor_diff_v2.1\".', 'err'); return; }
+      if(j.protocol_id !== 'anchor_diff_v2.1' && j.protocol_id !== 'anchor_diff_v3.0'){ log('Schemafel: protocol_id måste vara \"anchor_diff_v2.1\" eller \"anchor_diff_v3.0\".', 'err'); return; }
       if(!j.target || !j.target.base_checksum_sha256){ log('Schemafel: target.base_checksum_sha256 krävs.', 'err'); return; }
       schemaOK.style.display='inline-block';
 
@@ -1601,47 +1601,13 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
         const base = await findBaseText(j, HASHMAPS);
         log(`Basfil hittad: ${base.path} (källa: ${base.source})`);
         
-        const validationResults = [];
-        let validationOk = true;
-        for (const group of j.op_groups || []) {
-            for (const targetOp of group.targets || []) {
-                if (targetOp.op === 'replace_entire_file') {
-                    validationResults.push({ valid: true, op: targetOp });
-                    continue;
-                }
-
-                const anchorText = group.anchor.text || group.anchor;
-                const matchMode = group.anchor.match_mode || 'exact';
-                const normalizedBase = normalizeText(base.text, matchMode);
-                const normalizedAnchor = normalizeText(anchorText, matchMode);
-
-                let searchIndex = -1;
-                const matches = [];
-                while ((searchIndex = normalizedBase.indexOf(normalizedAnchor, searchIndex + 1)) !== -1) {
-                    matches.push(searchIndex);
-                }
-
-                const matchIndex = targetOp.match_index || 1;
-                if (matches.length < matchIndex) {
-                    log(`Valideringsfel: Kunde inte hitta instans ${matchIndex} av ankare. Endast ${matches.length} hittades.`, 'err');
-                    validationOk = false;
-                    continue;
-                }
-                validationResults.push({ valid: true, op: targetOp, group });
-            }
-        }
-
-        if (validationOk) {
-            lastValidated = { diff: j, base };
-            tgtPathEl.textContent = base.path;
-            tgtShaEl.textContent = j.target.base_checksum_sha256.toLowerCase();
-            tgtGitEl.textContent = (j.target.git_sha1 || '–');
-            tgtSrcEl.textContent = base.source;
-            log('Validering OK: Alla ankare och operationer verkar giltiga.');
-            applyBtn.disabled = false;
-        } else {
-             log('Validering misslyckades. Se logg för detaljer.', 'err');
-        }
+        lastValidated = { diff: j, base };
+        tgtPathEl.textContent = base.path;
+        tgtShaEl.textContent = j.target.base_checksum_sha256.toLowerCase();
+        tgtGitEl.textContent = (j.target.git_sha1 || '–');
+        tgtSrcEl.textContent = base.source;
+        log('Validering OK: Basfil hittad och checksumma matchar.');
+        applyBtn.disabled = false;
 
       } catch(e) {
         log('Validering misslyckades: '+e.message, 'err');
@@ -1652,34 +1618,55 @@ kbd{background:#f1f3f5;border:1px solid #e9ecef;border-bottom-color:#dee2e6;bord
       if(!lastValidated){ log('Kör Validate först.', 'err'); return; }
       
       let newText = lastValidated.base.text;
-      const { diff } = lastValidated;
+      const { diff, base } = lastValidated;
 
-      const fullReplaceOp = diff.op_groups?.flatMap(g => g.targets).find(t => t.op === 'replace_entire_file');
-      if (fullReplaceOp) {
-          newText = canonText(fullReplaceOp.new_content || '');
-          log('Applicerade \"replace_entire_file\". Ignorerar andra operationer.');
-      } else {
+      if (diff.protocol_id === 'anchor_diff_v3.0') {
           for (const group of diff.op_groups || []) {
-              for (const targetOp of group.targets || []) {
-                  const anchorText = group.anchor.text || group.anchor;
-                  const oldBlock = canonText(targetOp.old_block);
-                  const newBlock = canonText(targetOp.new_block);
-                  
-                  if (targetOp.op === 'replace_block') {
-                      const combination = canonText(anchorText) + oldBlock;
-                      if(newText.includes(combination)) {
-                          newText = newText.replace(combination, canonText(anchorText) + newBlock);
-                          log(`Applicerade replace_block för ankare (instans ${targetOp.match_index || 1})`);
-                      } else {
-                          log(`Kunde inte applicera replace_block för ankare (instans ${targetOp.match_index || 1}). Exakt matchning för ankar+old_block hittades ej.`, 'warn');
-                      }
-                  } else if (targetOp.op === 'delete_block') {
-                      const combination = canonText(anchorText) + oldBlock;
-                       if(newText.includes(combination)) {
-                          newText = newText.replace(combination, canonText(anchorText));
-                          log(`Applicerade delete_block för ankare (instans ${targetOp.match_index || 1})`);
-                      } else {
-                          log(`Kunde inte applicera delete_block för ankare (instans ${targetOp.match_index || 1}). Exakt matchning hittades ej.`, 'warn');
+              if (group.op !== 'replace_between_anchors') continue;
+              const startAnchor = canonText(group.start_anchor.text);
+              const endAnchor = canonText(group.end_anchor.text);
+              const startIndex = newText.indexOf(startAnchor);
+              if (startIndex === -1) {
+                  log(`Kunde inte applicera: start_anchor hittades ej.`, 'err'); return;
+              }
+              const endIndex = newText.indexOf(endAnchor, startIndex + startAnchor.length);
+              if (endIndex === -1) {
+                  log(`Kunde inte applicera: end_anchor hittades ej efter start_anchor.`, 'err'); return;
+              }
+              
+              const prefix = newText.substring(0, startIndex + startAnchor.length);
+              const suffix = newText.substring(endIndex);
+              newText = prefix + canonText(group.new_block) + suffix;
+              log(`Applicerade replace_between_anchors för '${startAnchor.substring(0,20)}...'`);
+          }
+      } else { // Fallback to v2.1
+          const fullReplaceOp = diff.op_groups?.flatMap(g => g.targets).find(t => t.op === 'replace_entire_file');
+          if (fullReplaceOp) {
+              newText = canonText(fullReplaceOp.new_content || '');
+              log('Applicerade \"replace_entire_file\". Ignorerar andra operationer.');
+          } else {
+              for (const group of diff.op_groups || []) {
+                  for (const targetOp of group.targets || []) {
+                      const anchorText = group.anchor.text || group.anchor;
+                      const oldBlock = canonText(targetOp.old_block);
+                      const newBlock = canonText(targetOp.new_block);
+                      
+                      if (targetOp.op === 'replace_block') {
+                          const combination = canonText(anchorText) + oldBlock;
+                          if(newText.includes(combination)) {
+                              newText = newText.replace(combination, canonText(anchorText) + newBlock);
+                              log(`Applicerade (v2.1) replace_block för ankare (instans ${targetOp.match_index || 1})`);
+                          } else {
+                              log(`Kunde inte applicera (v2.1) replace_block för ankare. Exakt matchning hittades ej.`, 'warn');
+                          }
+                      } else if (targetOp.op === 'delete_block') {
+                          const combination = canonText(anchorText) + oldBlock;
+                           if(newText.includes(combination)) {
+                              newText = newText.replace(combination, canonText(anchorText));
+                              log(`Applicerade (v2.1) delete_block för ankare (instans ${targetOp.match_index || 1})`);
+                          } else {
+                              log(`Kunde inte applicera (v2.1) delete_block för ankare. Exakt matchning hittades ej.`, 'warn');
+                          }
                       }
                   }
               }
