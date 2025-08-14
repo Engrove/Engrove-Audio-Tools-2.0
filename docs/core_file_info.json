@@ -115,8 +115,8 @@
     "purpose_and_responsibility": "Ett nytt, enhetligt GitHub Actions-workflow som ersätter de tidigare `process_historical_sessions.yml` och `update_documentation.yml`.",
     "usage_context": "Detta workflow agerar som den enda, atomära integrationspunkten. Det körs sekventiellt för att först bearbeta historiska sessionsdata och sedan uppdatera den levande dokumentationen, vilket eliminerar den tidigare race condition-konflikten.",
     "last_updated_by_session": "S-20250811-E",
-    "last_updated_at": "2025-08-14T18:17:04.540027+00:00",
-    "last_commit_sha": "f138809523db19cccccb34e4eed3d32762a3a5ad"
+    "last_updated_at": "2025-08-14T19:24:07.860480+00:00",
+    "last_commit_sha": "6149a47283523219e100d2c035e276dd9d038409"
   },
   ".github/workflows/ci.yml": {
     "purpose_and_responsibility": "Uppdaterad till v2.0. CI/CD-workflowet anropar nu `build_relations_graph.py` med det korrekta API-kontraktet, och skickar dynamiskt med projektets metadata som ett JSON-argument.",
