@@ -119,11 +119,11 @@
     "last_commit_sha": "f138809523db19cccccb34e4eed3d32762a3a5ad"
   },
   ".github/workflows/ci.yml": {
-    "purpose_and_responsibility": "Den enda, konsoliderade CI/CD-pipelinen för projektet. Ersätter de tidigare separata workflow-filerna för att eliminera race conditions och garantera korrekt exekveringsordning.",
-    "usage_context": "Triggas vid push till källkod, sessionsdata eller dokumentation för att sekventiellt bearbeta sessionsdata, generera AI-kontext, och driftsätta till GitHub Pages.",
-    "last_updated_by_session": "S-20250813-A",
-    "last_updated_at": "2025-08-13T19:42:58.349016+00:00",
-    "last_commit_sha": "f482c86b9dfad17884939e835d49c4177b7885ca"
+    "purpose_and_responsibility": "Uppdaterad till v2.0. CI/CD-workflowet anropar nu `build_relations_graph.py` med det korrekta API-kontraktet, och skickar dynamiskt med projektets metadata som ett JSON-argument.",
+    "usage_context": "Detta är den centrala automationspipelinen som säkerställer att alla metadat-artefakter (inklusive den nya, rika `file_relations.json`) är korrekt genererade och uppdaterade.",
+    "last_updated_by_session": "S-20250814T14-38-20Z",
+    "last_updated_at": "2025-08-14T18:50:02.763464+00:00",
+    "last_commit_sha": "08c6abc2e0ec7dbed7506c6ff5b84bc8431a3808"
   },
   "docs/ai_protocols/Scorecard_Protocol.md": {
     "purpose_and_responsibility": "Ett nytt, formellt protokoll som definierar den officiella poängsättningsmatrisen (rubric) och en 0-100-gradig skala för `ai_protocol_performance.scorecard`-artefakten.",
@@ -131,5 +131,12 @@
     "last_updated_by_session": "S-20250815T000000Z",
     "last_updated_at": "2025-08-14T18:33:39.241454+00:00",
     "last_commit_sha": "6b1a7badb36f8daa725bc4c365969c7290015632"
+  },
+  "scripts/build_relations_graph.py": {
+    "purpose_and_responsibility": "Uppgraderad till v5.1. Agerar som en universell analysmotor för hela projektet. Använder AST-parsing för Python och avancerad regex för andra filtyper för att skapa en självförklarande, semantiskt rik relationsgraf (`file_relations.json`) som inkluderar kod, konfiguration, dokumentation och data.",
+    "usage_context": "Körs av CI/CD-pipelinen för att automatiskt generera `file_relations.json`, som sedan bäddas in i AI-kontexten för att ge en djupgående arkitektonisk förståelse.",
+    "last_updated_by_session": "S-20250814T14-38-20Z",
+    "last_updated_at": "2025-08-14T18:50:02.763452+00:00",
+    "last_commit_sha": "08c6abc2e0ec7dbed7506c6ff5b84bc8431a3808"
   }
 }
