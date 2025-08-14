@@ -17,6 +17,7 @@
 # v1.1 (2025-08-13): Korrigerat ett syntaxfel i cron-schemat (saknade citattecken).
 # v1.2 (2025-08-13): Refaktorerat session-bearbetning för att använda miljövariabler.
 # v1.3 (2025-08-13): (Help me God) Korrigerat YAML-parsingsfel genom att ta bort onödiga citattecken runt en miljövariabel.
+# v2.0 (2025-08-14): Korrigerat anropet till build_relations_graph.py för att inkludera project_overview JSON.
 
 name: Consolidated CI/CD Pipeline
 
@@ -89,10 +90,21 @@ jobs:
       - name: STEP 2 Generate File Relations Graph
         id: generate-relations
         run: |
+          ### KORRIGERING ###
+          # Skriptet build_relations_graph.py kräver nu en JSON-sträng med projektinformation.
+          # Vi konstruerar denna sträng här med data från GitHub-kontexten.
           echo "Generating file relations graph and data schemas..."
-          python scripts/build_relations_graph.py
+          PROJECT_OVERVIEW_JSON=$(printf '{"repository": "%s", "branch": "%s"}' "${{ github.repository }}" "${{ github.ref_name }}")
+          python scripts/build_relations_graph.py "$PROJECT_OVERVIEW_JSON"
           echo "Graph generation complete."
-      - name: STEP 2 Generate AI Context JSON
+          ### FÖRKLARING ###
+          # 1. Vi skapar en shell-variabel PROJECT_OVERVIEW_JSON.
+          # 2. `printf` används för att säkert formatera JSON-strängen.
+          # 3. `${{ github.repository }}` (t.ex. "Engrove/Engrove-Audio-Tools-2.0") och `${{ github.ref_name }}` (t.ex. "main")
+          #    är GitHub Actions-variabler som automatiskt fylls i.
+          # 4. Variabeln skickas sedan som ett argument till python-skriptet.
+
+      - name: STEP 3 Generate AI Context JSON
         id: generate-json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -107,7 +119,7 @@ jobs:
             exit 1
           fi
 
-      - name: STEP 3 Create HTML Wrapper
+      - name: STEP 4 Create HTML Wrapper
         id: create-html
         if: steps.generate-json.outputs.success == 'true'
         run: |
@@ -115,7 +127,7 @@ jobs:
           python scripts/wrap_json_in_html.py "${{ env.SITE_DIR }}/${{ env.HTML_FILE }}"
           echo "success=true" >> "$GITHUB_OUTPUT"
 
-      - name: STEP 4 Create Metadata for Deployment
+      - name: STEP 5 Create Metadata for Deployment
         if: steps.create-html.outputs.success == 'true'
         run: |
           cat > "${{ env.SITE_DIR }}/${{ env.METADATA_FILE }}" << EOF
@@ -127,13 +139,13 @@ jobs:
           }
           EOF
 
-      - name: STEP 5 Upload Pages Artifact
+      - name: STEP 6 Upload Pages Artifact
         if: steps.create-html.outputs.success == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ${{ env.SITE_DIR }}
       
-      - name: STEP 6 Commit Documentation and Session Artifacts
+      - name: STEP 7 Commit Documentation and Session Artifacts
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: |
@@ -145,6 +157,7 @@ jobs:
           commit_user_name: 'Frankensteen (Bot)'
           commit_user_email: 'frankensteen-bot@users.noreply.github.com'
           file_pattern: 'docs/ByggLogg.json docs/Chatthistorik.json docs/ai_protocol_performance.json tools/frankensteen_learning_db.json docs/ai_protocols/DynamicProtocols.json docs/core_file_info.json docs/file_relations.json public/data/schemas/*.schema.json'
+
   deploy:
     needs: build
     if: success() && needs.build.outputs.context-generated == 'true'
