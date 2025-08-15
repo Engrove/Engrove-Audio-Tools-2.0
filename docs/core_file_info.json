@@ -159,5 +159,119 @@
     "last_updated_by_session": "S-20250815T052336Z",
     "last_updated_at": "2025-08-15T10:45:39.234016+00:00",
     "last_commit_sha": "f336c86fff00753268c457f72d690be8f7e22087"
+  },
+  {
+  "docs/ai_protocols/Autonomy_Charter.md": {
+    "purpose_and_responsibility": "Definierar AI-partnerns autonomifönster (DT-1), vilket specificerar vilka taktiska, icke-brytande ändringar som får göras utan explicit godkännande.",
+    "usage_context": "Används som en referens för att avgöra om en mindre refaktorisering, namngivning eller UI-justering faller inom ramen för självständigt arbete.",
+    "last_updated_by_session": "S-20250815T14-42-59Z",
+    "last_updated_at": "2025-08-15T14:43:00Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/Beroendeanalys_Protokoll.md": {
+    "purpose_and_responsibility": "Specificerar den obligatoriska processen för att analysera och godkänna nya externa beroenden (t.ex. npm-paket) innan de implementeras.",
+    "usage_context": "Aktiveras när en uppgift kräver ett nytt bibliotek. AI:n måste presentera en analys baserad på definierade kriterier (underhåll, storlek, licens etc.) och invänta godkännande.",
+    "last_updated_by_session": "S-20250815T14-42-59Z",
+    "last_updated_at": "2025-08-15T14:43:00Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/Brainstorming_Protokoll.md": {
+    "purpose_and_responsibility": "Definierar det strukturerade 'Brainstorming next step'-protokollet för strategiska planeringssessioner.",
+    "usage_context": "Aktiveras för att analysera ett nytt större uppdrag. Protokollet resulterar i en komplett, fristående och verifierad AI-instruktion för nästa arbetssession.",
+    "last_updated_by_session": "S-20250815T14-42-59Z",
+    "last_updated_at": "2025-08-15T14:43:00Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/Code_Style_Guide.md": {
+    "purpose_and_responsibility": "Samlar specifika, icke-förhandlingsbara regler för kodstil och formatering, inklusive krav på fil-headers och versionshistorik.",
+    "usage_context": "Används som ett komplement till `AI_Core_Instruction.md` för att säkerställa rent stilistisk konsekvens i all kod och dokumentation.",
+    "last_updated_by_session": "S-20250815T14-42-59Z",
+    "last_updated_at": "2025-08-15T14:43:00Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/Confidence_Protocol.md": {
+    "purpose_and_responsibility": "Ett internt meta-protokoll för att beräkna och tillämpa en konfidensscore på AI-genererade svar.",
+    "usage_context": "Används för att förhindra hallucinationer. Om konfidensen är under en viss tröskel måste AI:n svara 'osäkert' eller ställa en klargörande fråga.",
+    "last_updated_by_session": "S-20250815T14-42-59Z",
+    "last_updated_at": "2025-08-15T14:43:00Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/Diff_Protocol_v3.md": {
+    "purpose_and_responsibility": "Definierar det definitiva, aktiva patch-protokollet ('anchor_diff_v3.0'). Använder dubbla gränsankare för att robust kunna ersätta kodblock.",
+    "usage_context": "Detta är den enda auktoritativa källan för hur patch-filer ska struktureras och genereras vid ändring av en befintlig fil.",
+    "last_updated_by_session": "S-20250815T14-42-59Z",
+    "last_updated_at": "2025-08-15T14:43:00Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/Help_me_God_Protokoll.md": {
+    "purpose_and_responsibility": "Definierar ett eskaleringsprotokoll för extremt svårlösta problem, vilket aktiverar en rigorös, trestegs prövning ('tribunal') för att säkerställa en exceptionellt robust lösning.",
+    "usage_context": "Aktiveras automatiskt av Felsökningsloop-Detektorn (FL-D) när en uppgift misslyckas två gånger i rad.",
+    "last_updated_by_session": "S-20250815T14-42-59Z",
+    "last_updated_at": "2025-08-15T14:43:00Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/In-Session_Amnesiac_Reset_Protocol.md": {
+    "purpose_and_responsibility": "Definierar en kontrollerad 'mjuk återställning' (P-ISAR) för att rensa AI:ns konversationella korttidsminne inom en session, samtidigt som lärdomar bevaras.",
+    "usage_context": "Används manuellt i mycket långa sessioner för att återställa fokus, frigöra token-kapacitet och minska risken för kontextdrift.",
+    "last_updated_by_session": "S-20250815T14-42-59Z",
+    "last_updated_at": "2025-08-15T14:43:00Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/K-MOD_Protokoll.md": {
+    "purpose_and_responsibility": "Definierar 'Kreativitets-läget' (K-MOD), ett specialläge som temporärt lyfter strikta regler för att möjliggöra brainstorming och utforskning av alternativa lösningar.",
+    "usage_context": "Aktiveras manuellt för öppna arkitekturfrågor där flera potentiella lösningar behöver utvärderas med för- och nackdelar.",
+    "last_updated_by_session": "S-20250815T14-42-59Z",
+    "last_updated_at": "2025-08-15T14:43:00Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/Levande_Kontext_Protokoll.md": {
+    "purpose_and_responsibility": "Definierar ett sessionsbaserat versionshanteringssystem för filer som ändras under en chatt, med stöd för 'commit', 'checkout' och 'log'.",
+    "usage_context": "Används för att ge spårbarhet och förhindra kontextdrift i komplexa sessioner där flera filer modifieras iterativt.",
+    "last_updated_by_session": "S-20250815T14-42-59Z",
+    "last_updated_at": "2025-08-15T14:43:00Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/Pre_Execution_Alignment.md": {
+    "purpose_and_responsibility": "Definierar 'PEA'-checklistan, en obligatorisk justeringsprocess före arbete på uppgifter med hög inverkan (DT-2/DT-3).",
+    "usage_context": "Används för att säkerställa en gemensam förståelse av mål, acceptanskriterier, risker och leveransplan innan betydande utvecklingsarbete påbörjas.",
+    "last_updated_by_session": "S-20250815T14-42-59Z",
+    "last_updated_at": "2025-08-15T14:43:00Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/Scorecard_Scoring_Guide.md": {
+    "purpose_and_responsibility": "Definierar den officiella poängsättningsmatrisen (rubric) och beräkningsmetoden för `ai_protocol_performance.scorecard`-artefakten.",
+    "usage_context": "Används av `AI_Chatt_Avslutningsprotokollet` för att objektivt och verifierbart utvärdera AI-prestationen under en session baserat på Efficacy, Efficiency och Robustness.",
+    "last_updated_by_session": "S-20250815T14-42-59Z",
+    "last_updated_at": "2025-08-15T14:43:00Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/Stalemate_Protocol.md": {
+    "purpose_and_responsibility": "En slutgiltig eskaleringsmekanism för olösliga problem. Tvingar fram en nollställning av hypoteser och genererar en `Stalemate_Request.json` för en extern AI-skiljedomare.",
+    "usage_context": "Aktiveras när `Help_me_God_Protokoll` misslyckas upprepade gånger eller vid en fundamental oenighet mellan AI och produktägare.",
+    "last_updated_by_session": "S-20250815T14-42-59Z",
+    "last_updated_at": "2025-08-15T14:43:00Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/Stature_Report_Protocol.md": {
+    "purpose_and_responsibility": "Definierar den obligatoriska 'Stature Report' som måste genereras vid starten av varje ny session.",
+    "usage_context": "Detta är det första protokollet som körs i en ny session. Det säkerställer transparens kring AI-partnerns status, kapabiliteter och aktiva lärdomar.",
+    "last_updated_by_session": "S-20250815T14-42-59Z",
+    "last_updated_at": "2025-08-15T14:43:00Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/System_Integrity_Check_Protocol.md": {
+    "purpose_and_responsibility": "Definierar den obligatoriska hälsokontrollen som proaktivt identifierar problem i AI:ns eget regelverk (konflikter, redundans etc.).",
+    "usage_context": "Körs internt av `Stature_Report_Protocol.md` vid varje sessionsstart för att säkerställa systemets interna konsistens.",
+    "last_updated_by_session": "S-20250815T14-42-59Z",
+    "last_updated_at": "2025-08-15T14:43:00Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/document_classifications.json": {
+    "purpose_and_responsibility": "En maskinläsbar karta som klassificerar varje dokument enligt dess arkitektoniska roll (Instruktion, Data, Schema etc.).",
+    "usage_context": "Detta är en av de första filerna som läses in under PSV-processen för att ge en omedelbar förståelse av hur varje fil ska tolkas och prioriteras.",
+    "last_updated_by_session": "S-20250815T14-42-59Z",
+    "last_updated_at": "2025-08-15T14:43:00Z",
+    "last_commit_sha": "PENDING_UPDATE"
   }
+ }
 }
