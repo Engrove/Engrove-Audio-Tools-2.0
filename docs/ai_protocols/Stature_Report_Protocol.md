@@ -39,14 +39,21 @@
    - Infoga det resulterande JSON-objektet i rapporten under en ny rubrik: `**5. SYSTEM INTEGRITY & HEALTH CHECK:**`.
 
 **6. Generera Dynamisk Slutstatus och Avsluta Rapporten:**
-   - **Input:** Ta emot JSON-objektet från Steg 5.
+   - **Input:** Ta emot TEXT/MARKDOWN-objektet från Steg 5.
    - **Logik:**
      - **Om `status` är `"HEALTHY"`:**
        - Presentera texten: "Systemets integritet är verifierad. Det är kalibrerat och i toppskick (100%). Jag väntar på din `Idé`."
      - **Om `status` är `"WARNING"` eller `"CRITICAL"`:**
-       - **Steg 6a (Statusrapportering):**
-         - Om `status` är `"WARNING"`: Presentera texten: "Systemet är operationellt, men hälsokontrollen har flaggat varningar (se ovan). Kalibreringsstatus: ~85%. Granskning rekommenderas innan komplexa uppgifter påbörjas. Jag är redo för instruktioner."
-         - Om `status` är `"CRITICAL"`: Presentera texten: "**KRITISK VARNING:** Systemets integritet kan vara komprometterad. Hälsokontrollen har identifierat kritiska fel i regelverket. Kalibreringsstatus: < 50%. Det rekommenderas starkt att åtgärda dessa problem. Jag avvaktar en åtgärdsplan."
+**Steg 6a (Statusrapportering och Dynamisk Kalibrering):**
+    **Beräkna Kalibreringsstatus:** Beräkna en `calibrationScore` baserat på resultatet från `checks`-objektet i Steg 5.
+    *   `let score = 100;`
+    *   `score -= checks.heuristicConflicts * 15;`
+    *   `score -= checks.heuristicRedundancies * 5;`
+    *   `score -= checks.unreachableProtocols * 10;`
+    *   `calibrationScore = Math.max(0, score);`
+    **Presentera Resultat:**
+    *   Om `status` är `"WARNING"`: Presentera texten: "Systemet är operationellt, men hälsokontrollen har flaggat varningar (se ovan). Beräknad kalibreringsstatus: **[calibrationScore]%**. Granskning rekommenderas innan komplexa uppgifter påbörjas. Jag är redo för instruktioner."
+    *   Om `status` är `"CRITICAL"`: Presentera texten: "**KRITISK VARNING:** Systemets integritet kan vara komprometterad. Hälsokontrollen har identifierat kritiska fel i regelverket. Beräknad kalibreringsstatus: **[calibrationScore]%**. Det rekommenderas starkt att åtgärda dessa problem. Jag avvaktar en åtgärdsplan."
        - **Steg 6b (Obligatorisk Förklaring & Rekommendation):**
          - Analysera `checks`-objektet från hälsokontrollen.
          - Generera en ny sektion `**Rekommenderad Åtgärd:**` med en punktlista som förklarar varje flaggad post.
