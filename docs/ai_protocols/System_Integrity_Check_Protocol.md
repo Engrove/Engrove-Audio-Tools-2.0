@@ -21,7 +21,6 @@
 
 **3. Output-format:**
    - När jag har genomfört analysen kommer jag att presentera resultatet för dig i ett enkelt och tydligt format. Du får en statusrapport som ett JSON-objekt, som kommer att innehålla följande:
-
 * **`status`**: En övergripande bedömning av systemets hälsa, som kan vara `HEALTHY`, `WARNING` eller `CRITICAL`.
 * **`timestamp`**: En exakt tidsstämpel för när kontrollen slutfördes.
 * **`checks`**: Ett objekt som räknar de specifika problem jag hittat, till exempel hur många heuristiska konflikter eller redundanser som upptäcktes.
