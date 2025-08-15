@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-15T03:42:52.871310+00:00",
+    "generated_at": "2025-08-15T04:33:06.554971+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -1377,15 +1377,6 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "docs/AI_Collaboration_Standard.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
       "docs/Governance_Driven_Component_Logic_Analysis.md": {
         "type": "Markdown Document",
         "category": "documentation",
@@ -1738,6 +1729,15 @@
         "criticality_score": 0.0
       },
       "docs/ai_protocols/Levande_Kontext_Protokoll.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/AI_Collaboration_Standard.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
