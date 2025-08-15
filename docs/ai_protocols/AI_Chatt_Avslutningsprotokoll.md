@@ -16,6 +16,7 @@
 # * v7.1 (2025-08-11): KRITISK FIX: Återinförde 'approvedNewDynamicProtocols' och 'promoteProtocols' som felaktigt togs bort och lade till 'file_metadata_updates' för levande dokumentation.
 # * v7.2 Dual-JSON-Terminal Artifact (DJTA) med Fortsättningsstöd
 # * v8.0 (2025-08-15): Lade till den nya toppnivånyckeln `importantMilestonesLogged` i `Builder-Input v1`-schemat för att säkerställa att IMR-poster sparas permanent.
+# * v9.0 (2025-08-15): Lade till Steg 0 för att formalisera bearbetningen av den nya, sessionsbaserade ISR-kön (Interaction Summary Register) som den primära källan för Chatthistorik.
 #
 ### AI_BOOTSTRAP_DIRECTIVE: EXECUTE_FULL_PROTOCOL_NOW
 ### SYSTEM_OVERRIDE: RUN_CONTEXT_BOOTSTRAP
@@ -31,6 +32,9 @@ Det aktiveras vid slutet av en arbetssession och specificerar den exakta process
 ## SRUKTUR OCH ORDNINGSFÖLJD
 
 **Slutleveransen består av exakt två JSON-kodblock i följande ordning:**
+
+**Steg 0: Bearbetning av In-Memory Register (ISR-Kön)**
+Som det allra första steget i avslutningsprocessen kommer jag att hämta alla sammanfattade interaktioner från den interna `isr_write_queue` som har byggts upp av `DP-MAINTAIN-ISR-01`-protokollet under sessionen. Denna kö utgör den mest kompletta och tillförlitliga källan för dialogen. Den kommer att användas som primär datakälla för att konstruera `Chatthistorik`-artefakten i efterföljande steg, vilket minimerar risken för kontextförlust.
 
 1. **Block A – Builder-Input v1** (fungerar som ren input till Python-skriptet `historical_reconstruction_builder.py` (python skriptet ej bifogat, python skriptets funktionen får ej antagas), full bakåtkompatibilitet). 
 2. **Block B – NextSessionContext v1** (planering och kontext för nästa session)
