@@ -160,7 +160,6 @@
     "last_updated_at": "2025-08-15T10:45:39.234016+00:00",
     "last_commit_sha": "f336c86fff00753268c457f72d690be8f7e22087"
   },
-  {
   "docs/ai_protocols/Autonomy_Charter.md": {
     "purpose_and_responsibility": "Definierar AI-partnerns autonomifönster (DT-1), vilket specificerar vilka taktiska, icke-brytande ändringar som får göras utan explicit godkännande.",
     "usage_context": "Används som en referens för att avgöra om en mindre refaktorisering, namngivning eller UI-justering faller inom ramen för självständigt arbete.",
