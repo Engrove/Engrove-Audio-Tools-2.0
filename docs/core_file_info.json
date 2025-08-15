@@ -41,7 +41,7 @@
     "last_updated_at": "2025-08-15T05:09:04.720492+00:00",
     "last_commit_sha": "25807cabe4c93d33976bd1ebeb24e5770afd250d"
   },
-  "docs/Mappstruktur_och_Arbetsflöde.md": {
+  "docs/ai_protocols/Mappstruktur_och_Arbetsflöde.md": {
     "purpose_and_responsibility": "Den arkitektoniska ritningen för projektet. Definierar den FSD-inspirerade mappstrukturen och det AI-drivna arbetsflödet, inklusive den automatiserade dokumentationsprocessen.",
     "usage_context": "Används för att säkerställa att alla nya filer och moduler placeras korrekt i arkitekturen och att det överenskomna arbetsflödet följs från start till mål.",
     "last_updated_by_session": "S-20250811-BOOTSTRAP",
