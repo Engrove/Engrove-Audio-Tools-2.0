@@ -3,8 +3,8 @@
     "purpose_and_responsibility": "Uppdaterad med de nya meta-protokollen KMM v2 (Konversationens Minnes-Monitor), KIV v1 (Kontextintegritets-Verifiering), PHS (Protokoll för Hantering av Sessionsstatus) och det förstärkta PKRV-protokollet (Protokoll för Fokuserad Kontext-Återhämtning).",
     "usage_context": "Dessa nya protokoll utgör nu en central del av mitt kärnbeteende för att säkerställa robusthet i långa konversationer och är integrerade i den stående PSV-ordern.",
     "last_updated_by_session": "S-20250815T000000Z",
-    "last_updated_at": "2025-08-15T03:17:46.450641+00:00",
-    "last_commit_sha": "a33c8afcaa7b94249e44efe8dd01c9e407380049"
+    "last_updated_at": "2025-08-15T03:42:52.704007+00:00",
+    "last_commit_sha": "65dc10837636624520628803ea4c286a3d443a38"
   },
   "docs/ai_protocols/ai_config.json": {
     "purpose_and_responsibility": "Innehåller de maskinläsbara, strikta definitionerna av de 'Gyllene Reglerna', checklistor och granskningsnivåer.",
@@ -38,8 +38,8 @@
     "purpose_and_responsibility": "Uppdaterad till v9.0. Protokollet har omarbetats till en interaktiv, verifieringsdriven process (PVAG) som omsluter den befintliga, kontraktsstyrda artefaktgenereringen för att hantera minnesfragmentering.",
     "usage_context": "Detta är nu det gällande protokollet för att på ett säkert sätt avsluta en session och generera korrekta, mänskligt verifierade artefakter.",
     "last_updated_by_session": "S-20250815T000000Z",
-    "last_updated_at": "2025-08-15T03:17:46.450654+00:00",
-    "last_commit_sha": "a33c8afcaa7b94249e44efe8dd01c9e407380049"
+    "last_updated_at": "2025-08-15T03:42:52.704025+00:00",
+    "last_commit_sha": "65dc10837636624520628803ea4c286a3d443a38"
   },
   "docs/Mappstruktur_och_Arbetsflöde.md": {
     "purpose_and_responsibility": "Den arkitektoniska ritningen för projektet. Definierar den FSD-inspirerade mappstrukturen och det AI-drivna arbetsflödet, inklusive den automatiserade dokumentationsprocessen.",
@@ -129,8 +129,8 @@
     "purpose_and_responsibility": "Ett nytt, formellt protokoll som definierar den officiella poängsättningsmatrisen (rubric) och en 0-100-gradig skala för `ai_protocol_performance.scorecard`-artefakten.",
     "usage_context": "Detta dokument är nu den enda sanningskällan för hur AI-prestation ska utvärderas objektivt i slutet av en session.",
     "last_updated_by_session": "S-20250815T000000Z",
-    "last_updated_at": "2025-08-15T03:17:46.450658+00:00",
-    "last_commit_sha": "a33c8afcaa7b94249e44efe8dd01c9e407380049"
+    "last_updated_at": "2025-08-15T03:42:52.704029+00:00",
+    "last_commit_sha": "65dc10837636624520628803ea4c286a3d443a38"
   },
   "scripts/build_relations_graph.py": {
     "purpose_and_responsibility": "Uppgraderad till v5.1. Agerar som en universell analysmotor för hela projektet. Använder AST-parsing för Python och avancerad regex för andra filtyper för att skapa en självförklarande, semantiskt rik relationsgraf (`file_relations.json`) som inkluderar kod, konfiguration, dokumentation och data.",
