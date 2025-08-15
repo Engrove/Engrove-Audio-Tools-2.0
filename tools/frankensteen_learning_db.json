@@ -963,5 +963,26 @@
         "H-20250809-05"
       ]
     }
+  },
+  {
+  "heuristicId": "H-20250815-01",
+  "trigger": {
+    "type": "session_initialization",
+    "scope": ["*"],
+    "keywords": ["FORCE_SESSION_RESTART", "on_context_load"]
+  },
+  "identifiedRisk": {
+    "riskId": "RISK_BOOTSTRAP_PROTOCOL_VIOLATION",
+    "description": "Risken att AI:n felaktigt prioriterar en konversationell sammanfattning framför att exekvera de obligatoriska startprotokollen (Stature Report) vid en ny session."
+  },
+  "mitigation": {
+    "protocolId": "PROTOCOL_IMMEDIATE_SELF_CORRECTION",
+    "description": "Om det första svaret i en session inte inleds med 'PSV Genomförd.' följt av 'Frankensteen System Readiness & Stature Report', avbryt omedelbart genereringen. Generera om svaret från grunden och börja med att strikt följa `Stature_Report_Protocol.md`."
+  },
+  "metadata": {
+    "originSessionId": "CURRENT_SESSION",
+    "createdAt": "2025-08-15T10:00:00Z",
+    "status": "active"
   }
+ }
 ]
