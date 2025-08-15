@@ -3,76 +3,85 @@
 # === HISTORIK ===
 # * v1.0 (2025-08-15): Initial skapelse med grundläggande interaktivitet.
 # * v2.0 (2025-08-15): Implementerade logik för justerbar delningslinje.
+# * v3.0 (2025-08-15): Lade till logik för att hantera ribbon-menyns flikar.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.4) ===
-# - Obligatorisk Refaktorisering: All JS-logik är separerad.
+# - Obligatorisk Refaktorisering: Logiken är uppdelad i tydliga sektioner.
 
 JS_LOGIC = """
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Engrove Audio Tools UI Initialized.');
+    console.log('Engrove Audio Tools UI Initialized with Ribbon Menu.');
 
-    const menuButtons = document.querySelectorAll('.menu-button');
-    const rightPane = document.querySelector('.right-pane');
-    const searchInput = document.querySelector('.search-container input[type="search"]');
+    // --- Ribbon Menu Logic ---
+    const ribbonTabs = document.querySelectorAll('.ribbon-tab');
+    const ribbonPanes = document.querySelectorAll('.ribbon-pane');
+    const rightPane = document.getElementById('right-pane'); // Referens till högerpanelen
 
-    // --- Meny- och söklogik ---
-    menuButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const buttonText = button.textContent;
-            console.log(`Menyknapp '${buttonText}' klickades.`);
-            if (rightPane) {
-                rightPane.innerHTML = `<h2>'${buttonText}' valdes</h2><p>Funktionalitet för detta val kommer att implementeras här.</p>`;
+    ribbonTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const targetPaneId = 'tab-' + tab.dataset.tab;
+
+            // Uppdatera aktiv status för flikar
+            ribbonTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            // Visa/dölj ribbon-paneler
+            ribbonPanes.forEach(pane => {
+                pane.classList.toggle('active', pane.id === targetPaneId);
+            });
+            
+            console.log(`Ribbon tab '${tab.dataset.tab}' selected.`);
+            if(rightPane){
+                 rightPane.innerHTML = `<h2>Vy för '${tab.textContent}'</h2><p>Innehållet för detta verktyg visas här.</p>`;
             }
         });
     });
-
-    if (searchInput) {
-        searchInput.addEventListener('input', (event) => {
-            console.log(`Sökterm: ${event.target.value}`);
-            if (rightPane) {
-                rightPane.innerHTML = `<h2>Sökning</h2><p>Söker efter: <strong>${event.target.value}</strong></p>`;
+    
+    // Initialisera logik för knappar i ribbon (exempel)
+    document.body.addEventListener('click', event => {
+        const target = event.target;
+        if(target.tagName === 'BUTTON' && target.closest('.ribbon-group')) {
+            console.log(`Ribbon button '${target.textContent}' clicked.`);
+            if(rightPane){
+                 rightPane.innerHTML = `<h2>Åtgärd: ${target.textContent}</h2><p>Visar resultat för denna åtgärd.</p>`;
             }
-        });
-    }
+        }
+    });
 
-    // --- Logik för justerbar panel ---
+
+    // --- Resizer Logic (oförändrad) ---
     const resizer = document.getElementById('resizer');
     const leftPane = document.getElementById('left-pane');
 
-    let isResizing = false;
-    let initialX = 0;
-    let initialWidth = 0;
+    if(resizer && leftPane) {
+        let isResizing = false;
+        let initialX = 0;
+        let initialWidth = 0;
 
-    resizer.addEventListener('mousedown', (e) => {
-        isResizing = true;
-        initialX = e.clientX;
-        initialWidth = leftPane.offsetWidth;
-        
-        // Lägg till globala lyssnare för att hantera drag utanför resizer-elementet
-        document.addEventListener('mousemove', handleMouseMove);
-        document.addEventListener('mouseup', handleMouseUp);
-    });
+        resizer.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            initialX = e.clientX;
+            initialWidth = leftPane.offsetWidth;
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+        });
 
-    function handleMouseMove(e) {
-        if (!isResizing) return;
-        
-        const deltaX = e.clientX - initialX;
-        const newWidth = initialWidth + deltaX;
-        
-        // Sätt gränser för att panelen inte ska bli för liten eller för stor
-        const minWidth = 200; // Matchar min-width i CSS
-        const maxWidth = document.body.clientWidth * 0.8; // Max 80% av fönstret
-        
-        if (newWidth > minWidth && newWidth < maxWidth) {
-            leftPane.style.width = `${newWidth}px`;
-        }
-    }
+        const handleMouseMove = (e) => {
+            if (!isResizing) return;
+            const deltaX = e.clientX - initialX;
+            const newWidth = initialWidth + deltaX;
+            const minWidth = 200;
+            const maxWidth = document.body.clientWidth * 0.8;
+            if (newWidth > minWidth && newWidth < maxWidth) {
+                leftPane.style.width = `${newWidth}px`;
+            }
+        };
 
-    function handleMouseUp() {
-        isResizing = false;
-        // Rensa globala lyssnare för att sluta spåra musen
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleMouseUp);
+        const handleMouseUp = () => {
+            isResizing = false;
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+        };
     }
 });
 """
