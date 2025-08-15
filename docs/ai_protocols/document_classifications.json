@@ -32,7 +32,21 @@
       "docs/ai_protocols/DynamicProtocols.json": "CONFIGURATION_DATA",
       "docs/ai_protocols/frankensteen_persona.v1.0.json": "CONFIGURATION_DATA",
       "docs/ai_protocols/DynamicProtocol.schema.json": "SCHEMA_DEFINITION",
-      "docs/Analys_av_AI-regelverk_i_JSON_.md": "REFERENCE_MATERIAL"
+      "docs/Analys_av_AI-regelverk_i_JSON_.md": "REFERENCE_MATERIAL",
+      "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md": "OPERATIONAL_PROTOCOL",
+      "docs/ai_protocols/Brainstorming_Protokoll.md": "OPERATIONAL_PROTOCOL",
+      "docs/ai_protocols/Diff_Protocol_v3.md": "OPERATIONAL_PROTOCOL",
+      "docs/ai_protocols/full_code_chat_contract.txt": "CONFIGURATION_DATA",
+      "docs/ai_protocols/Help_me_God_Protokoll.md": "OPERATIONAL_PROTOCOL",
+      "docs/ai_protocols/In-Session_Amnesiac_Reset_Protocol.md": "OPERATIONAL_PROTOCOL",
+      "docs/ai_protocols/K-MOD_Protokoll.md": "OPERATIONAL_PROTOCOL",
+      "docs/ai_protocols/KPI_Dashboard_Spec.md": "REFERENCE_MATERIAL",
+      "docs/ai_protocols/Levande_Kontext_Protokoll.md": "OPERATIONAL_PROTOCOL",
+      "docs/ai_protocols/MAS_Architecture_Guide.md": "REFERENCE_MATERIAL",
+      "docs/ai_protocols/Pre_Execution_Alignment.md": "OPERATIONAL_PROTOCOL",
+      "docs/ai_protocols/Scorecard_Scoring_Guide.md": "OPERATIONAL_PROTOCOL",
+      "docs/ai_protocols/Stalemate_Protocol.md": "OPERATIONAL_PROTOCOL",
+      "docs/ai_protocols/Stature_Report_Protocol.md": "OPERATIONAL_PROTOCOL"
     },
     "fallback_rules": [
       {
