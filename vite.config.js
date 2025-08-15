@@ -1,10 +1,16 @@
 // vite.config.js
-// Denna fil konfigurerar Vite, vårt byggverktyg.
+// === SYFTE & ANSVAR ===
+// Denna fil konfigurerar Vite, vårt byggverktyg. Den definierar plugins,
+// sökvägs-alias och, viktigast av allt, alla HTML-ingångspunkter för projektet.
 //
-// ÄNDRING:
-// - Lade till 'debug.html' i `build.rollupOptions.input`. Detta instruerar Vite
-//   att behandla `debug.html` som en ytterligare ingångspunkt under byggprocessen,
-//   vilket gör den tillgänglig som en separat sida i den färdiga applikationen.
+// === HISTORIK ===
+// * v1.0 (Initial): Grundläggande konfiguration för Vue-appen.
+// * v1.1: Lade till alias för 'vue/dist/vue.esm-bundler.js' för att stödja showcase.html.
+// * v1.2: Lade till 'debug.html' som en ingångspunkt.
+// * v1.3 (2025-08-15): Lade till 'index2.html' (Engrove Audio Tools Creator) som en ingångspunkt.
+//
+// === TILLÄMPADE REGLER (Frankensteen v5.4) ===
+// - API-kontraktsverifiering: build.rollupOptions.input är korrekt formaterat.
 
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
@@ -29,8 +35,9 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         showcase: resolve(__dirname, 'showcase.html'),
-        // NYTT: Lägger till vår nya felsökningssida.
         debug: resolve(__dirname, 'debug.html'),
+        // NYTT: Lägger till vårt nya UI-verktyg som en fristående sida.
+        engrove_tools: resolve(__dirname, 'index2.html'),
       }
     }
   }
