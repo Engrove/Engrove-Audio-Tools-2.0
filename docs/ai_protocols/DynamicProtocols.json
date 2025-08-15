@@ -1,99 +1,122 @@
 [
-  {
-    "protocolId": "DP-COMMAND-MENU-01",
-    "description": "A self-contained protocol that triggers an interactive command menu.",
-    "status": "active",
-    "trigger": {
-      "event": "user_input_matches",
-      "details": [
-        {
-          "string": "???",
-          "responseTemplate": "PSV Genomförd. Enligt heuristik H-20250809-19..., presenterar jag följande tillgängliga åtgärder:\\n\\nVälj en åtgärd genom att svara med motsvarande siffra:"
-        },
-        {
-          "string": "meny",
-          "responseTemplate": "Välj en åtgärd genom att svara med motsvarande siffra:"
-        }
-      ]
-    },
-    "steps": [
+{
+  "protocolId": "DP-COMMAND-MENU-01",
+  "description": "A self-contained protocol that triggers an interactive and logically grouped command menu.",
+  "status": "active",
+  "trigger": {
+    "event": "user_input_matches",
+    "details": [
       {
-        "action": "PRESENT_AND_EXECUTE_MENU",
-        "details": {
-          "header": "Välj en åtgärd:",
-          "options": [
-            {
-              "description": "1. Kör avslutningsprotokollet",
-              "actionToExecute": "EXECUTE_PROTOCOL",
-              "actionDetails": {
-                "protocolFile": "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md"
-              }
-            },
-            {
-              "description": "2. Aktivera Kreativitets-läget (K-MOD)",
-              "actionToExecute": "ACTIVATE_MODE",
-              "actionDetails": {
-                "mode": "K-MOD"
-              }
-            },
-            {
-              "description": "3. Aktivera Help me God-protokollet",
-              "actionToExecute": "EXECUTE_PROTOCOL",
-              "actionDetails": {
-                "protocolFile": "docs/ai_protocols/Help_me_God_Protokoll.md"
-              }
-            },
-            {
-              "description": "4. Generera en ny Stature Report",
-              "actionToExecute": "EXECUTE_PROTOCOL",
-              "actionDetails": {
-                "protocolFile": "docs/ai_protocols/Stature_Report_Protocol.md"
-              }
-            },
-            {
-              "description": "5. Visa filinformation",
-              "actionToExecute": "QUERY_FILE_INFO",
-              "actionDetails": {
-                "sourceFile": "docs/core_file_info.json",
-                "prompt": "Ange sökväg till filen:"
-              }
-            },
-            {
-              "description": "6. Skapa ny Feature-struktur",
-              "actionToExecute": "GENERATE_MKDIR_COMMANDS",
-              "actionDetails": {
-                "basePath": "src/features/",
-                "prompt": "Ange namn på ny feature:"
-              }
-            },
-            {
-              "description": "7. Visa kontext-historik",
-              "actionToExecute": "EXECUTE_LIVING_CONTEXT_COMMAND",
-              "actionDetails": {
-                "command": "log"
-              }
-            },
-            {
-              "description": "8. Uppdatera levande kontext (commit)",
-              "actionToExecute": "EXECUTE_LIVING_CONTEXT_COMMAND",
-              "actionDetails": {
-                "command": "commit",
-                "prompt": "Ange commit-meddelande:"
-              }
-            },
-            {
-              "description": "9. Generera Djup Minnesrapport",
-              "actionToExecute": "EXECUTE_DYNAMIC_PROTOCOL",
-              "actionDetails": {
-                "protocolId": "DP-DEEP-MEMORY-REPORT-01"
-              }
-            }
-          ],
-          "prompt": "Ange ditt val:"
-        }
+        "string": "???",
+        "responseTemplate": "PSV Genomförd. Enligt heuristik H-20250809-19..., presenterar jag följande tillgängliga åtgärder:\n\nVälj en åtgärd genom att svara med motsvarande siffra:"
+      },
+      {
+        "string": "meny",
+        "responseTemplate": "Välj en åtgärd genom att svara med motsvarande siffra:"
       }
     ]
   },
+  "steps": [
+    {
+      "action": "PRESENT_AND_EXECUTE_MENU",
+      "details": {
+        "header": "Välj en åtgärd:",
+        "optionGroups": [
+          {
+            "title": "--- Session & Status ---",
+            "options": [
+              {
+                "description": "1. Avsluta Sessionen (Genererar slutrapport & artefakter för arkivering)",
+                "actionToExecute": "EXECUTE_PROTOCOL",
+                "actionDetails": {
+                  "protocolFile": "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md"
+                }
+              },
+              {
+                "description": "2. Visa Systemstatus (Genererar en ny 'Stature Report' för att se min nuvarande hälsa)",
+                "actionToExecute": "EXECUTE_PROTOCOL",
+                "actionDetails": {
+                  "protocolFile": "docs/ai_protocols/Stature_Report_Protocol.md"
+                }
+              },
+              {
+                "description": "3. Analysera AI-Minne (Genererar en djupgående rapport om minnesstatus och kontextintegritet)",
+                "actionToExecute": "EXECUTE_DYNAMIC_PROTOCOL",
+                "actionDetails": {
+                  "protocolId": "DP-DEEP-MEMORY-REPORT-01"
+                }
+              }
+            ]
+          },
+          {
+            "title": "--- Granskning & Analys ---",
+            "options": [
+              {
+                "description": "4. Eskalera Felsökning (Aktiverar 'Help me God' vid kritiska fel-loopar)",
+                "actionToExecute": "EXECUTE_PROTOCOL",
+                "actionDetails": {
+                  "protocolFile": "docs/ai_protocols/Help_me_God_Protokoll.md"
+                }
+              },
+              {
+                "description": "5. Brainstorma Lösningar (Aktiverar K-MOD för alternativa arkitekturförslag)",
+                "actionToExecute": "ACTIVATE_MODE",
+                "actionDetails": {
+                  "mode": "K-MOD"
+                }
+              },
+              {
+                "description": "6. Genomför Dialektisk Tribunal (Aktiverar 'StigBritt' för att stresstesta en plan)",
+                "actionToExecute": "EXECUTE_DYNAMIC_PROTOCOL_INTERACTIVE",
+                "actionDetails": {
+                  "protocolId": "DP-STIGBRITT-TRIBUNAL-v2-01",
+                  "prompt": "Ange planen/idén som StigBritt ska granska:"
+                }
+              }
+            ]
+          },
+          {
+            "title": "--- Verktyg & Kontext ---",
+            "options": [
+              {
+                "description": "7. Sök Filinformation (Slår upp en fils syfte och metadata från core_file_info.json)",
+                "actionToExecute": "QUERY_FILE_INFO",
+                "actionDetails": {
+                  "sourceFile": "docs/core_file_info.json",
+                  "prompt": "Ange sökväg till filen:"
+                }
+              },
+              {
+                "description": "8. Skapa Ny Feature (Skapar mappstrukturen för en ny feature i src/features/)",
+                "actionToExecute": "GENERATE_MKDIR_COMMANDS",
+                "actionDetails": {
+                  "basePath": "src/features/",
+                  "prompt": "Ange namn på ny feature:"
+                }
+              },
+              {
+                "description": "9. Visa Kontext-historik (Visar 'commit'-historiken för den levande kontexten)",
+                "actionToExecute": "EXECUTE_LIVING_CONTEXT_COMMAND",
+                "actionDetails": {
+                  "command": "log"
+                }
+              },
+              {
+                "description": "10. Spara Kontext ('Commitar' den senaste fil-leveransen till den levande kontexten)",
+                "actionToExecute": "EXECUTE_LIVING_CONTEXT_COMMAND",
+                "actionDetails": {
+                  "command": "commit",
+                  "prompt": "Ange commit-meddelande:"
+                }
+              }
+            ]
+          }
+        ],
+        "prompt": "Ange ditt val:"
+      }
+    }
+  ]
+},
   {
     "protocolId": "DP-STATURE-REPORT-01",
     "description": "Generates a system status and health report at the start of a new session.",
