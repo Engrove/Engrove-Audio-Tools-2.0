@@ -1,28 +1,29 @@
 # scripts/modules/ui_styles.py
 #
 # === HISTORIK ===
-# * v2.1 (2025-08-15): Korrigerat header-layout för att placera sökfältet
-#   permanent till höger. Justerat positionering för ribbon-etiketter.
+# * v3.0 (2025-08-15): Total visuell omdesign. Implementerade ett nytt mörkt
+#   tema med blåa accenter. Knappstilar har omarbetats för att matcha
+#   den nya designriktningen. Alla ribbon-etiketter har tagits bort.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.4) ===
-# - Fullständig kod, alltid.
+# - Obligatorisk Refaktorisering: Hela CSS-arkitekturen har uppdaterats.
 
 CSS_STYLES = """
 :root {
     --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --font-mono: ui-monospace, "JetBrains Mono", "SF Mono", Consolas, Menlo, monospace;
-    --bg-color: #f0f0f0;
-    --panel-bg-color: #ffffff;
-    --border-color: #cccccc;
-    --text-color: #1a1a1a;
-    --header-bg-color: #f0f0f0;
-    --button-hover-bg: #e9e9e9;
-    --input-bg-color: #ffffff;
-    --input-border-color: #b0b0b0;
-    --resizer-color: #dddddd;
-    --resizer-hover-color: #0d6efd;
-    --ribbon-tab-active-bg: #f9f9f9;
-    --ribbon-content-bg: #f9f9f9;
+    --bg-color: #2c3e50;
+    --panel-bg-color: #34495e;
+    --border-color: #4a6572;
+    --text-color: #ecf0f1;
+    --text-color-muted: #bdc3c7;
+    --header-bg-color: #2c3e50;
+    --button-bg: #3498db;
+    --button-hover-bg: #2980b9;
+    --button-text: #ffffff;
+    --input-bg-color: #2c3e50;
+    --input-border-color: #4a6572;
+    --resizer-color: #4a6572;
+    --resizer-hover-color: #3498db;
 }
 
 * { box-sizing: border-box; }
@@ -32,6 +33,11 @@ body, html {
     font-family: var(--font-sans); font-size: 14px;
     background-color: var(--bg-color); color: var(--text-color);
     display: flex; flex-direction: column; overflow: hidden;
+}
+
+h2 {
+    color: var(--text-color);
+    font-weight: 500;
 }
 
 .main-container {
@@ -70,94 +76,99 @@ body, html {
     border-radius: 4px 4px 0 0;
     cursor: pointer;
     font-size: 14px;
-    margin-bottom: -1px; /* För att överlappa content-kanten */
+    margin-bottom: -1px;
+    color: var(--text-color-muted);
 }
 
 .ribbon-tab.active {
-    background-color: var(--ribbon-content-bg);
+    background-color: var(--panel-bg-color);
     border-color: var(--border-color);
-    border-bottom-color: var(--ribbon-content-bg);
+    border-bottom-color: var(--panel-bg-color);
+    color: var(--text-color);
 }
 
-.search-container {
-    padding-bottom: 4px;
-}
-
-.search-container input[type="search"] {
-    border: 1px solid var(--input-border-color);
-    background-color: var(--input-bg-color);
-    border-radius: 4px; padding: 6px 8px; width: 250px; font-size: 14px;
-}
+.search-container { padding-bottom: 4px; }
 
 .ribbon-content {
-    background-color: var(--ribbon-content-bg);
+    background-color: var(--panel-bg-color);
     border-top: 1px solid var(--border-color);
     flex-grow: 1;
     display: flex;
-    align-items: stretch; /* Se till att grupperna fyller höjden */
+    align-items: stretch;
     padding: 4px 12px;
 }
 
 .ribbon-pane {
     display: none; width: 100%; height: 100%;
-    align-items: stretch; gap: 16px;
+    align-items: center; gap: 16px;
 }
 
 .ribbon-pane.active { display: flex; }
 
 .ribbon-group {
     display: flex;
-    align-items: center; /* Centrera knapparna vertikalt */
+    align-items: center;
     gap: 8px;
     height: 100%;
-    padding: 0 16px 12px 16px; /* Padding i botten för etikett */
+    padding: 0 16px;
     border-right: 1px solid var(--border-color);
-    position: relative;
 }
-
 .ribbon-group:first-child { padding-left: 4px; }
 
-.ribbon-group-label {
-    position: absolute;
-    bottom: 2px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 12px;
-    color: #666;
-    white-space: nowrap;
-}
-
-.ribbon-group button, .ribbon-group input {
-    background-color: var(--input-bg-color);
-    border: 1px solid var(--input-border-color);
-    border-radius: 4px;
-    padding: 5px 8px;
+/* --- Global Component Styles --- */
+button, input[type="search"], .ribbon-group button {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: 1px solid transparent;
+    border-radius: 5px;
+    padding: 8px 16px;
     font-size: 14px;
-    align-self: center; /* Håll element centrerade */
+    font-weight: 500;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    cursor: pointer;
 }
 
-.ribbon-group button { cursor: pointer; }
-.ribbon-group button:hover { background-color: var(--button-hover-bg); }
+button:hover, .ribbon-group button:hover {
+    background-color: var(--button-hover-bg);
+}
+
+.ribbon-tab:hover {
+    background-color: var(--panel-bg-color);
+    color: var(--text-color);
+}
+
+input[type="search"] {
+    background-color: var(--input-bg-color);
+    border-color: var(--input-border-color);
+    color: var(--text-color);
+    padding: 8px;
+    width: 250px;
+}
+
+input[type="search"]:focus {
+    outline: none;
+    border-color: var(--resizer-hover-color);
+}
 
 /* --- Main Panes --- */
+.left-pane, .right-pane {
+    background-color: var(--panel-bg-color);
+    border-color: var(--border-color);
+    padding: 12px;
+    overflow-y: auto;
+}
 .left-pane {
     width: 33.33%; max-width: 80%; min-width: 200px;
-    background-color: var(--panel-bg-color); padding: 12px;
-    overflow-y: auto; flex-shrink: 0;
+    border-right: 1px solid var(--border-color);
+    flex-shrink: 0;
 }
+.right-pane { flex-grow: 1; }
 
 .resizer {
     width: 5px; cursor: col-resize;
     background-color: var(--resizer-color); flex-shrink: 0;
     user-select: none; transition: background-color 0.2s ease;
 }
-
 .resizer:hover { background-color: var(--resizer-hover-color); }
-
-.right-pane {
-    flex-grow: 1;
-    background-color: var(--panel-bg-color); padding: 12px;
-    overflow-y: auto;
-}
 """
 # scripts/modules/ui_styles.py
