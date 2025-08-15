@@ -45,8 +45,8 @@
     "purpose_and_responsibility": "Den arkitektoniska ritningen för projektet. Definierar den FSD-inspirerade mappstrukturen och det AI-drivna arbetsflödet.",
     "usage_context": "Används för att säkerställa att alla nya filer och moduler placeras korrekt i arkitekturen och att det överenskomna arbetsflödet följs.",
     "last_updated_by_session": "S-20250815T052336Z",
-    "last_updated_at": "2025-08-15T10:18:32.537259+00:00",
-    "last_commit_sha": "89fe6f11ff5b71bb3c96db3f7271ce9aa7874189"
+    "last_updated_at": "2025-08-15T10:34:43.766996+00:00",
+    "last_commit_sha": "f022439b658ea2b72cee65e0bf57b5b723063d1f"
   },
   "tools/frankensteen_learning_db.json": {
     "purpose_and_responsibility": "Min långtidsminnesdatabas. Innehåller en lista över alla tidigare identifierade misstag (risker) och de åtgärder (mitigations) som ska vidtas för att förhindra dem.",
@@ -143,21 +143,21 @@
     "purpose_and_responsibility": "Definierar den standardiserade processen för samarbete mellan produktägare (Engrove) och AI-partner (Frankensteen), inklusive verktyg och dokumentationsstandarder.",
     "usage_context": "Används som en referens för hur man effektivt bygger kontext och formaterar fil-headers för optimalt AI-samarbete.",
     "last_updated_by_session": "S-20250815T052336Z",
-    "last_updated_at": "2025-08-15T10:18:32.537242+00:00",
-    "last_commit_sha": "89fe6f11ff5b71bb3c96db3f7271ce9aa7874189"
+    "last_updated_at": "2025-08-15T10:34:43.766983+00:00",
+    "last_commit_sha": "f022439b658ea2b72cee65e0bf57b5b723063d1f"
   },
   "docs/ai_protocols/Global_UI-Standard_för_Engrove-plattformen.md": {
     "purpose_and_responsibility": "Definierar den officiella UI-standarden för hela Engrove-plattformen, inklusive designfilosofi och visuella grundstenar (design tokens).",
     "usage_context": "Primär källa och styrdokument för all UI-utveckling för att säkerställa visuell och funktionell konsekvens.",
     "last_updated_by_session": "S-20250815T052336Z",
-    "last_updated_at": "2025-08-15T10:18:32.537264+00:00",
-    "last_commit_sha": "89fe6f11ff5b71bb3c96db3f7271ce9aa7874189"
+    "last_updated_at": "2025-08-15T10:34:43.767001+00:00",
+    "last_commit_sha": "f022439b658ea2b72cee65e0bf57b5b723063d1f"
   },
   "docs/ai_protocols/Global_UI-Standard_Komponentspecifikation.md": {
     "purpose_and_responsibility": "Ett appendix till den globala UI-standarden som innehåller detaljerade visuella och funktionella specifikationer för varje baskomponent.",
     "usage_context": "Används som en teknisk referens vid utveckling och verifiering av UI-komponenter för att säkerställa att de matchar designspecifikationen.",
     "last_updated_by_session": "S-20250815T052336Z",
-    "last_updated_at": "2025-08-15T10:18:32.537267+00:00",
-    "last_commit_sha": "89fe6f11ff5b71bb3c96db3f7271ce9aa7874189"
+    "last_updated_at": "2025-08-15T10:34:43.767004+00:00",
+    "last_commit_sha": "f022439b658ea2b72cee65e0bf57b5b723063d1f"
   }
 }
