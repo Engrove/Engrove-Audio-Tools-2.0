@@ -1,4 +1,4 @@
-# AI Chatt Avslutningsprotokoll v7.2# AI Chatt Avslutningsprotokoll v8.0
+# AI Chatt Avslutningsprotokoll
 # docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md
 #
 # === HISTORIK ===
