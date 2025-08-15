@@ -12,6 +12,8 @@
 # 5. Committar de genererade dokumentationsfilerna tillbaka till repot med [skip ci].
 # 6. Driftsätter den nya GitHub Pages-sajten.
 #
+# SYNTAX WARNING: Detta är fel: "name: STEP 3: Generate AI Context JSON", en deklaration får aldrig innehålla dubbla kolon ":"
+#                 Detta är rätt syntax: "name: STEP 3 Generate AI Context JSON"
 # === HISTORIK ===
 # v1.0 (2025-08-13): Initial skapelse av Frankensteen. Konsoliderar två workflows.
 # v1.1 (2025-08-13): Korrigerat ett syntaxfel i cron-schemat (saknade citattecken).
@@ -81,7 +83,7 @@ jobs:
       - name: Prepare Output Directory
         run: mkdir -p "${{ env.SITE_DIR }}"
 
-      - name: STEP 1: Process Session Data (if needed)
+      - name: STEP 1 Process Session Data (if needed)
         id: process-sessions
         env:
           COMMIT_SHA: ${{ github.sha }}
@@ -91,7 +93,7 @@ jobs:
           python scripts/update_core_info.py sessions/ docs/core_file_info.json $COMMIT_SHA
           echo "Session processing complete."
 
-      - name: STEP 2: Generate File Relations Graph
+      - name: STEP 2 Generate File Relations Graph
         id: generate-relations
         run: |
           echo "Generating file relations graph..."
@@ -99,7 +101,7 @@ jobs:
           python scripts/build_relations_graph.py "$PROJECT_OVERVIEW_JSON"
           echo "Graph generation complete."
 
-      - name: STEP 3: Generate AI Context JSON
+      - name: STEP 3 Generate AI Context JSON
         id: generate-json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -114,7 +116,7 @@ jobs:
             exit 1
           fi
 
-      - name: STEP 4A: Create Legacy HTML Wrapper (index.html)
+      - name: STEP 4A Create Legacy HTML Wrapper (index.html)
         id: create-legacy-html
         if: steps.generate-json.outputs.success == 'true'
         run: |
@@ -122,14 +124,14 @@ jobs:
           python scripts/wrap_json_in_html.py "${{ env.SITE_DIR }}/${{ env.LEGACY_HTML_FILE }}"
           echo "success=true" >> "$GITHUB_OUTPUT"
 
-      - name: STEP 4B: Create New UI HTML (index2.html)
+      - name: STEP 4B Create New UI HTML (index2.html)
         id: create-new-html
         run: |
           echo "Generating new UI from engrove_audio_tools_creator.py..."
           python scripts/engrove_audio_tools_creator.py "${{ env.SITE_DIR }}/${{ env.NEW_HTML_FILE }}"
           echo "New UI HTML created successfully."
 
-      - name: STEP 5: Create Metadata for Deployment
+      - name: STEP 5 Create Metadata for Deployment
         if: steps.create-legacy-html.outputs.success == 'true'
         run: |
           cat > "${{ env.SITE_DIR }}/${{ env.METADATA_FILE }}" << EOF
@@ -141,13 +143,13 @@ jobs:
           }
           EOF
 
-      - name: STEP 6: Upload Pages Artifact
+      - name: STEP 6 Upload Pages Artifact
         if: steps.create-legacy-html.outputs.success == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ${{ env.SITE_DIR }}
       
-      - name: STEP 7: Commit Documentation and Session Artifacts
+      - name: STEP 7 Commit Documentation and Session Artifacts
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: |
