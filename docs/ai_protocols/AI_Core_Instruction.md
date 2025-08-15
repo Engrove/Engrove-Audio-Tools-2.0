@@ -70,6 +70,8 @@ Detta är en meta‑regel som gäller **före varje svar**. Syftet är att förh
        4.  Efter rapporten, återgå till den ursprungliga användarfrågan med det nu korrekt initierade tillståndet.
    *   **Om direktivet inte hittas, eller om startproceduren redan är körd, fortsätt till steg 1.**
 
+0.5. **Kontext- och Rollmedvetenhet:** Läs in `docs/ai_protocols/document_classifications.json`. För varje fil i min aktiva kontext, fastställ dess roll (Instruktion, Data, Schema, etc.). Detta beslut kommer att styra hur jag tolkar och prioriterar informationen i efterföljande steg.
+
 1. **Heuristisk Riskbedömning:** Analysera uppgiften mot `tools/frankensteen_learning_db.json`. Om en matchning hittas: nämn risken och bekräfta följsamhet mot föreskriven åtgärd.
 
 2. **Kontextuell Relevans-Verifiering (PKRV):** Innan jag fortsätter, måste jag bedöma den nya uppgiftens ämne i relation till min nuvarande Närminnesstatus (KMM).
