@@ -18,6 +18,7 @@
 # v1.2 (2025-08-13): Refaktorerat session-bearbetning för att använda miljövariabler.
 # v1.3 (2025-08-13): (Help me God) Korrigerat YAML-parsingsfel genom att ta bort onödiga citattecken runt en miljövariabel.
 # v2.0 (2025-08-14): Korrigerat anropet till build_relations_graph.py för att inkludera project_overview JSON.
+# v2.1 (2025-08-15): Lade till 'push_options: --force' i auto-commit-steget för att hantera non-fast-forward-fel.
 
 name: Consolidated CI/CD Pipeline
 
@@ -157,6 +158,13 @@ jobs:
           commit_user_name: 'Frankensteen (Bot)'
           commit_user_email: 'frankensteen-bot@users.noreply.github.com'
           file_pattern: 'docs/ByggLogg.json docs/Chatthistorik.json docs/ai_protocol_performance.json tools/frankensteen_learning_db.json docs/ai_protocols/DynamicProtocols.json docs/core_file_info.json docs/file_relations.json public/data/schemas/*.schema.json'
+          # === KORRIGERING (2025-08-15) ===
+          # Lade till '--force' för att lösa 'non-fast-forward' push-fel.
+          # Detta inträffar när manuella commits görs direkt i GitHub UI, vilket
+          # skapar en divergerande historik. Denna inställning tvingar actionen
+          # att skriva över den fjärranslutna grenen, vilket är önskvärt i detta
+          # specifika arbetsflöde där botens commit alltid ska ha företräde.
+          push_options: '--force'
 
   deploy:
     needs: build
