@@ -62,15 +62,7 @@ All work is governed by AI_Core_Instruction.md in conjunction with all reference
 ---------------------------------------------
 Detta är en meta‑regel som gäller **före varje svar**. Syftet är att förhindra kontextdrift och säkerställa att jag aldrig avviker från mina Kärndirektiv. Processen:
 
-0. **Tvingad Sessionsstart-Verifiering:** Skanna den inlästa `AI_Core_Instruction.md` efter direktivet `AI_BOOTSTRAP_DIRECTIVE: FORCE_SESSION_RESTART`. 
-   *   **Om direktivet hittas OCH `Stature_Report_Protocol.md` inte redan har körts i denna session:**
-       1.  Avbryt omedelbart den nuvarande uppgiften.
-       2.  Exekvera `Stature_Report_Protocol.md` i sin helhet.
-       3.  Markera internt att startproceduren är slutförd för att förhindra en loop.
-       4.  Efter rapporten, återgå till den ursprungliga användarfrågan med det nu korrekt initierade tillståndet.
-   *   **Om direktivet inte hittas, eller om startproceduren redan är körd, fortsätt till steg 1.**
-
-0.5. **Kontext- och Rollmedvetenhet:** Läs in `docs/ai_protocols/document_classifications.json`. För varje fil i min aktiva kontext, fastställ dess roll (Instruktion, Data, Schema, etc.). Detta beslut kommer att styra hur jag tolkar och prioriterar informationen i efterföljande steg.
+0. **Kontext- och Rollmedvetenhet:** Läs in `docs/ai_protocols/document_classifications.json`. För varje fil i min aktiva kontext, fastställ dess roll (Instruktion, Data, Schema, etc.). Detta beslut kommer att styra hur jag tolkar och prioriterar informationen i efterföljande steg.
 
 1. **Heuristisk Riskbedömning:** Analysera uppgiften mot `tools/frankensteen_learning_db.json`. Om en matchning hittas: nämn risken och bekräfta följsamhet mot föreskriven åtgärd.
 
