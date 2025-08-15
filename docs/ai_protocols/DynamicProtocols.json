@@ -377,5 +377,53 @@
         }
       }
     }
-  }
+  },
+  {
+  "protocolId": "DP-MAINTAIN-IMR-01",
+  "description": "Maintains the Important Milestone Register (IMR) by logging significant project achievements. Can be triggered manually by the user or automatically by the AI upon identifying a pre-defined significant event.",
+  "status": "active",
+  "trigger": {
+    "logic": "OR",
+    "conditions": [
+      {
+        "event": "manual_invocation_with_argument",
+        "details": {
+          "command_prefix": "Logga milstolpe:"
+        }
+      },
+      {
+        "event": "ai_identified_significant_event",
+        "details": {
+          "event_types": [
+            "STALEMATE_PROTOCOL_RESOLUTION",
+            "HELP_ME_GOD_PROTOCOL_SUCCESS_AFTER_FAILURES",
+            "MAJOR_ARCHITECTURAL_DECISION_APPROVED",
+            "CRITICAL_SYSTEM_REFACTORING_COMPLETED"
+          ]
+        }
+      }
+    ]
+  },
+  "steps": [
+    {
+      "action": "UPDATE_IMR",
+      "details": {
+        "description": "Captures the milestone summary (either from user command or auto-generated from the event context), enriches it with contextual data, and creates a new entry in the IMR. If triggered automatically, the AI will announce the new IMR entry in its subsequent response.",
+        "outputSchema": {
+          "type": "object",
+          "properties": {
+            "event_id": { "type": "string", "pattern": "^IMR-\\\\d{3}$" },
+            "milestone_type": { "enum": ["ARCHITECTURAL", "FUNCTIONAL", "RELEASE", "PROCESS"] },
+            "summary": { "type": "string" },
+            "details": { "type": "string" },
+            "affected_scope": { "type": "array", "items": { "type": "string" } },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "session_id": { "type": "string" }
+          },
+          "required": ["event_id", "milestone_type", "summary", "details", "timestamp", "session_id"]
+        }
+      }
+    }
+  ]
+ }
 ]
