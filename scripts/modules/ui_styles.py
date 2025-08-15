@@ -1,9 +1,8 @@
 # scripts/modules/ui_styles.py
 #
 # === HISTORIK ===
-# * v1.0 (2025-08-15): Initial skapelse.
-# * v1.1 (2025-08-15): Lade till stilar för resizer.
-# * v2.0 (2025-08-15): Implementerade fullständiga stilar för ribbon-menyn.
+# * v2.1 (2025-08-15): Korrigerat header-layout för att placera sökfältet
+#   permanent till höger. Justerat positionering för ribbon-etiketter.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.4) ===
 # - Fullständig kod, alltid.
@@ -37,7 +36,7 @@ body, html {
 
 .main-container {
     display: flex; flex-grow: 1;
-    height: calc(100% - 85px); /* Justerat för ny header-höjd */
+    height: calc(100% - 85px);
 }
 
 /* --- Ribbon Header --- */
@@ -51,9 +50,15 @@ body, html {
     flex-direction: column;
 }
 
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 0 12px;
+}
+
 .ribbon-tabs {
     display: flex;
-    padding: 4px 12px 0 12px;
     gap: 4px;
 }
 
@@ -65,14 +70,23 @@ body, html {
     border-radius: 4px 4px 0 0;
     cursor: pointer;
     font-size: 14px;
+    margin-bottom: -1px; /* För att överlappa content-kanten */
 }
 
 .ribbon-tab.active {
     background-color: var(--ribbon-content-bg);
     border-color: var(--border-color);
     border-bottom-color: var(--ribbon-content-bg);
-    position: relative;
-    top: 1px;
+}
+
+.search-container {
+    padding-bottom: 4px;
+}
+
+.search-container input[type="search"] {
+    border: 1px solid var(--input-border-color);
+    background-color: var(--input-bg-color);
+    border-radius: 4px; padding: 6px 8px; width: 250px; font-size: 14px;
 }
 
 .ribbon-content {
@@ -80,28 +94,23 @@ body, html {
     border-top: 1px solid var(--border-color);
     flex-grow: 1;
     display: flex;
-    align-items: center;
-    padding: 0 12px;
+    align-items: stretch; /* Se till att grupperna fyller höjden */
+    padding: 4px 12px;
 }
 
 .ribbon-pane {
-    display: none; /* Dölj alla paneler som standard */
-    width: 100%;
-    height: 100%;
-    align-items: center;
-    gap: 16px;
+    display: none; width: 100%; height: 100%;
+    align-items: stretch; gap: 16px;
 }
 
-.ribbon-pane.active {
-    display: flex; /* Visa endast den aktiva */
-}
+.ribbon-pane.active { display: flex; }
 
 .ribbon-group {
     display: flex;
-    align-items: center;
+    align-items: center; /* Centrera knapparna vertikalt */
     gap: 8px;
     height: 100%;
-    padding: 0 16px;
+    padding: 0 16px 12px 16px; /* Padding i botten för etikett */
     border-right: 1px solid var(--border-color);
     position: relative;
 }
@@ -115,6 +124,7 @@ body, html {
     transform: translateX(-50%);
     font-size: 12px;
     color: #666;
+    white-space: nowrap;
 }
 
 .ribbon-group button, .ribbon-group input {
@@ -123,6 +133,7 @@ body, html {
     border-radius: 4px;
     padding: 5px 8px;
     font-size: 14px;
+    align-self: center; /* Håll element centrerade */
 }
 
 .ribbon-group button { cursor: pointer; }
