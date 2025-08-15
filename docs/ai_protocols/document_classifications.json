@@ -1,0 +1,72 @@
+{
+  "_meta": {
+    "protocol_id": "DocumentClassification_v1.0",
+    "purpose": "Detta är en maskinläsbar karta över projektets dokumentation. Den klassificerar varje fil enligt dess arkitektoniska roll för att ge en AI-assistent en otvetydig förståelse av hur varje fil ska tolkas: som en instruktion, en datakälla, ett kontrakt eller referensmaterial.",
+    "how_to_interpret": {
+      "classification_definitions": "Beskriver innebörden av varje klassificeringstyp.",
+      "classification_data": "Innehåller de faktiska reglerna för att klassificera filer, uppdelat i en explicit lista och ett regelverk för automatisk klassificering."
+    }
+  },
+  "classification_definitions": {
+    "CORE_INSTRUCTION": {
+      "description": "Den centrala, vägledande instruktionen. Endast en fil kan ha denna klass. Den styr all annan logik."
+    },
+    "OPERATIONAL_PROTOCOL": {
+      "description": "En processuell anvisning som definierar en specifik process, ett arbetsflöde eller en uppsättning regler som måste följas."
+    },
+    "CONFIGURATION_DATA": {
+      "description": "En datafil (oftast JSON) som innehåller konfiguration eller data som konsumeras av ett protokoll eller av koden. Den instruerar inte, den informerar."
+    },
+    "SCHEMA_DEFINITION": {
+      "description": "Ett formellt kontrakt (oftast JSON Schema) som definierar den förväntade strukturen på en datafil eller ett dataobjekt."
+    },
+    "REFERENCE_MATERIAL": {
+      "description": "Ett bakgrunds- eller analysdokument som ger kontext och 'varför', men som inte innehåller exekverbara regler. Är oftast 'brus' vid taktiska uppgifter."
+    }
+  },
+  "classification_data": {
+    "explicit_classifications": {
+      "docs/ai_protocols/AI_Core_Instruction.md": "CORE_INSTRUCTION",
+      "docs/ai_protocols/AI_Dynamic_Protocols.md": "OPERATIONAL_PROTOCOL",
+      "docs/ai_protocols/ai_config.json": "CONFIGURATION_DATA",
+      "docs/ai_protocols/DynamicProtocols.json": "CONFIGURATION_DATA",
+      "docs/ai_protocols/frankensteen_persona.v1.0.json": "CONFIGURATION_DATA",
+      "docs/ai_protocols/DynamicProtocol.schema.json": "SCHEMA_DEFINITION",
+      "docs/Analys_av_AI-regelverk_i_JSON_.md": "REFERENCE_MATERIAL"
+    },
+    "fallback_rules": [
+      {
+        "conditions": {
+          "path_contains": "/schemas/",
+          "extension": ".json"
+        },
+        "classification": "SCHEMA_DEFINITION"
+      },
+      {
+        "conditions": {
+          "filename_ends_with": "_Protocol.md"
+        },
+        "classification": "OPERATIONAL_PROTOCOL"
+      },
+      {
+        "conditions": {
+          "filename_ends_with": "_Protokoll.md"
+        },
+        "classification": "OPERATIONAL_PROTOCOL"
+      },
+      {
+        "conditions": {
+          "path_contains": "docs/ai_protocols/",
+          "extension": ".md"
+        },
+        "classification": "OPERATIONAL_PROTOCOL"
+      },
+      {
+        "conditions": {
+          "extension": ".json"
+        },
+        "classification": "CONFIGURATION_DATA"
+      }
+    ]
+  }
+}
