@@ -8,7 +8,7 @@
 # 1. Triggas vid push till relevanta filer (källkod, sessionsdata, dokumentation).
 # 2. Bearbetar sessionsdata och uppdaterar dokumentationsfiler (t.ex. core_file_info.json) på runnern.
 # 3. Genererar den fullständiga context.json baserat på det uppdaterade tillståndet.
-# 4. Bygger och laddar upp GitHub Pages-artefakten.
+# 4. Bygger och laddar upp GitHub Pages-artefakten (både index.html och det nya index2.html).
 # 5. Committar de genererade dokumentationsfilerna tillbaka till repot med [skip ci].
 # 6. Driftsätter den nya GitHub Pages-sajten.
 #
@@ -19,22 +19,24 @@
 # v1.3 (2025-08-13): (Help me God) Korrigerat YAML-parsingsfel genom att ta bort onödiga citattecken runt en miljövariabel.
 # v2.0 (2025-08-14): Korrigerat anropet till build_relations_graph.py för att inkludera project_overview JSON.
 # v2.1 (2025-08-15): Lade till 'push_options: --force' i auto-commit-steget för att hantera non-fast-forward-fel.
+# v2.2 (2025-08-15): Lade till byggsteg för det nya UI-verktyget (engrove_audio_tools_creator.py).
 
-name: Consolidated CI/CD Pipeline
+name: Consolidated CI/CD and Tools Pipeline
 
 on:
   push:
     branches: [ "main" ]
     paths:
-      # Triggers från gamla generate_context.yml
-      - '**.py'
+      # Triggers för befintligt system
       - '**.js'
       - '**.vue'
       - '**.html'
       - '**.md'
       - 'requirements.txt'
-      # Triggers från gamla process_session_data.yml
       - 'sessions/**.json'
+      # Nya triggers för det nya UI-verktyget
+      - 'scripts/engrove_audio_tools_creator.py'
+      - 'scripts/modules/**.py'
       # Inkludera denna fil själv
       - '.github/workflows/ci.yml'
   workflow_dispatch:
@@ -48,16 +50,17 @@ permissions:
 
 env:
   PYTHON_VERSION: '3.11'
-  SITE_DIR: '_site'
+  SITE_DIR: 'dist' # Ändrat till dist för att matcha standard för webbprojekt
   JSON_FILE: 'context.json'
-  HTML_FILE: 'index.html'
+  LEGACY_HTML_FILE: 'index.html'
+  NEW_HTML_FILE: 'index2.html'
   METADATA_FILE: 'metadata.json'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      context-generated: ${{ steps.create-html.outputs.success }}
+      context-generated: ${{ steps.create-legacy-html.outputs.success }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -78,7 +81,7 @@ jobs:
       - name: Prepare Output Directory
         run: mkdir -p "${{ env.SITE_DIR }}"
 
-      - name: STEP 1 Process Session Data (if needed)
+      - name: STEP 1: Process Session Data (if needed)
         id: process-sessions
         env:
           COMMIT_SHA: ${{ github.sha }}
@@ -88,24 +91,15 @@ jobs:
           python scripts/update_core_info.py sessions/ docs/core_file_info.json $COMMIT_SHA
           echo "Session processing complete."
 
-      - name: STEP 2 Generate File Relations Graph
+      - name: STEP 2: Generate File Relations Graph
         id: generate-relations
         run: |
-          ### KORRIGERING ###
-          # Skriptet build_relations_graph.py kräver nu en JSON-sträng med projektinformation.
-          # Vi konstruerar denna sträng här med data från GitHub-kontexten.
-          echo "Generating file relations graph and data schemas..."
+          echo "Generating file relations graph..."
           PROJECT_OVERVIEW_JSON=$(printf '{"repository": "%s", "branch": "%s"}' "${{ github.repository }}" "${{ github.ref_name }}")
           python scripts/build_relations_graph.py "$PROJECT_OVERVIEW_JSON"
           echo "Graph generation complete."
-          ### FÖRKLARING ###
-          # 1. Vi skapar en shell-variabel PROJECT_OVERVIEW_JSON.
-          # 2. `printf` används för att säkert formatera JSON-strängen.
-          # 3. `${{ github.repository }}` (t.ex. "Engrove/Engrove-Audio-Tools-2.0") och `${{ github.ref_name }}` (t.ex. "main")
-          #    är GitHub Actions-variabler som automatiskt fylls i.
-          # 4. Variabeln skickas sedan som ett argument till python-skriptet.
 
-      - name: STEP 3 Generate AI Context JSON
+      - name: STEP 3: Generate AI Context JSON
         id: generate-json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -120,16 +114,23 @@ jobs:
             exit 1
           fi
 
-      - name: STEP 4 Create HTML Wrapper
-        id: create-html
+      - name: STEP 4A: Create Legacy HTML Wrapper (index.html)
+        id: create-legacy-html
         if: steps.generate-json.outputs.success == 'true'
         run: |
           set -e
-          python scripts/wrap_json_in_html.py "${{ env.SITE_DIR }}/${{ env.HTML_FILE }}"
+          python scripts/wrap_json_in_html.py "${{ env.SITE_DIR }}/${{ env.LEGACY_HTML_FILE }}"
           echo "success=true" >> "$GITHUB_OUTPUT"
 
-      - name: STEP 5 Create Metadata for Deployment
-        if: steps.create-html.outputs.success == 'true'
+      - name: STEP 4B: Create New UI HTML (index2.html)
+        id: create-new-html
+        run: |
+          echo "Generating new UI from engrove_audio_tools_creator.py..."
+          python scripts/engrove_audio_tools_creator.py "${{ env.SITE_DIR }}/${{ env.NEW_HTML_FILE }}"
+          echo "New UI HTML created successfully."
+
+      - name: STEP 5: Create Metadata for Deployment
+        if: steps.create-legacy-html.outputs.success == 'true'
         run: |
           cat > "${{ env.SITE_DIR }}/${{ env.METADATA_FILE }}" << EOF
           {
@@ -140,13 +141,13 @@ jobs:
           }
           EOF
 
-      - name: STEP 6 Upload Pages Artifact
-        if: steps.create-html.outputs.success == 'true'
+      - name: STEP 6: Upload Pages Artifact
+        if: steps.create-legacy-html.outputs.success == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ${{ env.SITE_DIR }}
       
-      - name: STEP 7 Commit Documentation and Session Artifacts
+      - name: STEP 7: Commit Documentation and Session Artifacts
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: |
@@ -158,12 +159,6 @@ jobs:
           commit_user_name: 'Frankensteen (Bot)'
           commit_user_email: 'frankensteen-bot@users.noreply.github.com'
           file_pattern: 'docs/ByggLogg.json docs/Chatthistorik.json docs/ai_protocol_performance.json tools/frankensteen_learning_db.json docs/ai_protocols/DynamicProtocols.json docs/core_file_info.json docs/file_relations.json public/data/schemas/*.schema.json'
-          # === KORRIGERING (2025-08-15) ===
-          # Lade till '--force' för att lösa 'non-fast-forward' push-fel.
-          # Detta inträffar när manuella commits görs direkt i GitHub UI, vilket
-          # skapar en divergerande historik. Denna inställning tvingar actionen
-          # att skriva över den fjärranslutna grenen, vilket är önskvärt i detta
-          # specifika arbetsflöde där botens commit alltid ska ha företräde.
           push_options: '--force'
 
   deploy:
