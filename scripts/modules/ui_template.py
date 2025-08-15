@@ -1,16 +1,15 @@
 # scripts/modules/ui_template.py
 #
 # === SYFTE & ANSVAR ===
-# Denna modul innehåller den grundläggande HTML-strukturen för det nya
-# Engrove Audio Tools-gränssnittet. Den länkar till en extern CSS-fil.
+# Denna modul innehåller den grundläggande HTML-strukturen.
 #
 # === HISTORIK ===
 # * v1.0 (2025-08-15): Initial skapelse.
-# * v1.1 (2025-08-15): All CSS borttagen och ersatt med en <link>-tagg.
-#   Header-sektionen har byggts ut med meny och sökfält.
+# * v1.1 (2025-08-15): CSS separerad till extern fil. Header utbyggd.
+# * v1.2 (2025-08-15): Lade till <script>-tagg för att ladda extern JavaScript.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.4) ===
-# - Obligatorisk Refaktorisering: UI-mallen är separerad från stilar.
+# - Obligatorisk Refaktorisering: Tydlig separation av struktur, stil och logik.
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -42,6 +41,7 @@ HTML_TEMPLATE = """
             <!-- Framtida innehåll här -->
         </main>
     </div>
+    <script src="logic.js"></script>
 </body>
 </html>
 """
