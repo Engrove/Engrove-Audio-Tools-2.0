@@ -138,5 +138,33 @@
     "last_updated_by_session": "S-20250814T14-38-20Z",
     "last_updated_at": "2025-08-14T18:50:02.763452+00:00",
     "last_commit_sha": "08c6abc2e0ec7dbed7506c6ff5b84bc8431a3808"
+  },
+  "docs/ai_protocols/AI_Collaboration_Standard.md": {
+    "purpose_and_responsibility": "Definierar den standardiserade processen för samarbete mellan produktägare (Engrove) och AI-partner (Frankensteen), inklusive verktyg och dokumentationsstandarder.",
+    "usage_context": "Används som en referens för hur man effektivt bygger kontext och formaterar fil-headers för optimalt AI-samarbete.",
+    "last_updated_by_session": "S-20250815T052336Z",
+    "last_updated_at": "2025-08-15T05:36:33.621232+00:00",
+    "last_commit_sha": "ed24607a13fce4e8db5c74060d20cf1e187feb74"
+  },
+  "docs/ai_protocols/Mappstruktur_och_Arbetsflöde.md": {
+    "purpose_and_responsibility": "Den arkitektoniska ritningen för projektet. Definierar den FSD-inspirerade mappstrukturen och det AI-drivna arbetsflödet.",
+    "usage_context": "Används för att säkerställa att alla nya filer och moduler placeras korrekt i arkitekturen och att det överenskomna arbetsflödet följs.",
+    "last_updated_by_session": "S-20250815T052336Z",
+    "last_updated_at": "2025-08-15T05:36:33.621249+00:00",
+    "last_commit_sha": "ed24607a13fce4e8db5c74060d20cf1e187feb74"
+  },
+  "docs/ai_protocols/Global_UI-Standard_för_Engrove-plattformen.md": {
+    "purpose_and_responsibility": "Definierar den officiella UI-standarden för hela Engrove-plattformen, inklusive designfilosofi och visuella grundstenar (design tokens).",
+    "usage_context": "Primär källa och styrdokument för all UI-utveckling för att säkerställa visuell och funktionell konsekvens.",
+    "last_updated_by_session": "S-20250815T052336Z",
+    "last_updated_at": "2025-08-15T05:36:33.621253+00:00",
+    "last_commit_sha": "ed24607a13fce4e8db5c74060d20cf1e187feb74"
+  },
+  "docs/ai_protocols/Global_UI-Standard_Komponentspecifikation.md": {
+    "purpose_and_responsibility": "Ett appendix till den globala UI-standarden som innehåller detaljerade visuella och funktionella specifikationer för varje baskomponent.",
+    "usage_context": "Används som en teknisk referens vid utveckling och verifiering av UI-komponenter för att säkerställa att de matchar designspecifikationen.",
+    "last_updated_by_session": "S-20250815T052336Z",
+    "last_updated_at": "2025-08-15T05:36:33.621256+00:00",
+    "last_commit_sha": "ed24607a13fce4e8db5c74060d20cf1e187feb74"
   }
 }
