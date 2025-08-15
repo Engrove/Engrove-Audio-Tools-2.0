@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-15T18:37:35.887165+00:00",
+    "generated_at": "2025-08-15T18:47:46.384850+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -589,6 +589,13 @@
             "source": "modules.ui_template",
             "symbols": [
               "HTML_TEMPLATE"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "modules.ui_styles",
+            "symbols": [
+              "CSS_STYLES"
             ],
             "type": "library_import"
           }
