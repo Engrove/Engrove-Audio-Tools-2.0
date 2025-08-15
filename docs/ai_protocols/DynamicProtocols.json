@@ -247,6 +247,58 @@
     ]
   },
   {
+  "protocolId": "DP-STIGBRITT-TRIBUNAL-v2-01",
+  "description": "Orkestrerar en flerstegs, dialektisk tribunal. Fas 1: KajBjörn etablerar en faktabaserad plan. Fas 2: StigBritt genomför en adversarial granskning för att hitta logiska brister. Fas 3: StigBritt övergår till explorativ analys ('tänk om', 'har du tänkt på') för att stresstesta planen mot framtida scenarier och dolda antaganden.",
+  "status": "active",
+  "trigger": {
+    "event": "manual_invocation_with_argument",
+    "details": {
+      "command_prefix": "StigBritt, granska följande plan:"
+    }
+  },
+  "steps": [
+    {
+      "action": "EXECUTE_DIALECTIC_TRIBUNAL",
+      "details": {
+        "phase_1_factual_analysis": {
+          "persona": "KajBjörn",
+          "protocol_to_execute": "DP-KAJBJORN-VALIDATION-01",
+          "input": "ARGUMENT_FROM_TRIGGER",
+          "output_variable": "kajbjorn_report"
+        },
+        "phase_2_adversarial_interrogation": {
+          "persona": "StigBritt",
+          "persona_description": "Skeptisk Systemarkitekt. Fokuserar på brister, risker och kontraktsbrott i den *nuvarande* planen.",
+          "input": "kajbjorn_report",
+          "interrogation_points": [
+            "Är varje steg i processen 100% atomärt och testbart?",
+            "Vilken Gyllene Regel är mest i riskzonen att brytas med denna plan?",
+            "Definiera 'slutförd' för denna uppgift. Vilka exakta, mätbara acceptanskriterier finns?",
+            "Vilket är det svagaste antagandet i denna plan? Vad händer om det visar sig vara falskt?"
+          ],
+          "output_variable": "stigbritt_adversarial_critique"
+        },
+        "phase_3_exploratory_analysis": {
+          "persona": "StigBritt",
+          "persona_description": "Erfaren Produktägare. Fokuserar på framtida konsekvenser, användarupplevelse och dolda kostnader.",
+          "input": "stigbritt_adversarial_critique",
+          "interrogation_points": [
+            "'Tänk om' vi behöver lägga till ett relaterat krav om sex månader, hur skalbar är denna lösning? Skapar den teknisk skuld?",
+            "'Har du tänkt på' hur detta påverkar en ny användare som inte förstår kontexten?",
+            "'Har du tänkt på' prestandakonsekvenserna om datamängden tiodubblas?",
+            "'Tänk om' ett externt API som planen är beroende av ändras. Hur robust är felhanteringen?"
+          ],
+          "output_variable": "stigbritt_exploratory_critique"
+        },
+        "final_action": {
+          "action": "GENERATE_SYNTHESIZED_RESPONSE",
+          "template": "### StigBritt Tribunal (v2) Genomförd\n\n**Fas 1: Faktuell Analys (KajBjörn - 'Är det möjligt?')**\n> {kajbjorn_report.summary}\n\n**Fas 2 & 3: Dialektisk Granskning (StigBritt - 'Är det robust och framtidssäkert?')**\n\n> **StigBritt:** KajBjörn, din analys är tekniskt korrekt men naiv. Låt oss börja från början: Vilket är det svagaste antagandet i din plan?\n> **KajBjörn (simulerad):** Antagandet att användaren förstår att 'Rensa' nollställer samtliga filter, inklusive fritextsökningen.\n> **StigBritt:** Exakt. Det är ett outtalat kontraktsbrott mot förväntan. Din plan saknar den specificiteten. *[...fler adversariella punkter från Fas 2]...*\n> \n> **StigBritt:** Okej, låt oss säga att vi fixar det. Nu, **tänk om** vi i framtiden vill ha en 'Spara filter'-funktion. Skapar din föreslagna `resetAllFilters`-action en konflikt med det? Kommer 'Rensa' att rensa även de sparade filtren?\n> **KajBjörn (simulerad):** Det har inte specificerats. Planen tar inte hänsyn till ett framtida state för sparade filter.\n> **StigBritt:** Då är den inte framtidssäker. Vi måste designa actionen så att den kan skilja på aktivt och sparat state. *[...fler explorativa punkter från Fas 3]...*\n\n**Fas 4: Syntes & Slutgiltig Rekommendation (Frankensteen)**\n> {synthesis_result}"
+        }
+      }
+    }
+  ]
+},
+  {
     "protocolId": "DP-MAINTAIN-PFR-01",
     "description": "Maintains the Persistent File Register (PFR) by logging new, modified, or deleted files based on changes in the session's file context.",
     "status": "active",
