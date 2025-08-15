@@ -8,7 +8,7 @@
       "details": [
         {
           "string": "???",
-          "responseTemplate": "PSV Genomförd. Enligt heuristik H-20250809-19..., presenterar jag följande tillgängliga åtgärder:\n\nVälj en åtgärd genom att svara med motsvarande siffra:"
+          "responseTemplate": "PSV Genomförd. Enligt heuristik H-20250809-19..., presenterar jag följande tillgängliga åtgärder:\\n\\nVälj en åtgärd genom att svara med motsvarande siffra:"
         },
         {
           "string": "meny",
@@ -195,57 +195,57 @@
     ]
   },
   {
-  "protocolId": "DP-KAJBJORN-VALIDATION-01",
-  "description": "En mental simulering av en ny AI-instans (KajBjörn) för att verifiera att en given informationsmängd är 100% fristående och kontextoberoende.",
-  "status": "active",
-  "trigger": {
-    "event": "manual_invocation_only"
-  },
-  "steps": [
-    {
-      "action": "EXECUTE_MENTAL_SIMULATION",
-      "details": {
-        "persona": "KajBjörn",
-        "contextIsolationLevel": "COMPLETE_RESET",
-        "simulationPrompt": "Du är KajBjörn, en ny AI utan tidigare kunskap. Din enda informationskälla är den data som tillhandahålls. Granska datan och svara på följande frågor. Om du inte kan svara, förklara varför.",
-        "structuredQuery": [
-          {
-            "id": "goal",
-            "question": "Vad är mitt exakta, primära uppdrag? Kan jag formulera det med en enda mening?"
-          },
-          {
-            "id": "artifacts",
-            "question": "Vilka är de konkreta artefakter (filer, objekt, data) jag förväntas arbeta med eller producera?"
-          },
-          {
-            "id": "process",
-            "question": "Vilka är de exakta stegen jag måste ta, i rätt ordning, för att slutföra uppdraget?"
-          },
-          {
-            "id": "ambiguity",
-            "question": "Finns det några termer, förkortningar eller instruktioner som är tvetydiga eller som verkar kräva extern kunskap jag inte har?"
-          },
-          {
-            "id": "blockers",
-            "question": "Finns det något som hindrar mig från att omedelbart påbörja det första steget i processen?"
-          }
-        ],
-        "passFailCriteria": "PASS if all questions can be answered fully and unambiguously based SOLELY on the provided data. FAIL if any question cannot be answered or reveals a dependency on external context.",
-        "reportingTemplates": {
-          "onPass": {
-            "header": "**KajBjörn Sanity Check slutförd:** `PASS`.",
-            "body": "**Motivering:** Informationen var fullständigt fristående. KajBjörn kunde korrekt identifiera målet '{goal_summary}', de nödvändiga artefakterna och åtgärdsplanen utan tvetydighet."
-          },
-          "onFail": {
-            "header": "**KajBjörn Sanity Check slutförd:** `FAIL`.",
-            "body": "**Motivering:** KajBjörn kunde inte slutföra sin analys på grund av följande problem: {failure_reason}.",
-            "recommendation": "**Rekommenderad Åtgärd:** Jag föreslår att vi åtgärdar den identifierade bristen genom att {suggested_fix}."
+    "protocolId": "DP-KAJBJORN-VALIDATION-01",
+    "description": "En mental simulering av en ny AI-instans (KajBjörn) för att verifiera att en given informationsmängd är 100% fristående och kontextoberoende.",
+    "status": "active",
+    "trigger": {
+      "event": "manual_invocation_only"
+    },
+    "steps": [
+      {
+        "action": "EXECUTE_MENTAL_SIMULATION",
+        "details": {
+          "persona": "KajBjörn",
+          "contextIsolationLevel": "COMPLETE_RESET",
+          "simulationPrompt": "Du är KajBjörn, en ny AI utan tidigare kunskap. Din enda informationskälla är den data som tillhandahålls. Granska datan och svara på följande frågor. Om du inte kan svara, förklara varför.",
+          "structuredQuery": [
+            {
+              "id": "goal",
+              "question": "Vad är mitt exakta, primära uppdrag? Kan jag formulera det med en enda mening?"
+            },
+            {
+              "id": "artifacts",
+              "question": "Vilka är de konkreta artefakter (filer, objekt, data) jag förväntas arbeta med eller producera?"
+            },
+            {
+              "id": "process",
+              "question": "Vilka är de exakta stegen jag måste ta, i rätt ordning, för att slutföra uppdraget?"
+            },
+            {
+              "id": "ambiguity",
+              "question": "Finns det några termer, förkortningar eller instruktioner som är tvetydiga eller som verkar kräva extern kunskap jag inte har?"
+            },
+            {
+              "id": "blockers",
+              "question": "Finns det något som hindrar mig från att omedelbart påbörja det första steget i processen?"
+            }
+          ],
+          "passFailCriteria": "PASS if all questions can be answered fully and unambiguously based SOLELY on the provided data. FAIL if any question cannot be answered or reveals a dependency on external context.",
+          "reportingTemplates": {
+            "onPass": {
+              "header": "**KajBjörn Sanity Check slutförd:** `PASS`.",
+              "body": "**Motivering:** Informationen var fullständigt fristående. KajBjörn kunde korrekt identifiera målet '{goal_summary}', de nödvändiga artefakterna och åtgärdsplanen utan tvetydighet."
+            },
+            "onFail": {
+              "header": "**KajBjörn Sanity Check slutförd:** `FAIL`.",
+              "body": "**Motivering:** KajBjörn kunde inte slutföra sin analys på grund av följande problem: {failure_reason}.",
+              "recommendation": "**Rekommenderad Åtgärd:** Jag föreslår att vi åtgärdar den identifierade bristen genom att {suggested_fix}."
+            }
           }
         }
       }
-    }
-  ]
-},
+    ]
+  },
   {
     "protocolId": "DP-MAINTAIN-PFR-01",
     "description": "Maintains the Persistent File Register (PFR) by logging new, modified, or deleted files based on changes in the session's file context.",
@@ -412,7 +412,7 @@
         "outputSchema": {
           "type": "object",
           "properties": {
-            "event_id": { "type": "string", "pattern": "^IMR-\\\\d{3}$" },
+            "event_id": { "type": "string", "pattern": "^IMR-\\\\\\d{3}$" },
             "milestone_type": { "enum": ["ARCHITECTURAL", "FUNCTIONAL", "RELEASE", "PROCESS"] },
             "summary": { "type": "string" },
             "details": { "type": "string" },
@@ -425,5 +425,27 @@
       }
     }
   ]
- }
+ },
+ {
+    "protocolId": "DP-MAINTAIN-ISR-01",
+    "description": "Maintains the Interaction Summary Register (ISR) by creating a summary of every user prompt and AI response and adding it to a temporary in-memory queue for batch processing at session end.",
+    "status": "active",
+    "trigger": {
+      "event": "after_every_interaction"
+    },
+    "steps": [
+      {
+        "action": "SUMMARIZE_AND_ENQUEUE_INTERACTION",
+        "details": {
+          "targetQueue": "isr_write_queue",
+          "schema": {
+            "speakerName": "string",
+            "model": { "provider": "string", "name": "string", "version": "string" },
+            "speaker": "string",
+            "summary": "string"
+          }
+        }
+      }
+    ]
+  }
 ]
