@@ -1,8 +1,8 @@
 # scripts/modules/ui_template.py
 #
 # === HISTORIK ===
-# * v1.3 (2025-08-15): Lade till resizer-element.
-# * v2.0 (2025-08-15): Omstrukturerade header till ett fullständigt ribbon-gränssnitt.
+# * v2.1 (2025-08-15): Omstrukturerade header för att separera sökfältet från
+#   ribbon-innehållet och placera det permanent till höger.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.4) ===
 # - Fullständig kod, alltid.
@@ -18,17 +18,18 @@ HTML_TEMPLATE = """
 </head>
 <body>
     <header class="header-ribbon">
-        <div class="ribbon-tabs">
-            <button class="ribbon-tab active" data-tab="verktyg">Verktyg</button>
-            <button class="ribbon-tab" data-tab="installningar">Inställningar</button>
-            <button class="ribbon-tab" data-tab="hjalp">Hjälp</button>
+        <div class="top-bar">
+            <div class="ribbon-tabs">
+                <button class="ribbon-tab active" data-tab="verktyg">Verktyg</button>
+                <button class="ribbon-tab" data-tab="installningar">Inställningar</button>
+                <button class="ribbon-tab" data-tab="hjalp">Hjälp</button>
+            </div>
+            <div class="search-container">
+                <input type="search" placeholder="Sök...">
+            </div>
         </div>
         <div class="ribbon-content">
             <div id="tab-verktyg" class="ribbon-pane active">
-                <div class="ribbon-group">
-                    <input type="search" placeholder="Sök i data...">
-                    <span class="ribbon-group-label">Sök</span>
-                </div>
                 <div class="ribbon-group">
                     <button>Kör Analys</button>
                     <button>Exportera</button>
