@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-15T18:04:28.085879+00:00",
+    "generated_at": "2025-08-15T18:05:34.131869+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -559,6 +559,35 @@
         "imports": [],
         "dependents_count": 5,
         "criticality_score": 50.0
+      },
+      "scripts/engrove_audio_tools_creator.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [
+          {
+            "symbol": "main",
+            "type": "function"
+          }
+        ],
+        "imports": [
+          {
+            "source": "os",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "modules.ui_template",
+            "symbols": [
+              "HTML_TEMPLATE"
+            ],
+            "type": "library_import"
+          }
+        ],
+        "dependents_count": 0,
+        "criticality_score": 0.0
       },
       "scripts/wrap_json_in_html.py": {
         "type": "Python Script",
