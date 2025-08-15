@@ -1,15 +1,16 @@
 # scripts/modules/ui_template.py
 #
 # === SYFTE & ANSVAR ===
-# Denna modul innehåller den grundläggande HTML- och CSS-mallen för det nya
-# Engrove Audio Tools-gränssnittet. Den fungerar som en ren presentationskomponent
-# utan någon logik.
+# Denna modul innehåller den grundläggande HTML-strukturen för det nya
+# Engrove Audio Tools-gränssnittet. Den länkar till en extern CSS-fil.
 #
 # === HISTORIK ===
 # * v1.0 (2025-08-15): Initial skapelse.
+# * v1.1 (2025-08-15): All CSS borttagen och ersatt med en <link>-tagg.
+#   Header-sektionen har byggts ut med meny och sökfält.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.4) ===
-# - Obligatorisk Refaktorisering: UI-mallen är separerad från huvudlogiken.
+# - Obligatorisk Refaktorisering: UI-mallen är separerad från stilar.
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -18,72 +19,19 @@ HTML_TEMPLATE = """
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Engrove Audio Tools v3.0</title>
-    <style>
-        :root {
-            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            --font-mono: ui-monospace, "JetBrains Mono", "SF Mono", Consolas, Menlo, monospace;
-            --bg-color: #f0f0f0;
-            --panel-bg-color: #ffffff;
-            --border-color: #cccccc;
-            --text-color: #1a1a1a;
-            --header-bg-color: #f9f9f9;
-        }
-        
-        * {
-            box-sizing: border-box;
-        }
-
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            width: 100vw;
-            font-family: var(--font-sans);
-            font-size: 14px;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .main-container {
-            display: flex;
-            flex-grow: 1;
-            height: calc(100% - 40px); /* Justera för header-höjd */
-        }
-
-        .header {
-            height: 40px;
-            border-bottom: 1px solid var(--border-color);
-            background-color: var(--header-bg-color);
-            width: 100%;
-            flex-shrink: 0;
-            /* TODO: Lägg till header-innehåll här */
-        }
-
-        .left-pane {
-            width: 33.33%;
-            max-width: 400px;
-            min-width: 250px;
-            border-right: 1px solid var(--border-color);
-            background-color: var(--panel-bg-color);
-            padding: 12px;
-            overflow-y: auto;
-        }
-
-        .right-pane {
-            width: 66.67%;
-            background-color: var(--panel-bg-color);
-            padding: 12px;
-            overflow-y: auto;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="header">
-        <!-- Placeholder för framtida meny/verktygsfält -->
-    </div>
+    <header class="header">
+        <nav class="menu-bar">
+            <button class="menu-button">Verktyg</button>
+            <button class="menu-button">Inställningar</button>
+            <button class="menu-button">Hjälp</button>
+        </nav>
+        <div class="search-container">
+            <input type="search" placeholder="Sök...">
+        </div>
+    </header>
     <div class="main-container">
         <aside class="left-pane">
             <h2>Navigation</h2>
