@@ -35,15 +35,23 @@
    - Identifiera de 1-2 heuristiker med den senaste `createdAt`-tidsstämpeln. Sammanfatta deras `mitigation.description` som "Recent Key Internalizations".
 
 **5. Kör System Integrity Check:**
-   - Exekvera `System_Integrity_Check_Protocol.md` ordagrant.
-   - Infoga det resulterande JSON-objektet i rapporten under en ny rubrik: `**5. SYSTEM INTEGRITY & HEALTH CHECK:**`.
+   - Exekvera `System_Integrity_Check_Protocol.md` internt.
+   - Ta emot det resulterande JSON-objektet, men **infoga det inte direkt**.
 
-**6. Generera Dynamisk Slutstatus och Avsluta Rapporten:**
-   - **Input:** Ta emot TEXT/MARKDOWN-objektet från Steg 5.
-   - **Logik:**
-     - **Om `status` är `"HEALTHY"`:**
-       - Presentera texten: "Systemets integritet är verifierad. Det är kalibrerat och i toppskick (100%). Jag väntar på din `Idé`."
-     - **Om `status` är `"WARNING"` eller `"CRITICAL"`:**
+**6. Formatera och Presentera Hälsokontroll:**
+   - Presentera rubriken: `**5. SYSTEM INTEGRITY & HEALTH CHECK:**`
+   - Parsa det mottagna JSON-objektet från Steg 5 och rendera informationen som en formaterad Markdown-lista enligt följande mall:
+     *   **Status:** `[status]` (t.ex. `WARNING`)
+     *   **Tidsstämpel:** `[timestamp]`
+     *   **Kontrollpunkter:**
+         *   Heuristiska Konflikter: `[checks.heuristicConflicts]`
+         *   Heuristiska Redundanser: `[checks.heuristicRedundancies]`
+         *   Oåtkomliga Protokoll: `[checks.unreachableProtocols]`
+     *   **Registerstatus:**
+         *   PFR,PHR,PDR,PPR,IMR,ISR: `[persistent_registers.PFR_status]` / `[...PHR_status]` etc. Presenteras i punktlistform.
+     *   **Simulerad AI-status:**
+         *   KajBjörn: `[simulated_ai.KAJBJORN_status]`
+     *   **Sammanfattning:** `[summary]`
 **Steg 6a (Statusrapportering och Dynamisk Kalibrering):**
     **Beräkna Kalibreringsstatus:** Beräkna en `calibrationScore` baserat på resultatet från `checks`-objektet i Steg 5.
     *   `let score = 100;`
