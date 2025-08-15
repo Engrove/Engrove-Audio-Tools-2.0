@@ -412,5 +412,278 @@
     "last_updated_by_session": "S-20250815T16-02-21Z",
     "last_updated_at": "2025-08-15T16:03:00Z",
     "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/Autonomy_Charter.md": {
+    "purpose_and_responsibility": "Definierar AI-partnerns autonomifönster (DT-1), vilket specificerar vilka taktiska, icke-brytande ändringar som får göras utan explicit godkännande.",
+    "usage_context": "Används som en referens för att avgöra om en mindre refaktorisering, namngivning eller UI-justering faller inom ramen för självständigt arbete.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/Beroendeanalys_Protokoll.md": {
+    "purpose_and_responsibility": "Specificerar den obligatoriska processen för att analysera och godkänna nya externa beroenden (t.ex. npm-paket) innan de implementeras.",
+    "usage_context": "Aktiveras när en uppgift kräver ett nytt bibliotek. AI:n måste presentera en analys baserad på definierade kriterier (underhåll, storlek, licens etc.) och invänta godkännande.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/Brainstorming_Protokoll.md": {
+    "purpose_and_responsibility": "Definierar det strukturerade 'Brainstorming next step'-protokollet för strategiska planeringssessioner.",
+    "usage_context": "Aktiveras för att analysera ett nytt större uppdrag. Protokollet resulterar i en komplett, fristående och verifierad AI-instruktion för nästa arbetssession.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/Code_Style_Guide.md": {
+    "purpose_and_responsibility": "Samlar specifika, icke-förhandlingsbara regler för kodstil och formatering, inklusive krav på fil-headers och versionshistorik.",
+    "usage_context": "Används som ett komplement till `AI_Core_Instruction.md` för att säkerställa rent stilistisk konsekvens i all kod och dokumentation.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/Confidence_Protocol.md": {
+    "purpose_and_responsibility": "Ett internt meta-protokoll för att beräkna och tillämpa en konfidensscore på AI-genererade svar.",
+    "usage_context": "Används för att förhindra hallucinationer. Om konfidensen är under en viss tröskel måste AI:n svara 'osäkert' eller ställa en klargörande fråga.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/Diff_Protocol_v3.md": {
+    "purpose_and_responsibility": "Definierar det definitiva, aktiva patch-protokollet ('anchor_diff_v3.0'). Använder dubbla gränsankare för att robust kunna ersätta kodblock.",
+    "usage_context": "Detta är den enda auktoritativa källan för hur patch-filer ska struktureras och genereras vid ändring av en befintlig fil.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/Help_me_God_Protokoll.md": {
+    "purpose_and_responsibility": "Definierar ett eskaleringsprotokoll för extremt svårlösta problem, vilket aktiverar en rigorös, trestegs prövning ('tribunal') för att säkerställa en exceptionellt robust lösning.",
+    "usage_context": "Aktiveras automatiskt av Felsökningsloop-Detektorn (FL-D) när en uppgift misslyckas två gånger i rad.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/In-Session_Amnesiac_Reset_Protocol.md": {
+    "purpose_and_responsibility": "Definierar en kontrollerad 'mjuk återställning' (P-ISAR) för att rensa AI:ns konversationella korttidsminne inom en session, samtidigt som lärdomar bevaras.",
+    "usage_context": "Används manuellt i mycket långa sessioner för att återställa fokus, frigöra token-kapacitet och minska risken för kontextdrift.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/K-MOD_Protokoll.md": {
+    "purpose_and_responsibility": "Definierar 'Kreativitets-läget' (K-MOD), ett specialläge som temporärt lyfter strikta regler för att möjliggöra brainstorming och utforskning av alternativa lösningar.",
+    "usage_context": "Aktiveras manuellt för öppna arkitekturfrågor där flera potentiella lösningar behöver utvärderas med för- och nackdelar.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/Levande_Kontext_Protokoll.md": {
+    "purpose_and_responsibility": "Definierar ett sessionsbaserat versionshanteringssystem för filer som ändras under en chatt, med stöd för 'commit', 'checkout' och 'log'.",
+    "usage_context": "Används för att ge spårbarhet och förhindra kontextdrift i komplexa sessioner där flera filer modifieras iterativt.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/Pre_Execution_Alignment.md": {
+    "purpose_and_responsibility": "Definierar 'PEA'-checklistan, en obligatorisk justeringsprocess före arbete på uppgifter med hög inverkan (DT-2/DT-3).",
+    "usage_context": "Används för att säkerställa en gemensam förståelse av mål, acceptanskriterier, risker och leveransplan innan betydande utvecklingsarbete påbörjas.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/Scorecard_Scoring_Guide.md": {
+    "purpose_and_responsibility": "Definierar den officiella poängsättningsmatrisen (rubric) och beräkningsmetoden för `ai_protocol_performance.scorecard`-artefakten.",
+    "usage_context": "Används av `AI_Chatt_Avslutningsprotokollet` för att objektivt och verifierbart utvärdera AI-prestationen under en session baserat på Efficacy, Efficiency och Robustness.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/Stalemate_Protocol.md": {
+    "purpose_and_responsibility": "En slutgiltig eskaleringsmekanism för olösliga problem. Tvingar fram en nollställning av hypoteser och genererar en `Stalemate_Request.json` för en extern AI-skiljedomare.",
+    "usage_context": "Aktiveras när `Help_me_God_Protokoll` misslyckas upprepade gånger eller vid en fundamental oenighet mellan AI och produktägare.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/Stature_Report_Protocol.md": {
+    "purpose_and_responsibility": "Definierar den obligatoriska 'Stature Report' som måste genereras vid starten av varje ny session.",
+    "usage_context": "Detta är det första protokollet som körs i en ny session. Det säkerställer transparens kring AI-partnerns status, kapabiliteter och aktiva lärdomar.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/System_Integrity_Check_Protocol.md": {
+    "purpose_and_responsibility": "Definierar den obligatoriska hälsokontrollen som proaktivt identifierar problem i AI:ns eget regelverk (konflikter, redundans etc.).",
+    "usage_context": "Körs internt av `Stature_Report_Protocol.md` vid varje sessionsstart för att säkerställa systemets interna konsistens.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocols/document_classifications.json": {
+    "purpose_and_responsibility": "En maskinläsbar karta som klassificerar varje dokument enligt dess arkitektoniska roll (Instruktion, Data, Schema etc.).",
+    "usage_context": "Detta är en av de första filerna som läses in under PSV-processen för att ge en omedelbar förståelse av hur varje fil ska tolkas och prioriteras.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "AI.md": {
+    "purpose_and_responsibility": "Definierar AI-partnerns 'Frankensteen' identitet, kärndirektiv (Gyllene Regler) och de primära arbetsflödesprotokollen, inklusive K-MOD och Levande Kontext.",
+    "usage_context": "Detta är ett äldre, monolitiskt styrdokument som nu har ersatts av det modulära systemet i `docs/ai_protocols/`. Det bevaras som en historisk referens.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "README.md": {
+    "purpose_and_responsibility": "Projektets primära README-fil. Innehåller en mycket kortfattad titel.",
+    "usage_context": "Fungerar som standardingångspunkt för besökare på GitHub-repositoryt. Behöver troligen utökas med mer information.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "debug.html": {
+    "purpose_and_responsibility": "En fristående felsökningssida, 'Engrove Inspector', som fungerar som en isolerad Vue-app för att visa loggar från loggerStore.",
+    "usage_context": "Används under utveckling för att felsöka applikationens tillstånd på enheter (som mobiler) där utvecklarverktyg är svårtillgängliga. Den är en separat ingångspunkt i vite.config.js.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/AR_Protractor_Förbättrad_Precision.md": {
+    "purpose_and_responsibility": "Ett styrdokument som utforskar och specificerar tekniska förbättringar för AR Protractor, med fokus på mer avancerade markörsystem som AprilTags/ArUco.",
+    "usage_context": "Används som en teknisk referens och vision-dokument för framtida utveckling av AR-modulens precision.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/AR_Protractor_Teknisk_Analys.md": {
+    "purpose_and_responsibility": "En djupgående teknisk analys av AR Protractor-systemet som utvärderar dess realiserbarhet, prestanda, tillförlitlighet och underhållbarhet.",
+    "usage_context": "Används som ett beslutsunderlag och en riskanalys för AR-modulens arkitektur, baserad på Three.js och OpenCV.js.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/AR_Protractor_Teknisk_Dokumentation.md": {
+    "purpose_and_responsibility": "Den huvudsakliga tekniska specifikationen för AR Protractor-modulen, som täcker arkitektur, funktionalitet och kodexempel för kärnfunktioner.",
+    "usage_context": "Det primära referensdokumentet för att förstå AR-modulens design och implementation, från AR-markörer till kamerakalibrering.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/Analys_av_AI-regelverk_i_JSON_.md": {
+    "purpose_and_responsibility": "En djupgående akademisk analys av användningen av JSON och JSON Schema som ett medium för att implementera och upprätthålla ramverk för AI-styrning.",
+    "usage_context": "Används som ett teoretiskt och strategiskt referensmaterial för att förstå principerna bakom projektets JSON-baserade protokollsystem.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/Blueprint_för_Migrering_v1_till_v2.md": {
+    "purpose_and_responsibility": "Det centrala styrdokumentet som definierar den arkitektoniska filosofin (FSD), namnstandarder och den detaljerade planen för migreringen från v1.0 till v2.0.",
+    "usage_context": "Används som den primära vägkartan för allt refaktoreringsarbete relaterat till v2.0-uppgraderingen.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/Databehandlingskedja_för_Engrove_Audio_Toolkit.md": {
+    "purpose_and_responsibility": "Beskriver den automatiserade offline-datapipelinen, en sekventiell kedja av Python-skript som bygger, underhåller och berikar projektets databaser.",
+    "usage_context": "Fungerar som teknisk dokumentation för backend-processen, som förklarar hur rådata omvandlas till produktionsklar data.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/Engrove_Audio_Toolkit_Datainsamlings_och_Berikningssystem.md": {
+    "purpose_and_responsibility": "Ett master-dokument som beskriver arkitekturen och dataflödet för systemets datainsamlings- och berikningspipeline, med detaljerade komponentbeskrivningar.",
+    "usage_context": "Används som en övergripande teknisk referens för att förstå hela backend-systemet, från datainsamling till AI-validering och analys.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/Engrove_Audio_Toolkit_v2.0_Analys.md": {
+    "purpose_and_responsibility": "En komplett teknisk och strategisk analys av v2.0-projektet som utvärderar teknikstack, arkitektur, databehandling, designsystem och UI/UX.",
+    "usage_context": "Används som ett övergripande analysdokument för att förstå de tekniska och strategiska valen bakom v2.0-arkitekturen.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/Gemini_chatthistorik.txt": {
+    "purpose_and_responsibility": "En komplett, rå och kronologisk logg över alla interaktioner mellan Engrove och AI-partnern.",
+    "usage_context": "Fungerar som en detaljerad historisk referens för att kunna granska specifika dialoger och resonemang i efterhand. Innehållet ska bevaras, aldrig raderas eller summeras.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/Governance_Driven_Component_Logic_Analysis.md": {
+    "purpose_and_responsibility": "En teknisk analys som utforskar hur en 'governance-driven' arkitektur, baserad på externa JSON-regelverk, kan styra komponentlogik och applikationsbeteende.",
+    "usage_context": "Används som ett strategiskt dokument för att utvärdera och planera införandet av en mer flexibel, datadriven arkitektur i projektet.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/HomePage_Tekniska_Detaljer.md": {
+    "purpose_and_responsibility": "En teknisk rapport som sammanfattar definition, design och implementation av den nya landningssidan (`HomePage.vue`).",
+    "usage_context": "Dokumenterar den strategiska processen och de tekniska besluten bakom skapandet av landningssidan.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/Interaktiva_Animationer_för_Verktygskort.md": {
+    "purpose_and_responsibility": "Specificerar design och teknisk implementation för en interaktiv hover/touch-animation för verktygskorten på landningssidan.",
+    "usage_context": "En konkret teknisk guide för en specifik UI-förbättring, inklusive HTML-, CSS- och JavaScript-exempel.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/Manufacturers_URL_Database_Instruktion.md": {
+    "purpose_and_responsibility": "Förklarar syftet, strukturen och underhållsprocessen för `manufacturers.json`, en central kunskapsbas för tillverkar-URL:er.",
+    "usage_context": "Används som dokumentation för hur AI-skriptet automatiskt berikar databasen med verifierade URL:er.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/Teknisk_Beskrivning_Engrove_Audio_Toolkit.md": {
+    "purpose_and_responsibility": "En komplett teknisk beskrivning av projektet som täcker teknikstack, arkitektur och den bakomliggande databehandlingskedjan.",
+    "usage_context": "Används som en grundläggande teknisk introduktion till hela projektets uppbyggnad.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/UI_Testverktyg_Showcase.html.md": {
+    "purpose_and_responsibility": "Beskriver syftet och den tekniska implementationen av `showcase.html`, den fristående utvecklingsmiljön för UI-komponenter.",
+    "usage_context": "Fungerar som en guide för hur man använder och utvecklar UI-biblioteket i en isolerad testmiljö.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/Wow_Effekten_och_UX_Strategi.md": {
+    "purpose_and_responsibility": "Ett strategiskt styrdokument som definierar principerna för att skapa en positiv användarupplevelse ('wow-effekt') och behålla besökare.",
+    "usage_context": "Används som referens för design- och innehållsbeslut som rör webbplatsens övergripande UX och strategi.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ai_protocol_performance.json": {
+    "purpose_and_responsibility": "En persistent databas som loggar och kvantifierar AI-partnerns prestanda för varje session med hjälp av en standardiserad 'scorecard'.",
+    "usage_context": "Används av CI/CD-pipelinen för att spåra prestanda över tid och av AI Performance-fliken i AI Context Builder för visualisering.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/ByggLogg.json": {
+    "purpose_and_responsibility": "En historisk logg över alla bygg- och utvecklingssessioner, som dokumenterar genomförda åtgärder, resultat och projektstatus vid varje given tidpunkt.",
+    "usage_context": "Används för spårbarhet och för att förstå projektets evolution. Konsulteras vid felsökning av regressioner och för att förstå kontexten bakom tidigare tekniska beslut.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/Chatthistorik.json": {
+    "purpose_and_responsibility": "En komplett logg över alla interaktioner (dialog) mellan produktägare (Engrove) och AI-partner (Frankensteen) för varje session.",
+    "usage_context": "Fungerar som en detaljerad historisk referens för att granska specifika dialoger och resonemang. Används för att rekonstruera kontext och förstå bakgrunden till tekniska beslut och kodändringar.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
+  },
+  "docs/file_relations.json": {
+    "purpose_and_responsibility": "En maskinläsbar, strukturerad karta över projektets arkitektur, som beskriver alla relevanta filer, deras roller och deras inbördes beroenden. Innehåller ett självförklarande `_meta`-block.",
+    "usage_context": "Används av mig (Frankensteen) för att bedöma risk (`criticality_score`), samla in kontext för en uppgift och analysera arkitektoniska beroenden.",
+    "last_updated_by_session": "S-20250815T16-16-05Z_PENDING",
+    "last_updated_at": "2025-08-15T16:16:05Z",
+    "last_commit_sha": "PENDING_UPDATE"
   }
 }
