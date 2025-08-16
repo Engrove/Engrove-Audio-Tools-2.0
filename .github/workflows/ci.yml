@@ -23,6 +23,7 @@
 # v2.1 (2025-08-15): Lade till 'push_options: --force' i auto-commit-steget för att hantera non-fast-forward-fel.
 # v2.2 (2025-08-15): Lade till byggsteg för det nya UI-verktyget (engrove_audio_tools_creator.py).
 # v2.3 (2025-08-16): Korrigerat anropet till engrove_audio_tools_creator.py för att använda det nya kommandobaserade API:et ('build-ui').
+# v2.4 (2025-08-16): (Help me God - Domslut) Lade till 'clean: true' till checkout-steget för att säkerställa en ren byggmiljö och eliminera potentiella cachningsproblem.
 
 name: Consolidated CI/CD and Tools Pipeline
 
@@ -69,6 +70,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
+          clean: true # SÄKERSTÄLLER REN BYGGMILJÖ
 
       - name: Set up Python ${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v4
