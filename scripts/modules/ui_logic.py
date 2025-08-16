@@ -7,12 +7,69 @@
 # * v6.0 (2025-08-16): Refaktorerad för modularitet. All logik för filträdet har
 #   flyttats till den dedikerade modulen `ui_file_tree.py`. Denna fil
 #   innehåller nu endast generell UI-logik.
+# * v6.1 (2025-08-16): Lade till fullständig logik för filgranskningsmodalen,
+#   inklusive realtidshämtning av filinnehåll från GitHub.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
 # - Obligatorisk Refaktorisering: Logiken är nu uppdelad i separata, ansvarsfulla moduler.
 # - Fullständig Kod: Verifierat komplett.
 
 JS_LOGIC = """
+// Injektionspunkt för projektkonfiguration (repo/branch)
+const ENGROVE_CONFIG = __INJECT_PROJECT_OVERVIEW__;
+
+let currentModalFilePath = null;
+let currentModalFileContent = null;
+
+async function openFileModal(filePath) {
+    const modalOverlay = document.getElementById('file-modal-overlay');
+    const modalTitle = document.getElementById('modal-title');
+    const modalLoader = document.getElementById('modal-loader');
+    const modalError = document.getElementById('modal-error');
+    const modalContentPre = document.getElementById('modal-content-pre');
+
+    if (!modalOverlay || !modalTitle) return;
+
+    currentModalFilePath = filePath;
+    currentModalFileContent = null;
+
+    modalTitle.textContent = filePath;
+    modalLoader.classList.remove('hidden');
+    modalError.classList.add('hidden');
+    modalContentPre.textContent = '';
+    modalOverlay.classList.remove('hidden');
+
+    const repo = ENGROVE_CONFIG.repository;
+    const branch = ENGROVE_CONFIG.branch;
+    const url = `https://raw.githubusercontent.com/${repo}/${branch}/${filePath}`;
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Nätverksfel: ${response.status} ${response.statusText}`);
+        }
+        const text = await response.text();
+        currentModalFileContent = text;
+        modalContentPre.textContent = text;
+    } catch (error) {
+        console.error("Fel vid hämtning av fil:", error);
+        modalError.textContent = `Kunde inte hämta filens innehåll. Fel: ${error.message}`;
+        modalError.classList.remove('hidden');
+    } finally {
+        modalLoader.classList.add('hidden');
+    }
+}
+
+function closeFileModal() {
+    const modalOverlay = document.getElementById('file-modal-overlay');
+    if (modalOverlay) {
+        modalOverlay.classList.add('hidden');
+    }
+}
+
+// Gör funktionen globalt tillgänglig för anrop från ui_file_tree.js
+window.openFileModal = openFileModal;
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Engrove Audio Tools UI Initialized.');
 
@@ -21,6 +78,53 @@ document.addEventListener('DOMContentLoaded', () => {
     const resizer = document.getElementById('resizer');
     const ribbonTabs = document.querySelectorAll('.ribbon-tab');
     const ribbonPanes = document.querySelectorAll('.ribbon-pane');
+
+    // Modal-element
+    const modalOverlay = document.getElementById('file-modal-overlay');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+    const modalCopyPathBtn = document.getElementById('modal-copy-path');
+    const modalCopyContentBtn = document.getElementById('modal-copy-content');
+    const modalDownloadFileBtn = document.getElementById('modal-download-file');
+
+    // --- Modal Logic ---
+    if (modalOverlay) {
+        modalCloseBtn.addEventListener('click', closeFileModal);
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                closeFileModal();
+            }
+        });
+        
+        modalCopyPathBtn.addEventListener('click', () => {
+            if (currentModalFilePath) {
+                navigator.clipboard.writeText(currentModalFilePath).then(() => {
+                    // Optional: Add user feedback
+                });
+            }
+        });
+
+        modalCopyContentBtn.addEventListener('click', () => {
+            if (currentModalFileContent) {
+                navigator.clipboard.writeText(currentModalFileContent).then(() => {
+                    // Optional: Add user feedback
+                });
+            }
+        });
+
+        modalDownloadFileBtn.addEventListener('click', () => {
+            if (currentModalFileContent && currentModalFilePath) {
+                const blob = new Blob([currentModalFileContent], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = currentModalFilePath.split('/').pop();
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+        });
+    }
     
     // --- Ribbon Menu Logic ---
     ribbonTabs.forEach(tab => {
