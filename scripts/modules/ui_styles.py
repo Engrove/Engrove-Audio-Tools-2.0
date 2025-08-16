@@ -7,6 +7,7 @@
 # * v5.1 (2025-08-16): Implementerat anpassade tri-state kryssrutor.
 # * v5.2 (2025-08-16): Korrigerat layout och indentering för filträdet för att
 #   säkerställa korrekt visuell hierarki.
+# * v5.3 (2025-08-16): Lade till stilar för den nya filgranskningsmodalen.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
 # - Fullständig Kod: Verifierat komplett.
@@ -272,6 +273,84 @@ input[type="search"]:focus {
     padding: 1px 6px; border-radius: 99px; font-size: 10px;
     background-color: var(--bg-color); border: 1px solid var(--border-color);
     color: var(--text-color-muted); white-space: nowrap;
+}
+
+/* --- File Viewer Modal --- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.modal-overlay.hidden {
+    display: none;
+}
+.modal-panel {
+    background-color: var(--panel-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    width: 90vw;
+    max-width: 1200px;
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-family: var(--font-mono);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.modal-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+.modal-actions button {
+    padding: 6px 12px;
+}
+#modal-copy-path, #modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    padding: 0 8px;
+    color: var(--text-color-muted);
+}
+#modal-copy-path:hover, #modal-close-btn:hover {
+    color: var(--text-color);
+}
+.modal-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 16px;
+}
+.modal-content pre {
+    margin: 0;
+    font-family: var(--font-mono);
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+.modal-state {
+    padding: 20px;
+    text-align: center;
+    color: var(--text-color-muted);
+}
+.modal-state.hidden {
+    display: none;
 }
 """
 # scripts/modules/ui_styles.py
