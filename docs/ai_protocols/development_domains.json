@@ -1,0 +1,67 @@
+{
+  "_meta": {
+    "purpose": "Definierar distinkta utvecklingsdomäner inom projektet för att styra och fokusera AI-partnerns uppmärksamhet. Varje domän har en uppsättning styrande dokument som definierar 'sanningen' för det specifika arbetsområdet.",
+    "schema_version": "1.1"
+  },
+  "domains": [
+    {
+      "id": "VUE_APP",
+      "name": "Engrove Vue-projektet (Frontend)",
+      "description": "Fokusera på allt som rör den interaktiva webbapplikationen. Detta inkluderar Vue-komponenter, Pinia-stores, routing och den övergripande UI/UX-logiken.",
+      "file_globs": [
+        "src/**/*",
+        "public/data/schemas/*",
+        "public/images/**/*",
+        "*.html",
+        "package.json",
+        "vite.config.js"
+      ],
+      "governing_documents": [
+        "docs/ai_protocols/Mappstruktur_och_Arbetsflöde.md",
+        "docs/Global_UI-Standard_för_Engrove-plattformen.md",
+        "docs/Global_UI-Standard_Komponentspecifikation.md"
+      ]
+    },
+    {
+      "id": "PYTHON_DATA_PIPELINE",
+      "name": "Python Data Pipeline & Backend Tooling",
+      "description": "Fokusera på de Python-skript som hanterar datainsamling, konvertering, transformering och berikning av projektets kärndata.",
+      "file_globs": [
+        "scripts/modules/data_converter.py",
+        "public/data/*.json"
+      ],
+      "governing_documents": [
+        "docs/Databehandlingskedja_för_Engrove_Audio_Toolkit.md"
+      ]
+    },
+    {
+      "id": "CI_CD_AUTOMATION",
+      "name": "CI/CD & Project Automation",
+      "description": "Fokusera på de system som automatiskt bygger, testar, driftsätter och underhåller projektet. Detta inkluderar GitHub Actions och stödskript.",
+      "file_globs": [
+        ".github/workflows/ci.yml",
+        "scripts/generate_full_context.py",
+        "scripts/build_relations_graph.py",
+        "scripts/update_core_info.py",
+        "scripts/engrove_audio_tools_creator.py",
+        "wrangler.toml"
+      ],
+      "governing_documents": [
+        ".github/workflows/ci.yml"
+      ]
+    },
+    {
+      "id": "AI_SYSTEM_MAINTENANCE",
+      "name": "AI Protocol & System Maintenance (Meta)",
+      "description": "Fokusera på att granska, underhålla och uppgradera AI-partnerns egna styrdokument, protokoll, lärdomar och personlighet.",
+      "file_globs": [
+        "docs/ai_protocols/**/*.md",
+        "docs/ai_protocols/**/*.json",
+        "tools/frankensteen_learning_db.json"
+      ],
+      "governing_documents": [
+        "docs/ai_protocols/AI_Core_Instruction.md"
+      ]
+    }
+  ]
+}
