@@ -6,6 +6,8 @@
 #   framtida verktyg enligt "Operation: Dold Grund".
 # * v5.0 (2025-08-16): Lade till CSS-regler för det nya interaktiva filträdet,
 #   inklusive styling för noder, ikoner, taggar och indrag.
+# * v5.1 (2025-08-16): Implementerat fullständigt anpassade (custom) tri-state
+#   kryssrutor för att matcha den visuella specifikationen.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
 # - Fullständig Kod: Verifierat komplett.
@@ -30,6 +32,10 @@ CSS_STYLES = """
     --resizer-hover-color: #3498db;
     --ribbon-tab-active-bg: #34495e;
     --ribbon-content-bg: #34495e;
+    --cb-checked-bg: #2ecc71;
+    --cb-indeterminate-bg: #f39c12;
+    --cb-border-color: #7f8c8d;
+    --cb-focus-ring: #3498db;
 }
 
 * { box-sizing: border-box; }
@@ -177,71 +183,76 @@ input[type="search"]:focus {
     font-family: var(--font-mono);
     font-size: 13px;
 }
-.file-tree li {
-    padding: 1px 0;
-}
-.tree-node {
-    padding-left: 20px;
-    position: relative;
-}
-.tree-node > ul {
-    padding-left: 20px;
-}
+.file-tree li { padding: 1px 0; }
+.tree-node > ul { padding-left: 20px; }
 .toggle-icon {
-    position: absolute;
-    left: 2px;
-    top: 2px;
-    cursor: pointer;
-    user-select: none;
-    width: 18px;
-    height: 18px;
-    text-align: center;
-    line-height: 18px;
-    color: var(--text-color-muted);
+    cursor: pointer; user-select: none;
+    width: 18px; height: 18px; text-align: center; line-height: 18px;
+    color: var(--text-color-muted); flex-shrink: 0;
 }
-.toggle-icon:hover {
-    color: var(--text-color);
-}
-.tree-node.collapsed > ul {
-    display: none;
-}
+.toggle-icon:hover { color: var(--text-color); }
+.tree-node.collapsed > ul { display: none; }
 .node-label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-    padding: 2px 4px;
-    border-radius: 3px;
+    display: flex; align-items: center; gap: 6px;
+    cursor: pointer; padding: 2px 4px; border-radius: 3px;
 }
-.node-label:hover {
-    background-color: rgba(0,0,0,0.1);
-}
+.node-label:hover { background-color: rgba(0,0,0,0.1); }
+.node-icon { font-style: normal; }
+.node-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* --- Custom Tri-state Checkbox Styles --- */
 .node-label input[type="checkbox"] {
-    margin: 0;
-    flex-shrink: 0;
+    appearance: none; -webkit-appearance: none;
+    margin: 0; flex-shrink: 0;
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--cb-border-color);
+    border-radius: 3px;
+    background-color: transparent;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
-.node-icon {
-    font-style: normal;
+.node-label input[type="checkbox"]:focus-visible {
+    outline: 2px solid var(--cb-focus-ring);
+    outline-offset: 1px;
 }
-.node-text {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.node-label input[type="checkbox"]:checked {
+    background-color: var(--cb-checked-bg);
+    border-color: var(--cb-checked-bg);
 }
+.node-label input[type="checkbox"]:checked::before {
+    content: '✔';
+    position: absolute;
+    color: white;
+    font-size: 12px;
+    line-height: 14px;
+    left: 2px;
+    top: -1px;
+}
+.node-label input[type="checkbox"]:indeterminate {
+    background-color: var(--cb-indeterminate-bg);
+    border-color: var(--cb-indeterminate-bg);
+}
+.node-label input[type="checkbox"]:indeterminate::before {
+    content: '';
+    position: absolute;
+    background-color: white;
+    width: 8px;
+    height: 2px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+/* --- End Custom Checkbox --- */
+
 .metadata-tags {
-    display: flex;
-    gap: 4px;
-    margin-left: auto;
-    padding-left: 8px; /* So tags don't touch text */
+    display: flex; gap: 4px;
+    margin-left: auto; padding-left: 8px;
 }
 .metadata-tag {
-    padding: 1px 6px;
-    border-radius: 99px;
-    font-size: 10px;
-    background-color: var(--bg-color);
-    border: 1px solid var(--border-color);
-    color: var(--text-color-muted);
-    white-space: nowrap;
+    padding: 1px 6px; border-radius: 99px; font-size: 10px;
+    background-color: var(--bg-color); border: 1px solid var(--border-color);
+    color: var(--text-color-muted); white-space: nowrap;
 }
 """
 # scripts/modules/ui_styles.py
