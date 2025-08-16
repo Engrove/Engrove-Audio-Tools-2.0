@@ -7,18 +7,21 @@
 #
 # === HISTORIK ===
 # * v1.0 (2025-08-16): Initial skapelse som en del av Operation: Modularitet.
-# * v1.1 (2025-08-16): KRITISK FIX: Ändrat datainjektion till att använda JSON.parse()
-#   för att förhindra syntaxfel från specialtecken i datan.
+# * v1.1 (2025-08-16): KRITISK FIX: Ändrat datainjektion till att använda JSON.parse().
+# * v1.2 (2025-08-16): (Help me God - Domslut) Ersatt den osäkra platshållaren med en
+#   syntaktiskt giltig, citerad dummy-sträng ("__INJECT_AT_BUILD__") för att förhindra
+#   parse-fel vid misslyckad injektion.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
-# - Help me God: Grundorsaksanalys av ett SyntaxError ledde till denna robustare design.
-# - API-kontraktsverifiering: Modulen använder nu en säkrare metod för datainjektion.
+# - Help me God: Denna fix är ett direkt resultat av ett externt domslut.
+# - API-kontraktsverifiering: Kontraktet för datainjektion är nu mer robust.
 
 JS_FILE_TREE_LOGIC = """
-// === Engrove File Tree Logic v1.1 ===
+// === Engrove File Tree Logic v1.2 ===
 
-// JSON-datan injiceras som en sträng-literal och parsas säkert för att undvika syntaxfel.
-const FILE_TREE_DATA = JSON.parse(${injected_json_data_string});
+// JSON-datan injiceras som en sträng-literal och parsas säkert.
+// Platshållaren är en giltig sträng för att förhindra syntaxfel om ersättning misslyckas.
+const FILE_TREE_DATA = JSON.parse("__INJECT_AT_BUILD__");
 
 /**
  * Uppdaterar alla föräldrars kryssrutor uppåt i trädet.
@@ -143,8 +146,9 @@ function renderNode(nodeData) {
 function initializeFileTree() {
     const container = document.getElementById('file-tree-container');
     const navContainer = document.getElementById('navigation-container');
-    if (!container || typeof FILE_TREE_DATA === 'undefined') {
-        console.error("Filträdets container eller data saknas.");
+    if (!container || typeof FILE_TREE_DATA === 'undefined' || FILE_TREE_DATA === '__INJECT_AT_BUILD__') {
+        if(container) container.innerHTML = '<h2>Filträd</h2><p style=\"color: #ffc107;\">Data-injektion misslyckades under bygget.</p>';
+        console.error("Filträdets data saknas eller blev inte injicerad.");
         return;
     }
     
