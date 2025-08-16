@@ -8,15 +8,14 @@
 # * v1.0 (2025-08-15): Initial skapelse.
 # * v4.0 (2025-08-16): (Help me God) Omstrukturerad för att vara både kommandodriven och bakåtkompatibel.
 # * v5.0 (2025-08-16): ARKITEKTURUPPGRADERING: Implemented modular file tree logic.
-# * v5.1 (2025-08-16): KRITISK FIX: Ändrat datainjektion till att använda en escapad JSON-sträng
-#   och `JSON.parse()` i JS för att förhindra syntaxfel.
-# * v5.2 (2025-08-16): (Help me God - Domslut) Implementerat dubbel JSON-serialisering för att skapa en
-#   garanterat säker JavaScript-strängliteral. Lade till en självkontroll för att verifiera
-#   att platshållaren har ersatts, vilket slutgiltigt löser `SyntaxError`.
+# * v5.1 (2025-08-16): KRITISK FIX: Ändrat datainjektion till att använda en escapad JSON-sträng.
+# * v5.2 (2025-08-16): (Help me God - Domslut) Implementerat dubbel JSON-serialisering.
+# * v5.3 (2025-08-16): (Extern Dom) Korrigerat ett fatalt syntaxfel orsakat av felaktig
+#   konkatenering av JavaScript-moduler. Tagit bort de felaktiga "\\n\\n"-tecknen.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
 # - Help me God: Denna fix är ett direkt resultat av ett externt domslut efter flera misslyckanden.
-# - Heuristik H-20250816-02: En ny självkontroll har lagts till för att verifiera att injektionen lyckats.
+# - Heuristik H-20250816-04: En ny självkontroll har lagts till för att verifiera att injektionen lyckats.
 
 import os
 import sys
@@ -78,16 +77,17 @@ def build_ui(html_output_path, file_tree_json_string):
     
     placeholder = '"__INJECT_AT_BUILD__"'
     injected_js_tree_logic = JS_FILE_TREE_LOGIC.replace(placeholder, js_safe_string_literal)
-    final_js_logic = JS_LOGIC + "\\n\\n" + injected_js_tree_logic
+    
+    # KORRIGERING: Tar bort de felaktiga extra radbrytningarna. Ett enkelt radbyte räcker.
+    final_js_logic = JS_LOGIC + "\\n" + injected_js_tree_logic
 
     with open(html_output_path, 'w', encoding='utf-8') as f: f.write(HTML_TEMPLATE)
     with open(css_output_path, 'w', encoding='utf-8') as f: f.write(CSS_STYLES)
     with open(js_output_path, 'w', encoding='utf-8') as f: f.write(final_js_logic)
 
-    # Verifieringssteg enligt Heuristik H-20250816-02
     with open(js_output_path, 'r', encoding='utf-8') as f:
         content = f.read()
-    if placeholder in content:
+    if '"__INJECT_AT_BUILD__"' in content:
         raise RuntimeError(f"FATAL: Platshållaren '{placeholder}' ersattes inte i den slutgiltiga JS-filen.")
     
     print(f"UI-filer (HTML, CSS, JS) har skapats i mappen: {os.path.abspath(output_dir)}")
