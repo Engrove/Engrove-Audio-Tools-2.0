@@ -10,6 +10,8 @@
 # * v5.0 (2025-08-16): ARKITEKTURUPPGRADERING: Implemented modular file tree logic.
 # * v5.1 (2025-08-16): KRITISK FIX: Ändrat datainjektion till att använda en escapad JSON-sträng
 #   och `JSON.parse()` i JS för att förhindra syntaxfel.
+# * v5.2 (2025-08-16): (Help me God) Implementerat dubbel JSON-serialisering för att skapa en
+#   garanterat säker JavaScript-strängliteral, vilket slutgiltigt löser alla syntaxfel.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
 # - Obligatorisk Refaktorisering: Logiken är nu uppdelad i moduler.
@@ -49,14 +51,18 @@ def enrich_tree_recursive(current_node, name, relations_nodes):
             [(k, v) for k, v in current_node.items() if isinstance(v, dict)],
             key=lambda item: (item[1].get('type', 'directory') != 'directory', item[0])
         )
+        
+        # Skapa en ren 'children'-lista
         current_node['children'] = [v for k, v in children_items]
         
-        # Ta bort de ursprungliga barn-nycklarna för att rensa upp strukturen
-        for child_name, _ in children_items:
-            del current_node[child_name]
+        # Ta bort de ursprungliga barn-nycklarna för att undvika redundans i JSON
+        original_keys = [k for k, v in children_items]
+        for key in original_keys:
+            if key in current_node:
+                del current_node[key]
 
-        for child_node in current_node['children']:
-            child_name = next(k for k,v in children_items if v is child_node)
+        for i, child_node in enumerate(current_node['children']):
+            child_name = children_items[i][0]
             enrich_tree_recursive(child_node, child_name, relations_nodes)
 
 
@@ -69,9 +75,10 @@ def build_ui(html_output_path, file_tree_json_string):
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
     
-    # Escapa JSON-strängen för säker injektion i en JS template literal (`...`)
-    safe_js_string = file_tree_json_string.replace('`', '\\`').replace('\\\\', '\\\\\\\\').replace('${', '\\${')
-    injected_js_tree_logic = JS_FILE_TREE_LOGIC.replace('${file_tree_json}', safe_js_string)
+    # Dubbel serialisering: Skapa en giltig JS-strängliteral från JSON-strängen.
+    js_safe_string_literal = json.dumps(file_tree_json_string)
+    
+    injected_js_tree_logic = JS_FILE_TREE_LOGIC.replace('${injected_json_data_string}', js_safe_string_literal)
     final_js_logic = JS_LOGIC + "\\n\\n" + injected_js_tree_logic
 
     with open(html_output_path, 'w', encoding='utf-8') as f: f.write(HTML_TEMPLATE)
@@ -109,11 +116,10 @@ def main():
 
             print("Bygger och berikar trädstruktur...")
             
-            # Skapa en rot-nod för att hantera flera objekt i toppen av file_structure
             root_node = {'name': 'root', 'type': 'directory', 'path': '.', 'children_dict': file_structure}
             enrich_tree_recursive(root_node['children_dict'], 'root', relations_nodes)
-            
-            # Platta ut barnen till en lista
+
+            # Platta ut barnen till en lista efter berikning
             children_items = sorted(
                 [(k, v) for k, v in root_node['children_dict'].items() if isinstance(v, dict)],
                 key=lambda item: (item[1].get('type', 'directory') != 'directory', item[0])
