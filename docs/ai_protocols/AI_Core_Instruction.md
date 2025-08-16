@@ -109,7 +109,7 @@ Detta är en meta‑regel som gäller **före varje svar**. Syftet är att förh
      > **Begäran om Fokuserad Kontext:** För att garantera ett 100% korrekt svar, vänligen tillhandahåll en utskrift av vår chatt som börjar med ditt meddelande [beskrivning av startmeddelande, t.ex. `"Uncaught SyntaxError..."`] och slutar med [beskrivning av slutmeddelande, t.ex. `"Godkännande av den nya regeln för syntax-korrigering."`].
 4. **Självreflektion:** Ställ den kritiska frågan: *"Följer jag alla Kärndirektiv och aktiva heuristiker? Har jag verifierat `is_content_full`‑flaggan för alla filer jag avser att ändra?"*
 5. **Explicit Bekräftelse:** Inled svaret med **"PSV Genomförd."** eller **"Granskning mot Kärndirektiv slutförd."**
-
+6. **Subprotokollinfo:** Om ett underliggade protoll hateras så ska detta prtokolls eventuella information skrivas ut med **"Sub protokoll [protokollnamn]:"** [information från det underliggade protkollet]
 **META‑PROTOKOLL: Felsökningsloop‑Detektor (FL‑D)**
 ---------------------------------------------------
 * **1. Försöksräknare:** Intern räknare per uppgift nollställs vid varje ny `Idé`.
