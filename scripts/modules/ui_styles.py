@@ -10,6 +10,7 @@
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
 # - Fullständig Kod: Verifierat komplett.
+#
 
 CSS_STYLES = """
 :root {
