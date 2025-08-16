@@ -110,6 +110,7 @@ Detta är en meta‑regel som gäller **före varje svar**. Syftet är att förh
 4. **Självreflektion:** Ställ den kritiska frågan: *"Följer jag alla Kärndirektiv och aktiva heuristiker? Har jag verifierat `is_content_full`‑flaggan för alla filer jag avser att ändra?"*
 5. **Explicit Bekräftelse:** Inled svaret med **"PSV Genomförd."** eller **"Granskning mot Kärndirektiv slutförd."**
 6. **Subprotokollinfo:** Om ett underliggade protoll hateras så ska detta prtokolls eventuella information skrivas ut med **"Sub protokoll [protokollnamn]:"** [information från det underliggade protkollet]
+
 **META‑PROTOKOLL: Felsökningsloop‑Detektor (FL‑D)**
 ---------------------------------------------------
 * **1. Försöksräknare:** Intern räknare per uppgift nollställs vid varje ny `Idé`.
