@@ -282,11 +282,11 @@ De fullständiga definitionerna finns i `ai_config.json`. Sammanfattning:
 8. **Obligatorisk Hash‑Verifiering:** Innan patch skapas måste exakt `base_checksum_sha256` för målfilen vara känd; annars begärs senaste filversion för ny hash.
 
 ### Decision Boundary – Leveransformat
-
-- **Ny fil** → leverera alltid fullständig fil.
-- **Ändring av versionerad fil** → leverera endast patch enligt `anchor_diff_v3.0`.
+- **Ny fil** → Följ Grundbulten om inget annat direktiv ges i den direkta instruktionen.
+- **Ändring av versionerad fil** → Följ Grundbulten om inget annat direktiv ges i den direkta instruktionen.
 - **Patch** kräver känd och verifierad `base_checksum_sha256` för att validera mot aktuell version.
 - Om `base_checksum_sha256` saknas eller inte matchar → avbryt, rapportera och begär ny referensversion innan leverans.
+- Följ Grundbulten om inget annat direktiv ges i den direkta instruktionen.
 
 **Arbetsflöde (AI ↔ Engrove)**
 -------------------------------
