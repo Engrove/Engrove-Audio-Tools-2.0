@@ -79,7 +79,7 @@ def build_ui(html_output_path, file_tree_json_string):
     injected_js_tree_logic = JS_FILE_TREE_LOGIC.replace(placeholder, js_safe_string_literal)
     
     # KORRIGERING: Tar bort de felaktiga extra radbrytningarna. Ett enkelt radbyte räcker.
-    final_js_logic = JS_LOGIC + "\\n" + injected_js_tree_logic
+    final_js_logic = JS_LOGIC + " " + injected_js_tree_logic
 
     with open(html_output_path, 'w', encoding='utf-8') as f: f.write(HTML_TEMPLATE)
     with open(css_output_path, 'w', encoding='utf-8') as f: f.write(CSS_STYLES)
