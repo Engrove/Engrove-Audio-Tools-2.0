@@ -7,11 +7,13 @@
 # nuvarande status, kapabiliteter och aktiva lärdomar.
 #
 # === HISTORIK ===
-# v1.0 (2025-08-09): Initial skapelse.
-# v1.1 (2025-08-09): Gjorde Steg 6 dynamiskt för att sanningsenligt reflektera
+# * v1.0 (2025-08-09): Initial skapelse.
+# * v1.1 (2025-08-09): Gjorde Steg 6 dynamiskt för att sanningsenligt reflektera
 #                    resultatet från hälsokontrollen i Steg 5.
-# v1.2 (2025-08-09): Lade till ett obligatoriskt "Rekommenderad Åtgärd"-steg
+# * v1.2 (2025-08-09): Lade till ett obligatoriskt "Rekommenderad Åtgärd"-steg
 #                    för alla icke-hälsosamma statusrapporter.
+# * v2.0 (2025-08-15): Lade till Steg 7 för att presentera en åtgärdsmeny baserad
+#                    på hälsostatus och definierade utvecklingsdomäner.
 #
 # === PROTOKOLL-STEG ===
 
@@ -22,7 +24,7 @@
 **2. Sammanställ och Presentera "CORE SYSTEM & IDENTITY":**
    - Hämta den aktuella versionen från headern i `AI_Core_Instruction.md`.
    - Rapportera systemstatus som `OPERATIONAL`.
-   - Lista de primära, stående direktiven (PSV, FL-D, KII).
+   - Lista de primära, stående direktiven (PSV, FL-D, KMM/KIV).
 
 **3. Sammanställ och Presentera "PROTOCOL STATE":**
    - Räkna antalet regler i `golden_rules`-arrayen i `ai_config.json`. Rapportera som "X/Y aktiva".
@@ -60,8 +62,8 @@
     *   `score -= checks.unreachableProtocols * 10;`
     *   `calibrationScore = Math.max(0, score);`
     **Presentera Resultat:**
-    *   Om `status` är `"WARNING"`: Presentera texten: "Systemet är operationellt, men hälsokontrollen har flaggat varningar (se ovan). Beräknad kalibreringsstatus: **[calibrationScore]%**. Granskning rekommenderas innan komplexa uppgifter påbörjas. Jag är redo för instruktioner."
-    *   Om `status` är `"CRITICAL"`: Presentera texten: "**KRITISK VARNING:** Systemets integritet kan vara komprometterad. Hälsokontrollen har identifierat kritiska fel i regelverket. Beräknad kalibreringsstatus: **[calibrationScore]%**. Det rekommenderas starkt att åtgärda dessa problem. Jag avvaktar en åtgärdsplan."
+    *   Om `status` är `\"WARNING\"`: Presentera texten: "Systemet är operationellt, men hälsokontrollen har flaggat varningar (se ovan). Beräknad kalibreringsstatus: **[calibrationScore]%**. Granskning rekommenderas innan komplexa uppgifter påbörjas. Jag är redo för instruktioner."
+    *   Om `status` är `\"CRITICAL\"`: Presentera texten: "**KRITISK VARNING:** Systemets integritet kan vara komprometterad. Hälsokontrollen har identifierat kritiska fel i regelverket. Beräknad kalibreringsstatus: **[calibrationScore]%**. Det rekommenderas starkt att åtgärda dessa problem. Jag avvaktar en åtgärdsplan."
        - **Steg 6b (Obligatorisk Förklaring & Rekommendation):**
          - Analysera `checks`-objektet från hälsokontrollen.
          - Generera en ny sektion `**Rekommenderad Åtgärd:**` med en punktlista som förklarar varje flaggad post.
@@ -72,3 +74,14 @@
        - **Steg 6c (Avslutning):**
          - Avsluta med en lämplig fras, t.ex., "Jag är redo för instruktioner, men rekommenderar att vi adresserar dessa punkter först."
    - **Avslutning:** Följ den valda texten med: "---"
+
+**Steg 7: Presentera Actionable Menu:**
+   - Omedelbart efter att hälsorapporten har presenterats, generera och skriv ut en numrerad meny.
+   - **Logik för Menybyggnad:**
+     1.  Läs in `docs/ai_protocols/development_domains.json`.
+     2.  Kontrollera `status` från hälsokontrollen i Steg 6. Om status är `WARNING` eller `CRITICAL`, ska det första menyalternativet alltid vara:
+         > **1. Granska Systemintegritet:** Visa detaljerade rekommendationer för att åtgärda de identifierade problemen i hälsokontrollen.
+     3.  Iterera över `domains`-arrayen från `development_domains.json`. För varje domän, skapa ett menyalternativ som ser ut så här:
+         > **X. Välj Utvecklingsdomän: [domain.name]** - [domain.description]
+     4.  Numrera menyalternativen sekventiellt.
+   - **Avslutning:** Efter menyn, lägg till en `---`-avdelare följt av den obligatoriska KMM/KIV-statuspanelen.
