@@ -13,6 +13,8 @@
 #   parse-fel vid misslyckad injektion.
 # * v2.0 (2025-08-16): Implementerat tri-state (checked/indeterminate/unchecked) kryssrutor
 #   för mappar och auto-expandering vid val, enligt godkänd plan.
+# * v2.1 (2025-08-16): Separerade klickhändelser. Klick på filnamn öppnar nu filgranskningsmodalen.
+#   Platshållare uppdaterad till __INJECT_FILE_TREE__ för konsekvens.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
 # - Help me God: Denna fix är ett direkt resultat av ett externt domslut.
@@ -20,9 +22,9 @@
 # - Obligatorisk Refaktorisering: Logiken för filträdet är nu komplett och robust.
 
 JS_FILE_TREE_LOGIC = """
-// === Engrove File Tree Logic v2.0 ===
+// === Engrove File Tree Logic v2.1 ===
 
-const FILE_TREE_DATA = JSON.parse("__INJECT_AT_BUILD__");
+const FILE_TREE_DATA = JSON.parse(__INJECT_FILE_TREE__);
 
 /**
  * Uppdaterar alla föräldrars kryssrutor uppåt i trädet.
@@ -91,7 +93,6 @@ function renderNode(nodeData) {
         updateChildren(li, checkbox.checked);
         updateParents(li);
         
-        // MODIFIKATION: Expandera grenen om en mapp väljs
         if (isDir && checkbox.checked) {
             const toggle = li.querySelector(':scope > .toggle-icon');
             if (toggle && li.classList.contains('collapsed')) {
@@ -124,6 +125,25 @@ function renderNode(nodeData) {
     const text = document.createElement('span');
     text.className = 'node-text';
     text.textContent = nodeData.name;
+    
+    // Separera klickhändelser
+    if (isDir) {
+        text.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const toggle = li.querySelector(':scope > .toggle-icon');
+            if (toggle) toggle.click(); // Simulera klick på expandera/kollapsa
+        });
+    } else { // Fil
+        text.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (window.openFileModal) {
+                window.openFileModal(nodeData.path);
+            }
+        });
+    }
+    
     label.appendChild(text);
     
     if (nodeData.tags && nodeData.tags.length > 0) {
@@ -157,7 +177,7 @@ function renderNode(nodeData) {
 function initializeFileTree() {
     const container = document.getElementById('file-tree-container');
     const navContainer = document.getElementById('navigation-container');
-    if (!container || typeof FILE_TREE_DATA === 'undefined' || FILE_TREE_DATA === '__INJECT_AT_BUILD__') {
+    if (!container || typeof FILE_TREE_DATA === 'undefined' || FILE_TREE_DATA === '__INJECT_FILE_TREE__') {
         if(container) container.innerHTML = '<h2>Filträd</h2><p style="color: #ffc107;">Data-injektion misslyckades under bygget.</p>';
         console.error("Filträdets data saknas eller blev inte injicerad.");
         return;
