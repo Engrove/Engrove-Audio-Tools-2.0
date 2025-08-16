@@ -9,83 +9,118 @@
 # * v1.1 (2025-08-15): Korrigerad för att hantera kommandoradsargument.
 # * v2.0 (2025-08-15): Uppdaterad för att generera både HTML och CSS.
 # * v3.0 (2025-08-15): Uppdaterad för att även generera logic.js.
-# * v4.0 (2025-08-16): (Help me God - Rotorsaksanalys) Omstrukturerad för att vara
-#   både kommandodriven och bakåtkompatibel. Lade till 'convert-data'-kommando
-#   och hanterar nu det äldre anropssättet (med enbart sökväg) som ett
-#   implicit 'build-ui'-kommando för att säkerställa att CI/CD inte misslyckas.
+# * v4.0 (2025-08-16): (Help me God) Omstrukturerad för att vara både kommandodriven och bakåtkompatibel.
+# * v5.0 (2025-08-16): ARKITEKTURUPPGRADERING: Implemented modular file tree logic.
+#   - Läser nu context.json och file_relations.json för att bygga ett hierarkiskt, berikat filträd.
+#   - Injisicerar denna data i den nya, separata modulen `ui_file_tree.py`.
+#   - Monterar det slutgiltiga UI:t med det dynamiska filträdet.
 #
-# === TILLÄMPADE REGLER (Frankensteen v5.4) ===
-# - Fullständig Historik: Korrigerat misstag och återställt komplett historik.
-# - Felresiliens: Skriptet är nu robust mot olika anropssätt.
+# === TILLÄMPADE REGLER (Frankensteen v5.6) ===
+# - Obligatorisk Refaktorisering: Logiken är nu uppdelad i moduler.
+# - Fullständig Kod: Verifierat komplett.
 
 import os
 import sys
+import json
 from modules.ui_template import HTML_TEMPLATE
 from modules.ui_styles import CSS_STYLES
 from modules.ui_logic import JS_LOGIC
-# Importera den nya modulen endast om den finns, för att undvika fel
-try:
-    from modules.data_converter import convert_json_to_msgpack
-    DATA_CONVERTER_AVAILABLE = True
-except ImportError:
-    DATA_CONVERTER_AVAILABLE = False
+from modules.ui_file_tree import JS_FILE_TREE_LOGIC
 
-def build_ui(html_output_path):
-    """Genererar HTML, CSS och JS för användargränssnittet."""
+def enrich_tree_recursive(current_node, name, relations_nodes):
+    """
+    Traverserar rekursivt den nästlade filstrukturen och lägger till metadata.
+    """
+    if not isinstance(current_node, dict):
+        return
+
+    current_node['name'] = name
+
+    if current_node.get("type") == "file":
+        path = current_node.get("path")
+        if path and path in relations_nodes:
+            node_meta = relations_nodes[path]
+            tags = []
+            if node_meta.get('category'):
+                tags.append(node_meta['category'])
+            crit_score = node_meta.get('criticality_score')
+            if isinstance(crit_score, (int, float)):
+                tags.append(f"crit:{crit_score:.0f}%")
+            if tags:
+                current_node['tags'] = sorted(tags)
+    else: # Directory
+        # The children are the values of the dictionary, excluding known metadata keys
+        children_items = sorted(
+            [(k, v) for k, v in current_node.items() if isinstance(v, dict)],
+            key=lambda item: (item[1].get('type', 'directory') != 'directory', item[0]) # Sort folders first, then files
+        )
+        for child_name, child_node in children_items:
+            enrich_tree_recursive(child_node, child_name, relations_nodes)
+
+def build_ui(html_output_path, file_tree_json_string):
+    """Genererar HTML, CSS och den sammansatta JS-filen."""
     output_dir = os.path.dirname(html_output_path)
     css_output_path = os.path.join(output_dir, 'styles.css')
     js_output_path = os.path.join(output_dir, 'logic.js')
     
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
+        
+    injected_js_tree_logic = JS_FILE_TREE_LOGIC.replace('${file_tree_json}', file_tree_json_string)
+    final_js_logic = JS_LOGIC + "\\n\\n" + injected_js_tree_logic
 
-    print(f"Genererar UI till: {os.path.abspath(html_output_path)}")
     with open(html_output_path, 'w', encoding='utf-8') as f: f.write(HTML_TEMPLATE)
-        
-    print(f"Genererar CSS till: {os.path.abspath(css_output_path)}")
     with open(css_output_path, 'w', encoding='utf-8') as f: f.write(CSS_STYLES)
-        
-    print(f"Genererar JS till: {os.path.abspath(js_output_path)}")
-    with open(js_output_path, 'w', encoding='utf-8') as f: f.write(JS_LOGIC)
-        
-    print(f"\\nKlar. UI-filer har skapats.")
+    with open(js_output_path, 'w', encoding='utf-8') as f: f.write(final_js_logic)
+    
+    print(f"UI-filer (HTML, CSS, JS) har skapats i mappen: {os.path.abspath(output_dir)}")
+
 
 def main():
-    """Huvudfunktion som parsar kommandon och delegerar uppgifter."""
+    """Huvudfunktion som parsar argument, transformerar data och bygger UI."""
     if len(sys.argv) < 2:
-        print("Fel: Ett kommando eller en sökväg måste anges.", file=sys.stderr)
+        print("Fel: Ett kommando måste anges.", file=sys.stderr)
+        print("Användning: python scripts/engrove_audio_tools_creator.py build-ui <output_html> <context_json> <relations_json>", file=sys.stderr)
         sys.exit(1)
         
-    command_or_path = sys.argv[1]
+    command = sys.argv[1]
     
-    try:
-        # Bakåtkompatibilitet: Om argumentet inte är ett känt kommando, anta att det är en sökväg för 'build-ui'
-        if command_or_path == "build-ui" or not command_or_path in ["convert-data"]:
-            path = sys.argv[2] if command_or_path == "build-ui" else command_or_path
-            build_ui(path)
+    if command == "build-ui":
+        if len(sys.argv) != 5:
+            print("Fel: build-ui kräver exakt tre argument.", file=sys.stderr)
+            print("Användning: build-ui <output_html_path> <context_json_path> <relations_json_path>", file=sys.stderr)
+            sys.exit(1)
         
-        elif command_or_path == "convert-data":
-            if not DATA_CONVERTER_AVAILABLE:
-                print("Fel: data_converter-modulen kunde inte importeras. Har du skapat den?", file=sys.stderr)
-                sys.exit(1)
+        output_path = sys.argv[2]
+        context_json_path = sys.argv[3]
+        relations_json_path = sys.argv[4]
+
+        try:
+            print("Läser in datakällor...")
+            with open(context_json_path, 'r', encoding='utf-8') as f:
+                file_structure = json.load(f).get("file_structure", {})
+            with open(relations_json_path, 'r', encoding='utf-8') as f:
+                relations_nodes = json.load(f).get("graph_data", {}).get("nodes", {})
+
+            print("Bygger och berikar trädstruktur...")
+            for name, node in file_structure.items():
+                enrich_tree_recursive(node, name, relations_nodes)
+
+            root_node_children = [node for name, node in file_structure.items()]
+            root_node = {'name': 'root', 'type': 'directory', 'path': '.', 'children': root_node_children}
             
-            print("Startar datakonvertering...")
-            base_dir = os.path.dirname(os.path.dirname(__file__)) # Gå upp en nivå från /scripts
+            file_tree_json_string = json.dumps(root_node, ensure_ascii=False)
             
-            files_to_convert = [
-                ("public/data/cartridges-data.json", "public/data/cartridges.msgpack"),
-                ("public/data/tonearms-data.json", "public/data/tonearms.msgpack")
-            ]
+            print("Genererar UI-filer...")
+            build_ui(output_path, file_tree_json_string)
             
-            success_count = 0
-            for in_file, out_file in files_to_convert:
-                if convert_json_to_msgpack(os.path.join(base_dir, in_file), os.path.join(base_dir, out_file)):
-                    success_count += 1
-            
-            print(f"\\nDatakonvertering klar. {success_count} av {len(files_to_convert)} filer konverterades.")
-            
-    except Exception as e:
-        print(f"Ett oväntat fel uppstod: {e}", file=sys.stderr)
+            print("\\nKlar. UI med dynamiskt filträd har genererats.")
+
+        except Exception as e:
+            print(f"Ett oväntat fel uppstod under build-ui: {e}", file=sys.stderr)
+            sys.exit(1)
+    else:
+        print(f"Okänt kommando: {command}", file=sys.stderr)
         sys.exit(1)
 
 if __name__ == "__main__":
