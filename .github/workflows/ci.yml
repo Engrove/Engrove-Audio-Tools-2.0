@@ -22,6 +22,7 @@
 # v2.0 (2025-08-14): Korrigerat anropet till build_relations_graph.py för att inkludera project_overview JSON.
 # v2.1 (2025-08-15): Lade till 'push_options: --force' i auto-commit-steget för att hantera non-fast-forward-fel.
 # v2.2 (2025-08-15): Lade till byggsteg för det nya UI-verktyget (engrove_audio_tools_creator.py).
+# v2.3 (2025-08-16): Korrigerat anropet till engrove_audio_tools_creator.py för att använda det nya kommandobaserade API:et ('build-ui').
 
 name: Consolidated CI/CD and Tools Pipeline
 
@@ -52,7 +53,7 @@ permissions:
 
 env:
   PYTHON_VERSION: '3.11'
-  SITE_DIR: 'dist' # Ändrat till dist för att matcha standard för webbprojekt
+  SITE_DIR: 'dist'
   JSON_FILE: 'context.json'
   LEGACY_HTML_FILE: 'index.html'
   NEW_HTML_FILE: 'index2.html'
@@ -128,7 +129,7 @@ jobs:
         id: create-new-html
         run: |
           echo "Generating new UI from engrove_audio_tools_creator.py..."
-          python scripts/engrove_audio_tools_creator.py "${{ env.SITE_DIR }}/${{ env.NEW_HTML_FILE }}"
+          python scripts/engrove_audio_tools_creator.py build-ui "${{ env.SITE_DIR }}/${{ env.NEW_HTML_FILE }}" "${{ env.SITE_DIR }}/${{ env.JSON_FILE }}" "docs/file_relations.json"
           echo "New UI HTML created successfully."
 
       - name: STEP 5 Create Metadata for Deployment
