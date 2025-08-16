@@ -11,16 +11,17 @@
 # * v1.2 (2025-08-16): (Help me God - Domslut) Ersatt den osäkra platshållaren med en
 #   syntaktiskt giltig, citerad dummy-sträng ("__INJECT_AT_BUILD__") för att förhindra
 #   parse-fel vid misslyckad injektion.
+# * v2.0 (2025-08-16): Implementerat tri-state (checked/indeterminate/unchecked) kryssrutor
+#   för mappar och auto-expandering vid val, enligt godkänd plan.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
 # - Help me God: Denna fix är ett direkt resultat av ett externt domslut.
 # - API-kontraktsverifiering: Kontraktet för datainjektion är nu mer robust.
+# - Obligatorisk Refaktorisering: Logiken för filträdet är nu komplett och robust.
 
 JS_FILE_TREE_LOGIC = """
-// === Engrove File Tree Logic v1.2 ===
+// === Engrove File Tree Logic v2.0 ===
 
-// JSON-datan injiceras som en sträng-literal och parsas säkert.
-// Platshållaren är en giltig sträng för att förhindra syntaxfel om ersättning misslyckas.
 const FILE_TREE_DATA = JSON.parse("__INJECT_AT_BUILD__");
 
 /**
@@ -32,6 +33,8 @@ function updateParents(element) {
     if (!parentLi) return;
 
     const parentCheckbox = parentLi.querySelector(':scope > .node-label > input[type="checkbox"]');
+    if (!parentCheckbox) return;
+    
     const childCheckboxes = Array.from(parentLi.querySelectorAll(':scope > ul > li > .node-label > input[type="checkbox"]'));
 
     if (childCheckboxes.length === 0) return;
@@ -58,7 +61,7 @@ function updateParents(element) {
  * @param {boolean} isChecked - Den nya statusen för kryssrutan.
  */
 function updateChildren(element, isChecked) {
-    const childCheckboxes = element.querySelectorAll('li > .node-label > input[type="checkbox"]');
+    const childCheckboxes = element.querySelectorAll('li .node-label > input[type="checkbox"]');
     childCheckboxes.forEach(cb => {
         cb.checked = isChecked;
         cb.indeterminate = false;
@@ -75,46 +78,54 @@ function renderNode(nodeData) {
     
     const li = document.createElement('li');
     li.className = 'tree-node';
-    if (!isDir) li.style.paddingLeft = '20px';
 
     const label = document.createElement('label');
     label.className = 'node-label';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.dataset.path = nodeData.path;
+    
+    checkbox.addEventListener('click', (e) => {
+        e.stopPropagation();
+        updateChildren(li, checkbox.checked);
+        updateParents(li);
+        
+        // MODIFIKATION: Expandera grenen om en mapp väljs
+        if (isDir && checkbox.checked) {
+            const toggle = li.querySelector(':scope > .toggle-icon');
+            if (toggle && li.classList.contains('collapsed')) {
+                li.classList.remove('collapsed');
+                toggle.textContent = '▼';
+            }
+        }
+    });
+
+    label.appendChild(checkbox);
 
     if (isDir) {
         const toggle = document.createElement('span');
         toggle.className = 'toggle-icon';
         toggle.textContent = '►';
-        toggle.onclick = (e) => {
+        toggle.addEventListener('click', (e) => {
             e.stopPropagation();
             li.classList.toggle('collapsed');
             toggle.textContent = li.classList.contains('collapsed') ? '►' : '▼';
-        };
+        });
         li.appendChild(toggle);
         li.classList.add('collapsed');
     }
 
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.dataset.path = nodeData.path;
-    checkbox.onclick = (e) => {
-        e.stopPropagation();
-        updateChildren(li, checkbox.checked);
-        updateParents(li);
-    };
-
     const icon = document.createElement('span');
     icon.className = 'node-icon';
     icon.textContent = isDir ? '📁' : '📄';
+    label.appendChild(icon);
 
     const text = document.createElement('span');
     text.className = 'node-text';
     text.textContent = nodeData.name;
-    
-    label.appendChild(checkbox);
-    label.appendChild(icon);
     label.appendChild(text);
-    label.onclick = () => checkbox.click();
-
+    
     if (nodeData.tags && nodeData.tags.length > 0) {
         const tagsContainer = document.createElement('div');
         tagsContainer.className = 'metadata-tags';
@@ -147,7 +158,7 @@ function initializeFileTree() {
     const container = document.getElementById('file-tree-container');
     const navContainer = document.getElementById('navigation-container');
     if (!container || typeof FILE_TREE_DATA === 'undefined' || FILE_TREE_DATA === '__INJECT_AT_BUILD__') {
-        if(container) container.innerHTML = '<h2>Filträd</h2><p style=\"color: #ffc107;\">Data-injektion misslyckades under bygget.</p>';
+        if(container) container.innerHTML = '<h2>Filträd</h2><p style="color: #ffc107;">Data-injektion misslyckades under bygget.</p>';
         console.error("Filträdets data saknas eller blev inte injicerad.");
         return;
     }
