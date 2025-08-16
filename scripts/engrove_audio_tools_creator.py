@@ -17,6 +17,7 @@
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
 # - Help me God: Denna fix är ett direkt resultat av ett externt domslut.
 # - Obligatorisk Refaktorisering: Den datatransformerande logiken är nu robust.
+#
 
 import os
 import sys
