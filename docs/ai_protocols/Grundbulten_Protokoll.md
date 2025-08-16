@@ -38,8 +38,7 @@ END HEADER -->
 ## Steg 1: Dokumentation & metadata
 - **1a. Fil-header:** SYFTE, HISTORIK (full, inga platshållare), TILLÄMPADE REGLER.
 - **1b. Kommentarspolicy + sentineller:** Inkludera `BEGIN/END FILE` med exakt sökväg.
-  - Kommentar-syntax per filtyp:
-
+- **1c. Kommentar-syntax per filtyp:**
 | Filändelse | Kommentar-syntax                                 | Status       |
 |------------|---------------------------------------------------|--------------|
 | `.md`      | `<!-- ... -->`                                   | Obligatorisk |
@@ -48,7 +47,8 @@ END HEADER -->
 | `.json`    | *Inga kommentarer tillåtna*                      | Förbjudet    |
 | `.toml`    | `# ...`                                          | Obligatorisk |
 | `.yml`/`.yaml` | `# ...`                                      | Obligatorisk |
-
+- **1d. Kommentarskoriigering:** Felaktiga kommentar-syntax vid uppdatering av fil ska ovillkorligen rättas enligt punkt 1c syntax.
+  
 ## Steg 2: SPEC/ANTAGANDEN
 - Beskriv kontrakt, IO, invarianter, felhantering, typer, tråd/async, prestanda, miljö/beroenden.
 - Märk *[Explicit]* vs *[Härledd]*. Testerna i Steg 6 ska binda dessa.
@@ -78,6 +78,7 @@ END HEADER -->
 ## Steg 8: Filleverans
 - Leverera **full fil** (inte patch) om patch skulle kräva “resten är oförändrat”.
 - Formatsektion: **KOD/INNEHÅLL**. `TILLÄMPADE REGLER` i headern får uppdateras först i Steg 10.
+- `Processkomplicitet: ` Ett %-värde på hur väl filhanteringen utförst, mycket problem med extra åtgärder = låg procent, ett problemfritt genomförane = hög procent. + en en-menings rapport om hela Grundbulten-processens session.
 
 ## Steg 8b: Anti-Placeholder-Grind
 - Förbjudna mönster (exempel): `\.\.\.`, `TODO`, `FIXME`, `resten.*oförändrad`, `placeholder`, `stub`, `pseudo`, `exempel`, `// omitted`, `/* truncated */`.
