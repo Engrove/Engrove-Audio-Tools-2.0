@@ -1,8 +1,7 @@
 # scripts/modules/ui_template.py
 #
 # === HISTORIK ===
-# * v2.1 (2025-08-15): Omstrukturerade header för att separera sökfältet från
-#   ribbon-innehållet och placera det permanent till höger.
+# * v2.1 (2025-08-15): Tog bort alla .ribbon-group-label-element för ett renare UI.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.4) ===
 # - Fullständig kod, alltid.
@@ -33,21 +32,18 @@ HTML_TEMPLATE = """
                 <div class="ribbon-group">
                     <button>Kör Analys</button>
                     <button>Exportera</button>
-                    <span class="ribbon-group-label">Åtgärder</span>
                 </div>
             </div>
             <div id="tab-installningar" class="ribbon-pane">
                  <div class="ribbon-group">
                     <button>Mörkt Tema</button>
                     <button>Ljust Tema</button>
-                    <span class="ribbon-group-label">Gränssnitt</span>
                 </div>
             </div>
             <div id="tab-hjalp" class="ribbon-pane">
                 <div class="ribbon-group">
                     <button>Dokumentation</button>
                     <button>Om</button>
-                    <span class="ribbon-group-label">Support</span>
                 </div>
             </div>
         </div>
