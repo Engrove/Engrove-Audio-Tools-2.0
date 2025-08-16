@@ -1,37 +1,23 @@
 # scripts/modules/ui_styles.py
 #
-# === SYFTE & ANSVAR ===
-# Denna modul innehåller all CSS för det nya Engrove Audio Tools-gränssnittet.
-#
 # === HISTORIK ===
-# * v1.0 (2025-08-15): Initial skapelse.
-# * v1.1 (2025-08-15): Lade till stilar för resizer.
-# * v2.0 (2025-08-15): Implementerade stilar för ribbon-menyn.
-# * v3.0 (2025-08-16): Korrigerade header-layout och etikettpositionering.
-# * v4.0 (2025-08-16): (Help me God) Total visuell omdesign till ett mörkblått tema
-#   med ljusblå knappar för att matcha den överenskomna designriktningen.
+# * v4.0 (2025-08-16): Total visuell omdesign till ett mörkblått tema.
+# * v4.1 (2025-08-16): Lade till förberedande, initialt dolda stilar för
+#   framtida verktyg enligt "Operation: Dold Grund".
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.4) ===
 # - Fullständig Kod: Verifierat komplett.
-# - Obligatorisk Refaktorisering: Hela färgpaletten och komponentstilarna har
-#   omarbetats till en ny, konsekvent design.
 
 CSS_STYLES = """
 :root {
     --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     --font-mono: ui-monospace, "JetBrains Mono", "SF Mono", Consolas, Menlo, monospace;
-    
-    /* Ny mörkblå färgpalett */
     --bg-color: #2c3e50;
     --panel-bg-color: #34495e;
     --border-color: #4a6572;
     --text-color: #ecf0f1;
     --text-color-muted: #bdc3c7;
     --header-bg-color: #2c3e50;
-    --ribbon-content-bg: #34495e;
-    --ribbon-tab-active-bg: #34495e;
-
-    /* Ny knapp- och accentfärgpalett */
     --button-bg: #3498db;
     --button-hover-bg: #2980b9;
     --button-text: #ffffff;
@@ -39,6 +25,8 @@ CSS_STYLES = """
     --input-border-color: #4a6572;
     --resizer-color: #4a6572;
     --resizer-hover-color: #3498db;
+    --ribbon-tab-active-bg: #34495e;
+    --ribbon-content-bg: #34495e;
 }
 
 * { box-sizing: border-box; }
@@ -55,6 +43,7 @@ h2 { font-weight: 500; color: var(--text-color); }
 .main-container {
     display: flex; flex-grow: 1;
     height: calc(100% - 85px);
+    position: relative; /* Nödvändigt för full-page overlay */
 }
 
 /* --- Ribbon Header --- */
@@ -161,5 +150,20 @@ input[type="search"]:focus {
     transition: background-color 0.2s ease;
 }
 .resizer:hover { background-color: var(--resizer-hover-color); }
+
+/* --- Dolda Verktygs-Containrar (Operation: Dold Grund) --- */
+.tool-container {
+    display: none; /* Allt inuti detta är dolt som standard */
+    height: 100%;
+    width: 100%;
+}
+.full-page-container {
+    position: absolute;
+    inset: 0;
+    background-color: var(--panel-bg-color);
+    z-index: 100;
+    padding: 12px;
+    overflow-y: auto;
+}
 """
 # scripts/modules/ui_styles.py
