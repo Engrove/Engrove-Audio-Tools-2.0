@@ -25,5 +25,6 @@
 * **`timestamp`**: En exakt tidsstämpel för när kontrollen slutfördes.
 * **`checks`**: Ett objekt som räknar de specifika problem jag hittat, till exempel hur många heuristiska konflikter eller redundanser som upptäcktes.
 * **`Persistent Register`**: Ger status på de dymaiska reglerna definierade i DynamicProtocols.json: DP-MAINTAIN-PFR-01, DP-MAINTAIN-PHR-01, DP-MAINTAIN-PDR-01, DP-MAINTAIN-PPR-01, DP-MAINTAIN-IMR-01 och DP-MAINTAIN-ISR-01
-* **`Simulated AI`**: Ger status på DP-KAJBJORN-VALIDATION-01
+* **`Simulated AI KAJBJÖRN`**: Ger status på DP-KAJBJORN-VALIDATION-01
+* **`Simulated AI STIGBRITT`**: Ger status på DP-KAJBJORN-VALIDATION-01
 * **`summary`**: En kort, mänskligt läsbar sammanfattning som snabbt förklarar vad resultatet innebär.
