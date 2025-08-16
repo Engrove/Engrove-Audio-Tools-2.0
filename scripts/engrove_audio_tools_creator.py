@@ -11,6 +11,8 @@
 #   destruktiva `enrich_tree_recursive`-funktionen med en ren, icke-destruktiv
 #   rekursiv funktion (`transform_structure_to_tree`) för att korrekt bygga
 #   filträdets datastruktur. Detta löser felet där trädet var tomt.
+# * v6.1 (2025-08-16): Korrigerat metadata-taggarnas ordning till att vara deterministisk
+#   (category, sedan crit) istället för alfabetisk.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
 # - Help me God: Denna fix är ett direkt resultat av ett externt domslut.
@@ -51,13 +53,17 @@ def transform_structure_to_tree(structure_node, relations_nodes, path_prefix='')
         if new_node["type"] == "file":
             relations_data = relations_nodes.get(new_node["path"], {})
             tags = []
+            
+            # Deterministisk ordning: Kategori först, sedan kritikalitet.
             if relations_data.get('category'):
                 tags.append(relations_data['category'])
+            
             crit_score = relations_data.get('criticality_score')
             if isinstance(crit_score, (int, float)):
                 tags.append(f"crit:{crit_score:.0f}%")
+            
             if tags:
-                new_node['tags'] = sorted(tags)
+                new_node['tags'] = tags
         else: # Directory
             new_node["children"] = transform_structure_to_tree(node, relations_nodes, current_path)
         
@@ -79,7 +85,7 @@ def build_ui(html_output_path, file_tree_json_string):
     placeholder = '"__INJECT_AT_BUILD__"'
     injected_js_tree_logic = JS_FILE_TREE_LOGIC.replace(placeholder, js_safe_string_literal)
     
-    final_js_logic = JS_LOGIC + ";\n" + injected_js_tree_logic
+    final_js_logic = JS_LOGIC + ";\\n" + injected_js_tree_logic
 
     with open(html_output_path, 'w', encoding='utf-8') as f: f.write(HTML_TEMPLATE)
     with open(css_output_path, 'w', encoding='utf-8') as f: f.write(CSS_STYLES)
