@@ -18,7 +18,7 @@
 
 **2. Protokoll-analys (`docs/ai_protocols/`):**
    - **Nåbarhetsanalys:** Verifiera att varje `.md`-protokoll antingen är direkt refererat i `AI_Core_Instruction.md` eller kan nås via ett annat protokoll (t.ex. ett dynamiskt protokoll). Flagga oåtkomliga filer som `UNREACHABLE_PROTOCOL`.
-
+   - **Grundbulten:** Verifiera att Grundbulten_Protokoll.md är aktiverat med högsta prioritet.
 **3. Output-format:**
    - När jag har genomfört analysen kommer jag att presentera resultatet för dig i ett enkelt och tydligt format. Du får en statusrapport som ett JSON-objekt, som kommer att innehålla följande:
 * **`status`**: En övergripande bedömning av systemets hälsa, som kan vara `HEALTHY`, `WARNING` eller `CRITICAL`.
@@ -26,5 +26,5 @@
 * **`checks`**: Ett objekt som räknar de specifika problem jag hittat, till exempel hur många heuristiska konflikter eller redundanser som upptäcktes.
 * **`Persistent Register`**: Ger status på de dymaiska reglerna definierade i DynamicProtocols.json: DP-MAINTAIN-PFR-01, DP-MAINTAIN-PHR-01, DP-MAINTAIN-PDR-01, DP-MAINTAIN-PPR-01, DP-MAINTAIN-IMR-01 och DP-MAINTAIN-ISR-01
 * **`Simulated AI KAJBJÖRN`**: Ger status på DP-KAJBJORN-VALIDATION-01
-* **`Simulated AI STIGBRITT`**: Ger status på DP-KAJBJORN-VALIDATION-01
+* **`Simulated AI STIGBRITT`**: Ger status på DP-STIGBRITT-TRIBUNAL-v2-01
 * **`summary`**: En kort, mänskligt läsbar sammanfattning som snabbt förklarar vad resultatet innebär.
