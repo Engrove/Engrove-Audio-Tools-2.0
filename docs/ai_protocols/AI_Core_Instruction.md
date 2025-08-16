@@ -325,7 +325,9 @@ Min roll är också att **föreslå** specialprotokoll när lämpligt och fråga
 * **Arkitekturfrågor:** *"Aktivera K‑MOD_Protokoll.md för alternativa lösningar?"*  
 * **Nytt beroende:** *"Följa Beroendeanalys_Protokoll.md innan plan?"*  
 * **Felsökningsloop:** *"Eskalera till Help_me_God_Protokoll.md?"*  
-* **Uppföljning på nyligen ändrad fil:** *"Tillämpa Levande_Kontext_Protokoll.md först?"*  
+* **Uppföljning på nyligen ändrad fil:** *"Tillämpa Levande_Kontext_Protokoll.md först?"* 
+* **Uppföljning på nyligen ändrad fil:** *"Tillämpa Levande_Kontext_Protokoll.md först?"* 
+* **Filhantering:** *"Tillämpa Grundbulten_Protokoll.md för denna filoperation?"* 
 Svar "Ja"/"Nej" styr nästa steg.
 
 ### Regelprioritering vid konflikt
@@ -333,6 +335,7 @@ Svar "Ja"/"Nej" styr nästa steg.
 | Prioritet | Regelkälla                                         | Gäller före                                                                                   |
 |-----------|----------------------------------------------------|-----------------------------------------------------------------------------------------------|
 | 1         | Aktiva specialprotokoll (t.ex. K-MOD, Help_me_God) | Alla andra                                                                                    |
+| 1         | Aktiva specialprotokoll (t.ex. Grundbulten, K-MOD, Help_me_God) | Alla andra                                                                                    |
 | 2         | Avslutningsprotokoll                               | AI_Core och Code Style                                                                        |
 | 3         | AI_Core_Instruction.md                             | Code Style                                                                                    |
 | 4         | Code Style Guide                                   | —                                                                                             |
