@@ -1,12 +1,12 @@
 # scripts/modules/ui_template.py
 #
 # === HISTORIK ===
-# * v3.2 (2025-08-16): (Help me God - Rotorsaksanalys) Korrigerat HTML-strukturen
-#   för att korrekt implementera ribbon-menyn och ta bort motstridiga element.
+# * v3.2 (2025-08-16): Korrigerat HTML-strukturen för ribbon-menyn.
+# * v4.0 (2025-08-16): Lade till dolda containrar för framtida verktyg,
+#   inklusive en heltäckande .full-page-container, enligt "Operation: Dold Grund".
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.4) ===
 # - Fullständig Kod: Verifierat komplett.
-# - Syntax- & Linter-simulering: Validerad HTML.
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -52,13 +52,30 @@ HTML_TEMPLATE = """
     </header>
     <div class="main-container">
         <aside class="left-pane" id="left-pane">
-            <h2>Navigation</h2>
+            <div id="navigation-container">
+                <h2>Navigation</h2>
+            </div>
+            <!-- Dold container för framtida fil-träd -->
+            <div id="file-tree-container" class="tool-container">
+                <!-- Innehåll för fil-trädet kommer att renderas här av JS -->
+            </div>
         </aside>
         <div class="resizer" id="resizer"></div>
         <main class="right-pane" id="right-pane">
-            <h2>Information & Funktionalitet</h2>
-            <p>Välj ett verktyg i menyn ovan för att börja.</p>
+            <div id="info-container">
+                <h2>Information & Funktionalitet</h2>
+                <p>Välj ett verktyg i menyn ovan för att börja.</p>
+            </div>
+            <!-- Dold container för framtida datavisare -->
+            <div id="data-viewer-container" class="tool-container">
+                 <!-- Innehåll för datavisaren kommer att renderas här av JS -->
+            </div>
         </main>
+        
+        <!-- Heltäckande container för verktyg som kräver hela ytan -->
+        <div id="full-page-container" class="tool-container full-page-container">
+            <!-- Framtida verktyg som AI Performance renderas här -->
+        </div>
     </div>
     <script src="logic.js"></script>
 </body>
