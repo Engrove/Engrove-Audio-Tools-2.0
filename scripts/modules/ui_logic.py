@@ -4,18 +4,20 @@
 # * v3.0 (2025-08-15): Lade till logik för ribbon-menyn och resizer.
 # * v5.0 (2025-08-16): (Help me God) Återställd och verifierad. Lade till
 #   förberedande, vilande funktioner för "Operation: Dold Grund".
+# * v6.0 (2025-08-16): Refaktorerad för modularitet. All logik för filträdet har
+#   flyttats till den dedikerade modulen `ui_file_tree.py`. Denna fil
+#   innehåller nu endast generell UI-logik.
 #
-# === TILLÄMPADE REGLER (Frankensteen v5.4) ===
-# - Obligatorisk Refaktorisering: Logiken är tydligt sektionerad.
-# - Fullständig Kod: Verifierat komplett och korrekt.
+# === TILLÄMPADE REGLER (Frankensteen v5.6) ===
+# - Obligatorisk Refaktorisering: Logiken är nu uppdelad i separata, ansvarsfulla moduler.
+# - Fullständig Kod: Verifierat komplett.
 
 JS_LOGIC = """
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Engrove Audio Tools UI Initialized. Foundations are laid, tools are dormant.');
+    console.log('Engrove Audio Tools UI Initialized.');
 
     // --- Referenser till DOM-element ---
     const leftPane = document.getElementById('left-pane');
-    const rightPane = document.getElementById('right-pane');
     const resizer = document.getElementById('resizer');
     const ribbonTabs = document.querySelectorAll('.ribbon-tab');
     const ribbonPanes = document.querySelectorAll('.ribbon-pane');
@@ -59,49 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.removeEventListener('mousemove', handleMouseMove);
             document.removeEventListener('mouseup', handleMouseUp);
         };
-    }
-
-    // --- Framtida Verktygslogik (Förberedd men inaktiv) ---
-    const defaultNavContainer = document.getElementById('navigation-container');
-    const defaultInfoContainer = document.getElementById('info-container');
-    const fileTreeContainer = document.getElementById('file-tree-container');
-    const dataViewerContainer = document.getElementById('data-viewer-container');
-    const fullPageContainer = document.getElementById('full-page-container');
-
-    /**
-     * Döljer alla verktyg och visar standardvyerna.
-     */
-    function showDefaultView() {
-        [fileTreeContainer, dataViewerContainer, fullPageContainer].forEach(c => c.style.display = 'none');
-        [defaultNavContainer, defaultInfoContainer].forEach(c => c.style.display = 'block');
-    }
-
-    /**
-     * Visar ett specifikt verktygspar i panelerna.
-     */
-    function showPaneTools(leftTool, rightTool) {
-        // KORRIGERING: Anropa INTE showDefaultView här, det är redundant.
-        [defaultNavContainer, defaultInfoContainer, fullPageContainer].forEach(c => c.style.display = 'none');
-        if (leftTool) leftTool.style.display = 'block';
-        if (rightTool) rightTool.style.display = 'block';
-    }
-    
-    /**
-     * Visar ett verktyg som tar över hela skärmen.
-     */
-    function showFullPageTool(toolContainer) {
-        // KORRIGERING: Dölj paneler, visa bara fullskärms-verktyget.
-        [leftPane, rightPane, resizer].forEach(c => c.style.display = 'none');
-        if (toolContainer) toolContainer.style.display = 'block';
-    }
-
-    /**
-     * Funktion för att initialisera och rendera ett fil-träd. (PLATSHÅLLARE)
-     */
-    function initializeFileTree(fileData) {
-        console.log("DORMANT FUNCTION: initializeFileTree anropad.");
-        showPaneTools(fileTreeContainer, dataViewerContainer);
-        fileTreeContainer.innerHTML = '<h3>Filträd (WIP)</h3>';
     }
 });
 """
