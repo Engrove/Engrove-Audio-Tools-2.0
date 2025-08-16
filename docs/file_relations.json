@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-16T18:05:58.897760+00:00",
+    "generated_at": "2025-08-16T18:16:49.775973+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -566,7 +566,7 @@
         "language": "py",
         "exports": [
           {
-            "symbol": "enrich_tree_recursive",
+            "symbol": "transform_structure_to_tree",
             "type": "function"
           },
           {
