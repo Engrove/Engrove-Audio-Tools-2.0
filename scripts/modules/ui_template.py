@@ -4,8 +4,9 @@
 # * v3.2 (2025-08-16): Korrigerat HTML-strukturen för ribbon-menyn.
 # * v4.0 (2025-08-16): Lade till dolda containrar för framtida verktyg,
 #   inklusive en heltäckande .full-page-container, enligt "Operation: Dold Grund".
+# * v4.1 (2025-08-16): Lade till struktur för filgranskningsmodal och översatte all UI-text till svenska.
 #
-# === TILLÄMPADE REGLER (Frankensteen v5.4) ===
+# === TILLÄMPADE REGLER (Frankensteen v5.6) ===
 # - Fullständig Kod: Verifierat komplett.
 
 HTML_TEMPLATE = """
@@ -14,7 +15,7 @@ HTML_TEMPLATE = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Engrove Audio Tools v3.0</title>
+    <title>Engrove Audio Tools v3.0 - Analysverktyg</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -77,6 +78,27 @@ HTML_TEMPLATE = """
             <!-- Framtida verktyg som AI Performance renderas här -->
         </div>
     </div>
+
+    <!-- Modal för filgranskning -->
+    <div id="file-modal-overlay" class="modal-overlay hidden">
+        <div id="file-modal" class="modal-panel">
+            <header class="modal-header">
+                <h3 id="modal-title">Filnamn.js</h3>
+                <div class="modal-actions">
+                    <button id="modal-copy-path" title="Kopiera sökväg">📋</button>
+                    <button id="modal-copy-content">Kopiera innehåll</button>
+                    <button id="modal-download-file">Ladda ner</button>
+                    <button id="modal-close-btn" title="Stäng">×</button>
+                </div>
+            </header>
+            <main class="modal-content">
+                <div id="modal-loader" class="modal-state">Laddar innehåll...</div>
+                <div id="modal-error" class="modal-state hidden">Kunde inte hämta filens innehåll.</div>
+                <pre id="modal-content-pre"></pre>
+            </main>
+        </div>
+    </div>
+
     <script src="logic.js"></script>
 </body>
 </html>
