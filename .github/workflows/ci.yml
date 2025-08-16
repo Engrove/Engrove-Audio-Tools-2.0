@@ -31,18 +31,19 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      # Triggers för befintligt system
-      - '**.js'
-      - '**.vue'
-      - '**.html'
-      - '**.md'
-      - 'requirements.txt'
-      - 'sessions/**.json'
-      # Nya triggers för det nya UI-verktyget
-      - 'scripts/engrove_audio_tools_creator.py'
-      - 'scripts/modules/**.py'
+      ## Triggers för befintligt system
+      .buildtrigger
+      #- '**.js'
+      #- '**.vue'
+      #- '**.html'
+      #- '**.md'
+      #- 'requirements.txt'
+      #- 'sessions/**.json'
+      ## Nya triggers för det nya UI-verktyget
+      #- 'scripts/engrove_audio_tools_creator.py'
+      #- 'scripts/modules/**.py'
       # Inkludera denna fil själv
-      - '.github/workflows/ci.yml'
+      #- '.github/workflows/ci.yml'
   workflow_dispatch:
   schedule:
     - cron: '0 2 * * *'
