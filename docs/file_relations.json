@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-16T07:20:44.891223+00:00",
+    "generated_at": "2025-08-16T09:24:47.710292+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -1871,6 +1871,15 @@
         "criticality_score": 0.0
       },
       "docs/ai_protocols/Beroendeanalys_Protokoll.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/Grundbulten_Protokoll.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
