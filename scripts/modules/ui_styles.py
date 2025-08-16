@@ -2,16 +2,14 @@
 #
 # === HISTORIK ===
 # * v4.0 (2025-08-16): Total visuell omdesign till ett mörkblått tema.
-# * v4.1 (2025-08-16): Lade till förberedande, initialt dolda stilar för
-#   framtida verktyg enligt "Operation: Dold Grund".
-# * v5.0 (2025-08-16): Lade till CSS-regler för det nya interaktiva filträdet,
-#   inklusive styling för noder, ikoner, taggar och indrag.
-# * v5.1 (2025-08-16): Implementerat fullständigt anpassade (custom) tri-state
-#   kryssrutor för att matcha den visuella specifikationen.
+# * v4.1 (2025-08-16): Lade till förberedande, initialt dolda stilar.
+# * v5.0 (2025-08-16): Lade till CSS-regler för det interaktiva filträdet.
+# * v5.1 (2025-08-16): Implementerat anpassade tri-state kryssrutor.
+# * v5.2 (2025-08-16): Korrigerat layout och indentering för filträdet för att
+#   säkerställa korrekt visuell hierarki.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
 # - Fullständig Kod: Verifierat komplett.
-# - API-kontraktsverifiering: Alla färg- och fontvariabler följer `:root`-kontraktet.
 
 CSS_STYLES = """
 :root {
@@ -52,7 +50,7 @@ h2 { font-weight: 500; color: var(--text-color); }
 .main-container {
     display: flex; flex-grow: 1;
     height: calc(100% - 85px);
-    position: relative; /* Nödvändigt för full-page overlay */
+    position: relative;
 }
 
 /* --- Ribbon Header --- */
@@ -162,7 +160,7 @@ input[type="search"]:focus {
 
 /* --- Dolda Verktygs-Containrar (Operation: Dold Grund) --- */
 .tool-container {
-    display: none; /* Allt inuti detta är dolt som standard */
+    display: none; 
     height: 100%;
     width: 100%;
 }
@@ -183,22 +181,43 @@ input[type="search"]:focus {
     font-family: var(--font-mono);
     font-size: 13px;
 }
-.file-tree li { padding: 1px 0; }
-.tree-node > ul { padding-left: 20px; }
+.file-tree li {
+    padding: 1px 0;
+}
+.file-tree ul {
+    padding-left: 20px;
+}
+.tree-node.collapsed > ul {
+    display: none;
+}
+.node-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 3px;
+    width: 100%;
+}
+.node-label:hover {
+    background-color: rgba(0,0,0,0.1);
+}
 .toggle-icon {
     cursor: pointer; user-select: none;
     width: 18px; height: 18px; text-align: center; line-height: 18px;
     color: var(--text-color-muted); flex-shrink: 0;
 }
-.toggle-icon:hover { color: var(--text-color); }
-.tree-node.collapsed > ul { display: none; }
-.node-label {
-    display: flex; align-items: center; gap: 6px;
-    cursor: pointer; padding: 2px 4px; border-radius: 3px;
+.toggle-icon:hover {
+    color: var(--text-color);
 }
-.node-label:hover { background-color: rgba(0,0,0,0.1); }
-.node-icon { font-style: normal; }
-.node-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.node-icon {
+    font-style: normal;
+}
+.node-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 /* --- Custom Tri-state Checkbox Styles --- */
 .node-label input[type="checkbox"] {
