@@ -7,7 +7,7 @@
 #
 # === HISTORIK ===
 # * v1.0 (2025-08-16): Initial skapelse som en del av Operation: Modularitet.
-# * v1.1 (2025-08-16): KRITISK FIX: Ändrat datainjektionen till att använda JSON.parse()
+# * v1.1 (2025-08-16): KRITISK FIX: Ändrat datainjektion till att använda JSON.parse()
 #   för att förhindra syntaxfel från specialtecken i datan.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
@@ -17,8 +17,8 @@
 JS_FILE_TREE_LOGIC = """
 // === Engrove File Tree Logic v1.1 ===
 
-// JSON-datan injiceras som en sträng och parsas säkert.
-const FILE_TREE_DATA = JSON.parse(`${file_tree_json}`);
+// JSON-datan injiceras som en sträng-literal och parsas säkert för att undvika syntaxfel.
+const FILE_TREE_DATA = JSON.parse(${injected_json_data_string});
 
 /**
  * Uppdaterar alla föräldrars kryssrutor uppåt i trädet.
@@ -94,7 +94,6 @@ function renderNode(nodeData) {
     checkbox.type = 'checkbox';
     checkbox.dataset.path = nodeData.path;
     checkbox.onclick = (e) => {
-        // Stoppa eventet från att bubbla till label, vilket skulle trigga det två gånger.
         e.stopPropagation();
         updateChildren(li, checkbox.checked);
         updateParents(li);
@@ -111,7 +110,7 @@ function renderNode(nodeData) {
     label.appendChild(checkbox);
     label.appendChild(icon);
     label.appendChild(text);
-    label.onclick = () => checkbox.click(); // Gör hela raden klickbar
+    label.onclick = () => checkbox.click();
 
     if (nodeData.tags && nodeData.tags.length > 0) {
         const tagsContainer = document.createElement('div');
@@ -156,7 +155,6 @@ function initializeFileTree() {
     const rootUl = document.createElement('ul');
     rootUl.className = 'file-tree';
     
-    // Anta att FILE_TREE_DATA är rot-objektet
     if (FILE_TREE_DATA.children) {
         FILE_TREE_DATA.children.forEach(node => {
             rootUl.appendChild(renderNode(node));
