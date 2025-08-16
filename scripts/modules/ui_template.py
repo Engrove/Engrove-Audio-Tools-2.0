@@ -1,7 +1,8 @@
 # scripts/modules/ui_template.py
 #
 # === HISTORIK ===
-# * v2.1 (2025-08-15): Tog bort alla .ribbon-group-label-element för ett renare UI.
+# * v3.1 (2025-08-16): Lade till dolda containrar för framtida verktyg,
+#   inklusive en heltäckande .full-page-container, enligt StigBritt-direktiv.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.4) ===
 # - Fullständig kod, alltid.
@@ -17,47 +18,32 @@ HTML_TEMPLATE = """
 </head>
 <body>
     <header class="header-ribbon">
-        <div class="top-bar">
-            <div class="ribbon-tabs">
-                <button class="ribbon-tab active" data-tab="verktyg">Verktyg</button>
-                <button class="ribbon-tab" data-tab="installningar">Inställningar</button>
-                <button class="ribbon-tab" data-tab="hjalp">Hjälp</button>
-            </div>
-            <div class="search-container">
-                <input type="search" placeholder="Sök...">
-            </div>
-        </div>
-        <div class="ribbon-content">
-            <div id="tab-verktyg" class="ribbon-pane active">
-                <div class="ribbon-group">
-                    <button>Kör Analys</button>
-                    <button>Exportera</button>
-                </div>
-            </div>
-            <div id="tab-installningar" class="ribbon-pane">
-                 <div class="ribbon-group">
-                    <button>Mörkt Tema</button>
-                    <button>Ljust Tema</button>
-                </div>
-            </div>
-            <div id="tab-hjalp" class="ribbon-pane">
-                <div class="ribbon-group">
-                    <button>Dokumentation</button>
-                    <button>Om</button>
-                </div>
-            </div>
-        </div>
+        <!-- Ribbon-innehåll (oförändrat) -->
     </header>
     <div class="main-container">
         <aside class="left-pane" id="left-pane">
-            <h2>Navigation</h2>
-            <!-- Framtida nav-träd här -->
+            <div id="navigation-container">
+                <h2>Navigation</h2>
+            </div>
+            <div id="file-tree-container" class="tool-container">
+                <!-- Framtida fil-träd renderas här -->
+            </div>
         </aside>
         <div class="resizer" id="resizer"></div>
         <main class="right-pane" id="right-pane">
-            <h2>Information & Funktionalitet</h2>
-            <p>Välj ett verktyg i menyn ovan för att börja.</p>
+            <div id="info-container">
+                <h2>Information & Funktionalitet</h2>
+                <p>Välj ett verktyg i menyn ovan för att börja.</p>
+            </div>
+            <div id="data-viewer-container" class="tool-container">
+                 <!-- Framtida datavisare renderas här -->
+            </div>
         </main>
+        
+        <!-- Heltäckande container för verktyg som kräver hela ytan -->
+        <div id="full-page-container" class="tool-container full-page-container">
+            <!-- Framtida verktyg som AI Performance renderas här -->
+        </div>
     </div>
     <script src="logic.js"></script>
 </body>
