@@ -4,9 +4,12 @@
 # * v4.0 (2025-08-16): Total visuell omdesign till ett mörkblått tema.
 # * v4.1 (2025-08-16): Lade till förberedande, initialt dolda stilar för
 #   framtida verktyg enligt "Operation: Dold Grund".
+# * v5.0 (2025-08-16): Lade till CSS-regler för det nya interaktiva filträdet,
+#   inklusive styling för noder, ikoner, taggar och indrag.
 #
-# === TILLÄMPADE REGLER (Frankensteen v5.4) ===
+# === TILLÄMPADE REGLER (Frankensteen v5.6) ===
 # - Fullständig Kod: Verifierat komplett.
+# - API-kontraktsverifiering: Alla färg- och fontvariabler följer `:root`-kontraktet.
 
 CSS_STYLES = """
 :root {
@@ -164,6 +167,81 @@ input[type="search"]:focus {
     z-index: 100;
     padding: 12px;
     overflow-y: auto;
+}
+
+/* --- File Tree --- */
+.file-tree, .file-tree ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 13px;
+}
+.file-tree li {
+    padding: 1px 0;
+}
+.tree-node {
+    padding-left: 20px;
+    position: relative;
+}
+.tree-node > ul {
+    padding-left: 20px;
+}
+.toggle-icon {
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    cursor: pointer;
+    user-select: none;
+    width: 18px;
+    height: 18px;
+    text-align: center;
+    line-height: 18px;
+    color: var(--text-color-muted);
+}
+.toggle-icon:hover {
+    color: var(--text-color);
+}
+.tree-node.collapsed > ul {
+    display: none;
+}
+.node-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+.node-label:hover {
+    background-color: rgba(0,0,0,0.1);
+}
+.node-label input[type="checkbox"] {
+    margin: 0;
+    flex-shrink: 0;
+}
+.node-icon {
+    font-style: normal;
+}
+.node-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.metadata-tags {
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+    padding-left: 8px; /* So tags don't touch text */
+}
+.metadata-tag {
+    padding: 1px 6px;
+    border-radius: 99px;
+    font-size: 10px;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color-muted);
+    white-space: nowrap;
 }
 """
 # scripts/modules/ui_styles.py
