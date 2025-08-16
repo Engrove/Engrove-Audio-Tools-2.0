@@ -6,14 +6,10 @@
 #
 # === HISTORIK ===
 # * v1.0 (2025-08-15): Initial skapelse.
-# * v1.1 (2025-08-15): Korrigerad för att hantera kommandoradsargument.
-# * v2.0 (2025-08-15): Uppdaterad för att generera både HTML och CSS.
-# * v3.0 (2025-08-15): Uppdaterad för att även generera logic.js.
 # * v4.0 (2025-08-16): (Help me God) Omstrukturerad för att vara både kommandodriven och bakåtkompatibel.
 # * v5.0 (2025-08-16): ARKITEKTURUPPGRADERING: Implemented modular file tree logic.
-#   - Läser nu context.json och file_relations.json för att bygga ett hierarkiskt, berikat filträd.
-#   - Injisicerar denna data i den nya, separata modulen `ui_file_tree.py`.
-#   - Monterar det slutgiltiga UI:t med det dynamiska filträdet.
+# * v5.1 (2025-08-16): KRITISK FIX: Ändrat datainjektion till att använda en escapad JSON-sträng
+#   och `JSON.parse()` i JS för att förhindra syntaxfel.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
 # - Obligatorisk Refaktorisering: Logiken är nu uppdelad i moduler.
@@ -49,13 +45,20 @@ def enrich_tree_recursive(current_node, name, relations_nodes):
             if tags:
                 current_node['tags'] = sorted(tags)
     else: # Directory
-        # The children are the values of the dictionary, excluding known metadata keys
         children_items = sorted(
             [(k, v) for k, v in current_node.items() if isinstance(v, dict)],
-            key=lambda item: (item[1].get('type', 'directory') != 'directory', item[0]) # Sort folders first, then files
+            key=lambda item: (item[1].get('type', 'directory') != 'directory', item[0])
         )
-        for child_name, child_node in children_items:
+        current_node['children'] = [v for k, v in children_items]
+        
+        # Ta bort de ursprungliga barn-nycklarna för att rensa upp strukturen
+        for child_name, _ in children_items:
+            del current_node[child_name]
+
+        for child_node in current_node['children']:
+            child_name = next(k for k,v in children_items if v is child_node)
             enrich_tree_recursive(child_node, child_name, relations_nodes)
+
 
 def build_ui(html_output_path, file_tree_json_string):
     """Genererar HTML, CSS och den sammansatta JS-filen."""
@@ -65,8 +68,10 @@ def build_ui(html_output_path, file_tree_json_string):
     
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
-        
-    injected_js_tree_logic = JS_FILE_TREE_LOGIC.replace('${file_tree_json}', file_tree_json_string)
+    
+    # Escapa JSON-strängen för säker injektion i en JS template literal (`...`)
+    safe_js_string = file_tree_json_string.replace('`', '\\`').replace('\\\\', '\\\\\\\\').replace('${', '\\${')
+    injected_js_tree_logic = JS_FILE_TREE_LOGIC.replace('${file_tree_json}', safe_js_string)
     final_js_logic = JS_LOGIC + "\\n\\n" + injected_js_tree_logic
 
     with open(html_output_path, 'w', encoding='utf-8') as f: f.write(HTML_TEMPLATE)
@@ -103,11 +108,18 @@ def main():
                 relations_nodes = json.load(f).get("graph_data", {}).get("nodes", {})
 
             print("Bygger och berikar trädstruktur...")
-            for name, node in file_structure.items():
-                enrich_tree_recursive(node, name, relations_nodes)
-
-            root_node_children = [node for name, node in file_structure.items()]
-            root_node = {'name': 'root', 'type': 'directory', 'path': '.', 'children': root_node_children}
+            
+            # Skapa en rot-nod för att hantera flera objekt i toppen av file_structure
+            root_node = {'name': 'root', 'type': 'directory', 'path': '.', 'children_dict': file_structure}
+            enrich_tree_recursive(root_node['children_dict'], 'root', relations_nodes)
+            
+            # Platta ut barnen till en lista
+            children_items = sorted(
+                [(k, v) for k, v in root_node['children_dict'].items() if isinstance(v, dict)],
+                key=lambda item: (item[1].get('type', 'directory') != 'directory', item[0])
+            )
+            root_node['children'] = [v for k,v in children_items]
+            del root_node['children_dict']
             
             file_tree_json_string = json.dumps(root_node, ensure_ascii=False)
             
