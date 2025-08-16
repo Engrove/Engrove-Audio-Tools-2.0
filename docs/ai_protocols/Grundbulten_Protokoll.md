@@ -78,7 +78,7 @@ END HEADER -->
 ## Steg 8: Filleverans
 - Leverera **full fil** (inte patch) om patch skulle kräva “resten är oförändrat”.
 - Formatsektion: **KOD/INNEHÅLL**. `TILLÄMPADE REGLER` i headern får uppdateras först i Steg 10.
-- `Processkomplicitet: ` Ett %-värde på hur väl filhanteringen utförst, mycket problem med extra åtgärder = låg procent, ett problemfritt genomförane = hög procent. + en en-menings rapport om hela Grundbulten-processens session.
+- `Processkomplicitet: ` Ett %-värde på hur väl filhanteringen utförst, mycket problem med extra åtgärder = hög procent, ett problemfritt genomförane = låg procent. + en en-menings rapport om hela Grundbulten-processens session.
 
 ## Steg 8b: Anti-Placeholder-Grind
 - Förbjudna mönster (exempel): `\.\.\.`, `TODO`, `FIXME`, `resten.*oförändrad`, `placeholder`, `stub`, `pseudo`, `exempel`, `// omitted`, `/* truncated */`.
