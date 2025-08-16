@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-16T03:48:50.514142+00:00",
+    "generated_at": "2025-08-16T03:53:59.503021+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -1181,6 +1181,42 @@
         "language": "py",
         "exports": [],
         "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/modules/data_converter.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [
+          {
+            "symbol": "convert_json_to_msgpack",
+            "type": "function"
+          }
+        ],
+        "imports": [
+          {
+            "source": "json",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "msgpack",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "os",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          }
+        ],
         "dependents_count": 0,
         "criticality_score": 0.0
       },
