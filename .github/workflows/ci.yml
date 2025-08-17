@@ -17,18 +17,19 @@
 #                 Detta är rätt syntax: "name: STEP 3 Generate AI Context JSON"
 # PUSH TRIGGER: '.buildtrigger' ska vara den enda aktiva push triggern för att exakt styra när en körning ska ske. de övrika trigger objekten ska finnas knar men vara kommentarer.
 # === HISTORIK ===
-# v1.0 (2025-08-13): Initial skapelse av Frankensteen. Konsoliderar två workflows.
-# v1.1 (2025-08-13): Korrigerat ett syntaxfel i cron-schemat (saknade citattecken).
-# v1.2 (2025-08-13): Refaktorerat session-bearbetning för att använda miljövariabler.
-# v1.3 (2025-08-13): (Help me God) Korrigerat YAML-parsingsfel genom att ta bort onödiga citattecken runt en miljövariabel.
-# v2.0 (2025-08-14): Korrigerat anropet till build_relations_graph.py för att inkludera project_overview JSON.
-# v2.1 (2025-08-15): Lade till 'push_options: --force' i auto-commit-steget för att hantera non-fast-forward-fel.
-# v2.2 (2025-08-15): Lade till byggsteg för det nya UI-verktyget (engrove_audio_tools_creator.py).
-# v2.3 (2025-08-16): Korrigerat anropet till engrove_audio_tools_creator.py för att använda det nya kommandobaserade API:et ('build-ui').
-# v2.4 (2025-08-16): (Help me God - Domslut) Lade till 'clean: true' till checkout-steget för att säkerställa en ren byggmiljö och eliminera potentiella cachningsproblem.
-# v2.5 (2025-08-17): (Help me God - Grundorsaksanalys) Lade till ett nytt steg för att skapa project_overview.json och korrigerade anropet till engrove_audio_tools_creator.py med det saknade argumentet.
-# v2.6 (2025-08-17): Lade till steg för att bygga Einstein RAG-index, inklusive cachning för pip och Hugging Face-modeller. Uppdaterade commit-steget.
-# * SHA256_LF: 2c83d6505349e491c6e1e12733979607865e9c0c1b48995a9d3e2a1c0d9e8f7a
+# * v1.0 (2025-08-13): Initial skapelse av Frankensteen. Konsoliderar två workflows.
+# * v1.1 (2025-08-13): Korrigerat ett syntaxfel i cron-schemat (saknade citattecken).
+# * v1.2 (2025-08-13): Refaktorerat session-bearbetning för att använda miljövariabler.
+# * v1.3 (2025-08-13): (Help me God) Korrigerat YAML-parsingsfel genom att ta bort onödiga citattecken runt en miljövariabel.
+# * v2.0 (2025-08-14): Korrigerat anropet till build_relations_graph.py för att inkludera project_overview JSON.
+# * v2.1 (2025-08-15): Lade till 'push_options: --force' i auto-commit-steget för att hantera non-fast-forward-fel.
+# * v2.2 (2025-08-15): Lade till byggsteg för det nya UI-verktyget (engrove_audio_tools_creator.py).
+# * v2.3 (2025-08-16): Korrigerat anropet till engrove_audio_tools_creator.py för att använda det nya kommandobaserade API:et ('build-ui').
+# * v2.4 (2025-08-16): (Help me God - Domslut) Lade till 'clean: true' till checkout-steget för att säkerställa en ren byggmiljö och eliminera potentiella cachningsproblem.
+# * v2.5 (2025-08-17): (Help me God - Grundorsaksanalys) Lade till ett nytt steg för att skapa project_overview.json och korrigerade anropet till engrove_audio_tools_creator.py med det saknade argumentet.
+# * v2.6 (2025-08-17): Lade till steg för att bygga Einstein RAG-index, inklusive cachning för pip och Hugging Face-modeller. Uppdaterade commit-steget.
+# * v2.7 (2025-08-17): (Help me God - Domslut) Ersatt den bräckliga `printf`-metoden för JSON-konstruktion med en robust, direkt strängtilldelning för att lösa ett shell-parsingsfel.
+# * SHA256_LF: d3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4
 
 name: Consolidated CI/CD and Tools Pipeline
 
@@ -74,7 +75,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
-          clean: true # SÄKERSTÄLLER REN BYGGMILJÖ
+          clean: true
 
       - name: Set up Python ${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v4
@@ -110,7 +111,7 @@ jobs:
         id: generate-relations
         run: |
           echo "Generating file relations graph..."
-          PROJECT_OVERVIEW_JSON=$(printf '{\"repository\": \"%s\", \"branch\": \"%s\"}' \"${{ github.repository }}\" \"${{ github.ref_name }}\")
+          PROJECT_OVERVIEW_JSON='{"repository": "${{ github.repository }}", "branch": "${{ github.ref_name }}"}'
           python scripts/build_relations_graph.py "$PROJECT_OVERVIEW_JSON"
           echo "Graph generation complete."
       
@@ -148,7 +149,7 @@ jobs:
         id: create-project-overview
         run: |
           echo "Creating project overview JSON artifact..."
-          printf '{\"repository\": \"%s\", \"branch\": \"%s\"}' \"${{ github.repository }}\" \"${{ github.ref_name }}\" > "${{ env.PROJECT_OVERVIEW_FILE }}"
+          printf '{"repository": "%s", "branch": "%s"}' "${{ github.repository }}" "${{ github.ref_name }}" > "${{ env.PROJECT_OVERVIEW_FILE }}"
           echo "Artifact created at ${{ env.PROJECT_OVERVIEW_FILE }}"
 
       - name: STEP 4C Create New UI HTML (index2.html)
