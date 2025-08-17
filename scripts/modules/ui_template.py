@@ -5,9 +5,11 @@
 # * v4.0 (2025-08-16): Lade till dolda containrar för framtida verktyg,
 #   inklusive en heltäckande .full-page-container, enligt "Operation: Dold Grund".
 # * v4.1 (2025-08-16): Lade till struktur för filgranskningsmodal och översatte all UI-text till svenska.
+# * v4.2 (2025-08-17): Lade till Eruda debugging-verktyg för att underlätta felsökning på mobila enheter.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
 # - Fullständig Kod: Verifierat komplett.
+# - Grundbulten: Modifiering av mallfil för att påverka genererad output.
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -17,6 +19,9 @@ HTML_TEMPLATE = """
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Engrove Audio Tools v3.0 - Analysverktyg</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Eruda debugging console for mobile devices -->
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    <script>eruda.init();</script>
 </head>
 <body>
     <header class="header-ribbon">
