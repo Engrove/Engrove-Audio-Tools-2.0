@@ -1,6 +1,6 @@
 <!-- BEGIN FILE: docs/ai_protocols/Grundbulten_Protokoll.md
 SYFTE & ANSVAR:
-"Grundbulten" (P-GB-3.2) är den tvingande lagen för all filgenerering/-modifiering (kod, dokument, konfig, data).
+"Grundbulten" (P-GB-3.3) är den tvingande lagen för all filgenerering/-modifiering (kod, dokument, konfig, data).
 Mål: 100% korrekt, komplett, spårbar, verifierad och deterministisk leverans i chattläge (Gemini/OpenAI), utan antaganden.
 
 HISTORIK:
@@ -11,13 +11,14 @@ HISTORIK:
 * v3.0 (2025-08-16): REBORN: Hårda grindar G0–G4, evidensartefakter, typstyrd verifieringsmatris, CI-recept.
 * v3.1 (2025-08-17): (Help me God) Gjorde verifiering extern och obligatorisk. Införde 'VERIFICATION_LOG' och 'LIGHTWEIGHT COMPLIANCE STATEMENT' för att tvinga fram transparens och extern bevisföring efter upprepade processfel. Ersatte den vaga 'Processkomplicitet' med en 'Execution Summary'.
 * v3.2 (2025-08-17): Skärpt kontextkrav (G0 -> 99%), förenklad rapportering (G1 borttagen), och lagt till obligatorisk kvantitativ diff-analys (Steg 6 & 9).
+* v3.3 (2025-08-17): (Help me God) Infört Steg 10b, "Pre-Flight Diff Check", för att tvinga fram en slutgiltig, holistisk granskning av hela filen (inklusive metadata) innan leverans. Detta för att motverka "task fixation". VERIFICATION_LOG har uppdaterats för att inkludera denna kontroll.
 
 TILLÄMPADE REGLER (Frankensteen v5.6):
 * GR4 – Interaktionskontrakt: Självgranskning + extern dom; fast outputordning och ansvar.
 * GR5 – Tribunal/Red Team: KajBjörn validerar SPEC; StigBritt bryter planen före implementation.
 * GR6 – Processrefaktorering: Reproducerbar pipeline med grindar och verktygssteg.
 * GR7 – Historik & spårbarhet: Full historik i header, BEGIN/END-sentineller, inga platshållare.
-* GB-Gates – G0–G4 (nedan) är tvingande och aborterar på brott.
+* GB-Gates – G0, G2-G4 (nedan) är tvingande och aborterar på brott.
 * No-Guess-Pledge – Inga påståenden utan källa; fråga vid osäkerhet.
 * Help me God: Denna uppgradering är en direkt åtgärd mot ett systemiskt processfel.
 
@@ -25,7 +26,7 @@ Datum: 2025-08-17
 Extern granskare: Engrove (godkänd för införing i Steg 10)
 END HEADER -->
 
-# Protokoll: **Grundbulten** (P-GB-3.2) – Universell filhantering (chattsession)
+# Protokoll: **Grundbulten** (P-GB-3.3) – Universell filhantering (chattsession)
 
 ## Steg G: Hårda grindar (abortvillkor, före Steg 1)
 - **G0. Kontextintegritet < 99% ⇒ AVBRYT.** Kräv kompletterande källor/sammanfattning och ny körning.
@@ -74,7 +75,7 @@ END HEADER -->
 - **Allmänt:** Filstorlek, funktionsantal, objektantal, sektionsantal eller annan mätbar differans.
 
 ## Steg 7: Extern Verifiering & Bevisföring
-- I **varje svar** som levererar en fil enligt detta protokoll, **MÅSTE** ett `VERIFICATION_LOG`-block inkluderas. Detta block redovisar explicit de verifieringssteg som har (eller skulle ha) körts, inklusive manuella kontraktskontroller.
+- I **varje svar** som levererar en fil enligt detta protokoll, **MÅSTE** ett `VERIFICATION_LOG`-block inkluderas. Detta block redovisar explicit de verifieringssteg som har (eller skulle ha) körts.
 - **Exempel på `VERIFICATION_LOG`:**
   ```markdown
   #### VERIFICATION_LOG
@@ -83,6 +84,7 @@ END HEADER -->
     - `ast.parse`: [PASS] - Filen är giltig Python-syntax.
     - `ruff`: [PASS] - Inga linter-fel.
     - **Kontraktsverifiering (manuell):** [PASS] - `file_tree_placeholder` i byggskriptet matchar nu den o-citerade variabeln i `ui_file_tree.py`.
+    - **Pre-Flight Diff Check:** [PASS] - `HISTORIK`-sektionen är verifierat uppdaterad med vX.Y. Ingen oavsiktlig kodförlust har skett.
   ```
 
 ## Steg 8: Filleverans
@@ -94,9 +96,8 @@ END HEADER -->
 - Vid träff: **AVBRYT** och börja om vid Steg 2.
 
 ## Steg 9: Efterlevnadsrapport (Compliance Statement)
-- De fullständiga JSON-artefakterna (`COMPLIANCE_MANIFEST.json`, `EVIDENCE_MAP.json`) genereras **endast vid en formell sessionsavslutning** eller på **explicit begäran**.
-- För normala, löpande filleveranser ersätts de av en **Lightweight Compliance Statement** i ett markdown-kodblock, som måste inkluderas i svaret.
-- Vid filleverans där filstorlek, funktionsantal, objektantal, sektionsantal eller annan mätbar differans signifikant reducerats ska en förklaring anges.
+- För normala, löpande filleveranser, **MÅSTE** en **Lightweight Compliance Statement** i ett markdown-kodblock inkluderas i svaret.
+- Vid filleverans där filstorlek, funktionsantal, etc., signifikant reducerats ska en förklaring anges.
 - **Exempel på `LIGHTWEIGHT COMPLIANCE STATEMENT`:**
   ```markdown
   #### LIGHTWEIGHT COMPLIANCE STATEMENT
@@ -104,11 +105,20 @@ END HEADER -->
   - **Kontrakt:** [PASS]
   - **Placeholders:** [PASS]
   - **Historik:** [PASS]
+  - **Kvantitativ Diff:** [PASS] - Minskning av 2 funktioner motiverad av refaktorisering.
   ```
 
 ## Steg 10: Självgranskning & extern dom
-- **10a. Självgranskning:** Intern bekräftelse att alla steg i v3.1 har följts.
-- **10b. Extern dom (Engrove):** Godkännande eller korrigering. Först därefter uppdateras `TILLÄMPADE REGLER` i fil-headern.
+- **10a. Självgranskning:** Intern bekräftelse att alla steg i v3.3 har följts.
+- **10b. Pre-Flight Diff Check (Obligatorisk Slutkontroll):** Detta är det sista steget som utförs mentalt **innan** filen skrivs ut i svaret.
+  - **Syfte:** Att motverka "task fixation" och säkerställa att triviala men kritiska delar (som metadata) inte missas.
+  - **Process:** Jag MÅSTE genomföra en mental `diff`-granskning mellan den ursprungliga källfilen och min färdiga, slutgiltiga version.
+  - **Tvingande Kontrollpunkter:**
+    1.  **Metadata:** Har `HISTORIK`-sektionen uppdaterats korrekt med en ny, relevant versionspost?
+    2.  **Integritet:** Har någon befintlig, korrekt kod oavsiktligt tagits bort eller ändrats?
+    3.  **Fullständighet:** Matchar `BEGIN/END FILE`-sentinellerna den exakta filsökvägen?
+  - **Rapportering:** Resultatet av denna kontroll MÅSTE dokumenteras i `VERIFICATION_LOG`-blocket (se Steg 7).
+- **10c. Extern dom (Engrove):** Godkännande eller korrigering. Först därefter uppdateras `TILLÄMPADE REGLER` i fil-headern.
 
 ## Steg 11: Arkivering
 - Uppdatera HISTORIK. Säkerställ att BEGIN/END-sentineller och filsökväg är korrekta.
