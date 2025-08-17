@@ -1,3 +1,19 @@
+# BEGIN FILE: requirements.txt
+# === SYFTE & ANSVAR ===
+# Definierar projektets Python-beroenden. Utökad med bibliotek för "Einstein" RAG-systemet.
+# === HISTORIK ===
+# * v1.0: Initial version med requests, beautifulsoup4, msgpack.
+# * v2.0 (2025-08-17): Lade till sentence-transformers, torch, chromadb för RAG.
+# * SHA256_LF: 2d40b991448b2611a5113c2f0f8c05761a29ed6d31e9c9c366e60b7e41d8e13d
+
+requests==2.32.3
+beautifulsoup4==4.12.3
+msgpack==1.0.8
 requests==2.32.3
 jsonschema==4.23.0
-msgpack==1.0.8
+
+# --- Einstein RAG System Dependencies ---
+sentence-transformers
+torch
+chromadb
+# END FILE: requirements.txt
