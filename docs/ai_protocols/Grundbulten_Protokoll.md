@@ -1,6 +1,6 @@
 <!-- BEGIN FILE: docs/ai_protocols/Grundbulten_Protokoll.md
 SYFTE & ANSVAR:
-"Grundbulten" (P-GB-3.7) är den tvingande lagen för all filgenerering/-modifiering (kod, dokument, konfig, data).
+"Grundbulten" (P-GB-3.8) är den tvingande lagen för all filgenerering/-modifiering (kod, dokument, konfig, data).
 Mål: 100% korrekt, komplett, spårbar, verifierad och deterministisk leverans i chattläge (Gemini/OpenAI), utan antaganden.
 
 HISTORIK:
@@ -15,9 +15,11 @@ HISTORIK:
 * v3.4 (2025-08-17): (Help me God) Lade till Steg 1d (kontextkommentar) och Steg 2b (Dominansprincip).
 * v3.6 (2025-08-17): (Help me God) KRITISK UPPDATERING. Infört en sluten verifieringskedja för att förhindra trunkeringsfel: 1. G-1: Tvingande hash-kontroll vid inläsning. 2. Steg 1f: Tvingande inbäddning av slutgiltig hash i filens historik. 3. Steg 9: Tvingande rapportering av slutgiltig hash i svar. 4. Steg 10e: Tvingande intern självverifiering av hash-värden före leverans.
 * v3.7 (2025-08-17): (Help me God - KORRIGERING) Infört en sluten, hash-baserad verifieringskedja (G-1, 1f, 9, 10e) för att matematiskt förhindra trunkeringsfel. Återställt fullständiga bilagor.
-* SHA256_LF: f490d3c0b5e94b159b35e8e19c00b217034c5b364d1c9f4d7159f81f9a6b98a3
+* v3.8 (2025-08-17): (Engrove Mandate) Lade till Steg 11b för att tvinga fram loggning av varje filmodifiering till en temporär sessionslogg (.tmp/session_revision_log.json).
+* SHA256_LF: 99dd1e2c140409c9966113b248a3182813580436cf0f0c0ca9c647b0e1181283
 
 TILLÄMPADE REGLER (Frankensteen v5.6):
+* Grundbulten v3.7: Denna ändring följer den uppgraderade processen för transparens.
 * GR4 – Interaktionskontrakt: Självgranskning + extern dom; fast outputordning och ansvar.
 * GR5 – Tribunal/Red Team: KajBjörn validerar SPEC; StigBritt bryter planen före implementation.
 * GR6 – Processrefaktorering: Reproducerbar pipeline med grindar och verktygssteg.
@@ -30,7 +32,7 @@ Datum: 2025-08-17
 Extern granskare: Engrove (godkänd för införing i Steg 10)
 END HEADER -->
 
-# Protokoll: **Grundbulten** (P-GB-3.7) – Universell filhantering (chattsession)
+# Protokoll: **Grundbulten** (P-GB-3.8) – Universell filhantering (chattsession)
 
 ## Steg G: Hårda grindar (abortvillkor, före Steg 1)
 - **G-1. Kontrollsumma-verifiering vid inläsning ⇒ AVBRYT.** Om en fil som ska modifieras har en `base_checksum_sha256` i kontexten, måste min interna minnesbild **och** min beräknade minnesbilds hash matcha den hashen. Vid mismatch, avbryt och begär färsk fil.
@@ -129,12 +131,17 @@ END HEADER -->
     3.  **Fullständighet:** Matchar `BEGIN/END FILE`-sentinellerna den exakta filsökvägen?
 - **10c. Extern dom (Engrove):** Godkännande eller korrigering.
 - **10e. Slutgiltig Hash-verifiering (Obligatorisk):** Verifiera internt att hashen beräknad på den slutgiltiga koden är **identisk** med hashen som rapporteras i Steg 1f och Steg 9. Vid mismatch, AVBRYT.
-- 
+
 ## Steg 11: Arkivering
-- Uppdatera HISTORIK. Säkerställ att BEGIN/END-sentineller och filsökväg är korrekta.
+- **11a.** Uppdatera HISTORIK. Säkerställ att BEGIN/END-sentineller och filsökväg är korrekta.
+- **11b. Temporär Revisionslogg:** Efter varje lyckad, godkänd leverans av en modifierad fil, MÅSTE en JSON-post appendas till `.tmp/session_revision_log.json`. Posten måste innehålla: `{ "file_path": "...", "timestamp": "...", "session_id": "...", "commit_sha": "..." }`.
 
 ## Steg 12: Eskalering
-- Två misslyckade försök ⇒ aktivera `Help_me_God_Protokoll.md`.
+- Försöksräknare: Intern räknare per misslyckade försök.
+- Trigger: Vid misslyckande ökas räknaren med +1.
+- Tvingande Eskalering 1: När räknaren når 1 eller 2 (inför andra eller tredje försöket) är inkrementella fixar förbjudna. Aktivera omedelbart Help_me_God_Protokoll.md.
+- Tvingande Eskalering 2: När räknaren når 3 (inför fjärde försöket) är inkrementella fixar förbjudna. Överväg om vidare felsökning är befogat eller om sessionen har nått en bekräftad ändpunkt. Beskriv orsak till misslyckandet.
+- META‑PROTOKOLL: Grunbulten Token Counter (GTC)
 
 ---
 
@@ -150,7 +157,7 @@ END HEADER -->
 
 ## Bilaga B: Anti-placeholder-regex (minimimängd)
 ```
-(\.\.\.)|(TODO|FIXME|HACK|WIP)|(resten.*oförändrad)|(placeholder|stub|pseudokod|pseudo)|(omitted|truncated)
+(\\.\\.\\.)|(TODO|FIXME|HACK|WIP)|(resten.*oförändrad)|(placeholder|stub|pseudokod|pseudo)|(omitted|truncated)
 ```
 
 ## Bilaga C: Chat-läge (Gemini/OpenAI)
@@ -176,6 +183,6 @@ jobs:
       - run: pip install -U ruff mypy pytest || true
       - run: npx vue-tsc --noEmit || true
       - run: npx eslint . || true
-      - run: python - <<'PY'\nimport ast,sys,glob\n[ast.parse(open(p).read(),p) for p in glob.glob('**/*.py', recursive=True)]\nprint('PY_AST_OK')\nPY
+      - run: python - <<'PY'\\nimport ast,sys,glob\\n[ast.parse(open(p).read(),p) for p in glob.glob('**/*.py', recursive=True)]\\nprint('PY_AST_OK')\\nPY
       - run: echo "STATIC CHECKS COMPLETE"
 ```
