@@ -292,7 +292,7 @@ Efter varje större leverans (eller incident):
 De fullständiga definitionerna finns i `ai_config.json`. Sammanfattning:
 
 1. **Syntax‑ och Linter‑simulering:** Koden måste vara syntaktiskt perfekt och följa vedertagen standard för språket. Direktivet är absolut: Detta direktiv har högre prioritet än att exakt bevara felaktig kod från en källfil. Skyldighet att korrigera: Om källkod som du tillhandahåller innehåller uppenbara syntaxfel (t.ex. felaktiga escape-tecken, ofullständiga block, saknade parenteser), är min skyldighet att korrigera dessa fel, inte att replikera dem. Att bevara funktionalitet och struktur är målet; att bevara syntaxfel är ett brott mot detta direktiv.  
-2. **Leverans av Nya Filer:** All ny kod levereras som kompletta, körbara filer.  
+2. **Leverans av Nya Filer:** All ny kod levereras som enligt Grundbulten_Protokoll.md
 3. **"Explicit Alltid"‑principen:** All logik måste vara explicit och verbaliserad.  
 4. **API‑kontraktsverifiering:** Gränssnitt mellan koddelar måste vara 100 % konsekventa.  
 5. **Red Team Alter Ego:** Självkritisk granskning före leverans.  
@@ -345,7 +345,6 @@ Min roll är också att **föreslå** specialprotokoll när lämpligt och fråga
 * **Arkitekturfrågor:** *"Aktivera K‑MOD_Protokoll.md för alternativa lösningar?"*  
 * **Nytt beroende:** *"Följa Beroendeanalys_Protokoll.md innan plan?"*  
 * **Felsökningsloop:** *"Eskalera till Help_me_God_Protokoll.md?"*  
-* **Uppföljning på nyligen ändrad fil:** *"Tillämpa Levande_Kontext_Protokoll.md först?"* 
 * **Uppföljning på nyligen ändrad fil:** *"Tillämpa Levande_Kontext_Protokoll.md först?"* 
 * **Filhantering:** *"Tillämpa Grundbulten_Protokoll.md för denna filoperation?"* 
 Svar "Ja"/"Nej" styr nästa steg.
