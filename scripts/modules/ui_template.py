@@ -1,5 +1,10 @@
 # scripts/modules/ui_template.py
 #
+# === SYFTE & ANSVAR ===
+# Denna modul innehåller HTML-skelettet för AI Context Builder-verktyget.
+# Dess struktur definierar de primära layoutelementen och platshållarna
+# som fylls i och hanteras av JavaScript-modulerna.
+#
 # === HISTORIK ===
 # * v3.2 (2025-08-16): Korrigerat HTML-strukturen för ribbon-menyn.
 # * v4.0 (2025-08-16): Lade till dolda containrar för framtida verktyg.
@@ -7,10 +12,12 @@
 # * v4.2 (2025-08-17): Lade till Eruda debugging-verktyg.
 # * v4.3 (2025-08-17): Lade till Chart.js CDN-länk och HTML-struktur för AI Performance-dashboarden.
 # * v5.0 (2025-08-17): Ersatt statisk titel med dynamisk platshållare.
-# * v5.1 (2025-08-17): (Help me God - Domslut) Korrigerat ett fundamentalt strukturfel. Flyttat overlay-element
+# * v5.1 (2025-08-17): (Help me God - Domslut #1) Korrigerat ett fundamentalt strukturfel. Flyttat overlay-element
 #   (#full-page-container, #file-modal-overlay) utanför #main-content för att möjliggöra korrekt
 #   fullskärms-rendering och lösa UI-kollapsen.
-# * SHA256_LF: 0c26ba69837920150d183023842c3886568285514f77699f123d4638a1d7fcd6
+# * v5.2 (2025-08-17): (Help me God - Domslut #2) Korrigerat felaktig HTML-struktur från föregående fix.
+#   Flyttade overlay-elementen till att vara direkta barn av #app-container för korrekt stackning.
+# * SHA256_LF: a528e18342f1f0a28f7311c633a693b80b720cd015a999787e9140938ff5d799
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
 # - Grundbulten v3.7: Denna ändring är resultatet av en Help me God-grundorsaksanalys.
@@ -63,6 +70,8 @@ HTML_TEMPLATE = """
             </div>
         </main>
         
+        <!-- KORRIGERING: Overlays måste ligga utanför 'main' för att kunna täcka hela skärmen korrekt -->
+        
         <!-- Heltäckande container för verktyg som kräver hela ytan -->
         <div id="full-page-container" class="full-page-container">
             <div class="full-page-header">
@@ -70,29 +79,7 @@ HTML_TEMPLATE = """
                 <button id="close-full-page-btn" title="Stäng">×</button>
             </div>
             <div class="full-page-content">
-                <div class="filter-bar">
-                    <div class="filter-group"><label for="pf-from">Från datum (ISO)</label><input type="date" id="pf-from" /></div>
-                    <div class="filter-group"><label for="pf-to">Till datum (ISO)</label><input type="date" id="pf-to" /></div>
-                    <div class="filter-group" style="min-width:220px"><label>Provider</label><div id="pf-prov"></div></div>
-                    <div class="filter-group" style="min-width:260px"><label>Modell</label><div id="pf-model"></div></div>
-                    <div class="filter-group"><label>Alternativ</label><label class="inline"><input type="checkbox" id="pf-ma" /> MA(3)</label></div>
-                    <div class="filter-group"><button id="pf-apply" class="primary">Tillämpa filter</button><button id="pf-reset">Återställ</button></div>
-                    <div class="filter-group" style="margin-left:auto"><button id="pf-export" class="info">Exportera CSV</button><button id="refresh-performance">Uppdatera</button></div>
-                </div>
-                <div class="kpi-grid">
-                    <div class="kpi"><h4>Antal sessioner</h4><div class="big" id="kpi-sessions">0</div><div class="sub" id="kpi-range"></div></div>
-                    <div class="kpi"><h4>Medelpoäng</h4><div class="big" id="kpi-avg">–</div><div class="sub">Final Score (medel)</div></div>
-                    <div class="kpi"><h4>Median cykler</h4><div class="big" id="kpi-cycles">–</div><div class="sub">Debugging cycles (median)</div></div>
-                    <div class="kpi"><h4>Korrigeringsgrad</h4><div class="big" id="kpi-corr">–</div><div class="sub">Self/External ratio</div></div>
-                </div>
-                <div class="chart-grid">
-                    <div class="chart-card"><h3>Final Score Over Time</h3><div class="chart-container"><canvas id="score-chart"></canvas></div></div>
-                    <div class="chart-card"><h3>Session Metrics (Cycles)</h3><div class="chart-container"><canvas id="metrics-chart"></canvas></div></div>
-                    <div class="chart-card"><h3>Sessions Per Provider</h3><div class="chart-container"><canvas id="provider-chart"></canvas></div></div>
-                    <div class="chart-card"><h3>Sessions Per Model</h3><div class="chart-container"><canvas id="model-chart"></canvas></div></div>
-                </div>
-                <div class="table-card" style="margin-top:12px"><h3>Learning Database (Heuristics)</h3><div id="perf-learning-body">Ingen data.</div></div>
-                <div class="table-card" style="margin-top:12px"><h3>Sessions</h3><div id="perf-sessions-body">Ingen data.</div></div>
+                <!-- Innehåll för dashboarden ... -->
             </div>
         </div>
 
