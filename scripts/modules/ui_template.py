@@ -6,10 +6,11 @@
 #   inklusive en heltäckande .full-page-container, enligt "Operation: Dold Grund".
 # * v4.1 (2025-08-16): Lade till struktur för filgranskningsmodal och översatte all UI-text till svenska.
 # * v4.2 (2025-08-17): Lade till Eruda debugging-verktyg för att underlätta felsökning på mobila enheter.
+# * v4.3 (2025-08-17): Lade till Chart.js CDN-länk och den kompletta HTML-strukturen för AI Performance-dashboarden.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
-# - Fullständig Kod: Verifierat komplett.
-# - Grundbulten: Modifiering av mallfil för att påverka genererad output.
+# - Grundbulten v3.3: Denna ändring följer den uppgraderade processen för transparens och fullständighet.
+# - GR7 (Fullständig Historik): Historiken har uppdaterats korrekt.
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -19,6 +20,7 @@ HTML_TEMPLATE = """
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Engrove Audio Tools v3.0 - Analysverktyg</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
     <!-- Eruda debugging console for mobile devices -->
     <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
     <script>eruda.init();</script>
@@ -28,6 +30,7 @@ HTML_TEMPLATE = """
         <div class="top-bar">
             <div class="ribbon-tabs">
                 <button class="ribbon-tab active" data-tab="verktyg">Verktyg</button>
+                <button class="ribbon-tab" data-tab="performance">AI Performance</button>
                 <button class="ribbon-tab" data-tab="installningar">Inställningar</button>
                 <button class="ribbon-tab" data-tab="hjalp">Hjälp</button>
             </div>
@@ -40,6 +43,11 @@ HTML_TEMPLATE = """
                 <div class="ribbon-group">
                     <button>Kör Analys</button>
                     <button>Exportera</button>
+                </div>
+            </div>
+            <div id="tab-performance" class="ribbon-pane">
+                <div class="ribbon-group">
+                    <button>Uppdatera Data</button>
                 </div>
             </div>
             <div id="tab-installningar" class="ribbon-pane">
@@ -80,7 +88,35 @@ HTML_TEMPLATE = """
         
         <!-- Heltäckande container för verktyg som kräver hela ytan -->
         <div id="full-page-container" class="tool-container full-page-container">
-            <!-- Framtida verktyg som AI Performance renderas här -->
+            <div class="full-page-header">
+                <h2>AI Performance Dashboard</h2>
+                <button id="close-full-page-btn" title="Stäng">×</button>
+            </div>
+            <div class="full-page-content">
+                <div class="filter-bar">
+                    <div class="filter-group"><label for="pf-from">Från datum (ISO)</label><input type="date" id="pf-from" /></div>
+                    <div class="filter-group"><label for="pf-to">Till datum (ISO)</label><input type="date" id="pf-to" /></div>
+                    <div class="filter-group" style="min-width:220px"><label>Provider</label><div id="pf-prov"></div></div>
+                    <div class="filter-group" style="min-width:260px"><label>Modell</label><div id="pf-model"></div></div>
+                    <div class="filter-group"><label>Alternativ</label><label class="inline"><input type="checkbox" id="pf-ma" /> MA(3)</label></div>
+                    <div class="filter-group"><button id="pf-apply" class="primary">Tillämpa filter</button><button id="pf-reset">Återställ</button></div>
+                    <div class="filter-group" style="margin-left:auto"><button id="pf-export" class="info">Exportera CSV</button><button id="refresh-performance">Uppdatera</button></div>
+                </div>
+                <div class="kpi-grid">
+                    <div class="kpi"><h4>Antal sessioner</h4><div class="big" id="kpi-sessions">0</div><div class="sub" id="kpi-range"></div></div>
+                    <div class="kpi"><h4>Medelpoäng</h4><div class="big" id="kpi-avg">–</div><div class="sub">Final Score (medel)</div></div>
+                    <div class="kpi"><h4>Median cykler</h4><div class="big" id="kpi-cycles">–</div><div class="sub">Debugging cycles (median)</div></div>
+                    <div class="kpi"><h4>Korrigeringsgrad</h4><div class="big" id="kpi-corr">–</div><div class="sub">Self/External ratio</div></div>
+                </div>
+                <div class="chart-grid">
+                    <div class="chart-card"><h3>Final Score Over Time</h3><div class="chart-container"><canvas id="score-chart"></canvas></div></div>
+                    <div class="chart-card"><h3>Session Metrics (Cycles)</h3><div class="chart-container"><canvas id="metrics-chart"></canvas></div></div>
+                    <div class="chart-card"><h3>Sessions Per Provider</h3><div class="chart-container"><canvas id="provider-chart"></canvas></div></div>
+                    <div class="chart-card"><h3>Sessions Per Model</h3><div class="chart-container"><canvas id="model-chart"></canvas></div></div>
+                </div>
+                <div class="table-card" style="margin-top:12px"><h3>Learning Database (Heuristics)</h3><div id="perf-learning-body">Ingen data.</div></div>
+                <div class="table-card" style="margin-top:12px"><h3>Sessions</h3><div id="perf-sessions-body">Ingen data.</div></div>
+            </div>
         </div>
     </div>
 
