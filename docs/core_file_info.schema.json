@@ -27,6 +27,30 @@
         "last_commit_sha": {
           "type": "string",
           "description": "The full Git commit SHA that triggered this metadata update."
+        },
+        "revision_history": {
+          "type": "array",
+          "description": "A log of all modifications made to this file, tracked by session and commit.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "timestamp": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "session_id": {
+                "type": "string"
+              },
+              "commit_sha": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "timestamp",
+              "session_id",
+              "commit_sha"
+            ]
+          }
         }
       },
       "required": [
