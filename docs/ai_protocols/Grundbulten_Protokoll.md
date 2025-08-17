@@ -70,6 +70,7 @@ END HEADER -->
 ## Steg 6: Testdesign
 - **Kod:** Enhets- och egenskapstester (seed=42), felvägar, gränsvärden, icke-ASCII, tidszoner.
 - **Icke-kod:** Schema-/formatvalidering (Markdown-länkar, JSON Schema, YAML-schema, TOML-parse).
+- **Allmänt:** Filstorlek, funktionsantal, objektantal, sektionsantal eller annan mätbar differans.
 
 ## Steg 7: Extern Verifiering & Bevisföring
 - I **varje svar** som levererar en fil enligt detta protokoll, **MÅSTE** ett `VERIFICATION_LOG`-block inkluderas. Detta block redovisar explicit de verifieringssteg som har (eller skulle ha) körts, inklusive manuella kontraktskontroller.
@@ -94,6 +95,7 @@ END HEADER -->
 ## Steg 9: Efterlevnadsrapport (Compliance Statement)
 - De fullständiga JSON-artefakterna (`COMPLIANCE_MANIFEST.json`, `EVIDENCE_MAP.json`) genereras **endast vid en formell sessionsavslutning** eller på **explicit begäran**.
 - För normala, löpande filleveranser ersätts de av en **Lightweight Compliance Statement** i ett markdown-kodblock, som måste inkluderas i svaret.
+- Vid filleverans där filstorlek, funktionsantal, objektantal, sektionsantal eller annan mätbar differans signifikant reducerats ska en förklaring anges.
 - **Exempel på `LIGHTWEIGHT COMPLIANCE STATEMENT`:**
   ```markdown
   #### LIGHTWEIGHT COMPLIANCE STATEMENT
