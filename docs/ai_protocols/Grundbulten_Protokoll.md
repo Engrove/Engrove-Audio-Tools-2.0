@@ -25,7 +25,7 @@ Datum: 2025-08-17
 Extern granskare: Engrove (godkänd för införing i Steg 10)
 END HEADER -->
 
-# Protokoll: **Grundbulten** (P-GB-3.1) – Universell filhantering (chattsession)
+# Protokoll: **Grundbulten** (P-GB-3.2) – Universell filhantering (chattsession)
 
 ## Steg G: Hårda grindar (abortvillkor, före Steg 1)
 - **G0. Kontextintegritet < 99% ⇒ AVBRYT.** Kräv kompletterande källor/sammanfattning och ny körning.
