@@ -27,7 +27,7 @@ END HEADER -->
 # Protokoll: **Grundbulten** (P-GB-3.1) – Universell filhantering (chattsession)
 
 ## Steg G: Hårda grindar (abortvillkor, före Steg 1)
-- **G0. Kontextintegritet < 95% ⇒ AVBRYT.** Kräv kompletterande källor/sammanfattning och ny körning.
+- **G0. Kontextintegritet < 99% ⇒ AVBRYT.** Kräv kompletterande källor/sammanfattning och ny körning.
 - **G2. Anti-placeholder ⇒ AVBRYT.** Kör regex-svit (Bilaga B). Noll träffar krävs.
 - **G3. Verifieringsnivå ⇒ AVBRYT.** Simulerad körlogg räcker aldrig ensam; statiska kontroller måste vara PASS.
 - **G4. Legacy-sanering ⇒ AVBRYT.** Konflikt/överflödig artefakt måste patchas/arkiveras innan vidare uppdrag.
