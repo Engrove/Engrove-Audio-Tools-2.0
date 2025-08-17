@@ -10,7 +10,7 @@ HISTORIK:
 * v2.4 (2025-08-16): Anti-Placeholder-Grind, utfällda steg 2–8.
 * v3.0 (2025-08-16): REBORN: Hårda grindar G0–G4, evidensartefakter, typstyrd verifieringsmatris, CI-recept.
 * v3.1 (2025-08-17): (Help me God) Gjorde verifiering extern och obligatorisk. Införde 'VERIFICATION_LOG' och 'LIGHTWEIGHT COMPLIANCE STATEMENT' för att tvinga fram transparens och extern bevisföring efter upprepade processfel. Ersatte den vaga 'Processkomplicitet' med en 'Execution Summary'.
-* v.3.2 (2025-08-17: Verifiering av ändrad filstorlek.
+* v3.2 (2025-08-17): Skärpt kontextkrav (G0 -> 99%), förenklad rapportering (G1 borttagen), och lagt till obligatorisk kvantitativ diff-analys (Steg 6 & 9).
 
 TILLÄMPADE REGLER (Frankensteen v5.6):
 * GR4 – Interaktionskontrakt: Självgranskning + extern dom; fast outputordning och ansvar.
