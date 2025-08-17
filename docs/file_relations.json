@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-17T09:22:23.718098+00:00",
+    "generated_at": "2025-08-17T10:48:06.775724+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -812,6 +812,15 @@
             "type": "library_import"
           }
         ],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/engrove_audio_tools_creator.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
         "dependents_count": 0,
         "criticality_score": 0.0
       },
