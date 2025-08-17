@@ -13,12 +13,13 @@
 # * v2.0 (2025-08-16): Implementerat tri-state kryssrutor och auto-expandering.
 # * v2.1 (2025-08-16): Separerade klickhändelser för filnamn.
 # * v2.2 (2025-08-17): Lade till rendering av fil- och mappstorlekar.
+# * v2.3 (2025-08-17): Tog bort den hårdkodade <h2>Filträd</h2>-rubriken för ett renare UI.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
-# - Grundbulten v3.1: Denna ändring följer den uppgraderade processen för transparens.
+# - Grundbulten v3.2: Denna ändring följer den uppgraderade processen för transparens.
 
 JS_FILE_TREE_LOGIC = """
-// === Engrove File Tree Logic v2.2 ===
+// === Engrove File Tree Logic v2.3 ===
 
 const FILE_TREE_DATA = JSON.parse(__INJECT_FILE_TREE__);
 
@@ -182,7 +183,8 @@ function initializeFileTree() {
     }
     
     if(navContainer) navContainer.style.display = 'none';
-    container.innerHTML = '<h2>Filträd</h2>';
+    // KORRIGERING: Ta bort den hårdkodade rubriken
+    container.innerHTML = '';
     container.style.display = 'block';
 
     const rootUl = document.createElement('ul');
