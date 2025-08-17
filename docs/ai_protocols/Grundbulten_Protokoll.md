@@ -30,7 +30,7 @@ Datum: 2025-08-17
 Extern granskare: Engrove (godkänd för införing i Steg 10)
 END HEADER -->
 
-# Protokoll: **Grundbulten** (P-GB-3.7 – Universell filhantering (chattsession)
+# Protokoll: **Grundbulten** (P-GB-3.7) – Universell filhantering (chattsession)
 
 ## Steg G: Hårda grindar (abortvillkor, före Steg 1)
 - **G-1. Kontrollsumma-verifiering vid inläsning ⇒ AVBRYT.** Om en fil som ska modifieras har en `base_checksum_sha256` i kontexten, måste min interna minnesbild **och** min beräknade minnesbilds hash matcha den hashen. Vid mismatch, avbryt och begär färsk fil.
