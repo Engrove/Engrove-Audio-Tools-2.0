@@ -14,14 +14,18 @@
 # * v2.1 (2025-08-16): Separerade klickhändelser för filnamn.
 # * v2.2 (2025-08-17): Lade till rendering av fil- och mappstorlekar.
 # * v2.3 (2025-08-17): Tog bort den hårdkodade <h2>Filträd</h2>-rubriken för ett renare UI.
+# * v3.0 (2025-08-17): (Help me God - Grundorsaksanalys) Refaktorerat för att ta bort `JSON.parse`.
+#   Förlitar sig nu på att byggskriptet injicerar ett direkt JavaScript-objekt-literal.
+# * SHA256_LF: 2db854226d83a17c276a6f4e64f0b2f15a3068e612a87c12660d37e2ab081744
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
-# - Grundbulten v3.2: Denna ändring följer den uppgraderade processen för transparens.
+# - Grundbulten v3.7: Denna ändring är resultatet av en grundorsaksanalys.
+# - Help me God: Denna korrigering är resultatet av ett systemiskt fel.
 
 JS_FILE_TREE_LOGIC = """
-// === Engrove File Tree Logic v2.3 ===
+// === Engrove File Tree Logic v3.0 ===
 
-const FILE_TREE_DATA = JSON.parse(__INJECT_FILE_TREE__);
+const FILE_TREE_DATA = __INJECT_FILE_TREE__;
 
 function formatSize(bytes) {
     if (bytes === 0) return '0 B';
@@ -183,7 +187,7 @@ function initializeFileTree() {
     }
     
     if(navContainer) navContainer.style.display = 'none';
-    // KORRIGERING: Ta bort den hårdkodade rubriken
+    
     container.innerHTML = '';
     container.style.display = 'block';
 
