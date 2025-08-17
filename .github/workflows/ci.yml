@@ -1,3 +1,4 @@
+# BEGIN FILE: .github/workflows/ci.yml
 # .github/workflows/ci.yml
 # === SYFTE & ANSVAR ===
 # Detta är den enda, konsoliderade CI/CD-pipelinen för projektet.
@@ -26,6 +27,8 @@
 # v2.3 (2025-08-16): Korrigerat anropet till engrove_audio_tools_creator.py för att använda det nya kommandobaserade API:et ('build-ui').
 # v2.4 (2025-08-16): (Help me God - Domslut) Lade till 'clean: true' till checkout-steget för att säkerställa en ren byggmiljö och eliminera potentiella cachningsproblem.
 # v2.5 (2025-08-17): (Help me God - Grundorsaksanalys) Lade till ett nytt steg för att skapa project_overview.json och korrigerade anropet till engrove_audio_tools_creator.py med det saknade argumentet.
+# v2.6 (2025-08-17): Lade till steg för att bygga Einstein RAG-index, inklusive cachning för pip och Hugging Face-modeller. Uppdaterade commit-steget.
+# * SHA256_LF: 2c83d6505349e491c6e1e12733979607865e9c0c1b48995a9d3e2a1c0d9e8f7a
 
 name: Consolidated CI/CD and Tools Pipeline
 
@@ -59,7 +62,7 @@ env:
   LEGACY_HTML_FILE: 'index.html'
   NEW_HTML_FILE: 'index2.html'
   METADATA_FILE: 'metadata.json'
-  PROJECT_OVERVIEW_FILE: 'project_overview.json' # NY MILJÖVARIABEL
+  PROJECT_OVERVIEW_FILE: 'project_overview.json'
 
 jobs:
   build:
@@ -79,6 +82,12 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
 
+      - name: Cache Hugging Face models
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/huggingface
+          key: ${{ runner.os }}-huggingface-models-v1
+
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
@@ -97,13 +106,20 @@ jobs:
           python scripts/update_core_info.py sessions/ docs/core_file_info.json $COMMIT_SHA
           echo "Session processing complete."
 
-      - name: STEP 2 Generate File Relations Graph
+      - name: STEP 2A Generate File Relations Graph
         id: generate-relations
         run: |
           echo "Generating file relations graph..."
-          PROJECT_OVERVIEW_JSON=$(printf '{"repository": "%s", "branch": "%s"}' "${{ github.repository }}" "${{ github.ref_name }}")
+          PROJECT_OVERVIEW_JSON=$(printf '{\"repository\": \"%s\", \"branch\": \"%s\"}' \"${{ github.repository }}\" \"${{ github.ref_name }}\")
           python scripts/build_relations_graph.py "$PROJECT_OVERVIEW_JSON"
           echo "Graph generation complete."
+      
+      - name: STEP 2B Build Einstein Vector Index
+        id: build-einstein-index
+        run: |
+          echo "Building Einstein RAG vector index..."
+          python scripts/rag/build_vector_index.py ./ vector_store/
+          echo "Vector index built successfully."
 
       - name: STEP 3 Generate AI Context JSON
         id: generate-json
@@ -128,15 +144,13 @@ jobs:
           python scripts/wrap_json_in_html.py "${{ env.SITE_DIR }}/${{ env.LEGACY_HTML_FILE }}"
           echo "success=true" >> "$GITHUB_OUTPUT"
       
-      # NYTT STEG: Skapa den project_overview.json-fil som verktyget behöver
       - name: STEP 4B Create Project Overview Artifact
         id: create-project-overview
         run: |
           echo "Creating project overview JSON artifact..."
-          printf '{"repository": "%s", "branch": "%s"}' "${{ github.repository }}" "${{ github.ref_name }}" > "${{ env.PROJECT_OVERVIEW_FILE }}"
+          printf '{\"repository\": \"%s\", \"branch\": \"%s\"}' \"${{ github.repository }}\" \"${{ github.ref_name }}\" > "${{ env.PROJECT_OVERVIEW_FILE }}"
           echo "Artifact created at ${{ env.PROJECT_OVERVIEW_FILE }}"
 
-      # KORRIGERING: Lade till det femte argumentet som pekar på den nya filen
       - name: STEP 4C Create New UI HTML (index2.html)
         id: create-new-html
         run: |
@@ -170,14 +184,14 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: |
-            chore(docs): Automatiskt uppdatera sessionsdata och dokumentation
+            chore(docs, rag): Automatiskt uppdatera sessionsdata och Einstein-index
 
             Genererat av ci.yml workflow för commit ${{ github.sha }}.
 
             [skip ci]
           commit_user_name: 'Frankensteen (Bot)'
           commit_user_email: 'frankensteen-bot@users.noreply.github.com'
-          file_pattern: 'docs/ByggLogg.json docs/Chatthistorik.json docs/ai_protocol_performance.json tools/frankensteen_learning_db.json docs/ai_protocols/DynamicProtocols.json docs/core_file_info.json docs/file_relations.json public/data/schemas/*.schema.json project_overview.json'
+          file_pattern: 'docs/ByggLogg.json docs/Chatthistorik.json docs/ai_protocol_performance.json tools/frankensteen_learning_db.json docs/ai_protocols/DynamicProtocols.json docs/core_file_info.json docs/file_relations.json public/data/schemas/*.schema.json project_overview.json vector_store/'
           push_options: '--force'
 
   deploy:
@@ -191,3 +205,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+# END FILE: .github/workflows/ci.yml
