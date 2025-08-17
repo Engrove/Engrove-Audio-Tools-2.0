@@ -18,10 +18,11 @@
 # * v6.3 (2025-08-17): (Help me God - Grundorsaksanalys) Korrigerat `file_tree_placeholder`
 #   för att matcha den bare-word-variabel som används i `ui_file_tree.py`,
 #   vilket löser det kritiska `ReferenceError` vid körning.
+# * v7.0 (2025-08-17): Lade till rekursiv storleksberäkning för filer och mappar.
+#   `transform_structure_to_tree` berikar nu varje nod med en 'size'-egenskap.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
-# - Help me God: Denna fix är ett direkt resultat av ett externt domslut.
-# - Obligatorisk Refaktorisering: Den datatransformerande logiken är nu robust.
+# - Grundbulten v3.1: Denna ändring följer den uppgraderade processen för transparens.
 #
 import os
 import sys
@@ -31,14 +32,27 @@ from modules.ui_styles import CSS_STYLES
 from modules.ui_logic import JS_LOGIC
 from modules.ui_file_tree import JS_FILE_TREE_LOGIC
 
+def calculate_node_size(structure_node):
+    """
+    Beräknar rekursivt den totala storleken för en nod (fil eller mapp).
+    """
+    if not isinstance(structure_node, dict):
+        return 0
+    if structure_node.get('type') == 'file':
+        return structure_node.get('size_bytes', 0)
+    
+    total_size = 0
+    for child_node in structure_node.values():
+        total_size += calculate_node_size(child_node)
+    return total_size
+
 def transform_structure_to_tree(structure_node, relations_nodes, path_prefix=''):
     """
-    Bygger rekursivt en ren trädstruktur från file_structure och relations_nodes.
-    Detta är en icke-destruktiv funktion.
+    Bygger rekursivt en ren trädstruktur från file_structure och relations_nodes,
+    och berikar varje nod med dess storlek.
     """
     children = []
     
-    # Sortera för att säkerställa att mappar kommer före filer
     sorted_items = sorted(
         structure_node.items(),
         key=lambda item: (item[1].get('type', 'directory') != 'directory', item[0])
@@ -49,10 +63,13 @@ def transform_structure_to_tree(structure_node, relations_nodes, path_prefix='')
 
         current_path = f"{path_prefix}/{name}" if path_prefix else name
         
+        node_size = calculate_node_size(node)
+
         new_node = {
             "name": name,
             "path": node.get("path", current_path),
-            "type": node.get("type", "directory")
+            "type": node.get("type", "directory"),
+            "size": node_size
         }
 
         if new_node["type"] == "file":
@@ -74,7 +91,6 @@ def transform_structure_to_tree(structure_node, relations_nodes, path_prefix='')
 def build_ui(html_output_path, file_tree_json_string, project_overview):
     """
     Genererar HTML, CSS och den sammansatta JS-filen.
-    Inkluderar projektöversikt för realtidshämtning.
     """
     output_dir = os.path.dirname(html_output_path)
     css_output_path = os.path.join(output_dir, 'styles.css')
@@ -86,7 +102,6 @@ def build_ui(html_output_path, file_tree_json_string, project_overview):
     js_safe_string_literal = json.dumps(file_tree_json_string)
     js_config_string = json.dumps(project_overview)
     
-    # KORRIGERING: Platshållaren är nu en bare-word-variabel, inte en sträng.
     file_tree_placeholder = '__INJECT_FILE_TREE__'
     injected_js_tree_logic = JS_FILE_TREE_LOGIC.replace(file_tree_placeholder, js_safe_string_literal)
 
