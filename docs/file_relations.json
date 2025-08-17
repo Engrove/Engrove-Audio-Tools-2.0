@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-17T06:34:57.606014+00:00",
+    "generated_at": "2025-08-17T07:14:21.529032+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -565,6 +565,10 @@
         "category": "code",
         "language": "py",
         "exports": [
+          {
+            "symbol": "calculate_node_size",
+            "type": "function"
+          },
           {
             "symbol": "transform_structure_to_tree",
             "type": "function"
