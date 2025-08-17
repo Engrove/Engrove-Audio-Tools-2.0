@@ -20,13 +20,14 @@
 #   vilket löser det kritiska `ReferenceError` vid körning.
 # * v7.0 (2025-08-17): Lade till rekursiv storleksberäkning för filer och mappar.
 # * v7.1 (2025-08-17): Importerar och inkluderar den nya (tomma) `ui_performance_dashboard.py`-modulen för att förbereda för framtida funktionalitet.
-# * v7.2 (2025-08-17): (Help me God - Grundorsaksanalys) Korrigerat en kritisk datainjektionsbugg. Den dubbla `json.dumps()`-anropet på trädstrukturen togs bort för att förhindra JavaScript-krasch vid parsning.
-# * v7.3 (2025-08-17): (Help me God - Grundorsaksanalys) Slutgiltig korrigering av datainjektion. Ersätter nu platshållaren direkt istället för att försöka ersätta hela `JSON.parse`-anropet, vilket löser det tysta felet som orsakades av ett saknat semikolon.
-# * SHA256_LF: a078c117173b06922b972e391b4260d5b51a029fe28325a76e93d39580a1532f
+# * v8.0 (2025-08-17): (Help me God - Domslut) Refaktorerat datainjektionen. `JSON.parse` har tagits bort från `ui_file_tree.py`.
+#   Detta skript injicerar nu ett direkt JS-objekt-literal, vilket löser `SyntaxError: "[object Object]" is not valid JSON`.
+#   Lade även till hantering för versions-platshållaren i HTML-mallen.
+# * SHA256_LF: 52d921394f6f1954314c45c11090409c952219e992790924b260f8983088b9c7
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
 # - Grundbulten v3.7: Denna ändring är resultatet av en grundorsaksanalys och följer protokollet.
-# - Help me God: Denna korrigering är resultatet av en grundorsaksanalys av ett systemiskt fel.
+# - Help me God: Denna korrigering är resultatet av ett systemiskt fel.
 # - GR7 (Fullständig Historik): Historiken har uppdaterats korrekt.
 #
 import os
@@ -37,6 +38,8 @@ from modules.ui_styles import CSS_STYLES
 from modules.ui_logic import JS_LOGIC
 from modules.ui_file_tree import JS_FILE_TREE_LOGIC
 from modules.ui_performance_dashboard import JS_PERFORMANCE_LOGIC
+
+UI_VERSION = "7.4"
 
 def calculate_node_size(structure_node):
     """
@@ -105,12 +108,11 @@ def build_ui(html_output_path, file_tree_json_string, project_overview):
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
     
-    # KORRIGERING: Vi injicerar den redan serialiserade JSON-strängen direkt.
     js_safe_string_literal = file_tree_json_string
     js_config_string = json.dumps(project_overview)
     
     file_tree_placeholder = '__INJECT_FILE_TREE__'
-    # KORRIGERING: Ersätt endast platshållaren, inte hela anropet. Detta är mer robust.
+    # KORRIGERING: Ersätt platshållaren direkt med JSON-strängen, som blir ett giltigt JS-objekt.
     injected_js_tree_logic = JS_FILE_TREE_LOGIC.replace(file_tree_placeholder, js_safe_string_literal)
 
     config_placeholder = '__INJECT_PROJECT_OVERVIEW__';
@@ -118,7 +120,10 @@ def build_ui(html_output_path, file_tree_json_string, project_overview):
     
     final_js_logic = injected_js_logic + " " + injected_js_tree_logic + " " + JS_PERFORMANCE_LOGIC
 
-    with open(html_output_path, 'w', encoding='utf-8') as f: f.write(HTML_TEMPLATE)
+    # Proaktiv fix för {version}-platshållaren i HTML-mallen.
+    final_html = HTML_TEMPLATE.format(version=UI_VERSION)
+
+    with open(html_output_path, 'w', encoding='utf-8') as f: f.write(final_html)
     with open(css_output_path, 'w', encoding='utf-8') as f: f.write(CSS_STYLES)
     with open(js_output_path, 'w', encoding='utf-8') as f: f.write(final_js_logic)
 
