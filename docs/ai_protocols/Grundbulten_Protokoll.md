@@ -1,6 +1,6 @@
 <!-- BEGIN FILE: docs/ai_protocols/Grundbulten_Protokoll.md
 SYFTE & ANSVAR:
-"Grundbulten" (P-GB-3.4) är den tvingande lagen för all filgenerering/-modifiering (kod, dokument, konfig, data).
+"Grundbulten" (P-GB-3.7) är den tvingande lagen för all filgenerering/-modifiering (kod, dokument, konfig, data).
 Mål: 100% korrekt, komplett, spårbar, verifierad och deterministisk leverans i chattläge (Gemini/OpenAI), utan antaganden.
 
 HISTORIK:
@@ -9,17 +9,20 @@ HISTORIK:
 * v2.1 (2025-08-16): Syntes + tribunal + korrekt MD-kommentering.
 * v2.4 (2025-08-16): Anti-Placeholder-Grind, utfällda steg 2–8.
 * v3.0 (2025-08-16): REBORN: Hårda grindar G0–G4, evidensartefakter, typstyrd verifieringsmatris, CI-recept.
-* v3.1 (2025-08-17): (Help me God) Gjorde verifiering extern och obligatorisk. Införde 'VERIFICATION_LOG' och 'LIGHTWEIGHT COMPLIANCE STATEMENT' för att tvinga fram transparens och extern bevisföring efter upprepade processfel. Ersatte den vaga 'Processkomplicitet' med en 'Execution Summary'.
-* v3.2 (2025-08-17): Skärpt kontextkrav (G0 -> 99%), förenklad rapportering (G1 borttagen), och lagt till obligatorisk kvantitativ diff-analys (Steg 6 & 9).
-* v3.3 (2025-08-17): (Help me God) Infört Steg 10b, "Pre-Flight Diff Check", för att tvinga fram en slutgiltig, holistisk granskning av hela filen (inklusive metadata) innan leverans.
-* v3.4 (2025-08-17): (Help me God) Lade till Steg 1d (obligatorisk kontextkommentar) och Steg 2b (Kod-i-kod Dominansprincip) baserat på användarfeedback för att eliminera tvetydighet.
+* v3.1 (2025-08-17): (Help me God) Gjorde verifiering extern och obligatorisk. Införde 'VERIFICATION_LOG' och 'LIGHTWEIGHT COMPLIANCE STATEMENT'.
+* v3.2 (2025-08-17): Skärpt kontextkrav (G0 -> 99%), förenklad rapportering, och lagt till obligatorisk kvantitativ diff-analys.
+* v3.3 (2025-08-17): (Help me God) Infört Steg 10b, "Pre-Flight Diff Check".
+* v3.4 (2025-08-17): (Help me God) Lade till Steg 1d (kontextkommentar) och Steg 2b (Dominansprincip).
+* v3.6 (2025-08-17): (Help me God) KRITISK UPPDATERING. Infört en sluten verifieringskedja för att förhindra trunkeringsfel: 1. G-1: Tvingande hash-kontroll vid inläsning. 2. Steg 1f: Tvingande inbäddning av slutgiltig hash i filens historik. 3. Steg 9: Tvingande rapportering av slutgiltig hash i svar. 4. Steg 10e: Tvingande intern självverifiering av hash-värden före leverans.
+* v3.7 (2025-08-17): (Help me God - KORRIGERING) Infört en sluten, hash-baserad verifieringskedja (G-1, 1f, 9, 10e) för att matematiskt förhindra trunkeringsfel. Återställt fullständiga bilagor.
+* SHA256_LF: f490d3c0b5e94b159b35e8e19c00b217034c5b364d1c9f4d7159f81f9a6b98a3
 
 TILLÄMPADE REGLER (Frankensteen v5.6):
 * GR4 – Interaktionskontrakt: Självgranskning + extern dom; fast outputordning och ansvar.
 * GR5 – Tribunal/Red Team: KajBjörn validerar SPEC; StigBritt bryter planen före implementation.
 * GR6 – Processrefaktorering: Reproducerbar pipeline med grindar och verktygssteg.
 * GR7 – Historik & spårbarhet: Full historik i header, BEGIN/END-sentineller, inga platshållare.
-* GB-Gates – G0, G2-G4 (nedan) är tvingande och aborterar på brott.
+* GB-Gates – G-1, G0, G2-G4 (nedan) är tvingande och aborterar på brott.
 * No-Guess-Pledge – Inga påståenden utan källa; fråga vid osäkerhet.
 * Help me God: Denna uppgradering är en direkt åtgärd mot ett systemiskt processfel.
 
@@ -30,6 +33,7 @@ END HEADER -->
 # Protokoll: **Grundbulten** (P-GB-3.4) – Universell filhantering (chattsession)
 
 ## Steg G: Hårda grindar (abortvillkor, före Steg 1)
+- **G-1. Kontrollsumma-verifiering vid inläsning ⇒ AVBRYT.** Om en fil som ska modifieras har en `base_checksum_sha256` i kontexten, måste min interna minnesbild **och** min beräknade minnesbilds hash matcha den hashen. Vid mismatch, avbryt och begär färsk fil.
 - **G0. Kontextintegritet < 99% ⇒ AVBRYT.** Kräv kompletterande källor/sammanfattning och ny körning.
 - **G2. Anti-placeholder ⇒ AVBRYT.** Kör regex-svit (Bilaga B). Noll träffar krävs.
 - **G3. Verifieringsnivå ⇒ AVBRYT.** Simulerad körlogg räcker aldrig ensam; statiska kontroller måste vara PASS.
@@ -56,6 +60,7 @@ END HEADER -->
   `# Denna modul hanterar all generell UI-interaktivitet för det genererade verktyget,`
   `# såsom hantering av modals, resizer och meny-logik.`
 - **1e. Kommentarskoriigering:** Felaktiga kommentar-syntax vid uppdatering av fil ska ovillkorligen rättas enligt punkt 1c syntax.
+- **1f. Hash-evidens i fil-header (Obligatorisk):** Vid leverans **MÅSTE** en rad läggas till i `HISTORIK`-sektionen med den slutgiltiga, verifierade hashen. Format: `* SHA256_LF: <hash>`.
   
 ## Steg 2: SPEC/ANTAGANDEN
 - **2a.** Beskriv kontrakt, IO, invarianter, felhantering, typer, tråd/async, prestanda, miljö/beroenden.
@@ -109,21 +114,22 @@ END HEADER -->
 - **Exempel på `LIGHTWEIGHT COMPLIANCE STATEMENT`:**
   ```markdown
   #### LIGHTWEIGHT COMPLIANCE STATEMENT
-  - **Syntax:** [PASS]
-  - **Kontrakt:** [PASS]
-  - **Placeholders:** [PASS]
-  - **Historik:** [PASS]
-  - **Kvantitativ Diff:** [PASS] - Ökning av X rader motiverad av nya protokollsteg.
-  ```
+  - **Syntax:** [PASS/NOPASS]
+  - **Kontrakt:** [PASS/NOPASS]
+  - **Placeholders:** [PASS/NOPASS]
+  - **Historik:** [PASS/NOPASS]
+  - **Kvantitativ Diff:** [PASS/NOPASS] - [Ökning/Minskning] av X rader motiverad av nya protokollsteg.
+  - **Final SHA256:** [64-tecken hex hash]
 
 ## Steg 10: Självgranskning & extern dom
-- **10a. Självgranskning:** Intern bekräftelse att alla steg i v3.4 har följts.
+- **10a. Självgranskning:** Intern bekräftelse eller vederläggande att alla steg i "Grundbulten" protokoll nuvarande har följts eller inte kunnat följas.
 - **10b. Pre-Flight Diff Check (Obligatorisk Slutkontroll):** Mental `diff` av original vs. slutgiltig version. Kontrollpunkter:
     1.  **Metadata:** Har `HISTORIK` och kontextkommentar (Steg 1d) uppdaterats korrekt?
     2.  **Integritet:** Har någon befintlig, korrekt kod oavsiktligt tagits bort?
     3.  **Fullständighet:** Matchar `BEGIN/END FILE`-sentinellerna den exakta filsökvägen?
 - **10c. Extern dom (Engrove):** Godkännande eller korrigering.
-
+- **10e. Slutgiltig Hash-verifiering (Obligatorisk):** Verifiera internt att hashen beräknad på den slutgiltiga koden är **identisk** med hashen som rapporteras i Steg 1f och Steg 9. Vid mismatch, AVBRYT.
+- 
 ## Steg 11: Arkivering
 - Uppdatera HISTORIK. Säkerställ att BEGIN/END-sentineller och filsökväg är korrekta.
 
