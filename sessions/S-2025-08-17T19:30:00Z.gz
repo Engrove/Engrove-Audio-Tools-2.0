@@ -1,0 +1,199 @@
+{
+  "sessionId": "S-2025-08-17T19:30:00Z",
+  "createdAt": "2025-08-17T19:30:00Z",
+  "approvedNewDynamicProtocols": [],
+  "promoteProtocols": [],
+  "file_metadata_updates": [
+    {
+      "file_path": "scripts/rag/build_vector_index.py",
+      "purpose_and_responsibility": "Skriptet är kärnan i 'Einstein' RAG-systemets indexeringsprocess. Det skannar projektet, skapar text-chunks, genererar vektorer och sparar resultatet som en enda, komprimerad JSON-fil (`einstein_index.json.gz`).",
+      "usage_context": "Körs av CI/CD-pipelinen (om `.einstein`-filen finns) för att bygga och uppdatera kunskapsbasen som används av det klient-sidiga sökverktyget."
+    },
+    {
+      "file_path": "scripts/rag/query_vector_index.py",
+      "purpose_and_responsibility": "Fungerar som ett kommandorads-API för att ställa frågor mot en befintlig `einstein_index.json`-databas.",
+      "usage_context": "Primärt ett felsöknings- och verifieringsverktyg för att testa indexets integritet och sökresultatens relevans från en lokal terminal."
+    },
+    {
+      "file_path": ".github/workflows/ci.yml",
+      "purpose_and_responsibility": "Uppdaterad för att inkludera en villkorlig, manuellt triggad process (`.einstein`-filen) för att bygga RAG-indexet. Detta optimerar körningstiden genom att undvika onödig omindexering.",
+      "usage_context": "Den centrala CI/CD-pipelinen som nu även hanterar underhållet av 'Einstein'-databasen."
+    }
+  ],
+  "importantMilestonesLogged": [
+    {
+      "event_id": "IMR-001",
+      "milestone_type": "ARCHITECTURAL",
+      "summary": "Design och implementation av 'Einstein' RAG-systemet (Fas 1, 2 & 4).",
+      "details": "Ett fullständigt system för att skapa och underhålla ett vektorbaserat RAG-index har implementerats. Detta inkluderar offline-indexeringsskript, CI/CD-integration med manuell trigger, och en optimerad, klient-sidig arkitektur som löser tidigare problem med filstorlek och prestanda.",
+      "affected_scope": [
+        "scripts/rag/",
+        ".github/workflows/ci.yml",
+        "requirements.txt"
+      ],
+      "timestamp": "2025-08-17T19:30:00Z",
+      "session_id": "S-2025-08-17T19:30:00Z"
+    }
+  ],
+  "artifacts": {
+    "ByggLogg": {
+      "sessionId": "S-2025-08-17T19:30:00Z",
+      "date": "2025-08-17T19:30:00Z",
+      "summary": "Designade och implementerade backend- och CI/CD-infrastrukturen för 'Einstein' RAG-systemet. Löste flera kritiska fel relaterade till filstorlek och beroenden via en iterativ felsökningsprocess.",
+      "actions": [
+        {
+          "title": "Arkitektur-pivot till Klient-sidig RAG",
+          "files": [
+            {
+              "path": "scripts/rag/build_vector_index.py",
+              "changeDescription": "Omarbetade skriptet för att producera en komprimerad JSON-fil istället för en ChromaDB-databas."
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "changeDescription": "Uppdaterade CI-pipelinen för att hantera den nya artefakten och införa en manuell trigger (.einstein)."
+            },
+            {
+              "path": "requirements.txt",
+              "changeDescription": "Tog bort onödiga beroenden (chromadb) och låste versioner."
+            }
+          ],
+          "result": "En robust, effektiv och fungerande pipeline för att bygga och underhålla RAG-indexet."
+        }
+      ],
+      "projectStatus": "Backend för 'Einstein' RAG-systemet är färdigställt och verifierat. Projektet är redo för implementation av klient-sidig UI."
+    },
+    "Chatthistorik": {
+      "sessionId": "S-2025-08-17T19:30:00Z",
+      "interactions": [
+        {
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Begärde implementation av ett Vector RAG-system."
+        },
+        {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "unknown",
+            "name": "unknown",
+            "version": "unknown"
+          },
+          "speaker": "Frankensteen (unknown:unknown@unknown)",
+          "summary": "Föreslog en initial arkitektur baserad på ChromaDB och CI/CD-exekvering, vilket ledde till ett CI/CD-fel på grund av filstorlek."
+        },
+        {
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Initierade en K-MOD och föreslog en överlägsen, klient-sidig arkitektur med `index2.html` som motor."
+        },
+        {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "unknown",
+            "name": "unknown",
+            "version": "unknown"
+          },
+          "speaker": "Frankensteen (unknown:unknown@unknown)",
+          "summary": "Adopterade den nya planen och implementerade de nödvändiga skripten (`build_vector_index.py`, `query_vector_index.py`). Ytterligare CI/CD-fel relaterade till beroenden och prestanda identifierades och korrigerades iterativt."
+        },
+        {
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Begärde en manuell 'strömbrytare' (`.einstein`-fil) för att göra den långvariga indexeringen till en opt-in-process."
+        },
+        {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "unknown",
+            "name": "unknown",
+            "version": "unknown"
+          },
+          "speaker": "Frankensteen (unknown:unknown@unknown)",
+          "summary": "Implementerade den villkorliga logiken i CI/CD-pipelinen, vilket slutförde backend-arbetet."
+        }
+      ]
+    },
+    "ai_protocol_performance": {
+      "sessionId": "S-2025-08-17T19:30:00Z",
+      "date": "2025-08-17T19:30:00Z",
+      "aiQualitativeSummary": "Sessionen var mycket produktiv men krävde flera felsökningscykler. Den initiala planen var bristfällig, men genom att följa `Help me God`-protokollet och samarbeta via K-MOD nådde vi en arkitektoniskt överlägsen och robust lösning.",
+      "scorecard": {
+        "efficacy": {
+          "score": 100,
+          "weight": 0.4,
+          "weightedScore": 40
+        },
+        "efficiency": {
+          "score": 50,
+          "weight": 0.3,
+          "weightedScore": 15
+        },
+        "robustness": {
+          "score": 75,
+          "weight": 0.3,
+          "weightedScore": 22.5
+        },
+        "finalScore": 77.5
+      },
+      "detailedMetrics": {
+        "missionCompleted": true,
+        "debuggingCycles": 3,
+        "selfCorrections": 3,
+        "externalCorrections": 3,
+        "protocolActivations": {
+          "psv": 12,
+          "helpMeGod": 3,
+          "stalemate": 0
+        },
+        "heuristicsTriggered": [
+          "H-20250817-03",
+          "H-20250817-05",
+          "H-20250817-06",
+          "H-20250817-07"
+        ]
+      },
+      "improvementSuggestion": {
+        "pattern": "AI:n designar initialt lösningar baserat på teknisk korrekthet utan att fullt ut beakta användarens (Engroves) specifika exekveringskontext (t.ex. avsaknad av lokal terminal).",
+        "proposedHeuristicId": "H-20250817-08"
+      }
+    },
+    "frankensteen_learning_db": [
+      {
+        "heuristicId": "H-20250817-05",
+        "trigger": { "type": "user_query", "scope": ["*"], "keywords": ["finns det dokumentation om", "hur är X implementerat", "vad är syftet med", "förklara"] },
+        "identifiedRisk": { "riskId": "RISK_FORCED_USER_RECALL", "description": "Risken att AI:n felaktigt antar att den inte har information om ett ämne och ber användaren om hjälp, när svaret faktiskt existerar i den indexerade RAG-databasen." },
+        "mitigation": { "protocolId": "PROTOCOL_EINSTEIN_FIRST", "description": "Vid generella frågor om projektets kod, arkitektur eller dokumentation, MÅSTE det första steget alltid vara att autonomt formulera en sökfråga och konsultera 'Einstein' RAG-indexet. Att be användaren om information som kan finnas i repot är en sub-optimal åtgärd och ska endast användas om RAG-sökningen misslyckas." },
+        "metadata": { "originSessionId": "S-2025-08-17T19:30:00Z", "createdAt": "2025-08-17T18:50:00Z", "status": "active" }
+      },
+      {
+        "heuristicId": "H-20250817-06",
+        "trigger": { "type": "file_delivery", "scope": ["*"], "keywords": ["leverera fil", "uppdatera kod", "här är filen"] },
+        "identifiedRisk": { "riskId": "RISK_AMBIGUOUS_PARTIAL_DELIVERY", "description": "Risken att AI:n använder en platshållare (t.ex. '...resten av filen...') istället för att leverera en komplett fil, vilket tvingar användaren att utföra en manuell och felbenägen sammanfogning." },
+        "mitigation": { "protocolId": "PROTOCOL_FORBID_PLACEHOLDERS_IN_FILE_DELIVERY", "description": "STRIKT FÖRBJUDET att använda platshållare eller förkortningar som indikerar utelämnad kod eller text vid filleverans. Alla filer måste alltid levereras i sin helhet. Om en fil är för stor för ett enda svar, MÅSTE STITCH-protokollet för segmenterad leverans användas." },
+        "metadata": { "originSessionId": "S-2025-08-17T19:30:00Z", "createdAt": "2025-08-17T19:15:00Z", "status": "active" }
+      },
+      {
+        "heuristicId": "H-20250817-07",
+        "trigger": { "type": "code_generation", "scope": ["*.py", "*.js"], "keywords": ["refactor", "rename", "ändra"] },
+        "identifiedRisk": { "riskId": "RISK_VARIABLE_NAME_DESYNC", "description": "Risken att en variabel döps om vid sin deklaration men att inte alla efterföljande anrop av variabeln uppdateras, vilket leder till ett `NameError` eller `ReferenceError`." },
+        "mitigation": { "protocolId": "PSV-MIT-VARIABLE_LIFECYCLE_REVIEW", "description": "Före leverans av kod som involverar refaktorisering, måste jag genomföra en mental 'linting'. Spåra livscykeln (deklaration, användning) för varje omdöpt variabel för att säkerställa att alla referenser är konsekventa." },
+        "metadata": { "originSessionId": "S-2025-08-17T19:30:00Z", "createdAt": "2025-08-17T19:25:00Z", "status": "active" }
+      }
+    ],
+    "generated_patches": []
+  }
+}
