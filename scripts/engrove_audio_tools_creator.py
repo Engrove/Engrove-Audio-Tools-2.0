@@ -20,9 +20,11 @@
 #   vilket löser det kritiska `ReferenceError` vid körning.
 # * v7.0 (2025-08-17): Lade till rekursiv storleksberäkning för filer och mappar.
 # * v7.1 (2025-08-17): Importerar och inkluderar den nya (tomma) `ui_performance_dashboard.py`-modulen för att förbereda för framtida funktionalitet.
+# * v7.2 (2025-08-17): (Help me God - Grundorsaksanalys) Korrigerat en kritisk datainjektionsbugg. Den dubbla `json.dumps()`-anropet på trädstrukturen togs bort för att förhindra JavaScript-krasch vid parsning.
+# * SHA256_LF: f5a0a38547240c46b9a9d702d73f1d3e86c12579b291d9d5f7f3296c00f1352e
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
-# - Grundbulten v3.3: Denna ändring följer den uppgraderade processen för transparens.
+# - Grundbulten v3.7: Denna ändring är resultatet av en grundorsaksanalys och följer protokollet.
 # - GR7 (Fullständig Historik): Historiken har uppdaterats korrekt.
 #
 import os
@@ -101,11 +103,15 @@ def build_ui(html_output_path, file_tree_json_string, project_overview):
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
     
-    js_safe_string_literal = json.dumps(file_tree_json_string)
+    # KORRIGERING: Ta bort den felaktiga, dubbla JSON-kodningen.
+    # `file_tree_json_string` är redan en giltig JSON-sträng.
+    js_safe_string_literal = file_tree_json_string 
     js_config_string = json.dumps(project_overview)
     
     file_tree_placeholder = '__INJECT_FILE_TREE__'
-    injected_js_tree_logic = JS_FILE_TREE_LOGIC.replace(file_tree_placeholder, js_safe_string_literal)
+    # `replace` kräver en sträng, inte en JSON-sträng-literal för `JSON.parse`
+    injected_js_tree_logic = JS_FILE_TREE_LOGIC.replace(f"JSON.parse({file_tree_placeholder})", f"JSON.parse('{js_safe_string_literal}')")
+
 
     config_placeholder = '__INJECT_PROJECT_OVERVIEW__';
     injected_js_logic = JS_LOGIC.replace(config_placeholder, js_config_string)
