@@ -21,10 +21,12 @@
 # * v7.0 (2025-08-17): Lade till rekursiv storleksberäkning för filer och mappar.
 # * v7.1 (2025-08-17): Importerar och inkluderar den nya (tomma) `ui_performance_dashboard.py`-modulen för att förbereda för framtida funktionalitet.
 # * v7.2 (2025-08-17): (Help me God - Grundorsaksanalys) Korrigerat en kritisk datainjektionsbugg. Den dubbla `json.dumps()`-anropet på trädstrukturen togs bort för att förhindra JavaScript-krasch vid parsning.
-# * SHA256_LF: f5a0a38547240c46b9a9d702d73f1d3e86c12579b291d9d5f7f3296c00f1352e
+# * v7.3 (2025-08-17): (Help me God - Grundorsaksanalys) Slutgiltig korrigering av datainjektion. Ersätter nu platshållaren direkt istället för att försöka ersätta hela `JSON.parse`-anropet, vilket löser det tysta felet som orsakades av ett saknat semikolon.
+# * SHA256_LF: a078c117173b06922b972e391b4260d5b51a029fe28325a76e93d39580a1532f
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
 # - Grundbulten v3.7: Denna ändring är resultatet av en grundorsaksanalys och följer protokollet.
+# - Help me God: Denna korrigering är resultatet av en grundorsaksanalys av ett systemiskt fel.
 # - GR7 (Fullständig Historik): Historiken har uppdaterats korrekt.
 #
 import os
@@ -103,15 +105,13 @@ def build_ui(html_output_path, file_tree_json_string, project_overview):
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
     
-    # KORRIGERING: Ta bort den felaktiga, dubbla JSON-kodningen.
-    # `file_tree_json_string` är redan en giltig JSON-sträng.
-    js_safe_string_literal = file_tree_json_string 
+    # KORRIGERING: Vi injicerar den redan serialiserade JSON-strängen direkt.
+    js_safe_string_literal = file_tree_json_string
     js_config_string = json.dumps(project_overview)
     
     file_tree_placeholder = '__INJECT_FILE_TREE__'
-    # `replace` kräver en sträng, inte en JSON-sträng-literal för `JSON.parse`
-    injected_js_tree_logic = JS_FILE_TREE_LOGIC.replace(f"JSON.parse({file_tree_placeholder})", f"JSON.parse('{js_safe_string_literal}')")
-
+    # KORRIGERING: Ersätt endast platshållaren, inte hela anropet. Detta är mer robust.
+    injected_js_tree_logic = JS_FILE_TREE_LOGIC.replace(file_tree_placeholder, js_safe_string_literal)
 
     config_placeholder = '__INJECT_PROJECT_OVERVIEW__';
     injected_js_logic = JS_LOGIC.replace(config_placeholder, js_config_string)
@@ -122,6 +122,7 @@ def build_ui(html_output_path, file_tree_json_string, project_overview):
     with open(css_output_path, 'w', encoding='utf-8') as f: f.write(CSS_STYLES)
     with open(js_output_path, 'w', encoding='utf-8') as f: f.write(final_js_logic)
 
+    # Verifiering efter skrivning
     with open(js_output_path, 'r', encoding='utf-8') as f:
         content = f.read()
     if file_tree_placeholder in content:
