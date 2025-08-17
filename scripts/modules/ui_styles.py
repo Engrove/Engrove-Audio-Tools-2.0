@@ -9,10 +9,13 @@
 # * v5.3 (2025-08-16): Lade till stilar för filgranskningsmodalen.
 # * v5.4 (2025-08-17): Lade till en `.size-tag`-klass för att visa filstorlekar.
 # * v5.5 (2025-08-17): Lade till fullständig styling för AI Performance-dashboarden.
+# * v5.6 (2025-08-17): (Help me God - Domslut) Korrigerat en CSS-specificitetskonflikt.
+#   `.full-page-container` är nu `display: none` som standard och visas endast
+#   med `.active`-klassen, vilket löser buggen där den alltid var synlig.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
 # - Grundbulten v3.3: Denna ändring följer den uppgraderade processen för transparens.
-# - GR7 (Fullständig Historik): Historiken har uppdaterats korrekt.
+# - Help me God: Denna korrigering är resultatet av en grundorsaksanalys.
 
 CSS_STYLES = """
 :root {
@@ -178,11 +181,11 @@ input[type="search"]:focus, input[type="date"]:focus {
     inset: 0;
     background-color: var(--bg-color);
     z-index: 100;
-    display: flex;
-    flex-direction: column;
+    display: none; /* KORRIGERING: Dold som standard */
 }
 .full-page-container.active {
-    display: flex;
+    display: flex; /* KORRIGERING: Visas endast när aktiv */
+    flex-direction: column;
 }
 .full-page-header {
     display: flex;
