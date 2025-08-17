@@ -6,7 +6,7 @@
 # v4.1 (2025-08-16): Lade till struktur för filgranskningsmodal och översatte all UI-text till svenska.
 # v4.2 (2025-08-17): Lade till Eruda debugging-verktyg för att underlätta felsökning på mobila enheter.
 # v4.3 (2025-08-17): Lade till Chart.js CDN-länk och den kompletta HTML-strukturen för AI Performance-dashboarden.
-# v5.0 (2025-08-17): Ersatt den statiska HTML-titeln med en dynamisk platshållare '{version}' för att tillåta versionshantering från byggskriptet.
+# v5.0 (2025-08-17): Ersatt den statiska HTML-titeln med en dynamisk platshållare '{version}' för att tillåta versionshantering från byggskriptet. detta ledde till att sidan inte längre fungerar.
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
 # Grundbulten v3.4: Denna ändring följer den uppgraderade processen för transparens och fullständighet.
 # GR6 (Obligatorisk Refaktorisering): Titeln är nu dynamisk och mer underhållbar.
@@ -18,7 +18,7 @@ HTML_TEMPLATE = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Context Builder v{version}</title>
+    <title>AI Context Builder</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
     <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
