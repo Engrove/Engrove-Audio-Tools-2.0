@@ -9,27 +9,28 @@
 # * v1.0 (2025-08-16): Initial skapelse som en del av Operation: Modularitet.
 # * v1.1 (2025-08-16): KRITISK FIX: Ändrat datainjektion till att använda JSON.parse().
 # * v1.2 (2025-08-16): (Help me God - Domslut) Ersatt den osäkra platshållaren med en
-#   syntaktiskt giltig, citerad dummy-sträng ("__INJECT_AT_BUILD__") för att förhindra
-#   parse-fel vid misslyckad injektion.
-# * v2.0 (2025-08-16): Implementerat tri-state (checked/indeterminate/unchecked) kryssrutor
-#   för mappar och auto-expandering vid val, enligt godkänd plan.
-# * v2.1 (2025-08-16): Separerade klickhändelser. Klick på filnamn öppnar nu filgranskningsmodalen.
-#   Platshållare uppdaterad till __INJECT_FILE_TREE__ för konsekvens.
+#   syntaktiskt giltig, citerad dummy-sträng för att förhindra parse-fel.
+# * v2.0 (2025-08-16): Implementerat tri-state kryssrutor och auto-expandering.
+# * v2.1 (2025-08-16): Separerade klickhändelser för filnamn.
+# * v2.2 (2025-08-17): Lade till rendering av fil- och mappstorlekar.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
-# - Help me God: Denna fix är ett direkt resultat av ett externt domslut.
-# - API-kontraktsverifiering: Kontraktet för datainjektion är nu mer robust.
-# - Obligatorisk Refaktorisering: Logiken för filträdet är nu komplett och robust.
+# - Grundbulten v3.1: Denna ändring följer den uppgraderade processen för transparens.
 
 JS_FILE_TREE_LOGIC = """
-// === Engrove File Tree Logic v2.1 ===
+// === Engrove File Tree Logic v2.2 ===
 
 const FILE_TREE_DATA = JSON.parse(__INJECT_FILE_TREE__);
 
-/**
- * Uppdaterar alla föräldrars kryssrutor uppåt i trädet.
- * @param {HTMLElement} element - Det <li>-element vars barn har ändrats.
- */
+function formatSize(bytes) {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'kB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    const num = parseFloat((bytes / Math.pow(k, i)).toFixed(1));
+    return `${num} ${sizes[i]}`;
+}
+
 function updateParents(element) {
     const parentLi = element.parentElement.closest('li.tree-node');
     if (!parentLi) return;
@@ -57,11 +58,6 @@ function updateParents(element) {
     updateParents(parentLi);
 }
 
-/**
- * Uppdaterar alla barns kryssrutor nedåt i trädet.
- * @param {HTMLElement} element - Det <li>-element vars kryssruta har klickats.
- * @param {boolean} isChecked - Den nya statusen för kryssrutan.
- */
 function updateChildren(element, isChecked) {
     const childCheckboxes = element.querySelectorAll('li .node-label > input[type="checkbox"]');
     childCheckboxes.forEach(cb => {
@@ -70,11 +66,6 @@ function updateChildren(element, isChecked) {
     });
 }
 
-/**
- * Skapar och returnerar ett HTML-element för en enskild nod i trädet.
- * @param {object} nodeData - Dataobjektet för noden.
- * @returns {HTMLLIElement} Det färdiga <li>-elementet.
- */
 function renderNode(nodeData) {
     const isDir = nodeData.type === 'directory';
     
@@ -126,15 +117,14 @@ function renderNode(nodeData) {
     text.className = 'node-text';
     text.textContent = nodeData.name;
     
-    // Separera klickhändelser
     if (isDir) {
         text.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
             const toggle = li.querySelector(':scope > .toggle-icon');
-            if (toggle) toggle.click(); // Simulera klick på expandera/kollapsa
+            if (toggle) toggle.click();
         });
-    } else { // Fil
+    } else {
         text.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -146,15 +136,26 @@ function renderNode(nodeData) {
     
     label.appendChild(text);
     
+    const tagsContainer = document.createElement('div');
+    tagsContainer.className = 'metadata-tags';
+
+    if (typeof nodeData.size === 'number') {
+        const sizeTag = document.createElement('span');
+        sizeTag.className = 'size-tag';
+        sizeTag.textContent = formatSize(nodeData.size);
+        tagsContainer.appendChild(sizeTag);
+    }
+    
     if (nodeData.tags && nodeData.tags.length > 0) {
-        const tagsContainer = document.createElement('div');
-        tagsContainer.className = 'metadata-tags';
         nodeData.tags.forEach(tag => {
             const tagEl = document.createElement('span');
             tagEl.className = 'metadata-tag';
             tagEl.textContent = tag;
             tagsContainer.appendChild(tagEl);
         });
+    }
+    
+    if (tagsContainer.hasChildNodes()) {
         label.appendChild(tagsContainer);
     }
 
@@ -171,9 +172,6 @@ function renderNode(nodeData) {
     return li;
 }
 
-/**
- * Initialiserar och renderar hela filträdet.
- */
 function initializeFileTree() {
     const container = document.getElementById('file-tree-container');
     const navContainer = document.getElementById('navigation-container');
