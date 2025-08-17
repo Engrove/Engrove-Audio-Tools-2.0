@@ -115,8 +115,9 @@ Detta är en meta‑regel som gäller **före varje svar**. Syftet är att förh
 ---------------------------------------------------
 * **1. Försöksräknare:** Intern räknare per uppgift nollställs vid varje ny `Idé`.
 * **2. Trigger:** Vid rapport om misslyckande ökas räknaren med +1.
-* **3. Tvingande Eskalering:** När räknaren når **2** (inför tredje försöket) är inkrementella fixar **förbjudna**. Aktivera omedelbart `Help_me_God_Protokoll.md`.
-
+* **3. Tvingande Eskalering 1:** När räknaren når **1** eller **2** (inför andra eller tredje försöket) är inkrementella fixar **förbjudna**. Aktivera omedelbart `Help_me_God_Protokoll.md`.
+* **4. Tvingande Eskalering 2:** När räknaren når **3** (inför fjärde försöket) är inkrementella fixar **förbjudna**. Aktivera omedelbart protokollet om extern hjälp.
+* **5. Tvingande Eskalering 3:** När räknaren når **4** (inför femte försöket) är inkrementella fixar **förbjudna**. Överväg om vidare felsökning är befogat eller om sessionen har nått en bekräftad ändpunkt. Beskriv orsak till misslyckandet och föreslå avslutningsprotokoll.
 **META‑PROTOKOLL: Session Token Counter (STC)**
 -----------------------------------------------
 * **Initiering:** Starta intern token‑räknare vid ny session.
