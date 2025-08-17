@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-17T15:44:08.023315+00:00",
+    "generated_at": "2025-08-17T20:10:57.987920+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -1095,6 +1095,170 @@
         "language": "json",
         "exports": [],
         "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/rag/query_vector_index.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [
+          {
+            "symbol": "query_index",
+            "type": "function"
+          },
+          {
+            "symbol": "main",
+            "type": "function"
+          }
+        ],
+        "imports": [
+          {
+            "source": "sys",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "json",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "logging",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "pathlib",
+            "symbols": [
+              "Path"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "typing",
+            "symbols": [
+              "List",
+              "Dict",
+              "Any"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "chromadb",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "sentence_transformers",
+            "symbols": [
+              "SentenceTransformer"
+            ],
+            "type": "library_import"
+          }
+        ],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/rag/build_vector_index.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [
+          {
+            "symbol": "get_file_hash",
+            "type": "function"
+          },
+          {
+            "symbol": "get_file_paths",
+            "type": "function"
+          },
+          {
+            "symbol": "chunk_file_content",
+            "type": "function"
+          },
+          {
+            "symbol": "main",
+            "type": "function"
+          }
+        ],
+        "imports": [
+          {
+            "source": "sys",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "json",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "gzip",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "logging",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "hashlib",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "pathlib",
+            "symbols": [
+              "Path"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "datetime",
+            "symbols": [
+              "datetime",
+              "timezone"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "typing",
+            "symbols": [
+              "List",
+              "Dict",
+              "Any",
+              "Set"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "sentence_transformers",
+            "symbols": [
+              "SentenceTransformer"
+            ],
+            "type": "library_import"
+          }
+        ],
         "dependents_count": 0,
         "criticality_score": 0.0
       },
