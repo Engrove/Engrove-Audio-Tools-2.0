@@ -15,6 +15,9 @@
 #   (category, sedan crit) istället för alfabetisk.
 # * v6.2 (2025-08-16): Modifierat för att injicera project_overview och använda
 #   endast `category` som tagg i filträdet.
+# * v6.3 (2025-08-17): (Help me God - Grundorsaksanalys) Korrigerat `file_tree_placeholder`
+#   för att matcha den bare-word-variabel som används i `ui_file_tree.py`,
+#   vilket löser det kritiska `ReferenceError` vid körning.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
 # - Help me God: Denna fix är ett direkt resultat av ett externt domslut.
@@ -56,14 +59,8 @@ def transform_structure_to_tree(structure_node, relations_nodes, path_prefix='')
             relations_data = relations_nodes.get(new_node["path"], {})
             tags = []
             
-            # Använd endast 'category' som tagg
             if relations_data.get('category'):
                 tags.append(relations_data['category'])
-            
-            # Ta bort criticality_score-taggen
-            # crit_score = relations_data.get('criticality_score')
-            # if isinstance(crit_score, (int, float)):
-            #     tags.append(f"crit:{crit_score:.0f}%")
             
             if tags:
                 new_node['tags'] = tags
@@ -86,17 +83,14 @@ def build_ui(html_output_path, file_tree_json_string, project_overview):
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
     
-    # Förbered data för injektion i JS
     js_safe_string_literal = json.dumps(file_tree_json_string)
     js_config_string = json.dumps(project_overview)
     
-    # Injektion av fil-träd data
-    file_tree_placeholder = '\"__INJECT_FILE_TREE__\"'
+    # KORRIGERING: Platshållaren är nu en bare-word-variabel, inte en sträng.
+    file_tree_placeholder = '__INJECT_FILE_TREE__'
     injected_js_tree_logic = JS_FILE_TREE_LOGIC.replace(file_tree_placeholder, js_safe_string_literal)
 
-    # Injektion av projektöversikt (repo/branch)
     config_placeholder = '__INJECT_PROJECT_OVERVIEW__';
-    # ui_logic.py ska nu innehålla en plats för denna injektion
     injected_js_logic = JS_LOGIC.replace(config_placeholder, js_config_string)
     
     final_js_logic = injected_js_logic + " " + injected_js_tree_logic
@@ -105,7 +99,6 @@ def build_ui(html_output_path, file_tree_json_string, project_overview):
     with open(css_output_path, 'w', encoding='utf-8') as f: f.write(CSS_STYLES)
     with open(js_output_path, 'w', encoding='utf-8') as f: f.write(final_js_logic)
 
-    # Sanity check: ensure placeholders are replaced
     with open(js_output_path, 'r', encoding='utf-8') as f:
         content = f.read()
     if file_tree_placeholder in content:
@@ -118,12 +111,6 @@ def build_ui(html_output_path, file_tree_json_string, project_overview):
 
 def main():
     """Huvudfunktion som parsar argument, transformerar data och bygger UI."""
-    # Argument 1: Kommando (build-ui)
-    # Argument 2: output_html_path
-    # Argument 3: context_json_path
-    # Argument 4: relations_json_path
-    # Argument 5: project_overview_json_path
-
     if len(sys.argv) != 6:
         print("Fel: build-ui kräver exakt fyra argument.", file=sys.stderr)
         print("Användning: build-ui <command> <output_html_path> <context_json_path> <relations_json_path> <project_overview_json_path>", file=sys.stderr)
@@ -160,9 +147,7 @@ def main():
         sys.exit(1)
 
 if __name__ == "__main__":
-    # Denna del är endast för lokal testning. CI/CD kommer att anropa main() direkt.
     if len(sys.argv) > 1 and sys.argv[1] == 'build-ui':
-        # Simulerar anropet från CI/CD med ett dummy-kommando i sys.argv[1]
         main()
     else:
         print("Användning: python scripts/engrove_audio_tools_creator.py build-ui <output_html_path> <context_json_path> <relations_json_path> <project_overview_json_path>")
