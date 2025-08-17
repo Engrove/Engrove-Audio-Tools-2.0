@@ -24,6 +24,7 @@
 # v2.2 (2025-08-15): Lade till byggsteg för det nya UI-verktyget (engrove_audio_tools_creator.py).
 # v2.3 (2025-08-16): Korrigerat anropet till engrove_audio_tools_creator.py för att använda det nya kommandobaserade API:et ('build-ui').
 # v2.4 (2025-08-16): (Help me God - Domslut) Lade till 'clean: true' till checkout-steget för att säkerställa en ren byggmiljö och eliminera potentiella cachningsproblem.
+# v2.5 (2025-08-17): (Help me God - Grundorsaksanalys) Lade till ett nytt steg för att skapa project_overview.json och korrigerade anropet till engrove_audio_tools_creator.py med det saknade argumentet.
 
 name: Consolidated CI/CD and Tools Pipeline
 
@@ -31,18 +32,15 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      ## Triggers för befintligt system
-      .buildtrigger
+      - '.buildtrigger'
       #- '**.js'
       #- '**.vue'
       #- '**.html'
       #- '**.md'
       #- 'requirements.txt'
-      #- 'sessions/**.json'
-      ## Nya triggers för det nya UI-verktyget
+      - 'sessions/**.json'
       #- 'scripts/engrove_audio_tools_creator.py'
       #- 'scripts/modules/**.py'
-      # Inkludera denna fil själv
       #- '.github/workflows/ci.yml'
   workflow_dispatch:
   schedule:
@@ -60,6 +58,7 @@ env:
   LEGACY_HTML_FILE: 'index.html'
   NEW_HTML_FILE: 'index2.html'
   METADATA_FILE: 'metadata.json'
+  PROJECT_OVERVIEW_FILE: 'project_overview.json' # NY MILJÖVARIABEL
 
 jobs:
   build:
@@ -127,12 +126,25 @@ jobs:
           set -e
           python scripts/wrap_json_in_html.py "${{ env.SITE_DIR }}/${{ env.LEGACY_HTML_FILE }}"
           echo "success=true" >> "$GITHUB_OUTPUT"
+      
+      # NYTT STEG: Skapa den project_overview.json-fil som verktyget behöver
+      - name: STEP 4B Create Project Overview Artifact
+        id: create-project-overview
+        run: |
+          echo "Creating project overview JSON artifact..."
+          printf '{"repository": "%s", "branch": "%s"}' "${{ github.repository }}" "${{ github.ref_name }}" > "${{ env.PROJECT_OVERVIEW_FILE }}"
+          echo "Artifact created at ${{ env.PROJECT_OVERVIEW_FILE }}"
 
-      - name: STEP 4B Create New UI HTML (index2.html)
+      # KORRIGERING: Lade till det femte argumentet som pekar på den nya filen
+      - name: STEP 4C Create New UI HTML (index2.html)
         id: create-new-html
         run: |
           echo "Generating new UI from engrove_audio_tools_creator.py..."
-          python scripts/engrove_audio_tools_creator.py build-ui "${{ env.SITE_DIR }}/${{ env.NEW_HTML_FILE }}" "${{ env.SITE_DIR }}/${{ env.JSON_FILE }}" "docs/file_relations.json"
+          python scripts/engrove_audio_tools_creator.py build-ui \
+            "${{ env.SITE_DIR }}/${{ env.NEW_HTML_FILE }}" \
+            "${{ env.SITE_DIR }}/${{ env.JSON_FILE }}" \
+            "docs/file_relations.json" \
+            "${{ env.PROJECT_OVERVIEW_FILE }}"
           echo "New UI HTML created successfully."
 
       - name: STEP 5 Create Metadata for Deployment
@@ -164,7 +176,7 @@ jobs:
             [skip ci]
           commit_user_name: 'Frankensteen (Bot)'
           commit_user_email: 'frankensteen-bot@users.noreply.github.com'
-          file_pattern: 'docs/ByggLogg.json docs/Chatthistorik.json docs/ai_protocol_performance.json tools/frankensteen_learning_db.json docs/ai_protocols/DynamicProtocols.json docs/core_file_info.json docs/file_relations.json public/data/schemas/*.schema.json'
+          file_pattern: 'docs/ByggLogg.json docs/Chatthistorik.json docs/ai_protocol_performance.json tools/frankensteen_learning_db.json docs/ai_protocols/DynamicProtocols.json docs/core_file_info.json docs/file_relations.json public/data/schemas/*.schema.json project_overview.json'
           push_options: '--force'
 
   deploy:
