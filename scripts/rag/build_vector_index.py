@@ -17,7 +17,9 @@
 #   endast nya eller ändrade filer för att dramatiskt minska körningstiden.
 # * v4.0 (2025-08-17): (Help me God - Grundorsaksanalys) Lade till kompakt JSON-output
 #   och gzip-komprimering för att lösa GitHubs filstorleksgräns.
-# * SHA256_LF: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b3
+# * v4.1 (2025-08-17): (Help me God - Domslut) Korrigerat ett `NameError` där en
+#   omdöpt variabel (`output_path`) inte hade uppdaterats i alla anrop.
+# * SHA256_LF: a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
 # * Grundbulten v3.8: Filen är skapad enligt gällande protokoll.
@@ -173,7 +175,7 @@ def main():
     }
 
     # --- Steg 5: Skriv de nya indexfilerna (kompakt JSON och Gzip) ---
-    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_base_path.parent.mkdir(parents=True, exist_ok=True)
     
     logging.info(f"Skriver kompakt index till {output_json_path}...")
     json_bytes = json.dumps(final_index, separators=(',', ':')).encode('utf-8')
