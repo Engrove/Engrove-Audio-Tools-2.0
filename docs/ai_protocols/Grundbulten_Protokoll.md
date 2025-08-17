@@ -1,6 +1,6 @@
 <!-- BEGIN FILE: docs/ai_protocols/Grundbulten_Protokoll.md
 SYFTE & ANSVAR:
-"Grundbulten" (P-GB-3.1) är den tvingande lagen för all filgenerering/-modifiering (kod, dokument, konfig, data).
+"Grundbulten" (P-GB-3.2) är den tvingande lagen för all filgenerering/-modifiering (kod, dokument, konfig, data).
 Mål: 100% korrekt, komplett, spårbar, verifierad och deterministisk leverans i chattläge (Gemini/OpenAI), utan antaganden.
 
 HISTORIK:
@@ -10,6 +10,7 @@ HISTORIK:
 * v2.4 (2025-08-16): Anti-Placeholder-Grind, utfällda steg 2–8.
 * v3.0 (2025-08-16): REBORN: Hårda grindar G0–G4, evidensartefakter, typstyrd verifieringsmatris, CI-recept.
 * v3.1 (2025-08-17): (Help me God) Gjorde verifiering extern och obligatorisk. Införde 'VERIFICATION_LOG' och 'LIGHTWEIGHT COMPLIANCE STATEMENT' för att tvinga fram transparens och extern bevisföring efter upprepade processfel. Ersatte den vaga 'Processkomplicitet' med en 'Execution Summary'.
+* v.3.2 (2025-08-17: Verifiering av ändrad filstorlek.
 
 TILLÄMPADE REGLER (Frankensteen v5.6):
 * GR4 – Interaktionskontrakt: Självgranskning + extern dom; fast outputordning och ansvar.
