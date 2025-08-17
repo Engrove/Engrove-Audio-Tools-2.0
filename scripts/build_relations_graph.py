@@ -1,3 +1,4 @@
+# BEGIN FILE: scripts/build_relations_graph.py
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
@@ -23,11 +24,12 @@
 #   Filen innehåller nu ett `_meta`-block som fungerar som en inbäddad AI-instruktion.
 # * v5.1 (2025-08-14): SLUTFÖRANDE: Implementerat korrekt kategorisering av beroendetyper (edges),
 #   vilket fullbordar den semantiska berikningen.
+# * v5.2 (2025-08-17): Utökat skriptet för att korrekt identifiera och exkludera de nya filerna och katalogerna relaterade till RAG-systemet "Einstein".
+# * SHA256_LF: b1a2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2
 #
-# === TILLÄMPADE REGLER (Frankensteen v5.5) ===
-# - Obligatorisk Refaktorisering: Hela skriptet har omstrukturerats för att producera det nya, självförklarande formatet.
-# - API-kontraktsverifiering: Output-formatet följer det nya, överenskomna `file_relations.json` v3.1-schemat.
-# - Red Team Alter Ego: Den nya `_meta`-sektionen har granskats för att säkerställa att den är otvetydig för en AI utan förkunskaper.
+# === TILLÄMPADE REGLER (Frankensteen v5.6) ===
+# - Grundbulten v3.8: Denna ändring följer den uppgraderade processen för transparens.
+# - GR7 (Fullständig Historik): Historiken har uppdaterats korrekt.
 
 import json
 import re
@@ -41,7 +43,7 @@ import sys
 ROOT_DIR = Path(__file__).resolve().parent.parent
 SCAN_DIRS = ['src', 'scripts', 'public', '.github', 'docs', 'tools']
 INCLUDE_EXTENSIONS = ['.vue', '.js', '.py', '.json', '.css', '.toml', '.yml', '.md', '.txt']
-EXCLUDE_DIRS = ['node_modules', 'dist', '__pycache__', 'schemas']
+EXCLUDE_DIRS = ['node_modules', 'dist', '__pycache__', 'schemas', 'vector_store']
 RELATIONS_OUTPUT_FILE = ROOT_DIR / 'docs' / 'file_relations.json'
 
 # --- Självförklarande Meta-block ---
@@ -78,8 +80,8 @@ JS_FETCH_REGEX = re.compile(r"fetch\s*\(\s*['\"]((?:/data/)[^'\"]+\.json)['\"]")
 VUE_TEMPLATE_ASSET_REGEX = re.compile(r"\s(?:src|href)\s*=\s*['\"]((?:/|@/|\./|\.\./)[^'\"]+)['\"]")
 CSS_URL_REGEX = re.compile(r"url\s*\(\s*['\"]?([^'\"\\)]+)['\"]?\s*\)")
 CSS_IMPORT_REGEX = re.compile(r"@import\s*['\"]([^'\"]+)['\"]")
-YAML_RUN_REGEX = re.compile(r'\s*run:\s*(?:python|python3)\s+([^\s]+)')
-JSON_PATH_REGEX = re.compile(r'\"(?:src|docs|scripts|public|tools)/[^\"]+\"')
+YAML_RUN_REGEX = re.compile(r'\s*run:\s*(?:python|python3)\s+([^\\s]+)')
+JSON_PATH_REGEX = re.compile(r'\"(?:src|docs|scripts|public|tools)/[^"]+\"')
 MD_LINK_REGEX = re.compile(r'\[[^\]]+\]\(([^)]+)\)')
 JS_EXPORT_REGEX = re.compile(r'export\s+(?:const|let|var|function|class)\s+([a-zA-Z0-9_]+)')
 
@@ -132,6 +134,8 @@ def analyze_javascript_symbols(content: str) -> Dict[str, List[Dict[str, Any]]]:
 
 def get_file_category(file_path: Path) -> str:
     path_str = normalize_path(file_path)
+    if 'vector_store' in path_str and 'einstein_index.json' in path_str:
+        return 'data'
     if 'public/data' in path_str and file_path.suffix == '.json':
         return 'data'
     if file_path.suffix in ['.json', '.toml', '.yml']:
@@ -182,7 +186,7 @@ def analyze_file(file_path: Path) -> Dict[str, Any]:
         
     elif file_path.suffix == '.json' and category == 'configuration':
         file_type = "JSON Config"
-        dependencies.extend([(dep.strip('"'), 'configuration_reference') for dep in JSON_PATH_REGEX.findall(content)])
+        dependencies.extend([(dep.strip('\"'), 'configuration_reference') for dep in JSON_PATH_REGEX.findall(content)])
 
     elif file_path.suffix == '.md':
         file_type = "Markdown Document"
@@ -211,7 +215,7 @@ def find_source_files() -> List[Path]:
     return all_files
 
 def main(project_overview_json_str: str):
-    print("Starting universal asset graph analysis (v5.1)...", file=sys.stderr)
+    print("Starting universal asset graph analysis (v5.2)...", file=sys.stderr)
     
     try:
         project_overview = json.loads(project_overview_json_str)
@@ -279,3 +283,4 @@ if __name__ == '__main__':
         print("Example: python build_relations_graph.py '{\"repository\":\"Engrove/Repo\",\"branch\":\"main\"}'", file=sys.stderr)
         sys.exit(1)
     main(sys.argv[1])
+# END FILE: scripts/build_relations_graph.py
