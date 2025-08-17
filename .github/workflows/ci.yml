@@ -32,6 +32,7 @@
 # * v2.8 (2025-08-17): (Help me God - Domslut) Omarbetat RAG-indexeringen för att generera en portabel .json-fil istället för en ChromaDB-databas, vilket löser GitHubs filstorleksgräns.
 # * v2.9 (2025-08-17): (Help me God - Domslut) Optimerat installationen av beroenden genom att installera en CPU-specifik version av torch för att dramatiskt minska installationstiden.
 # * v2.10 (2025-08-17): (Help me God - Domslut) Korrigerat installationskommandot till att använda `--extra-index-url` för att inte exkludera PyPI, vilket löste installationsfelet.
+# * v2.11 (2025-08-17): (Help me God - Domslut) Finaliserat RAG-pipelinen. Anropet till build_vector_index.py har uppdaterats och auto-commit-steget hanterar nu den komprimerade einstein_index.json.gz.
 # * SHA256_LF: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2
 
 name: Consolidated CI/CD and Tools Pipeline
@@ -59,7 +60,7 @@ env:
   NEW_HTML_FILE: 'index2.html'
   METADATA_FILE: 'metadata.json'
   PROJECT_OVERVIEW_FILE: 'project_overview.json'
-  EINSTEIN_INDEX_FILE: 'einstein_index.json'
+  EINSTEIN_INDEX_BASENAME: 'einstein_index'
 
 jobs:
   build:
@@ -115,7 +116,7 @@ jobs:
         id: build-einstein-index
         run: |
           echo "Building Einstein RAG vector index..."
-          python scripts/rag/build_vector_index.py ./ "${{ env.EINSTEIN_INDEX_FILE }}"
+          python scripts/rag/build_vector_index.py ./ "${{ env.EINSTEIN_INDEX_BASENAME }}"
           echo "Vector index built successfully."
 
       - name: STEP 3 Generate AI Context JSON
@@ -188,7 +189,7 @@ jobs:
             [skip ci]
           commit_user_name: 'Frankensteen (Bot)'
           commit_user_email: 'frankensteen-bot@users.noreply.github.com'
-          file_pattern: 'docs/ByggLogg.json docs/Chatthistorik.json docs/ai_protocol_performance.json tools/frankensteen_learning_db.json docs/ai_protocols/DynamicProtocols.json docs/core_file_info.json docs/file_relations.json public/data/schemas/*.schema.json project_overview.json einstein_index.json'
+          file_pattern: 'docs/ByggLogg.json docs/Chatthistorik.json docs/ai_protocol_performance.json tools/frankensteen_learning_db.json docs/ai_protocols/DynamicProtocols.json docs/core_file_info.json docs/file_relations.json public/data/schemas/*.schema.json project_overview.json einstein_index.json.gz'
           push_options: '--force'
 
   deploy:
