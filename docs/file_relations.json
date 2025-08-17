@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-17T07:28:01.475752+00:00",
+    "generated_at": "2025-08-17T08:11:48.154174+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -1252,6 +1252,15 @@
             "type": "library_import"
           }
         ],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/modules/scripts/modules/ui_performance_dashboard.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [],
+        "imports": [],
         "dependents_count": 0,
         "criticality_score": 0.0
       },
