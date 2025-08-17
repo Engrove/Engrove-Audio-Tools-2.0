@@ -437,21 +437,21 @@
     "purpose_and_responsibility": "Ett centralt byggverktyg som genererar ett interaktivt UI (index2.html) baserat på projektets filstruktur och metadata. Använder modulära Python-filer för att bygga HTML, CSS och JavaScript.",
     "usage_context": "Körs av CI/CD-pipelinen för att skapa det webbaserade verktyget för att bygga AI-kontext.",
     "last_updated_by_session": "S-20250816T180000Z",
-    "last_updated_at": "2025-08-17T08:11:47.999288+00:00",
-    "last_commit_sha": "1eb362bcbf644c12c96f26090e134784f4774b2e"
+    "last_updated_at": "2025-08-17T09:22:23.564769+00:00",
+    "last_commit_sha": "aa9df90bd8ac15fa485166c13f013e7fce39a7ad"
   },
   "scripts/modules/ui_file_tree.py": {
     "purpose_and_responsibility": "Innehåller den isolerade JavaScript-logiken för att rendera och hantera det interaktiva, hierarkiska filträdet med tri-state-kryssrutor.",
     "usage_context": "Importeras som en sträng-literal av `engrove_audio_tools_creator.py` och injiceras i den slutgiltiga `logic.js`-filen.",
     "last_updated_by_session": "S-20250816T180000Z",
-    "last_updated_at": "2025-08-17T08:11:47.999300+00:00",
-    "last_commit_sha": "1eb362bcbf644c12c96f26090e134784f4774b2e"
+    "last_updated_at": "2025-08-17T09:22:23.564785+00:00",
+    "last_commit_sha": "aa9df90bd8ac15fa485166c13f013e7fce39a7ad"
   },
   "scripts/modules/ui_styles.py": {
     "purpose_and_responsibility": "Innehåller de CSS-regler som styr utseendet på det UI som genereras av `engrove_audio_tools_creator.py`, inklusive anpassade stilar för filträdet.",
     "usage_context": "Importeras som en sträng-literal av `engrove_audio_tools_creator.py` och skrivs till en separat `styles.css`-fil.",
     "last_updated_by_session": "S-20250816T180000Z",
-    "last_updated_at": "2025-08-17T08:11:47.999307+00:00",
-    "last_commit_sha": "1eb362bcbf644c12c96f26090e134784f4774b2e"
+    "last_updated_at": "2025-08-17T09:22:23.564807+00:00",
+    "last_commit_sha": "aa9df90bd8ac15fa485166c13f013e7fce39a7ad"
   }
 }
