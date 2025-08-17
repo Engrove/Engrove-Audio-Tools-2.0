@@ -9,10 +9,12 @@
 #   innehåller nu endast generell UI-logik.
 # * v6.1 (2025-08-16): Lade till fullständig logik för filgranskningsmodalen,
 #   inklusive realtidshämtning av filinnehåll från GitHub.
+# * v6.2 (2025-08-17): Uppdaterat ribbon-logiken för att hantera visning av
+#   den nya AI Performance-dashboarden som en fullskärms-overlay.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
-# - Obligatorisk Refaktorisering: Logiken är nu uppdelad i separata, ansvarsfulla moduler.
-# - Fullständig Kod: Verifierat komplett.
+# - Grundbulten v3.3: Denna ändring följer den uppgraderade processen för transparens.
+# - GR7 (Fullständig Historik): Historiken har uppdaterats korrekt.
 
 JS_LOGIC = """
 // Injektionspunkt för projektkonfiguration (repo/branch)
@@ -78,6 +80,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const resizer = document.getElementById('resizer');
     const ribbonTabs = document.querySelectorAll('.ribbon-tab');
     const ribbonPanes = document.querySelectorAll('.ribbon-pane');
+    const fullPageContainer = document.getElementById('full-page-container');
+    const closeFullPageBtn = document.getElementById('close-full-page-btn');
 
     // Modal-element
     const modalOverlay = document.getElementById('file-modal-overlay');
@@ -129,14 +133,32 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Ribbon Menu Logic ---
     ribbonTabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            const targetPaneId = 'tab-' + tab.dataset.tab;
+            const targetTab = tab.dataset.tab;
+            
             ribbonTabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
+            
             ribbonPanes.forEach(pane => {
-                pane.classList.toggle('active', pane.id === targetPaneId);
+                pane.classList.toggle('active', 'tab-' + targetTab === pane.id);
             });
+
+            // Hantera fullskärms-overlay
+            if (targetTab === 'performance') {
+                fullPageContainer.classList.add('active');
+            } else {
+                fullPageContainer.classList.remove('active');
+            }
         });
     });
+
+    if(closeFullPageBtn) {
+        closeFullPageBtn.addEventListener('click', () => {
+            fullPageContainer.classList.remove('active');
+            // Återställ till 'Verktyg'-fliken
+            const verktygTab = document.querySelector('.ribbon-tab[data-tab="verktyg"]');
+            if (verktygTab) verktygTab.click();
+        });
+    }
     
     // --- Resizer Logic ---
     if(resizer && leftPane) {
