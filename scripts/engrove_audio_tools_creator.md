@@ -6,9 +6,11 @@
 #
 # === HISTORIK ===
 # * v1.0 (2025-08-17): Initial skapelse.
+# * v1.1 (2025-08-17): Lade till sektion 6, "Lärdomar & Felsökningshistorik", för att dokumentera viktiga upptäckter och förhindra regressioner.
+# * SHA256_LF: a743f0c19a0a4c042e6a39485b0d09990886c91a7e283b748421b8f44d9f7831
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
-# Grundbulten v3.4: Hela filen har genererats enligt gällande protokoll.
+# Grundbulten v3.7: Hela filen har genererats enligt gällande protokoll.
 
 ## 1. Översikt
 
@@ -69,3 +71,23 @@ Arkitekturen är starkt beroende av att separera presentation (HTML), stil (CSS)
 *   **Prestandaförbättringar:** För mycket stora projekt kan renderingen av filträdet optimeras med "virtual scrolling".
 *   **Utökad Analys:** "Kör Analys"-knappen kan kopplas till mer avancerade analyser, som att visualisera beroenden direkt i UI:t baserat på `file_relations.json`.
 *   **State Management:** För mer komplexa verktyg kan en lättvikts state management-lösning (liknande Pinia, men i ren JS) implementeras för att hantera UI-tillstånd mer robust.
+
+## 6. Lärdomar & Felsökningshistorik (Rotorsakslogg)
+
+Denna sektion dokumenterar icke-triviala buggar och deras lösningar för att bygga upp en kunskapsbas och undvika att samma misstag upprepas.
+
+### **Incident: UI-krasch vid laddning (JSON Parse-fel)**
+*   **Datum:** 2025-08-17
+*   **Symptom:** Det genererade `index2.html`-verktyget var helt trasigt. Webbläsarkonsolen visade `SyntaxError: "[object Object]" is not valid JSON` som pekade på `logic.js`.
+*   **Grundorsak:** En felaktig datainjektionsstrategi. `engrove_audio_tools_creator.py` anropade `json.dumps()` på en redan serialiserad JSON-sträng. Detta resulterade i att JavaScript-koden i `ui_file_tree.py` försökte köra `JSON.parse()` på ett redan parsat objekt, vilket är ogiltigt.
+*   **Lösning:** En atomär, tvådelad korrigering.
+    1.  I `ui_file_tree.py`: Ta bort `JSON.parse()`-anropet och tilldela istället platshållaren direkt till variabeln.
+    2.  I `engrove_audio_tools_creator.py`: Uppdatera bygglogiken för att injicera den råa JSON-strängen direkt, vilket skapar ett giltigt JavaScript-objekt-literal.
+*   **Lärdom (Heuristik):** Datainjektion från ett byggskript till klient-JavaScript bör leverera data i sitt slutgiltiga, direkt användbara format (objekt-literal) istället för ett mellanformat (sträng) som kräver ytterligare parsning på klienten. Detta minimerar risken för typ- och serialiseringsfel.
+
+### **Incident: Trasig layout (Oersatt platshållare)**
+*   **Datum:** 2025-08-17
+*   **Symptom:** `index2.html` renderades med en helt trasig layout.
+*   **Grundorsak:** En platshållare (`{version}`) introducerades i `modules/ui_template.py`, men `engrove_audio_tools_creator.py` uppdaterades aldrig för att ersätta den med ett värde. Detta ledde till att den literala strängen `{version}` skrevs ut i den slutgiltiga HTML-filen, vilket gjorde den ogiltig.
+*   **Lösning:** Uppdatera `engrove_audio_tools_creator.py` till att använda `.format(version=...)` på `HTML_TEMPLATE`-strängen innan den skrivs till fil.
+*   **Lärdom (Heuristik):** När en platshållare introduceras i en mallfil (t.ex. `_template.py`), måste byggskriptet som konsumerar den uppdateras **atomärt** (i samma commit/åtgärd) för att hantera och ersätta platshållaren.
