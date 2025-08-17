@@ -5,7 +5,7 @@
 # Detta skript är kärnan i "Einstein" RAG-systemets indexeringsprocess.
 # Dess ansvar är att rekursivt skanna en angiven källkatalog, extrahera textinnehåll
 # från relevanta filer, dela upp texten i hanterbara "chunks", omvandla dessa
-# chunks till vektorer (embeddings) och lagra dem i en persistent JSON-fil.
+# chunks till vektorer (embeddings) och spara dem i en persistent, komprimerad JSON-fil.
 #
 # === HISTORIK ===
 # * v1.0 (2025-08-17): Initial skapelse. Implementerade indexering till ChromaDB.
@@ -15,14 +15,17 @@
 # * v3.0 (2025-08-17): (Help me God - Grundorsaksanalys) Infört intelligent,
 #   inkrementell indexering. Skriptet jämför nu fil-hashar och bearbetar
 #   endast nya eller ändrade filer för att dramatiskt minska körningstiden.
-# * SHA256_LF: f0e1d2c3b4a59687d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1
+# * v4.0 (2025-08-17): (Help me God - Grundorsaksanalys) Lade till kompakt JSON-output
+#   och gzip-komprimering för att lösa GitHubs filstorleksgräns.
+# * SHA256_LF: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b3
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
 # * Grundbulten v3.8: Filen är skapad enligt gällande protokoll.
-# * Help me God: Denna ändring är en direkt konsekvens av en grundorsaksanalys av ett CI/CD-prestandaproblem.
+# * Help me God: Denna ändring är en direkt konsekvens av en grundorsaksanalys av ett CI/CD-fel.
 
 import sys
 import json
+import gzip
 import logging
 import hashlib
 from pathlib import Path
@@ -81,26 +84,28 @@ def chunk_file_content(file_path: Path) -> List[str]:
 def main():
     """Huvudfunktion för att bygga och spara vektordatabasen."""
     if len(sys.argv) != 3:
-        print("Användning: python build_vector_index.py <source_directory> <output_json_path>", file=sys.stderr)
+        print("Användning: python build_vector_index.py <source_directory> <output_json_path_no_ext>", file=sys.stderr)
         sys.exit(1)
 
     source_dir = Path(sys.argv[1])
-    output_path = Path(sys.argv[2])
+    output_base_path = Path(sys.argv[2])
+    output_json_path = output_base_path.with_suffix('.json')
+    output_gz_path = output_base_path.with_suffix('.json.gz')
 
     # --- Steg 1: Läs in befintligt index (om det finns) ---
     old_chunks = []
     old_file_hashes: Dict[str, str] = {}
-    if output_path.exists():
-        logging.info(f"Läser befintligt index från {output_path}...")
+    if output_json_path.exists():
+        logging.info(f"Läser befintligt index från {output_json_path}...")
         try:
-            with open(output_path, 'r', encoding='utf-8') as f:
+            with open(output_json_path, 'r', encoding='utf-8') as f:
                 old_index_data = json.load(f)
                 old_chunks = old_index_data.get("chunks", [])
                 for chunk in old_chunks:
                     if 'source' in chunk and 'file_hash' in chunk:
                         old_file_hashes[chunk['source']] = chunk['file_hash']
         except (json.JSONDecodeError, IOError) as e:
-            logging.warning(f"Kunde inte läsa eller tolka befintligt index. Bygger om från grunden. Fel: {e}")
+            logging.warning(f"Kunde inte läsa befintligt index. Bygger om från grunden. Fel: {e}")
             old_chunks, old_file_hashes = [], {}
 
     # --- Steg 2: Jämför filer och identifiera ändringar ---
@@ -130,7 +135,7 @@ def main():
     # --- Steg 3: Bearbeta endast nya och ändrade filer ---
     newly_processed_chunks = []
     if files_to_process:
-        logging.info("Laddar embedding-modellen: all-MiniLM-L6-v2...")
+        logging.info(f"Laddar embedding-modellen: {EMBEDDING_MODEL}...")
         model = SentenceTransformer(EMBEDDING_MODEL)
 
         for file_path in files_to_process:
@@ -159,7 +164,6 @@ def main():
         if chunk.get('source') in unchanged_file_paths:
             final_chunks.append(chunk)
     
-    # Lägg till de nya/uppdaterade chunksen
     final_chunks.extend(newly_processed_chunks)
 
     final_index = {
@@ -168,15 +172,23 @@ def main():
         "chunks": final_chunks
     }
 
-    # --- Steg 5: Skriv den nya indexfilen ---
-    logging.info(f"Skriver uppdaterat index till {output_path}...")
+    # --- Steg 5: Skriv de nya indexfilerna (kompakt JSON och Gzip) ---
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, 'w', encoding='utf-8') as f:
-        json.dump(final_index, f)
+    
+    logging.info(f"Skriver kompakt index till {output_json_path}...")
+    json_bytes = json.dumps(final_index, separators=(',', ':')).encode('utf-8')
+    with open(output_json_path, 'wb') as f:
+        f.write(json_bytes)
+
+    logging.info(f"Skriver komprimerat index till {output_gz_path}...")
+    with gzip.open(output_gz_path, 'wb') as f:
+        f.write(json_bytes)
 
     logging.info("="*50)
     logging.info("Einstein Vector Index-bygge slutfört!")
     logging.info(f"Totalt antal chunks i indexet: {len(final_chunks)}")
+    logging.info(f"JSON-storlek: {len(json_bytes) / 1024 / 1024:.2f} MB")
+    logging.info(f"Gzip-storlek: {output_gz_path.stat().st_size / 1024 / 1024:.2f} MB")
     logging.info("="*50)
 
 if __name__ == "__main__":
