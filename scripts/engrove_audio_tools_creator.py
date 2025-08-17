@@ -19,10 +19,11 @@
 #   för att matcha den bare-word-variabel som används i `ui_file_tree.py`,
 #   vilket löser det kritiska `ReferenceError` vid körning.
 # * v7.0 (2025-08-17): Lade till rekursiv storleksberäkning för filer och mappar.
-#   `transform_structure_to_tree` berikar nu varje nod med en 'size'-egenskap.
+# * v7.1 (2025-08-17): Importerar och inkluderar den nya (tomma) `ui_performance_dashboard.py`-modulen för att förbereda för framtida funktionalitet.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
-# - Grundbulten v3.1: Denna ändring följer den uppgraderade processen för transparens.
+# - Grundbulten v3.3: Denna ändring följer den uppgraderade processen för transparens.
+# - GR7 (Fullständig Historik): Historiken har uppdaterats korrekt.
 #
 import os
 import sys
@@ -31,6 +32,7 @@ from modules.ui_template import HTML_TEMPLATE
 from modules.ui_styles import CSS_STYLES
 from modules.ui_logic import JS_LOGIC
 from modules.ui_file_tree import JS_FILE_TREE_LOGIC
+from modules.ui_performance_dashboard import JS_PERFORMANCE_LOGIC
 
 def calculate_node_size(structure_node):
     """
@@ -108,7 +110,7 @@ def build_ui(html_output_path, file_tree_json_string, project_overview):
     config_placeholder = '__INJECT_PROJECT_OVERVIEW__';
     injected_js_logic = JS_LOGIC.replace(config_placeholder, js_config_string)
     
-    final_js_logic = injected_js_logic + " " + injected_js_tree_logic
+    final_js_logic = injected_js_logic + " " + injected_js_tree_logic + " " + JS_PERFORMANCE_LOGIC
 
     with open(html_output_path, 'w', encoding='utf-8') as f: f.write(HTML_TEMPLATE)
     with open(css_output_path, 'w', encoding='utf-8') as f: f.write(CSS_STYLES)
