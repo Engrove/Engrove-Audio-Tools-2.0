@@ -8,9 +8,11 @@
 # * v5.2 (2025-08-16): Korrigerat layout och indentering för filträdet.
 # * v5.3 (2025-08-16): Lade till stilar för filgranskningsmodalen.
 # * v5.4 (2025-08-17): Lade till en `.size-tag`-klass för att visa filstorlekar.
+# * v5.5 (2025-08-17): Lade till fullständig styling för AI Performance-dashboarden.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
-# - Grundbulten v3.1: Denna ändring följer den uppgraderade processen för transparens.
+# - Grundbulten v3.3: Denna ändring följer den uppgraderade processen för transparens.
+# - GR7 (Fullständig Historik): Historiken har uppdaterats korrekt.
 
 CSS_STYLES = """
 :root {
@@ -47,6 +49,7 @@ body, html {
 }
 
 h2 { font-weight: 500; color: var(--text-color); }
+.inline { display: inline-flex; align-items: center; gap: 6px; }
 
 .main-container {
     display: flex; flex-grow: 1;
@@ -126,16 +129,18 @@ button, .ribbon-group button {
 button:hover, .ribbon-group button:hover {
     background-color: var(--button-hover-bg);
 }
+button.primary { background-color: var(--button-bg); }
+button.info { background-color: var(--info-color, #17a2b8); }
 
-input[type="search"] {
+input[type="search"], input[type="date"] {
     background-color: var(--input-bg-color);
     border: 1px solid var(--input-border-color);
     color: var(--text-color);
     padding: 8px;
-    width: 250px;
     border-radius: 5px;
 }
-input[type="search"]:focus {
+input[type="search"] { width: 250px; }
+input[type="search"]:focus, input[type="date"]:focus {
     outline: none;
     border-color: var(--resizer-hover-color);
 }
@@ -165,14 +170,59 @@ input[type="search"]:focus {
     height: 100%;
     width: 100%;
 }
+.tool-container.active {
+    display: block;
+}
 .full-page-container {
     position: absolute;
     inset: 0;
-    background-color: var(--panel-bg-color);
+    background-color: var(--bg-color);
     z-index: 100;
-    padding: 12px;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
+.full-page-container.active {
+    display: flex;
+}
+.full-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+#close-full-page-btn {
+    background: none; border: none; font-size: 1.5rem; color: var(--text-color-muted);
+}
+#close-full-page-btn:hover { color: var(--text-color); }
+
+.full-page-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* --- AI Performance Styles --- */
+.filter-bar { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+.filter-group { display: flex; flex-direction: column; gap: 4px; }
+.filter-group label { font-size: .85rem; color: var(--text-color-muted); }
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.kpi { border: 1px solid var(--border-color); border-radius: 8px; background: var(--panel-bg-color); padding: 10px; }
+.kpi h4 { margin: 0 0 6px 0; font-size: 0.95rem; color: var(--text-color-muted); }
+.kpi .big { font-size: 1.6rem; font-weight: 700; color: var(--text-color); }
+.kpi .sub { font-size: .85rem; color: var(--text-color-muted); }
+.chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+.chart-card { border: 1px solid var(--border-color); border-radius: 8px; background: var(--panel-bg-color); padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+.chart-card h3 { margin: 0 0 4px 0; font-size: 1.05rem; border-bottom: 1px solid var(--border-color); padding-bottom: 6px; }
+.chart-container { position: relative; height: 300px; }
+.table-card { border: 1px solid var(--border-color); border-radius: 8px; background: var(--panel-bg-color); padding: 10px; }
+.table-card table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.table-card th, .table-card td { border: 1px solid var(--border-color); padding: 6px; text-align: left; }
+.table-card th { background: var(--bg-color); }
 
 /* --- File Tree --- */
 .file-tree, .file-tree ul {
@@ -201,7 +251,7 @@ input[type="search"]:focus {
     width: 100%;
 }
 .node-label:hover {
-    background-color: rgba(0,0,0,0.1);
+    background-color: rgba(255,255,255,0.05);
 }
 .toggle-icon {
     cursor: pointer; user-select: none;
