@@ -7,10 +7,12 @@
 # * v4.1 (2025-08-16): Lade till struktur för filgranskningsmodal och översatte all UI-text till svenska.
 # * v4.2 (2025-08-17): Lade till Eruda debugging-verktyg för att underlätta felsökning på mobila enheter.
 # * v4.3 (2025-08-17): Lade till Chart.js CDN-länk och den kompletta HTML-strukturen för AI Performance-dashboarden.
+# * v4.4 (2025-08-17): Lade till CDN-länkar för Pako.js och Transformers.js. Uppdaterade UI för att stödja "Einstein" RAG-systemets dubbelfunktions-sökruta.
+# * SHA256_LF: 52f5313d4b6c1f1082d46e2978d33d7b695123b3207e3352723c3167f25902f2
 #
-# === TILLÄMPADE REGLER (Frankensteen v5.6) ===
-# - Grundbulten v3.3: Denna ändring följer den uppgraderade processen för transparens och fullständighet.
-# - GR7 (Fullständig Historik): Historiken har uppdaterats korrekt.
+# === TILLÄMPADE REGLER (Frankensteen v5.7) ===
+# - Grundbulten v3.8: Denna ändring följer den uppgraderade processen för transparens och fullständighet.
+# - GR7 (Fullständig Historik): Korrekt historik-header.
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -21,6 +23,8 @@ HTML_TEMPLATE = """
     <title>Engrove Audio Tools v3.0 - Analysverktyg</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1"></script>
     <!-- Eruda debugging console for mobile devices -->
     <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
     <script>eruda.init();</script>
@@ -35,7 +39,10 @@ HTML_TEMPLATE = """
                 <button class="ribbon-tab" data-tab="hjalp">Hjälp</button>
             </div>
             <div class="search-container">
-                <input type="search" placeholder="Sök...">
+                <input type="search" id="main-search-input" placeholder="Sök filer...">
+                <button id="einstein-toggle-btn" title="Einstein-sökning (klicka för att klistra in & aktivera)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10_0_1_0-10-10Z"/><path d="M12 18a6 6 0 1 0 0-12 6 6 0 1 0 0 12Z"/><path d="M12 22a10 10 0 0 0 10-10"/><path d="M2 12a10 10 0 0 0 10 10"/></svg>
+                </button>
             </div>
         </div>
         <div class="ribbon-content">
@@ -115,7 +122,7 @@ HTML_TEMPLATE = """
                     <div class="chart-card"><h3>Sessions Per Model</h3><div class="chart-container"><canvas id="model-chart"></canvas></div></div>
                 </div>
                 <div class="table-card" style="margin-top:12px"><h3>Learning Database (Heuristics)</h3><div id="perf-learning-body">Ingen data.</div></div>
-                <div class="table-card" style="margin-top:12px"><h3>Sessions</h3><div id="perf-sessions-body">Ingen data.</div></div>
+                <div class="table-card" style="margin-top:12px"><h3>Sessions</h3><div id="perf-sessions-body\">Ingen data.</div></div>
             </div>
         </div>
     </div>
@@ -124,6 +131,9 @@ HTML_TEMPLATE = """
     <div id="file-modal-overlay" class="modal-overlay hidden">
         <div id="file-modal" class="modal-panel">
             <header class="modal-header">
+                <span id="modal-loader-spinner" class="hidden" style="margin-right: 8px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1.5s linear infinite;"><circle cx="12" cy="12" r="10" stroke-opacity=".3"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+                </span>
                 <h3 id="modal-title">Filnamn.js</h3>
                 <div class="modal-actions">
                     <button id="modal-copy-path" title="Kopiera sökväg">📋</button>
