@@ -2,16 +2,16 @@
 #
 # === HISTORIK ===
 # * v4.0 (2025-08-16): Total visuell omdesign till ett mörkblått tema.
-# * v4.1 (2025-08-16): Lade till förberedande, initialt dolda stilar.
+# * v4.1 (2025-08-16): Lade till dolda containrar för framtida verktyg.
 # * v5.0 (2025-08-16): Lade till CSS-regler för det interaktiva filträdet.
 # * v5.1 (2025-08-16): Implementerat anpassade tri-state kryssrutor.
-# * v5.2 (2025-08-16): Korrigerat layout och indentering för filträdet för att
-#   säkerställa korrekt visuell hierarki.
-# * v5.3 (2025-08-16): Lade till stilar för den nya filgranskningsmodalen.
+# * v5.2 (2025-08-16): Korrigerat layout och indentering för filträdet.
+# * v5.3 (2025-08-16): Lade till stilar för filgranskningsmodalen.
+# * v5.4 (2025-08-17): Lade till en `.size-tag`-klass för att visa filstorlekar.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.6) ===
-# - Fullständig Kod: Verifierat komplett.
-#
+# - Grundbulten v3.1: Denna ändring följer den uppgraderade processen för transparens.
+
 CSS_STYLES = """
 :root {
     --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -269,11 +269,16 @@ input[type="search"]:focus {
     display: flex; gap: 4px;
     margin-left: auto; padding-left: 8px;
 }
-.metadata-tag {
+.metadata-tag, .size-tag {
     padding: 1px 6px; border-radius: 99px; font-size: 10px;
     background-color: var(--bg-color); border: 1px solid var(--border-color);
     color: var(--text-color-muted); white-space: nowrap;
 }
+.size-tag {
+    min-width: 45px;
+    text-align: right;
+}
+
 
 /* --- File Viewer Modal --- */
 .modal-overlay {
