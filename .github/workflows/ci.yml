@@ -127,11 +127,13 @@ jobs:
       - name: STEP 2C Build Einstein Vector Index (if triggered)
         if: steps.check_einstein_trigger.outputs.run_index == 'true'
         run: |
-          echo "Building Einstein RAG vector index..."
-          python scripts/rag/build_vector_index.py ./ "${{ env.EINSTEIN_INDEX_BASENAME }}"
-          echo "Vector index built successfully."
-          echo "Removing trigger file after successful build."
-          rm .einstein
+          if [ -f ".einstein" ]; then
+            echo "Building Einstein RAG vector index..."
+            python scripts/rag/build_vector_index.py ./ "${{ env.EINSTEIN_INDEX_BASENAME }}"
+            echo "Vector index built successfully."
+            echo "Removing trigger file after successful build."
+            mv .einstein .einstein.
+          fi
 
       - name: STEP 3 Generate AI Context JSON
         id: generate-json
