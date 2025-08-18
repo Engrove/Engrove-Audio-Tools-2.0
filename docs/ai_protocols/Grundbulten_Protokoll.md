@@ -157,9 +157,9 @@ END HEADER -->
 - **GitHub Actions (CI-YAML)**: YAML-parse ⇒ PASS; action-linter/dry-run ⇒ PASS.
 - **CSS**: Lint ⇒ 0 fel; tokens används (inga hårdkodade färger där tokens finns).
 
-## Bilaga B: Anti-placeholder-regex (minimimängd)
+## Bilaga B: Anti-placeholder-regex (utökad)
 ```
-(\\.\\.\\.)|(TODO|FIXME|HACK|WIP)|(resten.*oförändrad)|(placeholder|stub|pseudokod|pseudo)|(omitted|truncated)
+(\.\.\.)|(TODO|FIXME|HACK|WIP)|(resten.oförändrad)|(placeholder|stub|pseudokod|pseudo)|(omitted|truncated)|(implementera senare)|(logik här)|(här ska koden in)|(oförändrad kod)|(samma som (?:ovan|tidigare))|(#\s\.\.\.)|(\/\/\s*\.\.\.)
 ```
 
 ## Bilaga C: Chat-läge (Gemini/OpenAI)
