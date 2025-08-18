@@ -1,0 +1,171 @@
+{
+  "sessionId": "S-2025-08-18T11-15-00Z",
+  "createdAt": "2025-08-18T11:15:00Z",
+  "approvedNewDynamicProtocols": [],
+  "promoteProtocols": [],
+  "file_metadata_updates": [
+    {
+      "file_path": "docs/ai_protocols/Manuell_Patch_Protokoll.md",
+      "purpose_and_responsibility": "Definierar det strikta, otvetydiga formatet för att leverera en \"Manuell Patch-Instruktion\" i ett chatt-gränssnitt för en mänsklig operatör.",
+      "usage_context": "Används enligt beslutsmatrisen i Grundbulten_Protokoll.md för små, manuella ändringar där mänsklig läsbarhet och verifierbarhet är prioriterat."
+    }
+  ],
+  "importantMilestonesLogged": [
+    {
+      "event_id": "IMR-001",
+      "milestone_type": "PROCESS",
+      "summary": "Definierade och formaliserade P-MP-1.0 (Manuell Patch-Instruktion).",
+      "details": "Efter en metadiskussion om tvetydigheten i diff-leveranser, skapades ett nytt, rigoröst protokoll för att ge explicita, verifierbara instruktioner för manuella filändringar. Detta protokoll integrerades därefter i Grundbultens beslutsmatris.",
+      "affected_scope": [
+        "docs/ai_protocols/Grundbulten_Protokoll.md",
+        "docs/ai_protocols/Manuell_Patch_Protokoll.md"
+      ],
+      "timestamp": "2025-08-18T11:15:00Z",
+      "session_id": "S-2025-08-18T11-15-00Z"
+    }
+  ],
+  "artifacts": {
+    "ByggLogg": {
+      "sessionId": "S-2025-08-18T11-15-00Z",
+      "date": "2025-08-18T11:15:00Z",
+      "summary": "Kritiskt misslyckande vid refaktorering av sök-UI. Leverans av `ui_template.py` innehöll en platshållare, vilket bröt mot Grundbulten. Sessionen avslutades för att skapa en ny, komplett uppgiftsbeskrivning. Ett nytt protokoll (P-MP-1.0) definierades.",
+      "actions": [
+        {
+          "title": "Misslyckad leverans av `ui_template.py` (v5.1)",
+          "files": [
+            {
+              "path": "scripts/modules/ui_template.py",
+              "changeDescription": "Försök att korrigera HTML-arkitekturen genom att flytta ribbon-paneler. Leveransen misslyckades på grund av en kvarlämnad platshållarkommentar."
+            }
+          ],
+          "result": "Kritiskt fel: Brott mot Grundbulten (Anti-placeholder). Uppdraget avbröts. CI/CD är fortfarande blockerad."
+        }
+      ],
+      "projectStatus": "Blockerad. En ny, komplett uppgift för att slutföra UI-refaktoreringen måste genomföras."
+    },
+    "Chatthistorik": {
+      "sessionId": "S-2025-08-18T11-15-00Z",
+      "interactions": [
+        {
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Rapporterade att det nya UI:t inte fungerade som avsett, med en skärmdump som visade att menyval inte bytte innehåll i huvudpanelen."
+        },
+        {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "unknown",
+            "name": "unknown",
+            "version": "unknown"
+          },
+          "speaker": "Frankensteen (unknown:unknown@unknown)",
+          "summary": "Analyserade felet, identifierade en arkitektonisk brist i HTML-mallen och föreslog en patch för `ui_template.py`, men baserad på en inkorrekt `base_checksum_sha256`."
+        },
+        {
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Identifierade att AI:ns kontext var föråldrad och tillhandahöll den korrekta, senaste versionen av `ui_template.py`."
+        },
+        {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "unknown",
+            "name": "unknown",
+            "version": "unknown"
+          },
+          "speaker": "Frankensteen (unknown:unknown@unknown)",
+          "summary": "Erkände kontextdrift, eskalerade till Help me God, och levererade en fullständig, uppdaterad version av `ui_template.py` som dock felaktigt innehöll en platshållarkommentar."
+        },
+        {
+          "speakerName": "Engrove",
+          "model": {
+            "provider": "human",
+            "name": "operator",
+            "version": "unknown"
+          },
+          "speaker": "Engrove (human:operator@unknown)",
+          "summary": "Identifierade placeholder-felet och beordrade en omedelbar sessionsavslutning med instruktion om att skapa en ny, komplett plan."
+        }
+      ]
+    },
+    "ai_protocol_performance": {
+      "sessionId": "S-2025-08-18T11-15-00Z",
+      "date": "2025-08-18T11:15:00Z",
+      "aiQualitativeSummary": "Kritiskt misslyckande. Sessionen präglades av upprepade fel, inklusive kontextdrift och ett slutgiltigt brott mot ett kärndirektiv (Grundbulten/anti-placeholder). FL-D-protokollet eskalerade korrekt, men den slutliga leveransen var bristfällig. En ny heuristik för att förhindra subtila platshållare har genererats.",
+      "scorecard": {
+        "efficacy": {
+          "score": 0,
+          "weight": 0.4,
+          "weightedScore": 0
+        },
+        "efficiency": {
+          "score": 0,
+          "weight": 0.3,
+          "weightedScore": 0
+        },
+        "robustness": {
+          "score": 0,
+          "weight": 0.3,
+          "weightedScore": 0
+        },
+        "finalScore": 0
+      },
+      "detailedMetrics": {
+        "missionCompleted": false,
+        "debuggingCycles": 3,
+        "selfCorrections": 2,
+        "externalCorrections": 2,
+        "protocolActivations": {
+          "psv": 4,
+          "helpMeGod": 2,
+          "stalemate": 0
+        },
+        "heuristicsTriggered": []
+      },
+      "improvementSuggestion": {
+        "pattern": "AI:n lämnar platshållarkommentarer (t.ex. `<!-- ... (oförändrat) ... -->`) i stora kodblock för att spara tokens, vilket är ett protokollbrott.",
+        "proposedHeuristicId": "H-20250818-01"
+      }
+    },
+    "frankensteen_learning_db": [
+      {
+        "heuristicId": "H-20250818-01",
+        "trigger": {
+          "type": "file_delivery",
+          "scope": [
+            "*"
+          ],
+          "keywords": [
+            "oförändrad",
+            "...",
+            "bevarad"
+          ]
+        },
+        "identifiedRisk": {
+          "riskId": "RISK_IMPLICIT_PLACEHOLDER_OMISSION",
+          "description": "Risken att AI:n, vid leverans av en stor fil, använder en platshållarkommentar istället för den fullständiga koden, vilket leder till en trunkerad och ogiltig fil."
+        },
+        "mitigation": {
+          "protocolId": "PSV-MIT-EXPLICIT_VERIFY",
+          "description": "Före leverans av en fil, efter att den slutgiltiga hashen har beräknats, MÅSTE en extra intern granskning göras. Ställ den explicita frågan: 'Innehåller den kod jag är på väg att skicka NÅGON form av platshållare, inklusive `<!-- ... -->`?' Om svaret är ja, AVBRYT och rekonstruera den fullständiga filen."
+        },
+        "metadata": {
+          "originSessionId": "S-2025-08-18T11-15-00Z",
+          "createdAt": "2025-08-18T11:15:00Z",
+          "status": "active"
+        }
+      }
+    ],
+    "generated_patches": []
+  }
+}
