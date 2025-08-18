@@ -24,11 +24,12 @@
 # * v8.3 (2025-08-18): (Help me God - Domslut) Implementerat "Hybrid View Control". Ribbon-logiken hanterar nu korrekt både paneler i headern och växling till helsides-vyer i main-content.
 # * v8.4 (2025-08-18): (Stalemate Protocol - Domslut) Korrigerat panel-växlingslogiken för att säkerställa att föräldern (`#right-pane`) förblir synlig när en overlay-vy (`#einstein-container`) aktiveras.
 # * v8.5 (2025-08-18): (Engrove Mandate) Tog bort överflödig logik och event-lyssnare för de borttagna header-knapparna.
-# * SHA256_LF: a8e0d44e5c8c6f7b3a1b2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a
+# * v9.0 (2025-08-18): (K-MOD Plan) Omarbetat flik- och panelhantering för att stödja den nya "Start"- och "Data"-layouten. Logiken är nu centraliserad i `handleViewSwitch`.
+# * SHA256_LF: 70d8ab65c6dd90c674887dbef57724e3dbed633f498876cd2970bddf9598388d
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, korrigerade planen.
-# - Stalemate_Protocol: Denna ändring är ett direkt resultat av ett externt domslut efter ett systemiskt fel.
+# - P-OKD-1.0: Den nya `handleViewSwitch`-funktionen har fått en JSDoc-kommentar som förklarar dess syfte och parametrar.
 
 JS_LOGIC = """
 import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1';
@@ -151,17 +152,78 @@ function closeFileModal() {
 
 window.openFileModal = openFileModal;
 
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('Engrove Audio Tools UI Initialized.');
-
+/**
+ * @function handleViewSwitch
+ * @description Centraliserad funktion för att hantera synligheten av applikationens huvudvyer baserat på den aktiva menyfliken.
+ * @param {string} targetTab - ID:t för den valda fliken (t.ex. 'start', 'data', 'einstein').
+ */
+function handleViewSwitch(targetTab) {
+    // Hämta referenser till alla paneler
     const leftPane = document.getElementById('left-pane');
     const rightPane = document.getElementById('right-pane');
     const resizer = document.getElementById('resizer');
+
+    // Paneler inuti right-pane
+    const startPanel = document.getElementById('start-panel');
+    const infoContainer = document.getElementById('info-container');
+    const einsteinContainer = document.getElementById('einstein-container');
+    const performanceContainer = document.getElementById('full-page-container');
+
+    // Nollställ alla vyer
+    leftPane.style.display = 'none';
+    rightPane.style.display = 'none';
+    resizer.style.display = 'none';
+    startPanel.style.display = 'none';
+    infoContainer.style.display = 'none';
+    einsteinContainer.classList.remove('active');
+    performanceContainer.classList.remove('active');
+
+    // Aktivera vyer baserat på vald flik
+    switch (targetTab) {
+        case 'start':
+            leftPane.style.display = 'block';
+            rightPane.style.display = 'block';
+            resizer.style.display = 'block';
+            startPanel.style.display = 'block';
+            break;
+
+        case 'data':
+        case 'installningar':
+        case 'hjalp':
+            leftPane.style.display = 'block';
+            rightPane.style.display = 'block';
+            resizer.style.display = 'block';
+            infoContainer.style.display = 'block';
+            break;
+
+        case 'einstein':
+            rightPane.style.display = 'block';
+            einsteinContainer.classList.add('active');
+            break;
+
+        case 'performance':
+            rightPane.style.display = 'block';
+            performanceContainer.classList.add('active');
+            break;
+        
+        default:
+            // Fallback till startvyn om något går fel
+            leftPane.style.display = 'block';
+            rightPane.style.display = 'block';
+            resizer.style.display = 'block';
+            startPanel.style.display = 'block';
+            break;
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('Engrove Audio Tools UI Initialized.');
+
     const ribbonTabs = document.querySelectorAll('.ribbon-tab');
     const ribbonPanes = document.querySelectorAll('.ribbon-pane');
-    
-    const performanceContainer = document.getElementById('full-page-container');
-    const einsteinContainer = document.getElementById('einstein-container');
+    const resizer = document.getElementById('resizer');
+    const leftPane = document.getElementById('left-pane');
     
     const modalOverlay = document.getElementById('file-modal-overlay');
     const modalCloseBtn = document.getElementById('modal-close-btn');
@@ -198,7 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const targetTab = tab.dataset.tab;
             const targetPaneId = `tab-${targetTab}`;
 
-            // 1. Hantera flikarnas och header-panelernas utseende
+            // 1. Hantera flikarnas och meny-panelernas utseende
             ribbonTabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
 
@@ -206,33 +268,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 pane.classList.toggle('active', pane.id === targetPaneId);
             });
 
-            // 2. Hantera synligheten av huvud-vyerna
-            const showMainPanes = (targetTab === 'verktyg' || targetTab === 'installningar' || targetTab === 'hjalp');
-            const showEinstein   = (targetTab === 'einstein');
-            const showPerformance = (targetTab === 'performance');
-
-            // Nollställ overlay-vyer
-            einsteinContainer.classList.remove('active');
-            performanceContainer.classList.remove('active');
-
-            // Bas: dölj allt
-            leftPane.style.display = 'none';
-            rightPane.style.display = 'none';
-            resizer.style.display = 'none';
-
-            // Visa rätt vy
-            if (showMainPanes) {
-              leftPane.style.display = 'block';
-              rightPane.style.display = 'block';
-              resizer.style.display = 'block';
-            } else if (showEinstein) {
-              // Viktigt: behåll rightPane synlig – Einstein overlay ligger inuti rightPane
-              rightPane.style.display = 'block';
-              einsteinContainer.classList.add('active');
-            } else if (showPerformance) {
-              rightPane.style.display = 'block';
-              performanceContainer.classList.add('active');
-            }
+            // 2. Anropa den centrala funktionen för att hantera vy-växling
+            handleViewSwitch(targetTab);
         });
     });
     
@@ -248,6 +285,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         document.addEventListener('mouseup', () => { isResizing = false; });
     }
+    
+    // Sätt startvyn vid laddning
+    handleViewSwitch('start');
 });
 """
 
