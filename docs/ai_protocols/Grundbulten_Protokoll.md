@@ -1,6 +1,6 @@
 <!-- BEGIN FILE: docs/ai_protocols/Grundbulten_Protokoll.md
 SYFTE & ANSVAR:
-"Grundbulten" (P-GB-3.8) är den tvingande lagen för all filgenerering/-modifiering (kod, dokument, konfig, data).
+"Grundbulten" (P-GB-3.9) är den tvingande lagen för all filgenerering/-modifiering (kod, dokument, konfig, data).
 Mål: 100% korrekt, komplett, spårbar, verifierad och deterministisk leverans i chattläge (Gemini/OpenAI), utan antaganden.
 
 HISTORIK:
@@ -16,23 +16,24 @@ HISTORIK:
 * v3.6 (2025-08-17): (Help me God) KRITISK UPPDATERING. Infört en sluten verifieringskedja för att förhindra trunkeringsfel: 1. G-1: Tvingande hash-kontroll vid inläsning. 2. Steg 1f: Tvingande inbäddning av slutgiltig hash i filens historik. 3. Steg 9: Tvingande rapportering av slutgiltig hash i svar. 4. Steg 10e: Tvingande intern självverifiering av hash-värden före leverans.
 * v3.7 (2025-08-17): (Help me God - KORRIGERING) Infört en sluten, hash-baserad verifieringskedja (G-1, 1f, 9, 10e) för att matematiskt förhindra trunkeringsfel. Återställt fullständiga bilagor.
 * v3.8 (2025-08-17): (Engrove Mandate) Lade till Steg 11b för att tvinga fram loggning av varje filmodifiering till en temporär sessionslogg (.tmp/session_revision_log.json).
-* SHA256_LF: 99dd1e2c140409c9966113b248a3182813580436cf0f0c0ca9c647b0e1181283
+* v3.9 (2025-08-18): (Engrove Mandate) Lade till Bilaga E för att definiera en deterministisk beslutsmatris för leveransformat i chatt (Full fil vs. Manuell Patch vs. JSON-patch).
+* SHA256_LF: c4f8e07c968f371701cfc4978acc0f661021ac0446180b8c0f07984b5e3f08ac
 
-TILLÄMPADE REGLER (Frankensteen v5.6):
-* Grundbulten v3.7: Denna ändring följer den uppgraderade processen för transparens.
+TILLÄMPADE REGLER (Frankensteen v5.7):
+* Grundbulten v3.8: Denna ändring följer den uppgraderade processen för transparens.
 * GR4 – Interaktionskontrakt: Självgranskning + extern dom; fast outputordning och ansvar.
 * GR5 – Tribunal/Red Team: KajBjörn validerar SPEC; StigBritt bryter planen före implementation.
 * GR6 – Processrefaktorering: Reproducerbar pipeline med grindar och verktygssteg.
 * GR7 – Historik & spårbarhet: Full historik i header, BEGIN/END-sentineller, inga platshållare.
 * GB-Gates – G-1, G0, G2-G4 (nedan) är tvingande och aborterar på brott.
 * No-Guess-Pledge – Inga påståenden utan källa; fråga vid osäkerhet.
-* Help me God: Denna uppgradering är en direkt åtgärd mot ett systemiskt processfel.
+* Help me God: Denna uppgradering är en direkt åtgärd mot en identifierad tvetydighet.
 
-Datum: 2025-08-17
+Datum: 2025-08-18
 Extern granskare: Engrove (godkänd för införing i Steg 10)
 END HEADER -->
 
-# Protokoll: **Grundbulten** (P-GB-3.8) – Universell filhantering (chattsession)
+# Protokoll: **Grundbulten** (P-GB-3.9) – Universell filhantering (chattsession)
 
 ## Steg G: Hårda grindar (abortvillkor, före Steg 1)
 - **G-1. Kontrollsumma-verifiering vid inläsning ⇒ AVBRYT.** Om en fil som ska modifieras har en `base_checksum_sha256` i kontexten, måste min interna minnesbild **och** min beräknade minnesbilds hash matcha den hashen. Vid mismatch, avbryt och begär färsk fil.
@@ -107,7 +108,7 @@ END HEADER -->
   ```
 
 ## Steg 8: Filleverans
-- Leverera **full fil**.
+- Leveransformatet styrs av **Bilaga E**.
 - **8a. Execution Summary:** Svaret måste inkludera en ärlig enmeningssammanfattning av processen.
 - **8b. Anti-Placeholder-Grind:** Förbjudna mönster (se bilaga). Vid träff: **AVBRYT** och börja om vid Steg 2.
 
@@ -121,7 +122,8 @@ END HEADER -->
   - **Placeholders:** [PASS/NOPASS]
   - **Historik:** [PASS/NOPASS]
   - **Kvantitativ Diff:** [PASS/NOPASS] - [Ökning/Minskning] av X rader motiverad av nya protokollsteg.
-  - **Final SHA256:** [64-tecken hex hash]
+  - **Base SHA256:** [SHA för filen INNAN ändring]
+  - **Final SHA256:** [SHA för filen EFTER ändring]
 
 ## Steg 10: Självgranskning & extern dom
 - **10a. Självgranskning:** Intern bekräftelse eller vederläggande att alla steg i "Grundbulten" protokoll nuvarande har följts eller inte kunnat följas.
@@ -186,3 +188,15 @@ jobs:
       - run: python - <<'PY'\\nimport ast,sys,glob\\n[ast.parse(open(p).read(),p) for p in glob.glob('**/*.py', recursive=True)]\\nprint('PY_AST_OK')\\nPY
       - run: echo "STATIC CHECKS COMPLETE"
 ```
+
+---
+
+## Bilaga E: Beslutsmatris för Leveransformat i Chatt
+Detta avsnitt styr valet av format när en filändring presenteras i ett svar. Valet baseras på uppgiftens art och mottagarens behov (människa vs. maskin).
+
+| Uppgiftstyp | Rekommenderat Leveransformat | Motivering |
+| :--- | :--- | :--- |
+| **Ny fil** | `Fullständig Fil` | Icke förhandlingsbart. Enda sättet att garantera fullständighet. |
+| **Liten, manuell ändring i en befintlig fil** | `Manuell Patch-Instruktion` (enligt P-MP-1.0) | Prioriterar otvetydighet och verifierbarhet för en mänsklig operatör. |
+| **Medelstor till stor ändring (> 5 rader)** | `Fullständig Fil` | Standardläget. Minimerar risken för manuella fel. |
+| **Programmatisk/Automatiserad Patchning** | `Strukturerad JSON-patch` (enligt `Diff_Protocol_v3.md`) | Används när ett verktyg ska applicera patchen automatiskt. |
