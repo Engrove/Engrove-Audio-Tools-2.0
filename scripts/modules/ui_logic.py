@@ -11,22 +11,21 @@
 # * v5.0 (2025-08-16): (Help me God) Återställd och verifierad. Lade till
 #   förberedande, vilande funktioner för "Operation: Dold Grund".
 # * v6.0 (2025-08-16): Refaktorerad för modularitet. All logik för filträdet har
-#   flyttats till den dedikerade modulen `ui_file_tree.py`. Denna fil
-#   innehåller nu endast generell UI-logik.
-# * v6.1 (2025-08-16): Lade till fullständig logik för filgranskningsmodalen,
-#   inklusive realtidshämtning av filinnehåll från GitHub.
+#   flyttats till den dedikerade modulen `ui_file_tree.py`.
+# * v6.1 (2025-08-16): Lade till fullständig logik för filgranskningsmodalen.
 # * v6.2 (2025-08-17): Uppdaterat ribbon-logiken för att hantera visning av
 #   den nya AI Performance-dashboarden som en fullskärms-overlay.
 # * v7.0 (2025-08-17): Implementerat den fullständiga klient-sidiga logiken för "Einstein" RAG-systemet.
-# * v7.1 (2025-08-18): (Help me God - Domslut) Korrigerat ett `ReferenceError` genom att anropa `Xenova.pipeline` istället för `pipeline`.
+# * v7.1 (2025-08-18): (Help me God - Domslut) Korrigerat ett `ReferenceError`.
 # * v7.2 (2025-08-18): (Help me God - Domslut) Infört `import` för att hantera ES-modul-scope.
-# * v8.0 (2025-08-18): (Engrove Mandate) Stor refaktorering. All specifik Einstein-logik för att rendera resultat har flyttats till `ui_einstein_search.py`.
-# * v8.1 (2025-08-18): (Engrove Mandate) Anpassat ribbon-logiken till den nya "Outlook"-layouten. Hanterar nu växling av helsidesvyer i huvud-containern.
-# * SHA256_LF: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b3
+# * v8.0 (2025-08-18): Felaktig refaktorering ("Outlook Layout"). Deprekerad.
+# * v8.1 (2025-08-18): Felaktig refaktorering ("Outlook Layout"). Deprekerad.
+# * v8.2 (2025-08-18): (Help me God - Domslut) Återställt ribbon-logiken. Hanterar nu korrekt växling av paneler (`.ribbon-pane`) inuti den enhetliga headern, istället för helsides-vyer.
+# * SHA256_LF: 90dbc57671eb38e3859672398f42fdcf90de7772665a023fcb78d429c187e70a
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
-# - Grundbulten v3.9: Denna fil har modifierats enligt den godkända planen.
-# - GR6 (Obligatorisk Refaktorisering): Logiken har delats upp ytterligare. Denna modul agerar nu som en orkestrerare för UI-paneler och en motor för sökning, medan renderingen är helt delegerad.
+# - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, korrigerade planen.
+# - Help_me_God: Denna ändring är ett direkt resultat av en grundorsaksanalys av ett arkitektoniskt fel.
 
 JS_LOGIC = """
 import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1';
@@ -153,9 +152,9 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Engrove Audio Tools UI Initialized.');
 
     const leftPane = document.getElementById('left-pane');
-    const rightPane = document.getElementById('right-pane');
     const resizer = document.getElementById('resizer');
     const ribbonTabs = document.querySelectorAll('.ribbon-tab');
+    const ribbonPanes = document.querySelectorAll('.ribbon-pane');
     
     const performanceContainer = document.getElementById('full-page-container');
     const closePerformanceBtn = document.getElementById('close-full-page-btn');
@@ -195,27 +194,18 @@ document.addEventListener('DOMContentLoaded', () => {
     
     ribbonTabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            const targetTab = tab.dataset.tab;
+            const targetPaneId = `tab-${tab.dataset.tab}`;
+            
             ribbonTabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
 
-            // Hide all full-page containers and the main content pane initially
-            performanceContainer.classList.remove('active');
-            einsteinContainer.classList.remove('active');
-            rightPane.style.display = 'none';
-            leftPane.style.display = 'none';
-            resizer.style.display = 'none';
-
-            if (targetTab === 'performance') {
-                performanceContainer.classList.add('active');
-            } else if (targetTab === 'einstein') {
-                einsteinContainer.classList.add('active');
-            } else {
-                // For "verktyg" and other tabs, show the main panes
-                rightPane.style.display = 'block';
-                leftPane.style.display = 'block';
-                resizer.style.display = 'block';
-            }
+            ribbonPanes.forEach(pane => {
+                if (pane.id === targetPaneId) {
+                    pane.classList.add('active');
+                } else {
+                    pane.classList.remove('active');
+                }
+            });
         });
     });
 
@@ -248,4 +238,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 """
 
-# scripts/modules/ui_logic.py
+# END FILE: scripts/modules/ui_logic.py
