@@ -138,13 +138,13 @@ jobs:
           echo "Removing trigger file after successful build."
           rm .einstein
 
-      - name: STEP 2D Create Dummy Einstein Index (if skipped)
-        if: steps.check_einstein_trigger.outputs.run_index == 'false'
-        run: |
-          echo "Creating dummy Einstein index to prevent 404 errors on client."
-          DUMMY_JSON='{"model": "dummy", "createdAt": "$(date -Iseconds)", "chunks": []}'
-          echo "$DUMMY_JSON" | gzip > "${{ env.SITE_DIR }}/${{ env.EINSTEIN_INDEX_BASENAME }}.json.gz"
-          echo "Dummy index created."
+#      - name: STEP 2D Create Dummy Einstein Index (if skipped)
+#        if: steps.check_einstein_trigger.outputs.run_index == 'false'
+#        run: |
+#          echo "Creating dummy Einstein index to prevent 404 errors on client."
+#          DUMMY_JSON='{"model": "dummy", "createdAt": "$(date -Iseconds)", "chunks": []}'
+#          echo "$DUMMY_JSON" | gzip > "${{ env.SITE_DIR }}/${{ env.EINSTEIN_INDEX_BASENAME }}.json.gz"
+#          echo "Dummy index created."
 
       - name: STEP 3 Generate AI Context JSON
         id: generate-json
