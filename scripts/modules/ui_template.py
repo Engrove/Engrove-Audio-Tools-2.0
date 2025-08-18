@@ -19,11 +19,12 @@
 # * v5.1 (2025-08-18): Felaktig refaktorering ("Outlook Layout"). Deprekerad.
 # * v5.2 (2025-08-18): (Help me God - Domslut) Återställt den felaktiga "Outlook"-layouten. Återförenat ribbon-flikar och innehållspaneler till en enda header-komponent och återinfört den globala sökrutan.
 # * v5.3 (2025-08-18): Tog bort de överflödiga .full-page-header elementen från Einstein- och Performance-vyerna för att maximera ytan.
-# * SHA256_LF: 5240217578201a052b651030e463567b5e47854e1564619736e67610738e4a7a
+# * v5.4 (2025-08-18): (K-MOD Plan) Omstrukturerat UI. "Verktyg" -> "Start", lade till "Data"-flik, och gjorde högerpanelen kontextkänslig (dummy-implementation).
+# * SHA256_LF: 9295d32aeb4a4fdbbc47ff0439a91a8fa9980e4d
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, korrigerade planen.
-# - Help_me_God: Denna ändring är ett direkt resultat av en grundorsaksanalys av ett arkitektoniskt fel.
+# - P-OKD-1.0: Nya sektioner i HTML-mallen har förklarande kommentarer.
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -43,8 +44,10 @@ HTML_TEMPLATE = """
 <body>
     <header class="header-ribbon">
         <div class="top-bar">
+            <!-- Omarbetade flikar -->
             <div class="ribbon-tabs">
-                <button class="ribbon-tab active" data-tab="verktyg">Verktyg</button>
+                <button class="ribbon-tab active" data-tab="start">Start</button>
+                <button class="ribbon-tab" data-tab="data">Data</button>
                 <button class="ribbon-tab" data-tab="einstein">Einstein</button>
                 <button class="ribbon-tab" data-tab="performance">AI Performance</button>
                 <button class="ribbon-tab" data-tab="installningar">Inställningar</button>
@@ -55,10 +58,28 @@ HTML_TEMPLATE = """
             </div>
         </div>
         <div class="ribbon-content">
-            <div id="tab-verktyg" class="ribbon-pane active">
+            <!-- Start-flikens panel -->
+            <div id="tab-start" class="ribbon-pane active">
                 <div class="ribbon-group">
-                    <button>Kör Analys</button>
-                    <button>Exportera</button>
+                    <button id="clear-session">Töm Val & Output</button>
+                    <button id="refresh-data">Ladda om Data</button>
+                </div>
+                <div class="ribbon-group">
+                    <button id="run-analysis">Kör Analys</button>
+                    <button id="export-overview">Exportera Projektöversikt</button>
+                </div>
+            </div>
+            <!-- Data-flikens panel (Ny) -->
+            <div id="tab-data" class="ribbon-pane">
+                 <div class="ribbon-group">
+                    <button id="select-all">Markera Alla</button>
+                    <button id="deselect-all">Avmarkera Alla</button>
+                    <button id="select-core">Markera Kärndokument</button>
+                </div>
+                <div class="ribbon-group">
+                    <button id="create-context">Skapa Kontext</button>
+                    <button id="create-files">Skapa Filer</button>
+                    <label class="inline"><input type="checkbox" id="compact-json" checked> Kompakt JSON</label>
                 </div>
             </div>
             <div id="tab-einstein" class="ribbon-pane">
@@ -97,10 +118,25 @@ HTML_TEMPLATE = """
         </aside>
         <div class="resizer" id="resizer"></div>
         <main class="right-pane" id="right-pane">
-            <div id="info-container">
-                <h2>Information & Funktionalitet</h2>
-                <p>Välj ett verktyg i menyn ovan för att börja.</p>
+            <!-- Start Panel - Visas som standard -->
+            <div id="start-panel">
+                <h2>AI Context Builder v{version}</h2>
+                <p>Detta verktyg hjälper dig att inspektera projektets filstruktur, välja relevanta filer och generera en fokuserad kontext för en AI-partner.</p>
+                <h4>Funktionsöversikt</h4>
+                <ul>
+                    <li><strong>Start:</strong> Generella projekt- och sessionsåtgärder.</li>
+                    <li><strong>Data:</strong> Välj filer och generera kontext- eller fil-paket.</li>
+                    <li><strong>Einstein:</strong> Utför semantisk sökning i projektets kodbas.</li>
+                    <li><strong>AI Performance:</strong> Analysera och visualisera AI-prestanda över tid.</li>
+                </ul>
             </div>
+
+            <!-- Denna container visas för "Data"-fliken och andra vyer -->
+            <div id="info-container" style="display: none;">
+                <h2>Output</h2>
+                <pre id="out">Genererad data kommer att visas här.</pre>
+            </div>
+            
              <!-- Heltäckande container för Einstein -->
             <div id="einstein-container" class="tool-container full-page-container">
                 <div id="einstein-results-container" class="full-page-content">
