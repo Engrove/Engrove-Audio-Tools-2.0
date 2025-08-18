@@ -21,11 +21,12 @@
 # * v8.0 (2025-08-18): Felaktig refaktorering ("Outlook Layout"). Deprekerad.
 # * v8.1 (2025-08-18): Felaktig refaktorering ("Outlook Layout"). Deprekerad.
 # * v8.2 (2025-08-18): (Help me God - Domslut) Återställt ribbon-logiken. Hanterar nu korrekt växling av paneler (`.ribbon-pane`) inuti den enhetliga headern, istället för helsides-vyer.
+# * v8.3 (2025-08-18): (Help me God - Domslut) Implementerat "Hybrid View Control". Ribbon-logiken hanterar nu korrekt både paneler i headern och växling till helsides-vyer i main-content.
 # * SHA256_LF: 90dbc57671eb38e3859672398f42fdcf90de7772665a023fcb78d429c187e70a
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, korrigerade planen.
-# - Help_me_God: Denna ändring är ett direkt resultat av en grundorsaksanalys av ett arkitektoniskt fel.
+# - Help_me_God: Denna ändring är ett direkt resultat av en grundorsaksanalys av en funktionell regression.
 
 JS_LOGIC = """
 import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1';
@@ -152,6 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Engrove Audio Tools UI Initialized.');
 
     const leftPane = document.getElementById('left-pane');
+    const rightPane = document.getElementById('right-pane');
     const resizer = document.getElementById('resizer');
     const ribbonTabs = document.querySelectorAll('.ribbon-tab');
     const ribbonPanes = document.querySelectorAll('.ribbon-pane');
@@ -194,24 +196,43 @@ document.addEventListener('DOMContentLoaded', () => {
     
     ribbonTabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            const targetPaneId = `tab-${tab.dataset.tab}`;
-            
+            const targetTab = tab.dataset.tab;
+            const targetPaneId = `tab-${targetTab}`;
+
+            // 1. Hantera flikarnas och header-panelernas utseende
             ribbonTabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
 
             ribbonPanes.forEach(pane => {
-                if (pane.id === targetPaneId) {
-                    pane.classList.add('active');
-                } else {
-                    pane.classList.remove('active');
-                }
+                pane.classList.toggle('active', pane.id === targetPaneId);
             });
+
+            // 2. Hantera synligheten av huvud-vyerna
+            const showMainPanes = (targetTab === 'verktyg' || targetTab === 'installningar' || targetTab === 'hjalp');
+            const showEinstein = targetTab === 'einstein';
+            const showPerformance = targetTab === 'performance';
+            
+            // Dölj allt först
+            leftPane.style.display = 'none';
+            rightPane.style.display = 'none';
+            resizer.style.display = 'none';
+            einsteinContainer.classList.remove('active');
+            performanceContainer.classList.remove('active');
+            
+            // Visa sedan rätt vy
+            if (showMainPanes) {
+                leftPane.style.display = 'block';
+                rightPane.style.display = 'block';
+                resizer.style.display = 'block';
+            } else if (showEinstein) {
+                einsteinContainer.classList.add('active');
+            } else if (showPerformance) {
+                performanceContainer.classList.add('active');
+            }
         });
     });
 
     const closeAndSwitchToVerktyg = () => {
-        performanceContainer.classList.remove('active');
-        einsteinContainer.classList.remove('active');
         const verktygTab = document.querySelector('.ribbon-tab[data-tab="verktyg"]');
         if (verktygTab) verktygTab.click();
     };
