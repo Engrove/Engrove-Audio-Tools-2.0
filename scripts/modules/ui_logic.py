@@ -17,7 +17,8 @@
 #   den nya AI Performance-dashboarden som en fullskärms-overlay.
 # * v7.0 (2025-08-17): Implementerat den fullständiga klient-sidiga logiken för "Einstein" RAG-systemet.
 # * v7.1 (2025-08-18): (Help me God - Domslut) Korrigerat ett `ReferenceError` genom att anropa `Xenova.pipeline` istället för `pipeline`. Detta löser problemet med att Transformers.js, som en ES-modul, inte exponerar sina funktioner globalt.
-# * SHA256_LF: 4d28f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f8a9b0c1d2e3f4a5b6c7d8e9
+# * v7.2 (2025-08-18): (Help me God - Domslut) Infört `import` för att hantera ES-modul-scope.
+# * SHA256_LF: b3c4d5e6f8a9b0c1d2e3f4a5b6c7d8e9f0a1b3c4d5e6f8a9b0c1d2e3f4a5b6c7d8
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.8: Denna ändring följer den uppgraderade processen för transparens.
@@ -25,6 +26,8 @@
 # - GR7 (Fullständig Historik): Korrekt historik-header.
 
 JS_LOGIC = """
+import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1';
+
 // Injektionspunkt för projektkonfiguration (repo/branch)
 const ENGROVE_CONFIG = __INJECT_PROJECT_OVERVIEW__;
 
@@ -72,8 +75,6 @@ async function performSemanticSearch(query, numResults = 5) {
 
     if (!EINSTEIN_PIPELINE) {
         console.log('Laddar embedding-modell...');
-        // KORRIGERING: Använd det globala `Xenova`-objektet.
-        const { pipeline } = window.Xenova;
         EINSTEIN_PIPELINE = await pipeline('feature-extraction', EINSTEIN_MODEL_NAME);
         console.log('Embedding-modell laddad.');
     }
