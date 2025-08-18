@@ -1,4 +1,6 @@
+<!-- BEGIN FILE: scripts/engrove_audio_tools_creator.md -->
 # scripts/engrove_audio_tools_creator.md
+#
 # === SYFTE & ANSVAR ===
 # Detta dokument är den primära tekniska referensen för byggskriptet `engrove_audio_tools_creator.py`
 # och det webb-UI (`index2.html`) det genererar. Det beskriver arkitektur, dataflöde,
@@ -11,7 +13,7 @@
 # * SHA256_LF: a8e0d4c7b8e5a6f2b1d3e4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b3c2d5e4
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
-# Grundbulten v3.8: Denna dokumentationsfil har uppdaterats för att korrekt reflektera den nya systemarkitekturen.
+# - Grundbulten v3.9: Denna dokumentationsfil har uppdaterats för att korrekt reflektera den nya systemarkitekturen.
 
 ## 1. Översikt
 
@@ -81,3 +83,4 @@ Denna sektion dokumenterar icke-triviala buggar och deras lösningar för att by
 *   **Grundorsak:** En platshållare (`{version}`) introducerades i `modules/ui_template.py`, men byggskriptet uppdaterades inte för att ersätta den.
 *   **Lösning:** Uppdatera byggskriptet till att använda `.format(version=...)` på mallsträngen.
 *   **Lärdom (Heuristik):** När en platshållare introduceras i en mallfil, måste byggskriptet som konsumerar den uppdateras **atomärt** (i samma commit/åtgärd).
+<!-- END FILE: scripts/engrove_audio_tools_creator.md -->
