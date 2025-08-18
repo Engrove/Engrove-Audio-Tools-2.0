@@ -25,17 +25,24 @@
 # * v8.4 (2025-08-18): (Stalemate Protocol - Domslut) Korrigerat panel-växlingslogiken för att säkerställa att föräldern (`#right-pane`) förblir synlig när en overlay-vy (`#einstein-container`) aktiveras.
 # * v8.5 (2025-08-18): (Engrove Mandate) Tog bort överflödig logik och event-lyssnare för de borttagna header-knapparna.
 # * v9.0 (2025-08-18): (K-MOD Plan) Omarbetat flik- och panelhantering för att stödja den nya "Start"- och "Data"-layouten. Logiken är nu centraliserad i `handleViewSwitch`.
-# * SHA256_LF: 70d8ab65c6dd90c674887dbef57724e3dbed633f498876cd2970bddf9598388d
+# * v9.1 (2025-08-18): Implementerat händelselyssnare för alla nya kontroller i "Start"- och "Data"-flikarna.
+# * SHA256_LF: a145558197771746f3a696236b2f67644cd5a8e03063f22c6c21e6495df0271d
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
-# - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, korrigerade planen.
-# - P-OKD-1.0: Den nya `handleViewSwitch`-funktionen har fått en JSDoc-kommentar som förklarar dess syfte och parametrar.
+# - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända planen.
+# - P-OKD-1.0: Nya funktioner har JSDoc-kommentarer.
 
 JS_LOGIC = """
 import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1';
 
 // Injektionspunkt för projektkonfiguration (repo/branch)
 const ENGROVE_CONFIG = __INJECT_PROJECT_OVERVIEW__;
+const CORE_PATHS = [
+    'docs/ai_protocols/AI_Core_Instruction.md', 'docs/ai_protocols/ai_config.json', 'docs/ai_protocols/frankensteen_persona.v1.0.json',
+    'package.json', 'vite.config.js', 'docs/Mappstruktur_och_Arbetsflöde.md', 'tools/frankensteen_learning_db.json',
+    'docs/ai_protocols/AI_Dynamic_Protocols.md', 'docs/ai_protocols/DynamicProtocols.json', 'docs/core_file_info.json',
+    'docs/ai_protocols/Help_me_God_Protokoll.md', 'docs/ai_protocols/Grundbulten_Protokoll.md', 'docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md'
+];
 
 // --- Einstein RAG State ---
 let EINSTEIN_INDEX = null;
@@ -153,6 +160,27 @@ function closeFileModal() {
 window.openFileModal = openFileModal;
 
 /**
+ * Rensar det aktuella filurvalet och output-fönstret.
+ */
+function clearSession() {
+    if (window.deselectAllInTree) {
+        window.deselectAllInTree();
+    }
+    const outEl = document.getElementById('out');
+    if (outEl) {
+        outEl.textContent = 'Session rensad.';
+    }
+    console.log('Session rensad.');
+}
+
+/**
+ * Laddar om sidan för att starta en ny session.
+ */
+function reloadData() {
+    location.reload();
+}
+
+/**
  * @function handleViewSwitch
  * @description Centraliserad funktion för att hantera synligheten av applikationens huvudvyer baserat på den aktiva menyfliken.
  * @param {string} targetTab - ID:t för den valda fliken (t.ex. 'start', 'data', 'einstein').
@@ -220,16 +248,27 @@ function handleViewSwitch(targetTab) {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Engrove Audio Tools UI Initialized.');
 
+    // --- Main UI elements ---
     const ribbonTabs = document.querySelectorAll('.ribbon-tab');
     const ribbonPanes = document.querySelectorAll('.ribbon-pane');
     const resizer = document.getElementById('resizer');
     const leftPane = document.getElementById('left-pane');
     
+    // --- Modal elements ---
     const modalOverlay = document.getElementById('file-modal-overlay');
     const modalCloseBtn = document.getElementById('modal-close-btn');
     const modalCopyPathBtn = document.getElementById('modal-copy-path');
     const modalCopyContentBtn = document.getElementById('modal-copy-content');
     const modalDownloadFileBtn = document.getElementById('modal-download-file');
+
+    // --- New Control Buttons ---
+    const selectAllBtn = document.getElementById('select-all');
+    const deselectAllBtn = document.getElementById('deselect-all');
+    const selectCoreBtn = document.getElementById('select-core');
+    const createContextBtn = document.getElementById('create-context');
+    const createFilesBtn = document.getElementById('create-files');
+    const clearSessionBtn = document.getElementById('clear-session');
+    const refreshDataBtn = document.getElementById('refresh-data');
     
     initializeEinstein();
 
@@ -255,6 +294,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
+    // --- Event Listeners for controls ---
+    if(selectAllBtn) selectAllBtn.addEventListener('click', () => window.selectAllInTree && window.selectAllInTree());
+    if(deselectAllBtn) deselectAllBtn.addEventListener('click', () => window.deselectAllInTree && window.deselectAllInTree());
+    if(selectCoreBtn) selectCoreBtn.addEventListener('click', () => window.selectCoreInTree && window.selectCoreInTree(CORE_PATHS));
+    if(createContextBtn) createContextBtn.addEventListener('click', () => window.generateContext && window.generateContext());
+    if(createFilesBtn) createFilesBtn.addEventListener('click', () => window.generateFiles && window.generateFiles());
+    if(clearSessionBtn) clearSessionBtn.addEventListener('click', clearSession);
+    if(refreshDataBtn) refreshDataBtn.addEventListener('click', reloadData);
+
     ribbonTabs.forEach(tab => {
         tab.addEventListener('click', () => {
             const targetTab = tab.dataset.tab;
