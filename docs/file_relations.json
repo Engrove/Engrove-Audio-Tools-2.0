@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-18T08:28:48.764430+00:00",
+    "generated_at": "2025-08-18T10:03:43.027887+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -636,6 +636,13 @@
             "source": "modules.ui_performance_dashboard",
             "symbols": [
               "JS_PERFORMANCE_LOGIC"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "modules.ui_einstein_search",
+            "symbols": [
+              "JS_EINSTEIN_LOGIC"
             ],
             "type": "library_import"
           }
@@ -1413,6 +1420,15 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
+      "scripts/modules/ui_semantic_search.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
       "scripts/modules/ui_file_tree.py": {
         "type": "Python Script",
         "category": "code",
@@ -1455,6 +1471,15 @@
             "type": "library_import"
           }
         ],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/modules/ui_einstein_search.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [],
+        "imports": [],
         "dependents_count": 0,
         "criticality_score": 0.0
       },
