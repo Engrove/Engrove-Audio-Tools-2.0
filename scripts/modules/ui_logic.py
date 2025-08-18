@@ -1,41 +1,41 @@
-// BEGIN FILE: scripts/modules/ui_logic.py
-// scripts/modules/ui_logic.py
-//
-// === SYFTE & ANSVAR ===
-// Denna modul innehåller den sammansatta JavaScript-logiken för AI Context Builder UI,
-// inklusive hantering av ribbon-meny, filgranskning och den underliggande motorn
-// för Einstein RAG-sökfunktionaliteten.
-//
-// === HISTORIK ===
-// * v3.0 (2025-08-15): Lade till logik för ribbon-menyn och resizer.
-// * v5.0 (2025-08-16): (Help me God) Återställd och verifierad. Lade till
-//   förberedande, vilande funktioner för "Operation: Dold Grund".
-// * v6.0 (2025-08-16): Refaktorerad för modularitet. All logik för filträdet har
-//   flyttats till den dedikerade modulen `ui_file_tree.py`.
-// * v6.1 (2025-08-16): Lade till fullständig logik för filgranskningsmodalen.
-// * v6.2 (2025-08-17): Uppdaterat ribbon-logiken för att hantera visning av
-//   den nya AI Performance-dashboarden som en fullskärms-overlay.
-// * v7.0 (2025-08-17): Implementerat den fullständiga klient-sidiga logiken för "Einstein" RAG-systemet.
-// * v7.1 (2025-08-18): (Help me God - Domslut) Korrigerat ett `ReferenceError`.
-// * v7.2 (2025-08-18): (Help me God - Domslut) Infört `import` för att hantera ES-modul-scope.
-// * v8.0 (2025-08-18): Felaktig refaktorering ("Outlook Layout"). Deprekerad.
-// * v8.1 (2025-08-18): Felaktig refaktorering ("Outlook Layout"). Deprekerad.
-// * v8.2 (2025-08-18): (Help me God - Domslut) Återställt ribbon-logiken. Hanterar nu korrekt växling av paneler (`.ribbon-pane`) inuti den enhetliga headern, istället för helsides-vyer.
-// * v8.3 (2025-08-18): (Help me God - Domslut) Implementerat "Hybrid View Control". Ribbon-logiken hanterar nu korrekt både paneler i headern och växling till helsides-vyer i main-content.
-// * v8.4 (2025-08-18): (Stalemate Protocol - Domslut) Korrigerat panel-växlingslogiken för att säkerställa att föräldern (`#right-pane`) förblir synlig när en overlay-vy (`#einstein-container`) aktiveras.
-// * v8.5 (2025-08-18): (Engrove Mandate) Tog bort överflödig logik och event-lyssnare för de borttagna header-knapparna.
-// * v9.0 (2025-08-18): (K-MOD Plan) Omarbetat flik- och panelhantering för att stödja den nya "Start"- och "Data"-layouten. Logiken är nu centraliserad i `handleViewSwitch`.
-// * v9.1 (2025-08-18): Implementerat händelselyssnare för alla nya kontroller i "Start"- och "Data"-flikarna.
-// * v9.2 (2025-08-18): Omarbetat "Markera Kärndokument" för att vara additivt och dynamiskt inkludera alla protokollfiler.
-// * v10.0 (2025-08-18): Implementerat den fullständiga, robusta `generateFiles()`-funktionen, inklusive hash-verifiering och metadata-berikning.
-// * SHA256_LF: a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5
-//
-// === TILLÄMPADE REGLER (Frankensteen v5.7) ===
-// - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, reviderade planen.
-// - P-OKD-1.0: Nya funktioner har JSDoc-kommentarer.
-// - GR6 (Obligatorisk Refaktorisering): Funktionaliteten har implementerats modulärt och återanvänder befintliga hjälpfunktioner.
+# BEGIN FILE: scripts/modules/ui_logic.py
+# scripts/modules/ui_logic.py
+#
+# === SYFTE & ANSVAR ===
+# Denna modul innehåller den sammansatta JavaScript-logiken för AI Context Builder UI,
+# inklusive hantering av ribbon-meny, filgranskning och den underliggande motorn
+# för Einstein RAG-sökfunktionaliteten.
+#
+# === HISTORIK ===
+# * v3.0 (2025-08-15): Lade till logik för ribbon-menyn och resizer.
+# * v5.0 (2025-08-16): (Help me God) Återställd och verifierad. Lade till
+#   förberedande, vilande funktioner för "Operation: Dold Grund".
+# * v6.0 (2025-08-16): Refaktorerad för modularitet. All logik för filträdet har
+#   flyttats till den dedikerade modulen `ui_file_tree.py`.
+# * v6.1 (2025-08-16): Lade till fullständig logik för filgranskningsmodalen.
+# * v6.2 (2025-08-17): Uppdaterat ribbon-logiken för att hantera visning av
+#   den nya AI Performance-dashboarden som en fullskärms-overlay.
+# * v7.0 (2025-08-17): Implementerat den fullständiga klient-sidiga logiken för "Einstein" RAG-systemet.
+# * v7.1 (2025-08-18): (Help me God - Domslut) Korrigerat ett `ReferenceError`.
+# * v7.2 (2025-08-18): (Help me God - Domslut) Infört `import` för att hantera ES-modul-scope.
+# * v8.0 (2025-08-18): Felaktig refaktorering ("Outlook Layout"). Deprekerad.
+# * v8.1 (2025-08-18): Felaktig refaktorering ("Outlook Layout"). Deprekerad.
+# * v8.2 (2025-08-18): (Help me God - Domslut) Återställt ribbon-logiken. Hanterar nu korrekt växling av paneler (`.ribbon-pane`) inuti den enhetliga headern, istället för helsides-vyer.
+# * v8.3 (2025-08-18): (Help me God - Domslut) Implementerat "Hybrid View Control". Ribbon-logiken hanterar nu korrekt både paneler i headern och växling till helsides-vyer i main-content.
+# * v8.4 (2025-08-18): (Stalemate Protocol - Domslut) Korrigerat panel-växlingslogiken för att säkerställa att föräldern (`#right-pane`) förblir synlig när en overlay-vy (`#einstein-container`) aktiveras.
+# * v8.5 (2025-08-18): (Engrove Mandate) Tog bort överflödig logik och event-lyssnare för de borttagna header-knapparna.
+# * v9.0 (2025-08-18): (K-MOD Plan) Omarbetat flik- och panelhantering för att stödja den nya "Start"- och "Data"-layouten. Logiken är nu centraliserad i `handleViewSwitch`.
+# * v9.1 (2025-08-18): Implementerat händelselyssnare för alla nya kontroller i "Start"- och "Data"-flikarna.
+# * v9.2 (2025-08-18): Omarbetat "Markera Kärndokument" för att vara additivt och dynamiskt inkludera alla protokollfiler.
+# * v10.0 (2025-08-18): Implementerat den fullständiga, robusta `generateFiles()`-funktionen, inklusive hash-verifiering och metadata-berikning.
+# * SHA256_LF: a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5
+#
+# === TILLÄMPADE REGLER (Frankensteen v5.7) ===
+# - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, reviderade planen.
+# - P-OKD-1.0: Nya funktioner har JSDoc-kommentarer.
+# - GR6 (Obligatorisk Refaktorisering): Funktionaliteten har implementerats modulärt och återanvänder befintliga hjälpfunktioner.
 
-JS_LOGIC = """
+JS_LOGIC = \"\"\"
 import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1';
 
 // Injektionspunkt för projektkonfiguration (repo/branch)
@@ -353,6 +353,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     handleViewSwitch('start');
 });
-"""
+\"\"\"
 
-// END FILE: scripts/modules/ui_logic.py
+# END FILE: scripts/modules/ui_logic.py
