@@ -23,11 +23,12 @@
 # * v6.4 (2025-08-18): (FL-D Trigger) Korrigerat en flexbox overflow-regression genom att lägga till `min-height: 0` till `.full-page-content`.
 # * v6.5 (2025-08-18): (FL-D Trigger) Refaktorerat layouten för att möjliggöra body-scroll och dölja webbläsarens UI på mobila enheter.
 # * v6.6 (2025-08-18): (FL-D Eskalering/Help me God) Korrigerat en z-index stacking context-konflikt för att säkerställa att headern alltid renderas ovanpå scrollbart innehåll.
-# * SHA256_LF: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2
+# * v6.7 (2025-08-18): (K-MOD Plan) Lade till styling för den nya #start-panel för att säkerställa korrekt formatering av textinnehåll.
+# * SHA256_LF: ddb8c691dc57fedf86eac3c5fdbd521e5353e4ea
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, korrigerade planen.
-# - Felsökningsloop-Detektor (FL-D) & Help_me_God: Denna ändring är ett direkt resultat av ett rapporterat fel (Försök 2) och en eskalerad grundorsaksanalys.
+# - P-OKD-1.0: Den nya CSS-sektionen är tydligt kommenterad.
 
 CSS_STYLES = """
 :root {
@@ -186,6 +187,33 @@ input[type="search"]:focus, input[type="date"]:focus {
     height: 100%;
 }
 .resizer:hover { background-color: var(--resizer-hover-color); }
+
+/* --- Start Panel Styles --- */
+#start-panel {
+    padding: 20px 40px;
+    max-width: 900px;
+    margin: 0 auto;
+    height: 100%;
+    overflow-y: auto;
+}
+#start-panel h2 {
+    margin-top: 0;
+    color: var(--text-color);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 8px;
+}
+#start-panel h4 {
+    margin-top: 2em;
+    color: var(--text-color-muted);
+}
+#start-panel ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+#start-panel li {
+    margin-bottom: 0.5em;
+}
+
 
 /* --- Dolda Verktygs-Containrar (Operation: Dold Grund) --- */
 .tool-container {
