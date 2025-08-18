@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-18T10:03:43.027887+00:00",
+    "generated_at": "2025-08-18T11:19:56.548378+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -1889,6 +1889,15 @@
         "criticality_score": 0.0
       },
       "docs/ai_protocols/Diff_Protocol_v3.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/Manuell_Patch_Protokoll.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
