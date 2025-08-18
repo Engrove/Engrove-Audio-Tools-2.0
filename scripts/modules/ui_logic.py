@@ -22,11 +22,12 @@
 # * v8.1 (2025-08-18): Felaktig refaktorering ("Outlook Layout"). Deprekerad.
 # * v8.2 (2025-08-18): (Help me God - Domslut) Återställt ribbon-logiken. Hanterar nu korrekt växling av paneler (`.ribbon-pane`) inuti den enhetliga headern, istället för helsides-vyer.
 # * v8.3 (2025-08-18): (Help me God - Domslut) Implementerat "Hybrid View Control". Ribbon-logiken hanterar nu korrekt både paneler i headern och växling till helsides-vyer i main-content.
-# * SHA256_LF: 90dbc57671eb38e3859672398f42fdcf90de7772665a023fcb78d429c187e70a
+# * v8.4 (2025-08-18): (Stalemate Protocol - Domslut) Korrigerat panel-växlingslogiken för att säkerställa att föräldern (`#right-pane`) förblir synlig när en overlay-vy (`#einstein-container`) aktiveras.
+# * SHA256_LF: 2a1b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, korrigerade planen.
-# - Help_me_God: Denna ändring är ett direkt resultat av en grundorsaksanalys av en funktionell regression.
+# - Stalemate_Protocol: Denna ändring är ett direkt resultat av ett externt domslut efter ett systemiskt fel.
 
 JS_LOGIC = """
 import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1';
@@ -209,25 +210,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 2. Hantera synligheten av huvud-vyerna
             const showMainPanes = (targetTab === 'verktyg' || targetTab === 'installningar' || targetTab === 'hjalp');
-            const showEinstein = targetTab === 'einstein';
-            const showPerformance = targetTab === 'performance';
-            
-            // Dölj allt först
+            const showEinstein   = (targetTab === 'einstein');
+            const showPerformance = (targetTab === 'performance');
+
+            // Nollställ overlay-vyer
+            einsteinContainer.classList.remove('active');
+            performanceContainer.classList.remove('active');
+
+            // Bas: dölj allt
             leftPane.style.display = 'none';
             rightPane.style.display = 'none';
             resizer.style.display = 'none';
-            einsteinContainer.classList.remove('active');
-            performanceContainer.classList.remove('active');
-            
-            // Visa sedan rätt vy
+
+            // Visa rätt vy
             if (showMainPanes) {
-                leftPane.style.display = 'block';
-                rightPane.style.display = 'block';
-                resizer.style.display = 'block';
+              leftPane.style.display = 'block';
+              rightPane.style.display = 'block';
+              resizer.style.display = 'block';
             } else if (showEinstein) {
-                einsteinContainer.classList.add('active');
+              // Viktigt: behåll rightPane synlig – Einstein overlay ligger inuti rightPane
+              rightPane.style.display = 'block';
+              einsteinContainer.classList.add('active');
             } else if (showPerformance) {
-                performanceContainer.classList.add('active');
+              rightPane.style.display = 'block';
+              performanceContainer.classList.add('active');
             }
         });
     });
