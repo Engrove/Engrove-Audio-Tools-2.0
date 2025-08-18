@@ -19,7 +19,8 @@
 # * v6.0 (2025-08-18): Lade till sektion "Einstein Search Styles".
 # * v6.1 (2025-08-18): Felaktig refaktorering ("Outlook Layout"). Deprekerad.
 # * v6.2 (2025-08-18): (Help me God - Domslut) Återställt layouten för att stödja en enhetlig header. Justerat höjder för header och main-container.
-# * SHA256_LF: be2c43d02d08a7dacae96423433c37743a265a2804271993eabe546a376bf65c
+# * v6.3 (2025-08-18): Tog bort CSS-regler för den nu borttagna `.full-page-header`.
+# * SHA256_LF: 2795c6517a264a7e937397b2584e0c34e6284a141d0630b91223933c1f10c14c
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, korrigerade planen.
@@ -201,19 +202,6 @@ input[type="search"]:focus, input[type="date"]:focus {
     display: flex;
     flex-direction: column;
 }
-.full-page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px;
-    border-bottom: 1px solid var(--border-color);
-    flex-shrink: 0;
-}
-.full-page-header button {
-    background: none; border: none; font-size: 1.5rem; color: var(--text-color-muted);
-}
-.full-page-header button:hover { color: var(--text-color); }
-
 .full-page-content {
     flex-grow: 1;
     overflow-y: auto;
@@ -488,4 +476,4 @@ a.einstein-result-path:hover {
 }
 """
 
-# scripts/modules/ui_styles.py
+# END FILE: scripts/modules/ui_styles.py
