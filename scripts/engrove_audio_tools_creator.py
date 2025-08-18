@@ -23,13 +23,13 @@
 # * v8.0 (2025-08-17): (Help me God - Domslut) Refaktorerat datainjektionen. `JSON.parse` har tagits bort från `ui_file_tree.py`.
 #   Detta skript injicerar nu ett direkt JS-objekt-literal, vilket löser `SyntaxError: "[object Object]" is not valid JSON`.
 #   Lade även till hantering för versions-platshållaren i HTML-mallen.
-# * SHA256_LF: 52d921394f6f1954314c45c11090409c952219e992790924b260f8983088b9c7
+# * v9.0 (2025-08-18): (Engrove Mandate) Modifierad för att importera och injicera den nya ui_einstein_search-modulen och dess datakälla (core_file_info.json).
+# * SHA256_LF: d51e6005d53531b212cc0a14b30e060c4973347c4b7b25055b80261327142721
 #
-# === TILLÄMPADE REGLER (Frankensteen v5.6) ===
-# - Grundbulten v3.7: Denna ändring är resultatet av en grundorsaksanalys och följer protokollet.
-# - Help me God: Denna korrigering är resultatet av ett systemiskt fel.
-# - GR7 (Fullständig Historik): Historiken har uppdaterats korrekt.
-#
+# === TILLÄMPADE REGLER (Frankensteen v5.7) ===
+# - Grundbulten v3.8: Denna fil har modifierats enligt den godkända planen.
+# - GR4 (API-kontraktsverifiering): Skriptets kommandorads-API har uppdaterats för att acceptera en ny, obligatorisk datakälla.
+
 import os
 import sys
 import json
@@ -38,8 +38,9 @@ from modules.ui_styles import CSS_STYLES
 from modules.ui_logic import JS_LOGIC
 from modules.ui_file_tree import JS_FILE_TREE_LOGIC
 from modules.ui_performance_dashboard import JS_PERFORMANCE_LOGIC
+from modules.ui_einstein_search import JS_EINSTEIN_LOGIC
 
-UI_VERSION = "7.4"
+UI_VERSION = "8.0"
 
 def calculate_node_size(structure_node):
     """
@@ -97,7 +98,7 @@ def transform_structure_to_tree(structure_node, relations_nodes, path_prefix='')
         
     return children
 
-def build_ui(html_output_path, file_tree_json_string, project_overview):
+def build_ui(html_output_path, file_tree_json_string, project_overview, core_info_data):
     """
     Genererar HTML, CSS och den sammansatta JS-filen.
     """
@@ -110,45 +111,49 @@ def build_ui(html_output_path, file_tree_json_string, project_overview):
     
     js_safe_string_literal = file_tree_json_string
     js_config_string = json.dumps(project_overview)
+    js_core_info_string = json.dumps(core_info_data)
     
     file_tree_placeholder = '__INJECT_FILE_TREE__'
-    # KORRIGERING: Ersätt platshållaren direkt med JSON-strängen, som blir ett giltigt JS-objekt.
     injected_js_tree_logic = JS_FILE_TREE_LOGIC.replace(file_tree_placeholder, js_safe_string_literal)
 
     config_placeholder = '__INJECT_PROJECT_OVERVIEW__';
     injected_js_logic = JS_LOGIC.replace(config_placeholder, js_config_string)
     
-    final_js_logic = injected_js_logic + " " + injected_js_tree_logic + " " + JS_PERFORMANCE_LOGIC
+    core_info_placeholder = '__INJECT_CORE_FILE_INFO__'
+    injected_einstein_logic = JS_EINSTEIN_LOGIC.replace(core_info_placeholder, js_core_info_string)
 
-    # Proaktiv fix för {version}-platshållaren i HTML-mallen.
+    final_js_logic = injected_js_logic + " " + injected_js_tree_logic + " " + JS_PERFORMANCE_LOGIC + " " + injected_einstein_logic
+    
     final_html = HTML_TEMPLATE.format(version=UI_VERSION)
 
     with open(html_output_path, 'w', encoding='utf-8') as f: f.write(final_html)
     with open(css_output_path, 'w', encoding='utf-8') as f: f.write(CSS_STYLES)
     with open(js_output_path, 'w', encoding='utf-8') as f: f.write(final_js_logic)
 
-    # Verifiering efter skrivning
     with open(js_output_path, 'r', encoding='utf-8') as f:
         content = f.read()
     if file_tree_placeholder in content:
-        raise RuntimeError(f"FATAL: Platshållaren '{file_tree_placeholder}' ersattes inte i den slutgiltiga JS-filen.")
+        raise RuntimeError(f"FATAL: Platshållaren '{file_tree_placeholder}' ersattes inte.")
     if config_placeholder in content:
-        raise RuntimeError(f"FATAL: Platshållaren '{config_placeholder}' ersattes inte i den slutgiltiga JS-filen.")
+        raise RuntimeError(f"FATAL: Platshållaren '{config_placeholder}' ersattes inte.")
+    if core_info_placeholder in content:
+        raise RuntimeError(f"FATAL: Platshållaren '{core_info_placeholder}' ersattes inte.")
     
     print(f"UI-filer (HTML, CSS, JS) har skapats i mappen: {os.path.abspath(output_dir)}")
 
 
 def main():
     """Huvudfunktion som parsar argument, transformerar data och bygger UI."""
-    if len(sys.argv) != 6:
-        print("Fel: build-ui kräver exakt fyra argument.", file=sys.stderr)
-        print("Användning: build-ui <command> <output_html_path> <context_json_path> <relations_json_path> <project_overview_json_path>", file=sys.stderr)
+    if len(sys.argv) != 7:
+        print("Fel: build-ui kräver exakt fem argument.", file=sys.stderr)
+        print("Användning: build-ui <command> <output_html_path> <context_json_path> <relations_json_path> <project_overview_json_path> <core_info_json_path>", file=sys.stderr)
         sys.exit(1)
         
     output_path = sys.argv[2]
     context_json_path = sys.argv[3]
     relations_json_path = sys.argv[4]
     project_overview_json_path = sys.argv[5]
+    core_info_json_path = sys.argv[6]
 
     try:
         print("Läser in datakällor...")
@@ -158,6 +163,8 @@ def main():
             relations_nodes = json.load(f).get("graph_data", {}).get("nodes", {})
         with open(project_overview_json_path, 'r', encoding='utf-8') as f:
             project_overview = json.load(f)
+        with open(core_info_json_path, 'r', encoding='utf-8') as f:
+            core_info_data = json.load(f)
 
         print("Bygger och berikar trädstruktur...")
         
@@ -167,7 +174,7 @@ def main():
         file_tree_json_string = json.dumps(root_node, ensure_ascii=False)
         
         print("Genererar UI-filer...")
-        build_ui(output_path, file_tree_json_string, project_overview)
+        build_ui(output_path, file_tree_json_string, project_overview, core_info_data)
         
         print("Klar. UI med dynamiskt filträd har genererats.")
 
@@ -179,7 +186,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == 'build-ui':
         main()
     else:
-        print("Användning: python scripts/engrove_audio_tools_creator.py build-ui <output_html_path> <context_json_path> <relations_json_path> <project_overview_json_path>")
+        print("Användning: python scripts/engrove_audio_tools_creator.py build-ui <output_html_path> <context_json_path> <relations_json_path> <project_overview_json_path> <core_info_json_path>")
         sys.exit(1)
 
 # scripts/engrove_audio_tools_creator.py
