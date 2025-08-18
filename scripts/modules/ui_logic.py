@@ -48,7 +48,7 @@ const STATIC_CORE_PATHS = [
 ];
 // Dynamiska mappsökvägar för "Markera Kärndokument"
 const DYNAMIC_CORE_PATHS = [
-    'docs/ai_protocols/'
+    'docs/ai_protocols'
 ];
 
 
