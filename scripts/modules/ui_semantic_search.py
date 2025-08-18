@@ -10,7 +10,7 @@
 # * v1.0 (2025-08-18): Initial skapelse som en del av "Operation Semantisk Uppgradering".
 #   Extraherade befintlig Einstein-logik från ui_logic.py och implementerade
 #   ny renderingslogik som använder core_file_info.json för berikad metadata.
-# * SHA256_LF: 3a4b1c2d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b
+# * SHA256_LF: a8e0d44e5c8c6f7b3a1b2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.8: Filen är skapad enligt gällande protokoll.
@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error(\"Fel vid semantisk sökning:\", error);
             if (statusEl) statusEl.textContent = `Sökningen misslyckades: ${error.message}`;
-            resultsContainer.innerHTML = `<p class=\"error\">Ett fel uppstod: ${error.message}</p>`;
+            resultsContainer.innerHTML = `<p class=\\"error\\">Ett fel uppstod: ${error.message}</p>`;
         }
     }
 
