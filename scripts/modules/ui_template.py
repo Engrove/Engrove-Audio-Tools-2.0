@@ -8,21 +8,21 @@
 #
 # === HISTORIK ===
 # * v3.2 (2025-08-16): Korrigerat HTML-strukturen för ribbon-menyn.
-# * v4.0 (2025-08-16): Lade till dolda containrar för framtida verktyg,
-#   inklusive en heltäckande .full-page-container, enligt "Operation: Dold Grund".
+# * v4.0 (2025-08-16): Lade till dolda containrar för framtida verktyg.
 # * v4.1 (2025-08-16): Lade till struktur för filgranskningsmodal och översatte all UI-text till svenska.
 # * v4.2 (2025-08-17): Lade till Eruda debugging-verktyg för att underlätta felsökning på mobila enheter.
 # * v4.3 (2025-08-17): Lade till Chart.js CDN-länk och den kompletta HTML-strukturen för AI Performance-dashboarden.
-# * v4.4 (2025-08-17): Lade till CDN-länkar för Pako.js och Transformers.js. Uppdaterade UI för att stödja "Einstein" RAG-systemets dubbelfunktions-sökruta.
-# * v4.5 (2025-08-18): (Help me God - Domslut) Lade till `type="module"` till Transformers.js script-taggen för att lösa ett `Uncaught SyntaxError: Unexpected token 'export'` som förhindrade modellen från att laddas.
-# * v4.6 (2025-08-18): (Help me God - Domslut) Lade till `type="module"` för logic.js och korrigerade en trasig SVG-sökväg för Einstein-ikonen.
-# * v5.0 (2025-08-18): (Engrove Mandate) Refaktorering av sök-UI. Lade till en dedikerad "Einstein"-flik och en heltäckande resultat-container. Tog bort den gamla sökknappen från toppraden.
-# * v5.1 (2025-08-18): (Engrove Mandate) Refaktorerad layout genom att flytta ribbon-innehållet från den fasta headern till huvud-containern. Återställde den fullständiga koden för filgranskningsmodalen.
-# * SHA256_LF: 5a8e1b3c4d2e9f0a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a
+# * v4.4 (2025-08-17): Lade till CDN-länkar för Pako.js och Transformers.js.
+# * v4.5 (2025-08-18): (Help me God - Domslut) Lade till `type="module"` till Transformers.js script-taggen.
+# * v4.6 (2025-08-18): (Help me God - Domslut) Lade till `type="module"` för logic.js och korrigerade en trasig SVG-sökväg.
+# * v5.0 (2025-08-18): Felaktig refaktorering ("Outlook Layout"). Deprekerad.
+# * v5.1 (2025-08-18): Felaktig refaktorering ("Outlook Layout"). Deprekerad.
+# * v5.2 (2025-08-18): (Help me God - Domslut) Återställt den felaktiga "Outlook"-layouten. Återförenat ribbon-flikar och innehållspaneler till en enda header-komponent och återinfört den globala sökrutan.
+# * SHA256_LF: d0f8ba0c38f185e83c36a471318d108537d4728aa308140eb4deca6068eeb56e
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
-# - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända planen.
-# - GR6 (Obligatorisk Refaktorisering): HTML-strukturen har omorganiserats för att vara mer logisk och funktionell, vilket separerar den statiska headern från det dynamiska innehållet.
+# - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, korrigerade planen.
+# - Help_me_God: Denna ändring är ett direkt resultat av en grundorsaksanalys av ett arkitektoniskt fel.
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -49,11 +49,12 @@ HTML_TEMPLATE = """
                 <button class="ribbon-tab" data-tab="installningar">Inställningar</button>
                 <button class="ribbon-tab" data-tab="hjalp">Hjälp</button>
             </div>
+            <div class="search-container">
+                <input type="search" id="main-search-input" placeholder="Sök filer...">
+            </div>
         </div>
-    </header>
-    <div class="main-container">
         <div class="ribbon-content">
-             <div id="tab-verktyg" class="ribbon-pane active">
+            <div id="tab-verktyg" class="ribbon-pane active">
                 <div class="ribbon-group">
                     <button>Kör Analys</button>
                     <button>Exportera</button>
@@ -86,6 +87,8 @@ HTML_TEMPLATE = """
                 </div>
             </div>
         </div>
+    </header>
+    <div class="main-container">
         <aside class="left-pane" id="left-pane">
             <div id="file-tree-container" class="tool-container" style="display: block;">
                 <!-- Innehåll för fil-trädet kommer att renderas här av JS -->
