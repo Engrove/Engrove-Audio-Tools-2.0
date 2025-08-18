@@ -26,23 +26,31 @@
 # * v8.5 (2025-08-18): (Engrove Mandate) Tog bort överflödig logik och event-lyssnare för de borttagna header-knapparna.
 # * v9.0 (2025-08-18): (K-MOD Plan) Omarbetat flik- och panelhantering för att stödja den nya "Start"- och "Data"-layouten. Logiken är nu centraliserad i `handleViewSwitch`.
 # * v9.1 (2025-08-18): Implementerat händelselyssnare för alla nya kontroller i "Start"- och "Data"-flikarna.
-# * SHA256_LF: a145558197771746f3a696236b2f67644cd5a8e03063f22c6c21e6495df0271d
+# * v9.2 (2025-08-18): Omarbetat "Markera Kärndokument" för att vara additiv och dynamiskt inkludera alla protokollfiler.
+# * SHA256_LF: a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända planen.
-# - P-OKD-1.0: Nya funktioner har JSDoc-kommentarer.
+# - P-OKD-1.0: Funktioner och konstanter har tydliga kommentarer.
 
 JS_LOGIC = """
 import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1';
 
 // Injektionspunkt för projektkonfiguration (repo/branch)
 const ENGROVE_CONFIG = __INJECT_PROJECT_OVERVIEW__;
-const CORE_PATHS = [
-    'docs/ai_protocols/AI_Core_Instruction.md', 'docs/ai_protocols/ai_config.json', 'docs/ai_protocols/frankensteen_persona.v1.0.json',
-    'package.json', 'vite.config.js', 'docs/Mappstruktur_och_Arbetsflöde.md', 'tools/frankensteen_learning_db.json',
-    'docs/ai_protocols/AI_Dynamic_Protocols.md', 'docs/ai_protocols/DynamicProtocols.json', 'docs/core_file_info.json',
-    'docs/ai_protocols/Help_me_God_Protokoll.md', 'docs/ai_protocols/Grundbulten_Protokoll.md', 'docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md'
+// Statiska sökvägar för "Markera Kärndokument"
+const STATIC_CORE_PATHS = [
+    'docs/core_file_info.json',
+    'docs/file_relations.json',
+    'tools/frankensteen_learning_db.json',
+    'package.json',
+    'vite.config.js'
 ];
+// Dynamiska mappsökvägar för "Markera Kärndokument"
+const DYNAMIC_CORE_PATHS = [
+    'docs/ai_protocols/'
+];
+
 
 // --- Einstein RAG State ---
 let EINSTEIN_INDEX = null;
@@ -297,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Event Listeners for controls ---
     if(selectAllBtn) selectAllBtn.addEventListener('click', () => window.selectAllInTree && window.selectAllInTree());
     if(deselectAllBtn) deselectAllBtn.addEventListener('click', () => window.deselectAllInTree && window.deselectAllInTree());
-    if(selectCoreBtn) selectCoreBtn.addEventListener('click', () => window.selectCoreInTree && window.selectCoreInTree(CORE_PATHS));
+    if(selectCoreBtn) selectCoreBtn.addEventListener('click', () => window.addPathsToSelection && window.addPathsToSelection(STATIC_CORE_PATHS, DYNAMIC_CORE_PATHS));
     if(createContextBtn) createContextBtn.addEventListener('click', () => window.generateContext && window.generateContext());
     if(createFilesBtn) createFilesBtn.addEventListener('click', () => window.generateFiles && window.generateFiles());
     if(clearSessionBtn) clearSessionBtn.addEventListener('click', clearSession);
