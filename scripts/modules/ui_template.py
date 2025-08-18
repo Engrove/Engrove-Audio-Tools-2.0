@@ -18,7 +18,8 @@
 # * v5.0 (2025-08-18): Felaktig refaktorering ("Outlook Layout"). Deprekerad.
 # * v5.1 (2025-08-18): Felaktig refaktorering ("Outlook Layout"). Deprekerad.
 # * v5.2 (2025-08-18): (Help me God - Domslut) Återställt den felaktiga "Outlook"-layouten. Återförenat ribbon-flikar och innehållspaneler till en enda header-komponent och återinfört den globala sökrutan.
-# * SHA256_LF: d0f8ba0c38f185e83c36a471318d108537d4728aa308140eb4deca6068eeb56e
+# * v5.3 (2025-08-18): Tog bort de överflödiga .full-page-header elementen från Einstein- och Performance-vyerna för att maximera ytan.
+# * SHA256_LF: 5240217578201a052b651030e463567b5e47854e1564619736e67610738e4a7a
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, korrigerade planen.
@@ -102,10 +103,6 @@ HTML_TEMPLATE = """
             </div>
              <!-- Heltäckande container för Einstein -->
             <div id="einstein-container" class="tool-container full-page-container">
-                <div class="full-page-header">
-                    <h2>Einstein Semantisk Sökning</h2>
-                    <button id="close-einstein-btn" title="Stäng">×</button>
-                </div>
                 <div id="einstein-results-container" class="full-page-content">
                     <p>Ange en sökfråga i menybalken ovan för att börja.</p>
                 </div>
@@ -113,10 +110,6 @@ HTML_TEMPLATE = """
             
             <!-- Heltäckande container för AI Performance -->
             <div id="full-page-container" class="tool-container full-page-container">
-                <div class="full-page-header">
-                    <h2>AI Performance Dashboard</h2>
-                    <button id="close-full-page-btn" title="Stäng">×</button>
-                </div>
                 <div class="full-page-content">
                      <!-- ... (innehåll för performance dashboard) ... -->
                 </div>
