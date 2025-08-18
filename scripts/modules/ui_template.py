@@ -1,32 +1,4 @@
-# BEGIN FILE: scripts/modules/ui_template.py
-# scripts/modules/ui_template.py
-#
-# === SYFTE & ANSVAR ===
-# Denna fil definierar den primära HTML-mallen för AI Context Builder-verktyget.
-# Den innehåller den övergripande sidstrukturen, platshållare för dynamiskt
-# innehåll och länkar till externa bibliotek som Chart.js och Transformers.js.
-#
-# === HISTORIK ===
-# * v3.2 (2025-08-16): Korrigerat HTML-strukturen för ribbon-menyn.
-# * v4.0 (2025-08-16): Lade till dolda containrar för framtida verktyg.
-# * v4.1 (2025-08-16): Lade till struktur för filgranskningsmodal och översatte all UI-text till svenska.
-# * v4.2 (2025-08-17): Lade till Eruda debugging-verktyg för att underlätta felsökning på mobila enheter.
-# * v4.3 (2025-08-17): Lade till Chart.js CDN-länk och den kompletta HTML-strukturen för AI Performance-dashboarden.
-# * v4.4 (2025-08-17): Lade till CDN-länkar för Pako.js och Transformers.js.
-# * v4.5 (2025-08-18): (Help me God - Domslut) Lade till `type="module"` till Transformers.js script-taggen.
-# * v4.6 (2025-08-18): (Help me God - Domslut) Lade till `type="module"` för logic.js och korrigerade en trasig SVG-sökväg.
-# * v5.0 (2025-08-18): Felaktig refaktorering ("Outlook Layout"). Deprekerad.
-# * v5.1 (2025-08-18): Felaktig refaktorering ("Outlook Layout"). Deprekerad.
-# * v5.2 (2025-08-18): (Help me God - Domslut) Återställt den felaktiga "Outlook"-layouten. Återförenat ribbon-flikar och innehållspaneler till en enda header-komponent och återinfört den globala sökrutan.
-# * v5.3 (2025-08-18): Tog bort de överflödiga .full-page-header elementen från Einstein- och Performance-vyerna för att maximera ytan.
-# * v5.4 (2025-08-18): (K-MOD Plan) Omstrukturerat UI. "Verktyg" -> "Start", lade till "Data"-flik, och gjorde högerpanelen kontextkänslig (dummy-implementation).
-# * SHA256_LF: 9295d32aeb4a4fdbbc47ff0439a91a8fa9980e4d
-#
-# === TILLÄMPADE REGLER (Frankensteen v5.7) ===
-# - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, korrigerade planen.
-# - P-OKD-1.0: Nya sektioner i HTML-mallen har förklarande kommentarer.
-
-HTML_TEMPLATE = """
+<!-- BEGIN FILE: scripts/modules/ui_template.py -->
 <!DOCTYPE html>
 <html lang="sv">
 <head>
@@ -78,7 +50,7 @@ HTML_TEMPLATE = """
                 </div>
                 <div class="ribbon-group">
                     <button id="create-context">Skapa Kontext</button>
-                    <button id="create-files">Skapa Filer</button>
+                    <button id="create-files-btn">Skapa Filer</button>
                     <label class="inline"><input type="checkbox" id="compact-json" checked> Kompakt JSON</label>
                 </div>
             </div>
@@ -176,6 +148,4 @@ HTML_TEMPLATE = """
     <script type="module" src="logic.js"></script>
 </body>
 </html>
-"""
-
-# END FILE: scripts/modules/ui_template.py
+<!-- END FILE: scripts/modules/ui_template.py -->
