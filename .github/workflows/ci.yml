@@ -35,6 +35,7 @@
 # * v2.11 (2025-08-17): (Help me God - Domslut) Finaliserat RAG-pipelinen. Anropet till build_vector_index.py har uppdaterats och auto-commit-steget hanterar nu den komprimerade einstein_index.json.gz.
 # * v2.12 (2025-08-17): (Engrove Mandate) Infört en manuell "strömbrytare" (.einstein) för att göra den tidskrävande RAG-indexeringen till en opt-in-process.
 # * v2.13 (2025-08-17): (Help me God - Grundorsaksanalys) Korrigerat ett kritiskt fel där CI/CD misslyckades om `.einstein`-filen saknades. Commit-steget försöker inte längre committa den temporära trigger-filen och den raderas korrekt efter bygge.
+# * v2.14 (2025-08-17): (Help me God - Domslut) Lade till ett villkorligt steg för att skapa en tom "dummy" `einstein_index.json.gz` när den riktiga indexeringen hoppas över. Detta löser ett 404-fel på klient-sidan.
 # * SHA256_LF: a60252b37aa1c3b8e81cf2c87e7d456cc9877131d0b30467f6d100ab0511597d
 
 name: Consolidated CI/CD and Tools Pipeline
@@ -133,6 +134,14 @@ jobs:
           echo "Vector index built successfully."
           echo "Removing trigger file after successful build."
           rm .einstein
+          
+      - name: STEP 2D Create Dummy Einstein Index (if skipped)
+        if: steps.check_einstein_trigger.outputs.run_index == 'false'
+        run: |
+          echo "Creating dummy Einstein index to prevent 404 errors on client."
+          DUMMY_JSON='{"model": "dummy", "createdAt": "$(date -Iseconds)", "chunks": []}'
+          echo "$DUMMY_JSON" | gzip > "${{ env.SITE_DIR }}/${{ env.EINSTEIN_INDEX_BASENAME }}.json.gz"
+          echo "Dummy index created."
 
       - name: STEP 3 Generate AI Context JSON
         id: generate-json
