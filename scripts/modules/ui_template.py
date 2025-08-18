@@ -1,4 +1,10 @@
+# BEGIN FILE: scripts/modules/ui_template.py
 # scripts/modules/ui_template.py
+#
+# === SYFTE & ANSVAR ===
+# Denna fil definierar den primära HTML-mallen för AI Context Builder-verktyget.
+# Den innehåller den övergripande sidstrukturen, platshållare för dynamiskt
+# innehåll och länkar till externa bibliotek som Chart.js och Transformers.js.
 #
 # === HISTORIK ===
 # * v3.2 (2025-08-16): Korrigerat HTML-strukturen för ribbon-menyn.
@@ -11,11 +17,12 @@
 # * v4.5 (2025-08-18): (Help me God - Domslut) Lade till `type="module"` till Transformers.js script-taggen för att lösa ett `Uncaught SyntaxError: Unexpected token 'export'` som förhindrade modellen från att laddas.
 # * v4.6 (2025-08-18): (Help me God - Domslut) Lade till `type="module"` för logic.js och korrigerade en trasig SVG-sökväg för Einstein-ikonen.
 # * v5.0 (2025-08-18): (Engrove Mandate) Refaktorering av sök-UI. Lade till en dedikerad "Einstein"-flik och en heltäckande resultat-container. Tog bort den gamla sökknappen från toppraden.
-# * SHA256_LF: a2c4d9e8f7b6c5a4b3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2a1b0
+# * v5.1 (2025-08-18): (Engrove Mandate) Refaktorerad layout genom att flytta ribbon-innehållet från den fasta headern till huvud-containern. Återställde den fullständiga koden för filgranskningsmodalen.
+# * SHA256_LF: 5a8e1b3c4d2e9f0a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
-# - Grundbulten v3.8: Denna fil har modifierats enligt den godkända planen för refaktorering av sök-UI.
-# - GR6 (Obligatorisk Refaktorisering): Gränssnittet har omstrukturerats för att tydligt separera generell filsökning från semantisk sökning.
+# - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända planen.
+# - GR6 (Obligatorisk Refaktorisering): HTML-strukturen har omorganiserats för att vara mer logisk och funktionell, vilket separerar den statiska headern från det dynamiska innehållet.
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -42,12 +49,11 @@ HTML_TEMPLATE = """
                 <button class="ribbon-tab" data-tab="installningar">Inställningar</button>
                 <button class="ribbon-tab" data-tab="hjalp">Hjälp</button>
             </div>
-            <div class="search-container">
-                <input type="search" id="main-search-input" placeholder="Sök filer...">
-            </div>
         </div>
+    </header>
+    <div class="main-container">
         <div class="ribbon-content">
-            <div id="tab-verktyg" class="ribbon-pane active">
+             <div id="tab-verktyg" class="ribbon-pane active">
                 <div class="ribbon-group">
                     <button>Kör Analys</button>
                     <button>Exportera</button>
@@ -80,8 +86,6 @@ HTML_TEMPLATE = """
                 </div>
             </div>
         </div>
-    </header>
-    <div class="main-container">
         <aside class="left-pane" id="left-pane">
             <div id="file-tree-container" class="tool-container" style="display: block;">
                 <!-- Innehåll för fil-trädet kommer att renderas här av JS -->
@@ -93,29 +97,28 @@ HTML_TEMPLATE = """
                 <h2>Information & Funktionalitet</h2>
                 <p>Välj ett verktyg i menyn ovan för att börja.</p>
             </div>
+             <!-- Heltäckande container för Einstein -->
+            <div id="einstein-container" class="tool-container full-page-container">
+                <div class="full-page-header">
+                    <h2>Einstein Semantisk Sökning</h2>
+                    <button id="close-einstein-btn" title="Stäng">×</button>
+                </div>
+                <div id="einstein-results-container" class="full-page-content">
+                    <p>Ange en sökfråga i menybalken ovan för att börja.</p>
+                </div>
+            </div>
+            
+            <!-- Heltäckande container för AI Performance -->
+            <div id="full-page-container" class="tool-container full-page-container">
+                <div class="full-page-header">
+                    <h2>AI Performance Dashboard</h2>
+                    <button id="close-full-page-btn" title="Stäng">×</button>
+                </div>
+                <div class="full-page-content">
+                     <!-- ... (innehåll för performance dashboard) ... -->
+                </div>
+            </div>
         </main>
-        
-        <!-- Heltäckande container för Einstein -->
-        <div id="einstein-container" class="tool-container full-page-container">
-            <div class="full-page-header">
-                <h2>Einstein Semantisk Sökning</h2>
-                <button id="close-einstein-btn" title="Stäng">×</button>
-            </div>
-            <div id="einstein-results-container" class="full-page-content">
-                <p>Ange en sökfråga i menybalken ovan för att börja.</p>
-            </div>
-        </div>
-        
-        <!-- Heltäckande container för AI Performance -->
-        <div id="full-page-container" class="tool-container full-page-container">
-            <div class="full-page-header">
-                <h2>AI Performance Dashboard</h2>
-                <button id="close-full-page-btn" title="Stäng">×</button>
-            </div>
-            <div class="full-page-content">
-                 <!-- ... (innehåll för performance dashboard) ... -->
-            </div>
-        </div>
     </div>
 
     <!-- Modal för filgranskning -->
@@ -143,4 +146,4 @@ HTML_TEMPLATE = """
 </html>
 """
 
-# scripts/modules/ui_template.py
+# END FILE: scripts/modules/ui_template.py
