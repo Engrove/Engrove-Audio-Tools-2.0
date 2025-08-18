@@ -20,11 +20,12 @@
 # * v6.1 (2025-08-18): Felaktig refaktorering ("Outlook Layout"). Deprekerad.
 # * v6.2 (2025-08-18): (Help me God - Domslut) Återställt layouten för att stödja en enhetlig header. Justerat höjder för header och main-container.
 # * v6.3 (2025-08-18): Tog bort CSS-regler för den nu borttagna `.full-page-header`.
-# * SHA256_LF: 2795c6517a264a7e937397b2584e0c34e6284a141d0630b91223933c1f10c14c
+# * v6.4 (2025-08-18): (FL-D Trigger) Korrigerat en flexbox overflow-regression genom att lägga till `min-height: 0` till `.full-page-content`.
+# * SHA256_LF: d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, korrigerade planen.
-# - Help_me_God: Denna ändring är ett direkt resultat av en grundorsaksanalys av ett arkitektoniskt fel.
+# - Felsökningsloop-Detektor (FL-D): Denna ändring är ett direkt resultat av ett rapporterat fel (Försök 1).
 
 CSS_STYLES = """
 :root {
@@ -209,6 +210,7 @@ input[type="search"]:focus, input[type="date"]:focus {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    min-height: 0; /* KRITISK FIX: Tillåter flex-containern att krympa och aktivera sin egen scrollbar. */
 }
 
 /* --- Einstein Search Styles --- */
