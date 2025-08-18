@@ -12,10 +12,12 @@
 # * v5.6 (2025-08-17): (Help me God - Domslut) Korrigerat en CSS-specificitetskonflikt.
 #   `.full-page-container` är nu `display: none` som standard och visas endast
 #   med `.active`-klassen, vilket löser buggen där den alltid var synlig.
+# * v6.0 (2025-08-18): (Engrove Mandate) Lade till en ny sektion "Einstein Search Styles" för att styla det nya sökgränssnittet, inklusive resultatlistan och metadata-visningen.
+# * SHA256_LF: 4d22c9a67a6e133c944f2d398f654b0c20a9a3b2b8d4f4e1f0e9f8f4a3b2b1c0
 #
-# === TILLÄMPADE REGLER (Frankensteen v5.6) ===
-# - Grundbulten v3.3: Denna ändring följer den uppgraderade processen för transparens.
-# - Help me God: Denna korrigering är resultatet av en grundorsaksanalys.
+# === TILLÄMPADE REGLER (Frankensteen v5.7) ===
+# - Grundbulten v3.8: Denna fil har modifierats enligt den godkända planen för refaktorering av sök-UI.
+# - GR6 (Obligatorisk Refaktorisering): All styling för den nya funktionen är samlad och tydligt sektionerad i denna centrala CSS-fil.
 
 CSS_STYLES = """
 :root {
@@ -116,6 +118,7 @@ h2 { font-weight: 500; color: var(--text-color); }
     border-right: 1px solid var(--border-color);
 }
 .ribbon-group:first-child { padding-left: 4px; }
+.small { font-size: 12px; color: var(--text-color-muted); }
 
 /* --- Global Component Styles --- */
 button, .ribbon-group button {
@@ -143,6 +146,7 @@ input[type="search"], input[type="date"] {
     border-radius: 5px;
 }
 input[type="search"] { width: 250px; }
+#einstein-search-input { width: 350px; }
 input[type="search"]:focus, input[type="date"]:focus {
     outline: none;
     border-color: var(--resizer-hover-color);
@@ -195,10 +199,10 @@ input[type="search"]:focus, input[type="date"]:focus {
     border-bottom: 1px solid var(--border-color);
     flex-shrink: 0;
 }
-#close-full-page-btn {
+.full-page-header button {
     background: none; border: none; font-size: 1.5rem; color: var(--text-color-muted);
 }
-#close-full-page-btn:hover { color: var(--text-color); }
+.full-page-header button:hover { color: var(--text-color); }
 
 .full-page-content {
     flex-grow: 1;
@@ -207,6 +211,68 @@ input[type="search"]:focus, input[type="date"]:focus {
     display: flex;
     flex-direction: column;
     gap: 12px;
+}
+
+/* --- Einstein Search Styles --- */
+.einstein-result-item {
+    background: var(--panel-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 12px;
+}
+.einstein-result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+a.einstein-result-path {
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    color: var(--button-bg);
+    text-decoration: none;
+    font-weight: 500;
+}
+a.einstein-result-path:hover {
+    text-decoration: underline;
+}
+.einstein-result-score {
+    font-size: 0.85rem;
+    color: var(--text-color-muted);
+}
+.einstein-result-metadata p {
+    margin: 4px 0;
+    font-size: 0.9rem;
+    color: var(--text-color-muted);
+}
+.einstein-result-metadata p strong {
+    color: var(--text-color);
+}
+.einstein-result-details {
+    margin-top: 10px;
+}
+.einstein-result-details summary {
+    cursor: pointer;
+    color: var(--text-color-muted);
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+}
+.einstein-result-details pre {
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 0.85rem;
+    white-space: pre-wrap;
+    word-break: break-all;
+    max-height: 200px;
+    overflow-y: auto;
+}
+.einstein-no-results, .einstein-error {
+    color: var(--text-color-muted);
+    text-align: center;
+    padding: 20px;
 }
 
 /* --- AI Performance Styles --- */
@@ -411,4 +477,5 @@ input[type="search"]:focus, input[type="date"]:focus {
     display: none;
 }
 """
+
 # scripts/modules/ui_styles.py
