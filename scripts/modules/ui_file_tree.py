@@ -18,14 +18,15 @@
 # * v3.0 (2025-08-17): (Help me God - Grundorsaksanalys) Refaktorerat för att ta bort `JSON.parse`.
 #   Förlitar sig nu på att byggskriptet injicerar ett direkt JavaScript-objekt-literal.
 # * v4.0 (2025-08-18): Exponerat kontrollfunktioner (selectAll, deselectAll, selectCore) på window-objektet för extern åtkomst.
-# * SHA256_LF: 0e86b2403ed9633e079730f7856b3e0d88820c4d291e0a9f8f4a3e8e108d33d9
+# * v4.1 (2025-08-18): Omarbetat `selectCoreInTree` till `addPathsToSelection` för additivt och dynamiskt urval.
+# * SHA256_LF: 521b02868848d55877f29a0f4435555e1c0c9d8e7f6a5b4c3d2e1f9a0b1c2d3e
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.9: Denna fil har modifierats enligt den godkända planen.
-# - P-OKD-1.0: Nya globala funktioner har JSDoc-kommentarer.
+# - P-OKD-1.0: Nya och modifierade funktioner har JSDoc-kommentarer.
 
 JS_FILE_TREE_LOGIC = """
-// === Engrove File Tree Logic v4.0 ===
+// === Engrove File Tree Logic v4.1 ===
 
 const FILE_TREE_DATA = __INJECT_FILE_TREE__;
 
@@ -221,19 +222,51 @@ window.deselectAllInTree = function() {
 }
 
 /**
- * Global funktion för att markera en specifik lista av filer (kärndokument).
- * @param {string[]} paths - En array av filsökvägar som ska markeras.
+ * Hittar rekursivt alla filsökvägar under en given mapp i trädstrukturen.
+ * @param {string} directoryPath - Sökvägen till mappen att söka i.
+ * @returns {string[]} En array med alla funna filsökvägar.
  */
-window.selectCoreInTree = function(paths) {
-    window.deselectAllInTree();
+function findPathsUnder(directoryPath) {
+    const paths = [];
+    function traverse(node) {
+        if (node.type === 'file' && node.path.startsWith(directoryPath)) {
+            paths.push(node.path);
+        } else if (node.type === 'directory' && node.children) {
+            // Fortsätt bara att söka om den nuvarande mappsökvägen är en del av målsökvägen
+            if (directoryPath.startsWith(node.path)) {
+                 node.children.forEach(traverse);
+            }
+        }
+    }
+    if (FILE_TREE_DATA && FILE_TREE_DATA.children) {
+        FILE_TREE_DATA.children.forEach(traverse);
+    }
+    return paths;
+}
+
+/**
+ * Global funktion för att lägga till ett urval av filer (statiska och dynamiska) i det nuvarande urvalet.
+ * @param {string[]} staticPaths - En array av explicita filsökvägar som ska markeras.
+ * @param {string[]} dynamicPaths - En array av mappsökvägar vars innehåll ska markeras.
+ */
+window.addPathsToSelection = function(staticPaths = [], dynamicPaths = []) {
+    let pathsToSelect = [...staticPaths];
+
+    dynamicPaths.forEach(dirPath => {
+        const foundPaths = findPathsUnder(dirPath);
+        pathsToSelect.push(...foundPaths);
+    });
+
     const container = document.getElementById('file-tree-container');
     const allCheckboxes = Array.from(container.querySelectorAll('input[type=\"checkbox\"]'));
     
-    paths.forEach(p => {
+    // Använd en Set för snabbare uppslag
+    const selectionSet = new Set(pathsToSelect);
+
+    selectionSet.forEach(p => {
         const cb = allCheckboxes.find(x => x.dataset.path === p);
-        if (cb) {
+        if (cb && !cb.checked) { // Markera bara om den inte redan är markerad
             cb.checked = true;
-            // Auto-expand and update parents for each selected core file
             let li = cb.closest('li.tree-node');
             while(li) {
                 const parent = li.parentElement.closest('li.tree-node');
@@ -249,7 +282,7 @@ window.selectCoreInTree = function(paths) {
         }
     });
 
-    // Update parent states after all selections are done
+    // Uppdatera föräldratillstånd efter att alla val är gjorda
     allCheckboxes.forEach(cb => {
         if (cb.checked) {
             updateParents(cb.closest('li.tree-node'));
@@ -291,4 +324,4 @@ if (document.readyState === 'loading') {
     initializeFileTree();
 }
 """
-# scripts/modules/ui_file_tree.py
+# END FILE: scripts/modules/ui_file_tree.py
