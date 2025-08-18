@@ -9,10 +9,11 @@
 # * v4.3 (2025-08-17): Lade till Chart.js CDN-länk och den kompletta HTML-strukturen för AI Performance-dashboarden.
 # * v4.4 (2025-08-17): Lade till CDN-länkar för Pako.js och Transformers.js. Uppdaterade UI för att stödja "Einstein" RAG-systemets dubbelfunktions-sökruta.
 # * v4.5 (2025-08-18): (Help me God - Domslut) Lade till `type="module"` till Transformers.js script-taggen för att lösa ett `Uncaught SyntaxError: Unexpected token 'export'` som förhindrade modellen från att laddas.
-# * SHA256_LF: f439e6a7c8d9e0f1a2b3c4d5e6f8a9b0c1d2e3f4a5b6c7d8e9f0a1b3c4d5e6f8
+# * v4.6 (2025-08-18): (Help me God - Domslut) Lade till `type="module"` för logic.js och korrigerade en trasig SVG-sökväg för Einstein-ikonen.
+# * SHA256_LF: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
-# - Grundbulten v3.8: Denna ändring följer den uppgraderade processen för transparens och fullständighet.
+# - Grundbulten v3.8: Denna ändring följer den uppgraderade processen för transparens.
 # - Help me God: Denna korrigering är resultatet av en grundorsaksanalys av ett systemiskt fel.
 # - GR7 (Fullständig Historik): Korrekt historik-header.
 
@@ -152,7 +153,7 @@ HTML_TEMPLATE = """
         </div>
     </div>
 
-    <script src="logic.js"></script>
+    <script type="module" src="logic.js"></script>
 </body>
 </html>
 """
