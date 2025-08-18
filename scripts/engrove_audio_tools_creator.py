@@ -1,3 +1,4 @@
+# BEGIN FILE: scripts/engrove_audio_tools_creator.py
 # scripts/engrove_audio_tools_creator.py
 #
 # === SYFTE & ANSVAR ===
@@ -27,7 +28,7 @@
 # * SHA256_LF: d51e6005d53531b212cc0a14b30e060c4973347c4b7b25055b80261327142721
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
-# - Grundbulten v3.8: Denna fil har modifierats enligt den godkända planen.
+# - Grundbulten v3.9: Denna fil har modifierats enligt den godkända planen.
 # - GR4 (API-kontraktsverifiering): Skriptets kommandorads-API har uppdaterats för att acceptera en ny, obligatorisk datakälla.
 
 import os
@@ -40,7 +41,7 @@ from modules.ui_file_tree import JS_FILE_TREE_LOGIC
 from modules.ui_performance_dashboard import JS_PERFORMANCE_LOGIC
 from modules.ui_einstein_search import JS_EINSTEIN_LOGIC
 
-UI_VERSION = "8.0"
+UI_VERSION = "9.0"
 
 def calculate_node_size(structure_node):
     """
@@ -189,4 +190,4 @@ if __name__ == "__main__":
         print("Användning: python scripts/engrove_audio_tools_creator.py build-ui <output_html_path> <context_json_path> <relations_json_path> <project_overview_json_path> <core_info_json_path>")
         sys.exit(1)
 
-# scripts/engrove_audio_tools_creator.py
+# END FILE: scripts/engrove_audio_tools_creator.py
