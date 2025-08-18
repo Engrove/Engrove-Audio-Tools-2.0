@@ -23,7 +23,8 @@
 # * v8.2 (2025-08-18): (Help me God - Domslut) Återställt ribbon-logiken. Hanterar nu korrekt växling av paneler (`.ribbon-pane`) inuti den enhetliga headern, istället för helsides-vyer.
 # * v8.3 (2025-08-18): (Help me God - Domslut) Implementerat "Hybrid View Control". Ribbon-logiken hanterar nu korrekt både paneler i headern och växling till helsides-vyer i main-content.
 # * v8.4 (2025-08-18): (Stalemate Protocol - Domslut) Korrigerat panel-växlingslogiken för att säkerställa att föräldern (`#right-pane`) förblir synlig när en overlay-vy (`#einstein-container`) aktiveras.
-# * SHA256_LF: 2a1b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b
+# * v8.5 (2025-08-18): (Engrove Mandate) Tog bort överflödig logik och event-lyssnare för de borttagna header-knapparna.
+# * SHA256_LF: a8e0d44e5c8c6f7b3a1b2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, korrigerade planen.
@@ -160,11 +161,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const ribbonPanes = document.querySelectorAll('.ribbon-pane');
     
     const performanceContainer = document.getElementById('full-page-container');
-    const closePerformanceBtn = document.getElementById('close-full-page-btn');
-    
     const einsteinContainer = document.getElementById('einstein-container');
-    const closeEinsteinBtn = document.getElementById('close-einstein-btn');
-
+    
     const modalOverlay = document.getElementById('file-modal-overlay');
     const modalCloseBtn = document.getElementById('modal-close-btn');
     const modalCopyPathBtn = document.getElementById('modal-copy-path');
@@ -237,18 +235,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-
-    const closeAndSwitchToVerktyg = () => {
-        const verktygTab = document.querySelector('.ribbon-tab[data-tab="verktyg"]');
-        if (verktygTab) verktygTab.click();
-    };
-
-    if(closePerformanceBtn) {
-        closePerformanceBtn.addEventListener('click', closeAndSwitchToVerktyg);
-    }
-    if(closeEinsteinBtn) {
-        closeEinsteinBtn.addEventListener('click', closeAndSwitchToVerktyg);
-    }
     
     if(resizer && leftPane) {
         let isResizing = false;
