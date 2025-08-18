@@ -35,7 +35,8 @@
 # * v2.11 (2025-08-17): (Help me God - Domslut) Finaliserat RAG-pipelinen. Anropet till build_vector_index.py har uppdaterats och auto-commit-steget hanterar nu den komprimerade einstein_index.json.gz.
 # * v2.12 (2025-08-17): (Engrove Mandate) Infört en manuell "strömbrytare" (.einstein) för att göra den tidskrävande RAG-indexeringen till en opt-in-process.
 # * v2.13 (2025-08-17): (Help me God - Grundorsaksanalys) Korrigerat ett kritiskt fel där CI/CD misslyckades om `.einstein`-filen saknades. Commit-steget försöker inte längre committa den temporära trigger-filen och den raderas korrekt efter bygge.
-# * v2.14 (2025-08-17): (Help me God - Domslut) Lade till ett villkorligt steg för att skapa en tom "dummy" `einstein_index.json.gz` när den riktiga indexeringen hoppas över. Detta löser ett 404-fel på klient-sidan.
+# * v2.14 (2025-08-17): (Help me God - Domslut) Lade till ett villkorligt steg för att skapa en tom "dummy" `einstein_index.json.gz` när den riktiga indexeringen hoppas över. Detta löste ett 404-fel på klient-sidan.
+# * v2.15 (2025-08-18): (Help me God - Domslut) Korrigerat grundorsaken till 404-felet. Säkerställer nu att `einstein_index.json.gz` (både äkta och dummy) alltid placeras i `dist/`-mappen före uppladdning.
 # * SHA256_LF: a60252b37aa1c3b8e81cf2c87e7d456cc9877131d0b30467f6d100ab0511597d
 
 name: Consolidated CI/CD and Tools Pipeline
@@ -132,6 +133,8 @@ jobs:
           echo "Building Einstein RAG vector index..."
           python scripts/rag/build_vector_index.py ./ "${{ env.EINSTEIN_INDEX_BASENAME }}"
           echo "Vector index built successfully."
+          echo "Moving index to deployment directory..."
+          mv "${{ env.EINSTEIN_INDEX_BASENAME }}.json.gz" "${{ env.SITE_DIR }}/"
           echo "Removing trigger file after successful build."
           rm .einstein
 
@@ -140,7 +143,7 @@ jobs:
         run: |
           echo "Creating dummy Einstein index to prevent 404 errors on client."
           DUMMY_JSON='{"model": "dummy", "createdAt": "$(date -Iseconds)", "chunks": []}'
-          echo "$DUMMY_JSON" | gzip > "${{ env.EINSTEIN_INDEX_BASENAME }}.json.gz"
+          echo "$DUMMY_JSON" | gzip > "${{ env.SITE_DIR }}/${{ env.EINSTEIN_INDEX_BASENAME }}.json.gz"
           echo "Dummy index created."
 
       - name: STEP 3 Generate AI Context JSON
@@ -213,7 +216,7 @@ jobs:
             [skip ci]
           commit_user_name: 'Frankensteen (Bot)'
           commit_user_email: 'frankensteen-bot@users.noreply.github.com'
-          file_pattern: 'docs/ByggLogg.json docs/Chatthistorik.json docs/ai_protocol_performance.json tools/frankensteen_learning_db.json docs/ai_protocols/DynamicProtocols.json docs/core_file_info.json docs/file_relations.json public/data/schemas/*.schema.json project_overview.json einstein_index.json.gz'
+          file_pattern: 'docs/ByggLogg.json docs/Chatthistorik.json docs/ai_protocol_performance.json tools/frankensteen_learning_db.json docs/ai_protocols/DynamicProtocols.json docs/core_file_info.json docs/file_relations.json public/data/schemas/*.schema.json project_overview.json dist/einstein_index.json.gz'
           push_options: '--force'
 
   deploy:
