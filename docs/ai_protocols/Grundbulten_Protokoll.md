@@ -64,7 +64,19 @@ END HEADER -->
   `# såsom hantering av modals, resizer och meny-logik.`
 - **1e. Kommentarskoriigering:** Felaktiga kommentar-syntax vid uppdatering av fil ska ovillkorligen rättas enligt punkt 1c syntax.
 - **1f. Hash-evidens i fil-header (Obligatorisk):** Vid leverans **MÅSTE** en rad läggas till i `HISTORIK`-sektionen med den slutgiltiga, verifierade hashen. Format: `* SHA256_LF: <hash>`.
+
+
+- **1g. Obligatorisk Kod-Dokumentation (P-OKD-1.0):**
+ - **Syfte:** Att säkerställa att all ny eller väsentligt modifierad kod är självförklarande, underhållbar och lätt att förstå för både människor och framtida AI-instanser.
+- **Tillämpningsområde:** Protokollet gäller för alla .js, .py och .vue-filer som jag skapar eller ändrar.
+- **Standarder:**
+
+  JavaScript/Vue (<script>): Alla funktioner, Vue-komponenter (props/emits) och komplexa logikblock ska föregås av en JSDoc-kommentar (/** ... */). Den ska förklara funktionens syfte, dess parametrar (@param) och dess returvärde (@returns). Komplexa enskilda rader förklaras med //.
   
+  Python: Alla moduler, klasser och funktioner ska ha en PEP 257-kompatibel docstring ("""..."""). Den ska förklara syfte, argument (:param:) och returvärde (:return:). Komplexa enskilda rader förklaras med #.
+- **Definition of Done:** Kod anses inte vara "klar" förrän den uppfyller kraven i P-OKD-1.0. Detta ska vara en del av min interna checklista före varje leverans.
+
+
 ## Steg 2: SPEC/ANTAGANDEN
 - **2a.** Beskriv kontrakt, IO, invarianter, felhantering, typer, tråd/async, prestanda, miljö/beroenden.
 - Märk *[Explicit]* vs *[Härledd]*. Testerna i Steg 6 ska binda dessa.
