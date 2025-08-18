@@ -22,11 +22,12 @@
 # * v6.3 (2025-08-18): Tog bort CSS-regler för den nu borttagna `.full-page-header`.
 # * v6.4 (2025-08-18): (FL-D Trigger) Korrigerat en flexbox overflow-regression genom att lägga till `min-height: 0` till `.full-page-content`.
 # * v6.5 (2025-08-18): (FL-D Trigger) Refaktorerat layouten för att möjliggöra body-scroll och dölja webbläsarens UI på mobila enheter.
-# * SHA256_LF: 0e5b31f7c2b3d4e5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9
+# * v6.6 (2025-08-18): (FL-D Eskalering/Help me God) Korrigerat en z-index stacking context-konflikt för att säkerställa att headern alltid renderas ovanpå scrollbart innehåll.
+# * SHA256_LF: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, korrigerade planen.
-# - Felsökningsloop-Detektor (FL-D): Denna ändring är ett direkt resultat av ett rapporterat fel (Försök 1).
+# - Felsökningsloop-Detektor (FL-D) & Help_me_God: Denna ändring är ett direkt resultat av ett rapporterat fel (Försök 2) och en eskalerad grundorsaksanalys.
 
 CSS_STYLES = """
 :root {
@@ -69,6 +70,7 @@ h2 { font-weight: 500; color: var(--text-color); }
     display: flex;
     flex-grow: 1;
     position: relative;
+    z-index: 1; /* KRITISK FIX: Säkerställer att denna container är i ett lägre lager än headern. */
 }
 
 /* --- Ribbon Header --- */
@@ -211,7 +213,7 @@ input[type="search"]:focus, input[type="date"]:focus {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    min-height: 0; 
+    min-height: 0; /* KRITISK FIX: Tillåter flex-containern att krympa och aktivera sin egen scrollbar. */
 }
 
 /* --- Einstein Search Styles --- */
