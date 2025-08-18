@@ -1,3 +1,4 @@
+# BEGIN FILE: scripts/modules/ui_file_tree.py
 # scripts/modules/ui_file_tree.py
 #
 # === SYFTE & ANSVAR ===
@@ -16,17 +17,23 @@
 # * v2.3 (2025-08-17): Tog bort den hårdkodade <h2>Filträd</h2>-rubriken för ett renare UI.
 # * v3.0 (2025-08-17): (Help me God - Grundorsaksanalys) Refaktorerat för att ta bort `JSON.parse`.
 #   Förlitar sig nu på att byggskriptet injicerar ett direkt JavaScript-objekt-literal.
-# * SHA256_LF: 2db854226d83a17c276a6f4e64f0b2f15a3068e612a87c12660d37e2ab081744
+# * v4.0 (2025-08-18): Exponerat kontrollfunktioner (selectAll, deselectAll, selectCore) på window-objektet för extern åtkomst.
+# * SHA256_LF: 0e86b2403ed9633e079730f7856b3e0d88820c4d291e0a9f8f4a3e8e108d33d9
 #
-# === TILLÄMPADE REGLER (Frankensteen v5.6) ===
-# - Grundbulten v3.7: Denna ändring är resultatet av en grundorsaksanalys.
-# - Help me God: Denna korrigering är resultatet av ett systemiskt fel.
+# === TILLÄMPADE REGLER (Frankensteen v5.7) ===
+# - Grundbulten v3.9: Denna fil har modifierats enligt den godkända planen.
+# - P-OKD-1.0: Nya globala funktioner har JSDoc-kommentarer.
 
 JS_FILE_TREE_LOGIC = """
-// === Engrove File Tree Logic v3.0 ===
+// === Engrove File Tree Logic v4.0 ===
 
 const FILE_TREE_DATA = __INJECT_FILE_TREE__;
 
+/**
+ * Formaterar bytes till en läsbar sträng (kB, MB, etc.).
+ * @param {number} bytes Antalet bytes.
+ * @returns {string} Den formaterade storleken.
+ */
 function formatSize(bytes) {
     if (bytes === 0) return '0 B';
     const k = 1024;
@@ -36,14 +43,18 @@ function formatSize(bytes) {
     return `${num} ${sizes[i]}`;
 }
 
+/**
+ * Uppdaterar rekurvisivt checkboxtillståndet för alla föräldraelement.
+ * @param {HTMLElement} element Det element vars föräldrar ska uppdateras.
+ */
 function updateParents(element) {
     const parentLi = element.parentElement.closest('li.tree-node');
     if (!parentLi) return;
 
-    const parentCheckbox = parentLi.querySelector(':scope > .node-label > input[type="checkbox"]');
+    const parentCheckbox = parentLi.querySelector(':scope > .node-label > input[type=\"checkbox\"]');
     if (!parentCheckbox) return;
     
-    const childCheckboxes = Array.from(parentLi.querySelectorAll(':scope > ul > li > .node-label > input[type="checkbox"]'));
+    const childCheckboxes = Array.from(parentLi.querySelectorAll(':scope > ul > li > .node-label > input[type=\"checkbox\"]'));
 
     if (childCheckboxes.length === 0) return;
 
@@ -63,14 +74,24 @@ function updateParents(element) {
     updateParents(parentLi);
 }
 
+/**
+ * Uppdaterar alla underliggande checkboxes till ett specifikt tillstånd.
+ * @param {HTMLElement} element Förälderelementet.
+ * @param {boolean} isChecked Om checkboxes ska vara markerade eller ej.
+ */
 function updateChildren(element, isChecked) {
-    const childCheckboxes = element.querySelectorAll('li .node-label > input[type="checkbox"]');
+    const childCheckboxes = element.querySelectorAll('li .node-label > input[type=\"checkbox\"]');
     childCheckboxes.forEach(cb => {
         cb.checked = isChecked;
         cb.indeterminate = false;
     });
 }
 
+/**
+ * Renderar en enskild nod (fil eller mapp) i trädet.
+ * @param {object} nodeData Datan för noden.
+ * @returns {HTMLLIElement} Det skapade LI-elementet.
+ */
 function renderNode(nodeData) {
     const isDir = nodeData.type === 'directory';
     
@@ -177,11 +198,73 @@ function renderNode(nodeData) {
     return li;
 }
 
+/**
+ * Global funktion för att markera alla checkboxes i trädet.
+ */
+window.selectAllInTree = function() {
+    const container = document.getElementById('file-tree-container');
+    container.querySelectorAll('input[type=\"checkbox\"]').forEach(cb => {
+        cb.checked = true;
+        cb.indeterminate = false;
+    });
+}
+
+/**
+ * Global funktion för att avmarkera alla checkboxes i trädet.
+ */
+window.deselectAllInTree = function() {
+    const container = document.getElementById('file-tree-container');
+    container.querySelectorAll('input[type=\"checkbox\"]').forEach(cb => {
+        cb.checked = false;
+        cb.indeterminate = false;
+    });
+}
+
+/**
+ * Global funktion för att markera en specifik lista av filer (kärndokument).
+ * @param {string[]} paths - En array av filsökvägar som ska markeras.
+ */
+window.selectCoreInTree = function(paths) {
+    window.deselectAllInTree();
+    const container = document.getElementById('file-tree-container');
+    const allCheckboxes = Array.from(container.querySelectorAll('input[type=\"checkbox\"]'));
+    
+    paths.forEach(p => {
+        const cb = allCheckboxes.find(x => x.dataset.path === p);
+        if (cb) {
+            cb.checked = true;
+            // Auto-expand and update parents for each selected core file
+            let li = cb.closest('li.tree-node');
+            while(li) {
+                const parent = li.parentElement.closest('li.tree-node');
+                if(parent) {
+                    const toggle = parent.querySelector(':scope > .toggle-icon');
+                    if(toggle && parent.classList.contains('collapsed')) {
+                        parent.classList.remove('collapsed');
+                        toggle.textContent = '▼';
+                    }
+                }
+                li = parent;
+            }
+        }
+    });
+
+    // Update parent states after all selections are done
+    allCheckboxes.forEach(cb => {
+        if (cb.checked) {
+            updateParents(cb.closest('li.tree-node'));
+        }
+    });
+}
+
+/**
+ * Initialiserar och renderar hela filträdet.
+ */
 function initializeFileTree() {
     const container = document.getElementById('file-tree-container');
     const navContainer = document.getElementById('navigation-container');
     if (!container || typeof FILE_TREE_DATA === 'undefined' || FILE_TREE_DATA === '__INJECT_FILE_TREE__') {
-        if(container) container.innerHTML = '<h2>Filträd</h2><p style="color: #ffc107;">Data-injektion misslyckades under bygget.</p>';
+        if(container) container.innerHTML = '<h2>Filträd</h2><p style=\"color: #ffc107;\">Data-injektion misslyckades under bygget.</p>';
         console.error("Filträdets data saknas eller blev inte injicerad.");
         return;
     }
