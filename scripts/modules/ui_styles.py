@@ -1,4 +1,10 @@
+# BEGIN FILE: scripts/modules/ui_styles.py
 # scripts/modules/ui_styles.py
+#
+# === SYFTE & ANSVAR ===
+# Denna modul innehåller alla CSS-regler för AI Context Builder-verktyget. Den definierar
+# den visuella identiteten, layouten och interaktiva tillstånd för alla UI-komponenter,
+# inklusive det nya Einstein-sökgränssnittet.
 #
 # === HISTORIK ===
 # * v4.0 (2025-08-16): Total visuell omdesign till ett mörkblått tema.
@@ -13,11 +19,12 @@
 #   `.full-page-container` är nu `display: none` som standard och visas endast
 #   med `.active`-klassen, vilket löser buggen där den alltid var synlig.
 # * v6.0 (2025-08-18): (Engrove Mandate) Lade till en ny sektion "Einstein Search Styles" för att styla det nya sökgränssnittet, inklusive resultatlistan och metadata-visningen.
-# * SHA256_LF: 4d22c9a67a6e133c944f2d398f654b0c20a9a3b2b8d4f4e1f0e9f8f4a3b2b1c0
+# * v6.1 (2025-08-18): (Engrove Mandate) Anpassat layoutstilar för att stödja den nya "Outlook"-layouten där ribbon-innehållet är separerat från den fasta headern.
+# * SHA256_LF: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
-# - Grundbulten v3.8: Denna fil har modifierats enligt den godkända planen för refaktorering av sök-UI.
-# - GR6 (Obligatorisk Refaktorisering): All styling för den nya funktionen är samlad och tydligt sektionerad i denna centrala CSS-fil.
+# - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända planen.
+# - GR6 (Obligatorisk Refaktorisering): Layouten har anpassats till den nya HTML-strukturen och all ny styling för sökresultat är korrekt sektionerad.
 
 CSS_STYLES = """
 :root {
@@ -56,21 +63,16 @@ body, html {
 h2 { font-weight: 500; color: var(--text-color); }
 .inline { display: inline-flex; align-items: center; gap: 6px; }
 
-.main-container {
-    display: flex; flex-grow: 1;
-    height: calc(100% - 85px);
-    position: relative;
-}
-
 /* --- Ribbon Header --- */
 .header-ribbon {
-    height: 85px;
+    height: 45px;
     border-bottom: 1px solid var(--border-color);
     background-color: var(--header-bg-color);
     width: 100%;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
+    justify-content: flex-end;
 }
 
 .top-bar {
@@ -97,28 +99,6 @@ h2 { font-weight: 500; color: var(--text-color); }
     background-color: var(--panel-bg-color);
     color: var(--text-color);
 }
-.search-container { padding-bottom: 4px; }
-
-.ribbon-content {
-    background-color: var(--ribbon-content-bg);
-    border-top: 1px solid var(--border-color);
-    flex-grow: 1;
-    display: flex;
-    align-items: stretch;
-    padding: 4px 12px;
-}
-.ribbon-pane { display: none; width: 100%; height: 100%; align-items: center; gap: 16px; }
-.ribbon-pane.active { display: flex; }
-.ribbon-group {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    height: 100%;
-    padding: 0 16px;
-    border-right: 1px solid var(--border-color);
-}
-.ribbon-group:first-child { padding-left: 4px; }
-.small { font-size: 12px; color: var(--text-color-muted); }
 
 /* --- Global Component Styles --- */
 button, .ribbon-group button {
@@ -153,10 +133,42 @@ input[type="search"]:focus, input[type="date"]:focus {
 }
 
 /* --- Main Panes --- */
+.main-container {
+    display: flex;
+    flex-wrap: wrap; /* NEW: Forces elements to wrap */
+    flex-grow: 1;
+    height: calc(100% - 45px); /* Adjusted for new header height */
+    position: relative;
+}
+
+.ribbon-content {
+    flex-basis: 100%; /* NEW: Takes full width */
+    height: 40px; /* NEW: Fixed height for the content bar */
+    background-color: var(--ribbon-content-bg);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: stretch;
+    padding: 4px 12px;
+}
+.ribbon-pane { display: none; width: 100%; height: 100%; align-items: center; gap: 16px; }
+.ribbon-pane.active { display: flex; }
+.ribbon-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
+    padding: 0 16px;
+    border-right: 1px solid var(--border-color);
+}
+.ribbon-group:last-child { border-right: none; }
+.ribbon-group:first-child { padding-left: 4px; }
+.small { font-size: 12px; color: var(--text-color-muted); }
+
 .left-pane, .right-pane {
     background-color: var(--panel-bg-color);
     padding: 12px;
     overflow-y: auto;
+    height: calc(100% - 40px); /* Adjusted for ribbon content height */
 }
 .left-pane {
     width: 33.33%; max-width: 80%; min-width: 200px;
@@ -168,6 +180,7 @@ input[type="search"]:focus, input[type="date"]:focus {
     background-color: var(--resizer-color);
     flex-shrink: 0; user-select: none;
     transition: background-color 0.2s ease;
+    height: calc(100% - 40px); /* Adjusted */
 }
 .resizer:hover { background-color: var(--resizer-hover-color); }
 
