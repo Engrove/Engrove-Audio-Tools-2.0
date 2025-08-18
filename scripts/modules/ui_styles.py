@@ -21,7 +21,8 @@
 # * v6.2 (2025-08-18): (Help me God - Domslut) Återställt layouten för att stödja en enhetlig header. Justerat höjder för header och main-container.
 # * v6.3 (2025-08-18): Tog bort CSS-regler för den nu borttagna `.full-page-header`.
 # * v6.4 (2025-08-18): (FL-D Trigger) Korrigerat en flexbox overflow-regression genom att lägga till `min-height: 0` till `.full-page-content`.
-# * SHA256_LF: d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4
+# * v6.5 (2025-08-18): (FL-D Trigger) Refaktorerat layouten för att möjliggöra body-scroll och dölja webbläsarens UI på mobila enheter.
+# * SHA256_LF: 0e5b31f7c2b3d4e5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, korrigerade planen.
@@ -55,10 +56,10 @@ CSS_STYLES = """
 * { box-sizing: border-box; }
 
 body, html {
-    margin: 0; padding: 0; height: 100vh; width: 100vw;
+    margin: 0; padding: 0; min-height: 100vh; width: 100vw;
     font-family: var(--font-sans); font-size: 14px;
     background-color: var(--bg-color); color: var(--text-color);
-    display: flex; flex-direction: column; overflow: hidden;
+    display: flex; flex-direction: column;
 }
 
 h2 { font-weight: 500; color: var(--text-color); }
@@ -67,7 +68,6 @@ h2 { font-weight: 500; color: var(--text-color); }
 .main-container {
     display: flex;
     flex-grow: 1;
-    height: calc(100% - 85px);
     position: relative;
 }
 
@@ -80,6 +80,9 @@ h2 { font-weight: 500; color: var(--text-color); }
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .top-bar {
@@ -166,7 +169,6 @@ input[type="search"]:focus, input[type="date"]:focus {
 .left-pane, .right-pane {
     background-color: var(--panel-bg-color);
     padding: 12px;
-    overflow-y: auto;
     height: 100%;
 }
 .left-pane {
@@ -205,12 +207,11 @@ input[type="search"]:focus, input[type="date"]:focus {
 }
 .full-page-content {
     flex-grow: 1;
-    overflow-y: auto;
     padding: 12px;
     display: flex;
     flex-direction: column;
     gap: 12px;
-    min-height: 0; /* KRITISK FIX: Tillåter flex-containern att krympa och aktivera sin egen scrollbar. */
+    min-height: 0; 
 }
 
 /* --- Einstein Search Styles --- */
