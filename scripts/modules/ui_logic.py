@@ -18,12 +18,12 @@
 # * v7.0 (2025-08-17): Implementerat den fullständiga klient-sidiga logiken för "Einstein" RAG-systemet.
 # * v7.1 (2025-08-18): (Help me God - Domslut) Korrigerat ett `ReferenceError` genom att anropa `Xenova.pipeline` istället för `pipeline`. Detta löser problemet med att Transformers.js, som en ES-modul, inte exponerar sina funktioner globalt.
 # * v7.2 (2025-08-18): (Help me God - Domslut) Infört `import` för att hantera ES-modul-scope.
-# * SHA256_LF: b3c4d5e6f8a9b0c1d2e3f4a5b6c7d8e9f0a1b3c4d5e6f8a9b0c1d2e3f4a5b6c7d8
+# * v8.0 (2025-08-18): (Engrove Mandate) Stor refaktorering. All specifik Einstein-logik för att rendera resultat har flyttats till `ui_einstein_search.py`. Denna fil hanterar nu endast anrop och visning av den nya Einstein-containern. Den gamla sökknappslogiken har tagits bort.
+# * SHA256_LF: a528f870932c02118335359a9972b2505291b8a92357a9235c0211843b2b1a11
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
-# - Grundbulten v3.8: Denna ändring följer den uppgraderade processen för transparens.
-# - Help me God: Denna korrigering är resultatet av en grundorsaksanalys av ett systemiskt fel.
-# - GR7 (Fullständig Historik): Korrekt historik-header.
+# - Grundbulten v3.8: Denna fil har modifierats enligt den godkända planen.
+# - GR6 (Obligatorisk Refaktorisering): Logiken har delats upp enligt Single Responsibility Principle. Denna modul agerar nu som en orkestrerare istället för att innehålla all funktionalitet.
 
 JS_LOGIC = """
 import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1';
@@ -42,7 +42,7 @@ let currentModalFileContent = null;
 
 // --- Einstein Logic ---
 async function initializeEinstein() {
-    const statusEl = document.getElementById('einstein-status');
+    const statusEl = document.getElementById('einstein-status-bar');
     if (statusEl) statusEl.textContent = 'Laddar index...';
     try {
         const response = await fetch('einstein_index.json.gz');
@@ -50,7 +50,7 @@ async function initializeEinstein() {
         const compressed = await response.arrayBuffer();
         const decompressed = pako.inflate(compressed, { to: 'string' });
         EINSTEIN_INDEX = JSON.parse(decompressed);
-        if (statusEl) statusEl.textContent = `Index laddat (${EINSTEIN_INDEX.chunks.length} chunks)`;
+        if (statusEl) statusEl.textContent = `Redo (${EINSTEIN_INDEX.chunks.length} textfragment indexerade).`;
         console.log('Einstein RAG index loaded successfully.');
     } catch (e) {
         if (statusEl) statusEl.textContent = 'Fel vid laddning av index.';
@@ -70,12 +70,15 @@ function cosineSimilarity(vecA, vecB) {
     return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
 }
 
-async function performSemanticSearch(query, numResults = 5) {
+async function performSemanticSearch(query, numResults = 10) {
     if (!EINSTEIN_INDEX) throw new Error("Einstein-index är inte laddat.");
 
+    const statusEl = document.getElementById('einstein-status-bar');
     if (!EINSTEIN_PIPELINE) {
+        if (statusEl) statusEl.textContent = 'Laddar AI-modell (första sökningen)...';
         console.log('Laddar embedding-modell...');
         EINSTEIN_PIPELINE = await pipeline('feature-extraction', EINSTEIN_MODEL_NAME);
+        if (statusEl) statusEl.textContent = 'Modell laddad. Beräknar...';
         console.log('Embedding-modell laddad.');
     }
 
@@ -91,60 +94,17 @@ async function performSemanticSearch(query, numResults = 5) {
     return results.slice(0, numResults);
 }
 
-function renderEinsteinResults(container, results) {
-    container.innerHTML = ''; // Rensa tidigare resultat
-    if (results.length === 0) {
-        container.textContent = 'Inga relevanta resultat hittades.';
-        return;
-    }
-    
-    const fragment = document.createDocumentFragment();
-    results.forEach(result => {
-        const resultEl = document.createElement('div');
-        resultEl.className = 'einstein-result-item';
-
-        const headerEl = document.createElement('div');
-        headerEl.className = 'einstein-result-header';
-        
-        const sourceLink = document.createElement('a');
-        sourceLink.href = '#';
-        sourceLink.dataset.path = result.chunk.source;
-        sourceLink.textContent = result.chunk.source;
-        sourceLink.onclick = (e) => { e.preventDefault(); openFileModal(result.chunk.source); };
-        
-        const scoreEl = document.createElement('span');
-        scoreEl.className = 'einstein-result-score';
-        scoreEl.textContent = `Relevans: ${(result.similarity * 100).toFixed(1)}%`;
-
-        headerEl.appendChild(sourceLink);
-        headerEl.appendChild(scoreEl);
-
-        const contentEl = document.createElement('pre');
-        contentEl.className = 'einstein-result-content';
-        contentEl.textContent = result.chunk.content;
-
-        resultEl.appendChild(headerEl);
-        resultEl.appendChild(contentEl);
-        fragment.appendChild(resultEl);
-    });
-    container.appendChild(fragment);
-}
-
 
 // --- File Modal Logic ---
 async function openFileModal(filePath) {
     const modalOverlay = document.getElementById('file-modal-overlay');
-    const modal = document.getElementById('file-modal');
     const modalTitle = document.getElementById('modal-title');
     const modalLoader = document.getElementById('modal-loader');
-    const modalSpinner = document.getElementById('modal-loader-spinner');
     const modalError = document.getElementById('modal-error');
     const modalContentPre = document.getElementById('modal-content-pre');
 
     if (!modalOverlay || !modalTitle) return;
 
-    modal.classList.remove('einstein-mode');
-    modalSpinner.classList.add('hidden');
     currentModalFilePath = filePath;
     currentModalFileContent = null;
 
@@ -173,35 +133,6 @@ async function openFileModal(filePath) {
     }
 }
 
-async function openEinsteinModal(query) {
-    const modalOverlay = document.getElementById('file-modal-overlay');
-    const modal = document.getElementById('file-modal');
-    const modalTitle = document.getElementById('modal-title');
-    const modalLoader = document.getElementById('modal-loader');
-    const modalSpinner = document.getElementById('modal-loader-spinner');
-    const modalError = document.getElementById('modal-error');
-    const modalContentPre = document.getElementById('modal-content-pre');
-
-    modal.classList.add('einstein-mode');
-    modalTitle.textContent = `Fråga: "${query}"`;
-    modalLoader.classList.remove('hidden');
-    modalSpinner.classList.remove('hidden');
-    modalError.classList.add('hidden');
-    modalContentPre.innerHTML = '';
-    modalOverlay.classList.remove('hidden');
-
-    try {
-        const results = await performSemanticSearch(query);
-        renderEinsteinResults(modalContentPre, results);
-    } catch (error) {
-        console.error("Fel vid semantisk sökning:", error);
-        modalError.textContent = `Sökningen misslyckades: ${error.message}`;
-        modalError.classList.remove('hidden');
-    } finally {
-        modalLoader.classList.add('hidden');
-        modalSpinner.classList.add('hidden');
-    }
-}
 
 function closeFileModal() {
     const modalOverlay = document.getElementById('file-modal-overlay');
@@ -218,61 +149,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const leftPane = document.getElementById('left-pane');
     const resizer = document.getElementById('resizer');
     const ribbonTabs = document.querySelectorAll('.ribbon-tab');
-    const ribbonPanes = document.querySelectorAll('.ribbon-pane');
-    const fullPageContainer = document.getElementById('full-page-container');
-    const closeFullPageBtn = document.getElementById('close-full-page-btn');
+    
+    const performanceContainer = document.getElementById('full-page-container');
+    const closePerformanceBtn = document.getElementById('close-full-page-btn');
+    
+    const einsteinContainer = document.getElementById('einstein-container');
+    const closeEinsteinBtn = document.getElementById('close-einstein-btn');
+
     const modalOverlay = document.getElementById('file-modal-overlay');
     const modalCloseBtn = document.getElementById('modal-close-btn');
     const modalCopyPathBtn = document.getElementById('modal-copy-path');
     const modalCopyContentBtn = document.getElementById('modal-copy-content');
     const modalDownloadFileBtn = document.getElementById('modal-download-file');
-    const einsteinBtn = document.getElementById('einstein-toggle-btn');
-    const searchInput = document.getElementById('main-search-input');
     
     initializeEinstein();
-
-    if (einsteinBtn && searchInput) {
-        einsteinBtn.addEventListener('click', async () => {
-            if (einsteinBtn.classList.contains('active')) {
-                const query = searchInput.value.trim();
-                if (query) {
-                    await openEinsteinModal(query);
-                }
-            } else {
-                try {
-                    const text = await navigator.clipboard.readText();
-                    if (text.trim()) {
-                        searchInput.value = text.trim();
-                    }
-                    searchInput.placeholder = "Ange semantisk fråga...";
-                    einsteinBtn.classList.add('active');
-                    searchInput.focus();
-                } catch (err) {
-                    console.warn('Kunde inte läsa från urklipp:', err);
-                    searchInput.placeholder = "Kunde inte läsa urklipp. Skriv fråga...";
-                    einsteinBtn.classList.add('active');
-                    searchInput.focus();
-                }
-            }
-        });
-        
-        searchInput.addEventListener('blur', () => {
-             if (!searchInput.value.trim()) {
-                einsteinBtn.classList.remove('active');
-                searchInput.placeholder = "Sök filer...";
-            }
-        });
-
-        searchInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && einsteinBtn.classList.contains('active')) {
-                e.preventDefault();
-                const query = searchInput.value.trim();
-                if (query) {
-                    openEinsteinModal(query);
-                }
-            }
-        });
-    }
 
     if (modalOverlay) {
         modalCloseBtn.addEventListener('click', closeFileModal);
@@ -301,18 +191,27 @@ document.addEventListener('DOMContentLoaded', () => {
             const targetTab = tab.dataset.tab;
             ribbonTabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
-            ribbonPanes.forEach(pane => { pane.classList.toggle('active', 'tab-' + targetTab === pane.id); });
-            if (targetTab === 'performance') { fullPageContainer.classList.add('active'); } 
-            else { fullPageContainer.classList.remove('active'); }
+            
+            performanceContainer.classList.remove('active');
+            einsteinContainer.classList.remove('active');
+
+            if (targetTab === 'performance') { performanceContainer.classList.add('active'); } 
+            else if (targetTab === 'einstein') { einsteinContainer.classList.add('active'); }
         });
     });
 
-    if(closeFullPageBtn) {
-        closeFullPageBtn.addEventListener('click', () => {
-            fullPageContainer.classList.remove('active');
-            const verktygTab = document.querySelector('.ribbon-tab[data-tab=\"verktyg\"]');
-            if (verktygTab) verktygTab.click();
-        });
+    const closeAndSwitchToVerktyg = () => {
+        performanceContainer.classList.remove('active');
+        einsteinContainer.classList.remove('active');
+        const verktygTab = document.querySelector('.ribbon-tab[data-tab="verktyg"]');
+        if (verktygTab) verktygTab.click();
+    };
+
+    if(closePerformanceBtn) {
+        closePerformanceBtn.addEventListener('click', closeAndSwitchToVerktyg);
+    }
+    if(closeEinsteinBtn) {
+        closeEinsteinBtn.addEventListener('click', closeAndSwitchToVerktyg);
     }
     
     if(resizer && leftPane) {
@@ -329,4 +228,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 """
+
 # scripts/modules/ui_logic.py
