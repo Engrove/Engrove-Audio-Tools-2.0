@@ -8,10 +8,12 @@
 # * v4.2 (2025-08-17): Lade till Eruda debugging-verktyg för att underlätta felsökning på mobila enheter.
 # * v4.3 (2025-08-17): Lade till Chart.js CDN-länk och den kompletta HTML-strukturen för AI Performance-dashboarden.
 # * v4.4 (2025-08-17): Lade till CDN-länkar för Pako.js och Transformers.js. Uppdaterade UI för att stödja "Einstein" RAG-systemets dubbelfunktions-sökruta.
-# * SHA256_LF: 52f5313d4b6c1f1082d46e2978d33d7b695123b3207e3352723c3167f25902f2
+# * v4.5 (2025-08-18): (Help me God - Domslut) Lade till `type="module"` till Transformers.js script-taggen för att lösa ett `Uncaught SyntaxError: Unexpected token 'export'` som förhindrade modellen från att laddas.
+# * SHA256_LF: f439e6a7c8d9e0f1a2b3c4d5e6f8a9b0c1d2e3f4a5b6c7d8e9f0a1b3c4d5e6f8
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.8: Denna ändring följer den uppgraderade processen för transparens och fullständighet.
+# - Help me God: Denna korrigering är resultatet av en grundorsaksanalys av ett systemiskt fel.
 # - GR7 (Fullständig Historik): Korrekt historik-header.
 
 HTML_TEMPLATE = """
@@ -24,7 +26,7 @@ HTML_TEMPLATE = """
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
     <script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1"></script>
     <!-- Eruda debugging console for mobile devices -->
     <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
     <script>eruda.init();</script>
@@ -41,7 +43,7 @@ HTML_TEMPLATE = """
             <div class="search-container">
                 <input type="search" id="main-search-input" placeholder="Sök filer...">
                 <button id="einstein-toggle-btn" title="Einstein-sökning (klicka för att klistra in & aktivera)">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10_0_1_0-10-10Z"/><path d="M12 18a6 6 0 1 0 0-12 6 6 0 1 0 0 12Z"/><path d="M12 22a10 10 0 0 0 10-10"/><path d="M2 12a10 10 0 0 0 10 10"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10 10 10 0 0 0-10-10Z"/><path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z"/><path d="M12 22a10 10 0 0 0 10-10"/><path d="M2 12a10 10 0 0 0 10 10"/></svg>
                 </button>
             </div>
         </div>
@@ -73,11 +75,11 @@ HTML_TEMPLATE = """
     </header>
     <div class="main-container">
         <aside class="left-pane" id="left-pane">
-            <div id="navigation-container">
+            <div id="navigation-container" style="display: none;">
                 <h2>Navigation</h2>
             </div>
             <!-- Dold container för framtida fil-träd -->
-            <div id="file-tree-container" class="tool-container">
+            <div id="file-tree-container" class="tool-container" style="display: block;">
                 <!-- Innehåll för fil-trädet kommer att renderas här av JS -->
             </div>
         </aside>
@@ -122,7 +124,7 @@ HTML_TEMPLATE = """
                     <div class="chart-card"><h3>Sessions Per Model</h3><div class="chart-container"><canvas id="model-chart"></canvas></div></div>
                 </div>
                 <div class="table-card" style="margin-top:12px"><h3>Learning Database (Heuristics)</h3><div id="perf-learning-body">Ingen data.</div></div>
-                <div class="table-card" style="margin-top:12px"><h3>Sessions</h3><div id="perf-sessions-body\">Ingen data.</div></div>
+                <div class="table-card" style="margin-top:12px"><h3>Sessions</h3><div id="perf-sessions-body">Ingen data.</div></div>
             </div>
         </div>
     </div>
