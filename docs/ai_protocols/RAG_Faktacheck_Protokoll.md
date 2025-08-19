@@ -13,10 +13,12 @@ Tvingar fram retrieval‑augmented generation för faktapåståenden.
  5. Om hallucination upptäcks → kör **HAT‑tuning** (Hallucination‑Aware Tuning) vid nästa modell‑deploy.  <!-- RAG‑HAT﻿:contentReference[oaicite:6]{index=6} -->
  6. För medicin/juridik → växla till domän‑specifikt RAG‑index.
 
-**OUTPUT**
+**OUTPUT (RAG v1):**
 - Källor: topp 3 med DOI/URL.
 - Resultat: { conflictsPercent: <0–100>, flaggedClaims: <int> }
-- Signalering: om conflictsPercent ≥ 15 → sänk confidence med 0.10 (via Confidence_Protocol) och rekommendera Escalation L3.
+{ "flaggedClaims": <int>, "conflictsPercent": <0..100>, "sources": [{ "type":"doi|url", "value":"..." }] }
+
+**Signal:** conflictsPercent ≥ 15 ⇒ sänk confidence −0.10 och rekommendera L3.
 
 **Aktivering**  
 Implicit när PSV steg 4 triggas.
