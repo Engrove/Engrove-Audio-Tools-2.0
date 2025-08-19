@@ -1,5 +1,6 @@
 # BEGIN FILE: scripts/engrove_audio_tools_creator.py
 # scripts/engrove_audio_tools_creator.py
+#
 # === SYFTE & ANSVAR ===
 # Detta är ett centralt byggverktyg. Det genererar ett interaktivt UI baserat på
 # projektets filstruktur och metadata.
@@ -25,11 +26,12 @@
 #   Lade även till hantering för versions-platshållaren i HTML-mallen.
 # * v9.0 (2025-08-18): (Engrove Mandate) Modifierad för att importera och injicera den nya ui_einstein_search-modulen och dess datakälla (core_file_info.json).
 # * v10.0 (2025-08-19): (Help me God - Domslut) Korrigerat ett NameError genom att korrekt definiera variabeln 'js_full_context_string' innan den används.
+# * v10.1 (2025-08-19): (Help me God - Domslut) Återställt trunkerad logik och korrekt implementerat injicering av hela context.json.
 # * SHA256_LF: 013731f125a9e948300225dc951451ca026b1dc08599ba3ed5c9ef46e129bb2d
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.9: Denna fil har modifierats enligt en grundorsaksanalys.
-# - Help me God: Felet var ett `NameError`, vilket krävde en fundamental analys av dataflödet i skriptet.
+# - Help me God: Felet var ett `NameError` som ledde till en katastrofal trunkering, vilket krävde en fullständig återställning och verifiering.
 
 import os
 import sys
@@ -41,6 +43,8 @@ from modules.ui_file_tree import JS_FILE_TREE_LOGIC
 from modules.ui_performance_dashboard import JS_PERFORMANCE_LOGIC
 from modules.ui_einstein_search import JS_EINSTEIN_LOGIC
 
+UI_VERSION = "10.1"
+
 def calculate_node_size(node):
     if node['type'] == 'file':
         return node.get('size_bytes', 0)
@@ -51,11 +55,19 @@ def calculate_node_size(node):
     node['size_bytes'] = total_size
     return total_size
 
-def transform_structure_to_tree(structure, path_prefix=''):
+def transform_structure_to_tree(structure, relations_nodes, path_prefix=''):
     tree = []
-    for name, node in structure.items():
+    sorted_items = sorted(
+        structure.items(),
+        key=lambda item: (item[1].get('type', 'directory') != 'directory', item[0])
+    )
+    for name, node in sorted_items:
         current_path = os.path.join(path_prefix, name)
-        tags = [node.get('category', 'unknown')]
+        tags = []
+        if node['type'] == 'file':
+            relations_data = relations_nodes.get(current_path, {})
+            if relations_data.get('category'):
+                tags.append(relations_data['category'])
         
         tree_node = {
             "name": name,
@@ -65,33 +77,22 @@ def transform_structure_to_tree(structure, path_prefix=''):
             "size_bytes": node.get('size_bytes', 0)
         }
         if node['type'] == 'directory':
-            tree_node["children"] = transform_structure_to_tree(node.get('children', {}), current_path)
+            tree_node["children"] = transform_structure_to_tree(node.get('children', {}), relations_nodes, current_path)
         
         tree.append(tree_node)
     return tree
 
-def build_ui(output_html_path, context_json_path, relations_json_path, overview_json_path, core_info_json_path):
+def build_ui(output_html_path, context_data, relations_data, overview_data, core_info_data):
     try:
-        print("Läser in datakällor...")
-        with open(context_json_path, 'r', encoding='utf-8') as f:
-            context_data = json.load(f)
-        with open(relations_json_path, 'r', encoding='utf-8') as f:
-            relations_data = json.load(f)
-        with open(overview_json_path, 'r', encoding='utf-8') as f:
-            overview_data = json.load(f)
-        with open(core_info_json_path, 'r', encoding='utf-8') as f:
-            core_info_data = json.load(f)
-
         print("Bygger och berikar trädstruktur...")
         file_structure = context_data.get('file_structure', {})
+        relations_nodes = relations_data.get("graph_data", {}).get("nodes", {})
         calculate_node_size(file_structure)
-        file_tree_data = transform_structure_to_tree(file_structure)
+        file_tree_data = transform_structure_to_tree(file_structure, relations_nodes)
 
         print("Genererar UI-filer...")
         
-        # KORRIGERING: Definiera js_full_context_string här
         js_full_context_string = json.dumps(context_data)
-
         js_file_tree_string = json.dumps(file_tree_data)
         js_relations_string = json.dumps(relations_data)
         js_overview_string = json.dumps(overview_data)
@@ -113,26 +114,40 @@ def build_ui(output_html_path, context_json_path, relations_json_path, overview_
         html_content = html_content.replace("<!-- INJECT_FILE_TREE_LOGIC -->", f"<script type='module'>{final_js_file_tree}</script>")
         html_content = html_content.replace("<!-- INJECT_PERFORMANCE_LOGIC -->", f"<script type='module'>{JS_PERFORMANCE_LOGIC}</script>")
         html_content = html_content.replace("<!-- INJECT_EINSTEIN_LOGIC -->", f"<script type='module'>{final_einstein_logic}</script>")
-        html_content = html_content.replace("__VERSION_PLACEHOLDER__", version_tag)
+        html_content = html_content.replace("__VERSION_PLACEHOLDER__", f"{version_tag} - UI v{UI_VERSION}")
 
         with open(output_html_path, 'w', encoding='utf-8') as f:
             f.write(html_content)
 
     except Exception as e:
-        print(f"Ett oväntat fel uppstod under build-ui: {e}")
+        print(f"Ett oväntat fel uppstod under build-ui: {e}", file=sys.stderr)
         sys.exit(1)
 
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == 'build-ui':
         if len(sys.argv) != 7:
-            print("Användning: python engrove_audio_tools_creator.py build-ui <output_html> <context_json> <relations_json> <overview_json> <core_info_json>")
+            print("Användning: python engrove_audio_tools_creator.py build-ui <output_html> <context_json> <relations_json> <overview_json> <core_info_json>", file=sys.stderr)
             sys.exit(1)
-        output_html_path = sys.argv[2]
-        context_json_path = sys.argv[3]
-        relations_json_path = sys.argv[4]
-        overview_json_path = sys.argv[5]
-        core_info_json_path = sys.argv[6]
-        build_ui(output_html_path, context_json_path, relations_json_path, overview_json_path, core_info_json_path)
+        
+        try:
+            print("Läser in datakällor...")
+            with open(sys.argv[3], 'r', encoding='utf-8') as f: context_data = json.load(f)
+            with open(sys.argv[4], 'r', encoding='utf-8') as f: relations_data = json.load(f)
+            with open(sys.argv[5], 'r', encoding='utf-8') as f: overview_data = json.load(f)
+            with open(sys.argv[6], 'r', encoding='utf-8') as f: core_info_data = json.load(f)
+            
+            build_ui(sys.argv[2], context_data, relations_data, overview_data, core_info_data)
+            print("Klar. UI med dynamiskt filträd har genererats.")
+
+        except FileNotFoundError as e:
+            print(f"Fel: Kunde inte hitta en av indatafilerna: {e}", file=sys.stderr)
+            sys.exit(1)
+        except json.JSONDecodeError as e:
+            print(f"Fel: Kunde inte tolka en av JSON-filerna: {e}", file=sys.stderr)
+            sys.exit(1)
+        except Exception as e:
+            print(f"Ett oväntat fel uppstod: {e}", file=sys.stderr)
+            sys.exit(1)
     else:
         print("Okänt kommando. Tillgängliga kommandon: 'build-ui'")
         sys.exit(1)
