@@ -10,6 +10,18 @@
 # v1.0 (2025-08-09): Initial skapelse.
 #
 # === KONTROLLPUNKTER ===
+## OUTPUT (SIC v1 JSON)
+{
+  "timestamp": "<ISO8601>",
+  "checks": {
+    "heuristicConflicts": <int>,
+    "heuristicRedundancies": <int>,
+    "unreachableProtocols": <int>
+  },
+  "notes": "<kort sammanfattning>"
+}
+
+**PSV-gränsdragning:** Detta dokument utför hälsokontroll. Inga PSV-beslut fattas här. Stature_Report konsumerar denna JSON.
 
 **1. Heuristik-analys (`tools/frankensteen_learning_db.json`):**
    - **Konflikt-detektion:** Identifiera heuristiker vars `trigger`-villkor är identiska eller kraftigt överlappande men som föreskriver olika `mitigation`-åtgärder. Flagga dessa som `POTENTIAL_CONFLICT`.
