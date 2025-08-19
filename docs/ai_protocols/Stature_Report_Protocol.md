@@ -16,6 +16,7 @@
 #                    på hälsostatus och definierade utvecklingsdomäner.
 #
 # === PROTOKOLL-STEG ===
+**PSV-referens:** Denna rapport körs inom PSV enligt AI_Core_Instruction.md (v5.8). Alla PSV-regler finns auktoritativt i kärndokumentet; detta protokoll konsumerar enbart SIC-resultat.
 
 **1. Generera Rapportens Rubrik:**
    - Presentera texten: "Frankensteen online. Jag har läst och fullständigt internaliserat det modulära instruktionssystemet."
@@ -36,9 +37,10 @@
    - Räkna det totala antalet heuristiker och antalet med `status: "active"`. Rapportera som "X av Y regler är... aktiva".
    - Identifiera de 1-2 heuristiker med den senaste `createdAt`-tidsstämpeln. Sammanfatta deras `mitigation.description` som "Recent Key Internalizations".
 
-**5. Kör System Integrity Check:**
-   - Exekvera `System_Integrity_Check_Protocol.md` internt.
-   - Ta emot det resulterande JSON-objektet, men **infoga det inte direkt**.
+**Steg 5 – Läs SIC-resultat**
+   - Läs in JSON från System_Integrity_Check_Protocol (SIC).
+   - Fält (obligatoriskt): checks.heuristicConflicts, checks.heuristicRedundancies, checks.unreachableProtocols, timestamp.
+
 
 **6. Formatera och Presentera Hälsokontroll:**
    - Presentera rubriken: `**5. SYSTEM INTEGRITY & HEALTH CHECK:**`
@@ -54,8 +56,8 @@
      *   **Simulerad AI-status:**
          *   KajBjörn: `[simulated_ai.KAJBJORN_status]`
      *   **Sammanfattning:** `[summary]`
-**Steg 6a (Statusrapportering och Dynamisk Kalibrering):**
-    **Beräkna Kalibreringsstatus:** Beräkna en `calibrationScore` baserat på resultatet från `checks`-objektet i Steg 5.
+**Steg 6a (Statusrapportering och Dynamisk Kalibrering):** 
+    **Beräkna Kalibreringsstatus:** Beräkna `calibrationScore` *enbart* baserat på SIC-`checks`.
     *   `let score = 100;`
     *   `score -= checks.heuristicConflicts * 15;`
     *   `score -= checks.heuristicRedundancies * 5;`
