@@ -119,7 +119,7 @@ def build_ui(html_output_path, file_tree_json_string, project_overview, core_inf
     config_placeholder = '__INJECT_PROJECT_OVERVIEW__';
     injected_js_logic = JS_LOGIC.replace(config_placeholder, js_config_string)
 
-     context_placeholder = '__INJECT_FULL_CONTEXT__';
+    context_placeholder = '__INJECT_FULL_CONTEXT__';
     injected_js_logic = JS_LOGIC.replace(config_placeholder, js_config_string).replace(context_placeholder, js_full_context_string)
 
     core_info_placeholder = '__INJECT_CORE_FILE_INFO__'
@@ -139,6 +139,8 @@ def build_ui(html_output_path, file_tree_json_string, project_overview, core_inf
         raise RuntimeError(f"FATAL: Platshållaren '{file_tree_placeholder}' ersattes inte.")
     if config_placeholder in content:
         raise RuntimeError(f"FATAL: Platshållaren '{config_placeholder}' ersattes inte.")
+    if context_placeholder in content:
+        raise RuntimeError(f"FATAL: Platshållaren '{context_placeholder}' ersattes inte.")
     if core_info_placeholder in content:
         raise RuntimeError(f"FATAL: Platshållaren '{core_info_placeholder}' ersattes inte.")
     
