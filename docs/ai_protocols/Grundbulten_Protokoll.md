@@ -8,7 +8,7 @@ HISTORIK:
 * v2.0 (2025-08-16): Universell omarbetning.
 * v2.1 (2025-08-16): Syntes + tribunal + korrekt MD-kommentering.
 * v2.4 (2025-08-16): Anti-Placeholder-Grind, utfällda steg 2–8.
-* v3.0 (2025-08-16): REBORN: Hårda grindar G0–G4, evidensartefakter, typstyrd verifieringsmatris, CI-recept.
+* v3.0 (2025-08-16): REBORN: Hårda grindar G0, G1, G2, G3, G4, evidensartefakter, typstyrd verifieringsmatris, CI-recept.
 * v3.1 (2025-08-17): (Help me God) Gjorde verifiering extern och obligatorisk. Införde 'VERIFICATION_LOG' och 'LIGHTWEIGHT COMPLIANCE STATEMENT'.
 * v3.2 (2025-08-17): Skärpt kontextkrav (G0 -> 99%), förenklad rapportering, och lagt till obligatorisk kvantitativ diff-analys.
 * v3.3 (2025-08-17): (Help me God) Infört Steg 10b, "Pre-Flight Diff Check".
@@ -20,16 +20,16 @@ HISTORIK:
 * SHA256_LF: c4f8e07c968f371701cfc4978acc0f661021ac0446180b8c0f07984b5e3f08ac
 
 TILLÄMPADE REGLER (Frankensteen v5.7):
-* Grundbulten v3.8: Denna ändring följer den uppgraderade processen för transparens.
+* Grundbulten v3.9: Denna ändring följer den uppgraderade processen för transparens.
 * GR4 – Interaktionskontrakt: Självgranskning + extern dom; fast outputordning och ansvar.
 * GR5 – Tribunal/Red Team: KajBjörn validerar SPEC; StigBritt bryter planen före implementation.
 * GR6 – Processrefaktorering: Reproducerbar pipeline med grindar och verktygssteg.
 * GR7 – Historik & spårbarhet: Full historik i header, BEGIN/END-sentineller, inga platshållare.
-* GB-Gates – G-1, G0, G2-G4 (nedan) är tvingande och aborterar på brott.
+* GB-Gates – G-1, G0, G1, G2, G3, G4, G5 (nedan) är tvingande och aborterar på brott.
 * No-Guess-Pledge – Inga påståenden utan källa; fråga vid osäkerhet.
 * Help me God: Denna uppgradering är en direkt åtgärd mot en identifierad tvetydighet.
 
-Datum: 2025-08-18
+Datum: 2025-08-19
 Extern granskare: Engrove (godkänd för införing i Steg 10)
 END HEADER -->
 
@@ -53,7 +53,10 @@ END HEADER -->
     - Publikt CLI-/API-kontrakt (signaturer, argv, flaggor)
     - Kritiska imports (lista och existens)
     - Sentinel-ersättningar (inga platshållare kvar)
-    
+    **Policy:** Förbjud “uppskattad” diff
+      - AI får inte rapportera diff utan CI-beräknade värden.
+      - Om referensfil saknas eller hash inte matchar ⇒ AVBRYT enligt G-1 och begär base_checksum_sha256.
+
   **Trunkeringsdetektor:** jämför SHA-256 av tre normerade segment (HEAD/MID/TAIL) före/efter.
     - Om TAIL_AFTER ≠ förväntat vid små diffar eller om TAIL saknas ⇒ AVBRYT (TRUNCATION SUSPECTED).
   **Start/Slut-bevarare:**
@@ -83,7 +86,7 @@ END HEADER -->
   `# scripts/modules/ui_logic.py`
   `# Denna modul hanterar all generell UI-interaktivitet för det genererade verktyget,`
   `# såsom hantering av modals, resizer och meny-logik.`
-- **1e. Kommentarskoriigering:** Felaktiga kommentar-syntax vid uppdatering av fil ska ovillkorligen rättas enligt punkt 1c syntax.
+- **1e. Kommentarskorrigering:** Felaktiga kommentar-syntax vid uppdatering av fil ska ovillkorligen rättas enligt punkt 1c syntax.
 - **1f. Hash-evidens i fil-header (Obligatorisk):** Vid leverans **MÅSTE** en rad läggas till i `HISTORIK`-sektionen med den slutgiltiga, verifierade hashen. Format: `* SHA256_LF: <hash>`.
 
 
@@ -149,7 +152,7 @@ END HEADER -->
         - LINES_AFTER = LINES_BEFORE + added_lines − deleted_lines (måste hålla).
         - Δbytes = BYTES_AFTER − BYTES_BEFORE (rapporterat).
         - **Tröskel:** |added_lines − deleted_lines| / LINES_BEFORE ≤ 10 % utan REFRAKTOR-FLAG.
-  - **Abortregel (tvingande):** Om någon konsistenskontroll faller eller ett tecken på trunkering upptäcks (se D) ⇒ AVBRYT och markera “QD-INCONSISTENT”.
+  - **Abortregel (tvingande):** Om någon konsistenskontroll faller eller ett tecken på trunkering upptäcks (se G5 Trunkeringsdetektor) ⇒ AVBRYT och markera “QD-INCONSISTENT”.
 - **Hash-kedja: base_sha256=<...> → final_sha256=<...> [PASS|FAIL]**
 - **VERIFICATION_LOG och Compliance ska innehålla tabell:**
   >  | Metric    | Before | After | Added | Deleted | Check              |
@@ -198,7 +201,7 @@ END HEADER -->
     >  | Result    |        |       |       |         | **PASS/FAIL**      |
     - Fail ⇒ AVBRYT.
   - **Compliance-text – exempelrad:**
-    - **Kvantitativ diff:** [PASS] Lb=1234, La=1184, +15/−65 (Δ=−50); Bytes Δ=−3 812; Non-empty: 1021→987; Konsistens=PASS.
+    - **Kvantitativ diff:** [PASS/NOPASS] Lb=1234, La=1184, +15/−65 (Δ=−50); Bytes Δ=−3 812; Non-empty: 1021→987; Konsistens=PASS.
    
 ## Steg 10: Självgranskning & extern dom
 - **10a. Självgranskning:** Intern bekräftelse eller vederläggande att alla steg i "Grundbulten" protokoll nuvarande har följts eller inte kunnat följas.
@@ -226,14 +229,13 @@ END HEADER -->
 - Trigger: Vid misslyckande ökas räknaren med +1.
 - Tvingande Eskalering 1: När räknaren når 1 eller 2 (inför andra eller tredje försöket) är inkrementella fixar förbjudna. Aktivera omedelbart Help_me_God_Protokoll.md.
 - Tvingande Eskalering 2: När räknaren når 3 (inför fjärde försöket) är inkrementella fixar förbjudna. Överväg om vidare felsökning är befogat eller om sessionen har nått en bekräftad ändpunkt. Beskriv orsak till misslyckandet.
-- META‑PROTOKOLL: Grunbulten Token Counter (GTC)
+- META‑PROTOKOLL: Grundbulten Token Counter (GTC)
 - Not (bindning till AI_Core_Instruction FL-D): Vid två misslyckade leveranser för samma fil/fel ⇒ AVBRYT enligt denna Grundbult och eskalera till Help_me_God_Protokoll.md. Inkrementella fixar förbjudna tills extern analys slutförd.
 
 
 ---
 
 ## Bilaga A: Typstyrd verifieringsmatris (minimikrav)
-- **Python (`.py`)**: `ast.parse` ⇒ PASS; ruff/flake8 ⇒ 0 fel; `mypy --strict` ⇒ 0 fel; imports resolvade; om tester finns: `pytest -q` (seed=42).
 - **Vue/JS (`.vue`, `.js`)**: `vue-tsc --noEmit` (även JS via JSDoc/tsconfig) ⇒ PASS; ESLint ⇒ 0 fel; Vite build dry-run ⇒ OK.
 - **JSON (`.json`)**: Validera mot tillämpligt **JSON Schema**; `$schema` krävs; inga kommentarer; stabil nyckelordning där det är norm.
 - **YAML (`.yml/.yaml`)**: `yamllint` ⇒ 0 fel; schema-validering om finns.
