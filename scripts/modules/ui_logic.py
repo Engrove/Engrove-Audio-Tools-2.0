@@ -27,8 +27,8 @@
 # * v9.0 (2025-08-18): (K-MOD Plan) Omarbetat flik- och panelhantering för att stödja den nya "Start"- och "Data"-layouten. Logiken är nu centraliserad i `handleViewSwitch`.
 # * v9.1 (2025-08-18): Implementerat händelselyssnare för alla nya kontroller i "Start"- och "Data"-flikarna.
 # * v9.2 (2025-08-18): Omarbetat "Markera Kärndokument" för att vara additivt och dynamiskt inkludera alla protokollfiler.
-# * v10.0 (2025-08-18): Implementerat den fullständiga, robusta `generateFiles()`-funktionen, inklusive hash-verifiering och metadata-berikning.
-# * SHA256_LF: a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5
+# * v10.0 (2025-08-19): Implementerat den fullständiga, robusta `generateFiles()`-funktionen, inklusive hash-verifiering och metadata-berikning.
+# * SHA256_LF: 2d89061efc7bcfba4969729601fd120ec911914ffbad544a53124f5a9cd72a42
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, reviderade planen.
@@ -39,8 +39,8 @@ JS_LOGIC = """
 import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1';
 
 // Injektionspunkt för projektkonfiguration (repo/branch)
-const ENGROVE_CONFIG = __INJECT_PROJECT_OVERVIEW__;
-const FULL_CONTEXT = __INJECT_FULL_CONTEXT__; // Ny, komplett datakälla
+const ENGROVE_CONFIG = __INJECT_OVERVIEW_JSON_PAYLOAD__;
+const FULL_CONTEXT = __INJECT_CONTEXT_JSON_PAYLOAD__; // Ny, komplett datakälla
 
 // Statiska sökvägar för "Markera Kärndokument"
 const STATIC_CORE_PATHS = [
@@ -180,9 +180,15 @@ window.openFileModal = openFileModal;
  * inklusive hash-verifiering och metadata-berikning.
  */
 async function generateFiles() {
-    const sels = window.selectedFiles ? window.selectedFiles() : [];
-    if (sels.length === 0) {
-        alert('Välj minst en fil.');
+    const outputElement = document.getElementById('out');
+    outputElement.textContent = 'Genererar payload...';
+    document.getElementById('copy').disabled = true;
+    document.getElementById('download').disabled = true;
+
+    const selectedPaths = window.selectedFiles ? window.selectedFiles() : [];
+    if (selectedPaths.length === 0) {
+        outputElement.textContent = 'Fel: Inga filer valda.';
+        alert('Välj minst en fil från trädet.');
         return;
     }
 
@@ -192,16 +198,19 @@ async function generateFiles() {
     const relations = FULL_CONTEXT.file_relations?.graph_data?.nodes || {};
     const contextHashes = FULL_CONTEXT.hash_index?.sha256_lf || {};
 
-    for (const path of sels) {
+    for (const path of selectedPaths) {
         try {
             const content = await fetchText(path);
             const actual_sha256 = await sha256HexLF(content);
-            const expected_sha256 = contextHashes[actual_sha256] ? actual_sha256 : Object.keys(contextHashes).find(key => contextHashes[key].includes(path));
+            
+            // P-HV: Jämför hash med den från den initiala kontexten
+            const expected_sha256 = Object.keys(contextHashes).find(key => contextHashes[key].includes(path));
 
             if (expected_sha256 && actual_sha256 !== expected_sha256) {
                 validationReport.mismatches.push({ path, expected_sha256, actual_sha256 });
             }
 
+            // Berika med metadata
             const metadata = {
                 purpose_and_responsibility: coreInfo[path]?.purpose_and_responsibility || 'N/A',
                 criticality_score: relations[path]?.criticality_score || 0
@@ -218,15 +227,11 @@ async function generateFiles() {
         validationReport.status = 'WARNING';
     }
 
-    const payload = { files_payload: filesPayload, validation_report: validationReport };
+    const finalPayload = { files_payload: filesPayload, validation_report: validationReport };
     const isCompact = document.getElementById('compact-json')?.checked;
-    const jsonString = isCompact ? JSON.stringify(payload) : JSON.stringify(payload, null, 2);
+    const jsonString = isCompact ? JSON.stringify(finalPayload) : JSON.stringify(finalPayload, null, 2);
 
-    const outEl = document.getElementById('out');
-    if(outEl) {
-        outEl.textContent = jsonString;
-    }
-    
+    outputElement.textContent = jsonString;
     document.getElementById('copy').disabled = false;
     document.getElementById('download').disabled = false;
 }
@@ -292,8 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectAllBtn = document.getElementById('select-all');
     const deselectAllBtn = document.getElementById('deselect-all');
     const selectCoreBtn = document.getElementById('select-core');
-    const createContextBtn = document.getElementById('create-context');
-    const createFilesBtn = document.getElementById('create-files-btn'); // ID uppdaterat
+    const createFilesBtn = document.getElementById('create-files-btn');
     const clearSessionBtn = document.getElementById('clear-session');
     const refreshDataBtn = document.getElementById('refresh-data');
     
@@ -322,8 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if(selectAllBtn) selectAllBtn.addEventListener('click', () => window.selectAllInTree && window.selectAllInTree());
     if(deselectAllBtn) deselectAllBtn.addEventListener('click', () => window.deselectAllInTree && window.deselectAllInTree());
     if(selectCoreBtn) selectCoreBtn.addEventListener('click', () => window.addPathsToSelection && window.addPathsToSelection(STATIC_CORE_PATHS, DYNAMIC_CORE_PATHS));
-    if(createContextBtn) createContextBtn.addEventListener('click', () => window.generateContext && window.generateContext());
-    if(createFilesBtn) createFilesBtn.addEventListener('click', generateFiles); // Ny koppling
+    if(createFilesBtn) createFilesBtn.addEventListener('click', generateFiles);
     if(clearSessionBtn) clearSessionBtn.addEventListener('click', clearSession);
     if(refreshDataBtn) refreshDataBtn.addEventListener('click', reloadData);
 
