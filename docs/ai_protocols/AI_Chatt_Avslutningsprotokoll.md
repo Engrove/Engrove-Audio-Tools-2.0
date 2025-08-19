@@ -36,8 +36,12 @@ Det aktiveras vid slutet av en arbetssession och specificerar den exakta process
 **Steg 0: Bearbetning av In-Memory Register (ISR-Kön)**
 Som det allra första steget i avslutningsprocessen kommer jag att hämta alla sammanfattade interaktioner från den interna `isr_write_queue` som har byggts upp av `DP-MAINTAIN-ISR-01`-protokollet under sessionen. Denna kö utgör den mest kompletta och tillförlitliga källan för dialogen. Den kommer att användas som primär datakälla för att konstruera `Chatthistorik`-artefakten i efterföljande steg, vilket minimerar risken för kontextförlust.
 
-1. **Block A – Builder-Input v1** (fungerar som ren input till Python-skriptet `historical_reconstruction_builder.py` (python skriptet ej bifogat, python skriptets funktionen får ej antagas), full bakåtkompatibilitet). 
-2. **Block B – NextSessionContext v1** (planering och kontext för nästa session)
+1. **Block A – Builder-Input v1:**
+   - fungerar som ren input till Python-skriptet `historical_reconstruction_builder.py` (python skriptet ej bifogat, python skriptets funktionen får ej antagas), full bakåtkompatibilitet.
+   - "sicReport": <SIC v1 JSON enligt System_Integrity_Check_Protocol.md>
+   - "statureSummary": { "status": "OK|WARNING|ERROR", "calibrationScore": <0–100> }
+3. **Block B – NextSessionContext v1:**
+   - planering och kontext för nästa session
 
 Inget annat innehåll får förekomma före, mellan eller efter dessa två block.
 
