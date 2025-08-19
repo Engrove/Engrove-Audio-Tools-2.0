@@ -8,4 +8,6 @@
 6. Om *antingen* SE eller Shannon‑spridning > τ → aktivera `RAG_Faktacheck`.
 7. Logga `entropy` och `semantic_entropy` i interna metrics‑loggen.
 8. **Entropy‑Watchdog:** om SE ökar mellan iteration `attempt_id n` och `n+1`, avbryt auto‑retry och begär ny data.  
-9. Returnera majoritets‑ eller median‑variant.  
+9. Returnera majoritets‑ eller median‑variant.
+10. Vid flagg (SE eller Shannon > 0.15): initiera RAG_Faktacheck och signalera Confidence_Protocol att applicera −0.10 samt överväg L3.
+
