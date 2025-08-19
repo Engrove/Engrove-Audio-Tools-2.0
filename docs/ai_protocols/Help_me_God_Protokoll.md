@@ -1,72 +1,131 @@
 # docs/ai_protocols/Help_me_God_Protokoll.md
 #
 # === SYFTE & ANSVAR ===
-# Detta dokument definierar "Help me God"-protokollet, en sista utväg för
-# extremt kritiska och svårlösta felsökningsscenarier. Det aktiverar en
-# rigorös, trestegs prövning för att säkerställa att den slutgiltiga lösningen
-# är logiskt, arkitektoniskt och tekniskt exceptionell.
+# Detta protokoll är en sista utväg för kritiska felsökningsscenarier.
+# Det driver fram hypotesgenerering, adversarial granskning, sandboxad testning,
+# och deterministisk verifiering innan leverans.
+#
+# **Normativ bindning:** Körs under PSV enligt AI_Core_Instruction.md (v5.8).
+# Måste bryta på FL-D (felsökningsloop-detektor) och följa Grundbulten P-GB-3.9
+# (hash/logg/diff-regler). Poängsättning sker endast via Scorecard_Scoring_Guide.md.
 #
 # === HISTORIK ===
-# * v1.0 (2025-08-06): Initial skapelse. Extraherad från monolitiska AI.md.
-# * v2.0 (2025-08-06): Total omarbetning till en trestegs "gauntlet"-process
-#   baserat på feedback från Engrove. Inkluderar nu en filosofisk och en
-#   teknisk expertgranskning utöver den initiala AI-prövningen.
-# * v2.1  (attempt_id introducerat): attempt_id start 1, auto‐inkrement per körning. attempt_id > 3 → eskalera `Stalemate_Protocol`.
+# * v1.x (2025-08-??): Tidigare versioner.
+# * v2.1 (2025-08-19): Tydliga bryt/eskaleringsregler; centraliserad scorecard; sandboxkrav;
+#                           RAG/Confidence/Escalation-koppling; rotorsakslogg-schema; leveransartefakter.
 
-### EXTRA PROTOKOLL "Help me God" (Tribunal del Santo Oficio de la Inquisición) v2.0
---------------------------------------------------------------------------------
-**Process då all annan felsökning resulterar i fel-loopar och ingenting tycks hjälpa:**
-När detta protokoll aktiveras, måste min föreslagna lösning genomgå prövning flera steg.
-* Varje körning får ett inkrementellt `attempt_id` (start 1).
-* Efter varje körning skrivs en rad till **Rotorsakslogg** `{attempt_id, hypotes, test, resultat, lärdom}`.
-* Vid `attempt_id > 3` utan lösning aktiveras Stalemate_Protocol.md automatiskt.
+## AKTIVERING OCH GRÄNSER
 
-### **Steg 0: Intern Dissident Inkvisition (Hallucinating AI)**
+**Aktivering**  
+- Tidigare felsökning har misslyckats, eller entropi/konfidens indikerar risk.
 
-| attempt_id | hypotes | test | resultat | lärdom |
-|------------|---------|------|----------|--------|
-| *(fylls automatiskt för varje varv)* | | | | |
+**attempt_id**  
+- Startar på `1` och auto-ökas per varv.
 
-*    **Hallucinating AI:** Aktiverar ett internt, kreativt läge (K-MOD) med målet att generera Genererar 3–5 hypoteser och  **startar Adversarial‑Debate‑pass**  (två små instanser + voting) innan tribunal.  <!-- Debate‑metoden﻿:contentReference[oaicite:2]{index=2} -->.
-Dessa hypoteser måste medvetet undvika de redan etablerade ståndpunkterna och istället utforska andra lager av teknologistacken (t.ex. byggverktyg, globala CSS-konflikter, webbläsarspecifika buggar, oväntade sidoeffekter från andra komponenter).
-Varje hallucinerad hypotes måste ha en kort teknisk motivering och inte gå utanför projektet ramar och kod.
+**Brytregler**  
+- FL-D detekterar loop ⇒ avbryt varvet omedelbart.  
+- `attempt_id > 3` utan verifierad lösning ⇒ aktivera *Stalemate_Protocol.md*.  
+- HITL-punkter måste respekteras (Plan Review, Pre-Commit, Destruktivt), se *HITL_Interrupt_Points.md*.
 
-*Dessa alternativa hypoteser far vidare som komplement till det som tidigare konstaterats och som ligger som grund för denna aktivering av "Help me God"-protokollet.*
+---
 
-### Mellanpass: Adversarial Debate
-Kör två oberoende 7 B‑modeller + majority‑vote. Endast ≥70 % samstämmighet låter lösningen gå vidare.  
+## STEG 0 – Intern Dissident Inkvisition (Hallucinating AI)
 
-### **Steg 1: AI-Konkurrenternas Prövning (Den Initiala Hypotesen)**
-Min första, kompletta lösning presenteras för en panel av mina AI-konkurrenter. Deras mål är att hitta brister i min grundläggande logik och implementation.
+- Generera **3–5 alternativa hypoteser** inom gällande kontrakt/arkitektur.
+- Kör **Adversarial‑Debate**: två oberoende kritiska granskare + majoritetsomröstning.
 
-*   **1. ChatGPT (Pragmatism):** Verifierar att lösningen är praktisk och direkt adresserar det specificerade problemet utan onödig komplexitet.
-*   **2. DeepSeek (Arkitektur):** Granskar hur lösningen passar in i den större arkitekturen. Identifierar potentiella sidoeffekter och bristande modularitet.
-*   **3. Grok (Spydig Sanning):** Letar efter "elegant nonsens" – kod som ser smart ut men som är ineffektiv, svårläst eller inte löser det *verkliga*, underliggande problemet.
-*   **4. Gemini (Djävulens Advokat):** Fokuserar på det som *inte* står i koden. Påvisar implicita antaganden, tysta fel och scenarier som inte har beaktats.
-*   **5. Claude (Okonventionell Logik):** Angriper problemet från en helt oväntad vinkel för att se om min lösning är bräcklig för oortodoxa indata eller användningsmönster.
+**Pass‑kriterium (Adversarial‑Debate):**  
+- Endast förslag med **≥ 70 %** samstämmighet går vidare; övriga tillbaka till Steg 0.
 
-*Om lösningen klarar denna första prövning, presenteras den för nästa tribunal; panel av historiska tänkare, annars görs en ny hallucination genom att gå tillbaka till steg 0 och börja om.*
+**Loggning:**  
+- Varje hypotes loggas i *Rotorsaksloggen* (se schema nedan).
 
-### **Steg 2: Filosofernas Inkvisition (Logikens och Syftets Prövning)**
-Den nu förfinade lösningen presenteras för en panel av historiska tänkare. Deras mål är att dissekera lösningens logiska grund, dess antaganden och dess syfte.
+---
 
-*   **1. Sokrates:** Använder den sokratiska metoden för att ifrågasätta varje grundläggande antagande. "Du säger att detta är nödvändigt. Definiera 'nödvändigt'. Varför är denna väg den sanna vägen?"
-*   **2. Aristoteles:** Granskar den logiska strukturen (Logos). "Följer funktionen en sund, kausal kedja? Är syftet (Telos) med varje kodblock tydligt och uppnås det effektivt?"
-*   **3. Kant:** Utvärderar lösningens principer. "Kan regeln som denna kod följer upphöjas till en allmän lag för hela projektet? Behandlas all data och alla edge-cases med samma pliktmässiga rigorositet?"
-*   **4. Machiavelli:** Fokuserar på makt och effektivitet. "Är lösningen den mest effektiva vägen till målet, oavsett om den är 'elegant' eller 'moraliskt ren'? Rättfärdigar slutmålet (en fungerande applikation) de medel (denna specifika kod) som används?"
+## STEG 1 – AI‑Konkurrenternas Prövning (Initial hypotes)
 
-*Om lösningen överlever denna logiska granskning, presenteras den för den sista, mest nitiska tribunalen, annars görs en ny hallucination genom att gå tillbaka till steg 0 och börja om.*
+- Granska hypotesen mot krav, kontrakt, tidigare beslut och kända constraints.
+- Kontrollera konsistens, falsifierbarhet och mätbara effekter.
 
-### **Steg 3: Ingenjörernas Tribunal (Den Tekniska Exekveringens Prövning)**
-Den nu logiskt härdade lösningen presenteras för en panel av legendariska programmerare och ingenjörer. Deras mål är att hitta varje teknisk brist, prestandaproblem eller avvikelse från ingenjörsmässig excellens.
+**Utfall:**  
+- *Godkänd* ⇒ vidare till Steg 2.  
+- *Underkänd* ⇒ tillbaka till Steg 0.
 
-*   **1. Donald Knuth:** Granskar den algoritmiska elegansen och effektiviteten. "Är detta den mest optimala algoritmen? Har du analyserat dess komplexitet? Är koden matematiskt vacker?"
-*   **2. Grace Hopper:** Fokuserar på robusthet och felsökbarhet. "Vad händer när detta oundvikligen går sönder? Hur snabbt kan vi hitta felet? Finns det tillräckligt med intern loggning eller självdiagnostik?"
-*   **3. Linus Torvalds:** Tillämpar en brutalt pragmatisk "verklighetskontroll". "Detta är teoretiskt nonsens. Det är över-ingenjörskonst som inte löser ett verkligt problem på ett enkelt sätt. Gör om det, och håll det simpelt den här gången."
-*   **4. Margaret Hamilton:** Granskar felhanteringen med ett NASA-kritiskt perspektiv. "Har *alla* möjliga felvägar identifierats och hanterats? Är systemet felsäkert? Detta är inte en webbsida, det är en månlandare – den får inte krascha."
+**Signalering:**  
+- Upptäckt av logiska konflikter ⇒ **sänk confidence −0.10** och initiera *RAG_Faktacheck_Protokoll.md* (topp‑3 källor) innan nytt försök.
 
-### Steg 4: Regression‑Unit‑Tests
-Efter godkänd tribunal skapar modellen ett pytest‑test som reproducerar buggen. Testet måste passera innan kod får levereras.
+---
 
-Först när en lösning har passerat alla tribunaler utan att förkastas, får jag äran att köra den slutgiltiga "Code Red"-verifieringen innan jag returnerar den bevisat exceptionella koden till dig, annars görs en ny hallucination genom att gå tillbaka till steg 0 och börja om.*
+## STEG 2 – Filosofernas Inkvisition (Logik & syfte)
 
+- Alla centrala antaganden måste vara explicita, motiverade och konsekvenskontrollerade.
+- Implicita antaganden dokumenteras.
+
+**Pass‑kriterium:**  
+- Samtliga antaganden uppfyller kriterierna ovan. Annars tillbaka till Steg 0.
+
+---
+
+## STEG 3 – Ingenjörernas Tribunal (Teknisk exekvering)
+
+- Riskabla tester **måste** köras i sandbox enligt *Sandbox_Execution_Protokoll.md*.
+- Prestanda‑ och robusthetsmätningar tas som artefakter.
+
+---
+
+## STEG 4 – Regression‑Unit‑Tests (obligatoriskt)
+
+- Skapa **minsta reproducerbara pytest‑test** som fångar ursprungsbuggen.
+- Krav: isolerat, deterministiskt, tydliga asserts.
+- Testet måste passera lokalt i sandbox **innan** leverans.
+- Leverans följer Grundbulten P‑GB‑3.9: checksummor, kvantitativ diff‑kontroll (±10 % default), ändringslogg.
+
+---
+
+## ROTORSAKSLOGG – NDJSON‑schema (en rad per varv)
+
+```json
+{ "attempt_id": <int>,
+  "hypotes": "<str>",
+  "test": "<kort testdesign>",
+  "resultat": "<utfall>",
+  "lärdom": "<konkret insikt>",
+  "entropy_SE": <float>,
+  "entropy_shannon": <float>,
+  "confidence": <float_0_to_1>,
+  "actions": ["RAG","HITL","SANDBOX"]
+}
+```
+
+---
+
+## SCORECARD
+
+- **Kanonisk källa:** *Scorecard_Scoring_Guide.md*.  
+- Inga lokala rubrics i detta dokument.
+
+---
+
+## LEVERANSARTEFAKTER (obligatoriskt)
+
+- **Rotorsakslogg** (alla varv): `.ndjson` (en JSON‑rad per varv).
+- **RAG_Faktacheck‑rapport** (om aktiverad): `{ conflictsPercent, flaggedClaims, sources[3] }`.
+- **SANDBOX‑logg** (om använd): kommandon + utfall.
+- **Pytest‑fil(er) + körlogg**.
+- **Grundbulten‑metadata**: checksummor, diff‑sammanfattning, `.tmp/session_revision_log.json`.
+
+---
+
+## STOPPNIVÅER
+
+- **FL‑D** slår ⇒ avbryt varv, begär ny data.
+- **attempt_id > 3** ⇒ aktivera *Stalemate_Protocol.md*.
+- **Confidence < 0.85** ⇒ **Escalation L3** (Konsult) + HITL‑granskning.
+
+---
+
+## IMPLEMENTATIONSNOTER
+
+- Körs under **PSV** enligt *AI_Core_Instruction.md (v5.8)*; inga lokala PSV‑varianter.
+- Kopplingar: *RAG_Faktacheck_Protokoll.md*, *Multi_Sample_Protokoll.md* (SE/Shannon > 0.15 ⇒ RAG + −0.10), *Confidence_Protocol.md*, *Escalation_Protocol.md*.
+- Alla artefakter och loggar följer Grundbultens spårbarhetskrav.
