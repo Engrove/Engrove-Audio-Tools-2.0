@@ -25,3 +25,7 @@
 - Delsteg:
 - Beslutsnivå: DT-2 / DT-3
 - Godkännande: Engrove (ja/nej), datum:
+
+## 6) Handoff
+- HITL Plan Review: presentera planen och invänta OK.
+- Nästa steg: PSV enligt AI_Core_Instruction.md (v5.8).
