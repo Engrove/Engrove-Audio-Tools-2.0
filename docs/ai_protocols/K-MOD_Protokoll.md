@@ -17,6 +17,7 @@
 # === KANONISKT RESULTAT ===
 # Ett JSON-objekt KMOD_Output_v1 som sammanfattar alternativ, analys och rekommendation.
 # Skrivs till reports_queue + ISR. Ingen produktionskod genereras.
+#
 
 ## 1) Aktivering, tid & cooldown
 - **Aktivering (manuell):** Engrove kommando “Starta K-MOD”.
