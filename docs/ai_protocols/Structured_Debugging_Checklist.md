@@ -19,6 +19,8 @@
 - QG-A..E passerar (AI_Core_Instruction.md).
 - Micro-Retro notis skapad.
 
+**Leverans:** Patch enligt anchor_diff_v3.0 (Diff_Protocol_v3.md) med base_checksum_sha256. Logga i .tmp/session_revision_log.json.
+
 **Anti-mönster att undvika**
 - ”HTML i stället för JSON” utan att bevisa orsak.
 - Konfig-gissning utan loggbevis.
