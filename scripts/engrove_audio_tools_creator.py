@@ -1,8 +1,9 @@
-# BEGIN FILE: scripts/engrove_audio_tools_creator.py
 # scripts/engrove_audio_tools_creator.py
+#
 # === SYFTE & ANSVAR ===
 # Detta är ett centralt byggverktyg. Det genererar ett interaktivt UI baserat på
 # projektets filstruktur och metadata.
+#
 # === HISTORIK ===
 # * v1.0 (2025-08-15): Initial skapelse.
 # * v5.4 (2025-08-16): (EXTERN DOM #2) Korrigerat semikolon-injektion.
@@ -23,12 +24,11 @@
 #   Detta skript injicerar nu ett direkt JS-objekt-literal, vilket löser `SyntaxError: "[object Object]" is not valid JSON`.
 #   Lade även till hantering för versions-platshållaren i HTML-mallen.
 # * v9.0 (2025-08-18): (Engrove Mandate) Modifierad för att importera och injicera den nya ui_einstein_search-modulen och dess datakälla (core_file_info.json).
-# * v10.0 (2025-08-19): (Help me God - Domslut) Omarbetad för att ta bort statisk injicering av context.json. UI-logiken kommer nu att hämta denna fil asynkront.
-# * SHA256_LF: UNVERIFIED
+# * SHA256_LF: d51e6005d53531b212cc0a14b30e060c4973347c4b7b25055b80261327142721
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
-# - Grundbulten v3.9: Denna fil har modifierats enligt en grundorsaksanalys.
-# - Help me God: Den bräckliga datainjektionsmetoden har ersatts med en robust, asynkron arkitektur.
+# - Grundbulten v3.8: Denna fil har modifierats enligt den godkända planen.
+# - GR4 (API-kontraktsverifiering): Skriptets kommandorads-API har uppdaterats för att acceptera en ny, obligatorisk datakälla.
 
 import os
 import sys
@@ -40,112 +40,158 @@ from modules.ui_file_tree import JS_FILE_TREE_LOGIC
 from modules.ui_performance_dashboard import JS_PERFORMANCE_LOGIC
 from modules.ui_einstein_search import JS_EINSTEIN_LOGIC
 
-def calculate_node_size(node):
-    """Beräknar rekursivt storleken på en nod (fil eller mapp)."""
-    if node['type'] == 'file':
-        return node.get('size_bytes', 0)
-    elif node['type'] == 'directory':
-        total_size = 0
-        for child in node.get('children', []):
-            total_size += calculate_node_size(child)
-        node['size_bytes'] = total_size
-        return total_size
-    return 0
+UI_VERSION = "8.0"
 
-def transform_structure_to_tree(structure, path_prefix=""):
-    """Icke-destruktiv, rekursiv funktion för att omvandla den platta strukturen till ett träd."""
-    tree = []
-    for name, node_data in structure.items():
-        current_path = os.path.join(path_prefix, name)
-        if node_data['type'] == 'directory':
-            children = transform_structure_to_tree(node_data.get('children', {}), current_path)
-            tree.append({
-                'name': name,
-                'path': current_path,
-                'type': 'directory',
-                'children': children,
-                'size_bytes': node_data.get('size_bytes', 0)
-            })
-        else:
-            tree.append({
-                'name': name,
-                'path': current_path,
-                'type': 'file',
-                'size_bytes': node_data.get('size_bytes', 0),
-                'category': node_data.get('category', 'unknown')
-            })
-    return tree
+def calculate_node_size(structure_node):
+    """
+    Beräknar rekursivt den totala storleken för en nod (fil eller mapp).
+    """
+    if not isinstance(structure_node, dict):
+        return 0
+    if structure_node.get('type') == 'file':
+        return structure_node.get('size_bytes', 0)
+    
+    total_size = 0
+    for child_node in structure_node.values():
+        total_size += calculate_node_size(child_node)
+    return total_size
 
-def build_ui(output_path, context_path, relations_path, overview_path, core_info_path):
-    """Huvudfunktion för att bygga UI."""
-    try:
-        print("Läser in datakällor...")
-        with open(context_path, 'r', encoding='utf-8') as f:
-            context_data = json.load(f)
-        with open(relations_path, 'r', encoding='utf-8') as f:
-            file_relations_data = json.load(f)
-        with open(overview_path, 'r', encoding='utf-8') as f:
-            project_overview_data = json.load(f)
-        with open(core_info_path, 'r', encoding='utf-8') as f:
-            core_file_info_data = json.load(f)
+def transform_structure_to_tree(structure_node, relations_nodes, path_prefix=''):
+    """
+    Bygger rekursivt en ren trädstruktur från file_structure och relations_nodes,
+    och berikar varje nod med dess storlek.
+    """
+    children = []
+    
+    sorted_items = sorted(
+        structure_node.items(),
+        key=lambda item: (item[1].get('type', 'directory') != 'directory', item[0])
+    )
 
-        print("Bygger och berikar trädstruktur...")
-        file_structure = context_data.get('file_structure', {})
-        for name, node in file_structure.items():
-            calculate_node_size(node)
+    for name, node in sorted_items:
+        if not isinstance(node, dict): continue
+
+        current_path = f"{path_prefix}/{name}" if path_prefix else name
         
-        tree_data = transform_structure_to_tree(file_structure)
-        js_tree_string = json.dumps(tree_data, ensure_ascii=False)
+        node_size = calculate_node_size(node)
+
+        new_node = {
+            "name": name,
+            "path": node.get("path", current_path),
+            "type": node.get("type", "directory"),
+            "size": node_size
+        }
+
+        if new_node["type"] == "file":
+            relations_data = relations_nodes.get(new_node["path"], {})
+            tags = []
+            
+            if relations_data.get('category'):
+                tags.append(relations_data['category'])
+            
+            if tags:
+                new_node['tags'] = tags
+        else: # Directory
+            new_node["children"] = transform_structure_to_tree(node, relations_nodes, current_path)
         
-        print("Genererar UI-filer...")
+        children.append(new_node)
         
-        # Injektion av datakällor
-        js_file_relations_string = json.dumps(file_relations_data)
-        js_core_file_info_string = json.dumps(core_file_info_data)
-        js_project_overview_string = json.dumps(project_overview_data)
+    return children
 
-        # Kombinera och ersätt platshållare i JS-moduler
-        js_file_tree_content = JS_FILE_TREE_LOGIC.replace(
-            "__FILE_TREE_DATA_PLACEHOLDER__", js_tree_string
-        )
-        
-        js_einstein_content = JS_EINSTEIN_LOGIC.replace(
-            "'__EINSTEIN_CORE_FILE_INFO_PLACEHOLDER__'", js_core_file_info_string
-        )
+def build_ui(html_output_path, file_tree_json_string, project_overview, core_info_data):
+    """
+    Genererar HTML, CSS och den sammansatta JS-filen.
+    """
+    output_dir = os.path.dirname(html_output_path)
+    css_output_path = os.path.join(output_dir, 'styles.css')
+    js_output_path = os.path.join(output_dir, 'logic.js')
+    
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
+    
+    js_safe_string_literal = file_tree_json_string
+    js_config_string = json.dumps(project_overview)
+    js_core_info_string = json.dumps(core_info_data)
+    
+    file_tree_placeholder = '__INJECT_FILE_TREE__'
+    injected_js_tree_logic = JS_FILE_TREE_LOGIC.replace(file_tree_placeholder, js_safe_string_literal)
 
-        js_logic_content = JS_LOGIC.replace(
-            "'__PROJECT_OVERVIEW_PLACEHOLDER__'", js_project_overview_string
-        )
+    config_placeholder = '__INJECT_PROJECT_OVERVIEW__';
+    injected_js_logic = JS_LOGIC.replace(config_placeholder, js_config_string)
 
-        # Skapa den slutgiltiga HTML-filen
-        html_content = HTML_TEMPLATE.replace(
-            "<!-- {{STYLES_PLACEHOLDER}} -->", f"<style>{CSS_STYLES}</style>"
-        ).replace(
-            "<!-- {{LOGIC_PLACEHOLDER}} -->", 
-            f"<script type=\\\"module\\\">\\n{js_file_tree_content}\\n{js_logic_content}\\n{js_performance_dashboard_content}\\n{js_einstein_content}\\n</script>"
-        ).replace(
-            "{{VERSION_PLACEHOLDER}}", project_overview_data.get('last_updated_at', 'N/A')
-        )
+    context_placeholder = '__INJECT_FULL_CONTEXT__';
+    injected_js_logic = JS_LOGIC.replace(config_placeholder, js_config_string).replace(context_placeholder, js_full_context_string)
 
-        with open(output_path, 'w', encoding='utf-8') as f:
-            f.write(html_content)
+    core_info_placeholder = '__INJECT_CORE_FILE_INFO__'
+    injected_einstein_logic = JS_EINSTEIN_LOGIC.replace(core_info_placeholder, js_core_info_string)
 
-    except Exception as e:
-        print(f"Ett oväntat fel uppstod under build-ui: {e}")
-        sys.exit(1)
+    final_js_logic = injected_js_logic + " " + injected_js_tree_logic + " " + JS_PERFORMANCE_LOGIC + " " + injected_einstein_logic
+    
+    final_html = HTML_TEMPLATE.format(version=UI_VERSION)
+
+    with open(html_output_path, 'w', encoding='utf-8') as f: f.write(final_html)
+    with open(css_output_path, 'w', encoding='utf-8') as f: f.write(CSS_STYLES)
+    with open(js_output_path, 'w', encoding='utf-8') as f: f.write(final_js_logic)
+
+    with open(js_output_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+    if file_tree_placeholder in content:
+        raise RuntimeError(f"FATAL: Platshållaren '{file_tree_placeholder}' ersattes inte.")
+    if config_placeholder in content:
+        raise RuntimeError(f"FATAL: Platshållaren '{config_placeholder}' ersattes inte.")
+    if context_placeholder in content:
+        raise RuntimeError(f"FATAL: Platshållaren '{context_placeholder}' ersattes inte.")
+    if core_info_placeholder in content:
+        raise RuntimeError(f"FATAL: Platshållaren '{core_info_placeholder}' ersattes inte.")
+    
+    print(f"UI-filer (HTML, CSS, JS) har skapats i mappen: {os.path.abspath(output_dir)}")
+
 
 def main():
-    """Hanterar kommandoradsargument."""
-    if len(sys.argv) > 1 and sys.argv[1] == 'build-ui':
-        if len(sys.argv) != 7:
-            print("Användning: python engrove_audio_tools_creator.py build-ui <output_html> <context_json> <relations_json> <overview_json> <core_info_json>")
-            sys.exit(1)
-        build_ui(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
-    else:
-        print("Okänt kommando. Använd 'build-ui'.")
+    """Huvudfunktion som parsar argument, transformerar data och bygger UI."""
+    if len(sys.argv) != 7:
+        print("Fel: build-ui kräver exakt fem argument.", file=sys.stderr)
+        print("Användning: build-ui <command> <output_html_path> <context_json_path> <relations_json_path> <project_overview_json_path> <core_info_json_path>", file=sys.stderr)
+        sys.exit(1)
+        
+    output_path = sys.argv[2]
+    context_json_path = sys.argv[3]
+    relations_json_path = sys.argv[4]
+    project_overview_json_path = sys.argv[5]
+    core_info_json_path = sys.argv[6]
+
+    try:
+        print("Läser in datakällor...")
+        with open(context_json_path, 'r', encoding='utf-8') as f:
+            file_structure = json.load(f).get("file_structure", {})
+        with open(relations_json_path, 'r', encoding='utf-8') as f:
+            relations_nodes = json.load(f).get("graph_data", {}).get("nodes", {})
+        with open(project_overview_json_path, 'r', encoding='utf-8') as f:
+            project_overview = json.load(f)
+        with open(core_info_json_path, 'r', encoding='utf-8') as f:
+            core_info_data = json.load(f)
+
+        print("Bygger och berikar trädstruktur...")
+        
+        tree_children = transform_structure_to_tree(file_structure, relations_nodes)
+        root_node = {'name': 'root', 'type': 'directory', 'path': '.', 'children': tree_children}
+        
+        file_tree_json_string = json.dumps(root_node, ensure_ascii=False)
+        
+        print("Genererar UI-filer...")
+        build_ui(output_path, file_tree_json_string, project_overview, core_info_data)
+        
+        print("Klar. UI med dynamiskt filträd har genererats.")
+
+    except Exception as e:
+        print(f"Ett oväntat fel uppstod under build-ui: {e}", file=sys.stderr)
         sys.exit(1)
 
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] == 'build-ui':
+        main()
+    else:
+        print("Användning: python scripts/engrove_audio_tools_creator.py build-ui <output_html_path> <context_json_path> <relations_json_path> <project_overview_json_path> <core_info_json_path>")
+        sys.exit(1)
 
-# END FILE: scripts/engrove_audio_tools_creator.py
+# scripts/engrove_audio_tools_creator.py
