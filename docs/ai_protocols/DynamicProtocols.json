@@ -522,5 +522,62 @@
         }
       }
     ]
+  },
+  {
+    "protocolId": "DP-ISAR-CANDIDATE-FLD-01",
+    "status": "active",
+    "description": "Föreslå ISAR när FL-D slog senaste turen.",
+    "trigger": { "event": "turn_committed", "conditions": [{ "metric":"fld_recent","op":">=","value":1 }] },
+    "steps": [
+      { "action":"GENERATE_REPORT","details":{"template":"ISAR_PREPARE_V1","outputRegister":"reports_queue"} },
+      { "action":"APPEND_TO_REGISTER","details":{"register":"isr_write_queue","fields":["timestamp","event:isar_candidate","reason:fld"]} }
+    ],
+    "schema": { "artifact":"isar_prepare_notice" }
+  },
+  {
+    "protocolId": "DP-ISAR-CANDIDATE-LOWCONF-01",
+    "status": "active",
+    "description": "Föreslå ISAR vid låg glidande confidence.",
+    "trigger": { "event":"turn_committed", "conditions":[{ "metric":"confidence_ma5","op":"<","value":0.50 }] },
+    "steps": [
+      { "action":"GENERATE_REPORT","details":{"template":"ISAR_PREPARE_V1","outputRegister":"reports_queue"} },
+      { "action":"APPEND_TO_REGISTER","details":{"register":"isr_write_queue","fields":["timestamp","event:isar_candidate","reason:low_conf"]} }
+    ],
+    "schema": { "artifact":"isar_prepare_notice" }
+  },
+  {
+    "protocolId": "DP-ISAR-CANDIDATE-CONTEXT-01",
+    "status": "active",
+    "description": "Föreslå ISAR vid hög token-fyllnad eller låg kontextintegritet.",
+    "trigger": { "event":"turn_committed", "conditions":[{ "metric":"token_fill_ratio","op":">=","value":0.80 }] },
+    "steps": [
+      { "action":"GENERATE_REPORT","details":{"template":"ISAR_PREPARE_V1","outputRegister":"reports_queue"} },
+      { "action":"APPEND_TO_REGISTER","details":{"register":"isr_write_queue","fields":["timestamp","event:isar_candidate","reason:context"]} }
+    ],
+    "schema": { "artifact":"isar_prepare_notice" }
+  },
+  {
+    "protocolId": "DP-ISAR-CANDIDATE-ENTROPY-01",
+    "status": "active",
+    "description": "Föreslå ISAR vid återkommande entropiavvikelser.",
+    "trigger": { "event":"turn_committed", "conditions":[{ "metric":"multi_sample_flags_last2","op":">=","value":2 }] },
+    "steps": [
+      { "action":"GENERATE_REPORT","details":{"template":"ISAR_PREPARE_V1","outputRegister":"reports_queue"} },
+      { "action":"APPEND_TO_REGISTER","details":{"register":"isr_write_queue","fields":["timestamp","event:isar_candidate","reason:entropy"]} }
+    ],
+    "schema": { "artifact":"isar_prepare_notice" }
+  },
+  {
+    "protocolId": "DP-RAG-ALERT-01",
+    "status": "active",
+    "description": "RAG conflicts ≥15 → sänk confidence och varna människa.",
+    "trigger": { "event":"rag_factcheck_finished", "conditions":[{ "metric":"rag_conflicts_%","op":">=","value":15 }] },
+    "steps": [
+      { "action":"GENERATE_REPORT","details":{"template":"ALERT_NOTICE","outputRegister":"reports_queue"} },
+      { "action":"APPEND_TO_REGISTER","details":{"register":"isr_write_queue","fields":["timestamp","event:kpi_alert","kpi:rag_conflicts_%"]} },
+      { "action":"EXECUTE_VERIFICATION","details":{"verificationProtocol":"CONFIDENCE_ADJUST_-0.10","failPolicy":"continue_with_warning"} }
+    ],
+    "schema": { "artifact":"alert_notice" }
   }
 ]
+
