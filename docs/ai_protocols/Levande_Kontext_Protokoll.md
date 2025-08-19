@@ -1,64 +1,121 @@
 # docs/ai_protocols/Levande_Kontext_Protokoll.md
 #
 # === SYFTE & ANSVAR ===
-# Detta dokument definierar "Levande Kontext"-protokollet, ett sessionsbaserat
-# versionshanteringssystem för filer som ändras under en chatt. Det ger
-# spårbarhet, reversibilitet och en otvetydig "sanningskälla" för den
-# aktiva kodbasen under sessionens gång.
+# Sessionsbaserat VCS för kontext: spårbar, deterministisk, lätt att återställa.
+# Säkrar att AI arbetar mot rätt filbaslinje och att alla ändringar är loggade.
+#
+# **Normativ bindning:** Körs under PSV (AI_Core_Instruction.md v5.8).
+# Följer Grundbulten P-GB-3.9 (hash/logg) och Diff_Protocol_v3.md (anchor_diff_v3.0).
 #
 # === HISTORIK ===
-# * v1.0 (2025-08-06): Initialt förslag för att lösa kontextdrift.
-# * v2.0 (2025-08-06): Uppgraderad till ett komplett versionshanteringssystem
-#   baserat på feedback från Engrove. Inkluderar nu versionering,
-#   revisionsbeskrivningar och kommandon för att återgå och granska historik.
+# * v2.0 (tidigare): Konceptuell version med ellipser.
+# * v2.1 (2025-08-19): Körbar specifikation. Index+blob, hårda triggers, schema, P-KLS, DP-krokar, DJTA-snapshot.
 
-### EXTRA PROTOKOLL: "LEVANDE KONTEXT" (Version 2.0)
-----------------------------------------------------------------
-**Syfte:** Att eliminera kontextdrift genom att implementera ett sessionsbaserat versionshanteringssystem för filer som ändras. Detta ger full spårbarhet, möjlighet att återgå till tidigare versioner, och en otvetydig "sanningskälla" för den aktiva kodbasen under sessionens gång.
+## EXTRA PROTOKOLL: "LEVANDE KONTEXT" (v2.1)
 
-**Initialt Tillstånd:**
-Vid starten av varje session är kontext-versionen `v0`, vilket representerar den exakta koden från den initiala JSON-filen.
+**Mål:** Spårbar, deterministisk filkontext under session. Låg overhead. Inga patchar skrivs här; detta är metadataflöde.
 
-**Kommandon:**
+### Register/lagring
+- Index: `.tmp/living_context/index.json`
+- Innehåll: `.tmp/living_context/blobs/<sha256>` (rått innehåll; filnamn = sha256)
+- ISR-event per åtgärd: `{ event:"lk_<op>", file, sha256 }`
+- Revisioner: `v0..vN` per fil
 
-**1. `Uppdatera levande kontext: [Kort beskrivning av ändringen]`**
-   *   **Funktion:** Detta är "commit"-kommandot. Det instruerar mig att ta den senaste filen jag levererade, spara den som en ny version i min interna historik, och öka versionsnumret (`+1`). Beskrivningen du anger blir "commit-meddelandet".
-   *   **Exempel:** `Uppdatera levande kontext: Lade till BaseMultiSelect för kategorifilter.`
-   *   **Exempel:** `Commit: Lade till BaseMultiSelect för kategorifilter.`
+### Kommandon (AI-interna steg, ej användarkommando)
+1) **LK_INIT(file, content, note?)**
+   - Beräkna `sha256(content)`. Spara blob.
+   - Lägg i index: `{ file, history:[{ rev:"v0", sha256, note:"init|<note>", ts:"<ISO8601>" }] }`
+2) **LK_COMMIT(file, new_content, note)**
+   - Kräv **anchor_diff_v3.0** mot senaste `sha256` (base_checksum_sha256 = index.senaste.sha256).
+   - Spara blob, bumpa rev `v{n+1}`, uppdatera index (rev, sha256, note, ts).
+3) **LK_REVERT(file, target_rev)**
+   - Hämta `blob@target_rev`, gör LK_COMMIT med `note:"revert->target_rev"`.
+4) **LK_SHOW_HISTORY(file)**
+   - Lista `rev, ts, note, sha256` (senaste→äldsta).
+5) **LK_VERIFY_BASELINE(file, external_sha256?)**
+   - Jämför `index.senaste.sha256` mot angiven. Mismatch ⇒ **STOPPA** och begär uppdaterad fil eller explicit bekräftelse att arbeta mot LK@senaste.
 
-**2. `Återgå till kontext version [nummer]`**
-   *   **Funktion:** Detta är "checkout"-kommandot. Det instruerar mig att ändra min aktiva pekare till en specifik, tidigare version från historiken. All efterföljande kodgenerering kommer att baseras på den återställda versionen.
-   *   **Exempel:** `Återgå till kontext version 1`
+### Efterlevnad
+- Endast patchar enligt **Diff_Protocol_v3.md (anchor_diff_v3.0)** accepteras i anslutning till LK_COMMIT.
+- Varje LK_COMMIT **måste** inkludera `base_checksum_sha256 = index.senaste.sha256`.
+- Logga alla operationer i `.tmp/session_revision_log.json` (P-GB-3.9) och i ISR.
 
-**3. `Visa kontext-historik`**
-   *   **Funktion:** Detta är "log"-kommandot. Det instruerar mig att skriva ut en sammanfattning av den interna kontext-historiken för den aktuella sessionen, inklusive version, beskrivning och vilken som är aktiv.
-   *   **Exempel:** `Visa kontext-historik`
+---
 
-**4. `Logga hallucination`:** `<antal falska påståenden>/<antal faktapåståenden>`
-   *  **Funktion:** Appendrar en rad i intern metrics‑logg för sessionen.
+## SCHEMA
 
-**Mina Svar:**
+**index.json**
+```json
+{
+  "version": "LKv2.1",
+  "files": [
+    {
+      "file": "src/App.tsx",
+      "history": [
+        { "rev": "v0", "sha256": "<64-hex>", "note": "init",         "ts": "<ISO8601>" },
+        { "rev": "v1", "sha256": "<64-hex>", "note": "fix header",  "ts": "<ISO8601>" }
+      ]
+    }
+  ]
+}
+```
 
-*   **Efter `Uppdatera`:**
-    > `"Bekräftat. Kontext uppdaterad till v2: 'Justerade marginaler i header'. Detta är nu den aktiva versionen."`
+**blob**  
+- Rått innehåll. Filnamn = sha256.
 
-*   **Efter `Återgå`:**
-    > `"Bekräftat. Har återgått till kontext v1: 'Lade till BaseMultiSelect...'. Detta är nu den aktiva versionen."`
+---
 
-*   **Efter `Visa`:**
-    > ```markdown
-    > ### Kontext-historik för Sessionen
-    >
-    > *   v0: Initial kontext från start-JSON.
-    > *   **v1: Lade till BaseMultiSelect... (AKTIV)**
-    > *   v2: Justerade marginaler i header.
-    > ```
+## P-KLS (Kontext‑verifiering vid långa sessioner)
 
-### PROTOKOLLFÖRSTÄRKNING: Kontext-verifiering vid Långa Sessioner (P-KLS)
+**Trigger:** `(turn_count ≥ 20)` **AND** `intent:"edit_file"` **AND** filen finns i LK-index.  
+**Åtgärd:** Kör **LK_VERIFY_BASELINE(file)**. Vid mismatch:
+- Säg: “Kontexten för `<fil>` är föråldrad (sha mismatch). Ladda aktuell version eller bekräfta explicit att jag ska arbeta mot LK@senaste.”  
+**Fortsättning:** Implementering får endast ske om baseline matchar **eller** användaren explicit bekräftar arbete mot LK@senaste.
 
-**Namn:** Protokoll för Kontext-verifiering vid Långa Sessioner (P-KLS)
+---
 
-**Trigger:** När en session överstiger 20 interaktioner OCH jag ombeds modifiera en fil som gavs som kontext tidigt i sessionen.
+## DynamicProtocols (krokar för generatorn)
 
-**Åtgärd:** Jag måste proaktivt avbryta den omedelbara implementationen och ställa följande obligatoriska, verifierande fråga:
-> *"Denna session är lång och kontexten för [filnamn] kan vara föråldrad. Kan du vänligen tillhandahålla den senaste versionen för att säkerställa att jag arbetar på en korrekt baslinje?"*
+1) **DP-LK-VERIFY-ON-EDIT-01**  
+   - `event: "turn_committed"`  
+   - `conditions`: `[{ "intent":"edit_file", "file_in_lk_index": true }]`  
+   - `steps`:
+     - `CHECK_COMPLIANCE`: förvarna om krav på `anchor_diff_v3.0` vid kommande commit
+     - `GENERATE_REPORT`: template `LK_VERIFY_NOTICE` → `reports_queue`
+     - `APPEND_TO_REGISTER`: `{ event:"lk_verify_candidate", file }`
+
+2) **DP-LK-AUTO-COMMIT-ON-ANSWER-01**  
+   - `event: "patch_committed"`  
+   - `steps`:
+     - `QUERY_FILE`: `.tmp/living_context/index.json` (required)
+     - `SANDBOX_EXEC`/`EXEC`: kör LK_COMMIT(file, content, note_from_patch)
+     - `APPEND_TO_REGISTER`: `{ event:"lk_commit", file, rev }`
+
+3) **DP-LK-BOOTSTRAP-ON-START-01**  
+   - `event: "new_session_start"`  
+   - `steps`:
+     - Om `.tmp/living_context` saknas men DJTA har `living_context_snapshot`: återskapa index+blobs.
+     - `APPEND_TO_REGISTER`: `{ event:"lk_bootstrap", files: <n> }`
+
+---
+
+## Avslut (session_end)
+
+- Bifoga `living_context_snapshot` i **DJTA Block A** (AI_Chatt_Avslutningsprotokoll.md):
+```json
+{
+  "living_context_snapshot": {
+    "files": [
+      { "file": "src/App.tsx", "latest_rev": "v7", "sha256": "<64-hex>" }
+    ]
+  }
+}
+```
+- Nästa session kan bootstrap:a från snapshot om `.tmp/living_context` saknas.
+
+---
+
+## Implementationsnoter
+- Lågt hinder: index är litet; blobbar dedupliceras via sha256.
+- LK används för **kontextspårning**, inte som enda sanning för källkod. Riktig källa = repo/användarfil.
+- Om användare laddar ny version utan LK‑koppling: kör **LK_VERIFY_BASELINE** och skapa ny rev.
