@@ -8,6 +8,10 @@
 ## SYFTE & ANSVAR
 Detta dokument definierar den officiella poängsättningsmatrisen (rubric) och beräkningsmetoden för `ai_protocol_performance.scorecard`-artefakten. Syftet är att ersätta subjektiva bedömningar med en strukturerad, evidensbaserad utvärdering av AI-partnerns prestation under en session.
 
+**Kanonisk källa:** Detta är enda sanningskällan för rubric. Andra dokument ska referera hit.
+**Formel:** finalScore = 100 * (0.4*efficacy + 0.3*efficiency + 0.3*robustness)
+**Källdata:** använd DJTA Block A/B, rotorsakslogg, SIC/Stature.
+
 ## 1. Grundprinciper
 *   **Skala:** Alla poäng (`score`) anges på en skala från **0 till 100**.
 *   **Objektivitet:** Poängen ska så långt som möjligt baseras på mätbara händelser från sessionen (t.ex. antal korrigeringscykler, aktiverade protokoll).
