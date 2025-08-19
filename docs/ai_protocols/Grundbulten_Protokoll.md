@@ -35,12 +35,33 @@ END HEADER -->
 
 # Protokoll: **Grundbulten** (P-GB-3.9) – Universell filhantering (chattsession)
 
+## Terminologi & policy
+**REFRAKTOR-FLAG:** obligatorisk, när strukturen (inventarium/CLI) medvetet ändras. Utan flagga ⇒ ändringen blockeras av G5/10b.
+**Kvantitativ diff-tröskel:** ±10 % som default; projekt kan skärpa i lokal policy.
+
 ## Steg G: Hårda grindar (abortvillkor, före Steg 1)
 - **G-1. Kontrollsumma-verifiering vid inläsning ⇒ AVBRYT.** Om en fil som ska modifieras har en `base_checksum_sha256` i kontexten, måste min interna minnesbild **och** min beräknade minnesbilds hash matcha den hashen. Vid mismatch, avbryt och begär färsk fil.
 - **G0. Kontextintegritet < 99% ⇒ AVBRYT.** Kräv kompletterande källor/sammanfattning och ny körning.
+- **G1. Kontext-abort (tvingande):** Om is_content_full == false för målfilen ⇒ AVBRYT omedelbart och begär komplett fil + base_checksum_sha256. Inga patchar/regeneration tillåtna innan kontext = 100%.
 - **G2. Anti-placeholder ⇒ AVBRYT.** Kör regex-svit (Bilaga B). Noll träffar krävs.
 - **G3. Verifieringsnivå ⇒ AVBRYT.** Simulerad körlogg räcker aldrig ensam; statiska kontroller måste vara PASS.
 - **G4. Legacy-sanering ⇒ AVBRYT.** Konflikt/överflödig artefakt måste patchas/arkiveras innan vidare uppdrag.
+- **G5. Strukturella invariants (tvingande):**
+    Före leverans måste följande PASS:a mot referensversionen, annars AVBRYT:
+    - AST-parse (språkets parser)
+    - Funktions-/klassinventarium (namn + antal)
+    - Publikt CLI-/API-kontrakt (signaturer, argv, flaggor)
+    - Kritiska imports (lista och existens)
+    - Sentinel-ersättningar (inga platshållare kvar)
+    
+  **Trunkeringsdetektor:** jämför SHA-256 av tre normerade segment (HEAD/MID/TAIL) före/efter.
+    - Om TAIL_AFTER ≠ förväntat vid små diffar eller om TAIL saknas ⇒ AVBRYT (TRUNCATION SUSPECTED).
+  **Start/Slut-bevarare:**
+    - BEGIN/END FILE-sentineller måste finnas i AFTER och återfinnas i diffens ‘context’.
+ 
+## **Policy:** Förbjud “uppskattad” diff
+  - AI får inte rapportera diff utan CI-beräknade värden.
+  - Om referensfil saknas eller hash inte matchar ⇒ AVBRYT enligt G-1 och begär base_checksum_sha256.
 
 ## Steg 0: Mål och omfattning
 - Gäller **alla** filtyper. Leverans ska vara **självförsörjande** (inga dolda referenser).
@@ -109,15 +130,37 @@ END HEADER -->
 ## Steg 7: Extern Verifiering & Bevisföring
 - I **varje svar** som levererar en fil enligt detta protokoll, **MÅSTE** ett `VERIFICATION_LOG`-block inkluderas.
 - **Exempel på `VERIFICATION_LOG`:**
-  ```markdown
-  #### VERIFICATION_LOG
-  - **Fil:** `scripts/engrove_audio_tools_creator.py`
-  - **Verifiering (simulerad):**
-    - `ast.parse`: [PASS] - Filen är giltig Python-syntax.
-    - `ruff`: [PASS] - Inga linter-fel.
-    - **Kontraktsverifiering (manuell):** [PASS] - Kontextkommentar (Steg 1d) och Dominansprincip (Steg 2b) är nu en del av protokollet.
-    - **Pre-Flight Diff Check:** [PASS] - `HISTORIK`-sektionen är verifierat uppdaterad med vX.Y.
-  ```
+ 
+#### VERIFICATION_LOG (obligatorisk)
+- Fil: <relativ väg>
+- Statisk syntaktisk verifiering: ast/parse=[PASS|FAIL], linter=[PASS|WARN|FAIL]
+- Strukturell diff:
+  - **Functions/classes:** <före>=N / <efter>=N  [PASS|FAIL + difflista vid skillnad]
+  - **CLI/API-signaturer:** [PASS|FAIL + diff]
+  - **Imports (kritiska):** [PASS|FAIL + diff]
+- **Sentinels/Placeholders:** [PASS|FAIL]
+- **Kvantitativ diff:** Normalisering före diff: UTF-8, LF, trim trailing spaces.
+   - **Metrikpaket (alla krävs):**
+     - LINES_BEFORE/AFTER = exakta radantal.
+     - NUMSTAT: added_lines, deleted_lines.
+     - BYTES_BEFORE/AFTER.
+     - NONEMPTY_BEFORE/AFTER (rader utan endast whitespace/kommentar).
+     - **Konsistenskontroll:**
+        - LINES_AFTER = LINES_BEFORE + added_lines − deleted_lines (måste hålla).
+        - Δbytes = BYTES_AFTER − BYTES_BEFORE (rapporterat).
+        - **Tröskel:** |added_lines − deleted_lines| / LINES_BEFORE ≤ 10 % utan REFRAKTOR-FLAG.
+  - **Abortregel (tvingande):** Om någon konsistenskontroll faller eller ett tecken på trunkering upptäcks (se D) ⇒ AVBRYT och markera “QD-INCONSISTENT”.
+- **Hash-kedja: base_sha256=<...> → final_sha256=<...> [PASS|FAIL]**
+- **VERIFICATION_LOG och Compliance ska innehålla tabell:**
+  >  | Metric    | Before | After | Added | Deleted | Check              |
+  >  | --------- | -----: | ----: | ----: | ------: | ------------------ |
+  >  | Lines     |     Lb |    La |    +A |      −D | `La == Lb + A − D` |
+  >  | Non-empty |     Nb |    Na |     — |       — | Info               |
+  >  | Bytes     |     Bb |    Ba |     — |       — | Δ = Ba−Bb          |
+  >  | Result    |        |       |       |         | **PASS/FAIL**      |
+  - Fail ⇒ AVBRYT.
+ - **Compliance-text – exempelrad:**
+   - **Kvantitativ diff:** [PASS] Lb=1234, La=1184, +15/−65 (Δ=−50); Bytes Δ=−3 812; Non-empty: 1021→987; Konsistens=PASS.
 
 ## Steg 8: Filleverans
 - Leveransformatet styrs av **Bilaga E**.
@@ -136,13 +179,41 @@ END HEADER -->
   - **Kvantitativ Diff:** [PASS/NOPASS] - [Ökning/Minskning] av X rader motiverad av nya protokollsteg.
   - **Base SHA256:** [SHA för filen INNAN ändring]
   - **Final SHA256:** [SHA för filen EFTER ändring]
-
+  - **AST/Syntax**: [PASS/NOPASS]
+  - **Strukturell Invarians:**
+    - **Funktions-/klassinventarium:** [PASS/NOPASS]
+    - **CLI-/API-signaturer:** [PASS/NOPASS]
+    - **Imports (kritiska):** [PASS/NOPASS]
+  - **Placeholders/Sentinels:** [PASS/NOPASS]
+  - **Kvantitativ Diff:** [PASS/NOPASS] (motivering krävs > ±10%)
+  - **Base SHA256:** <...>
+  - **Final SHA256:** <...>
+  - **Hash-kedja verifierad (Steg 10e):** [PASS/NOPASS]
+  - **VERIFICATION_LOG och Compliance ska innehålla tabell:**
+    >  | Metric    | Before | After | Added | Deleted | Check              |
+    >  | --------- | -----: | ----: | ----: | ------: | ------------------ |
+    >  | Lines     |     Lb |    La |    +A |      −D | `La == Lb + A − D` |
+    >  | Non-empty |     Nb |    Na |     — |       — | Info               |
+    >  | Bytes     |     Bb |    Ba |     — |       — | Δ = Ba−Bb          |
+    >  | Result    |        |       |       |         | **PASS/FAIL**      |
+    - Fail ⇒ AVBRYT.
+  - **Compliance-text – exempelrad:**
+    - **Kvantitativ diff:** [PASS] Lb=1234, La=1184, +15/−65 (Δ=−50); Bytes Δ=−3 812; Non-empty: 1021→987; Konsistens=PASS.
+   
 ## Steg 10: Självgranskning & extern dom
 - **10a. Självgranskning:** Intern bekräftelse eller vederläggande att alla steg i "Grundbulten" protokoll nuvarande har följts eller inte kunnat följas.
-- **10b. Pre-Flight Diff Check (Obligatorisk Slutkontroll):** Mental `diff` av original vs. slutgiltig version. Kontrollpunkter:
-    1.  **Metadata:** Har `HISTORIK` och kontextkommentar (Steg 1d) uppdaterats korrekt?
-    2.  **Integritet:** Har någon befintlig, korrekt kod oavsiktligt tagits bort?
-    3.  **Fullständighet:** Matchar `BEGIN/END FILE`-sentinellerna den exakta filsökvägen?
+- **10b. Pre-Flight Diff (tvingande):**
+  1) **Metadata:** HISTORIK uppdaterad + SHA256_LF inbäddad.
+  2) **Integritet:** Ingen borttagen korrekt kod utan REFRAKTOR-FLAG.
+  3) **Fullständighet:** BEGIN/END FILE stämmer med exakt filsökväg.
+  4) **Strukturell diff (måste PASS):**
+     - AST-parse
+     - Funktions-/klassinventarium identiskt (eller förändrat med REFRAKTOR-FLAG + motivering)
+     - CLI-/API-kontrakt identiskt (eller explicit ändringsspec)
+     - Kritiska imports kvar
+     - Inga kvarvarande platshållare
+  5) **Tröskel:** Rad-/byte-diff > ±10% kräver REFRAKTOR-FLAG + skriftlig motivering + godkännande.
+
 - **10c. Extern dom (Engrove):** Godkännande eller korrigering.
 - **10e. Slutgiltig Hash-verifiering (Obligatorisk):** Verifiera internt att hashen beräknad på den slutgiltiga koden är **identisk** med hashen som rapporteras i Steg 1f och Steg 9. Vid mismatch, AVBRYT.
 
@@ -156,6 +227,8 @@ END HEADER -->
 - Tvingande Eskalering 1: När räknaren når 1 eller 2 (inför andra eller tredje försöket) är inkrementella fixar förbjudna. Aktivera omedelbart Help_me_God_Protokoll.md.
 - Tvingande Eskalering 2: När räknaren når 3 (inför fjärde försöket) är inkrementella fixar förbjudna. Överväg om vidare felsökning är befogat eller om sessionen har nått en bekräftad ändpunkt. Beskriv orsak till misslyckandet.
 - META‑PROTOKOLL: Grunbulten Token Counter (GTC)
+- Not (bindning till AI_Core_Instruction FL-D): Vid två misslyckade leveranser för samma fil/fel ⇒ AVBRYT enligt denna Grundbult och eskalera till Help_me_God_Protokoll.md. Inkrementella fixar förbjudna tills extern analys slutförd.
+
 
 ---
 
@@ -168,6 +241,9 @@ END HEADER -->
 - **TOML (`.toml`)**: toml-parse ⇒ PASS.
 - **GitHub Actions (CI-YAML)**: YAML-parse ⇒ PASS; action-linter/dry-run ⇒ PASS.
 - **CSS**: Lint ⇒ 0 fel; tokens används (inga hårdkodade färger där tokens finns).
+- **Python:** ast.parse ⇒ PASS; inventarium via AST (funktioner/klasser); CLI-spec kontrolleras (t.ex. argparse/argv-räkning); imports jämförs mot referenslista.
+- **JS/Vue:** vue-tsc --noEmit/ESLint; export-inventarium (funktioner/komponenter); publika props/emits/kommandon; imports.
+- **Allmänt:** “REFRAKTOR-FLAG” krävs när inventarium/CLI ändras; annars AVBRYT.
 
 ## Bilaga B: Anti-placeholder-regex (utökad)
 ```
@@ -199,6 +275,58 @@ jobs:
       - run: npx eslint . || true
       - run: python - <<'PY'\\nimport ast,sys,glob\\n[ast.parse(open(p).read(),p) for p in glob.glob('**/*.py', recursive=True)]\\nprint('PY_AST_OK')\\nPY
       - run: echo "STATIC CHECKS COMPLETE"
+      - name: Structural inventory (Python)
+        run: |
+           python - <<'PY'
+           import sys,hashlib
+           from pathlib import Path
+           import difflib
+           def norm_text(p):
+               s = Path(p).read_text(encoding='utf-8', errors='strict')
+               s = s.replace('\r\n','\n').replace('\r','\n')
+               s = '\n'.join(line.rstrip() for line in s.split('\n'))
+               return s
+           before_path = ".tmp/base/files/scripts/engrove_audio_tools_creator.py"  # referens
+           after_path  = "scripts/engrove_audio_tools_creator.py"                  # kandidat
+           sb = norm_text(before_path)
+           sa = norm_text(after_path)
+           Lb, La = sb.count('\n')+1 if sb else 0, sa.count('\n')+1 if sa else 0
+           Nb = sum(1 for r in sb.split('\n') if r.strip() and not r.lstrip().startswith(('#','//','/*','*')))
+           Na = sum(1 for r in sa.split('\n') if r.strip() and not r.lstrip().startswith(('#','//','/*','*')))
+           Bb, Ba = len(sb.encode('utf-8')), len(sa.encode('utf-8'))
+           added = deleted = 0
+           for tag,i1,i2,j1,j2 in difflib.SequenceMatcher(a=sb.split('\n'), b=sa.split('\n')).get_opcodes():
+               if tag in ('replace','delete'):
+                   deleted += (i2 - i1)
+               if tag in ('replace','insert'):
+                   added += (j2 - j1)
+           ok_lines = (La == Lb + added - deleted)
+           report = {
+             "LINES_BEFORE":Lb,"LINES_AFTER":La,"ADDED":added,"DELETED":deleted,
+             "NONEMPTY_BEFORE":Nb,"NONEMPTY_AFTER":Na,
+             "BYTES_BEFORE":Bb,"BYTES_AFTER":Ba,
+             "CONSISTENT": ok_lines
+           }
+           print(report)
+           if not ok_lines: sys.exit(2)
+           # 3x sentinel anti-truncation (E)
+           import math
+           def chunk_hash(s, where):
+               n=len(s); 
+               if n==0: return hashlib.sha256(b'').hexdigest()
+               span = max(1024, math.ceil(n*0.02))
+               if where=="head": segment=s[:span]
+               elif where=="mid": 
+                   start=max(0,(n//2)-(span//2)); segment=s[start:start+span]
+               else: segment=s[-span:]
+               return hashlib.sha256(segment.encode('utf-8')).hexdigest()
+           sentinels = {
+             "HEAD_BEFORE":chunk_hash(sb,"head"), "HEAD_AFTER":chunk_hash(sa,"head"),
+             "MID_BEFORE":chunk_hash(sb,"mid"),   "MID_AFTER":chunk_hash(sa,"mid"),
+             "TAIL_BEFORE":chunk_hash(sb,"tail"), "TAIL_AFTER":chunk_hash(sa,"tail"),
+           }
+           print(sentinels)
+           PY
 ```
 
 ---
