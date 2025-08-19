@@ -27,3 +27,5 @@
 **3. Exekvering:**
    - Om ett `trigger.event` matchar, exekvera `steps`-arrayen i sekvens.
    - All output från exekveringen måste följa formatet som specificeras i `details`.
+   - PSV-orchestrering: hänvisa alltid till AI_Core_Instruction.md (v5.8) för PSV-ordning; inga lokala PSV-varianter får införas här.
+
