@@ -118,7 +118,10 @@ def build_ui(html_output_path, file_tree_json_string, project_overview, core_inf
 
     config_placeholder = '__INJECT_PROJECT_OVERVIEW__';
     injected_js_logic = JS_LOGIC.replace(config_placeholder, js_config_string)
-    
+
+     context_placeholder = '__INJECT_FULL_CONTEXT__';
+    injected_js_logic = JS_LOGIC.replace(config_placeholder, js_config_string).replace(context_placeholder, js_full_context_string)
+
     core_info_placeholder = '__INJECT_CORE_FILE_INFO__'
     injected_einstein_logic = JS_EINSTEIN_LOGIC.replace(core_info_placeholder, js_core_info_string)
 
