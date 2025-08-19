@@ -1,4 +1,3 @@
-# BEGIN FILE: scripts/engrove_audio_tools_creator.py
 # scripts/engrove_audio_tools_creator.py
 #
 # === SYFTE & ANSVAR ===
@@ -24,13 +23,12 @@
 # * v8.0 (2025-08-17): (Help me God - Domslut) Refaktorerat datainjektionen. `JSON.parse` har tagits bort från `ui_file_tree.py`.
 #   Detta skript injicerar nu ett direkt JS-objekt-literal, vilket löser `SyntaxError: "[object Object]" is not valid JSON`.
 #   Lade även till hantering för versions-platshållaren i HTML-mallen.
-# * v9.0 (2025-08-18): (Engrove Mandate) Modifierad för att importera och injicera den nya ui_einstein_search-modulen och dess datakälla (core_info.json).
-# * v9.1 (2025-08-18): Utökad för att injicera den fullständiga, råa context_bundle.json i ui_logic.py för att möjliggöra avancerad klient-sidig bearbetning.
-# * SHA256_LF: 2795c65f02c6b412b1d75f280a52f9540b61e27a19c5220c30a8459462f4b4e9
+# * v9.0 (2025-08-18): (Engrove Mandate) Modifierad för att importera och injicera den nya ui_einstein_search-modulen och dess datakälla (core_file_info.json).
+# * SHA256_LF: d51e6005d53531b212cc0a14b30e060c4973347c4b7b25055b80261327142721
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
-# - Grundbulten v3.9: Denna fil har modifierats enligt den godkända planen.
-# - GR4 (API-kontraktsverifiering): Skriptets kommandorads-API har uppdaterats för att acceptera en ny datakälla (context_bundle).
+# - Grundbulten v3.8: Denna fil har modifierats enligt den godkända planen.
+# - GR4 (API-kontraktsverifiering): Skriptets kommandorads-API har uppdaterats för att acceptera en ny, obligatorisk datakälla.
 
 import os
 import sys
@@ -42,7 +40,7 @@ from modules.ui_file_tree import JS_FILE_TREE_LOGIC
 from modules.ui_performance_dashboard import JS_PERFORMANCE_LOGIC
 from modules.ui_einstein_search import JS_EINSTEIN_LOGIC
 
-UI_VERSION = "9.1"
+UI_VERSION = "8.0"
 
 def calculate_node_size(structure_node):
     """
@@ -100,7 +98,7 @@ def transform_structure_to_tree(structure_node, relations_nodes, path_prefix='')
         
     return children
 
-def build_ui(html_output_path, file_tree_json_string, project_overview, core_info_data, full_context_data):
+def build_ui(html_output_path, file_tree_json_string, project_overview, core_info_data):
     """
     Genererar HTML, CSS och den sammansatta JS-filen.
     """
@@ -114,15 +112,12 @@ def build_ui(html_output_path, file_tree_json_string, project_overview, core_inf
     js_safe_string_literal = file_tree_json_string
     js_config_string = json.dumps(project_overview)
     js_core_info_string = json.dumps(core_info_data)
-    js_full_context_string = json.dumps(full_context_data)
     
     file_tree_placeholder = '__INJECT_FILE_TREE__'
     injected_js_tree_logic = JS_FILE_TREE_LOGIC.replace(file_tree_placeholder, js_safe_string_literal)
 
     config_placeholder = '__INJECT_PROJECT_OVERVIEW__';
-    context_placeholder = '__INJECT_FULL_CONTEXT__';
-    injected_js_logic = JS_LOGIC.replace(config_placeholder, js_config_string).replace(context_placeholder, js_full_context_string)
-
+    injected_js_logic = JS_LOGIC.replace(config_placeholder, js_config_string)
     
     core_info_placeholder = '__INJECT_CORE_FILE_INFO__'
     injected_einstein_logic = JS_EINSTEIN_LOGIC.replace(core_info_placeholder, js_core_info_string)
@@ -143,9 +138,7 @@ def build_ui(html_output_path, file_tree_json_string, project_overview, core_inf
         raise RuntimeError(f"FATAL: Platshållaren '{config_placeholder}' ersattes inte.")
     if core_info_placeholder in content:
         raise RuntimeError(f"FATAL: Platshållaren '{core_info_placeholder}' ersattes inte.")
-    if context_placeholder in content:
-        raise RuntimeError(f"FATAL: Platshållaren '{context_placeholder}' ersattes inte.")
-
+    
     print(f"UI-filer (HTML, CSS, JS) har skapats i mappen: {os.path.abspath(output_dir)}")
 
 
@@ -165,8 +158,7 @@ def main():
     try:
         print("Läser in datakällor...")
         with open(context_json_path, 'r', encoding='utf-8') as f:
-            full_context_data = json.load(f)
-            file_structure = full_context_data.get("file_structure", {})
+            file_structure = json.load(f).get("file_structure", {})
         with open(relations_json_path, 'r', encoding='utf-8') as f:
             relations_nodes = json.load(f).get("graph_data", {}).get("nodes", {})
         with open(project_overview_json_path, 'r', encoding='utf-8') as f:
@@ -182,7 +174,7 @@ def main():
         file_tree_json_string = json.dumps(root_node, ensure_ascii=False)
         
         print("Genererar UI-filer...")
-        build_ui(output_path, file_tree_json_string, project_overview, core_info_data, full_context_data)
+        build_ui(output_path, file_tree_json_string, project_overview, core_info_data)
         
         print("Klar. UI med dynamiskt filträd har genererats.")
 
@@ -197,4 +189,4 @@ if __name__ == "__main__":
         print("Användning: python scripts/engrove_audio_tools_creator.py build-ui <output_html_path> <context_json_path> <relations_json_path> <project_overview_json_path> <core_info_json_path>")
         sys.exit(1)
 
-# END FILE: scripts/engrove_audio_tools_creator.py
+# scripts/engrove_audio_tools_creator.py
