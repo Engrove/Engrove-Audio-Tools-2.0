@@ -35,7 +35,7 @@
 # - P-OKD-1.0: Nya funktioner har JSDoc-kommentarer.
 # - GR6 (Obligatorisk Refaktorisering): Funktionaliteten har implementerats modulärt och återanvänder befintliga hjälpfunktioner.
 
-JS_LOGIC = \"\"\"
+JS_LOGIC = """
 import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1';
 
 // Injektionspunkt för projektkonfiguration (repo/branch)
@@ -353,6 +353,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     handleViewSwitch('start');
 });
-\"\"\"
+"""
 
 # END FILE: scripts/modules/ui_logic.py
