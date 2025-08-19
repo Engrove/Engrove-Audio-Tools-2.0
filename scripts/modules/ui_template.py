@@ -27,7 +27,7 @@
 # - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, korrigerade planen.
 # - P-OKD-1.0: Nya sektioner i HTML-mallen har förklarande kommentarer.
 
-HTML_TEMPLATE = \"\"\"
+HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html lang=\"sv\">
 <head>
@@ -177,6 +177,6 @@ HTML_TEMPLATE = \"\"\"
     <script type=\"module\" src=\"logic.js\"></script>
 </body>
 </html>
-\"\"\"
+"""
 
 # END FILE: scripts/modules/ui_template.py
