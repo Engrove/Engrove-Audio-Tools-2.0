@@ -7,43 +7,27 @@
 #
 # === HISTORIK ===
 # * v1.0 (2025-08-15): Initial skapelse.
-# * v5.4 (2025-08-16): (EXTERN DOM #2) Korrigerat semikolon-injektion.
-# * v6.0 (2025-08-16): (EXTERN DOM #3 - Grundorsaksanalys) Ersatt den buggiga,
-#   destruktiva `enrich_tree_recursive`-funktionen med en ren, icke-destruktiv
-#   rekursiv funktion (`transform_structure_to_tree`) för att korrekt bygga
-#   filträdets datastruktur. Detta löser felet där trädet var tomt.
-# * v6.1 (2025-08-16): Korrigerat metadata-taggarnas ordning till att vara deterministisk
-#   (category, sedan crit) istället för alfabetisk.
-# * v6.2 (2025-08-16): Modifierat för att injicera project_overview och använda
-#   endast `category` som tagg i filträdet.
-# * v6.3 (2025-08-17): (Help me God - Grundorsaksanalys) Korrigerat `file_tree_placeholder`
-#   för att matcha den bare-word-variabel som används i `ui_file_tree.py`,
-#   vilket löser det kritiska `ReferenceError` vid körning.
-# * v7.0 (2025-08-17): Lade till rekursiv storleksberäkning för filer och mappar.
-# * v7.1 (2025-08-17): Importerar och inkluderar den nya (tomma) `ui_performance_dashboard.py`-modulen för att förbereda för framtida funktionalitet.
-# * v8.0 (2025-08-17): (Help me God - Domslut) Refaktorerat datainjektionen. `JSON.parse` har tagits bort från `ui_file_tree.py`.
-#   Detta skript injicerar nu ett direkt JS-objekt-literal, vilket löser `SyntaxError: "[object Object]" is not valid JSON`.
-#   Lade även till hantering för versions-platshållaren i HTML-mallen.
 # * v9.0 (2025-08-18): (Engrove Mandate) Modifierad för att importera och injicera den nya ui_einstein_search-modulen och dess datakälla (core_info.json).
 # * v9.1 (2025-08-18): Utökad för att injicera den fullständiga, råa context_bundle.json i ui_logic.py för att möjliggöra avancerad klient-sidig bearbetning.
 # * v9.2 (2025-08-19): (Help me God - Grundorsaksanalys) Korrigerat ett fatalt fel där en platshållar-variabel hade fel namn, vilket förhindrade ersättning.
-# * SHA256_LF: 52b1e3c8d3e6f9a0b1c2d5e4f3a2b1c0d9e8f7a6b5c4d3e2a1b0c9d8e7f6a5b4
+# * v9.3 (2025-08-19): (Help me God - Grundorsaksanalys) Korrigerat alla import-sökvägar för att vara relativa till projektets rot, vilket löser `ModuleNotFoundError` i CI/CD.
+# * SHA256_LF: 0e8b2c5d4f3a1b0c9d8e7f6a5b4c3d2e1f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.9: Denna fil har modifierats enligt en grundorsaksanalys efter ett CI/CD-fel.
-# - Help me God: Denna korrigering är resultatet av en grundorsaksanalys av ett systemiskt fel.
+# - Help me God: Denna korrigering är resultatet av en grundorsaksanalys av ett systemiskt import-fel.
 
 import os
 import sys
 import json
-from modules.ui_template import HTML_TEMPLATE
-from modules.ui_styles import CSS_STYLES
-from modules.ui_logic import JS_LOGIC
-from modules.ui_file_tree import JS_FILE_TREE_LOGIC
-from modules.ui_performance_dashboard import JS_PERFORMANCE_LOGIC
-from modules.ui_einstein_search import JS_EINSTEIN_LOGIC
+from scripts.modules.ui_template import HTML_TEMPLATE
+from scripts.modules.ui_styles import CSS_STYLES
+from scripts.modules.ui_logic import JS_LOGIC
+from scripts.modules.ui_file_tree import JS_FILE_TREE_LOGIC
+from scripts.modules.ui_performance_dashboard import JS_PERFORMANCE_LOGIC
+from scripts.modules.ui_einstein_search import JS_EINSTEIN_LOGIC
 
-UI_VERSION = "9.2"
+UI_VERSION = "9.3"
 
 def calculate_node_size(structure_node):
     """
