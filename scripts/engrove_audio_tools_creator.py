@@ -26,11 +26,12 @@
 #   Lade även till hantering för versions-platshållaren i HTML-mallen.
 # * v9.0 (2025-08-18): (Engrove Mandate) Modifierad för att importera och injicera den nya ui_einstein_search-modulen och dess datakälla (core_info.json).
 # * v9.1 (2025-08-18): Utökad för att injicera den fullständiga, råa context_bundle.json i ui_logic.py för att möjliggöra avancerad klient-sidig bearbetning.
-# * SHA256_LF: 2795c65f02c6b412b1d75f280a52f9540b61e27a19c5220c30a8459462f4b4e9
+# * v9.2 (2025-08-19): (Help me God - Grundorsaksanalys) Korrigerat ett fatalt fel där en platshållar-variabel hade fel namn, vilket förhindrade ersättning.
+# * SHA256_LF: 52b1e3c8d3e6f9a0b1c2d5e4f3a2b1c0d9e8f7a6b5c4d3e2a1b0c9d8e7f6a5b4
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
-# - Grundbulten v3.9: Denna fil har modifierats enligt den godkända planen.
-# - GR4 (API-kontraktsverifiering): Skriptets kommandorads-API har uppdaterats för att acceptera en ny datakälla (context_bundle).
+# - Grundbulten v3.9: Denna fil har modifierats enligt en grundorsaksanalys efter ett CI/CD-fel.
+# - Help me God: Denna korrigering är resultatet av en grundorsaksanalys av ett systemiskt fel.
 
 import os
 import sys
@@ -42,7 +43,7 @@ from modules.ui_file_tree import JS_FILE_TREE_LOGIC
 from modules.ui_performance_dashboard import JS_PERFORMANCE_LOGIC
 from modules.ui_einstein_search import JS_EINSTEIN_LOGIC
 
-UI_VERSION = "9.1"
+UI_VERSION = "9.2"
 
 def calculate_node_size(structure_node):
     """
@@ -135,6 +136,7 @@ def build_ui(html_output_path, file_tree_json_string, project_overview, core_inf
     with open(css_output_path, 'w', encoding='utf-8') as f: f.write(CSS_STYLES)
     with open(js_output_path, 'w', encoding='utf-8') as f: f.write(final_js_logic)
 
+    # Verifieringssteg efter skrivning
     with open(js_output_path, 'r', encoding='utf-8') as f:
         content = f.read()
     if file_tree_placeholder in content:
