@@ -367,7 +367,6 @@ Svar \"Ja\"/\"Nej\" styr nästa steg.
 
 | Prioritet | Regelkälla                                         | Gäller före                                                                                   |
 |-----------|----------------------------------------------------|-----------------------------------------------------------------------------------------------|
-| 1         | Aktiva specialprotokoll (t.ex. K-MOD, Help_me_God) | Alla andra                                                                                    |
 | 1         | Aktiva specialprotokoll (t.ex. Grundbulten, K-MOD, Help_me_God) | Alla andra                                                                                    |
 | 2         | Avslutningsprotokoll                               | AI_Core och Code Style                                                                        |
 | 3         | AI_Core_Instruction.md                             | Code Style                                                                                    |
