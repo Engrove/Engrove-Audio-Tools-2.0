@@ -1,0 +1,119 @@
+# BEGIN FILE: docs/ai_protocols/md2yml.yml
+id: P-MD2YML-2.1
+rev: '2.1'
+lang: 'en' # This protocol's language is English. Its output is always English.
+encoding: 'utf-8'
+date: '2025-08-20'
+purp: "Standalone, deterministic protocol to convert narrative Markdown (.md) protocols from ANY source language into a compact, machine-readable, English hybrid YAML (.yml) format. The conversion process itself MUST adhere to Grundbulten's principles."
+scope: "Any .md protocol structured like P-GB-3.9, regardless of its original language."
+
+policy:
+  enforce_gb_compliance: true # Execution MUST be self-compliant with Grundbulten's verification rules.
+  lossless_intent: true # Core logical rules MUST be preserved perfectly through translation.
+  strict_key_mapping: true # All transformations MUST strictly follow `target_schema.mapping`.
+  deterministic_abbrev: true # Use only abbreviations defined in `target_schema.mapping`.
+  output_lang_enforced: 'en' # The output language for all string values MUST be English.
+
+hist:
+  - v1.0: "2025-08-19 Initial version for basic MD-to-YML conversion (assumed Swedish source)."
+  - v2.0: "2025-08-20 Made standalone, enforces Grundbulten, mandates EN translation and abbreviation."
+  - v2.1: "2025-08-20 CRITICAL UPDATE: Made fully language-agnostic. Added mandatory language detection (S1b) and translation-first workflow to ensure English output regardless of source language."
+  - SHA256_LF: a8e51b3a88df5529f796bd457c6b758da4f40f09b5523a54a014a600d8f0f63a
+
+# ==============================================================================
+# TARGET SCHEMA DEFINITION
+# Defines the mandatory structure and key mapping for the output YAML file.
+# ==============================================================================
+
+target_schema:
+  description: "Defines the mandatory structure and key mapping for the output YAML file."
+  root_keys: [id, rev, lang, enc, date, purp, scope, policy, hist, target_schema, proc, annex, verify_spec] # Used for validation.
+  mapping:
+    # Source MD Section -> Target YML Key -> Rule
+    - { src: "SYFTE & ANSVAR",  tgt: "purp",          rule: "Translate to concise English purpose statement." }
+    - { src: "HISTORIK",        tgt: "hist",          rule: "Map to a list of strings. Translate content." }
+    - { src: "Grindar (G)",     tgt: "gates",         rule: "Map to a list of gate objects." }
+    - { src: "Steg (S)",        tgt: "proc",          rule: "Map to a list of process step objects." }
+    - { src: "Bilagor (A-E)",   tgt: "annex",         rule: "Map to a list of annex objects." }
+    # Object Keys
+    - { src: "Regel-ID",        tgt: "id",            rule: "Direct copy (e.g., 'G-1', 'S4a')." }
+    - { src: "Titel",           tgt: "title",         rule: "Translate title to English." }
+    - { src: "Regeltext",       tgt: "rule",          rule: "Synthesize the core imperative from TRANSLATED text into a concise English rule string. See S2b." }
+    - { src: "Motivering",      tgt: "why_md",        rule: "Translate the rationale to English, preserving Markdown." }
+    - { src: "Innehåll",        tgt: "content",       rule: "For annexes, copy content. If text, translate to English." }
+
+# ==============================================================================
+# CONVERSION PROCESS (proc)
+# A strict, step-by-step algorithm for the transformation.
+# ==============================================================================
+
+proc:
+  - id: S0
+    title: "Pre-flight & Source Integrity Check (Grundbulten G-1)"
+    rule: "On receiving the source .md file, require its `base_sha256_lf`. Calculate hash of the provided content. If hashes mismatch, ABORT and request a fresh file to prevent acting on truncated/stale input."
+    why_md: |
+      **Why:** Implements Grundbulten's first gate (G-1). This is the most critical step to ensure the source file is complete and exactly what you intended.
+
+  - id: S1
+    title: "Source Decomposition & Language Analysis"
+    sub_steps:
+      - id: 1a
+        title: "Decomposition"
+        rule: "Parse the source .md file into a structured intermediate representation (AST). Identify all primary sections and every individual rule."
+        why_md: "**Why:** This maps the narrative document into a structured format that can be processed algorithmically, separating content from presentation."
+      - id: 1b
+        title: "Language Detection (Mandatory)"
+        rule: "For all extracted text content (purp, hist, titles, rules, rationales), perform language detection. If the dominant language is not English (`en`), flag ALL text content for translation. Report the detected language in the verification log."
+        why_md: |
+          **Why:** This is the core of the language-agnostic requirement. By explicitly detecting the language first, we can reliably apply the correct translation model and enforce the English-only output policy. It removes dangerous assumptions.
+
+  - id: S2
+    title: "Core Transformation Engine (Translate-First)"
+    rule: "Iterate through the intermediate representation. If flagged in S1b, all text MUST be translated to English FIRST, before applying the mapping rules."
+    sub_steps:
+      - id: 2a
+        title: "Translate to English & Map Content"
+        rule: "For every text element, if it is not English, translate it to high-quality English. Then, map the (now English) content to the target keys (`tgt`) defined in `target_schema.mapping`."
+        why_md: "**Why:** This enforces the `output_lang_enforced: 'en'` policy and ensures consistency across all converted files."
+
+      - id: 2b
+        title: "Synthesize `rule` string (from English text)"
+        rule: "From the **translated English** rule's text, distill the core, non-negotiable command into a concise, imperative English string. Remove all explanatory prose. The output should resemble pseudocode."
+        why_md: "**Why:** This creates the machine-readable part of the hybrid format from a standardized English source, which is critical for deterministic synthesis."
+
+      - id: 2c
+        title: "Preserve `why_md` (from English text)"
+        rule: "Take the **translated English** explanatory prose, and place it in the `why_md` field. All original Markdown formatting (bold, lists, etc.) MUST be preserved."
+        why_md: "**Why:** This preserves the human-readable context, ensuring the purpose behind the rule is clear regardless of the original language."
+
+  - id: S3
+    title: "Assembly & Finalization"
+    rule: "Assemble the transformed data into a single, valid YAML document string. Calculate the `SHA256_LF` of the final content and embed it into the `hist` section of the generated YAML itself."
+    why_md: "**Why:** Implements Grundbulten's traceability requirements (Steg 1f), making the output file self-verifying."
+
+  - id: S4
+    title: "Grundbulten-Compliant Verification & Reporting"
+    rule: "Before delivering the final file, perform a self-verification and generate a mandatory `VERIFICATION_LOG` based on the template in `verify_spec`."
+    why_md: "**Why:** This is the proof of work. It demonstrates that this protocol was followed correctly and provides auditable metrics to confirm the conversion's integrity."
+
+# ==============================================================================
+# VERIFICATION SPECIFICATION (verify_spec)
+# Defines the mandatory output report for every execution of this protocol.
+# ==============================================================================
+
+verify_spec:
+  title: "Mandatory Verification Log for P-MD2YML-2.1 Execution"
+  template: |
+    #### VERIFICATION LOG (P-MD2YML-2.1 COMPLIANCE)
+    - **Protocol Adherence:** [PASS] - All steps of `P-MD2YML-2.1` were executed.
+    - **Source File:** `[path/to/source.md]`
+    - **Source SHA256_LF:** `[sha_from_user_or_calculated]`
+    - **Language Check:** Primary source language detected as `[detected_lang]`. Translation to `en` required: [YES/NO].
+    - **Target File:** `[path/to/target.yml]`
+    - **Target SHA256_LF:** `[calculated_sha_of_new_yml]`
+    - **Integrity Check:**
+      - **Schema Validation:** [PASS] - Output YAML conforms to the `target_schema`.
+      - **Item Count:** Source items (gates+steps+annexes) = `[N]`, Target items = `[N]`. [MATCH/MISMATCH]
+      - **Intent Preservation Audit:** [PASS] - Manual review confirms no logic was lost during translation and synthesis.
+    - **Execution Summary:** Successfully detected source language `[detected_lang]`, translated to English, and converted the protocol into the compact hybrid YAML format.
+# END FILE: docs/ai_protocols/md2yml.yml
