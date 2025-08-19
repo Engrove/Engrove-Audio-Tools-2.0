@@ -9,4 +9,6 @@
 **Escalation-mappning:** 
 - Plan Review ↔ L4 (Samarbetspartner).
 - Pre-Commit ↔ L3 vid confidence < 0.85.
-- Destruktivt ↔ alltid HITL bekräftelse oavsett nivå.
+- Destruktivt ↔  Destruktivt ↔ alltid HITL-CONFIRM.
+
+**Logg:** Protokollera beslut i .tmp/session_revision_log.json (P-GB-3.9).
