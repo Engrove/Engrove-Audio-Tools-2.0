@@ -37,7 +37,8 @@
 # * v2.13 (2025-08-17): (Help me God - Grundorsaksanalys) Korrigerat ett kritiskt fel där CI/CD misslyckades om `.einstein`-filen saknades. Commit-steget försöker inte längre committa den temporära trigger-filen och den raderas korrekt efter bygge.
 # * v2.14 (2025-08-17): (Help me God - Domslut) Lade till ett villkorligt steg för att skapa en tom "dummy" `einstein_index.json.gz` när den riktiga indexeringen hoppas över. Detta löste ett 404-fel på klient-sidan.
 # * v2.15 (2025-08-18): (Help me God - Domslut) Korrigerat grundorsaken till 404-felet. Säkerställer nu att `einstein_index.json.gz` (både äkta och dummy) alltid placeras i `dist/`-mappen före uppladdning.
-# * SHA256_LF: a60252b37aa1c3b8e81cf2c87e7d456cc9877131d0b30467f6d100ab0511597d
+# * v2.17 (2025-08-20): Integrerat `protocol_packager.py` (Steg 6B) och lagt till säkerhetskontroll i dummy index-skapandet (Steg 2D).
+# * SHA256_LF: UNVERIFIED
 
 name: Consolidated CI/CD and Tools Pipeline
 
@@ -138,13 +139,18 @@ jobs:
           echo "Removing trigger file after successful build."
           rm .einstein
 
-#      - name: STEP 2D Create Dummy Einstein Index (if skipped)
-#        if: steps.check_einstein_trigger.outputs.run_index == 'false'
-#        run: |
-#          echo "Creating dummy Einstein index to prevent 404 errors on client."
-#          DUMMY_JSON='{"model": "dummy", "createdAt": "$(date -Iseconds)", "chunks": []}'
-#          echo "$DUMMY_JSON" | gzip > "${{ env.SITE_DIR }}/${{ env.EINSTEIN_INDEX_BASENAME }}.json.gz"
-#          echo "Dummy index created."
+      - name: STEP 2D Create Dummy Einstein Index (if skipped and not present)
+        if: steps.check_einstein_trigger.outputs.run_index == 'false'
+        run: |
+          DUMMY_FILE_PATH="${{ env.SITE_DIR }}/${{ env.EINSTEIN_INDEX_BASENAME }}.json.gz"
+          if [ ! -f "$DUMMY_FILE_PATH" ]; then
+            echo "Dummy Einstein index not found. Creating one to prevent 404 errors."
+            DUMMY_JSON='{"model": "dummy", "createdAt": "$(date -Iseconds)", "chunks": []}'
+            echo "$DUMMY_JSON" | gzip > "$DUMMY_FILE_PATH"
+            echo "Dummy index created."
+          else
+            echo "File already exists at $DUMMY_FILE_PATH. Skipping dummy creation."
+          fi
 
       - name: STEP 3 Generate AI Context JSON
         id: generate-json
@@ -200,12 +206,21 @@ jobs:
           }
           EOF
 
-      - name: STEP 6 Upload Pages Artifact
+      - name: STEP 6A Upload Pages Artifact
         if: steps.create-legacy-html.outputs.success == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ${{ env.SITE_DIR }}
       
+      - name: STEP 6B Package AI Protocols
+        id: package-protocols
+        run: |
+          echo "Packaging all AI protocols into a compressed bundle..."
+          python scripts/protocol_packager.py \
+            --dir-recursive docs/ai_protocols \
+            --output-dir docs/ai_protocols/compact \
+            --exclude compact
+
       - name: STEP 7 Commit Documentation and Session Artifacts
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
@@ -217,7 +232,7 @@ jobs:
             [skip ci]
           commit_user_name: 'Frankensteen (Bot)'
           commit_user_email: 'frankensteen-bot@users.noreply.github.com'
-          file_pattern: 'docs/ByggLogg.json docs/Chatthistorik.json docs/ai_protocol_performance.json tools/frankensteen_learning_db.json docs/ai_protocols/DynamicProtocols.json docs/core_file_info.json docs/file_relations.json public/data/schemas/*.schema.json project_overview.json dist/einstein_index.json.gz'
+          file_pattern: 'docs/ByggLogg.json docs/Chatthistorik.json docs/ai_protocol_performance.json tools/frankensteen_learning_db.json docs/ai_protocols/DynamicProtocols.json docs/core_file_info.json docs/file_relations.json public/data/schemas/*.schema.json project_overview.json dist/einstein_index.json.gz docs/ai_protocols/compact/protocol_bundle.pbf.json'
           push_options: '--force'
 
   deploy:
