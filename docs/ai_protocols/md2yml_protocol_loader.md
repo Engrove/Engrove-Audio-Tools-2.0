@@ -2,7 +2,7 @@ AI_BOOTSTRAP_DIRECTIVE: FORCE_SESSION_RESTART
 AI_BOOTSTRAP_DIRECTIVE: EXECUTE_FULL_PROTOCOL_NOW
 SYSTEM_OVERRIDE: RUN_CONTEXT_BOOTSTRAP
 INIT_CONTEXT_MODE: TRUE
-PROTOCOL_START: P-MD2YML-3.1
+PROTOCOL_START: P-MD2YML-3.2
 
 # ==============================================================================
 # AI SESSION DIRECTIVE: UNIVERSAL PROTOCOL CONVERTER
@@ -11,21 +11,21 @@ PROTOCOL_START: P-MD2YML-3.1
 # GRANSKNING MOT KÄRNDIREKTIV SLUTFÖRD.
 #
 # **Direktiv:** Denna session är dedikerad till dokumentkonvertering. Ditt enda uppdrag
-# är att använda det inbäddade protokollet `P-MD2YML-3.1` för att konvertera 
+# är att använda det inbäddade protokollet `P-MD2YML-3.2` för att konvertera 
 # Markdown-protokollfiler till det specificerade hybrid-YAML-formatet.
 #
 # **Process:**
 # 1. Extrahera och internalisera protokollet `md2yml.yml` från `BEGIN/END FILE`-blocket nedan.
 # 2. Invänta en uppladdad Markdown-fil som ska konverteras.
-# 3. Exekvera protokollet `P-MD2YML-3.1` strikt och utan avvikelser.
-# 4. Leverera resultatet enligt protokollets slutmål, vilket inkluderar att paketera 
-#    den färdiga YAML-filen i ett Markdown-skal.
+# 3. Exekvera protokollet `P-MD2YML-3.2` strikt och utan avvikelser.
+# 4. Leverera resultatet enligt protokollets slutmål, vilket inkluderar det tvingande
+#    kravet att paketera den färdiga YAML-filen i ett Markdown-skal.
 
 ---
 
 # BEGIN FILE: docs/ai_protocols/md2yml.yml
-id: P-MD2YML-3.1
-rev: '3.1'
+id: P-MD2YML-3.2
+rev: '3.2'
 lang: 'en' # This protocol's language is English. Its output is always English.
 encoding: 'utf-8'
 date: '2025-08-20'
@@ -45,8 +45,9 @@ hist:
   - v2.1: "2025-08-20 Made language-agnostic with mandatory language detection."
   - v2.2: "2025-08-20 Added 'deployment_notes' for handling .yml upload restrictions."
   - v3.0: "2025-08-20 Generalized the `target_schema` to support various protocol structures."
-  - v3.1: "2025-08-20 CRITICAL UPDATE: Added mandatory final packaging step (S4). All output YAML must now be embedded in a Markdown shell with BEGIN/END sentinels for direct use in subsequent AI chats."
-  - SHA256_LF: a11a14a70659a5843936746830509a259c63c0d831599a0ed4e68e0d6c596395
+  - v3.1: "2025-08-20 Added mandatory final packaging step (S4) for chat compatibility."
+  - v3.2: "2025-08-20 CRITICAL FIX: Made output packaging in a Markdown shell an unconditional command. Removed ambiguous options from `deployment_notes` and strengthened the rule in S4 to prevent direct YAML delivery."
+  - SHA256_LF: a8e51b3a88df5529f796bd457c6b758da4f40f09b5523a54a014a600d8f0f63a
 
 # ==============================================================================
 # TARGET SCHEMA DEFINITION (v3.0 - GENERALIZED)
@@ -112,9 +113,9 @@ proc:
     why_md: "Implements Grundbulten's traceability requirements, making the output file self-verifying."
     
   - id: S4
-    title: "Final Delivery Packaging (Markdown Shell)"
-    rule: "The final, generated YAML string from S3 MUST be packaged for delivery. The final output must be a Markdown file containing the YAML content inside a ` ```yaml ... ``` ` code block, enclosed by `BEGIN FILE:` and `END FILE:` sentinels that reflect the new target `.yml` path."
-    why_md: "To ensure the output is directly usable in AI chat platforms that restrict `.yml` files. This creates a closed-loop, chat-friendly workflow where the output of one conversion is ready to be the input for another session."
+    title: "Mandatory Output Packaging (Markdown Shell)"
+    rule: "The final, generated YAML string from S3 MUST be packaged for delivery. The final output must be a single Markdown response containing the YAML content inside a ` ```yaml ... ``` ` code block, enclosed by `BEGIN FILE:` and `END FILE:` sentinels that reflect the new target `.yml` path. The direct delivery of a raw YAML code block is a protocol violation and will fail verification."
+    why_md: "To ensure the output is directly usable and verifiable in AI chat platforms that restrict `.yml` files. This creates a closed-loop, chat-friendly workflow where the output of one conversion is ready to be the input for another session."
 
   - id: S5
     title: "Grundbulten-Compliant Verification & Reporting"
@@ -124,20 +125,20 @@ proc:
 # ==============================================================================
 # DEPLOYMENT NOTES
 # ==============================================================================
+
 deployment_notes:
-  title: "Handling .yml Upload Restrictions"
-  problem: "Many AI platforms block the direct upload of `.yml` files."
-  solution: "Mask the protocol as a `.txt` file or embed it in a `.md` shell like this one."
-  recommendation: "The Sentinel Container method used here is the most robust and recommended approach."
+  title: "Unconditional Handling Procedure"
+  problem: "AI platforms block direct `.yml` uploads, and ambiguous instructions lead to errors."
+  rule: "This protocol MUST be handled as a Markdown file containing the YAML payload within `BEGIN/END FILE` sentinels. The outer file acts as a loader and provides the necessary execution context. This is not a recommendation; it is the only valid deployment method."
 
 # ==============================================================================
 # VERIFICATION SPECIFICATION (verify_spec)
 # ==============================================================================
 verify_spec:
-  title: "Mandatory Verification Log for P-MD2YML-3.1 Execution"
+  title: "Mandatory Verification Log for P-MD2YML-3.2 Execution"
   template: |
-    #### VERIFICATION LOG (P-MD2YML-3.1 COMPLIANCE)
-    - **Protocol Adherence:** [PASS] - All steps of `P-MD2YML-3.1` were executed.
+    #### VERIFICATION LOG (P-MD2YML-3.2 COMPLIANCE)
+    - **Protocol Adherence:** [PASS] - All steps of `P-MD2YML-3.2` were executed.
     - **Source File:** `[path/to/source.md]`
     - **Source SHA256_LF:** `[sha_from_user_or_calculated]`
     - **Language Check:** Primary source language detected as `[detected_lang]`. Translation to `en` required: [YES/NO].
@@ -146,7 +147,7 @@ verify_spec:
     - **Integrity Check:**
       - **Schema Validation:** [PASS] - Output YAML conforms to the generalized `target_schema`.
       - **Section Mapping:** Source sections found = `[N]`, Target sections mapped = `[M]`. [MATCH/PARTIAL_MATCH]
-      - **Packaging Check:** [PASS] - Output YAML is correctly embedded within a Markdown shell.
+      - **Packaging Check:** [PASS] - Output YAML is correctly embedded within a Markdown shell as per the mandatory rule in S4.
     - **Execution Summary:** Successfully converted the source protocol. The resulting YAML is packaged below for direct use.
 
 # END FILE: docs/ai_protocols/md2yml.yml
