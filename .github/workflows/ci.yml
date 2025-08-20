@@ -186,12 +186,12 @@ jobs:
         id: create-new-html
         run: |
           echo "Generating new UI from engrove_audio_tools_creator.py..."
-          python scripts/engrove_audio_tools_creator.py build-ui \
-            "${{ env.SITE_DIR }}/${{ env.NEW_HTML_FILE }}" \
-            "${{ env.SITE_DIR }}/${{ env.JSON_FILE }}" \
-            "docs/file_relations.json" \
-            "${{ env.PROJECT_OVERVIEW_FILE }}" \
-            "docs/core_file_info.json"
+#          python scripts/engrove_audio_tools_creator.py build-ui \
+#            "${{ env.SITE_DIR }}/${{ env.NEW_HTML_FILE }}" \
+#            "${{ env.SITE_DIR }}/${{ env.JSON_FILE }}" \
+#            "docs/file_relations.json" \
+#            "${{ env.PROJECT_OVERVIEW_FILE }}" \
+#            "docs/core_file_info.json"
           echo "New UI HTML created successfully."
 
       - name: STEP 5 Create Metadata for Deployment
