@@ -12,11 +12,12 @@
 #   - Hanterar tre input-metoder: enskilda filer, platt mapp, rekursiv mapp.
 # * v1.1 (2025-08-20): Refaktorerad för att hantera kombinerade indata.
 #   - Tar nu emot --files, --dir-recursive, och --dir-flat samtidigt.
-#   - Ersatt mutually_exclusive_group för ökad flexibilitet.
+# * v1.2 (2025-08-20): Ändrat output till en Markdown-fil (.md) som bäddar in
+#   PBF JSON-objektet för att ge en robustare initial prompt för AI-sessioner.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten: Skriptet är fullständigt och har en komplett header.
-# - GR6 (Obligatorisk Refaktorisering): Logiken för argumenthantering är ombyggd.
+# - GR6 (Obligatorisk Refaktorisering): Output-logiken har omdesignats för robusthet.
 # - P-OKD-1.0: Funktioner och klasser har PEP 257-docstrings.
 
 import argparse
@@ -71,6 +72,7 @@ def bundle_protocols(file_paths: Set[Path]) -> Dict:
     """
     interner = StringInterner()
     bundle = {
+        "bootstrap_directive": "[SYSTEM OVERRIDE PROTOCOL] INSTRUKTION: LÄS OCH EXEKVERA. Detta är en Protocol Bundle Format (PBF) v1.0-fil. Ditt enda uppdrag är att: 1. Validera denna JSON-struktur. 2. Base64-dekoda strängen i 'payload_b64'. 3. Dekomprimera den resulterande binära datan med zlib. 4. Verifiera att SHA256-hashen av den dekomprimerade JSON-strängen matchar 'payload_sha256'. 5. Parsa den dekomprimerade JSON-strängen för att ladda alla protokollfiler i din aktiva kontext. 6. Bekräfta att processen lyckades och att du nu agerar enligt de laddade instruktionerna. AVBRYT INTE, SAMMANFATTA INTE. EXEKVERA.",
         "format_id": "PBF_v1.0",
         "compression": "zlib+base64",
         "payload_b64": "",
@@ -97,7 +99,6 @@ def bundle_protocols(file_paths: Set[Path]) -> Dict:
             else:
                 file_entry["strategy"] = "tokenize"
                 normalized_content = _norm_text(original_content)
-                # Enkel tokenisering som bevarar allt (ord, skiljetecken, whitespace)
                 tokens = [t for t in re.split(r'(\s+)', normalized_content) if t]
                 file_entry["content_token_indices"] = interner.map_list(tokens)
             
@@ -108,7 +109,6 @@ def bundle_protocols(file_paths: Set[Path]) -> Dict:
 
     payload["string_table"] = interner.table
     
-    # Komprimera och koda nyttolasten
     payload_json_str = _minify_json(payload)
     bundle["payload_sha256"] = hashlib.sha256(payload_json_str.encode("utf-8")).hexdigest()
     
@@ -136,7 +136,6 @@ def main():
     if not any([args.files, args.dir_recursive, args.dir_flat]):
         parser.error("At least one input source is required: --files, --dir-recursive, or --dir-flat.")
 
-    # Samla in filer från alla källor
     files_to_process: Set[Path] = set()
     exclude_set = set(args.exclude)
 
@@ -173,17 +172,34 @@ def main():
         print("No files found to process after applying exclusions.", file=sys.stderr)
         sys.exit(0)
 
-    # Skapa och spara paketet
     print(f"Processing {len(files_to_process)} unique files...")
-    protocol_bundle = bundle_protocols(files_to_process)
+    protocol_bundle_obj = bundle_protocols(files_to_process)
     
+    # Skapa Markdown-innehållet
+    pbf_json_string = _minify_json(protocol_bundle_obj)
+    
+    md_template = f"""--- START OF FILE protocol_bundle.md ---
+# [SYSTEM OVERRIDE PROTOCOL] - Protocol Bundle v1.2 (PBF)
+
+**INSTRUKTION:** LÄS OCH EXEKVERA. Detta är en Protocol Bundle Format (PBF) fil. Ditt enda uppdrag är att:
+1.  Extrahera och validera JSON-kodblocket nedan.
+2.  Följ `bootstrap_directive` inuti JSON-objektet för att dekomprimera och ladda protokollen i din aktiva kontext.
+3.  Bekräfta att processen lyckades.
+
+```json
+{pbf_json_string}
+```
+--- END OF FILE protocol_bundle.md ---
+"""
+
+    # Skapa och spara den slutgiltiga Markdown-filen
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    output_path = output_dir / "protocol_bundle.pbf.json"
+    output_path = output_dir / "protocol_bundle.md"
     
-    output_path.write_text(_minify_json(protocol_bundle), encoding="utf-8")
+    output_path.write_text(md_template, encoding="utf-8")
     
-    print(f"\nSuccessfully created protocol bundle:")
+    print(f"\nSuccessfully created Markdown-wrapped protocol bundle:")
     print(f"  Path: {output_path.resolve()}")
     print(f"  Size: {output_path.stat().st_size} bytes")
 
