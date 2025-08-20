@@ -37,7 +37,7 @@
 # * v2.13 (2025-08-17): (Help me God - Grundorsaksanalys) Korrigerat ett kritiskt fel där CI/CD misslyckades om `.einstein`-filen saknades. Commit-steget försöker inte längre committa den temporära trigger-filen och den raderas korrekt efter bygge.
 # * v2.14 (2025-08-17): (Help me God - Domslut) Lade till ett villkorligt steg för att skapa en tom "dummy" `einstein_index.json.gz` när den riktiga indexeringen hoppas över. Detta löste ett 404-fel på klient-sidan.
 # * v2.15 (2025-08-18): (Help me God - Domslut) Korrigerat grundorsaken till 404-felet. Säkerställer nu att `einstein_index.json.gz` (både äkta och dummy) alltid placeras i `dist/`-mappen före uppladdning.
-# * v2.17 (2025-08-20): Integrerat `protocol_packager.py` (Steg 6B) och lagt till säkerhetskontroll i dummy index-skapandet (Steg 2D).
+# * v2.17 (2025-08-20): Lade till steg (6B) för att paketera AI-protokoll med protocol_packager.py v1.1. Förbättrat logiken i STEP 2D för att undvika att skriva över en befintlig indexfil.
 # * SHA256_LF: UNVERIFIED
 
 name: Consolidated CI/CD and Tools Pipeline
@@ -142,14 +142,14 @@ jobs:
       - name: STEP 2D Create Dummy Einstein Index (if skipped and not present)
         if: steps.check_einstein_trigger.outputs.run_index == 'false'
         run: |
-          DUMMY_FILE_PATH="${{ env.SITE_DIR }}/${{ env.EINSTEIN_INDEX_BASENAME }}.json.gz"
-          if [ ! -f "$DUMMY_FILE_PATH" ]; then
-            echo "Dummy Einstein index not found. Creating one to prevent 404 errors."
+          FILE_PATH="${{ env.SITE_DIR }}/${{ env.EINSTEIN_INDEX_BASENAME }}.json.gz"
+          if [ ! -f "$FILE_PATH" ]; then
+            echo "Dummy index does not exist. Creating it to prevent 404 errors."
             DUMMY_JSON='{"model": "dummy", "createdAt": "$(date -Iseconds)", "chunks": []}'
-            echo "$DUMMY_JSON" | gzip > "$DUMMY_FILE_PATH"
-            echo "Dummy index created."
+            echo "$DUMMY_JSON" | gzip > "$FILE_PATH"
+            echo "Dummy index created at $FILE_PATH."
           else
-            echo "File already exists at $DUMMY_FILE_PATH. Skipping dummy creation."
+            echo "Index file already exists at $FILE_PATH. Skipping dummy file creation."
           fi
 
       - name: STEP 3 Generate AI Context JSON
@@ -182,17 +182,17 @@ jobs:
           printf '{"repository": "%s", "branch": "%s"}' "${{ github.repository }}" "${{ github.ref_name }}" > "${{ env.PROJECT_OVERVIEW_FILE }}"
           echo "Artifact created at ${{ env.PROJECT_OVERVIEW_FILE }}"
 
-#      - name: STEP 4C Create New UI HTML (index2.html)
-#        id: create-new-html
-#        run: |
-#          echo "Generating new UI from engrove_audio_tools_creator.py..."
-#          python scripts/engrove_audio_tools_creator.py build-ui \
-#            "${{ env.SITE_DIR }}/${{ env.NEW_HTML_FILE }}" \
-#            "${{ env.SITE_DIR }}/${{ env.JSON_FILE }}" \
-#            "docs/file_relations.json" \
-#            "${{ env.PROJECT_OVERVIEW_FILE }}" \
-#            "docs/core_file_info.json"
-#          echo "New UI HTML created successfully."
+      - name: STEP 4C Create New UI HTML (index2.html)
+        id: create-new-html
+        run: |
+          echo "Generating new UI from engrove_audio_tools_creator.py..."
+          python scripts/engrove_audio_tools_creator.py build-ui \
+            "${{ env.SITE_DIR }}/${{ env.NEW_HTML_FILE }}" \
+            "${{ env.SITE_DIR }}/${{ env.JSON_FILE }}" \
+            "docs/file_relations.json" \
+            "${{ env.PROJECT_OVERVIEW_FILE }}" \
+            "docs/core_file_info.json"
+          echo "New UI HTML created successfully."
 
       - name: STEP 5 Create Metadata for Deployment
         if: steps.create-legacy-html.outputs.success == 'true'
@@ -215,9 +215,10 @@ jobs:
       - name: STEP 6B Package AI Protocols
         id: package-protocols
         run: |
-          echo "Packaging all AI protocols into a compressed bundle..."
+          echo "Packaging specified AI protocols and configs into a compressed bundle..."
           python scripts/protocol_packager.py \
             --dir-recursive docs/ai_protocols \
+            --files docs/file_relations.json docs/core_file_info.json tools/frankensteen_learning_db.json package.json vite.config.js \
             --output-dir docs/ai_protocols/compact \
             --exclude compact
 
