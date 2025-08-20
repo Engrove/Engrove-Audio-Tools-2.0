@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-19T04:54:59.830934+00:00",
+    "generated_at": "2025-08-20T18:41:29.111892+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -1096,6 +1096,115 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
+      "scripts/protocol_packager.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [
+          {
+            "symbol": "_norm_text",
+            "type": "function"
+          },
+          {
+            "symbol": "sha256_lf",
+            "type": "function"
+          },
+          {
+            "symbol": "_minify_json",
+            "type": "function"
+          },
+          {
+            "symbol": "StringInterner",
+            "type": "class"
+          },
+          {
+            "symbol": "bundle_protocols",
+            "type": "function"
+          },
+          {
+            "symbol": "main",
+            "type": "function"
+          }
+        ],
+        "imports": [
+          {
+            "source": "argparse",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "base64",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "hashlib",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "json",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "re",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "sys",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "zlib",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "dataclasses",
+            "symbols": [
+              "dataclass",
+              "field"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "pathlib",
+            "symbols": [
+              "Path"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "typing",
+            "symbols": [
+              "Dict",
+              "List",
+              "Iterable",
+              "Set"
+            ],
+            "type": "library_import"
+          }
+        ],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
       "scripts/docs/file_relations.json": {
         "type": "JSON Config",
         "category": "configuration",
@@ -1906,15 +2015,6 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "docs/ai_protocols/Brainstorming_Protokoll.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
       "docs/ai_protocols/Multi_Sample_Protokoll.md": {
         "type": "Markdown Document",
         "category": "documentation",
@@ -2059,24 +2159,6 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "docs/ai_protocols/Manuell_Cache-Berikning_Protokoll.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/ai_protocols/KPI_Dashboard_Spec.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
       "docs/ai_protocols/Hallucination_Leaderboard_Check.md": {
         "type": "Markdown Document",
         "category": "documentation",
@@ -2212,15 +2294,6 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "docs/ai_protocols/Diff_JSON_Protocol.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
       "docs/ai_protocols/context_bootstrap_instruction.md": {
         "type": "Markdown Document",
         "category": "documentation",
@@ -2231,6 +2304,15 @@
         "criticality_score": 0.0
       },
       "docs/ai_protocols/Stature_Report_Protocol.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/md2yml_protocol_loader.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
