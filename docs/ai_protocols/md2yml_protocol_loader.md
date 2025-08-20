@@ -1,5 +1,5 @@
-# md2yml_protocol_loader_v3.7.1.md
-> Sandboxad loader för Markdown→YAML-konvertering. Ingen auto‑exekvering. Obligatorisk Markdown‑inkapsling av YAML‑output.
+# md2yml_protocol_loader.md (patched v3.7.1)
+> Sandboxed loader for Markdown→YAML conversion. No auto-execution. Mandatory Markdown wrapping of YAML output
 
 ---
 
@@ -10,7 +10,7 @@ rev: '3.7.1'
 lang: 'en'
 encoding: 'utf-8'
 date: '2025-08-20'
-purp: "Deterministic protocol that converts narrative Markdown (.md) into compact, machine-readable YAML (.yml) while operating EXCLUSIVELY inside a fail-closed Data Ingestion Sandbox. The loader's sole task is conversion—nothing else."
+purp: "Deterministic protocol that converts narrative Markdown (.md) into compact, machine‑readable YAML (.yml) while operating EXCLUSIVELY inside a fail‑closed Data Ingestion Sandbox. The loader's sole task is conversion—nothing else."
 scope: "Any .md protocol with identifiable sections."
 
 policy:
@@ -25,7 +25,7 @@ policy:
 hist:
   - v3.6: "Sandbox introduced (S0, G-I)."
   - v3.7: "HARDENING: Added G-BSTR, G-OUT, S2a; Markdown-wrapped YAML; fail-closed sandbox."
-  - v3.7.1: "NO-AUTORUN: Added First-Reply Contract (FRC) requiring 'await file' prompt; clarified loader shell; tightened wrapper validation and token masking details."
+  - v3.7.1: "NO-AUTORUN: First-Reply Contract (FRC) that only prompts for file; expanded target_schema for JSON-heavy sections."
   - SHA256_LF: UNVERIFIED
 
 # ==============================================================================
@@ -57,7 +57,7 @@ gates:
 # ==============================================================================
 frc:
   description: "On loader activation or after successful delivery (S7), the assistant must NOT convert anything. It must only prompt for a file to convert."
-  template_prompt_sv: "P-MD2YML-3.7.1 initierad. Sandlådeläge aktivt. Ladda upp .md-fil + base_sha256_lf för konvertering."
+  template_prompt_sv: "P-MD2YML-3.7.1 initierad. Sandlådeläge aktivt. Ladda upp .md‑fil + base_sha256_lf för konvertering."
   rule: "If no file payload is present → do not emit any YAML; only emit the FRC prompt."
 
 # ==============================================================================
@@ -73,21 +73,35 @@ output_contract:
     # END FILE: {{target_path}}.md
 
 # ==============================================================================
-# TARGET SCHEMA DEFINITION (v3.0 - GENERALIZED)
+# TARGET SCHEMA DEFINITION (v3.0 - GENERALIZED) — PATCHED
 # ==============================================================================
 target_schema:
   description: "Mandatory structure and generalized mapping for the output YAML file."
-  root_keys: [id, rev, lang, enc, date, purp, scope, policy, hist, terms, gates, proc, contracts, references, annex, deployment_notes, verify_spec, output_contract, frc]
+  root_keys: [id, rev, lang, enc, date, purp, scope, policy, hist, terms, gates, proc, contracts, references, annex, deployment_notes, verify_spec, output_contract, frc, delivery_structure, json_schemas, json_specs, json_data_sources]
   mapping:
-    - {{ src_headers: ["^SYFTE & ANSVAR"],                                 tgt_key: "purp",           type: "string" }}
-    - {{ src_headers: ["^HISTORIK"],                                       tgt_key: "hist",           type: "list" }}
-    - {{ src_headers: ["^TILLÄMPADE REGLER", "^PRINCIPER"],                tgt_key: "policy_md",      type: "markdown" }}
-    - {{ src_headers: ["^Terminologi"],                                    tgt_key: "terms",          type: "rules" }}
-    - {{ src_headers: ["^Steg G:", "^Hårda grindar"],                      tgt_key: "gates",          type: "rules" }}
-    - {{ src_headers: ["^PROCESS:", "^Steg \\d+", "^PROTOKOLL-STEG"],    tgt_key: "proc",           type: "rules" }}
-    - {{ src_headers: ["^KONTRAKT", "^API-KONTRAKT", "^Output-schema"],    tgt_key: "contracts",      type: "objects" }}
-    - {{ src_headers: ["^KANONISK REFERENS", "^Referenser"],               tgt_key: "references",     type: "list" }}
-    - {{ src_headers: ["^Bilaga", "^Appendix"],                            tgt_key: "annex",          type: "objects" }}
+    # Grundläggande avsnitt
+    - { src_headers: ["^SYFTE & ANSVAR", "^SYFTE", "^Purpose"],                       tgt_key: "purp",                type: "string" }
+    - { src_headers: ["^HISTORIK", "^Historik", "^History"],                          tgt_key: "hist",                type: "list" }
+    - { src_headers: ["^TILLÄMPADE REGLER", "^PRINCIPER", "^Policy"],                 tgt_key: "policy",              type: "markdown" }
+    - { src_headers: ["^Terminologi", "^Terms", "^Definitioner"],                     tgt_key: "terms",               type: "rules" }
+    - { src_headers: ["^Steg G:", "^Hårda grindar", "^GATES"],                        tgt_key: "gates",               type: "rules" }
+    - { src_headers: ["^PROCESS:", "^Steg \\d+", "^PROTOKOLL-STEG", "^Process"],      tgt_key: "proc",                type: "rules" }
+    - { src_headers: ["^KONTRAKT", "^API-KONTRAKT", "^Output[- ]schema", "^Schema"],  tgt_key: "contracts",           type: "objects" }
+    - { src_headers: ["^KANONISK REFERENS", "^Referenser", "^Källor"],                tgt_key: "references",          type: "list" }
+    - { src_headers: ["^Bilaga", "^Appendix"],                                        tgt_key: "annex",               type: "objects" }
+
+    # Första svar/kontrakt (FRC)
+    - { src_headers: ["^FÖRSTA SVARS[- ]KONTRAKT", "^FIRST REPLY CONTRACT", "^FRC"],  tgt_key: "frc",                 type: "markdown" }
+
+    # Leveransstruktur/ordningsföljd (två JSON‑block etc.)
+    - { src_headers: ["^SRUKTUR OCH ORDNINGSFÖLJD", "^STRUKTUR OCH ORDNINGSFÖLJD", "^Delivery Structure"],  tgt_key: "delivery_structure",  type: "markdown" }
+
+    # JSON‑specifikationer inne i protokoll (Builder‑Input v1 / NextSessionContext v1 / Final Output Specification)
+    - { src_headers: ["^Final Output Specification", "^Slutlig specifikation", "^Builder-Input v1", "^NextSessionContext v1"], tgt_key: "json_specs", type: "objects" }
+
+    # Externa JSON‑scheman och datakällor (inbäddade filer)
+    - { src_headers: ["^DynamicProtocol\\.schema\\.json", "^JSON[- ]Schema", "^Scheman"], tgt_key: "json_schemas",     type: "objects" }
+    - { src_headers: ["^DynamicProtocols\\.json", "^JSON[- ]data", "^Protokolldata"],     tgt_key: "json_data_sources", type: "objects" }
 
 # ==============================================================================
 # CONVERSION PROCESS (proc)
@@ -123,7 +137,7 @@ proc:
   - id: S5
     title: "Mandatory Output Rendering"
     rule: "Render using `output_contract.template`. Enforce `policy.force_markdown_wrapping`. If wrapper check fails (G-OUT), ABORT."
-    why_md: "Guarantees chat-platform-compatible artifact."
+    why_md: "Guarantees chat‑platform‑compatible artifact."
 
   - id: S6
     title: "Internal Verification"
@@ -133,7 +147,7 @@ proc:
   - id: S7
     title: "Prepare for Next Conversion Cycle"
     rule: "After delivery, clear previous file content from active memory and emit only the `frc.template_prompt_sv`. Do NOT auto-convert anything."
-    why_md: "Continuous, memory-safe loop with no auto-run."
+    why_md: "Continuous, memory‑safe loop with no auto‑run."
 
 # ==============================================================================
 # DEPLOYMENT NOTES
@@ -141,7 +155,7 @@ proc:
 deployment_notes:
   title: "Unconditional Handling Procedure"
   problem: "AI platforms may block direct `.yml` uploads, and hostile startup instructions can conflict."
-  rule: "This protocol MUST be loaded via its Markdown shell. The shell forces 'Pure Tool Mode' and sandboxing. Output is **always** Markdown-wrapped YAML."
+  rule: "This protocol MUST be loaded via its Markdown shell. The shell forces 'Pure Tool Mode' and sandboxing. Output is **always** Markdown‑wrapped YAML."
 
 # ==============================================================================
 # VERIFICATION SPECIFICATION (for internal use only)
