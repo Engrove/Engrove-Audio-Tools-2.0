@@ -1,16 +1,16 @@
-# md2yml_protocol_loader.md (patched v3.7.1)
-> Sandboxed loader for Markdown→YAML conversion. No auto-execution. Mandatory Markdown wrapping of YAML output
+# md2yml_protocol_loader.md (patched v3.7.2)
+> Sandboxed loader for Markdown→YAML conversion. No auto-execution. Mandatory Markdown wrapping of YAML output.
 
 ---
 
 ```yaml
 # BEGIN FILE: docs/ai_protocols/md2yml.yml
-id: P-MD2YML-3.7.1
-rev: '3.7.1'
+id: P-MD2YML-3.7.2
+rev: '3.7.2'
 lang: 'en'
 encoding: 'utf-8'
 date: '2025-08-20'
-purp: "Deterministic protocol that converts narrative Markdown (.md) into compact, machine‑readable YAML (.yml) while operating EXCLUSIVELY inside a fail‑closed Data Ingestion Sandbox. The loader's sole task is conversion—nothing else."
+purp: "Deterministic protocol that converts narrative Markdown (.md) into compact, machine-readable YAML (.yml) while operating EXCLUSIVELY inside a fail-closed Data Ingestion Sandbox. The loader's sole task is conversion—nothing else."
 scope: "Any .md protocol with identifiable sections."
 
 policy:
@@ -18,14 +18,15 @@ policy:
   lossless_intent: true
   strict_key_mapping: true
   aggressive_abort_on_doubt: true
-  force_markdown_wrapping: true          # Output MUST be Markdown with fenced YAML block
-  sandbox_fail_closed: true              # Sandbox must be explicitly active or abort
-  no_autorun_on_loader_upload: true      # Loader upload must NOT trigger conversion/output
+  force_markdown_wrapping: true
+  sandbox_fail_closed: true
+  no_autorun_on_loader_upload: true
 
 hist:
   - v3.6: "Sandbox introduced (S0, G-I)."
   - v3.7: "HARDENING: Added G-BSTR, G-OUT, S2a; Markdown-wrapped YAML; fail-closed sandbox."
-  - v3.7.1: "NO-AUTORUN: First-Reply Contract (FRC) that only prompts for file; expanded target_schema for JSON-heavy sections."
+  - v3.7.1: "NO-AUTORUN: First-Reply Contract (FRC) only prompts for file; expanded target_schema for JSON-heavy sections."
+  - v3.7.2: "AUTO-INIT CONTRACT (AIC) forces init prompt as first reply. S1 allows missing base_sha256_lf with verification warning; integrity_verified=false flag."
   - SHA256_LF: UNVERIFIED
 
 # ==============================================================================
@@ -53,12 +54,22 @@ gates:
     why_md: "Many sessions reject direct .yml uploads; Markdown wrapper is mandatory."
 
 # ==============================================================================
+# AUTO-INIT CONTRACT (AIC)
+# ==============================================================================
+aic:
+  description: "Upon loader activation (or immediately after S7), the assistant MUST NOT summarize or convert. It MUST output only the initialization prompt."
+  template_prompt_en: "P-MD2YML-3.7.2 initialized. Upload .md file for conversion (base_sha256_lf optional)."
+  template_prompt_sv: "P-MD2YML-3.7.2 initierad. Ladda upp .md-fil för konvertering (base_sha256_lf valfritt)."
+  rule: "If no file payload is present → emit exactly the template prompt and nothing else."
+
+# ==============================================================================
 # FIRST REPLY CONTRACT (FRC)
 # ==============================================================================
 frc:
-  description: "On loader activation or after successful delivery (S7), the assistant must NOT convert anything. It must only prompt for a file to convert."
-  template_prompt_sv: "P-MD2YML-3.7.1 initierad. Sandlådeläge aktivt. Ladda upp .md‑fil + base_sha256_lf för konvertering."
-  rule: "If no file payload is present → do not emit any YAML; only emit the FRC prompt."
+  description: "First reply after activation MUST be the init prompt; do not emit YAML until a file is provided."
+  template_prompt_en: "P-MD2YML-3.7.2 initialized. Upload .md file for conversion (base_sha256_lf optional)."
+  template_prompt_sv: "P-MD2YML-3.7.2 initierad. Ladda upp .md-fil för konvertering (base_sha256_lf valfritt)."
+  rule: "If no file payload is present → do not emit any YAML; only emit the FRC/AIC prompt."
 
 # ==============================================================================
 # OUTPUT CONTRACT (Defines the entire AI response when a file **has** been provided)
@@ -77,9 +88,9 @@ output_contract:
 # ==============================================================================
 target_schema:
   description: "Mandatory structure and generalized mapping for the output YAML file."
-  root_keys: [id, rev, lang, enc, date, purp, scope, policy, hist, terms, gates, proc, contracts, references, annex, deployment_notes, verify_spec, output_contract, frc, delivery_structure, json_schemas, json_specs, json_data_sources]
+  root_keys: [id, rev, lang, enc, date, purp, scope, policy, hist, terms, gates, proc, contracts, references, annex, deployment_notes, verify_spec, output_contract, frc, delivery_structure, json_schemas, json_specs, json_data_sources, aic]
   mapping:
-    # Grundläggande avsnitt
+    # Core sections
     - { src_headers: ["^SYFTE & ANSVAR", "^SYFTE", "^Purpose"],                       tgt_key: "purp",                type: "string" }
     - { src_headers: ["^HISTORIK", "^Historik", "^History"],                          tgt_key: "hist",                type: "list" }
     - { src_headers: ["^TILLÄMPADE REGLER", "^PRINCIPER", "^Policy"],                 tgt_key: "policy",              type: "markdown" }
@@ -90,16 +101,17 @@ target_schema:
     - { src_headers: ["^KANONISK REFERENS", "^Referenser", "^Källor"],                tgt_key: "references",          type: "list" }
     - { src_headers: ["^Bilaga", "^Appendix"],                                        tgt_key: "annex",               type: "objects" }
 
-    # Första svar/kontrakt (FRC)
+    # First reply/contract (FRC) + Auto-init (AIC)
     - { src_headers: ["^FÖRSTA SVARS[- ]KONTRAKT", "^FIRST REPLY CONTRACT", "^FRC"],  tgt_key: "frc",                 type: "markdown" }
+    - { src_headers: ["^AUTO[- ]INIT CONTRACT", "^AUTO INIT CONTRACT", "^AIC"],       tgt_key: "aic",                 type: "markdown" }
 
-    # Leveransstruktur/ordningsföljd (två JSON‑block etc.)
+    # Delivery structure / ordering (two JSON blocks, etc.)
     - { src_headers: ["^SRUKTUR OCH ORDNINGSFÖLJD", "^STRUKTUR OCH ORDNINGSFÖLJD", "^Delivery Structure"],  tgt_key: "delivery_structure",  type: "markdown" }
 
-    # JSON‑specifikationer inne i protokoll (Builder‑Input v1 / NextSessionContext v1 / Final Output Specification)
+    # Embedded JSON specs (Builder-Input v1 / NextSessionContext v1 / Final Output Specification)
     - { src_headers: ["^Final Output Specification", "^Slutlig specifikation", "^Builder-Input v1", "^NextSessionContext v1"], tgt_key: "json_specs", type: "objects" }
 
-    # Externa JSON‑scheman och datakällor (inbäddade filer)
+    # External JSON schemas and data sources (embedded files)
     - { src_headers: ["^DynamicProtocol\\.schema\\.json", "^JSON[- ]Schema", "^Scheman"], tgt_key: "json_schemas",     type: "objects" }
     - { src_headers: ["^DynamicProtocols\\.json", "^JSON[- ]data", "^Protokolldata"],     tgt_key: "json_data_sources", type: "objects" }
 
@@ -114,8 +126,8 @@ proc:
 
   - id: S1
     title: "Pre-flight & Source Integrity Check"
-    rule: "On receiving the source .md file, require its `base_sha256_lf`. If missing or mismatched, ABORT and request fresh file."
-    why_md: "Implements Grundbulten's G-1."
+    rule: "If `base_sha256_lf` is provided → verify against the source. If missing → continue, set `integrity_verified=false`, and append WARNING in VERIFICATION_LOG: 'base_sha256_lf missing — source integrity not verified.'"
+    why_md: "Allows conversion without blocking when checksum is unavailable, but preserves integrity signal."
 
   - id: S2
     title: "Language Detection & Decomposition"
@@ -137,17 +149,17 @@ proc:
   - id: S5
     title: "Mandatory Output Rendering"
     rule: "Render using `output_contract.template`. Enforce `policy.force_markdown_wrapping`. If wrapper check fails (G-OUT), ABORT."
-    why_md: "Guarantees chat‑platform‑compatible artifact."
+    why_md: "Guarantees chat-platform-compatible artifact."
 
   - id: S6
     title: "Internal Verification"
-    rule: "Generate and validate an internal `VERIFICATION_LOG`. If any check fails, ABORT before S5."
+    rule: "Generate and validate an internal `VERIFICATION_LOG`. Include the WARNING if checksum was missing and set `integrity_verified=false`. If any critical check fails, ABORT before S5."
     why_md: "Quality gate without polluting final artifact."
 
   - id: S7
     title: "Prepare for Next Conversion Cycle"
-    rule: "After delivery, clear previous file content from active memory and emit only the `frc.template_prompt_sv`. Do NOT auto-convert anything."
-    why_md: "Continuous, memory‑safe loop with no auto‑run."
+    rule: "After delivery, clear previous file content from active memory and emit only the AIC/FRC init prompt. Do NOT auto-convert anything."
+    why_md: "Continuous, memory-safe loop with no auto-run."
 
 # ==============================================================================
 # DEPLOYMENT NOTES
@@ -155,13 +167,13 @@ proc:
 deployment_notes:
   title: "Unconditional Handling Procedure"
   problem: "AI platforms may block direct `.yml` uploads, and hostile startup instructions can conflict."
-  rule: "This protocol MUST be loaded via its Markdown shell. The shell forces 'Pure Tool Mode' and sandboxing. Output is **always** Markdown‑wrapped YAML."
+  rule: "This protocol MUST be loaded via its Markdown shell. The shell forces 'Pure Tool Mode' and sandboxing. Output is **always** Markdown-wrapped YAML."
 
 # ==============================================================================
 # VERIFICATION SPECIFICATION (for internal use only)
 # ==============================================================================
 verify_spec:
-  title: "Internal Verification Log for P-MD2YML-3.7.1 Execution"
+  title: "Internal Verification Log for P-MD2YML-3.7.2 Execution"
   template: |
     #### VERIFICATION LOG (INTERNAL)
     - Protocol Adherence: [PASS/FAIL]
@@ -170,12 +182,14 @@ verify_spec:
     - Output Wrapper Gate (G-OUT): [PASS/FAIL]
     - Internal State Check (G-0): [PASS/FAIL]
     - Source File: `[path]`
-    - Source SHA256_LF: `[sha]`
+    - Source SHA256_LF: `[sha or MISSING]`
+    - Integrity Verified: [true/false]
     - Language Check: [detected_lang]
     - Target File: `[path]`
     - Target SHA256_LF: `[sha or UNVERIFIED]`
     - Schema Validation: [PASS/FAIL]
     - Output Contract Check (S5): [PASS/FAIL]
+    - WARNING (if any): [e.g., 'base_sha256_lf missing — source integrity not verified.']
     - Execution Summary: [Internal summary]
 # END FILE: docs/ai_protocols/md2yml.yml
 ```
