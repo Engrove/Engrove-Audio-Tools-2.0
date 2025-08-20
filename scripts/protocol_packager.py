@@ -10,21 +10,25 @@
 # * v1.0 (2025-08-20): Initial skapelse av Frankensteen.
 #   - Implementerar PBF v1.0 med lossless-strategier.
 #   - Hanterar tre input-metoder: enskilda filer, platt mapp, rekursiv mapp.
-#   - Inkluderar en intern verifieringsfunktion för att garantera jämställdhet.
+# * v1.1 (2025-08-20): Refaktorerad för att hantera kombinerade indata.
+#   - Tar nu emot --files, --dir-recursive, och --dir-flat samtidigt.
+#   - Ersatt mutually_exclusive_group för ökad flexibilitet.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten: Skriptet är fullständigt och har en komplett header.
-# - GR6 (Obligatorisk Refaktorisering): Logiken är uppdelad i moduler.
+# - GR6 (Obligatorisk Refaktorisering): Logiken för argumenthantering är ombyggd.
 # - P-OKD-1.0: Funktioner och klasser har PEP 257-docstrings.
 
 import argparse
 import base64
 import hashlib
 import json
+import re
+import sys
 import zlib
-from pathlib import Path
 from dataclasses import dataclass, field
-from typing import Dict, List, Iterable, Set, Tuple
+from pathlib import Path
+from typing import Dict, List, Iterable, Set
 
 # --- Hjälpfunktioner ---
 def _norm_text(s: str) -> str:
@@ -117,44 +121,60 @@ def bundle_protocols(file_paths: Set[Path]) -> Dict:
 def main():
     """Hanterar kommandoradsargument och kör paketeringsprocessen."""
     parser = argparse.ArgumentParser(
-        description="Packs protocol files into a single, compressed PBF v1.0 artifact."
+        description="Packs protocol files into a single, compressed PBF v1.0 artifact from multiple sources."
     )
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--files", nargs="+", help="One or more individual file paths.")
-    group.add_argument("--dir", help="A directory to process.")
     
-    parser.add_argument("--recursive", action="store_true", help="Process directory recursively (used with --dir).")
+    parser.add_argument("--files", nargs="+", default=[], help="One or more individual file paths.")
+    parser.add_argument("--dir-recursive", nargs="+", default=[], help="One or more directories to scan recursively.")
+    parser.add_argument("--dir-flat", nargs="+", default=[], help="One or more directories to scan non-recursively (top level only).")
+    
     parser.add_argument("--output-dir", required=True, help="Directory to save the output bundle.")
-    parser.add_argument("--exclude", nargs="*", default=[], help="File or directory names to exclude.")
+    parser.add_argument("--exclude", nargs="*", default=[], help="File or directory names to exclude (e.g., '.git', '__pycache__').")
     
     args = parser.parse_args()
 
-    # Samla in filer
+    if not any([args.files, args.dir_recursive, args.dir_flat]):
+        parser.error("At least one input source is required: --files, --dir-recursive, or --dir-flat.")
+
+    # Samla in filer från alla källor
     files_to_process: Set[Path] = set()
     exclude_set = set(args.exclude)
 
-    if args.files:
-        for f in args.files:
-            p = Path(f)
-            if p.is_file():
+    for f_path in args.files:
+        p = Path(f_path)
+        if p.is_file():
+            if not any(part in exclude_set for part in p.parts):
                 files_to_process.add(p)
-    elif args.dir:
-        scan_path = Path(args.dir)
-        if not scan_path.is_dir():
-            print(f"Error: Directory not found at {args.dir}", file=sys.stderr)
-            sys.exit(1)
-        
-        glob_pattern = "**/*" if args.recursive else "*"
-        for p in scan_path.glob(glob_pattern):
-            if p.is_file() and not any(part in exclude_set for part in p.parts):
-                files_to_process.add(p)
+            else:
+                print(f"Info: Excluding specified file: {p}", file=sys.stderr)
+        else:
+            print(f"Warning: Specified file not found, skipping: {p}", file=sys.stderr)
+
+    for d_path in args.dir_flat:
+        scan_path = Path(d_path)
+        if scan_path.is_dir():
+            for p in scan_path.glob("*"):
+                if p.is_file() and not any(part in exclude_set for part in p.parts):
+                    files_to_process.add(p)
+        else:
+            print(f"Warning: Flat directory not found, skipping: {d_path}", file=sys.stderr)
+
+    for d_path in args.dir_recursive:
+        scan_path = Path(d_path)
+        if scan_path.is_dir():
+            for p in scan_path.glob("**/*"):
+                if p.is_file() and not any(part in exclude_set for part in p.parts):
+                    files_to_process.add(p)
+        else:
+            print(f"Warning: Recursive directory not found, skipping: {d_path}", file=sys.stderr)
+
 
     if not files_to_process:
-        print("No files found to process.", file=sys.stderr)
+        print("No files found to process after applying exclusions.", file=sys.stderr)
         sys.exit(0)
 
     # Skapa och spara paketet
-    print(f"Processing {len(files_to_process)} files...")
+    print(f"Processing {len(files_to_process)} unique files...")
     protocol_bundle = bundle_protocols(files_to_process)
     
     output_dir = Path(args.output_dir)
