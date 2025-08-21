@@ -3,6 +3,9 @@
 **Dokumentversion:** 1.0
 **Datum:** 2025-08-21
 
+## SYFTE & ANSVAR
+Detta dokument definierar projektets "varför", "för vem" och "när". Det är den primära strategiska guiden för all utveckling och ska användas av AI:n för att förstå uppgifters prioritet och kontext.
+
 ## 1. Produktvision
 
 **Att skapa det definitiva, datadrivna och community-förankrade verktyget för "overthinkers" inom Hi-Fi.**
