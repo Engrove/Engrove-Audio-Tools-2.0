@@ -239,14 +239,10 @@ def main() -> None:
 2.  Följ `bootstrap_directive` inuti JSON-objektet för att dekomprimera och ladda protokollen i din aktiva kontext.
 3.  Bekräfta att processen lyckades.
 
-```json
 {pbf_json_string}
-````
 
-\--- END OF FILE protocol\_bundle.md ---
 """
 
-```
 # Skapa och spara den slutgiltiga Markdown-filen
 output_dir = Path(args.output_dir)
 output_dir.mkdir(parents=True, exist_ok=True)
@@ -257,7 +253,6 @@ output_path.write_text(md_template, encoding="utf-8")
 print(f"\nSuccessfully created Markdown-wrapped protocol bundle:")
 print(f"  Path: {output_path.resolve()}")
 print(f"  Size: {output_path.stat().st_size} bytes")
-```
 
 if **name** == "**main**":
 main()
