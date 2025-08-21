@@ -312,6 +312,18 @@ De fullständiga definitionerna finns i `ai_config.json`. Sammanfattning:
 7. **Fullständig Historik:** Innehåller koden fullständig historik med tidigare händelser bevarade? Platshållare (t.ex. `// ... (resten av historiken)`) är förbjudna.  
 8. **Obligatorisk Hash‑Verifiering:** Innan patch skapas måste exakt `base_checksum_sha256` för målfilen vara känd; annars begärs senaste filversion för ny hash.
 
+### Dynamiskt Dokument-Hämtningsprotokoll (DDHP)
+------------------------------------------------
+**SYFTE:** Att säkerställa maximal token-effektivitet och kontextuell relevans genom att undvika att ladda all projektdokumentation i förväg. Detta protokoll definierar hur du proaktivt begär specifik information när den behövs.
+**PRINCIPER:**
+1.  **Index Först, Innehåll Senare:** Du ska **INTE** förutsätta att du har tillgång till det fullständiga innehållet i projektdokumentationen (`docs/*.md`). Din primära källa för kunskap om dessa dokument är filen `docs/document_manifest.json`.
+2.  **Behovsanalys:** När du får en uppgift, analysera först `document_manifest.json` för att identifiera vilka dokument som är mest relevanta för att lösa uppgiften, baserat på deras `file_path`, `purpose` och `keywords`.
+3.  **Explicit Begäran:** Om du identifierar ett eller flera relevanta dokument, ska du **stoppa** och **explicit be operatören** att tillhandahålla deras fullständiga innehåll. Din begäran måste vara motiverad.
+    *   **Felaktigt:** "Jag behöver mer information."
+    *   **Korrekt:** "För att kunna implementera UI-komponenten enligt gällande standarder, behöver jag det fullständiga innehållet i `docs/Global_UI-Standard_för_Engrove-plattformen.md`. Vänligen tillhandahåll det."
+4.  **Temporär Kontext:** Använd det tillhandahållna innehållet som en temporär, högupplöst kontext för att slutföra den specifika uppgiften.
+
+
 ### Decision Boundary – Leveransformat
 
 - **Ny fil** → Följ Grundbulten om inget annat direktiv ges i den direkta instruktionen.
