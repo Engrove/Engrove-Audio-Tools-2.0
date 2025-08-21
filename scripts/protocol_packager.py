@@ -232,27 +232,27 @@ def main() -> None:
     pbf_json_string = json.dumps(protocol_bundle_obj, indent=2, ensure_ascii=False) # Använd indent för läsbarhet i MD
     
     md_template = f"""--- START OF FILE protocol_bundle.md ---
-# [SYSTEM OVERRIDE PROTOCOL] - Protocol Bundle v1.2 (PBF)
+        # [SYSTEM OVERRIDE PROTOCOL] - Protocol Bundle v1.2 (PBF)
 
-**INSTRUKTION:** LÄS OCH EXEKVERA. Detta är en Protocol Bundle Format (PBF) fil. Ditt enda uppdrag är att:
-1.  Extrahera och validera JSON-kodblocket nedan.
-2.  Följ `bootstrap_directive` inuti JSON-objektet för att dekomprimera och ladda protokollen i din aktiva kontext.
-3.  Bekräfta att processen lyckades.
+        **INSTRUKTION:** LÄS OCH EXEKVERA. Detta är en Protocol Bundle Format (PBF) fil. Ditt enda uppdrag är att:
+        1.  Extrahera och validera JSON-kodblocket nedan.
+        2.  Följ `bootstrap_directive` inuti JSON-objektet för att dekomprimera och ladda protokollen i din aktiva kontext.
+        3.  Bekräfta att processen lyckades.
 
-{pbf_json_string}
+        {pbf_json_string}
 
-"""
+        """
 
-# Skapa och spara den slutgiltiga Markdown-filen
-output_dir = Path(args.output_dir)
-output_dir.mkdir(parents=True, exist_ok=True)
-output_path = output_dir / "protocol_bundle.md"
+    # Skapa och spara den slutgiltiga Markdown-filen
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = output_dir / "protocol_bundle.md"
 
-output_path.write_text(md_template, encoding="utf-8")
+    output_path.write_text(md_template, encoding="utf-8")
 
-print(f"\nSuccessfully created Markdown-wrapped protocol bundle:")
-print(f"  Path: {output_path.resolve()}")
-print(f"  Size: {output_path.stat().st_size} bytes")
+    print(f"\nSuccessfully created Markdown-wrapped protocol bundle:")
+    print(f"  Path: {output_path.resolve()}")
+    print(f"  Size: {output_path.stat().st_size} bytes")
 
 if __name__ == "__main__":
     main()
