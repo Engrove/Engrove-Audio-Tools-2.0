@@ -60,104 +60,161 @@ Filen ska innehålla ett JSON-objekt med följande struktur. Alla fält är obli
 
 ```json
 {
-  "sessionId": "SESSIONID",
-  "createdAt": "YYYY-MM-DDTHH:mm:ssZ",
-  "approvedNewDynamicProtocols": [ 
-    // Valfri array. Innehåller fullständiga JSON-objekt för NYA, godkända protokoll.
-    // Exempel: { "protocolId": "DP-NEW-FEATURE-01", "description": "...", ... }
-  ],
-  "promoteProtocols": [ 
-    // Valfri array. Innehåller strängar med ID:n för protokoll som ska få status 'active'.
-    // Exempel: "DP-COMMAND-MENU-01"
-  ],
-  "file_metadata_updates": [
-    {
-      "file_path": "sökväg/till/filen.md",
-      "purpose_and_responsibility": "Beskriver filens huvudsakliga syfte och ansvarsområde.",
-      "usage_context": "För protokoll: beskriver när och varför det ska aktiveras eller efterfrågas. För andra filer: beskriver dess roll i arkitekturen."
-    }
-  ],
-  "importantMilestonesLogged": [
-    // Valfri array. Innehåller kompletta JSON-objekt för varje milstolpe som loggats under sessionen.
-    // Exempel: { "event_id": "IMR-001", "summary": "Implementation av...", ... }
-  ],
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "SESSIONID",
-      "date": "YYYY-MM-DDTHH:mm:ssZ",
-      "summary": "Kort sammanfattning av sessionens resultat.",
-      "actions": [
+  "schema_version": "DJTA v1.1",
+  "session_id": "S-2025-08-21T10-15-00Z",
+  "created_at": "2025-08-21T10:15:00Z",
+
+  "_comment_summary": "Detta objekt är för snabb indexering och analys. Det extraheras till session_manifest.json.",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "S-2025-08-21T10-15-00Z",
+    "timestamp_utc": "2025-08-21T10:15:00Z",
+    "summary": "Refactored the AudioPlayer component to use Pinia store for state management.",
+    "keywords": [
+      "fsd", "vue", "typescript", "pinia-store", "refactoring"
+    ],
+    "modified_files": [
+      "src/features/AudioPlayer/ui/AudioPlayer.vue",
+      "src/entities/track/model/trackStore.ts"
+    ],
+    "error_signatures": [
+      "TypeScript error TS2322"
+    ],
+    "success_score": 4,
+    "operator_interventions": 3
+  },
+
+  "_comment_builder": "Detta objekt innehåller alla handlingsbara instruktioner och artefakter för CI/CD och aggregeringsskript.",
+  "builder_input": {
+    "purpose": "Instructions for CI/CD and aggregation scripts based on the outcome of the session.",
+    
+    "protocol_updates": {
+      "approve_new": [
         {
-          "title": "Kort teknisk titel.",
-          "files": [
-            {
-              "path": "sökväg/till/fil",
-              "changeDescription": "Exakt ändring + motiv."
-            }
-          ],
-          "result": "Tekniskt utfall."
+          "protocolId": "DP-NEW-FEATURE-01",
+          "description": "Protocol for creating new Vuex modules with boilerplate actions and mutations.",
+          "trigger": "User requests a new Vuex module.",
+          "steps": [
+            "Step 1:...",
+            "Step 2:..."
+          ]
         }
       ],
-      "projectStatus": "Verifierad status vid sessionens slut."
-    },
-    "Chatthistorik": {
-      "sessionId": "SESSIONID",
-      "interactions": [
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "OpenAI",
-            "name": "gpt-5",
-            "version": "2025-08-01"
-          },
-          "speaker": "Frankensteen (OpenAI:gpt-5@2025-08-01)",
-          "summary": "Koncis sammanfattning av inlägget."
-        }
+      "promote_to_active": [
+        "DP-COMMAND-MENU-01"
       ]
     },
-    "ai_protocol_performance": {
-      "sessionId": "SESSIONID",
-      "date": "YYYY-MM-DDTHH:mm:ssZ",
-      "aiQualitativeSummary": "Kort AI-perspektiv.",
-      "scorecard": {
-        "efficacy": { "score": 0, "weight": 0.4, "weightedScore": 0.0 },
-        "efficiency": { "score": 0, "weight": 0.3, "weightedScore": 0.0 },
-        "robustness": { "score": 0, "weight": 0.3, "weightedScore": 0.0 },
-        "finalScore": 0.0
-      },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 0,
-        "selfCorrections": 0,
-        "externalCorrections": 0,
-        "protocolActivations": { "psv": 0, "helpMeGod": 0, "stalemate": 0 },
-        "heuristicsTriggered": []
-      },
-      "improvementSuggestion": {
-        "pattern": "Återkommande mönster.",
-        "proposedHeuristicId": "H-YYYYMMDD-seq"
-      }
-    },
-    "frankensteen_learning_db": [
+    
+    "metadata_updates": [
       {
-        "heuristicId": "H-YYYYMMDD-seq",
-        "trigger": { "type": "...", "scope": ["..."], "keywords": ["..."] },
-        "identifiedRisk": { "riskId": "...", "description": "..." },
-        "mitigation": { "protocolId": "...", "description": "..." },
-        "metadata": { "originSessionId": "SESSIONID", "createdAt": "YYYY-MM-DDTHH:mm:ssZ" }
+        "file_path": "docs/ai_protocols/Stature_Report_Protocol.md",
+        "purpose_and_responsibility": "Updated to include a new section for 'Action Menu' recommendations.",
+        "usage_context": "Activated at the start of a session following a System Override Protocol to provide a strategic overview and actionable plan."
       }
     ],
-    "generated_patches": [
+    
+    "milestones_to_log": [
       {
-        "protocol_id": "anchor_diff_v2.1",
-        "target": {
-          "path": "...",
-          "base_checksum_sha256": "..."
-        },
-        "op_groups": [ ],
-        "meta": { "notes": "..." }
+        "event_id": "IMR-001",
+        "summary": "Implementation of the three-tier context hierarchy (Hot, Warm, Cold).",
+        "details": "Successfully defined the structure for session_manifest.json and integrated its generation into the CI/CD pipeline."
       }
-    ]
+    ],
+
+    "final_artifacts_for_aggregation": {
+      "ByggLogg": {
+        "sessionId": "S-2025-08-21T10-15-00Z",
+        "date": "2025-08-21T10:15:00Z",
+        "summary": "Refactoring of AudioPlayer.vue completed with one TypeScript error corrected by the operator.",
+        "actions": [
+          {
+            "title": "Refactor AudioPlayer.vue to use Pinia",
+            "files": [
+              {
+                "path": "src/features/AudioPlayer/ui/AudioPlayer.vue",
+                "changeDescription": "Replaced local state with calls to the trackStore."
+              }
+            ],
+            "result": "Build successful after manual correction of prop type mismatch."
+          }
+        ],
+        "projectStatus": "Verified"
+      },
+      "Chatthistorik": {
+        "sessionId": "S-2025-08-21T10-15-00Z",
+        "interactions": [
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "OpenAI",
+              "name": "gpt-5",
+              "version": "2025-08-01"
+            },
+            "speaker": "Frankensteen (OpenAI:gpt-5@2025-08-01)",
+            "summary": "Initial attempt to refactor AudioPlayer had a type error on the 'track' prop. Corrected after operator feedback."
+          }
+        ]
+      },
+      "ai_protocol_performance": {
+        "sessionId": "S-2025-08-21T10-15-00Z",
+        "date": "2025-08-21T10:15:00Z",
+        "aiQualitativeSummary": "The system understood the refactoring goal but failed to infer the correct prop type from the new Pinia store, requiring external correction.",
+        "scorecard": {
+          "efficacy": { "score": 4, "weight": 0.4, "weightedScore": 1.6 },
+          "efficiency": { "score": 3, "weight": 0.3, "weightedScore": 0.9 },
+          "robustness": { "score": 3, "weight": 0.3, "weightedScore": 0.9 },
+          "finalScore": 3.4
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 1,
+          "selfCorrections": 0,
+          "externalCorrections": 1,
+          "protocolActivations": { "psv": 0, "helpMeGod": 0, "stalemate": 0 },
+          "heuristicsTriggered": []
+        },
+        "improvementSuggestion": {
+          "pattern": "System fails to cross-reference type definitions from state management stores when refactoring components.",
+          "proposedHeuristicId": "H-20250821-01"
+        }
+      },
+      "frankensteen_learning_db": [
+        {
+          "heuristicId": "H-20250821-01",
+          "trigger": {
+            "type": "CodeGeneration",
+            "scope": ["*.vue"],
+            "keywords": ["refactor", "pinia", "props", "store"]
+          },
+          "identifiedRisk": {
+            "riskId": "R-TYPE-INFERENCE-02",
+            "description": "Risk of prop type mismatch when refactoring a component to use a central store."
+          },
+          "mitigation": {
+            "protocolId": "RAG_Faktacheck_Protokoll",
+            "description": "Before generating the component's <script setup>, actively retrieve the type definitions for all relevant state properties from the target Pinia store file."
+          },
+          "metadata": {
+            "originSessionId": "S-2025-08-21T10-15-00Z",
+            "createdAt": "2025-08-21T10:15:00Z"
+          }
+        }
+      ],
+      "generated_patches": [
+        {
+          "protocol_id": "anchor_diff_v2.1",
+          "target": {
+            "path": "src/features/AudioPlayer/ui/AudioPlayer.vue",
+            "base_checksum_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "op_groups": [],
+          "meta": {
+            "notes": "Patch generated to align with new Pinia store structure."
+          }
+        }
+      ]
+    }
   }
 }
 ```
