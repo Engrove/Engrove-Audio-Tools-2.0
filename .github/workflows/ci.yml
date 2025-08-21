@@ -99,6 +99,13 @@ jobs:
       - name: Prepare Output Directory
         run: mkdir -p "${{ env.SITE_DIR }}"
 
+      - name: STEP 0 Patch sessions files once
+        id: session_patc
+        run: |
+          echo "Patching sessions files..."
+          python scripts/session_patch.py
+          echo "Patching sessions files complete."
+          
       - name: STEP 1 Process Session Data (if needed)
         id: process-sessions
         env:
