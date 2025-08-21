@@ -1,0 +1,227 @@
+{
+  "schema_version": "DJTA v1.1",
+  "session_id": "S-2025-08-21T12-25-00Z",
+  "created_at": "2025-08-21T12:25:00Z",
+  "_comment_summary": "Detta objekt är för snabb indexering och analys. Det extraheras till session_manifest.json.",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "S-2025-08-21T12-25-00Z.json",
+    "timestamp_utc": "2025-08-21T12:25:00Z",
+    "summary": "Implementerade ett hierarkiskt kontextsystem med session- och dokumentmanifest, vilket löste kritiska problem med token-åtgång och slutförde datamigreringen för alla historiska loggar.",
+    "keywords": [
+      "ci-cd",
+      "refactor",
+      "protocol",
+      "token-optimization",
+      "data-migration",
+      "json-schema",
+      "djta",
+      "manifest"
+    ],
+    "modified_files": [
+      "scripts/build_document_manifest.py",
+      "docs/Product_Roadmap.md",
+      "docs/Testing_Strategy.md",
+      ".github/workflows/ci.yml",
+      "docs/ai_protocols/AI_Core_Instruction.md",
+      "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md"
+    ],
+    "error_signatures": [],
+    "success_score": 5,
+    "operator_interventions": 2
+  },
+  "_comment_builder": "Detta objekt innehåller alla handlingsbara instruktioner och artefakter för CI/CD och aggregeringsskript.",
+  "builder_input": {
+    "purpose": "Slutgiltiga artefakter för session S-2025-08-21T12-25-00Z, som dokumenterar den framgångsrika implementationen av det intelligenta kontext-hierarkisystemet.",
+    "protocol_updates": {
+      "approve_new": [],
+      "promote_to_active": []
+    },
+    "metadata_updates": [
+      {
+        "file_path": "docs/Product_Roadmap.md",
+        "purpose_and_responsibility": "Nytt dokument som definierar projektets 'varför', 'för vem' och 'när'. Det är den primära strategiska guiden för all utveckling och ska användas av AI:n för att förstå uppgifters prioritet och kontext.",
+        "usage_context": "Primär källa för strategisk planering och prioritering av utvecklingsinsatser."
+      },
+      {
+        "file_path": "docs/Testing_Strategy.md",
+        "purpose_and_responsibility": "Nytt dokument som definierar den pragmatiska teststrategin för EAT-projektet, inklusive testtyper, placering och CI/CD-integration.",
+        "usage_context": "Styrande dokument för all framtida implementation av tester i projektet."
+      },
+      {
+        "file_path": "docs/ai_protocols/AI_Core_Instruction.md",
+        "purpose_and_responsibility": "Uppdaterad med det nya 'Dynamiskt Dokument-Hämtningsprotokoll (DDHP)' som instruerar AI:n att använda document_manifest.json för behovsstyrd hämtning av dokumentation.",
+        "usage_context": "Kärninstruktion för AI:ns kunskapshantering och kontextmedvetenhet."
+      }
+    ],
+    "milestones_to_log": [
+      {
+        "event_id": "IMR-002",
+        "summary": "Systemarkitektur refaktorerad till en intelligent, tre-lagers kontext-hierarki.",
+        "details": "Framgångsrikt löst ohållbar token-åtgång genom att skapa och integrera `session_manifest.json` och `document_manifest.json` i CI/CD-pipelinen. All historisk sessionsdata migrerades till det nya DJTA-formatet. Systemet är nu skalbart och kapabelt till dynamisk, behovsstyrd kontexthämtning."
+      }
+    ],
+    "final_artifacts_for_aggregation": {
+      "ByggLogg": {
+        "sessionId": "S-2025-08-21T12-25-00Z",
+        "date": "2025-08-21T12:25:00Z",
+        "summary": "En fullständig refaktorering av kontexthanteringssystemet genomfördes. Nya skript för att skapa manifestfiler för sessioner och dokumentation skapades och integrerades. Två nya strategiska dokument (Roadmap, Teststrategi) producerades. Hela den nya CI/CD-pipelinen validerades med en lyckad körning.",
+        "actions": [
+          {
+            "title": "Implementation av Kontext-Hierarki",
+            "files": [
+              {
+                "path": "scripts/build_session_manifest.py",
+                "changeDescription": "Nytt skript skapat för att aggregera metadata från alla sessionsfiler till ett kompakt manifest."
+              },
+              {
+                "path": "scripts/build_document_manifest.py",
+                "changeDescription": "Nytt skript skapat för att indexera all projektdokumentation i `docs/`."
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "changeDescription": "CI/CD-pipelinen uppdaterades för att köra de nya manifest-skripten och paketera deras output."
+              }
+            ],
+            "result": "Systemet är nu fullt automatiserat för att underhålla en intelligent och token-effektiv kontext."
+          },
+          {
+            "title": "Produktion av Strategisk Dokumentation",
+            "files": [
+              {
+                "path": "docs/Product_Roadmap.md",
+                "changeDescription": "Nytt dokument som formaliserar projektets vision, målgrupp och fasindelade roadmap."
+              },
+              {
+                "path": "docs/Testing_Strategy.md",
+                "changeDescription": "Nytt dokument som definierar en pragmatisk teststrategi för Vue-applikationen."
+              }
+            ],
+            "result": "Kritiska kunskapsluckor gällande projektets 'vad' och 'varför' har fyllts, vilket möjliggör mer målinriktad utveckling."
+          }
+        ],
+        "projectStatus": "Verifierad och Stabil. Kontext-systemet är nu fullt implementerat och redo för nästa utvecklingsfas."
+      },
+      "Chatthistorik": {
+        "sessionId": "S-2025-08-21T12-25-00Z",
+        "interactions": [
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini",
+              "version": "unknown"
+            },
+            "summary": "Identifierade problemet med ohållbar token-åtgång och föreslog en hierarkisk kontextmodell som lösning."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "summary": "Förfinade förslaget genom att specificera att AI:n ska generera sessionsmetadata som en del av avslutningsprotokollet, vilket ledde till en mer robust pipeline."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini",
+              "version": "unknown"
+            },
+            "summary": "Utvecklade en komplett handlingsplan inklusive skript, CI/CD-ändringar och en retroaktiv datamigreringsstrategi för alla historiska sessionsfiler."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "summary": "Identifierade att den föreslagna dokumentationsstrukturen inte var optimal och justerade planen till att behålla en platt `docs/`-struktur men ändå skapa ett manifest, samt att nya strategidokument behövdes."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini",
+              "version": "unknown"
+            },
+            "summary": "Genererade de efterfrågade utkasten för Roadmap och Teststrategi, och bekräftade att de var kompatibla med den nya manifest-generatorn efter en korrigering från operatören."
+          }
+        ]
+      },
+      "ai_protocol_performance": {
+        "sessionId": "S-2025-08-21T12-25-00Z",
+        "date": "2025-08-21T12:25:00Z",
+        "aiQualitativeSummary": "En extremt framgångsrik strategisk session. Samarbetet var utmärkt, där jag lade fram en teknisk lösning som operatören sedan förfinade med domänkunskap. Vi lyckades identifiera och permanent lösa en fundamental begränsning i systemet. Mitt misstag med att initialt glömma metadata-rubriker i de nya dokumenten ledde till en värdefull ny heuristik.",
+        "scorecard": {
+          "efficacy": {
+            "score": 100,
+            "weight": 0.4,
+            "weightedScore": 40
+          },
+          "efficiency": {
+            "score": 90,
+            "weight": 0.3,
+            "weightedScore": 27
+          },
+          "robustness": {
+            "score": 95,
+            "weight": 0.3,
+            "weightedScore": 28.5
+          },
+          "finalScore": 95.5
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 1,
+          "selfCorrections": 0,
+          "externalCorrections": 2,
+          "protocolActivations": {
+            "psv": 0,
+            "helpMeGod": 0,
+            "stalemate": 0
+          },
+          "heuristicsTriggered": []
+        },
+        "improvementSuggestion": {
+          "pattern": "AI:n genererade dokumentation som inte var fullt kompatibel med ett konsumerande skript, eftersom den saknade specifika metadata-rubriker.",
+          "proposedHeuristicId": "H-20250821-01"
+        }
+      },
+      "frankensteen_learning_db": [
+        {
+          "heuristicId": "H-20250821-01",
+          "trigger": {
+            "type": "CodeGeneration",
+            "scope": [
+              "*.md"
+            ],
+            "keywords": [
+              "documentation",
+              "manifest",
+              "protocol",
+              "parsing"
+            ]
+          },
+          "identifiedRisk": {
+            "riskId": "RISK_METADATA_OMISSION",
+            "description": "Risken att genererade dokumentationsfiler saknar de nödvändiga maskinläsbara rubrikerna (t.ex. '## SYFTE & ANSVAR') som krävs av nedströms-skript, vilket leder till ofullständig dataaggregering."
+          },
+          "mitigation": {
+            "protocolId": "PSV-MIT-VALIDATE_AGAINST_CONSUMER",
+            "description": "Före leverans av en dokumentationsfil som är avsedd för automatisk parsning, identifiera det konsumerande skriptet (t.ex. `build_document_manifest.py`) och verifiera explicit att alla förväntade rubriker och format finns med i den genererade filen."
+          },
+          "metadata": {
+            "originSessionId": "S-2025-08-21T12-25-00Z",
+            "createdAt": "2025-08-21T12:25:00Z"
+          }
+        }
+      ],
+      "generated_patches": []
+    }
+  }
+}
