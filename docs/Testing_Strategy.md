@@ -3,6 +3,9 @@
 **Dokumentversion:** 1.0
 **Datum:** 2025-08-21
 
+## SYFTE & ANSVAR
+Detta dokument definierar den pragmatiska teststrategin för EAT-projektet. Det beskriver vilka typer av tester som ska användas, var de ska placeras i FSD-arkitekturen, och hur de integreras i CI/CD-pipelinen. Målet är att säkerställa hög kodkvalitet och stabilitet med en rimlig arbetsinsats.
+
 ## 1. Filosofi
 
 Vår teststrategi är **pragmatisk och värdedriven**. Målet är inte 100% kodtäckning, utan att med rimlig ansträngning säkerställa att de mest kritiska delarna av applikationen fungerar korrekt och förblir stabila över tid. Vi prioriterar tester för:
