@@ -255,6 +255,6 @@ print(f"  Path: {output_path.resolve()}")
 print(f"  Size: {output_path.stat().st_size} bytes")
 
 if __name__ == "__main__":
-main()
+    main()
 
 # END FILE: scripts/protocol\_packager.py
