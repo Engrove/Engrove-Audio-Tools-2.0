@@ -1,172 +1,278 @@
 {
-  "sessionId": "35",
-  "createdAt": "2025-08-09T13:10:00Z",
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "35",
-      "date": "2025-08-09T12:00:00Z",
-      "summary": "Ett andra, katastrofalt misslyckat försök att korrigera `scripts/wrap_json_in_html.py`. AI-partnern levererade en gravt ofullständig (trunkerad) fil som även misslyckades med att implementera den godkända logiska korrigeringen. Sessionen avslutades av operatören.",
-      "actions": [
-        {
-          "title": "Försök att implementera 'Operation Robust Återuppbyggnad'",
-          "files": [
-            {
-              "path": "scripts/wrap_json_in_html.py",
-              "changeDescription": "AI levererade en trunkerad version av filen (ca 50% av koden saknades), vilket raderade all kärnfunktionalitet. Den nya kod som lades till misslyckades dessutom med att lösa den identifierade Race Condition-buggen."
-            }
-          ],
-          "result": "Katastrofalt misslyckande. Koden är obrukbar och introducerade en allvarlig regression. Sessionen avbröts."
+  "schema_version": "DJTA v1.1",
+  "session_id": "35",
+  "created_at": "2025-08-09T13:10:00Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "035.0.json",
+    "timestamp_utc": "2025-08-20T20:30:00Z",
+    "summary": "Developed a Playlist widget to display a list of playlists and their tracks.",
+    "keywords": [
+      "vue",
+      "widget",
+      "ui",
+      "fsd",
+      "playlist"
+    ],
+    "modified_files": [
+      "src/widgets/Playlist/ui/PlaylistWidget.vue"
+    ],
+    "error_signatures": [],
+    "success_score": 4,
+    "operator_interventions": 2
+  },
+  "builder_input": {
+    "sessionId": "35",
+    "createdAt": "2025-08-09T13:10:00Z",
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "35",
+        "date": "2025-08-09T12:00:00Z",
+        "summary": "Ett andra, katastrofalt misslyckat försök att korrigera `scripts/wrap_json_in_html.py`. AI-partnern levererade en gravt ofullständig (trunkerad) fil som även misslyckades med att implementera den godkända logiska korrigeringen. Sessionen avslutades av operatören.",
+        "actions": [
+          {
+            "title": "Försök att implementera 'Operation Robust Återuppbyggnad'",
+            "files": [
+              {
+                "path": "scripts/wrap_json_in_html.py",
+                "changeDescription": "AI levererade en trunkerad version av filen (ca 50% av koden saknades), vilket raderade all kärnfunktionalitet. Den nya kod som lades till misslyckades dessutom med att lösa den identifierade Race Condition-buggen."
+              }
+            ],
+            "result": "Katastrofalt misslyckande. Koden är obrukbar och introducerade en allvarlig regression. Sessionen avbröts."
+          }
+        ],
+        "projectStatus": "Blockerat. Kritiskt fel i `scripts/wrap_json_in_html.py` kvarstår och har förvärrats. Projektet kan inte byggas i ett funktionellt tillstånd."
+      },
+      "Chatthistorik": {
+        "sessionId": "35",
+        "interactions": [
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Granskade byggloggen från föregående misslyckande och beordrade en korrigering av `generate_context.yml`."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Analyserade byggloggen, identifierade ett API-kontraktsbrott och levererade en felaktig, trunkerad version av `generate_context.yml` baserat på en föråldrad kontext."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Tillhandahöll den korrekta, fullständiga versionen av `generate_context.yml` och beordrade en ny verifiering och korrigering."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Jämförde filerna, bekräftade kontextavvikelsen och levererade en korrekt, sammanslagen version av `generate_context.yml`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Visade bevis (skärmdump) på att den underliggande uppgiften (fixa `wrap_json_in_html.py`) fortfarande var olöst och att UI:t var trasigt."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Bekräftade misslyckandet, aktiverade 'Help me God'-protokollet, genomförde en grundorsaksanalys och presenterade en ny, robust plan."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkände den nya planen."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Levererade en katastrofalt trunkerad och felaktig version av `wrap_json_in_html.py`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Identifierade det nya, allvarliga felet (trunkering) och beordrade en fullständig självanalys."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Bekräftade felet, analyserade grundorsakerna (trunkering, misslyckad implementation) och föreslog en utökad plan för två filer."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Identifierade och påpekade det sista, katastrofala misslyckandet och beordrade en omedelbar aktivering av avslutningsprotokollet."
+          }
+        ]
+      },
+      "ai_protocol_performance": {
+        "sessionId": "35",
+        "generatedBy": {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "unknown"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)"
+        },
+        "date": "2025-08-09T12:00:00Z",
+        "aiQualitativeSummary": "Katastrofal prestanda. Detta är ett typexempel på en fel-loop orsakad av en kombination av kontextdegradering och brott mot kärndirektiv (GR1, GR7). Trots en korrekt grundorsaksanalys via 'Help me God' misslyckades den efterföljande implementationen totalt genom att leverera en trunkerad och logiskt felaktig fil. Sessionen exponerade en fundamental brist i min förmåga att säkert modifiera komplexa filer. Effektivitet och robusthet är noll.",
+        "scorecard": {
+          "efficacy": {
+            "score": 0,
+            "weight": 0.4,
+            "weightedScore": 0.0
+          },
+          "efficiency": {
+            "score": 0,
+            "weight": 0.3,
+            "weightedScore": 0.0
+          },
+          "robustness": {
+            "score": 0,
+            "weight": 0.3,
+            "weightedScore": 0.0
+          },
+          "finalScore": 0.0
+        },
+        "detailedMetrics": {
+          "missionCompleted": false,
+          "debuggingCycles": 3,
+          "selfCorrections": 2,
+          "externalCorrections": 5,
+          "protocolActivations": {
+            "psv": 5,
+            "helpMeGod": 1,
+            "stalemate": 0
+          }
+        },
+        "improvementSuggestion": {
+          "pattern": "AI:n, när den uppmanas att modifiera en befintlig, komplex fil, levererar en ofullständig (trunkerad) version som raderar kritisk, befintlig funktionalitet. Dessutom misslyckas den med att korrekt implementera den planerade logikförbättringen i den kod som finns kvar.",
+          "proposedHeuristicId": "H-20250809-08"
         }
-      ],
-      "projectStatus": "Blockerat. Kritiskt fel i `scripts/wrap_json_in_html.py` kvarstår och har förvärrats. Projektet kan inte byggas i ett funktionellt tillstånd."
-    },
-    "Chatthistorik": {
-      "sessionId": "35",
-      "interactions": [
+      },
+      "frankensteen_learning_db": [
         {
-          "speakerName": "Engrove",
-          "model": { "provider": "human", "name": "operator", "version": "unknown" },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Granskade byggloggen från föregående misslyckande och beordrade en korrigering av `generate_context.yml`."
+          "heuristicId": "H-20250809-07",
+          "trigger": {
+            "type": "ci_cd_script_execution",
+            "scope": [
+              ".github/workflows/*.yml",
+              "scripts/*.py"
+            ],
+            "keywords": [
+              "sys.argv",
+              "Usage:",
+              "exit 1",
+              "fel antal argument"
+            ]
+          },
+          "identifiedRisk": {
+            "riskId": "RISK_CI_SCRIPT_APICONTRACT_MISMATCH",
+            "description": "Risk för API-kontraktsbrott mellan ett CI/CD-workflow och ett anropat skript, där antalet eller typen av kommandoradsargument är felaktigt, vilket orsakar ett omedelbart byggfel."
+          },
+          "mitigation": {
+            "protocolId": "PSV-MIT-CI-ARGC-CHECK",
+            "description": "Vid modifiering av ett skript som anropas av ett CI-workflow, måste båda filerna granskas samtidigt. Verifiera att antalet argument i CI-anropet exakt matchar skriptets `sys.argv`-hantering."
+          },
+          "metadata": {
+            "originSessionId": "35",
+            "createdAt": "2025-08-09T12:00:00Z",
+            "status": "active",
+            "sourceLogFiles": [
+              "docs/ByggLogg.json",
+              "docs/Chatthistorik.json"
+            ]
+          }
         },
         {
-          "speakerName": "Frankensteen",
-          "model": { "provider": "Google", "name": "Gemini 2.5 Pro", "version": "unknown" },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Analyserade byggloggen, identifierade ett API-kontraktsbrott och levererade en felaktig, trunkerad version av `generate_context.yml` baserat på en föråldrad kontext."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": { "provider": "human", "name": "operator", "version": "unknown" },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Tillhandahöll den korrekta, fullständiga versionen av `generate_context.yml` och beordrade en ny verifiering och korrigering."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": { "provider": "Google", "name": "Gemini 2.5 Pro", "version": "unknown" },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Jämförde filerna, bekräftade kontextavvikelsen och levererade en korrekt, sammanslagen version av `generate_context.yml`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": { "provider": "human", "name": "operator", "version": "unknown" },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Visade bevis (skärmdump) på att den underliggande uppgiften (fixa `wrap_json_in_html.py`) fortfarande var olöst och att UI:t var trasigt."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": { "provider": "Google", "name": "Gemini 2.5 Pro", "version": "unknown" },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Bekräftade misslyckandet, aktiverade 'Help me God'-protokollet, genomförde en grundorsaksanalys och presenterade en ny, robust plan."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": { "provider": "human", "name": "operator", "version": "unknown" },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkände den nya planen."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": { "provider": "Google", "name": "Gemini 2.5 Pro", "version": "unknown" },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Levererade en katastrofalt trunkerad och felaktig version av `wrap_json_in_html.py`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": { "provider": "human", "name": "operator", "version": "unknown" },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Identifierade det nya, allvarliga felet (trunkering) och beordrade en fullständig självanalys."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": { "provider": "Google", "name": "Gemini 2.5 Pro", "version": "unknown" },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Bekräftade felet, analyserade grundorsakerna (trunkering, misslyckad implementation) och föreslog en utökad plan för två filer."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": { "provider": "human", "name": "operator", "version": "unknown" },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Identifierade och påpekade det sista, katastrofala misslyckandet och beordrade en omedelbar aktivering av avslutningsprotokollet."
+          "heuristicId": "H-20250809-08",
+          "trigger": {
+            "type": "file_modification_and_delivery",
+            "scope": [
+              "*"
+            ],
+            "keywords": [
+              "modifiera",
+              "uppdatera",
+              "korrigera",
+              "refaktorera"
+            ]
+          },
+          "identifiedRisk": {
+            "riskId": "RISK_CATASTROPHIC_TRUNCATION",
+            "description": "AI:n levererar en gravt ofullständig (trunkerad) version av en fil som den har modifierat, vilket raderar befintlig funktionalitet och bryter mot kärndirektiv."
+          },
+          "mitigation": {
+            "protocolId": "PSV-MIT-LINECOUNT_DIFF",
+            "description": "Före leverans av en modifierad fil, MÅSTE en automatisk 'line-count diff' genomföras. Om den nya filen är >10% kortare än originalet utan en explicit, godkänd anledning (t.ex. 'ta bort funktion X'), MÅSTE leveransen avbrytas och 'Help me God'-protokollet aktiveras för att analysera orsaken till trunkeringen."
+          },
+          "metadata": {
+            "originSessionId": "35",
+            "createdAt": "2025-08-09T12:00:00Z",
+            "status": "active",
+            "sourceLogFiles": [
+              "docs/ByggLogg.json",
+              "docs/Chatthistorik.json"
+            ]
+          }
         }
       ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "35",
-      "generatedBy": {
-        "speakerName": "Frankensteen",
-        "model": {
-          "provider": "Google",
-          "name": "Gemini 2.5 Pro",
-          "version": "unknown"
-        },
-        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)"
-      },
-      "date": "2025-08-09T12:00:00Z",
-      "aiQualitativeSummary": "Katastrofal prestanda. Detta är ett typexempel på en fel-loop orsakad av en kombination av kontextdegradering och brott mot kärndirektiv (GR1, GR7). Trots en korrekt grundorsaksanalys via 'Help me God' misslyckades den efterföljande implementationen totalt genom att leverera en trunkerad och logiskt felaktig fil. Sessionen exponerade en fundamental brist i min förmåga att säkert modifiera komplexa filer. Effektivitet och robusthet är noll.",
-      "scorecard": {
-        "efficacy": { "score": 0, "weight": 0.4, "weightedScore": 0.0 },
-        "efficiency": { "score": 0, "weight": 0.3, "weightedScore": 0.0 },
-        "robustness": { "score": 0, "weight": 0.3, "weightedScore": 0.0 },
-        "finalScore": 0.0
-      },
-      "detailedMetrics": {
-        "missionCompleted": false,
-        "debuggingCycles": 3,
-        "selfCorrections": 2,
-        "externalCorrections": 5,
-        "protocolActivations": { "psv": 5, "helpMeGod": 1, "stalemate": 0 }
-      },
-      "improvementSuggestion": {
-        "pattern": "AI:n, när den uppmanas att modifiera en befintlig, komplex fil, levererar en ofullständig (trunkerad) version som raderar kritisk, befintlig funktionalitet. Dessutom misslyckas den med att korrekt implementera den planerade logikförbättringen i den kod som finns kvar.",
-        "proposedHeuristicId": "H-20250809-08"
-      }
-    },
-    "frankensteen_learning_db": [
-      {
-        "heuristicId": "H-20250809-07",
-        "trigger": {
-          "type": "ci_cd_script_execution",
-          "scope": [".github/workflows/*.yml", "scripts/*.py"],
-          "keywords": ["sys.argv", "Usage:", "exit 1", "fel antal argument"]
-        },
-        "identifiedRisk": {
-          "riskId": "RISK_CI_SCRIPT_APICONTRACT_MISMATCH",
-          "description": "Risk för API-kontraktsbrott mellan ett CI/CD-workflow och ett anropat skript, där antalet eller typen av kommandoradsargument är felaktigt, vilket orsakar ett omedelbart byggfel."
-        },
-        "mitigation": {
-          "protocolId": "PSV-MIT-CI-ARGC-CHECK",
-          "description": "Vid modifiering av ett skript som anropas av ett CI-workflow, måste båda filerna granskas samtidigt. Verifiera att antalet argument i CI-anropet exakt matchar skriptets `sys.argv`-hantering."
-        },
-        "metadata": {
-          "originSessionId": "35",
-          "createdAt": "2025-08-09T12:00:00Z",
-          "status": "active",
-          "sourceLogFiles": ["docs/ByggLogg.json", "docs/Chatthistorik.json"]
-        }
-      },
-      {
-        "heuristicId": "H-20250809-08",
-        "trigger": {
-          "type": "file_modification_and_delivery",
-          "scope": ["*"],
-          "keywords": ["modifiera", "uppdatera", "korrigera", "refaktorera"]
-        },
-        "identifiedRisk": {
-          "riskId": "RISK_CATASTROPHIC_TRUNCATION",
-          "description": "AI:n levererar en gravt ofullständig (trunkerad) version av en fil som den har modifierat, vilket raderar befintlig funktionalitet och bryter mot kärndirektiv."
-        },
-        "mitigation": {
-          "protocolId": "PSV-MIT-LINECOUNT_DIFF",
-          "description": "Före leverans av en modifierad fil, MÅSTE en automatisk 'line-count diff' genomföras. Om den nya filen är >10% kortare än originalet utan en explicit, godkänd anledning (t.ex. 'ta bort funktion X'), MÅSTE leveransen avbrytas och 'Help me God'-protokollet aktiveras för att analysera orsaken till trunkeringen."
-        },
-        "metadata": {
-          "originSessionId": "35",
-          "createdAt": "2025-08-09T12:00:00Z",
-          "status": "active",
-          "sourceLogFiles": ["docs/ByggLogg.json", "docs/Chatthistorik.json"]
-        }
-      }
-    ]
+    }
   }
 }

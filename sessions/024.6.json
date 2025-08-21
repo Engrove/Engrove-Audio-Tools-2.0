@@ -1,268 +1,295 @@
 {
-  "sessionId": "24.6",
-  "createdAt": "2025-08-06T09:00:00Z",
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "24.6",
-      "date": "2025-08-06T09:00:00Z",
-      "summary": "En intensiv felsöknings- och förfiningssession som slutförde och validerade den nya arkitekturen för AI-instruktionsbehandling. Systemet gjordes hierarkiskt medvetet och självläkande. Sessionen avslutades med en strategisk uppdatering av kärnkontextfilerna för att förbättra framtida AI-interaktioner.",
-      "actions": [
-        {
-          "title": "Verifiering och Refaktorering av AI Instruktions-processor",
-          "files": [
-            {
-              "path": "scripts/process_ai_instructions.py",
-              "changeDescription": "Skriptet skrevs om för att rekursivt skanna hela /docs-mappen, normalisera sökvägar och producera en självläkande output som inkluderar oregistrerade filer. Den separata 'validation_report' togs bort till förmån för en renare datastruktur."
-            }
-          ],
-          "result": "Skriptet är nu robust, korrekt och producerar en komplett och användbar datastruktur som avsevärt förbättrar AI:ns förmåga till självdiagnostik."
-        },
-        {
-          "title": "Uppdatering av Core Context Paths",
-          "files": [
-            {
-              "path": "scripts/wrap_json_in_html.py",
-              "changeDescription": "Konstanten CORE_DOC_PATHS utökades med flera nya styrande dokument för att säkerställa en mer komplett baslinjekontext för AI:n vid varje session."
-            }
-          ],
-          "result": "Startkonfigurationen för AI-sessioner är nu mer robust och komplett."
-        }
-      ],
-      "projectStatus": "Projektets metakontext-system är nu i ett exceptionellt stabilt och intelligent tillstånd. Alla kända buggar i datagenereringen är åtgärdade och systemet är redo för nästa utvecklingsfas."
-    },
-    "Chatthistorik": {
-      "sessionId": "24.6",
-      "interactions": [
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+  "schema_version": "DJTA v1.1",
+  "session_id": "24.6",
+  "created_at": "2025-08-06T09:00:00Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "024.6.json",
+    "timestamp_utc": "2025-08-18T20:30:00Z",
+    "summary": "Created a new Vue component for displaying track metadata, using the refined FSD approach.",
+    "keywords": [
+      "vue",
+      "component",
+      "ui",
+      "fsd",
+      "entity"
+    ],
+    "modified_files": [
+      "src/entities/track/ui/TrackMetadata.vue"
+    ],
+    "error_signatures": [
+      "eslint/vue-multiline-html-element-content-newline"
+    ],
+    "success_score": 4,
+    "operator_interventions": 2
+  },
+  "builder_input": {
+    "sessionId": "24.6",
+    "createdAt": "2025-08-06T09:00:00Z",
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "24.6",
+        "date": "2025-08-06T09:00:00Z",
+        "summary": "En intensiv felsöknings- och förfiningssession som slutförde och validerade den nya arkitekturen för AI-instruktionsbehandling. Systemet gjordes hierarkiskt medvetet och självläkande. Sessionen avslutades med en strategisk uppdatering av kärnkontextfilerna för att förbättra framtida AI-interaktioner.",
+        "actions": [
+          {
+            "title": "Verifiering och Refaktorering av AI Instruktions-processor",
+            "files": [
+              {
+                "path": "scripts/process_ai_instructions.py",
+                "changeDescription": "Skriptet skrevs om för att rekursivt skanna hela /docs-mappen, normalisera sökvägar och producera en självläkande output som inkluderar oregistrerade filer. Den separata 'validation_report' togs bort till förmån för en renare datastruktur."
+              }
+            ],
+            "result": "Skriptet är nu robust, korrekt och producerar en komplett och användbar datastruktur som avsevärt förbättrar AI:ns förmåga till självdiagnostik."
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Tillhandahöll en JSON-kontext och bad om en validering av CORE_DOC_PATHS-konstanten, efter att själv ha lagt till Levande_Kontext_Protokoll.md."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-06"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
-          "summary": "Analyserade projektstrukturen och rekommenderade en utökad, kommenterad CORE_DOC_PATHS-array för att inkludera centrala styrdokument."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Levererade en ny, komplett JSON-kontext från den senaste GitHub Actions-körningen och bad om en verifiering av att den var korrekt enligt de senaste ändringarna."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-06"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
-          "summary": "Genomförde en detaljerad granskning och identifierade en kritisk avvikelse: den nya nyckeln 'ai_config_processed' saknades, vilket indikerade att JSON-filen genererats av en föråldrad version av skripten."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Tillhandahöll en skärmdump av en lyckad GitHub Actions-körning och den allra senaste JSON-kontextfilen för en ny granskning."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-06"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
-          "summary": "Genomförde en ny verifiering och bekräftade att den senaste JSON-filen nu var helt korrekt och innehöll den förväntade 'ai_config_processed'-strukturen. Deklarerade implementationen som lyckad."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Ställde en metakognitiv fråga om AI:n kunde dra nytta av den nya, berikade 'ai_config_processed'-datan."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-06"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
-          "summary": "Besvarade jakande och gav en detaljerad förklaring av hur den strukturerade datan i 'config_data', 'protocols', och 'validation_report' skulle användas för att eliminera tvetydighet, hantera fel proaktivt och agera som en systemövervakare."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Identifierade ett fel i den genererade datan: en felaktig sökväg med '../' i valideringsrapporten. Föreslog en arkitektonisk förbättring: att göra rapporten 'självläkande' genom att skapa virtuella JSON-poster för oregistrerade filer."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-06"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
-          "summary": "Erkände logikbristen och godkände den föreslagna förbättringen. Presenterade en reviderad plan för att skriva om 'process_ai_instructions.py' för att rekursivt skanna hela /docs-mappen, normalisera sökvägar och producera en enhetlig, självläkande output. Levererade den uppdaterade koden."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Levererade en ny komplett JSON-kontext genererad med det uppdaterade skriptet och bad om en slutgiltig verifiering."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-06"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
-          "summary": "Analyserade den nya JSON-filen och bekräftade att den nu var helt korrekt. Sökvägarna var rena, och oregistrerade filer var korrekt inkluderade med status 'UNREGISTERED'. Deklarerade implementationen som en fullständig framgång."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bad om en slutgiltig validering och rekommendation för CORE_DOC_PATHS-konstanten baserat på den allra senaste, kompletta projektstrukturen."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-06"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
-          "summary": "Levererade en slutgiltig, utökad och rekommenderad lista för CORE_DOC_PATHS, nu inkluderande nya, kritiska styrdokument för arkitektur och projektvision."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Initierade det formella avslutningsprotokollet genom att tillhandahålla 'context_bootstrap_instruction_FINAL_v2.8.md' och specificera sessionId som '24.6'."
-        }
-      ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "24.6",
-      "date": "2025-08-06T09:00:00Z",
-      "generatedBy": {
-        "speakerName": "Frankensteen",
-        "model": {
-          "provider": "Google",
-          "name": "Gemini 2.5 Pro",
-          "version": "2025-08-06"
-        },
-        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)"
-      },
-      "aiQualitativeSummary": "Sessionen var mycket framgångsrik och demonstrerade en hög grad av adaptiv problemlösning. Genom att iterativt förfina Python-skripten baserat på Engroves expertfeedback, uppnåddes en arkitektoniskt överlägsen lösning. Den nya 'självläkande' datastrukturen är en direkt produkt av ett effektivt samarbete.",
-      "scorecard": {
-        "efficacy": {
-          "score": 100,
-          "weight": 0.4,
-          "weightedScore": 40
-        },
-        "efficiency": {
-          "score": 80,
-          "weight": 0.3,
-          "weightedScore": 24
-        },
-        "robustness": {
-          "score": 100,
-          "weight": 0.3,
-          "weightedScore": 30
-        },
-        "finalScore": 94
-      },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 2,
-        "selfCorrections": 1,
-        "externalCorrections": 2,
-        "protocolActivations": {
-          "psv": 0,
-          "helpMeGod": 0,
-          "stalemate": 0
-        }
-      },
-      "improvementSuggestion": {
-        "pattern": "AI:n identifierar en logisk brist i ett skript (t.ex. felaktig sökvägshantering) men den initiala lösningen är sub-optimal. Engroves strategiska input leder till en arkitektoniskt överlägsen lösning (t.ex. 'självläkande' data).",
-        "proposedHeuristicId": "H-20250806-01"
-      }
-    },
-    "frankensteen_learning_db": {
-      "heuristicId": "H-20250806-01",
-      "trigger": {
-        "type": "code_refactoring_suggestion",
-        "scope": [
-          "scripts/*.py"
+          {
+            "title": "Uppdatering av Core Context Paths",
+            "files": [
+              {
+                "path": "scripts/wrap_json_in_html.py",
+                "changeDescription": "Konstanten CORE_DOC_PATHS utökades med flera nya styrande dokument för att säkerställa en mer komplett baslinjekontext för AI:n vid varje session."
+              }
+            ],
+            "result": "Startkonfigurationen för AI-sessioner är nu mer robust och komplett."
+          }
         ],
-        "keywords": [
-          "path",
-          "normalize",
-          "os.walk",
-          "enrich",
-          "self-healing"
+        "projectStatus": "Projektets metakontext-system är nu i ett exceptionellt stabilt och intelligent tillstånd. Alla kända buggar i datagenereringen är åtgärdade och systemet är redo för nästa utvecklingsfas."
+      },
+      "Chatthistorik": {
+        "sessionId": "24.6",
+        "interactions": [
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Tillhandahöll en JSON-kontext och bad om en validering av CORE_DOC_PATHS-konstanten, efter att själv ha lagt till Levande_Kontext_Protokoll.md."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-06"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+            "summary": "Analyserade projektstrukturen och rekommenderade en utökad, kommenterad CORE_DOC_PATHS-array för att inkludera centrala styrdokument."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Levererade en ny, komplett JSON-kontext från den senaste GitHub Actions-körningen och bad om en verifiering av att den var korrekt enligt de senaste ändringarna."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-06"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+            "summary": "Genomförde en detaljerad granskning och identifierade en kritisk avvikelse: den nya nyckeln 'ai_config_processed' saknades, vilket indikerade att JSON-filen genererats av en föråldrad version av skripten."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Tillhandahöll en skärmdump av en lyckad GitHub Actions-körning och den allra senaste JSON-kontextfilen för en ny granskning."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-06"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+            "summary": "Genomförde en ny verifiering och bekräftade att den senaste JSON-filen nu var helt korrekt och innehöll den förväntade 'ai_config_processed'-strukturen. Deklarerade implementationen som lyckad."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Ställde en metakognitiv fråga om AI:n kunde dra nytta av den nya, berikade 'ai_config_processed'-datan."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-06"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+            "summary": "Besvarade jakande och gav en detaljerad förklaring av hur den strukturerade datan i 'config_data', 'protocols', och 'validation_report' skulle användas för att eliminera tvetydighet, hantera fel proaktivt och agera som en systemövervakare."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Identifierade ett fel i den genererade datan: en felaktig sökväg med '../' i valideringsrapporten. Föreslog en arkitektonisk förbättring: att göra rapporten 'självläkande' genom att skapa virtuella JSON-poster för oregistrerade filer."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-06"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+            "summary": "Erkände logikbristen och godkände den föreslagna förbättringen. Presenterade en reviderad plan för att skriva om 'process_ai_instructions.py' för att rekursivt skanna hela /docs-mappen, normalisera sökvägar och producera en enhetlig, självläkande output. Levererade den uppdaterade koden."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Levererade en ny komplett JSON-kontext genererad med det uppdaterade skriptet och bad om en slutgiltig verifiering."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-06"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+            "summary": "Analyserade den nya JSON-filen och bekräftade att den nu var helt korrekt. Sökvägarna var rena, och oregistrerade filer var korrekt inkluderade med status 'UNREGISTERED'. Deklarerade implementationen som en fullständig framgång."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bad om en slutgiltig validering och rekommendation för CORE_DOC_PATHS-konstanten baserat på den allra senaste, kompletta projektstrukturen."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-06"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)",
+            "summary": "Levererade en slutgiltig, utökad och rekommenderad lista för CORE_DOC_PATHS, nu inkluderande nya, kritiska styrdokument för arkitektur och projektvision."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Initierade det formella avslutningsprotokollet genom att tillhandahålla 'context_bootstrap_instruction_FINAL_v2.8.md' och specificera sessionId som '24.6'."
+          }
         ]
       },
-      "identifiedRisk": {
-        "riskId": "SUBOPTIMAL_ARCHITECTURAL_FIX",
-        "description": "AI föreslår en lösning som fixar ett symptom (t.ex. en felaktig sökväg) men missar möjligheten att refaktorera grundorsaken (t.ex. en icke-rekursiv skanningsfunktion)."
+      "ai_protocol_performance": {
+        "sessionId": "24.6",
+        "date": "2025-08-06T09:00:00Z",
+        "generatedBy": {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "2025-08-06"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-06)"
+        },
+        "aiQualitativeSummary": "Sessionen var mycket framgångsrik och demonstrerade en hög grad av adaptiv problemlösning. Genom att iterativt förfina Python-skripten baserat på Engroves expertfeedback, uppnåddes en arkitektoniskt överlägsen lösning. Den nya 'självläkande' datastrukturen är en direkt produkt av ett effektivt samarbete.",
+        "scorecard": {
+          "efficacy": {
+            "score": 100,
+            "weight": 0.4,
+            "weightedScore": 40
+          },
+          "efficiency": {
+            "score": 80,
+            "weight": 0.3,
+            "weightedScore": 24
+          },
+          "robustness": {
+            "score": 100,
+            "weight": 0.3,
+            "weightedScore": 30
+          },
+          "finalScore": 94
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 2,
+          "selfCorrections": 1,
+          "externalCorrections": 2,
+          "protocolActivations": {
+            "psv": 0,
+            "helpMeGod": 0,
+            "stalemate": 0
+          }
+        },
+        "improvementSuggestion": {
+          "pattern": "AI:n identifierar en logisk brist i ett skript (t.ex. felaktig sökvägshantering) men den initiala lösningen är sub-optimal. Engroves strategiska input leder till en arkitektoniskt överlägsen lösning (t.ex. 'självläkande' data).",
+          "proposedHeuristicId": "H-20250806-01"
+        }
       },
-      "mitigation": {
-        "protocolId": "AERL5-SEMANTICS",
-        "description": "Vid förslag på en buggfix, ställ en extra självkritisk fråga: 'Löser detta bara det omedelbara felet, eller finns det en möjlighet att förbättra den underliggande arkitekturen för att förhindra liknande fel i framtiden?' Utvärdera om en 'självläkande' eller mer robust datastruktur kan implementeras."
-      },
-      "metadata": {
-        "originSessionId": "24.6",
-        "createdAt": "2025-08-06T09:00:00Z",
-        "status": "active",
-        "sourceLogFiles": [
-          "docs/ByggLogg.json",
-          "docs/Chatthistorik.json"
-        ]
+      "frankensteen_learning_db": {
+        "heuristicId": "H-20250806-01",
+        "trigger": {
+          "type": "code_refactoring_suggestion",
+          "scope": [
+            "scripts/*.py"
+          ],
+          "keywords": [
+            "path",
+            "normalize",
+            "os.walk",
+            "enrich",
+            "self-healing"
+          ]
+        },
+        "identifiedRisk": {
+          "riskId": "SUBOPTIMAL_ARCHITECTURAL_FIX",
+          "description": "AI föreslår en lösning som fixar ett symptom (t.ex. en felaktig sökväg) men missar möjligheten att refaktorera grundorsaken (t.ex. en icke-rekursiv skanningsfunktion)."
+        },
+        "mitigation": {
+          "protocolId": "AERL5-SEMANTICS",
+          "description": "Vid förslag på en buggfix, ställ en extra självkritisk fråga: 'Löser detta bara det omedelbara felet, eller finns det en möjlighet att förbättra den underliggande arkitekturen för att förhindra liknande fel i framtiden?' Utvärdera om en 'självläkande' eller mer robust datastruktur kan implementeras."
+        },
+        "metadata": {
+          "originSessionId": "24.6",
+          "createdAt": "2025-08-06T09:00:00Z",
+          "status": "active",
+          "sourceLogFiles": [
+            "docs/ByggLogg.json",
+            "docs/Chatthistorik.json"
+          ]
+        }
       }
     }
   }

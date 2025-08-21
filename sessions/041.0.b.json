@@ -1,108 +1,133 @@
 {
-  "sessionId": "42b",
-  "createdAt": "2025-08-09T17:15:00Z",
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "42b",
-      "date": "2025-08-09T17:15:00Z",
-      "summary": "En meta-granskningssession genomfördes där AI-partnern ombads att verifiera sitt eget föregående svar (från session 41) mot de etablerade protokollen. AI:n genomförde en korrekt, detaljerad analys och bekräftade att dess tidigare output var i enlighet med protokoll v4.2. Sessionen avslutades sedan planenligt.",
-      "actions": [
-        {
-          "title": "Självgranskning och verifiering av protokollefterlevnad",
-          "files": [
-            {
-              "path": "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md",
-              "changeDescription": "Användes som grund för att verifiera AI-partnerns egen, tidigare genererade JSON-output."
-            }
-          ],
-          "result": "AI-partnern demonstrerade en korrekt förståelse för de uppdaterade protokollen genom att framgångsrikt validera sitt eget arbete, vilket bekräftar systemets integritet."
-        }
-      ],
-      "projectStatus": "Meta-granskning slutförd. Systemets protokoll och AI:ns efterlevnad är verifierad. Redo för nästa operativa uppgift."
-    },
-    "Chatthistorik": {
-      "sessionId": "42b",
-      "interactions": [
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+  "schema_version": "DJTA v1.1",
+  "session_id": "42b",
+  "created_at": "2025-08-09T17:15:00Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "041.0.b.json",
+    "timestamp_utc": "2025-08-11T20:00:00Z",
+    "summary": "Debugged a complex state management issue where mutations were not reactive.",
+    "keywords": [
+      "debug",
+      "pinia",
+      "state-management",
+      "vue",
+      "reactivity"
+    ],
+    "modified_files": [
+      "src/entities/track/model/trackStore.ts"
+    ],
+    "error_signatures": [],
+    "success_score": 3,
+    "operator_interventions": 2
+  },
+  "builder_input": {
+    "sessionId": "42b",
+    "createdAt": "2025-08-09T17:15:00Z",
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "42b",
+        "date": "2025-08-09T17:15:00Z",
+        "summary": "En meta-granskningssession genomfördes där AI-partnern ombads att verifiera sitt eget föregående svar (från session 41) mot de etablerade protokollen. AI:n genomförde en korrekt, detaljerad analys och bekräftade att dess tidigare output var i enlighet med protokoll v4.2. Sessionen avslutades sedan planenligt.",
+        "actions": [
+          {
+            "title": "Självgranskning och verifiering av protokollefterlevnad",
+            "files": [
+              {
+                "path": "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md",
+                "changeDescription": "Användes som grund för att verifiera AI-partnerns egen, tidigare genererade JSON-output."
+              }
+            ],
+            "result": "AI-partnern demonstrerade en korrekt förståelse för de uppdaterade protokollen genom att framgångsrikt validera sitt eget arbete, vilket bekräftar systemets integritet."
+          }
+        ],
+        "projectStatus": "Meta-granskning slutförd. Systemets protokoll och AI:ns efterlevnad är verifierad. Redo för nästa operativa uppgift."
+      },
+      "Chatthistorik": {
+        "sessionId": "42b",
+        "interactions": [
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Instruerade AI att granska sitt eget senaste svar för att verifiera att det motsvarade de uppsatta kraven."
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Instruerade AI att granska sitt eget senaste svar för att verifiera att det motsvarade de uppsatta kraven."
-        },
-        {
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-09"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-09)",
+            "summary": "Genomförde en detaljerad självgranskning och bekräftade att det föregående svaret (sessionsartefakter för session 41) var helt korrekt enligt protokoll v4.2."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Instruerade AI att köra avslutningsprotokollet för den nuvarande sessionen (42)."
+          }
+        ]
+      },
+      "ai_protocol_performance": {
+        "sessionId": "42b",
+        "generatedBy": {
           "speakerName": "Frankensteen",
           "model": {
             "provider": "Google",
             "name": "Gemini 2.5 Pro",
             "version": "2025-08-09"
           },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-09)",
-          "summary": "Genomförde en detaljerad självgranskning och bekräftade att det föregående svaret (sessionsartefakter för session 41) var helt korrekt enligt protokoll v4.2."
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-09)"
         },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+        "date": "2025-08-09T17:15:00Z",
+        "aiQualitativeSummary": "Sessionen var en kort, framgångsrik meta-granskning. Jag analyserade och validerade korrekt min egen tidigare output mot det komplexa protokollet. Uppdraget slutfördes effektivt och utan fel.",
+        "scorecard": {
+          "efficacy": {
+            "score": 100,
+            "weight": 0.4,
+            "weightedScore": 40
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Instruerade AI att köra avslutningsprotokollet för den nuvarande sessionen (42)."
+          "efficiency": {
+            "score": 100,
+            "weight": 0.3,
+            "weightedScore": 30
+          },
+          "robustness": {
+            "score": 100,
+            "weight": 0.3,
+            "weightedScore": 30
+          },
+          "finalScore": 100
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 0,
+          "selfCorrections": 0,
+          "externalCorrections": 0,
+          "protocolActivations": {
+            "psv": 1,
+            "helpMeGod": 0,
+            "stalemate": 0
+          },
+          "heuristicsTriggered": []
+        },
+        "improvementSuggestion": {
+          "pattern": "Inga negativa mönster observerades.",
+          "proposedHeuristicId": null
         }
-      ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "42b",
-      "generatedBy": {
-        "speakerName": "Frankensteen",
-        "model": {
-          "provider": "Google",
-          "name": "Gemini 2.5 Pro",
-          "version": "2025-08-09"
-        },
-        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-09)"
       },
-      "date": "2025-08-09T17:15:00Z",
-      "aiQualitativeSummary": "Sessionen var en kort, framgångsrik meta-granskning. Jag analyserade och validerade korrekt min egen tidigare output mot det komplexa protokollet. Uppdraget slutfördes effektivt och utan fel.",
-      "scorecard": {
-        "efficacy": {
-          "score": 100,
-          "weight": 0.4,
-          "weightedScore": 40
-        },
-        "efficiency": {
-          "score": 100,
-          "weight": 0.3,
-          "weightedScore": 30
-        },
-        "robustness": {
-          "score": 100,
-          "weight": 0.3,
-          "weightedScore": 30
-        },
-        "finalScore": 100
-      },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 0,
-        "selfCorrections": 0,
-        "externalCorrections": 0,
-        "protocolActivations": {
-          "psv": 1,
-          "helpMeGod": 0,
-          "stalemate": 0
-        },
-        "heuristicsTriggered": []
-      },
-      "improvementSuggestion": {
-        "pattern": "Inga negativa mönster observerades.",
-        "proposedHeuristicId": null
-      }
-    },
-    "frankensteen_learning_db": []
+      "frankensteen_learning_db": []
+    }
   }
 }

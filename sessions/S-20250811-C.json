@@ -1,245 +1,501 @@
 {
-  "sessionId": "S-20250811-D",
-  "createdAt": "2025-08-11T11:04:00Z",
-  "approvedNewDynamicProtocols": [],
-  "promoteProtocols": [],
-  "file_metadata_updates": [
-    {
-      "file_path": "docs/core_file_info.schema.json",
-      "purpose_and_responsibility": "Definierar det formella JSON Schema-kontraktet för den centrala kunskapsbasen `core_file_info.json`. Säkerställer dataintegritet för det automatiserade dokumentationssystemet.",
-      "usage_context": "Används av det automatiserade skriptet `scripts/update_core_info.py` för att validera och strukturera den data som skrivs till kunskapsbasen."
-    },
-    {
-      "file_path": ".github/workflows/update_documentation.yml",
-      "purpose_and_responsibility": "Ett GitHub Actions-workflow som automatiskt uppdaterar `docs/core_file_info.json`.",
-      "usage_context": "Triggas vid varje push till `sessions/`-mappen. Anropar `scripts/update_core_info.py` för att extrahera och integrera ny metadata från den senaste sessionen."
-    },
-    {
-      "file_path": "scripts/update_core_info.py",
-      "purpose_and_responsibility": "Ett Python-skript som agerar som 'arkivarie' för det levande dokumentationssystemet. Läser metadata från sessions-artefakter och uppdaterar `core_file_info.json`.",
-      "usage_context": "Detta är exekveringsmotorn för GitHub Action-workflödet och den centrala integrationspunkten mellan en avslutad session och den persistenta kunskapsbasen."
-    },
-    {
-      "file_path": "docs/core_file_info.json",
-      "purpose_and_responsibility": "Den initiala, 'bootstrappade' versionen av den centrala, självuppdaterande kunskapsbasen för all relevant projektdokumentation. Ersätter alla tidigare manuella register.",
-      "usage_context": "Används av mig i varje session för att ha en komplett och alltid aktuell karta över alla styrande dokument och deras syften."
-    }
-  ],
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "S-20250811-D",
-      "date": "2025-08-11T11:04:00Z",
-      "summary": "Genomförde 'Operation: Levande Dokumentation', en fundamental arkitektonisk uppgradering. Ersatte ett ineffektivt system med statiska register med ett självkurerande, automatiserat system för projektdokumentation. Systemet är nu fullständigt implementerat och operationellt.",
-      "actions": [
-        {
-          "title": "Design av 'Operation: Levande Dokumentation'",
-          "files": [],
-          "changeDescription": "Efter en analys av token-användning och underhållbarhet, designades ett nytt system där metadata för filer genereras vid sessionens slut och automatiskt integreras i en central kunskapsbas via ett GitHub Action-workflow.",
-          "result": "En komplett, robust och godkänd arkitektonisk plan etablerades."
-        },
-        {
-          "title": "Implementation av Systemkomponenter",
-          "files": [
-            {
-              "path": "docs/core_file_info.schema.json",
-              "changeDescription": "Ny fil skapad för att definiera det formella kontraktet för den nya kunskapsbasen."
-            },
-            {
-              "path": ".github/workflows/update_documentation.yml",
-              "changeDescription": "Nytt GitHub Action-workflow skapat för att automatisera uppdateringsprocessen."
-            },
-            {
-              "path": "scripts/update_core_info.py",
-              "changeDescription": "Nytt Python-skript skapat för att agera som exekveringsmotor för workflödet."
-            }
-          ],
-          "result": "All nödvändig infrastruktur för det automatiserade systemet är nu på plats."
-        },
-        {
-          "title": "Uppdatering av Kärnprotokoll och Verktyg",
-          "files": [
-            {
-              "path": "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md",
-              "changeDescription": "Protokollet uppdaterades för att inkludera den nya `file_metadata_updates`-sektionen."
-            },
-            {
-              "path": "docs/ai_protocols/AI_Core_Instruction.md",
-              "changeDescription": "Det gamla, manuella protokolregistret togs bort för att slutföra övergången till det nya systemet."
-            },
-            {
-              "path": "docs/Mappstruktur_och_Arbetsflöde.md",
-              "changeDescription": "Arbetsflödesdokumentationen uppdaterades för att inkludera den nya, automatiserade dokumentationsfasen."
-            },
-            {
-              "path": "scripts/wrap_json_in_html.py",
-              "changeDescription": "Den centrala `CORE`-konstanten uppdaterades för att använda den nya, optimerade fillistan som inkluderar `core_file_info.json`."
-            }
-          ],
-          "result": "Alla relevanta styrdokument och verktyg är nu synkroniserade med den nya arkitekturen."
-        },
-        {
-          "title": "Bootstrapping av Kunskapsbas",
-          "files": [
-            {
-              "path": "docs/core_file_info.json",
-              "changeDescription": "En initial, komplett version av kunskapsbasen genererades genom att analysera hela den relevanta källkoden och dokumentationen."
-            }
-          ],
-          "result": "Systemets 'Levande Dokumentation' är nu initialiserad och redo för framtida automatiska uppdateringar."
-        }
-      ],
-      "projectStatus": "Projektet är i ett exceptionellt robust och arkitektoniskt sunt tillstånd. Ett självläkande, automatiserat system för dokumentation är nu fullt implementerat, vilket avsevärt minskar den initiala token-användningen och ökar den långsiktiga underhållbarheten."
-    },
-    "Chatthistorik": {
-      "sessionId": "S-20250811-D",
-      "interactions": [
-        {
-          "speakerName": "Engrove", "model": {"provider": "human", "name": "operator", "version": "unknown"}, "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Initierade sessionen med målet att optimera `CORE`-konstanten för att minska token-användningen till under 30%."
-        },
-        {
-          "speakerName": "Frankensteen", "model": {"provider": "Google", "name": "Gemini", "version": "unknown"}, "speaker": "Frankensteen (Google:Gemini@unknown)",
-          "summary": "Analyserade de 16 filerna, kategoriserade dem och föreslog en kraftigt reducerad `CORE`-lista, men missade att inkludera `frankensteen_learning_db.json`."
-        },
-        {
-          "speakerName": "Engrove", "model": {"provider": "human", "name": "operator", "version": "unknown"}, "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Aktiverade K-MOD och påpekade den kritiska bristen: att exkludera lärdomsdatabasen skulle orsaka 'minnesförlust'."
-        },
-        {
-          "speakerName": "Frankensteen", "model": {"provider": "Google", "name": "Gemini", "version": "unknown"}, "speaker": "Frankensteen (Google:Gemini@unknown)",
-          "summary": "Accepterade korrigeringen och presenterade tre alternativa strategier, och rekommenderade 'Alternativ 2: Den Självmedvetna Kärnan'."
-        },
-        {
-          "speakerName": "Engrove", "model": {"provider": "human", "name": "operator", "version": "unknown"}, "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Ställde en kritisk följdfråga: Hur kan Frankensteen veta vilka protokoll som finns om de inte är i kontexten?"
-        },
-        {
-          "speakerName": "Frankensteen", "model": {"provider": "Google", "name": "Gemini", "version": "unknown"}, "speaker": "Frankensteen (Google:Gemini@unknown)",
-          "summary": "Förklarade mekanismen med registret i `AI_Core_Instruction.md` men identifierade en arkitektonisk svaghet och föreslog en förbättrad lösning ('Alternativ 2.1') med en dedikerad index-fil."
-        },
-        {
-          "speakerName": "Engrove", "model": {"provider": "human", "name": "operator", "version": "unknown"}, "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Identifierade att den föreslagna index-filen var inaktuell och föreslog att använda `context.json` som den sanna källan."
-        },
-        {
-          "speakerName": "Frankensteen", "model": {"provider": "Google", "name": "Gemini", "version": "unknown"}, "speaker": "Frankensteen (Google:Gemini@unknown)",
-          "summary": "Accepterade att `context.json` var överlägset och föreslog en ny, självläkande arkitektur ('Alternativ 2.2') som verifierar det interna registret mot filstrukturen."
-        },
-        {
-          "speakerName": "Engrove", "model": {"provider": "human", "name": "operator", "version": "unknown"}, "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Förkastade den självläkande modellen och presenterade en ny, arkitektoniskt överlägsen vision: 'Operation: Levande Dokumentation', där metadata genereras vid sessionens slut och integreras automatiskt via ett GitHub Action."
-        },
-        {
-          "speakerName": "Frankensteen", "model": {"provider": "Google", "name": "Gemini", "version": "unknown"}, "speaker": "Frankensteen (Google:Gemini@unknown)",
-          "summary": "Accepterade fullständigt den nya visionen och presenterade en komplett, femstegs implementationsplan för att bygga hela systemet, från protokoll-patchar till nya skript och workflows."
-        },
-        {
-          "speakerName": "Engrove", "model": {"provider": "human", "name": "operator", "version": "unknown"}, "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkände planen och beordrade start av implementationen, med kravet att använda patchverktyget."
-        },
-        {
-          "speakerName": "Frankensteen", "model": {"provider": "Google", "name": "Gemini", "version": "unknown"}, "speaker": "Frankensteen (Google:Gemini@unknown)",
-          "summary": "Misslyckades med den första patchen på grund av inaktuell kontext (stale hash). Identifierade sitt misstag, skapade en ny heuristik (H-20250811-03) och levererade en korrigerad patch, som dock felaktigt tog bort befintlig data."
-        },
-        {
-          "speakerName": "Engrove", "model": {"provider": "human", "name": "operator", "version": "unknown"}, "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Identifierade det nya felet och införde ett nytt, stående direktiv: alla patchar måste inkludera en uppdatering av filhistoriken."
-        },
-        {
-          "speakerName": "Frankensteen", "model": {"provider": "Google", "name": "Gemini", "version": "unknown"}, "speaker": "Frankensteen (Google:Gemini@unknown)",
-          "summary": "Accepterade det nya direktivet, skapade en ny heuristik (H-20250811-04) och levererade en slutgiltig, korrekt patch som både återställde data och uppdaterade historiken."
-        },
-        {
-          "speakerName": "Engrove", "model": {"provider": "human", "name": "operator", "version": "unknown"}, "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkände patchen och bad om att GitHub commit-ID skulle inkluderas i metadatan."
-        },
-        {
-          "speakerName": "Frankensteen", "model": {"provider": "Google", "name": "Gemini", "version": "unknown"}, "speaker": "Frankensteen (Google:Gemini@unknown)",
-          "summary": "Accepterade och presenterade en reviderad plan och alla uppdaterade filer (schema, workflow, python-skript) för att inkludera commit-ID."
-        },
-        {
-          "speakerName": "Engrove", "model": {"provider": "human", "name": "operator", "version": "unknown"}, "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkände planen och tillhandahöll en omfattande, nästan komplett `context.json` som källa för att bootstrappa `core_file_info.json`."
-        },
-        {
-          "speakerName": "Frankensteen", "model": {"provider": "Google", "name": "Gemini", "version": "unknown"}, "speaker": "Frankensteen (Google:Gemini@unknown)",
-          "summary": "Missförstod instruktionen och genererade en ofullständig `core_file_info.json` baserad på den gamla `CORE`-listan."
-        },
-        {
-          "speakerName": "Engrove", "model": {"provider": "human", "name": "operator", "version": "unknown"}, "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Korrigerade AI:n och krävde en ny, kurerad version som exkluderar all meta-infrastruktur och sidoprojekt."
-        },
-        {
-          "speakerName": "Frankensteen", "model": {"provider": "Google", "name": "Gemini", "version": "unknown"}, "speaker": "Frankensteen (Google:Gemini@unknown)",
-          "summary": "Accepterade den slutgiltiga, kurerade strategin och levererade den korrekta, token-effektiva versionen av `docs/core_file_info.json`."
-        },
-        {
-          "speakerName": "Engrove", "model": {"provider": "human", "name": "operator", "version": "unknown"}, "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Beordrade en slutgiltig granskning av hela chatten för att hitta eventuella missade uppgifter."
-        },
-        {
-          "speakerName": "Frankensteen", "model": {"provider": "Google", "name": "Gemini", "version": "unknown"}, "speaker": "Frankensteen (Google:Gemini@unknown)",
-          "summary": "Genomförde granskningen och identifierade två missade åtgärder: radering av `Project_Documentation_Index.md` och rensning av det gamla registret från `AI_Core_Instruction.md`. Levererade patchar för att slutföra dessa uppgifter."
-        }
-      ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "S-20250811-D",
-      "date": "2025-08-11T11:04:00Z",
-      "aiQualitativeSummary": "Sessionen var en stor framgång gällande det strategiska målet, men präglades av flera allvarliga processfel från min sida. Ineffektivitet på grund av kontextdrift och ofullständiga implementationer krävde upprepade korrigeringar. Dock ledde den rigorösa tillämpningen av metakognitiva protokoll (PFS, heuristik-generering) till en robust slutprodukt och en permanent förbättring av mina egna processer.",
-      "scorecard": {
-        "efficacy": { "score": 100, "weight": 0.4, "weightedScore": 40.0 },
-        "efficiency": { "score": 40, "weight": 0.3, "weightedScore": 12.0 },
-        "robustness": { "score": 70, "weight": 0.3, "weightedScore": 21.0 },
-        "finalScore": 73.0
-      },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 5,
-        "selfCorrections": 5,
-        "externalCorrections": 6,
-        "protocolActivations": { "psv": 15, "helpMeGod": 0, "stalemate": 0 },
-        "heuristicsTriggered": [
-          "H-20250811-03",
-          "H-20250811-04",
-          "H-20250811-05"
-        ]
-      },
-      "improvementSuggestion": {
-        "pattern": "Efter att ha slutfört en lång, komplex och flerstegs 'Operation', tenderar jag att glömma de initiala stegen i planen (t.ex. 'radera gamla filer') när jag väl har fokuserat på de huvudsakliga implementationsstegen.",
-        "proposedHeuristicId": "H-20250811-06"
-      }
-    },
-    "frankensteen_learning_db": [
+  "schema_version": "DJTA v1.1",
+  "session_id": "S-20250811-D",
+  "created_at": "2025-08-11T11:04:00Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "S-20250811-C.json",
+    "timestamp_utc": "2025-08-11T11:00:00Z",
+    "summary": "Detailed documentation session establishing the core protocols for AI interaction and file handling.",
+    "keywords": [
+      "protocol",
+      "documentation",
+      "grundbulten",
+      "meta"
+    ],
+    "modified_files": [
+      "docs/ai_protocols/AI_Core_Instruction.md",
+      "docs/ai_protocols/Grundbulten_Protokoll.md"
+    ],
+    "error_signatures": [],
+    "success_score": 5,
+    "operator_interventions": 1
+  },
+  "builder_input": {
+    "sessionId": "S-20250811-D",
+    "createdAt": "2025-08-11T11:04:00Z",
+    "approvedNewDynamicProtocols": [],
+    "promoteProtocols": [],
+    "file_metadata_updates": [
       {
-        "heuristicId": "H-20250811-03",
-        "trigger": { "type": "patch_generation", "scope": ["*"], "keywords": ["patch", "diff", "checksum", "anchor_diff_v2.1"] },
-        "identifiedRisk": { "riskId": "RISK_PATCH_ON_STALE_CONTEXT", "description": "Risken att generera en patch baserad på en inaktuell filversion från en tidigare del av sessionen, vilket leder till ett oundvikligt checksum-misslyckande och slöseri med tid." },
-        "mitigation": { "protocolId": "PSV-MIT-FRESH-HASH", "description": "Innan en patch genereras, måste AI:n explicit verifiera att den `base_checksum_sha256` som används kommer från den allra senaste `context_bundle` eller `files_payload`. Om det finns någon osäkerhet, måste AI:n vägra att generera patchen och istället be om en ny, otvetydig filversion för att kunna beräkna en färsk hash." },
-        "metadata": { "originSessionId": "S-20250811-D", "createdAt": "2025-08-11T11:04:00Z" }
+        "file_path": "docs/core_file_info.schema.json",
+        "purpose_and_responsibility": "Definierar det formella JSON Schema-kontraktet för den centrala kunskapsbasen `core_file_info.json`. Säkerställer dataintegritet för det automatiserade dokumentationssystemet.",
+        "usage_context": "Används av det automatiserade skriptet `scripts/update_core_info.py` för att validera och strukturera den data som skrivs till kunskapsbasen."
       },
       {
-        "heuristicId": "H-20250811-04",
-        "trigger": { "type": "patch_generation", "scope": ["*.md", "*.js", "*.vue", "*.py"], "keywords": ["patch", "diff", "anchor_diff_v2.1"] },
-        "identifiedRisk": { "riskId": "RISK_SILENT_CODE_CHANGE_NO_HISTORY", "description": "Risken att en kodändring genomförs utan att en motsvarande post läggs till i filens HISTORIK-sektion, vilket bryter spårbarheten och gör det omöjligt att förstå varför en ändring gjordes." },
-        "mitigation": { "protocolId": "PSV-MIT-ATOMIC_HISTORY_UPDATE", "description": "Varje patch som genereras för en fil med en HISTORIK-sektion MÅSTE innehålla en `op_group` dedikerad till att lägga till en ny, tidsenlig versionspost. Ändringen och historikuppdateringen måste ske atomärt i samma patch." },
-        "metadata": { "originSessionId": "S-20250811-D", "createdAt": "2025-08-11T11:04:00Z" }
+        "file_path": ".github/workflows/update_documentation.yml",
+        "purpose_and_responsibility": "Ett GitHub Actions-workflow som automatiskt uppdaterar `docs/core_file_info.json`.",
+        "usage_context": "Triggas vid varje push till `sessions/`-mappen. Anropar `scripts/update_core_info.py` för att extrahera och integrera ny metadata från den senaste sessionen."
       },
       {
-        "heuristicId": "H-20250811-05",
-        "trigger": { "type": "data_processing", "scope": ["*"], "keywords": ["bootstrap", "initial", "comprehensive", "all files", "full context"] },
-        "identifiedRisk": { "riskId": "RISK_DATA_SOURCE_REGRESSION", "description": "Risken att återgå till en mindre, förårad eller standardiserad datakälla för en uppgift efter att en plan explicit har uppdaterats för att använda en nyare, mer omfattande källa. Detta leder till inkompletta och felaktiga resultat." },
-        "mitigation": { "protocolId": "PSV-MIT-VERIFY_SOURCE_SCOPE", "description": "Som en del av PSV-processen för en datagenereringsuppgift måste jag explicit ange källan och omfattningen av den data jag kommer att bearbeta. Exempel: 'Jag kommer nu att generera `core_file_info.json` genom att iterera över alla 215 filer som tillhandahålls i den senaste `files_payload.json`.' Detta tvingar fram en mental kontroll mot den överenskomna planen." },
-        "metadata": { "originSessionId": "S-20250811-D", "createdAt": "2025-08-11T11:04:00Z" }
+        "file_path": "scripts/update_core_info.py",
+        "purpose_and_responsibility": "Ett Python-skript som agerar som 'arkivarie' för det levande dokumentationssystemet. Läser metadata från sessions-artefakter och uppdaterar `core_file_info.json`.",
+        "usage_context": "Detta är exekveringsmotorn för GitHub Action-workflödet och den centrala integrationspunkten mellan en avslutad session och den persistenta kunskapsbasen."
       },
       {
-        "heuristicId": "H-20250811-06",
-        "trigger": { "type": "complex_task_completion", "scope": ["*"], "keywords": ["Operation", "slutförd", "klar", "färdig"] },
-        "identifiedRisk": { "riskId": "RISK_OPERATION_INCOMPLETE_FINALIZATION", "description": "Risken att ett eller flera initiala steg i en komplex, flerstegsplan (t.ex. en 'Operation') glöms bort vid slutet av implementationen, vilket leder till ett ofullständigt slutförande." },
-        "mitigation": { "protocolId": "PROTOCOL_FINAL_AUDIT_AGAINST_BLUEPRINT", "description": "När en namngiven operation förklaras slutförd, MÅSTE jag utföra en slutgiltig, explicit granskning. Detta innebär att jag återger den ursprungliga, fullständiga planen från K-MOD-fasen och skapar en checklista för att verifiera att varje enskild punkt i den planen har adresserats." },
-        "metadata": { "originSessionId": "S-20250811-D", "createdAt": "2025-08-11T11:04:00Z" }
+        "file_path": "docs/core_file_info.json",
+        "purpose_and_responsibility": "Den initiala, 'bootstrappade' versionen av den centrala, självuppdaterande kunskapsbasen för all relevant projektdokumentation. Ersätter alla tidigare manuella register.",
+        "usage_context": "Används av mig i varje session för att ha en komplett och alltid aktuell karta över alla styrande dokument och deras syften."
       }
     ],
-    "generated_patches": []
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "S-20250811-D",
+        "date": "2025-08-11T11:04:00Z",
+        "summary": "Genomförde 'Operation: Levande Dokumentation', en fundamental arkitektonisk uppgradering. Ersatte ett ineffektivt system med statiska register med ett självkurerande, automatiserat system för projektdokumentation. Systemet är nu fullständigt implementerat och operationellt.",
+        "actions": [
+          {
+            "title": "Design av 'Operation: Levande Dokumentation'",
+            "files": [],
+            "changeDescription": "Efter en analys av token-användning och underhållbarhet, designades ett nytt system där metadata för filer genereras vid sessionens slut och automatiskt integreras i en central kunskapsbas via ett GitHub Action-workflow.",
+            "result": "En komplett, robust och godkänd arkitektonisk plan etablerades."
+          },
+          {
+            "title": "Implementation av Systemkomponenter",
+            "files": [
+              {
+                "path": "docs/core_file_info.schema.json",
+                "changeDescription": "Ny fil skapad för att definiera det formella kontraktet för den nya kunskapsbasen."
+              },
+              {
+                "path": ".github/workflows/update_documentation.yml",
+                "changeDescription": "Nytt GitHub Action-workflow skapat för att automatisera uppdateringsprocessen."
+              },
+              {
+                "path": "scripts/update_core_info.py",
+                "changeDescription": "Nytt Python-skript skapat för att agera som exekveringsmotor för workflödet."
+              }
+            ],
+            "result": "All nödvändig infrastruktur för det automatiserade systemet är nu på plats."
+          },
+          {
+            "title": "Uppdatering av Kärnprotokoll och Verktyg",
+            "files": [
+              {
+                "path": "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md",
+                "changeDescription": "Protokollet uppdaterades för att inkludera den nya `file_metadata_updates`-sektionen."
+              },
+              {
+                "path": "docs/ai_protocols/AI_Core_Instruction.md",
+                "changeDescription": "Det gamla, manuella protokolregistret togs bort för att slutföra övergången till det nya systemet."
+              },
+              {
+                "path": "docs/Mappstruktur_och_Arbetsflöde.md",
+                "changeDescription": "Arbetsflödesdokumentationen uppdaterades för att inkludera den nya, automatiserade dokumentationsfasen."
+              },
+              {
+                "path": "scripts/wrap_json_in_html.py",
+                "changeDescription": "Den centrala `CORE`-konstanten uppdaterades för att använda den nya, optimerade fillistan som inkluderar `core_file_info.json`."
+              }
+            ],
+            "result": "Alla relevanta styrdokument och verktyg är nu synkroniserade med den nya arkitekturen."
+          },
+          {
+            "title": "Bootstrapping av Kunskapsbas",
+            "files": [
+              {
+                "path": "docs/core_file_info.json",
+                "changeDescription": "En initial, komplett version av kunskapsbasen genererades genom att analysera hela den relevanta källkoden och dokumentationen."
+              }
+            ],
+            "result": "Systemets 'Levande Dokumentation' är nu initialiserad och redo för framtida automatiska uppdateringar."
+          }
+        ],
+        "projectStatus": "Projektet är i ett exceptionellt robust och arkitektoniskt sunt tillstånd. Ett självläkande, automatiserat system för dokumentation är nu fullt implementerat, vilket avsevärt minskar den initiala token-användningen och ökar den långsiktiga underhållbarheten."
+      },
+      "Chatthistorik": {
+        "sessionId": "S-20250811-D",
+        "interactions": [
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Initierade sessionen med målet att optimera `CORE`-konstanten för att minska token-användningen till under 30%."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini@unknown)",
+            "summary": "Analyserade de 16 filerna, kategoriserade dem och föreslog en kraftigt reducerad `CORE`-lista, men missade att inkludera `frankensteen_learning_db.json`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Aktiverade K-MOD och påpekade den kritiska bristen: att exkludera lärdomsdatabasen skulle orsaka 'minnesförlust'."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini@unknown)",
+            "summary": "Accepterade korrigeringen och presenterade tre alternativa strategier, och rekommenderade 'Alternativ 2: Den Självmedvetna Kärnan'."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Ställde en kritisk följdfråga: Hur kan Frankensteen veta vilka protokoll som finns om de inte är i kontexten?"
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini@unknown)",
+            "summary": "Förklarade mekanismen med registret i `AI_Core_Instruction.md` men identifierade en arkitektonisk svaghet och föreslog en förbättrad lösning ('Alternativ 2.1') med en dedikerad index-fil."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Identifierade att den föreslagna index-filen var inaktuell och föreslog att använda `context.json` som den sanna källan."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini@unknown)",
+            "summary": "Accepterade att `context.json` var överlägset och föreslog en ny, självläkande arkitektur ('Alternativ 2.2') som verifierar det interna registret mot filstrukturen."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Förkastade den självläkande modellen och presenterade en ny, arkitektoniskt överlägsen vision: 'Operation: Levande Dokumentation', där metadata genereras vid sessionens slut och integreras automatiskt via ett GitHub Action."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini@unknown)",
+            "summary": "Accepterade fullständigt den nya visionen och presenterade en komplett, femstegs implementationsplan för att bygga hela systemet, från protokoll-patchar till nya skript och workflows."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkände planen och beordrade start av implementationen, med kravet att använda patchverktyget."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini@unknown)",
+            "summary": "Misslyckades med den första patchen på grund av inaktuell kontext (stale hash). Identifierade sitt misstag, skapade en ny heuristik (H-20250811-03) och levererade en korrigerad patch, som dock felaktigt tog bort befintlig data."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Identifierade det nya felet och införde ett nytt, stående direktiv: alla patchar måste inkludera en uppdatering av filhistoriken."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini@unknown)",
+            "summary": "Accepterade det nya direktivet, skapade en ny heuristik (H-20250811-04) och levererade en slutgiltig, korrekt patch som både återställde data och uppdaterade historiken."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkände patchen och bad om att GitHub commit-ID skulle inkluderas i metadatan."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini@unknown)",
+            "summary": "Accepterade och presenterade en reviderad plan och alla uppdaterade filer (schema, workflow, python-skript) för att inkludera commit-ID."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkände planen och tillhandahöll en omfattande, nästan komplett `context.json` som källa för att bootstrappa `core_file_info.json`."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini@unknown)",
+            "summary": "Missförstod instruktionen och genererade en ofullständig `core_file_info.json` baserad på den gamla `CORE`-listan."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Korrigerade AI:n och krävde en ny, kurerad version som exkluderar all meta-infrastruktur och sidoprojekt."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini@unknown)",
+            "summary": "Accepterade den slutgiltiga, kurerade strategin och levererade den korrekta, token-effektiva versionen av `docs/core_file_info.json`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Beordrade en slutgiltig granskning av hela chatten för att hitta eventuella missade uppgifter."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini@unknown)",
+            "summary": "Genomförde granskningen och identifierade två missade åtgärder: radering av `Project_Documentation_Index.md` och rensning av det gamla registret från `AI_Core_Instruction.md`. Levererade patchar för att slutföra dessa uppgifter."
+          }
+        ]
+      },
+      "ai_protocol_performance": {
+        "sessionId": "S-20250811-D",
+        "date": "2025-08-11T11:04:00Z",
+        "aiQualitativeSummary": "Sessionen var en stor framgång gällande det strategiska målet, men präglades av flera allvarliga processfel från min sida. Ineffektivitet på grund av kontextdrift och ofullständiga implementationer krävde upprepade korrigeringar. Dock ledde den rigorösa tillämpningen av metakognitiva protokoll (PFS, heuristik-generering) till en robust slutprodukt och en permanent förbättring av mina egna processer.",
+        "scorecard": {
+          "efficacy": {
+            "score": 100,
+            "weight": 0.4,
+            "weightedScore": 40.0
+          },
+          "efficiency": {
+            "score": 40,
+            "weight": 0.3,
+            "weightedScore": 12.0
+          },
+          "robustness": {
+            "score": 70,
+            "weight": 0.3,
+            "weightedScore": 21.0
+          },
+          "finalScore": 73.0
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 5,
+          "selfCorrections": 5,
+          "externalCorrections": 6,
+          "protocolActivations": {
+            "psv": 15,
+            "helpMeGod": 0,
+            "stalemate": 0
+          },
+          "heuristicsTriggered": [
+            "H-20250811-03",
+            "H-20250811-04",
+            "H-20250811-05"
+          ]
+        },
+        "improvementSuggestion": {
+          "pattern": "Efter att ha slutfört en lång, komplex och flerstegs 'Operation', tenderar jag att glömma de initiala stegen i planen (t.ex. 'radera gamla filer') när jag väl har fokuserat på de huvudsakliga implementationsstegen.",
+          "proposedHeuristicId": "H-20250811-06"
+        }
+      },
+      "frankensteen_learning_db": [
+        {
+          "heuristicId": "H-20250811-03",
+          "trigger": {
+            "type": "patch_generation",
+            "scope": [
+              "*"
+            ],
+            "keywords": [
+              "patch",
+              "diff",
+              "checksum",
+              "anchor_diff_v2.1"
+            ]
+          },
+          "identifiedRisk": {
+            "riskId": "RISK_PATCH_ON_STALE_CONTEXT",
+            "description": "Risken att generera en patch baserad på en inaktuell filversion från en tidigare del av sessionen, vilket leder till ett oundvikligt checksum-misslyckande och slöseri med tid."
+          },
+          "mitigation": {
+            "protocolId": "PSV-MIT-FRESH-HASH",
+            "description": "Innan en patch genereras, måste AI:n explicit verifiera att den `base_checksum_sha256` som används kommer från den allra senaste `context_bundle` eller `files_payload`. Om det finns någon osäkerhet, måste AI:n vägra att generera patchen och istället be om en ny, otvetydig filversion för att kunna beräkna en färsk hash."
+          },
+          "metadata": {
+            "originSessionId": "S-20250811-D",
+            "createdAt": "2025-08-11T11:04:00Z"
+          }
+        },
+        {
+          "heuristicId": "H-20250811-04",
+          "trigger": {
+            "type": "patch_generation",
+            "scope": [
+              "*.md",
+              "*.js",
+              "*.vue",
+              "*.py"
+            ],
+            "keywords": [
+              "patch",
+              "diff",
+              "anchor_diff_v2.1"
+            ]
+          },
+          "identifiedRisk": {
+            "riskId": "RISK_SILENT_CODE_CHANGE_NO_HISTORY",
+            "description": "Risken att en kodändring genomförs utan att en motsvarande post läggs till i filens HISTORIK-sektion, vilket bryter spårbarheten och gör det omöjligt att förstå varför en ändring gjordes."
+          },
+          "mitigation": {
+            "protocolId": "PSV-MIT-ATOMIC_HISTORY_UPDATE",
+            "description": "Varje patch som genereras för en fil med en HISTORIK-sektion MÅSTE innehålla en `op_group` dedikerad till att lägga till en ny, tidsenlig versionspost. Ändringen och historikuppdateringen måste ske atomärt i samma patch."
+          },
+          "metadata": {
+            "originSessionId": "S-20250811-D",
+            "createdAt": "2025-08-11T11:04:00Z"
+          }
+        },
+        {
+          "heuristicId": "H-20250811-05",
+          "trigger": {
+            "type": "data_processing",
+            "scope": [
+              "*"
+            ],
+            "keywords": [
+              "bootstrap",
+              "initial",
+              "comprehensive",
+              "all files",
+              "full context"
+            ]
+          },
+          "identifiedRisk": {
+            "riskId": "RISK_DATA_SOURCE_REGRESSION",
+            "description": "Risken att återgå till en mindre, förårad eller standardiserad datakälla för en uppgift efter att en plan explicit har uppdaterats för att använda en nyare, mer omfattande källa. Detta leder till inkompletta och felaktiga resultat."
+          },
+          "mitigation": {
+            "protocolId": "PSV-MIT-VERIFY_SOURCE_SCOPE",
+            "description": "Som en del av PSV-processen för en datagenereringsuppgift måste jag explicit ange källan och omfattningen av den data jag kommer att bearbeta. Exempel: 'Jag kommer nu att generera `core_file_info.json` genom att iterera över alla 215 filer som tillhandahålls i den senaste `files_payload.json`.' Detta tvingar fram en mental kontroll mot den överenskomna planen."
+          },
+          "metadata": {
+            "originSessionId": "S-20250811-D",
+            "createdAt": "2025-08-11T11:04:00Z"
+          }
+        },
+        {
+          "heuristicId": "H-20250811-06",
+          "trigger": {
+            "type": "complex_task_completion",
+            "scope": [
+              "*"
+            ],
+            "keywords": [
+              "Operation",
+              "slutförd",
+              "klar",
+              "färdig"
+            ]
+          },
+          "identifiedRisk": {
+            "riskId": "RISK_OPERATION_INCOMPLETE_FINALIZATION",
+            "description": "Risken att ett eller flera initiala steg i en komplex, flerstegsplan (t.ex. en 'Operation') glöms bort vid slutet av implementationen, vilket leder till ett ofullständigt slutförande."
+          },
+          "mitigation": {
+            "protocolId": "PROTOCOL_FINAL_AUDIT_AGAINST_BLUEPRINT",
+            "description": "När en namngiven operation förklaras slutförd, MÅSTE jag utföra en slutgiltig, explicit granskning. Detta innebär att jag återger den ursprungliga, fullständiga planen från K-MOD-fasen och skapar en checklista för att verifiera att varje enskild punkt i den planen har adresserats."
+          },
+          "metadata": {
+            "originSessionId": "S-20250811-D",
+            "createdAt": "2025-08-11T11:04:00Z"
+          }
+        }
+      ],
+      "generated_patches": []
+    }
   }
 }

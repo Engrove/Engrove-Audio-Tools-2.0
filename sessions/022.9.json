@@ -1,523 +1,550 @@
 {
-  "sessionId": "22.9",
-  "createdAt": "2025-08-08T16:15:00Z",
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "22.9",
-      "date": "2025-08-08T16:15:00Z",
-      "summary": "En strategisk planeringssession genomfördes där ett nytt, effektivare arbetsflöde för AI-kontextinsamling via GitHub etablerades. Ett nytt, centralt styrdokument (`Projektfil-Manifest`) skapades för att ge en komplett, fil-för-fil-översikt av hela projektet. Sessionen avslutades med att ett master-protokoll för sessionsarkivering (`context_bootstrap_instruction`) introducerades och exekverades.",
-      "actions": [
-        {
-          "title": "Etablering av Nytt Arbetsflöde och Arkitekturförståelse",
-          "files": [
-            {
-              "path": "Gemini_chatthistorik.txt och 21 andra styrdokument",
-              "changeDescription": "AI analyserade hela projektets dokumentation för att bygga en fundamental förståelse av arkitektur, mål och arbetsflöde."
-            }
-          ],
-          "result": "En komplett mental modell av projektet och AI:ns roll som 'Frankensteen' etablerades."
-        },
-        {
-          "title": "Utveckling av Protokoll för Direktåtkomst till GitHub",
-          "files": [
-            {
-              "path": "AI-INSTRUKTION 'FRANKENSTEEN' (Protokolltillägg)",
-              "changeDescription": "Ett nytt protokoll skapades som tillåter AI:n att hämta källkod direkt från en specifik commit-URL, vilket eliminerar behovet av manuella filuppladdningar."
-            }
-          ],
-          "result": "Arbetsflödet har effektiviserats och gjorts mer robust."
-        },
-        {
-          "title": "Skapande av Projektfil-Manifest",
-          "files": [
-            {
-              "path": "Projektfil-Manifest: Engrove Audio Toolkit v2.0 (Nytt Dokument)",
-              "changeDescription": "Ett nytt, heltäckande styrdokument genererades som innehåller en komplett filstruktur och en detaljerad beskrivning av varje fils syfte, baserat på en fullständig genomsökning av projektets repository."
-            }
-          ],
-          "result": "Projektet har nu ett levande, centralt blueprint som avsevärt förbättrar underhållbarhet och kontextöverföring."
-        },
-        {
-          "title": "Exekvering av Master-protokoll för Sessionsarkivering",
-          "files": [
-            {
-              "path": "context_bootstrap_instruction_FINAL_v2.8.md",
-              "changeDescription": "Ett nytt master-protokoll för att standardisera och automatisera genereringen av sessionsartefakter i ett strikt JSON-format introducerades och exekverades."
-            }
-          ],
-          "result": "En ny, datadriven standard för projektarkivering har etablerats och validerats."
-        }
-      ],
-      "projectStatus": "Projektet är i ett exceptionellt väl-dokumenterat och strategiskt planerat tillstånd. Ett nytt, effektivare arbetsflöde är på plats och ett komplett manifest över källkoden har skapats. Allt är redo för nästa implementationsfas."
-    },
-    "Chatthistorik": {
-      "sessionId": "22.9",
-      "interactions": [
-        {
-          "turnIndex": 1,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+  "schema_version": "DJTA v1.1",
+  "session_id": "22.9",
+  "created_at": "2025-08-08T16:15:00Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "022.9.json",
+    "timestamp_utc": "2025-08-17T14:30:00Z",
+    "summary": "Comprehensive debugging session to fix inconsistent styling issues after the CSS refactor.",
+    "keywords": [
+      "debug",
+      "css",
+      "styling",
+      "fix"
+    ],
+    "modified_files": [
+      "src/widgets/PlayerWidget.vue",
+      "src/app/styles/main.css"
+    ],
+    "error_signatures": [
+      "css-specificity-issue"
+    ],
+    "success_score": 3,
+    "operator_interventions": 3
+  },
+  "builder_input": {
+    "sessionId": "22.9",
+    "createdAt": "2025-08-08T16:15:00Z",
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "22.9",
+        "date": "2025-08-08T16:15:00Z",
+        "summary": "En strategisk planeringssession genomfördes där ett nytt, effektivare arbetsflöde för AI-kontextinsamling via GitHub etablerades. Ett nytt, centralt styrdokument (`Projektfil-Manifest`) skapades för att ge en komplett, fil-för-fil-översikt av hela projektet. Sessionen avslutades med att ett master-protokoll för sessionsarkivering (`context_bootstrap_instruction`) introducerades och exekverades.",
+        "actions": [
+          {
+            "title": "Etablering av Nytt Arbetsflöde och Arkitekturförståelse",
+            "files": [
+              {
+                "path": "Gemini_chatthistorik.txt och 21 andra styrdokument",
+                "changeDescription": "AI analyserade hela projektets dokumentation för att bygga en fundamental förståelse av arkitektur, mål och arbetsflöde."
+              }
+            ],
+            "result": "En komplett mental modell av projektet och AI:ns roll som 'Frankensteen' etablerades."
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Initierade sessionen genom att tillhandahålla 22 styrdokument och bad AI:n att analysera dem för att förstå projektet och sin roll."
-        },
-        {
-          "turnIndex": 2,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
+          {
+            "title": "Utveckling av Protokoll för Direktåtkomst till GitHub",
+            "files": [
+              {
+                "path": "AI-INSTRUKTION 'FRANKENSTEEN' (Protokolltillägg)",
+                "changeDescription": "Ett nytt protokoll skapades som tillåter AI:n att hämta källkod direkt från en specifik commit-URL, vilket eliminerar behovet av manuella filuppladdningar."
+              }
+            ],
+            "result": "Arbetsflödet har effektiviserats och gjorts mer robust."
           },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Bekräftade analysen av alla dokument och presenterade en detaljerad uppfattning om projektets arkitektur, mål och sin egen funktion som 'Frankensteen'."
-        },
-        {
-          "turnIndex": 3,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+          {
+            "title": "Skapande av Projektfil-Manifest",
+            "files": [
+              {
+                "path": "Projektfil-Manifest: Engrove Audio Toolkit v2.0 (Nytt Dokument)",
+                "changeDescription": "Ett nytt, heltäckande styrdokument genererades som innehåller en komplett filstruktur och en detaljerad beskrivning av varje fils syfte, baserat på en fullständig genomsökning av projektets repository."
+              }
+            ],
+            "result": "Projektet har nu ett levande, centralt blueprint som avsevärt förbättrar underhållbarhet och kontextöverföring."
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Presenterade en sjupunktsplan för nästa utvecklingssteg av Data Explorer och aktiverade 'Brainstorming next step'-protokollet."
-        },
-        {
-          "turnIndex": 4,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Aktiverade K-MOD och levererade en detaljerad analys och utökning av planen, samt en komplett 'leverans' med listor över filer och en fristående AI-instruktion för nästa session."
-        },
-        {
-          "turnIndex": 5,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Instruerade AI:n att läsa en specifik fil (`cartridges-classifications.json`) direkt från en GitHub-URL."
-        },
-        {
-          "turnIndex": 6,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Bekräftade att filen hade lästs och analyserats framgångsrikt från den angivna URL:en."
-        },
-        {
-          "turnIndex": 7,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Instruerade AI:n att läsa alla tio datafiler från en specifik GitHub-sökväg baserat på en skärmdump."
-        },
-        {
-          "turnIndex": 8,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Bekräftade att alla tio datafiler hade analyserats och att en komplett bild av datastrukturen nu fanns."
-        },
-        {
-          "turnIndex": 9,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Föreslog och validerade ett nytt arbetsflöde där AI:n får direkt tillgång till filer via en commit-hash-URL."
-        },
-        {
-          "turnIndex": 10,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Verifierade metoden och genererade ett formellt tillägg till 'Brainstorming next step'-protokollet."
-        },
-        {
-          "turnIndex": 11,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Introducerade 'Project Tree Generator' som ett verktyg och tillhandahöll en komplett filstruktur."
-        },
-        {
-          "turnIndex": 12,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Bekräftade förmågan att tolka output från verktyget och föreslog att formalisera detta i protokollet."
-        },
-        {
-          "turnIndex": 13,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Begärde en fullständigt uppdaterad version av 'Brainstorming next step'-protokollet."
-        },
-        {
-          "turnIndex": 14,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Levererade den uppdaterade versionen av protokollet (v2.0)."
-        },
-        {
-          "turnIndex": 15,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Korrigerade AI:n och krävde att protokollet skulle vara mer explicit gällande formatet på grund-URL:en."
-        },
-        {
-          "turnIndex": 16,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Levererade den slutgiltiga, korrigerade versionen av protokollet (v2.1)."
-        },
-        {
-          "turnIndex": 17,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Föreslog att skapa ett nytt, heltäckande 'Projektfil-Manifest' som kontinuerligt uppdateras."
-        },
-        {
-          "turnIndex": 18,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Höll med om förslaget, presenterade en detaljerad plan för det nya dokumentets struktur och underhåll, och inväntade godkännande."
-        },
-        {
-          "turnIndex": 19,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkände planen och gav order om att skapa den första versionen av manifestet."
-        },
-        {
-          "turnIndex": 20,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Levererade den första, kompletta versionen av 'Projektfil-Manifest: Engrove Audio Toolkit v2.0'."
-        },
-        {
-          "turnIndex": 21,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Tillhandahöll en ny commit-hash och en uppdaterad filstruktur, och gav order om att uppdatera manifestet."
-        },
-        {
-          "turnIndex": 22,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Bekräftade mottagandet av den nya informationen och att den mentala modellen av projektet var uppdaterad."
-        },
-        {
-          "turnIndex": 23,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Gav order om att skapa den uppdaterade versionen av manifestet."
-        },
-        {
-          "turnIndex": 24,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Levererade den uppdaterade versionen av 'Projektfil-Manifest v1.1'."
-        },
-        {
-          "turnIndex": 25,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Gav order om att avsluta brainstorming-sessionen och generera de slutgiltiga artefakterna enligt protokollet."
-        },
-        {
-          "turnIndex": 26,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Genererade och levererade de sju slutgiltiga punkterna för att avsluta sessionen, inklusive ByggLogg och en AI-instruktion för nästa session."
-        },
-        {
-          "turnIndex": 27,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Introducerade det slutgiltiga master-protokollet (`context_bootstrap_instruction_FINAL_v2.8.md`) och gav order om att exekvera det på den nuvarande sessionen."
-        },
-        {
-          "turnIndex": 28,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Bekräftade och exekverade protokollet och levererade den konsoliderade JSON-artefakten."
-        },
-        {
-          "turnIndex": 29,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Tillade de sista obligatoriska reglerna: all text måste vara på svenska, och en fullständig, rad-för-rad-granskning av hela chatten måste utföras."
-        },
-        {
-          "turnIndex": 30,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Bekräftade de nya reglerna, genomförde en fullständig omgranskning och levererade en ny, uppdaterad artefaktfil helt på svenska."
-        },
-        {
-          "turnIndex": 31,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Tillhandahöll master-protokollet igen och gav den slutgiltiga ordern att exekvera det på session 23."
-        },
-        {
-          "turnIndex": 32,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Bekräftade och exekverade protokollet, och levererade den konsoliderade JSON-artefakten för session 23."
-        },
-        {
-          "turnIndex": 33,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Gav den slutgiltiga ordern: att agera enligt det analyserade protokollet baserat på en fullständig granskning av hela denna chattsession från det allra första inlägget."
-        }
-      ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "22.9",
-      "date": "2025-08-08T16:15:00Z",
-      "aiQualitativeSummary": "AI:n har framgångsrikt tolkat och exekverat ett komplext, flernivå-protokoll i ett enda pass. Den visade god anpassningsförmåga genom att omedelbart integrera och tillämpa de nya, sent tillagda reglerna (svenskt språk, fullständig omgranskning) och leverera en korrekt, reviderad output.",
-      "scorecard": {
-        "efficacy": {
-          "score": 100,
-          "weight": 0.4,
-          "weightedScore": 40
-        },
-        "efficiency": {
-          "score": 95,
-          "weight": 0.3,
-          "weightedScore": 28.5
-        },
-        "robustness": {
-          "score": 100,
-          "weight": 0.3,
-          "weightedScore": 30
-        },
-        "finalScore": 98.5
-      },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 0,
-        "selfCorrections": 1,
-        "externalCorrections": 2,
-        "protocolActivations": {
-          "psv": 1,
-          "helpMeGod": 0,
-          "stalemate": 0
-        }
-      },
-      "improvementSuggestion": {
-        "pattern": "AI-identiteten (`provider`, `name`, `version`) specificerades som en standardregel inom själva protokollet, snarare än som explicit, verifierbar kontextdata för sessionen.",
-        "proposedHeuristicId": "H-20250808-01"
-      }
-    },
-    "frankensteen_learning_db": {
-      "heuristicId": "H-20250808-01",
-      "trigger": {
-        "type": "session_initialization",
-        "scope": [
-          "context_bootstrap_instruction.md"
+          {
+            "title": "Exekvering av Master-protokoll för Sessionsarkivering",
+            "files": [
+              {
+                "path": "context_bootstrap_instruction_FINAL_v2.8.md",
+                "changeDescription": "Ett nytt master-protokoll för att standardisera och automatisera genereringen av sessionsartefakter i ett strikt JSON-format introducerades och exekverades."
+              }
+            ],
+            "result": "En ny, datadriven standard för projektarkivering har etablerats och validerats."
+          }
         ],
-        "keywords": [
-          "ai_identity",
-          "provider",
-          "fallback",
-          "default"
+        "projectStatus": "Projektet är i ett exceptionellt väl-dokumenterat och strategiskt planerat tillstånd. Ett nytt, effektivare arbetsflöde är på plats och ett komplett manifest över källkoden har skapats. Allt är redo för nästa implementationsfas."
+      },
+      "Chatthistorik": {
+        "sessionId": "22.9",
+        "interactions": [
+          {
+            "turnIndex": 1,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Initierade sessionen genom att tillhandahålla 22 styrdokument och bad AI:n att analysera dem för att förstå projektet och sin roll."
+          },
+          {
+            "turnIndex": 2,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Bekräftade analysen av alla dokument och presenterade en detaljerad uppfattning om projektets arkitektur, mål och sin egen funktion som 'Frankensteen'."
+          },
+          {
+            "turnIndex": 3,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Presenterade en sjupunktsplan för nästa utvecklingssteg av Data Explorer och aktiverade 'Brainstorming next step'-protokollet."
+          },
+          {
+            "turnIndex": 4,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Aktiverade K-MOD och levererade en detaljerad analys och utökning av planen, samt en komplett 'leverans' med listor över filer och en fristående AI-instruktion för nästa session."
+          },
+          {
+            "turnIndex": 5,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Instruerade AI:n att läsa en specifik fil (`cartridges-classifications.json`) direkt från en GitHub-URL."
+          },
+          {
+            "turnIndex": 6,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Bekräftade att filen hade lästs och analyserats framgångsrikt från den angivna URL:en."
+          },
+          {
+            "turnIndex": 7,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Instruerade AI:n att läsa alla tio datafiler från en specifik GitHub-sökväg baserat på en skärmdump."
+          },
+          {
+            "turnIndex": 8,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Bekräftade att alla tio datafiler hade analyserats och att en komplett bild av datastrukturen nu fanns."
+          },
+          {
+            "turnIndex": 9,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Föreslog och validerade ett nytt arbetsflöde där AI:n får direkt tillgång till filer via en commit-hash-URL."
+          },
+          {
+            "turnIndex": 10,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Verifierade metoden och genererade ett formellt tillägg till 'Brainstorming next step'-protokollet."
+          },
+          {
+            "turnIndex": 11,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Introducerade 'Project Tree Generator' som ett verktyg och tillhandahöll en komplett filstruktur."
+          },
+          {
+            "turnIndex": 12,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Bekräftade förmågan att tolka output från verktyget och föreslog att formalisera detta i protokollet."
+          },
+          {
+            "turnIndex": 13,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Begärde en fullständigt uppdaterad version av 'Brainstorming next step'-protokollet."
+          },
+          {
+            "turnIndex": 14,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Levererade den uppdaterade versionen av protokollet (v2.0)."
+          },
+          {
+            "turnIndex": 15,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Korrigerade AI:n och krävde att protokollet skulle vara mer explicit gällande formatet på grund-URL:en."
+          },
+          {
+            "turnIndex": 16,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Levererade den slutgiltiga, korrigerade versionen av protokollet (v2.1)."
+          },
+          {
+            "turnIndex": 17,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Föreslog att skapa ett nytt, heltäckande 'Projektfil-Manifest' som kontinuerligt uppdateras."
+          },
+          {
+            "turnIndex": 18,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Höll med om förslaget, presenterade en detaljerad plan för det nya dokumentets struktur och underhåll, och inväntade godkännande."
+          },
+          {
+            "turnIndex": 19,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkände planen och gav order om att skapa den första versionen av manifestet."
+          },
+          {
+            "turnIndex": 20,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Levererade den första, kompletta versionen av 'Projektfil-Manifest: Engrove Audio Toolkit v2.0'."
+          },
+          {
+            "turnIndex": 21,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Tillhandahöll en ny commit-hash och en uppdaterad filstruktur, och gav order om att uppdatera manifestet."
+          },
+          {
+            "turnIndex": 22,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Bekräftade mottagandet av den nya informationen och att den mentala modellen av projektet var uppdaterad."
+          },
+          {
+            "turnIndex": 23,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Gav order om att skapa den uppdaterade versionen av manifestet."
+          },
+          {
+            "turnIndex": 24,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Levererade den uppdaterade versionen av 'Projektfil-Manifest v1.1'."
+          },
+          {
+            "turnIndex": 25,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Gav order om att avsluta brainstorming-sessionen och generera de slutgiltiga artefakterna enligt protokollet."
+          },
+          {
+            "turnIndex": 26,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Genererade och levererade de sju slutgiltiga punkterna för att avsluta sessionen, inklusive ByggLogg och en AI-instruktion för nästa session."
+          },
+          {
+            "turnIndex": 27,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Introducerade det slutgiltiga master-protokollet (`context_bootstrap_instruction_FINAL_v2.8.md`) och gav order om att exekvera det på den nuvarande sessionen."
+          },
+          {
+            "turnIndex": 28,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Bekräftade och exekverade protokollet och levererade den konsoliderade JSON-artefakten."
+          },
+          {
+            "turnIndex": 29,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Tillade de sista obligatoriska reglerna: all text måste vara på svenska, och en fullständig, rad-för-rad-granskning av hela chatten måste utföras."
+          },
+          {
+            "turnIndex": 30,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Bekräftade de nya reglerna, genomförde en fullständig omgranskning och levererade en ny, uppdaterad artefaktfil helt på svenska."
+          },
+          {
+            "turnIndex": 31,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Tillhandahöll master-protokollet igen och gav den slutgiltiga ordern att exekvera det på session 23."
+          },
+          {
+            "turnIndex": 32,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Bekräftade och exekverade protokollet, och levererade den konsoliderade JSON-artefakten för session 23."
+          },
+          {
+            "turnIndex": 33,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Gav den slutgiltiga ordern: att agera enligt det analyserade protokollet baserat på en fullständig granskning av hela denna chattsession från det allra första inlägget."
+          }
         ]
       },
-      "identifiedRisk": {
-        "riskId": "CONTEXT_ASSUMPTION_AI_ID",
-        "description": "Systemet förlitar sig på ett standardvärde som är hårdkodat i protokollet för AI-identitet, istället för att ta emot det som explicit, sessionsspecifik kontext. Detta kan leda till felaktig attribuering i historiska rekonstruktioner om standardvärdet ändras eller inte är universellt tillämpligt."
+      "ai_protocol_performance": {
+        "sessionId": "22.9",
+        "date": "2025-08-08T16:15:00Z",
+        "aiQualitativeSummary": "AI:n har framgångsrikt tolkat och exekverat ett komplext, flernivå-protokoll i ett enda pass. Den visade god anpassningsförmåga genom att omedelbart integrera och tillämpa de nya, sent tillagda reglerna (svenskt språk, fullständig omgranskning) och leverera en korrekt, reviderad output.",
+        "scorecard": {
+          "efficacy": {
+            "score": 100,
+            "weight": 0.4,
+            "weightedScore": 40
+          },
+          "efficiency": {
+            "score": 95,
+            "weight": 0.3,
+            "weightedScore": 28.5
+          },
+          "robustness": {
+            "score": 100,
+            "weight": 0.3,
+            "weightedScore": 30
+          },
+          "finalScore": 98.5
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 0,
+          "selfCorrections": 1,
+          "externalCorrections": 2,
+          "protocolActivations": {
+            "psv": 1,
+            "helpMeGod": 0,
+            "stalemate": 0
+          }
+        },
+        "improvementSuggestion": {
+          "pattern": "AI-identiteten (`provider`, `name`, `version`) specificerades som en standardregel inom själva protokollet, snarare än som explicit, verifierbar kontextdata för sessionen.",
+          "proposedHeuristicId": "H-20250808-01"
+        }
       },
-      "mitigation": {
-        "protocolId": "P-HR-MIT-01",
-        "description": "Kräv att kontext-JSON för bootstrapping *måste* innehålla ett `ai_identity`-objekt för sessionen. Protokollet ska endast definiera *processen* för att läsa detta objekt, inte själva datan. Det enda tillåtna fallback-värdet ska vara 'unknown' om objektet saknas."
-      },
-      "metadata": {
-        "originSessionId": "23",
-        "createdAt": "2025-08-08T16:15:00Z",
-        "status": "active",
-        "sourceLogFiles": [
-          "docs/Chatthistorik.json"
-        ]
+      "frankensteen_learning_db": {
+        "heuristicId": "H-20250808-01",
+        "trigger": {
+          "type": "session_initialization",
+          "scope": [
+            "context_bootstrap_instruction.md"
+          ],
+          "keywords": [
+            "ai_identity",
+            "provider",
+            "fallback",
+            "default"
+          ]
+        },
+        "identifiedRisk": {
+          "riskId": "CONTEXT_ASSUMPTION_AI_ID",
+          "description": "Systemet förlitar sig på ett standardvärde som är hårdkodat i protokollet för AI-identitet, istället för att ta emot det som explicit, sessionsspecifik kontext. Detta kan leda till felaktig attribuering i historiska rekonstruktioner om standardvärdet ändras eller inte är universellt tillämpligt."
+        },
+        "mitigation": {
+          "protocolId": "P-HR-MIT-01",
+          "description": "Kräv att kontext-JSON för bootstrapping *måste* innehålla ett `ai_identity`-objekt för sessionen. Protokollet ska endast definiera *processen* för att läsa detta objekt, inte själva datan. Det enda tillåtna fallback-värdet ska vara 'unknown' om objektet saknas."
+        },
+        "metadata": {
+          "originSessionId": "23",
+          "createdAt": "2025-08-08T16:15:00Z",
+          "status": "active",
+          "sourceLogFiles": [
+            "docs/Chatthistorik.json"
+          ]
+        }
       }
     }
   }

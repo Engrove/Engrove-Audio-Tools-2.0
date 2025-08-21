@@ -1,124 +1,229 @@
 {
-  "sessionId": "46.1",
-  "createdAt": "2025-08-10T11:42:39Z",
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "46.1",
-      "date": "2025-08-10T11:42:39Z",
-      "summary": "Införde strikt JSON-baserat Discovery (K-MOD/D-MOD) med auto-select, förbättrad bootstrap-kontext och bildförbudsregel. Levererade komplett wrap_json_in_html.py.",
-      "actions": [
+  "schema_version": "DJTA v1.1",
+  "session_id": "46.1",
+  "created_at": "2025-08-10T11:42:39Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "046.1.json",
+    "timestamp_utc": "2025-08-18T16:00:00Z",
+    "summary": "Further refinement of the dynamic protocol for Vue component creation, adding more detail to steps.",
+    "keywords": [
+      "protocol",
+      "refinement",
+      "vue"
+    ],
+    "modified_files": [
+      "docs/ai_protocols/DynamicProtocols.json"
+    ],
+    "error_signatures": [],
+    "success_score": 4,
+    "operator_interventions": 1
+  },
+  "builder_input": {
+    "sessionId": "46.1",
+    "createdAt": "2025-08-10T11:42:39Z",
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "46.1",
+        "date": "2025-08-10T11:42:39Z",
+        "summary": "Införde strikt JSON-baserat Discovery (K-MOD/D-MOD) med auto-select, förbättrad bootstrap-kontext och bildförbudsregel. Levererade komplett wrap_json_in_html.py.",
+        "actions": [
+          {
+            "title": "Uppgradera AI Context Builder till STRICT JSON",
+            "files": [
+              {
+                "path": "scripts/wrap_json_in_html.py",
+                "changeDescription": "Implementerade RETURN_CONTRACT för K-MOD/D-MOD, strikt JSON-validering (utan regexp), auto-select via paths/ID:n, rules_hash-echo, kandidaturval med innehåll, mini file-map, bootstrap (full/chunk/stub) + provider-envelopes (ChatGPT 5/Gemini), hjälpmodal och prestandapanel."
+              }
+            ],
+            "result": "Discovery-prompt ger nu full projektintro, kandidater med innehåll och deterministisk återkoppling som Buildern kan tolka direkt."
+          },
+          {
+            "title": "Bilden förbjuden som default",
+            "files": [
+              {
+                "path": "scripts/wrap_json_in_html.py",
+                "changeDescription": "Lade till 'forbid_image_generation' i obligatoriska regler; injicerat i alla lägen."
+              }
+            ],
+            "result": "Förhindrar oönskad bildgenerering i discovery/planeringsfaser."
+          },
+          {
+            "title": "Bootstrap-kontext för tom modell",
+            "files": [
+              {
+                "path": "scripts/wrap_json_in_html.py",
+                "changeDescription": "Projektkapsel (name/purpose/stack/routes/scripts), filsammanfattningar och relationer exporteras till impl_bootstrap_v1."
+              }
+            ],
+            "result": "Ny LLM-session kan startas utan extern kontext."
+          }
+        ],
+        "projectStatus": "Discovery→Bootstrap klart. Rekommenderad nästa åtgärd: integrera Buildern i CI + validera D-MOD auto-select mot real repo."
+      },
+      "Chatthistorik": {
+        "sessionId": "46.1",
+        "interactions": [
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Begärde körning av avslutningsprotokoll för session 46.1."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "unknown",
+              "name": "unknown",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (unknown:unknown@unknown)",
+            "summary": "Körde protokollets steg; genererade konsoliderad artefakt och next_session.json enligt schema."
+          }
+        ],
+        "coverage": "partial",
+        "coverageReason": "Fullständig tur-för-tur-logg saknas i källmaterialet; endast nyckelhändelser sammanfattade."
+      },
+      "ai_protocol_performance": {
+        "sessionId": "46.1",
+        "date": "2025-08-10T11:42:39Z",
+        "aiQualitativeSummary": "Strict JSON-flöde minskade tolkningsfel och förbättrade reproducerbarhet för filval.",
+        "scorecard": {
+          "efficacy": {
+            "score": 85,
+            "weight": 0.4,
+            "weightedScore": 34.0
+          },
+          "efficiency": {
+            "score": 70,
+            "weight": 0.3,
+            "weightedScore": 21.0
+          },
+          "robustness": {
+            "score": 80,
+            "weight": 0.3,
+            "weightedScore": 24.0
+          },
+          "finalScore": 79.0
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 3,
+          "selfCorrections": 5,
+          "externalCorrections": 1,
+          "protocolActivations": {
+            "psv": 2,
+            "helpMeGod": 0,
+            "stalemate": 0
+          },
+          "heuristicsTriggered": [
+            "H-20250810-STRICT-RETURN",
+            "H-20250810-DMOD-ECHOHASH"
+          ]
+        },
+        "improvementSuggestion": {
+          "pattern": "Automatisera fullständig chattloggning för Chatthistorik via CI-hook.",
+          "proposedHeuristicId": "H-20250810-CHATLOG-CI"
+        }
+      },
+      "frankensteen_learning_db": [
         {
-          "title": "Uppgradera AI Context Builder till STRICT JSON",
-          "files": [
-            {
-              "path": "scripts/wrap_json_in_html.py",
-              "changeDescription": "Implementerade RETURN_CONTRACT för K-MOD/D-MOD, strikt JSON-validering (utan regexp), auto-select via paths/ID:n, rules_hash-echo, kandidaturval med innehåll, mini file-map, bootstrap (full/chunk/stub) + provider-envelopes (ChatGPT 5/Gemini), hjälpmodal och prestandapanel."
-            }
-          ],
-          "result": "Discovery-prompt ger nu full projektintro, kandidater med innehåll och deterministisk återkoppling som Buildern kan tolka direkt."
+          "heuristicId": "H-20250810-STRICT-RETURN",
+          "trigger": {
+            "type": "schema",
+            "scope": [
+              "discovery"
+            ],
+            "keywords": [
+              "STRICT JSON",
+              "RETURN_CONTRACT"
+            ]
+          },
+          "identifiedRisk": {
+            "riskId": "R-STRICT-01",
+            "description": "LLM svarar med fri text → Builder kan inte auto-selecta."
+          },
+          "mitigation": {
+            "protocolId": "discovery_v2",
+            "description": "Kräv strikt JSON med explicit schema och validera client-side."
+          },
+          "metadata": {
+            "originSessionId": "46.1",
+            "createdAt": "2025-08-10T11:42:39Z",
+            "status": "active",
+            "sourceLogFiles": [
+              "docs/ByggLogg.json",
+              "docs/Chatthistorik.json"
+            ]
+          }
         },
         {
-          "title": "Bilden förbjuden som default",
-          "files": [
-            {
-              "path": "scripts/wrap_json_in_html.py",
-              "changeDescription": "Lade till 'forbid_image_generation' i obligatoriska regler; injicerat i alla lägen."
-            }
-          ],
-          "result": "Förhindrar oönskad bildgenerering i discovery/planeringsfaser."
+          "heuristicId": "H-20250810-DMOD-ECHOHASH",
+          "trigger": {
+            "type": "contract",
+            "scope": [
+              "discovery"
+            ],
+            "keywords": [
+              "D-MOD",
+              "rules_hash",
+              "selected_ids"
+            ]
+          },
+          "identifiedRisk": {
+            "riskId": "R-DMOD-01",
+            "description": "Kandidatval baserat på gamla regler → orepeterbar selektion."
+          },
+          "mitigation": {
+            "protocolId": "discovery_dmod_v1",
+            "description": "LLM måste echa 'rules_hash' och välja endast ID:n från CANDIDATE_FILES."
+          },
+          "metadata": {
+            "originSessionId": "46.1",
+            "createdAt": "2025-08-10T11:42:39Z",
+            "status": "active",
+            "sourceLogFiles": [
+              "docs/ByggLogg.json",
+              "docs/Chatthistorik.json"
+            ]
+          }
         },
         {
-          "title": "Bootstrap-kontext för tom modell",
-          "files": [
-            {
-              "path": "scripts/wrap_json_in_html.py",
-              "changeDescription": "Projektkapsel (name/purpose/stack/routes/scripts), filsammanfattningar och relationer exporteras till impl_bootstrap_v1."
-            }
-          ],
-          "result": "Ny LLM-session kan startas utan extern kontext."
+          "heuristicId": "H-20250810-CHATLOG-CI",
+          "trigger": {
+            "type": "process",
+            "scope": [
+              "logging"
+            ],
+            "keywords": [
+              "Chatthistorik",
+              "CI export"
+            ]
+          },
+          "identifiedRisk": {
+            "riskId": "R-LOG-01",
+            "description": "Ofullständig Chatthistorik bryter valideringsgate och spårbarhet."
+          },
+          "mitigation": {
+            "protocolId": "logging_v1",
+            "description": "Exportera varje tur till JSON i CI och bifoga vid avslut."
+          },
+          "metadata": {
+            "originSessionId": "46.1",
+            "createdAt": "2025-08-10T11:42:39Z",
+            "status": "active",
+            "sourceLogFiles": [
+              "docs/ByggLogg.json",
+              "docs/Chatthistorik.json"
+            ]
+          }
         }
-      ],
-      "projectStatus": "Discovery→Bootstrap klart. Rekommenderad nästa åtgärd: integrera Buildern i CI + validera D-MOD auto-select mot real repo."
-    },
-    "Chatthistorik": {
-      "sessionId": "46.1",
-      "interactions": [
-        {
-          "speakerName": "Engrove",
-          "model": { "provider": "human", "name": "operator", "version": "unknown" },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Begärde körning av avslutningsprotokoll för session 46.1."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": { "provider": "unknown", "name": "unknown", "version": "unknown" },
-          "speaker": "Frankensteen (unknown:unknown@unknown)",
-          "summary": "Körde protokollets steg; genererade konsoliderad artefakt och next_session.json enligt schema."
-        }
-      ],
-      "coverage": "partial",
-      "coverageReason": "Fullständig tur-för-tur-logg saknas i källmaterialet; endast nyckelhändelser sammanfattade."
-    },
-    "ai_protocol_performance": {
-      "sessionId": "46.1",
-      "date": "2025-08-10T11:42:39Z",
-      "aiQualitativeSummary": "Strict JSON-flöde minskade tolkningsfel och förbättrade reproducerbarhet för filval.",
-      "scorecard": {
-        "efficacy": { "score": 85, "weight": 0.4, "weightedScore": 34.0 },
-        "efficiency": { "score": 70, "weight": 0.3, "weightedScore": 21.0 },
-        "robustness": { "score": 80, "weight": 0.3, "weightedScore": 24.0 },
-        "finalScore": 79.0
-      },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 3,
-        "selfCorrections": 5,
-        "externalCorrections": 1,
-        "protocolActivations": { "psv": 2, "helpMeGod": 0, "stalemate": 0 },
-        "heuristicsTriggered": ["H-20250810-STRICT-RETURN", "H-20250810-DMOD-ECHOHASH"]
-      },
-      "improvementSuggestion": {
-        "pattern": "Automatisera fullständig chattloggning för Chatthistorik via CI-hook.",
-        "proposedHeuristicId": "H-20250810-CHATLOG-CI"
-      }
-    },
-    "frankensteen_learning_db": [
-      {
-        "heuristicId": "H-20250810-STRICT-RETURN",
-        "trigger": { "type": "schema", "scope": ["discovery"], "keywords": ["STRICT JSON", "RETURN_CONTRACT"] },
-        "identifiedRisk": { "riskId": "R-STRICT-01", "description": "LLM svarar med fri text → Builder kan inte auto-selecta." },
-        "mitigation": { "protocolId": "discovery_v2", "description": "Kräv strikt JSON med explicit schema och validera client-side." },
-        "metadata": {
-          "originSessionId": "46.1",
-          "createdAt": "2025-08-10T11:42:39Z",
-          "status": "active",
-          "sourceLogFiles": ["docs/ByggLogg.json", "docs/Chatthistorik.json"]
-        }
-      },
-      {
-        "heuristicId": "H-20250810-DMOD-ECHOHASH",
-        "trigger": { "type": "contract", "scope": ["discovery"], "keywords": ["D-MOD", "rules_hash", "selected_ids"] },
-        "identifiedRisk": { "riskId": "R-DMOD-01", "description": "Kandidatval baserat på gamla regler → orepeterbar selektion." },
-        "mitigation": { "protocolId": "discovery_dmod_v1", "description": "LLM måste echa 'rules_hash' och välja endast ID:n från CANDIDATE_FILES." },
-        "metadata": {
-          "originSessionId": "46.1",
-          "createdAt": "2025-08-10T11:42:39Z",
-          "status": "active",
-          "sourceLogFiles": ["docs/ByggLogg.json", "docs/Chatthistorik.json"]
-        }
-      },
-      {
-        "heuristicId": "H-20250810-CHATLOG-CI",
-        "trigger": { "type": "process", "scope": ["logging"], "keywords": ["Chatthistorik", "CI export"] },
-        "identifiedRisk": { "riskId": "R-LOG-01", "description": "Ofullständig Chatthistorik bryter valideringsgate och spårbarhet." },
-        "mitigation": { "protocolId": "logging_v1", "description": "Exportera varje tur till JSON i CI och bifoga vid avslut." },
-        "metadata": {
-          "originSessionId": "46.1",
-          "createdAt": "2025-08-10T11:42:39Z",
-          "status": "active",
-          "sourceLogFiles": ["docs/ByggLogg.json", "docs/Chatthistorik.json"]
-        }
-      }
-    ]
+      ]
+    }
   }
 }

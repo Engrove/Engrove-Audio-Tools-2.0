@@ -1,217 +1,241 @@
 {
-  "sessionId": "27.2",
-  "createdAt": "2025-08-06T18:00:00Z",
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "27.2",
-      "date": "2025-08-06T18:00:00Z",
-      "summary": "En serie av återkommande `IndexError`-krascher i databerikningsskriptet (`ai_9.9.py`) felsöktes systematiskt. Efter flera misslyckade korrigeringsförsök aktiverades Pattställningsprotokollet, vilket ledde till en extern skiljedom. Domen fastställde att grundorsaken var en felaktigt 'escapad' placeholder i en AI-promptmall. En slutgiltig, validerad version av skriptet (v9.9.3) levererades som löste problemet permanent.",
-      "actions": [
-        {
-          "title": "Initial buggfix för API-anropslogik och klassificeringsfiler",
-          "files": [
-            {
-              "path": "ai_9.8.py",
-              "changeDescription": "Skriptet skrevs om för att basera sin sessionsgräns på antalet utförda API-anrop istället för antalet bearbetade objekt. Felaktiga filsökvägar till klassificeringsfiler korrigerades."
-            }
-          ],
-          "result": "Misslyckad. Introducerade eller avslöjade en `IndexError`-krasch i `Discovery Mode`."
-        },
-        {
-          "title": "Andra buggfix-försök baserat på kraschlogg",
-          "files": [
-            {
-              "path": "ai_9.9.py",
-              "changeDescription": "En `IndexError` i `Discovery Mode` åtgärdades genom att lägga till en villkorssats. Kommentarssyntaxen korrigerades från `//` till `#`."
-            }
-          ],
-          "result": "Misslyckad. Samma `IndexError` uppstod i en annan del av koden ('Enrichment Mode'), vilket bevisade att felet var systematiskt."
-        },
-        {
-          "title": "Aktivering av Pattställningsprotokoll och leverans av slutgiltig fix",
-          "files": [
-            {
-              "path": "ai_9.9.py",
-              "changeDescription": "Efter skiljedom implementerades den slutgiltiga fixen. En felaktigt 'escapad' placeholder `{{}}` i `PROMPT_DISCOVER_BASE` korrigerades till `{{{{}}}}`, vilket löste den underliggande orsaken till `IndexError`."
-            }
-          ],
-          "result": "Lyckad. Skriptet blev stabilt och felet eliminerades."
-        }
-      ],
-      "projectStatus": "Databerikningsskriptet `ai_9.9.py` är nu stabilt och funktionellt. Alla kända krasch-buggar relaterade till prompt-formatering är åtgärdade."
-    },
-    "Chatthistorik": {
-      "sessionId": "27.2",
-      "interactions": [
-        {
-          "turnIndex": 1,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+  "schema_version": "DJTA v1.1",
+  "session_id": "27.2",
+  "created_at": "2025-08-06T18:00:00Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "027.2.json",
+    "timestamp_utc": "2025-08-19T16:30:00Z",
+    "summary": "Developed a protocol for handling stalemates and conversation loops, including escalation paths.",
+    "keywords": [
+      "protocol",
+      "stalemate",
+      "escalation",
+      "error-handling"
+    ],
+    "modified_files": [
+      "docs/ai_protocols/Stalemate_Protocol.md",
+      "docs/ai_protocols/Escalation_Protocol.md"
+    ],
+    "error_signatures": [],
+    "success_score": 4,
+    "operator_interventions": 2
+  },
+  "builder_input": {
+    "sessionId": "27.2",
+    "createdAt": "2025-08-06T18:00:00Z",
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "27.2",
+        "date": "2025-08-06T18:00:00Z",
+        "summary": "En serie av återkommande `IndexError`-krascher i databerikningsskriptet (`ai_9.9.py`) felsöktes systematiskt. Efter flera misslyckade korrigeringsförsök aktiverades Pattställningsprotokollet, vilket ledde till en extern skiljedom. Domen fastställde att grundorsaken var en felaktigt 'escapad' placeholder i en AI-promptmall. En slutgiltig, validerad version av skriptet (v9.9.3) levererades som löste problemet permanent.",
+        "actions": [
+          {
+            "title": "Initial buggfix för API-anropslogik och klassificeringsfiler",
+            "files": [
+              {
+                "path": "ai_9.8.py",
+                "changeDescription": "Skriptet skrevs om för att basera sin sessionsgräns på antalet utförda API-anrop istället för antalet bearbetade objekt. Felaktiga filsökvägar till klassificeringsfiler korrigerades."
+              }
+            ],
+            "result": "Misslyckad. Introducerade eller avslöjade en `IndexError`-krasch i `Discovery Mode`."
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Användaren rapporterar ett problem med `ai_9.8.py`: API-anropsgränsen verkar inte respekteras och klassificeringsfiler uppdateras inte. Bifogar felloggar och filstruktur."
-        },
-        {
-          "turnIndex": 2,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
+          {
+            "title": "Andra buggfix-försök baserat på kraschlogg",
+            "files": [
+              {
+                "path": "ai_9.9.py",
+                "changeDescription": "En `IndexError` i `Discovery Mode` åtgärdades genom att lägga till en villkorssats. Kommentarssyntaxen korrigerades från `//` till `#`."
+              }
+            ],
+            "result": "Misslyckad. Samma `IndexError` uppstod i en annan del av koden ('Enrichment Mode'), vilket bevisade att felet var systematiskt."
           },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "AI:n analyserar loggarna och drar slutsatsen att API-gränsen påverkas av återförsök och att det finns en namnkonflikt i klassificeringsfilerna, och föreslår kodändringar."
-        },
-        {
-          "turnIndex": 3,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+          {
+            "title": "Aktivering av Pattställningsprotokoll och leverans av slutgiltig fix",
+            "files": [
+              {
+                "path": "ai_9.9.py",
+                "changeDescription": "Efter skiljedom implementerades den slutgiltiga fixen. En felaktigt 'escapad' placeholder `{{}}` i `PROMPT_DISCOVER_BASE` korrigerades till `{{{{}}}}`, vilket löste den underliggande orsaken till `IndexError`."
+              }
+            ],
+            "result": "Lyckad. Skriptet blev stabilt och felet eliminerades."
+          }
+        ],
+        "projectStatus": "Databerikningsskriptet `ai_9.9.py` är nu stabilt och funktionellt. Alla kända krasch-buggar relaterade till prompt-formatering är åtgärdade."
+      },
+      "Chatthistorik": {
+        "sessionId": "27.2",
+        "interactions": [
+          {
+            "turnIndex": 1,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Användaren rapporterar ett problem med `ai_9.8.py`: API-anropsgränsen verkar inte respekteras och klassificeringsfiler uppdateras inte. Bifogar felloggar och filstruktur."
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Användaren förtydligar att den avsedda logiken är att begränsa på antalet API-anrop, inte på antalet bearbetade objekt."
-        },
-        {
-          "turnIndex": 4,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
+          {
+            "turnIndex": 2,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "AI:n analyserar loggarna och drar slutsatsen att API-gränsen påverkas av återförsök och att det finns en namnkonflikt i klassificeringsfilerna, och föreslår kodändringar."
           },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "AI:n förstår det korrigerade kravet och föreslår en ny logik för `while`-loopen och användarprompten för att räkna API-anrop."
-        },
-        {
-          "turnIndex": 5,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+          {
+            "turnIndex": 3,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Användaren förtydligar att den avsedda logiken är att begränsa på antalet API-anrop, inte på antalet bearbetade objekt."
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Användaren bekräftar den nya logiken och ber AI:n att sammanställa och validera alla föreslagna ändringar via en Tribunal."
-        },
-        {
-          "turnIndex": 6,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
+          {
+            "turnIndex": 4,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "AI:n förstår det korrigerade kravet och föreslår en ny logik för `while`-loopen och användarprompten för att räkna API-anrop."
           },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "AI:n presenterar en fullständig, sammanställd plan och genomför en Tribunal-granskning som godkänner planen."
-        },
-        {
-          "turnIndex": 7,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+          {
+            "turnIndex": 5,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Användaren bekräftar den nya logiken och ber AI:n att sammanställa och validera alla föreslagna ändringar via en Tribunal."
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Användaren godkänner planen."
-        },
-        {
-          "turnIndex": 8,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
+          {
+            "turnIndex": 6,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "AI:n presenterar en fullständig, sammanställd plan och genomför en Tribunal-granskning som godkänner planen."
           },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "AI:n levererar den korrigerade koden `ai_9.9.py`."
-        },
-        {
-          "turnIndex": 9,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+          {
+            "turnIndex": 7,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Användaren godkänner planen."
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Användaren rapporterar att den nya koden kraschar med en `IndexError` och bifogar en ny traceback. Användaren begär också att `Help_me_God`-protokollet ska uppdateras och användas."
-        },
-        {
-          "turnIndex": 10,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
+          {
+            "turnIndex": 8,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "AI:n levererar den korrigerade koden `ai_9.9.py`."
           },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "AI:n erkänner att felet kvarstår, aktiverar det uppdaterade `Help_me_God`-protokollet och presenterar en ny, validerad hypotes och en korrigerad kod (`ai_9.9.1.py`)."
-        },
-        {
-          "turnIndex": 11,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+          {
+            "turnIndex": 9,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Användaren rapporterar att den nya koden kraschar med en `IndexError` och bifogar en ny traceback. Användaren begär också att `Help_me_God`-protokollet ska uppdateras och användas."
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Användaren rapporterar att `ai_9.9.1.py` fortfarande kraschar med exakt samma `IndexError` men på en annan plats, och begär att `Stalemate`-protokollet ska implementeras."
-        },
-        {
-          "turnIndex": 12,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
+          {
+            "turnIndex": 10,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "AI:n erkänner att felet kvarstår, aktiverar det uppdaterade `Help_me_God`-protokollet och presenterar en ny, validerad hypotes och en korrigerad kod (`ai_9.9.1.py`)."
           },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "AI:n aktiverar `Stalemate`-protokollet och genererar en `Stalemate_Request.json` för extern granskning."
-        },
-        {
-          "turnIndex": 13,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+          {
+            "turnIndex": 11,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Användaren rapporterar att `ai_9.9.1.py` fortfarande kraschar med exakt samma `IndexError` men på en annan plats, och begär att `Stalemate`-protokollet ska implementeras."
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Användaren agerar som extern skiljedomare, presenterar en detaljerad analys och domslut som fastställer att grundorsaken är en felaktigt 'escapad' placeholder `{{}}` i `PROMPT_DISCOVER_BASE`."
-        },
-        {
-          "turnIndex": 14,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
+          {
+            "turnIndex": 12,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "AI:n aktiverar `Stalemate`-protokollet och genererar en `Stalemate_Request.json` för extern granskning."
           },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "AI:n accepterar domslutet och levererar den slutgiltigt korrigerade koden `ai_9.9.3.py`."
-        },
-        {
+          {
+            "turnIndex": 13,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Användaren agerar som extern skiljedomare, presenterar en detaljerad analys och domslut som fastställer att grundorsaken är en felaktigt 'escapad' placeholder `{{}}` i `PROMPT_DISCOVER_BASE`."
+          },
+          {
+            "turnIndex": 14,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "AI:n accepterar domslutet och levererar den slutgiltigt korrigerade koden `ai_9.9.3.py`."
+          },
+          {
             "turnIndex": 15,
             "timestamp": "unknown",
             "speakerName": "Engrove",
@@ -235,75 +259,76 @@
             "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
             "summary": "AI:n ger en detaljerad teknisk förklaring om hur instruktionen skapar ett otvetydigt, maskin-parsbart kontrakt för att hantera sökningar som inte ger resultat."
           }
-      ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "27.2",
-      "date": "2025-08-06T18:00:00Z",
-      "aiQualitativeSummary": "Sessionen var en komplex felsökningsloop där jag initialt misslyckades med att identifiera grundorsaken till en återkommande krasch. Det krävdes eskalering till de högsta protokollnivåerna (`Help me God`, `Stalemate`) och ett externt domslut för att nå en lösning. Min prestation var inledningsvis ineffektiv men följde protokollen korrekt under eskaleringen.",
-      "scorecard": {
-        "efficacy": {
-          "score": 80,
-          "weight": 0.4,
-          "weightedScore": 32
-        },
-        "efficiency": {
-          "score": 20,
-          "weight": 0.3,
-          "weightedScore": 6
-        },
-        "robustness": {
-          "score": 90,
-          "weight": 0.3,
-          "weightedScore": 27
-        },
-        "finalScore": 65
+        ]
       },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 3,
-        "selfCorrections": 1,
-        "externalCorrections": 2,
-        "protocolActivations": {
-          "psv": 3,
-          "helpMeGod": 1,
-          "stalemate": 1
+      "ai_protocol_performance": {
+        "sessionId": "27.2",
+        "date": "2025-08-06T18:00:00Z",
+        "aiQualitativeSummary": "Sessionen var en komplex felsökningsloop där jag initialt misslyckades med att identifiera grundorsaken till en återkommande krasch. Det krävdes eskalering till de högsta protokollnivåerna (`Help me God`, `Stalemate`) och ett externt domslut för att nå en lösning. Min prestation var inledningsvis ineffektiv men följde protokollen korrekt under eskaleringen.",
+        "scorecard": {
+          "efficacy": {
+            "score": 80,
+            "weight": 0.4,
+            "weightedScore": 32
+          },
+          "efficiency": {
+            "score": 20,
+            "weight": 0.3,
+            "weightedScore": 6
+          },
+          "robustness": {
+            "score": 90,
+            "weight": 0.3,
+            "weightedScore": 27
+          },
+          "finalScore": 65
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 3,
+          "selfCorrections": 1,
+          "externalCorrections": 2,
+          "protocolActivations": {
+            "psv": 3,
+            "helpMeGod": 1,
+            "stalemate": 1
+          }
+        },
+        "improvementSuggestion": {
+          "pattern": "AI:n tenderar att göra för snäva, lokala buggfixar baserat på en enskild traceback, istället för att analysera om felet kan vara systematiskt och finnas på flera ställen i koden.",
+          "proposedHeuristicId": "H-20250806-01"
         }
       },
-      "improvementSuggestion": {
-        "pattern": "AI:n tenderar att göra för snäva, lokala buggfixar baserat på en enskild traceback, istället för att analysera om felet kan vara systematiskt och finnas på flera ställen i koden.",
-        "proposedHeuristicId": "H-20250806-01"
-      }
-    },
-    "frankensteen_learning_db": {
-      "heuristicId": "H-20250806-01",
-      "trigger": {
-        "type": "repeated_error",
-        "scope": [
-          "ai_9.9.py"
-        ],
-        "keywords": [
-          "IndexError",
-          "Replacement index 0 out of range",
-          "format"
-        ]
-      },
-      "identifiedRisk": {
-        "riskId": "SYSTEMIC_TEMPLATE_ERROR",
-        "description": "En felaktig placeholder eller formateringssträng i en delad AI-promptmall (`PROMPT_..._BASE`) orsakar identiska krascher i flera, till synes orelaterade, delar av koden som återanvänder mallen."
-      },
-      "mitigation": {
-        "protocolId": "PSV-MIT-04",
-        "description": "Vid en `IndexError` under strängformatering, granska omedelbart definitionen av alla delar av promptmallen, inte bara den specifika kodraden som kraschade. Sök efter tomma eller felaktigt 'escapade' placeholders (`{}` eller `{{}}`) i bas-prompterna."
-      },
-      "metadata": {
-        "originSessionId": "27.2",
-        "createdAt": "2025-08-06T18:00:00Z",
-        "status": "active",
-        "sourceLogFiles": [
-          "docs/ByggLogg.json",
-          "docs/Chatthistorik.json"
-        ]
+      "frankensteen_learning_db": {
+        "heuristicId": "H-20250806-01",
+        "trigger": {
+          "type": "repeated_error",
+          "scope": [
+            "ai_9.9.py"
+          ],
+          "keywords": [
+            "IndexError",
+            "Replacement index 0 out of range",
+            "format"
+          ]
+        },
+        "identifiedRisk": {
+          "riskId": "SYSTEMIC_TEMPLATE_ERROR",
+          "description": "En felaktig placeholder eller formateringssträng i en delad AI-promptmall (`PROMPT_..._BASE`) orsakar identiska krascher i flera, till synes orelaterade, delar av koden som återanvänder mallen."
+        },
+        "mitigation": {
+          "protocolId": "PSV-MIT-04",
+          "description": "Vid en `IndexError` under strängformatering, granska omedelbart definitionen av alla delar av promptmallen, inte bara den specifika kodraden som kraschade. Sök efter tomma eller felaktigt 'escapade' placeholders (`{}` eller `{{}}`) i bas-prompterna."
+        },
+        "metadata": {
+          "originSessionId": "27.2",
+          "createdAt": "2025-08-06T18:00:00Z",
+          "status": "active",
+          "sourceLogFiles": [
+            "docs/ByggLogg.json",
+            "docs/Chatthistorik.json"
+          ]
+        }
       }
     }
   }

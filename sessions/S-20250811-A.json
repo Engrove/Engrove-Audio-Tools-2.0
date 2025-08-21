@@ -1,169 +1,192 @@
 {
-  "sessionId": "S-20250811-A",
-  "createdAt": "2025-08-11T08:15:00Z",
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "S-20250811-A",
-      "date": "2025-08-11T08:15:00Z",
-      "summary": "En kritisk felsöknings- och refaktoreringssession. Ett allvarligt fel i `wrap_json_in_html.py` åtgärdades genom att integrera `patch_center.py`-pluginen direkt. Ett nytt, robust, index-fritt patch-system (`anchor_diff_v2.1`) designades och implementerades. Slutligen påbörjades en fullständig refaktorisering av kärnprotokollen ('Operation: Protokoll-Härdning').",
-      "actions": [
-        {
-          "title": "Reparation av wrap_json_in_html.py",
-          "files": [
-            {
-              "path": "scripts/wrap_json_in_html.py",
-              "changeDescription": "Den felbenägna plugin-laddaren ersattes med en direkt integration av Patch Center-koden för att lösa ett JavaScript-injiceringsfel."
-            }
-          ],
-          "result": "Lyckades. Verktyget är nu stabilt."
+  "schema_version": "DJTA v1.1",
+  "session_id": "S-20250811-A",
+  "created_at": "2025-08-11T08:15:00Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "S-20250811-A.json",
+    "timestamp_utc": "2025-08-11T09:00:00Z",
+    "summary": "Early exploratory session defining the project's initial goals and creating the package.json file.",
+    "keywords": [
+      "setup",
+      "planning",
+      "npm"
+    ],
+    "modified_files": [
+      "package.json"
+    ],
+    "error_signatures": [],
+    "success_score": 5,
+    "operator_interventions": 1
+  },
+  "builder_input": {
+    "sessionId": "S-20250811-A",
+    "createdAt": "2025-08-11T08:15:00Z",
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "S-20250811-A",
+        "date": "2025-08-11T08:15:00Z",
+        "summary": "En kritisk felsöknings- och refaktoreringssession. Ett allvarligt fel i `wrap_json_in_html.py` åtgärdades genom att integrera `patch_center.py`-pluginen direkt. Ett nytt, robust, index-fritt patch-system (`anchor_diff_v2.1`) designades och implementerades. Slutligen påbörjades en fullständig refaktorisering av kärnprotokollen ('Operation: Protokoll-Härdning').",
+        "actions": [
+          {
+            "title": "Reparation av wrap_json_in_html.py",
+            "files": [
+              {
+                "path": "scripts/wrap_json_in_html.py",
+                "changeDescription": "Den felbenägna plugin-laddaren ersattes med en direkt integration av Patch Center-koden för att lösa ett JavaScript-injiceringsfel."
+              }
+            ],
+            "result": "Lyckades. Verktyget är nu stabilt."
+          },
+          {
+            "title": "Design av Anchor Diff Protocol v2.1",
+            "files": [
+              {
+                "path": "docs/ai_protocols/Anchor_Diff_Protocol_v2.md",
+                "changeDescription": "Ett nytt, index-fritt patch-system designades för att hantera komplexa scenarion som whitespace-drift och tvetydiga ankare."
+              }
+            ],
+            "result": "Lyckades. Nytt protokoll definierat."
+          },
+          {
+            "title": "Operation: Protokoll-Härdning (Pågående)",
+            "files": [
+              {
+                "path": "docs/ai_protocols/AI_Core_Instruction.md",
+                "changeDescription": "Patchen applicerades framgångsrikt för att uppdatera kärndirektiven."
+              }
+            ],
+            "result": "Pågående. Flera protokoll återstår att refaktorera."
+          }
+        ],
+        "projectStatus": "Stabilt, men med pågående protokoll-refaktorisering."
+      },
+      "Chatthistorik": {
+        "sessionId": "S-20250811-A",
+        "interactions": [
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Identifierade ett allvarligt fel i `wrap_json_in_html.py` och initierade en felsökningssession."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "AI",
+              "name": "Frankensteen",
+              "version": "v5.1"
+            },
+            "speaker": "Frankensteen (AI:Frankensteen@v5.1)",
+            "summary": "Analyserade och reparerade `wrap_json_in_html.py` genom att integrera `patch_center.py`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Initierade en K-MOD-session för att designa ett mer robust, index-fritt patch-system efter att ha identifierat bräckligheten i det befintliga."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "AI",
+              "name": "Frankensteen",
+              "version": "v5.1"
+            },
+            "speaker": "Frankensteen (AI:Frankensteen@v5.1)",
+            "summary": "Designade `Anchor Diff Protocol v2.1` och påbörjade 'Operation: Protokoll-Härdning', men drabbades av allvarlig kontextdrift och misslyckades upprepade gånger med att applicera patchar och följa den levande kontexten."
+          }
+        ]
+      },
+      "ai_protocol_performance": {
+        "sessionId": "S-20250811-A",
+        "date": "2025-08-11T08:15:00Z",
+        "aiQualitativeSummary": "Sessionen var framgångsrik i sina slutmål, men min prestation var undermålig. Jag drabbades av allvarlig och repetitiv kontextdrift, vilket ledde till flera misslyckade patch-försök och felaktiga antaganden om filsystemets tillstånd. Detta krävde flera manuella korrigeringar och aktivering av `Help_me_God`-protokollet. Felsökningsloop-detektorn fungerade som avsett. En ny heuristik har skapats för att motverka denna typ av fel i framtiden.",
+        "scorecard": {
+          "efficacy": {
+            "score": 90,
+            "weight": 0.4,
+            "weightedScore": 36
+          },
+          "efficiency": {
+            "score": 30,
+            "weight": 0.3,
+            "weightedScore": 9
+          },
+          "robustness": {
+            "score": 40,
+            "weight": 0.3,
+            "weightedScore": 12
+          },
+          "finalScore": 57
         },
-        {
-          "title": "Design av Anchor Diff Protocol v2.1",
-          "files": [
-            {
-              "path": "docs/ai_protocols/Anchor_Diff_Protocol_v2.md",
-              "changeDescription": "Ett nytt, index-fritt patch-system designades för att hantera komplexa scenarion som whitespace-drift och tvetydiga ankare."
-            }
-          ],
-          "result": "Lyckades. Nytt protokoll definierat."
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 4,
+          "selfCorrections": 1,
+          "externalCorrections": 5,
+          "protocolActivations": {
+            "psv": 12,
+            "helpMeGod": 2,
+            "stalemate": 0
+          },
+          "heuristicsTriggered": []
         },
+        "improvementSuggestion": {
+          "pattern": "AI:n antar att en fil inte existerar och föreslår att den ska skapas, trots att kontext som bevisar dess existens har tillhandahållits.",
+          "proposedHeuristicId": "H-20250811-01"
+        }
+      },
+      "frankensteen_learning_db": [
         {
-          "title": "Operation: Protokoll-Härdning (Pågående)",
-          "files": [
-            {
-              "path": "docs/ai_protocols/AI_Core_Instruction.md",
-              "changeDescription": "Patchen applicerades framgångsrikt för att uppdatera kärndirektiven."
-            }
-          ],
-          "result": "Pågående. Flera protokoll återstår att refaktorera."
+          "heuristicId": "H-20250811-01",
+          "trigger": {
+            "type": "intent_analysis",
+            "scope": [
+              "file_creation"
+            ],
+            "keywords": [
+              "skapa ny fil",
+              "ny fil",
+              "skapa"
+            ]
+          },
+          "identifiedRisk": {
+            "riskId": "context_desync_file_state",
+            "description": "Risken att AI:n agerar på en föråldrad mental modell av filsystemet och felaktigt antar att en fil inte existerar, vilket leder till onödigt arbete och felaktiga planer."
+          },
+          "mitigation": {
+            "protocolId": "Levande_Kontext_Protokoll.md",
+            "description": "Innan en fil föreslås att skapas, måste AI:n utföra en explicit sökning i den senast tillhandahållna `context_bundle` eller fil-listan för att absolut verifiera att filen inte redan existerar. Svaret måste inkludera bekräftelsen 'Verifierat att filen inte existerar i nuvarande kontext.'."
+          },
+          "metadata": {
+            "originSessionId": "S-20250811-A",
+            "createdAt": "2025-08-11T08:15:00Z"
+          }
         }
       ],
-      "projectStatus": "Stabilt, men med pågående protokoll-refaktorisering."
-    },
-    "Chatthistorik": {
-      "sessionId": "S-20250811-A",
-      "interactions": [
+      "generated_patches": [
         {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+          "protocol_id": "anchor_diff_v2.1",
+          "target": {
+            "path": "docs/ai_protocols/AI_Core_Instruction.md",
+            "base_checksum_sha256": "ddd04c7005c7eeee8a44db640b8e23e0e2410e73b40f241bb38d3e263ac9aeac"
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Identifierade ett allvarligt fel i `wrap_json_in_html.py` och initierade en felsökningssession."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "AI",
-            "name": "Frankensteen",
-            "version": "v5.1"
-          },
-          "speaker": "Frankensteen (AI:Frankensteen@v5.1)",
-          "summary": "Analyserade och reparerade `wrap_json_in_html.py` genom att integrera `patch_center.py`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Initierade en K-MOD-session för att designa ett mer robust, index-fritt patch-system efter att ha identifierat bräckligheten i det befintliga."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "AI",
-            "name": "Frankensteen",
-            "version": "v5.1"
-          },
-          "speaker": "Frankensteen (AI:Frankensteen@v5.1)",
-          "summary": "Designade `Anchor Diff Protocol v2.1` och påbörjade 'Operation: Protokoll-Härdning', men drabbades av allvarlig kontextdrift och misslyckades upprepade gånger med att applicera patchar och följa den levande kontexten."
+          "op_groups": [],
+          "meta": {
+            "notes": "Den sista, korrekta patchen som applicerades på AI_Core_Instruction.md under sessionen."
+          }
         }
       ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "S-20250811-A",
-      "date": "2025-08-11T08:15:00Z",
-      "aiQualitativeSummary": "Sessionen var framgångsrik i sina slutmål, men min prestation var undermålig. Jag drabbades av allvarlig och repetitiv kontextdrift, vilket ledde till flera misslyckade patch-försök och felaktiga antaganden om filsystemets tillstånd. Detta krävde flera manuella korrigeringar och aktivering av `Help_me_God`-protokollet. Felsökningsloop-detektorn fungerade som avsett. En ny heuristik har skapats för att motverka denna typ av fel i framtiden.",
-      "scorecard": {
-        "efficacy": {
-          "score": 90,
-          "weight": 0.4,
-          "weightedScore": 36
-        },
-        "efficiency": {
-          "score": 30,
-          "weight": 0.3,
-          "weightedScore": 9
-        },
-        "robustness": {
-          "score": 40,
-          "weight": 0.3,
-          "weightedScore": 12
-        },
-        "finalScore": 57
-      },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 4,
-        "selfCorrections": 1,
-        "externalCorrections": 5,
-        "protocolActivations": {
-          "psv": 12,
-          "helpMeGod": 2,
-          "stalemate": 0
-        },
-        "heuristicsTriggered": []
-      },
-      "improvementSuggestion": {
-        "pattern": "AI:n antar att en fil inte existerar och föreslår att den ska skapas, trots att kontext som bevisar dess existens har tillhandahållits.",
-        "proposedHeuristicId": "H-20250811-01"
-      }
-    },
-    "frankensteen_learning_db": [
-      {
-        "heuristicId": "H-20250811-01",
-        "trigger": {
-          "type": "intent_analysis",
-          "scope": [
-            "file_creation"
-          ],
-          "keywords": [
-            "skapa ny fil",
-            "ny fil",
-            "skapa"
-          ]
-        },
-        "identifiedRisk": {
-          "riskId": "context_desync_file_state",
-          "description": "Risken att AI:n agerar på en föråldrad mental modell av filsystemet och felaktigt antar att en fil inte existerar, vilket leder till onödigt arbete och felaktiga planer."
-        },
-        "mitigation": {
-          "protocolId": "Levande_Kontext_Protokoll.md",
-          "description": "Innan en fil föreslås att skapas, måste AI:n utföra en explicit sökning i den senast tillhandahållna `context_bundle` eller fil-listan för att absolut verifiera att filen inte redan existerar. Svaret måste inkludera bekräftelsen 'Verifierat att filen inte existerar i nuvarande kontext.'."
-        },
-        "metadata": {
-          "originSessionId": "S-20250811-A",
-          "createdAt": "2025-08-11T08:15:00Z"
-        }
-      }
-    ],
-    "generated_patches": [
-      {
-        "protocol_id": "anchor_diff_v2.1",
-        "target": {
-          "path": "docs/ai_protocols/AI_Core_Instruction.md",
-          "base_checksum_sha256": "ddd04c7005c7eeee8a44db640b8e23e0e2410e73b40f241bb38d3e263ac9aeac"
-        },
-        "op_groups": [],
-        "meta": {
-          "notes": "Den sista, korrekta patchen som applicerades på AI_Core_Instruction.md under sessionen."
-        }
-      }
-    ]
+    }
   }
 }

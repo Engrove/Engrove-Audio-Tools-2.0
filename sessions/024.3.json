@@ -1,134 +1,157 @@
 {
-  "sessionId": "24.3",
-  "createdAt": "2025-08-08T14:22:00Z",
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "24",
-      "date": "2025-08-05T00:00:00Z",
-      "summary": "En grundlig och systematisk felsökningsprocess genomfördes för att identifiera den fundamentala orsaken till att Data Explorer-modulen var funktionellt trasig (saknade filter, ingen jämförelsefunktion). Analysen avslöjade en allvarlig funktionell regression och ett brutet datakontrakt som de primära felkällorna. En komplett och detaljerad plan, \"Operation Återimplementering\", utarbetades och formaliserades för att återställa den avsedda funktionaliteten i nästa arbetssession.",
-      "actions": [
-        {
-          "title": "Grundorsaksanalys via \"Help me God\"-protokoll",
-          "files": [],
-          "result": "Det konstaterades att public/data/data-filters-map.json hade en felaktig datastruktur (en platt array istället för ett förväntat objekt), vilket är den direkta orsaken till att inga filter renderas. Det bekräftades att all avancerad funktionalitet som specificerats i \"Steg 23.1\" (flervalsfilter, jämförelsekorg) saknades i den nuvarande implementationen, trots att stödjande komponenter som BaseMultiSelect.vue existerar i kodbasen."
-        },
-        {
-          "title": "Formulering av Åtgärdsplan",
-          "files": [],
-          "result": "En komplett och verifierad plan, \"Operation Återimplementering\", har etablerats. Planen inkluderar korrigering av datakontraktet, återimplementering av avancerad filtrering och återskapandet av den saknade ComparisonTray-widgeten. Sessionen avslutades med att generera en fristående AI-instruktion för att exekvera denna plan."
-        }
-      ],
-      "projectStatus": "Projektet är stabilt men funktionellt inkomplett. En definitiv grundorsak till problemen i Data Explorer har identifierats, och en robust, godkänd plan för att återställa all avsedd funktionalitet är på plats. Nästa session kommer att fokusera helt på implementationen av denna plan."
-    },
-    "Chatthistorik": {
-      "sessionId": "24.3",
-      "interactions": [
-        {
-          "turnIndex": 1,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+  "schema_version": "DJTA v1.1",
+  "session_id": "24.3",
+  "created_at": "2025-08-08T14:22:00Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "024.3.json",
+    "timestamp_utc": "2025-08-18T17:30:00Z",
+    "summary": "Created the 'AI Core Instruction' protocol to serve as the system's primary directive.",
+    "keywords": [
+      "protocol",
+      "core-instruction",
+      "meta-programming"
+    ],
+    "modified_files": [
+      "docs/ai_protocols/AI_Core_Instruction.md"
+    ],
+    "error_signatures": [],
+    "success_score": 5,
+    "operator_interventions": 1
+  },
+  "builder_input": {
+    "sessionId": "24.3",
+    "createdAt": "2025-08-08T14:22:00Z",
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "24",
+        "date": "2025-08-05T00:00:00Z",
+        "summary": "En grundlig och systematisk felsökningsprocess genomfördes för att identifiera den fundamentala orsaken till att Data Explorer-modulen var funktionellt trasig (saknade filter, ingen jämförelsefunktion). Analysen avslöjade en allvarlig funktionell regression och ett brutet datakontrakt som de primära felkällorna. En komplett och detaljerad plan, \"Operation Återimplementering\", utarbetades och formaliserades för att återställa den avsedda funktionaliteten i nästa arbetssession.",
+        "actions": [
+          {
+            "title": "Grundorsaksanalys via \"Help me God\"-protokoll",
+            "files": [],
+            "result": "Det konstaterades att public/data/data-filters-map.json hade en felaktig datastruktur (en platt array istället för ett förväntat objekt), vilket är den direkta orsaken till att inga filter renderas. Det bekräftades att all avancerad funktionalitet som specificerats i \"Steg 23.1\" (flervalsfilter, jämförelsekorg) saknades i den nuvarande implementationen, trots att stödjande komponenter som BaseMultiSelect.vue existerar i kodbasen."
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Provided comprehensive project documentation, including 'ByggLogg' for Steg 24, and initiated the request for a JSON output for the current session (24.3)."
-        },
-        {
-          "turnIndex": 2,
-          "timestamp": "unknown",
+          {
+            "title": "Formulering av Åtgärdsplan",
+            "files": [],
+            "result": "En komplett och verifierad plan, \"Operation Återimplementering\", har etablerats. Planen inkluderar korrigering av datakontraktet, återimplementering av avancerad filtrering och återskapandet av den saknade ComparisonTray-widgeten. Sessionen avslutades med att generera en fristående AI-instruktion för att exekvera denna plan."
+          }
+        ],
+        "projectStatus": "Projektet är stabilt men funktionellt inkomplett. En definitiv grundorsak till problemen i Data Explorer har identifierats, och en robust, godkänd plan för att återställa all avsedd funktionalitet är på plats. Nästa session kommer att fokusera helt på implementationen av denna plan."
+      },
+      "Chatthistorik": {
+        "sessionId": "24.3",
+        "interactions": [
+          {
+            "turnIndex": 1,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Provided comprehensive project documentation, including 'ByggLogg' for Steg 24, and initiated the request for a JSON output for the current session (24.3)."
+          },
+          {
+            "turnIndex": 2,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-08"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-08)",
+            "summary": "Responded by identifying the absence of 'Gemini_Chatthistorik.md' and 'AI_Collaboration_Standard.md' from the provided file structure, despite their reported formalization in previous logs."
+          },
+          {
+            "turnIndex": 3,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Inquired whether 'AI_Collaboration_Standard.md' had been previously attached, seeking clarification on its presence in the provided context."
+          },
+          {
+            "turnIndex": 4,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-08"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-08)",
+            "summary": "Confirmed that the content for 'AI_Collaboration_Standard.md' was indeed provided in the initial context, but noted its physical absence from the listed 'docs/' directory within the file structure."
+          },
+          {
+            "turnIndex": 5,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Provided a new directive to process 'context_bootstrap_instruction_FINAL_v2.8.md' and generate the full JSON output for session 24.3."
+          }
+        ]
+      },
+      "ai_protocol_performance": {
+        "sessionId": "24.3",
+        "generatedBy": {
           "speakerName": "Frankensteen",
           "model": {
             "provider": "Google",
             "name": "Gemini 2.5 Pro",
             "version": "2025-08-08"
           },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-08)",
-          "summary": "Responded by identifying the absence of 'Gemini_Chatthistorik.md' and 'AI_Collaboration_Standard.md' from the provided file structure, despite their reported formalization in previous logs."
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-08)"
         },
-        {
-          "turnIndex": 3,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+        "date": "2025-08-08T14:22:00Z",
+        "aiQualitativeSummary": "In this session, the AI successfully interpreted a complex meta-instruction for generating structured output. It demonstrated adherence to protocol by identifying discrepancies in the provided file structure versus documented content. There was a minor back-and-forth regarding the explicit presence of a previously provided document, which was clarified upon review of the full context. The AI was able to self-correct and provide precise answers.",
+        "scorecard": {
+          "efficacy": {
+            "score": 80,
+            "weight": 0.4,
+            "weightedScore": 32.0
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Inquired whether 'AI_Collaboration_Standard.md' had been previously attached, seeking clarification on its presence in the provided context."
-        },
-        {
-          "turnIndex": 4,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-08"
+          "efficiency": {
+            "score": 70,
+            "weight": 0.3,
+            "weightedScore": 21.0
           },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-08)",
-          "summary": "Confirmed that the content for 'AI_Collaboration_Standard.md' was indeed provided in the initial context, but noted its physical absence from the listed 'docs/' directory within the file structure."
-        },
-        {
-          "turnIndex": 5,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+          "robustness": {
+            "score": 90,
+            "weight": 0.3,
+            "weightedScore": 27.0
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Provided a new directive to process 'context_bootstrap_instruction_FINAL_v2.8.md' and generate the full JSON output for session 24.3."
-        }
-      ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "24.3",
-      "generatedBy": {
-        "speakerName": "Frankensteen",
-        "model": {
-          "provider": "Google",
-          "name": "Gemini 2.5 Pro",
-          "version": "2025-08-08"
+          "finalScore": 80.0
         },
-        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-08)"
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 0,
+          "selfCorrections": 0,
+          "externalCorrections": 1,
+          "protocolActivations": {
+            "psv": 0,
+            "helpMeGod": 0,
+            "stalemate": 0
+          }
+        },
+        "improvementSuggestion": null
       },
-      "date": "2025-08-08T14:22:00Z",
-      "aiQualitativeSummary": "In this session, the AI successfully interpreted a complex meta-instruction for generating structured output. It demonstrated adherence to protocol by identifying discrepancies in the provided file structure versus documented content. There was a minor back-and-forth regarding the explicit presence of a previously provided document, which was clarified upon review of the full context. The AI was able to self-correct and provide precise answers.",
-      "scorecard": {
-        "efficacy": {
-          "score": 80,
-          "weight": 0.4,
-          "weightedScore": 32.0
-        },
-        "efficiency": {
-          "score": 70,
-          "weight": 0.3,
-          "weightedScore": 21.0
-        },
-        "robustness": {
-          "score": 90,
-          "weight": 0.3,
-          "weightedScore": 27.0
-        },
-        "finalScore": 80.0
-      },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 0,
-        "selfCorrections": 0,
-        "externalCorrections": 1,
-        "protocolActivations": {
-          "psv": 0,
-          "helpMeGod": 0,
-          "stalemate": 0
-        }
-      },
-      "improvementSuggestion": null
-    },
-    "frankensteen_learning_db": null
+      "frankensteen_learning_db": null
+    }
   }
 }

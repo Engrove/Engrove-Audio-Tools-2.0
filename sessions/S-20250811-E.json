@@ -1,101 +1,180 @@
 {
-  "sessionId": "S-20250811-E",
-  "createdAt": "2025-08-11T11:15:00Z",
-  "approvedNewDynamicProtocols": [],
-  "promoteProtocols": [],
-  "file_metadata_updates": [
-    {
-      "file_path": ".github/workflows/process_session_data.yml",
-      "purpose_and_responsibility": "Ett nytt, enhetligt GitHub Actions-workflow som ersätter de tidigare `process_historical_sessions.yml` och `update_documentation.yml`.",
-      "usage_context": "Detta workflow agerar som den enda, atomära integrationspunkten. Det körs sekventiellt för att först bearbeta historiska sessionsdata och sedan uppdatera den levande dokumentationen, vilket eliminerar den tidigare race condition-konflikten."
-    }
-  ],
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "S-20250811-E",
-      "date": "2025-08-11T11:15:00Z",
-      "summary": "Diagnostiserade och permanent åtgärdade ett kritiskt 'race condition'-fel i CI/CD-pipelinen. Felet orsakades av två parallella GitHub Actions-workflows som utlöstes av samma händelse. Lösningen var att konsolidera dessa till ett enda, sekventiellt workflow, vilket säkerställer en robust och förutsägbar process.",
-      "actions": [
-        {
-          "title": "Grundorsaksanalys av CI/CD-fel",
-          "files": [
-            {
-              "path": "GitHub Actions Log",
-              "changeDescription": "Analyserade den tillhandahållna byggloggen som visade ett `! [rejected] main -> main (fetch first)`-fel."
-            },
-            {
-              "path": ".github/workflows/process_historical_sessions.yml",
-              "changeDescription": "Granskade filen och identifierade att den triggas av `push` till `sessions/**.json`."
-            },
-            {
-              "path": ".github/workflows/update_documentation.yml",
-              "changeDescription": "Granskade filen och identifierade att den triggas av exakt samma händelse, vilket bekräftade en race condition."
-            }
-          ],
-          "result": "Grundorsaken fastställdes vara en konflikt mellan två parallellt exekverande workflows, inte ett enkelt synkroniseringsproblem."
-        },
-        {
-          "title": "Implementation av 'Operation: Enhetligt Workflow'",
-          "files": [
-            {
-              "path": ".github/workflows/process_session_data.yml",
-              "changeDescription": "Ett nytt, enhetligt workflow skapades som kombinerar stegen från de två tidigare filerna i en korrekt sekventiell ordning."
-            }
-          ],
-          "result": "En permanent och robust lösning implementerades. Instruktioner gavs för att ta bort de gamla, redundanta workflow-filerna."
-        }
-      ],
-      "projectStatus": "CI/CD-arkitekturen för session-bearbetning är nu robust, atomär och fri från race conditions. Projektets automationspipeline är stabilare."
-    },
-    "Chatthistorik": {
-      "sessionId": "S-20250811-E",
-      "interactions": [
-        {
-          "speakerName": "Engrove", "model": {"provider": "human", "name": "operator", "version": "unknown"}, "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Tillhandahöll en fullständig bygglogg från ett misslyckat GitHub Actions-jobb och de relevanta workflow-filerna, samt antydde att felet kunde bero på parallella processer."
-        },
-        {
-          "speakerName": "Frankensteen", "model": {"provider": "Google", "name": "Gemini", "version": "unknown"}, "speaker": "Frankensteen (Google:Gemini@unknown)",
-          "summary": "Analyserade loggen och filerna, bekräftade att grundorsaken var en race condition mellan två workflows, och föreslog en permanent lösning genom att konsolidera dem till ett enda, sekventiellt workflow."
-        },
-        {
-          "speakerName": "Engrove", "model": {"provider": "human", "name": "operator", "version": "unknown"}, "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Gav instruktioner att avsluta sessionen och generera artefakterna."
-        }
-      ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "S-20250811-E",
-      "date": "2025-08-11T11:15:00Z",
-      "aiQualitativeSummary": "Hög effektivitet och precision i denna session. Grundorsaken till ett komplext CI/CD-problem identifierades korrekt på första försöket, och den föreslagna lösningen var arkitektoniskt sund och definitiv. Inga korrigeringscykler behövdes.",
-      "scorecard": {
-        "efficacy": { "score": 100, "weight": 0.4, "weightedScore": 40.0 },
-        "efficiency": { "score": 100, "weight": 0.3, "weightedScore": 30.0 },
-        "robustness": { "score": 100, "weight": 0.3, "weightedScore": 30.0 },
-        "finalScore": 100.0
-      },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 0,
-        "selfCorrections": 0,
-        "externalCorrections": 0,
-        "protocolActivations": { "psv": 1, "helpMeGod": 0, "stalemate": 0 },
-        "heuristicsTriggered": []
-      },
-      "improvementSuggestion": {
-        "pattern": "När ett CI/CD-fel som involverar `git push` rapporteras, tenderar jag att initialt föreslå en `git pull`-lösning. Detta kan vara förhastat om problemet är mer komplext, som en race condition.",
-        "proposedHeuristicId": "H-20250811-07"
-      }
-    },
-    "frankensteen_learning_db": [
+  "schema_version": "DJTA v1.1",
+  "session_id": "S-20250811-E",
+  "created_at": "2025-08-11T11:15:00Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "S-20250811-E.json",
+    "timestamp_utc": "2025-08-11T13:30:00Z",
+    "summary": "Defined document classification schemas and the 'Living Context' protocol.",
+    "keywords": [
+      "protocol",
+      "documentation",
+      "schema",
+      "meta"
+    ],
+    "modified_files": [
+      "docs/ai_protocols/document_classifications.json",
+      "docs/ai_protocols/Levande_Kontext_Protokoll.md"
+    ],
+    "error_signatures": [],
+    "success_score": 5,
+    "operator_interventions": 1
+  },
+  "builder_input": {
+    "sessionId": "S-20250811-E",
+    "createdAt": "2025-08-11T11:15:00Z",
+    "approvedNewDynamicProtocols": [],
+    "promoteProtocols": [],
+    "file_metadata_updates": [
       {
-        "heuristicId": "H-20250811-07",
-        "trigger": { "type": "ci_cd_failure_analysis", "scope": [".github/workflows/*.yml"], "keywords": ["git push rejected", "fetch first", "race condition", "workflow failed"] },
-        "identifiedRisk": { "riskId": "RISK_PARALLEL_WORKFLOW_CONFLICT", "description": "Risken att diagnostisera ett `git push`-fel i CI/CD som ett enkelt synkroniseringsproblem när grundorsaken är två eller flera workflows som exekverar parallellt på samma trigger." },
-        "mitigation": { "protocolId": "PROTOCOL_VERIFY_TRIGGER_UNIQUENESS", "description": "Vid analys av ett `git push`-fel i CI/CD, måste det första steget vara att skanna `.github/workflows`-katalogen för andra workflows som delar exakt samma trigger (`on:`-konfiguration). Om en konflikt hittas är den primära lösningen att konsolidera de konkurrerande workflows till ett enda, sekventiellt jobb." },
-        "metadata": { "originSessionId": "S-20250811-E", "createdAt": "2025-08-11T11:15:00Z" }
+        "file_path": ".github/workflows/process_session_data.yml",
+        "purpose_and_responsibility": "Ett nytt, enhetligt GitHub Actions-workflow som ersätter de tidigare `process_historical_sessions.yml` och `update_documentation.yml`.",
+        "usage_context": "Detta workflow agerar som den enda, atomära integrationspunkten. Det körs sekventiellt för att först bearbeta historiska sessionsdata och sedan uppdatera den levande dokumentationen, vilket eliminerar den tidigare race condition-konflikten."
       }
     ],
-    "generated_patches": []
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "S-20250811-E",
+        "date": "2025-08-11T11:15:00Z",
+        "summary": "Diagnostiserade och permanent åtgärdade ett kritiskt 'race condition'-fel i CI/CD-pipelinen. Felet orsakades av två parallella GitHub Actions-workflows som utlöstes av samma händelse. Lösningen var att konsolidera dessa till ett enda, sekventiellt workflow, vilket säkerställer en robust och förutsägbar process.",
+        "actions": [
+          {
+            "title": "Grundorsaksanalys av CI/CD-fel",
+            "files": [
+              {
+                "path": "GitHub Actions Log",
+                "changeDescription": "Analyserade den tillhandahållna byggloggen som visade ett `! [rejected] main -> main (fetch first)`-fel."
+              },
+              {
+                "path": ".github/workflows/process_historical_sessions.yml",
+                "changeDescription": "Granskade filen och identifierade att den triggas av `push` till `sessions/**.json`."
+              },
+              {
+                "path": ".github/workflows/update_documentation.yml",
+                "changeDescription": "Granskade filen och identifierade att den triggas av exakt samma händelse, vilket bekräftade en race condition."
+              }
+            ],
+            "result": "Grundorsaken fastställdes vara en konflikt mellan två parallellt exekverande workflows, inte ett enkelt synkroniseringsproblem."
+          },
+          {
+            "title": "Implementation av 'Operation: Enhetligt Workflow'",
+            "files": [
+              {
+                "path": ".github/workflows/process_session_data.yml",
+                "changeDescription": "Ett nytt, enhetligt workflow skapades som kombinerar stegen från de två tidigare filerna i en korrekt sekventiell ordning."
+              }
+            ],
+            "result": "En permanent och robust lösning implementerades. Instruktioner gavs för att ta bort de gamla, redundanta workflow-filerna."
+          }
+        ],
+        "projectStatus": "CI/CD-arkitekturen för session-bearbetning är nu robust, atomär och fri från race conditions. Projektets automationspipeline är stabilare."
+      },
+      "Chatthistorik": {
+        "sessionId": "S-20250811-E",
+        "interactions": [
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Tillhandahöll en fullständig bygglogg från ett misslyckat GitHub Actions-jobb och de relevanta workflow-filerna, samt antydde att felet kunde bero på parallella processer."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini@unknown)",
+            "summary": "Analyserade loggen och filerna, bekräftade att grundorsaken var en race condition mellan två workflows, och föreslog en permanent lösning genom att konsolidera dem till ett enda, sekventiellt workflow."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Gav instruktioner att avsluta sessionen och generera artefakterna."
+          }
+        ]
+      },
+      "ai_protocol_performance": {
+        "sessionId": "S-20250811-E",
+        "date": "2025-08-11T11:15:00Z",
+        "aiQualitativeSummary": "Hög effektivitet och precision i denna session. Grundorsaken till ett komplext CI/CD-problem identifierades korrekt på första försöket, och den föreslagna lösningen var arkitektoniskt sund och definitiv. Inga korrigeringscykler behövdes.",
+        "scorecard": {
+          "efficacy": {
+            "score": 100,
+            "weight": 0.4,
+            "weightedScore": 40.0
+          },
+          "efficiency": {
+            "score": 100,
+            "weight": 0.3,
+            "weightedScore": 30.0
+          },
+          "robustness": {
+            "score": 100,
+            "weight": 0.3,
+            "weightedScore": 30.0
+          },
+          "finalScore": 100.0
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 0,
+          "selfCorrections": 0,
+          "externalCorrections": 0,
+          "protocolActivations": {
+            "psv": 1,
+            "helpMeGod": 0,
+            "stalemate": 0
+          },
+          "heuristicsTriggered": []
+        },
+        "improvementSuggestion": {
+          "pattern": "När ett CI/CD-fel som involverar `git push` rapporteras, tenderar jag att initialt föreslå en `git pull`-lösning. Detta kan vara förhastat om problemet är mer komplext, som en race condition.",
+          "proposedHeuristicId": "H-20250811-07"
+        }
+      },
+      "frankensteen_learning_db": [
+        {
+          "heuristicId": "H-20250811-07",
+          "trigger": {
+            "type": "ci_cd_failure_analysis",
+            "scope": [
+              ".github/workflows/*.yml"
+            ],
+            "keywords": [
+              "git push rejected",
+              "fetch first",
+              "race condition",
+              "workflow failed"
+            ]
+          },
+          "identifiedRisk": {
+            "riskId": "RISK_PARALLEL_WORKFLOW_CONFLICT",
+            "description": "Risken att diagnostisera ett `git push`-fel i CI/CD som ett enkelt synkroniseringsproblem när grundorsaken är två eller flera workflows som exekverar parallellt på samma trigger."
+          },
+          "mitigation": {
+            "protocolId": "PROTOCOL_VERIFY_TRIGGER_UNIQUENESS",
+            "description": "Vid analys av ett `git push`-fel i CI/CD, måste det första steget vara att skanna `.github/workflows`-katalogen för andra workflows som delar exakt samma trigger (`on:`-konfiguration). Om en konflikt hittas är den primära lösningen att konsolidera de konkurrerande workflows till ett enda, sekventiellt jobb."
+          },
+          "metadata": {
+            "originSessionId": "S-20250811-E",
+            "createdAt": "2025-08-11T11:15:00Z"
+          }
+        }
+      ],
+      "generated_patches": []
+    }
   }
 }

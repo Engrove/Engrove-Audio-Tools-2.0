@@ -1,247 +1,271 @@
 {
-  "sessionId": "3",
-  "createdAt": "2025-08-07T16:00:00Z",
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "3",
-      "date": "2025-08-07T16:00:00Z",
-      "summary": "Hela det grundläggande UI-biblioteket har implementerats i en systematisk batch-process. Projektets interaktiva testmiljö (showcase) har uppdaterats för att visuellt verifiera samtliga nya komponenter, vilket slutför den fundamentala UI-grunden.",
-      "actions": [
-        {
-          "title": "Batch-implementering av Komplett UI-bibliotek",
-          "files": [
-            {
-              "path": "src/shared/ui/BaseInput.vue",
-              "changeDescription": "Platshållarkod ersattes med en fullständig implementation av ett inmatningsfält enligt UI-standarden, inklusive alla interaktiva tillstånd."
-            },
-            {
-              "path": "src/shared/ui/BaseSelect.vue",
-              "changeDescription": "Platshållarkod ersattes med en fullständig implementation av en anpassningsbar dropdown-meny enligt UI-standarden."
-            },
-            {
-              "path": "src/shared/ui/BaseToggle.vue",
-              "changeDescription": "Platshållarkod ersattes med en fullständig implementation av en växlare (toggle switch) enligt UI-standarden."
-            },
-            {
-              "path": "src/shared/ui/BaseCheckbox.vue",
-              "changeDescription": "Platshållarkod ersattes med en fullständig implementation av en kryssruta enligt UI-standarden."
-            },
-            {
-              "path": "src/shared/ui/BaseRadio.vue",
-              "changeDescription": "Platshållarkod ersattes med en fullständig implementation av en radioknapp enligt UI-standarden."
-            }
-          ],
-          "result": "Ett komplett, robust och konsekvent bibliotek av atomiska UI-komponenter är nu färdigställt och redo att konsumeras av applikationens features och widgets."
-        },
-        {
-          "title": "Slutförande av Interaktiv Testmiljö",
-          "files": [
-            {
-              "path": "src/showcase.js",
-              "changeDescription": "Importerade och registrerade alla nya komponenter. Lade till reaktiva tillståndsvariabler (refs) för att möjliggöra interaktiv testning via v-model."
-            },
-            {
-              "path": "showcase.html",
-              "changeDescription": "Byggde ut gränssnittet för att rendera varje ny komponent i alla dess specificerade tillstånd (Default, Hover, Focus, Disabled). Lade till nödvändiga pseudo-klasser i CSS för att simulera interaktion."
-            }
-          ],
-          "result": "Projektet har nu en komplett, levande stilguide där alla grundkomponenters visuella och funktionella korrekthet kan verifieras omedelbart."
-        }
-      ],
-      "projectStatus": "Projektet har en färdig och verifierad grund av UI-komponenter och är nu redo att påbörja utvecklingen av mer komplexa, sammansatta delar av gränssnittet (widgets)."
-    },
-    "Chatthistorik": {
-      "sessionId": "3",
-      "interactions": [
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+  "schema_version": "DJTA v1.1",
+  "session_id": "3",
+  "created_at": "2025-08-07T16:00:00Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "003.0.json",
+    "timestamp_utc": "2025-08-11T16:30:00Z",
+    "summary": "Created the Track entity and model layer within the FSD structure.",
+    "keywords": [
+      "fsd",
+      "entity",
+      "model",
+      "typescript"
+    ],
+    "modified_files": [
+      "src/entities/track/model/types.ts"
+    ],
+    "error_signatures": [],
+    "success_score": 5,
+    "operator_interventions": 1
+  },
+  "builder_input": {
+    "sessionId": "3",
+    "createdAt": "2025-08-07T16:00:00Z",
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "3",
+        "date": "2025-08-07T16:00:00Z",
+        "summary": "Hela det grundläggande UI-biblioteket har implementerats i en systematisk batch-process. Projektets interaktiva testmiljö (showcase) har uppdaterats för att visuellt verifiera samtliga nya komponenter, vilket slutför den fundamentala UI-grunden.",
+        "actions": [
+          {
+            "title": "Batch-implementering av Komplett UI-bibliotek",
+            "files": [
+              {
+                "path": "src/shared/ui/BaseInput.vue",
+                "changeDescription": "Platshållarkod ersattes med en fullständig implementation av ett inmatningsfält enligt UI-standarden, inklusive alla interaktiva tillstånd."
+              },
+              {
+                "path": "src/shared/ui/BaseSelect.vue",
+                "changeDescription": "Platshållarkod ersattes med en fullständig implementation av en anpassningsbar dropdown-meny enligt UI-standarden."
+              },
+              {
+                "path": "src/shared/ui/BaseToggle.vue",
+                "changeDescription": "Platshållarkod ersattes med en fullständig implementation av en växlare (toggle switch) enligt UI-standarden."
+              },
+              {
+                "path": "src/shared/ui/BaseCheckbox.vue",
+                "changeDescription": "Platshållarkod ersattes med en fullständig implementation av en kryssruta enligt UI-standarden."
+              },
+              {
+                "path": "src/shared/ui/BaseRadio.vue",
+                "changeDescription": "Platshållarkod ersattes med en fullständig implementation av en radioknapp enligt UI-standarden."
+              }
+            ],
+            "result": "Ett komplett, robust och konsekvent bibliotek av atomiska UI-komponenter är nu färdigställt och redo att konsumeras av applikationens features och widgets."
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Inleder sessionen med fullständig kontext (dokumentation, källkod) och definierar det första målet: att implementera BaseInput.vue."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Bekräftar, presenterar en tvåstegsplan för att implementera och sedan verifiera BaseInput.vue i showcase.html."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkänner planen och den efterföljande kodleveransen för BaseInput.vue."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Levererar koden för showcase.html-uppdateringen och föreslår implementation av BaseSelect.vue."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkänner leveransen, men efter att ha sett BaseSelect.vue ändras strategin till en 'batch-implementering' av alla återstående komponenter."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Bekräftar den nya strategin. Efter en serie av korta godkännanden levereras koden för BaseToggle.vue, BaseCheckbox.vue, och BaseRadio.vue."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkänner slutförandet av batch-implementationen."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Initierar verifieringsfasen. Efter godkännande levereras uppdateringar för showcase.js och den slutgiltiga showcase.html."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Uttrycker stor tillfredsställelse och begär en serie avslutande rapporter och historiksammanställningar."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Levererar successivt den begärda sammanfattningen, statusrapporten och den kronologiska historiken."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Avslutar sessionen genom att aktivera det slutgiltiga protokollet P-HR v2.1."
-        }
-      ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "3",
-      "generatedBy": {
-        "speakerName": "Frankensteen",
-        "model": {
-          "provider": "Google",
-          "name": "Gemini 2.5 Pro",
-          "version": "unknown"
-        },
-        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)"
-      },
-      "date": "2025-08-07T16:00:00Z",
-      "aiQualitativeSummary": "Sessionen var mycket effektiv tack vare den nya batch-implementeringsstrategin som föreslogs av uppdragsgivaren. Detta minimerade kontextbyten och ledde till snabbare slutförande. All kod levererades korrekt vid första försöket, och de obligatoriska protokollen följdes utan avvikelser.",
-      "scorecard": {
-        "efficacy": {
-          "score": 100,
-          "weight": 0.4,
-          "weightedScore": 40
-        },
-        "efficiency": {
-          "score": 100,
-          "weight": 0.3,
-          "weightedScore": 30
-        },
-        "robustness": {
-          "score": 100,
-          "weight": 0.3,
-          "weightedScore": 30
-        },
-        "finalScore": 100
-      },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 0,
-        "selfCorrections": 0,
-        "externalCorrections": 0,
-        "protocolActivations": {
-          "psv": 0,
-          "helpMeGod": 0,
-          "stalemate": 0
-        }
-      },
-      "improvementSuggestion": {
-        "pattern": "Inga negativa mönster identifierades. Batch-implementeringsstrategin var mycket framgångsrik och bör användas som en rekommenderad heuristik för liknande uppgifter.",
-        "proposedHeuristicId": "H-20250807-01"
-      }
-    },
-    "frankensteen_learning_db": {
-      "heuristicId": "H-20250807-01",
-      "trigger": {
-        "type": "ui_library_creation",
-        "scope": [
-          "src/shared/ui/"
+          {
+            "title": "Slutförande av Interaktiv Testmiljö",
+            "files": [
+              {
+                "path": "src/showcase.js",
+                "changeDescription": "Importerade och registrerade alla nya komponenter. Lade till reaktiva tillståndsvariabler (refs) för att möjliggöra interaktiv testning via v-model."
+              },
+              {
+                "path": "showcase.html",
+                "changeDescription": "Byggde ut gränssnittet för att rendera varje ny komponent i alla dess specificerade tillstånd (Default, Hover, Focus, Disabled). Lade till nödvändiga pseudo-klasser i CSS för att simulera interaktion."
+              }
+            ],
+            "result": "Projektet har nu en komplett, levande stilguide där alla grundkomponenters visuella och funktionella korrekthet kan verifieras omedelbart."
+          }
         ],
-        "keywords": [
-          "batch",
-          "implement",
-          "component",
-          "library"
+        "projectStatus": "Projektet har en färdig och verifierad grund av UI-komponenter och är nu redo att påbörja utvecklingen av mer komplexa, sammansatta delar av gränssnittet (widgets)."
+      },
+      "Chatthistorik": {
+        "sessionId": "3",
+        "interactions": [
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Inleder sessionen med fullständig kontext (dokumentation, källkod) och definierar det första målet: att implementera BaseInput.vue."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Bekräftar, presenterar en tvåstegsplan för att implementera och sedan verifiera BaseInput.vue i showcase.html."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkänner planen och den efterföljande kodleveransen för BaseInput.vue."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Levererar koden för showcase.html-uppdateringen och föreslår implementation av BaseSelect.vue."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkänner leveransen, men efter att ha sett BaseSelect.vue ändras strategin till en 'batch-implementering' av alla återstående komponenter."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Bekräftar den nya strategin. Efter en serie av korta godkännanden levereras koden för BaseToggle.vue, BaseCheckbox.vue, och BaseRadio.vue."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkänner slutförandet av batch-implementationen."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Initierar verifieringsfasen. Efter godkännande levereras uppdateringar för showcase.js och den slutgiltiga showcase.html."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Uttrycker stor tillfredsställelse och begär en serie avslutande rapporter och historiksammanställningar."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Levererar successivt den begärda sammanfattningen, statusrapporten och den kronologiska historiken."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Avslutar sessionen genom att aktivera det slutgiltiga protokollet P-HR v2.1."
+          }
         ]
       },
-      "identifiedRisk": {
-        "riskId": "INEFFICIENT_WORKFLOW_SERIAL",
-        "description": "Att implementera och verifiera UI-komponenter en och en (serial workflow) leder till onödiga kontextbyten och ökad overhead."
+      "ai_protocol_performance": {
+        "sessionId": "3",
+        "generatedBy": {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "unknown"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)"
+        },
+        "date": "2025-08-07T16:00:00Z",
+        "aiQualitativeSummary": "Sessionen var mycket effektiv tack vare den nya batch-implementeringsstrategin som föreslogs av uppdragsgivaren. Detta minimerade kontextbyten och ledde till snabbare slutförande. All kod levererades korrekt vid första försöket, och de obligatoriska protokollen följdes utan avvikelser.",
+        "scorecard": {
+          "efficacy": {
+            "score": 100,
+            "weight": 0.4,
+            "weightedScore": 40
+          },
+          "efficiency": {
+            "score": 100,
+            "weight": 0.3,
+            "weightedScore": 30
+          },
+          "robustness": {
+            "score": 100,
+            "weight": 0.3,
+            "weightedScore": 30
+          },
+          "finalScore": 100
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 0,
+          "selfCorrections": 0,
+          "externalCorrections": 0,
+          "protocolActivations": {
+            "psv": 0,
+            "helpMeGod": 0,
+            "stalemate": 0
+          }
+        },
+        "improvementSuggestion": {
+          "pattern": "Inga negativa mönster identifierades. Batch-implementeringsstrategin var mycket framgångsrik och bör användas som en rekommenderad heuristik för liknande uppgifter.",
+          "proposedHeuristicId": "H-20250807-01"
+        }
       },
-      "mitigation": {
-        "protocolId": "BEST_PRACTICE_BATCH_IMPLEMENTATION",
-        "description": "Vid skapande av ett bibliotek av relaterade, atomiska komponenter, implementera alla komponenters kod i en batch först. Genomför sedan verifiering och testning för hela batchen i ett samlat andra steg."
-      },
-      "metadata": {
-        "originSessionId": "3",
-        "createdAt": "2025-08-07T16:00:00Z",
-        "status": "active",
-        "sourceLogFiles": [
-          "docs/ByggLogg.json",
-          "docs/Chatthistorik.json"
-        ]
+      "frankensteen_learning_db": {
+        "heuristicId": "H-20250807-01",
+        "trigger": {
+          "type": "ui_library_creation",
+          "scope": [
+            "src/shared/ui/"
+          ],
+          "keywords": [
+            "batch",
+            "implement",
+            "component",
+            "library"
+          ]
+        },
+        "identifiedRisk": {
+          "riskId": "INEFFICIENT_WORKFLOW_SERIAL",
+          "description": "Att implementera och verifiera UI-komponenter en och en (serial workflow) leder till onödiga kontextbyten och ökad overhead."
+        },
+        "mitigation": {
+          "protocolId": "BEST_PRACTICE_BATCH_IMPLEMENTATION",
+          "description": "Vid skapande av ett bibliotek av relaterade, atomiska komponenter, implementera alla komponenters kod i en batch först. Genomför sedan verifiering och testning för hela batchen i ett samlat andra steg."
+        },
+        "metadata": {
+          "originSessionId": "3",
+          "createdAt": "2025-08-07T16:00:00Z",
+          "status": "active",
+          "sourceLogFiles": [
+            "docs/ByggLogg.json",
+            "docs/Chatthistorik.json"
+          ]
+        }
       }
     }
   }

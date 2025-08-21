@@ -1,621 +1,649 @@
 {
-  "sessionId": "17",
-  "createdAt": "2025-08-02T18:00:00Z",
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "17",
-      "date": "2025-08-02T18:00:00Z",
-      "summary": "En fundamental refaktorisering av applikationens CSS-arkitektur genomfördes för att centralisera all temahantering, vilket avsevärt förbättrade kodens underhållbarhet. Samtidigt slutfördes en aggressiv visuell omarbetning av \"Compact Mode\" för ökad informationstäthet, ett kritiskt renderingsfel i landningssidans hero-sektion åtgärdades, och den tekniska dokumentationen synkroniserades med de nya arkitektoniska besluten.",
-      "actions": [
-        {
-          "title": "Felrättning av Radbrytning i Hero-Sektionen",
-          "files": [
-            {
-              "path": "src/pages/home/HomePage.vue",
-              "changeDescription": "Justerade CSS för .hero-title med ett relativt line-height och en max-width för att förhindra överlappande text och säkerställa en estetiskt tilltalande radbrytning."
-            }
-          ],
-          "result": "Det visuella renderingsfelet på landningssidan är nu åtgärdat på alla skärmbredder."
-        },
-        {
-          "title": "Centralisering av CSS-arkitektur och Omarbetning av 'Compact Mode'",
-          "files": [
-            {
-              "path": "src/app/styles/_components.css",
-              "changeDescription": "Skapade en ny, central CSS-fil för att exklusivt hantera komponent-specifika tema-överstyrningar."
-            },
-            {
-              "path": "src/app/styles/_global.css",
-              "changeDescription": "Uppdaterades för att importera den nya _components.css-filen, vilket aktiverar den globalt."
-            },
-            {
-              "path": "src/shared/ui/BaseButton.vue",
-              "changeDescription": "Migrerade .compact-theme-regler till den nya centrala filen."
-            },
-            {
-              "path": "src/shared/ui/BaseInput.vue",
-              "changeDescription": "Migrerade .compact-theme-regler till den nya centrala filen."
-            },
-            {
-              "path": "src/shared/ui/BaseSelect.vue",
-              "changeDescription": "Migrerade .compact-theme-regler till den nya centrala filen."
-            },
-            {
-              "path": "src/shared/ui/BaseTable.vue",
-              "changeDescription": "Migrerade .compact-theme-regler till den nya centrala filen."
-            },
-            {
-              "path": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-              "changeDescription": "Migrerade .compact-theme-regler och gjorde dem mer aggressiva för att uppnå önskad informationstäthet, inklusive halverat avstånd mellan filter."
-            }
-          ],
-          "result": "All temahantering är nu centraliserad, vilket förenklar framtida justeringar, samtidigt som komponenternas grundläggande stilar förblir säkert inkapslade."
-        },
-        {
-          "title": "Synkronisering av Teknisk Dokumentation",
-          "files": [
-            {
-              "path": "Engrove Audio Toolkit UI-utveckling",
-              "changeDescription": "Uppdaterades för att korrekt beskriva den nya, centraliserade arkitekturen för temahantering, vilket säkerställer att dokumentationen är i linje med källkoden."
-            }
-          ],
-          "result": "Projektets styrande designdokumentation är nu korrekt och aktuell."
-        },
-        {
-          "title": "Formalisering av Nästa Utvecklingsfas",
-          "files": [
-            {
-              "path": "AI-INSTRUKTION FÖR NÄSTA SESSION",
-              "changeDescription": "En komplett och detaljerad plan för \"Data Explorer - Fas 2\" utarbetades, inklusive specifikationer för responsiva tabeller, visuell datakonditionering, filterförfining och den nya \"Synergy Filter\"-funktionen."
-            }
-          ],
-          "result": "En tydlig och godkänd handlingsplan för nästa arbetssession har etablerats."
-        }
-      ],
-      "projectStatus": "Projektet är i ett exceptionellt stabilt, väl-dokumenterat och visuellt förfinat tillstånd. Den nya CSS-arkitekturen har avsevärt förbättrat underhållbarheten. Applikationen är fullt redo för nästa fas av funktionsutveckling, med en detaljerad plan på plats för att förbättra Data Explorer."
-    },
-    "Chatthistorik": {
-      "sessionId": "17",
-      "interactions": [
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+  "schema_version": "DJTA v1.1",
+  "session_id": "17",
+  "created_at": "2025-08-02T18:00:00Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "017.0.json",
+    "timestamp_utc": "2025-08-16T15:00:00Z",
+    "summary": "Modified RAG indexer to output a portable JSON file to solve GitHub file size and storage limits.",
+    "keywords": [
+      "rag",
+      "optimization",
+      "ci-cd",
+      "refactor",
+      "file-size"
+    ],
+    "modified_files": [
+      "scripts/rag/build_vector_index.py",
+      ".github/workflows/ci.yml"
+    ],
+    "error_signatures": [
+      "git-lfs-error"
+    ],
+    "success_score": 5,
+    "operator_interventions": 2
+  },
+  "builder_input": {
+    "sessionId": "17",
+    "createdAt": "2025-08-02T18:00:00Z",
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "17",
+        "date": "2025-08-02T18:00:00Z",
+        "summary": "En fundamental refaktorisering av applikationens CSS-arkitektur genomfördes för att centralisera all temahantering, vilket avsevärt förbättrade kodens underhållbarhet. Samtidigt slutfördes en aggressiv visuell omarbetning av \"Compact Mode\" för ökad informationstäthet, ett kritiskt renderingsfel i landningssidans hero-sektion åtgärdades, och den tekniska dokumentationen synkroniserades med de nya arkitektoniska besluten.",
+        "actions": [
+          {
+            "title": "Felrättning av Radbrytning i Hero-Sektionen",
+            "files": [
+              {
+                "path": "src/pages/home/HomePage.vue",
+                "changeDescription": "Justerade CSS för .hero-title med ett relativt line-height och en max-width för att förhindra överlappande text och säkerställa en estetiskt tilltalande radbrytning."
+              }
+            ],
+            "result": "Det visuella renderingsfelet på landningssidan är nu åtgärdat på alla skärmbredder."
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Inledde sessionen med statusrapport för Steg 16 och en ny, tvådelad uppgift: omarbeta 'Compact Mode' och korrigera ett radbrytningsfel i hero-sektionen. Bifogade bilder och instruerade AI att invänta källkod."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
+          {
+            "title": "Centralisering av CSS-arkitektur och Omarbetning av 'Compact Mode'",
+            "files": [
+              {
+                "path": "src/app/styles/_components.css",
+                "changeDescription": "Skapade en ny, central CSS-fil för att exklusivt hantera komponent-specifika tema-överstyrningar."
+              },
+              {
+                "path": "src/app/styles/_global.css",
+                "changeDescription": "Uppdaterades för att importera den nya _components.css-filen, vilket aktiverar den globalt."
+              },
+              {
+                "path": "src/shared/ui/BaseButton.vue",
+                "changeDescription": "Migrerade .compact-theme-regler till den nya centrala filen."
+              },
+              {
+                "path": "src/shared/ui/BaseInput.vue",
+                "changeDescription": "Migrerade .compact-theme-regler till den nya centrala filen."
+              },
+              {
+                "path": "src/shared/ui/BaseSelect.vue",
+                "changeDescription": "Migrerade .compact-theme-regler till den nya centrala filen."
+              },
+              {
+                "path": "src/shared/ui/BaseTable.vue",
+                "changeDescription": "Migrerade .compact-theme-regler till den nya centrala filen."
+              },
+              {
+                "path": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
+                "changeDescription": "Migrerade .compact-theme-regler och gjorde dem mer aggressiva för att uppnå önskad informationstäthet, inklusive halverat avstånd mellan filter."
+              }
+            ],
+            "result": "All temahantering är nu centraliserad, vilket förenklar framtida justeringar, samtidigt som komponenternas grundläggande stilar förblir säkert inkapslade."
           },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Bekräftade mottagandet av instruktioner och förståelse för uppdraget. Meddelade att jag inväntar källkod innan en åtgärdsplan formuleras, i enlighet med protokoll."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+          {
+            "title": "Synkronisering av Teknisk Dokumentation",
+            "files": [
+              {
+                "path": "Engrove Audio Toolkit UI-utveckling",
+                "changeDescription": "Uppdaterades för att korrekt beskriva den nya, centraliserade arkitekturen för temahantering, vilket säkerställer att dokumentationen är i linje med källkoden."
+              }
+            ],
+            "result": "Projektets styrande designdokumentation är nu korrekt och aktuell."
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Levererade all kontext och källkod. Föreslog en ny strategi: att centralisera all CSS till en enda fil för enklare underhåll."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Analyserade förslaget om CSS-centralisering, identifierade risker med förlorad inkapsling och föreslog en hybridlösning som kompromiss. Presenterade en detaljerad åtgärdsplan för godkännande."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkände den föreslagna hybridlösningen och åtgärdsplanen."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Påbörjade implementationen och levererade den uppdaterade filen `src/pages/home/HomePage.vue` med korrigering för hero-rubriken."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bekräftade mottagandet med 'Ok'."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Skapade den nya, tomma filen `src/app/styles/_components.css` för centraliserad temahantering."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bekräftade mottagandet med 'ok'."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Uppdaterade `src/app/styles/_global.css` för att importera den nya `_components.css`-filen."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bekräftade mottagandet med 'Ok'."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Levererade en rensad `src/shared/ui/BaseButton.vue` utan temaregler."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bekräftade mottagandet med 'Ok'."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Uppdaterade `_components.css` med de migrerade reglerna för `BaseButton`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bekräftade mottagandet med 'ok'."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Fortsatte processen genom att leverera en rensad `src/shared/ui/BaseInput.vue`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bekräftade mottagandet med 'ok'."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Uppdaterade `_components.css` med de migrerade reglerna för `BaseInput`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bekräftade mottagandet med 'Ok'."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Levererade en rensad `src/shared/ui/BaseSelect.vue`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bekräftade mottagandet med 'Ok'."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Uppdaterade `_components.css` med de migrerade reglerna för `BaseSelect`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bekräftade mottagandet med 'Ok'."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Levererade en rensad `src/shared/ui/BaseTable.vue`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bekräftade mottagandet och specificerade två nya framtida uppgifter: synkronisera dokumentation och planera för 'Synergy Filter'."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Bekräftade de nya uppgifterna och uppdaterade `_components.css` med reglerna för `BaseTable`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bekräftade mottagandet med 'Ok'."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Levererade den sista rensade komponenten, `src/widgets/DataFilterPanel/ui/DataFilterPanel.vue`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bekräftade mottagandet med 'Ok'."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Slutförde CSS-migreringen genom att uppdatera `_components.css` med reglerna för `DataFilterPanel`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bekräftade mottagandet med 'Ok'."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Presenterade en plan för att uppdatera UI-dokumentationen för att reflektera den nya CSS-arkitekturen och inväntade godkännande."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkände planen för dokumentationsuppdatering."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Levererade det uppdaterade dokumentet `Engrove Audio Toolkit UI-utveckling`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bifogade en skärmdump som visade det lyckade resultatet av 'Compact Mode' och instruerade AI att halvera avståndet mellan dropdowns som ett sista test."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Presenterade en plan för att halvera avståndet och levererade den slutgiltigt uppdaterade `_components.css`-filen."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bekräftade att testet var lyckat."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Sammanfattade de slutförda uppgifterna och föreslog att aktivera Kreativitets-läget för att planera 'Synergy Filter'-funktionen."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Korrigerade AI:n och påpekade att andra, tidigare specificerade punkter skulle hanteras först. Refererade till en tidigare plan från session 13."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Bad om ursäkt för misstaget, backade och presenterade en uppdaterad och formaliserad plan för 'Data Explorer - Fas 2' baserad på den gamla instruktionen."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Instruerade AI att lägga till en ny punkt i planen: att förfina och specificera dropdown-filtren."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Levererade den slutgiltiga, kompletta planen för 'Data Explorer - Fas 2', inklusive den nya punkten om filterförfining."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Begärde en `ByggLogg`-post för den nuvarande sessionen (Steg 17)."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Genererade och levererade `Statusrapport: Steg 17` enligt protokoll."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Begärde en fullständig, kronologisk historik för hela sessionen."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Genererade och levererade den kronologiska projekthistoriken för Session 17."
-        }
-      ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "17",
-      "generatedBy": {
-        "speakerName": "Frankensteen",
-        "model": {
-          "provider": "Google",
-          "name": "Gemini 2.5 Pro",
-          "version": "unknown"
-        },
-        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)"
-      },
-      "date": "2025-08-02T18:00:00Z",
-      "aiQualitativeSummary": "Sessionen var mycket framgångsrik. Jag identifierade en betydande arkitektonisk risk i användarens förslag (centralisera all CSS) och föreslog en robust hybridlösning som blev godkänd. Implementationen av planen var felfri och följde protokollen exakt. Ett mindre misstag gjordes mot slutet där jag föreslog nästa steg för tidigt, men detta korrigerades omedelbart efter feedback.",
-      "scorecard": {
-        "efficacy": {
-          "score": 100,
-          "weight": 0.4,
-          "weightedScore": 40
-        },
-        "efficiency": {
-          "score": 95,
-          "weight": 0.3,
-          "weightedScore": 28.5
-        },
-        "robustness": {
-          "score": 100,
-          "weight": 0.3,
-          "weightedScore": 30
-        },
-        "finalScore": 98.5
-      },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 0,
-        "selfCorrections": 0,
-        "externalCorrections": 1,
-        "protocolActivations": {
-          "psv": 0,
-          "helpMeGod": 0,
-          "stalemate": 0
-        }
-      },
-      "improvementSuggestion": {
-        "pattern": "Användaren föreslog en arkitektonisk ändring (centralisera all CSS) som var intuitiv men tekniskt riskfylld. Jag identifierade risken (förlust av 'scoped styles') och föreslog en säkrare kompromiss.",
-        "proposedHeuristicId": "H-20250802-01"
-      }
-    },
-    "frankensteen_learning_db": {
-      "heuristicId": "H-20250802-01",
-      "trigger": {
-        "type": "architectural_suggestion",
-        "scope": [
-          "*.css",
-          "*.vue"
+          {
+            "title": "Formalisering av Nästa Utvecklingsfas",
+            "files": [
+              {
+                "path": "AI-INSTRUKTION FÖR NÄSTA SESSION",
+                "changeDescription": "En komplett och detaljerad plan för \"Data Explorer - Fas 2\" utarbetades, inklusive specifikationer för responsiva tabeller, visuell datakonditionering, filterförfining och den nya \"Synergy Filter\"-funktionen."
+              }
+            ],
+            "result": "En tydlig och godkänd handlingsplan för nästa arbetssession har etablerats."
+          }
         ],
-        "keywords": [
-          "centralize",
-          "global css",
-          "scoped"
+        "projectStatus": "Projektet är i ett exceptionellt stabilt, väl-dokumenterat och visuellt förfinat tillstånd. Den nya CSS-arkitekturen har avsevärt förbättrat underhållbarheten. Applikationen är fullt redo för nästa fas av funktionsutveckling, med en detaljerad plan på plats för att förbättra Data Explorer."
+      },
+      "Chatthistorik": {
+        "sessionId": "17",
+        "interactions": [
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Inledde sessionen med statusrapport för Steg 16 och en ny, tvådelad uppgift: omarbeta 'Compact Mode' och korrigera ett radbrytningsfel i hero-sektionen. Bifogade bilder och instruerade AI att invänta källkod."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Bekräftade mottagandet av instruktioner och förståelse för uppdraget. Meddelade att jag inväntar källkod innan en åtgärdsplan formuleras, i enlighet med protokoll."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Levererade all kontext och källkod. Föreslog en ny strategi: att centralisera all CSS till en enda fil för enklare underhåll."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Analyserade förslaget om CSS-centralisering, identifierade risker med förlorad inkapsling och föreslog en hybridlösning som kompromiss. Presenterade en detaljerad åtgärdsplan för godkännande."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkände den föreslagna hybridlösningen och åtgärdsplanen."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Påbörjade implementationen och levererade den uppdaterade filen `src/pages/home/HomePage.vue` med korrigering för hero-rubriken."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bekräftade mottagandet med 'Ok'."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Skapade den nya, tomma filen `src/app/styles/_components.css` för centraliserad temahantering."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bekräftade mottagandet med 'ok'."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Uppdaterade `src/app/styles/_global.css` för att importera den nya `_components.css`-filen."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bekräftade mottagandet med 'Ok'."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Levererade en rensad `src/shared/ui/BaseButton.vue` utan temaregler."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bekräftade mottagandet med 'Ok'."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Uppdaterade `_components.css` med de migrerade reglerna för `BaseButton`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bekräftade mottagandet med 'ok'."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Fortsatte processen genom att leverera en rensad `src/shared/ui/BaseInput.vue`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bekräftade mottagandet med 'ok'."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Uppdaterade `_components.css` med de migrerade reglerna för `BaseInput`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bekräftade mottagandet med 'Ok'."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Levererade en rensad `src/shared/ui/BaseSelect.vue`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bekräftade mottagandet med 'Ok'."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Uppdaterade `_components.css` med de migrerade reglerna för `BaseSelect`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bekräftade mottagandet med 'Ok'."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Levererade en rensad `src/shared/ui/BaseTable.vue`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bekräftade mottagandet och specificerade två nya framtida uppgifter: synkronisera dokumentation och planera för 'Synergy Filter'."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Bekräftade de nya uppgifterna och uppdaterade `_components.css` med reglerna för `BaseTable`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bekräftade mottagandet med 'Ok'."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Levererade den sista rensade komponenten, `src/widgets/DataFilterPanel/ui/DataFilterPanel.vue`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bekräftade mottagandet med 'Ok'."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Slutförde CSS-migreringen genom att uppdatera `_components.css` med reglerna för `DataFilterPanel`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bekräftade mottagandet med 'Ok'."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Presenterade en plan för att uppdatera UI-dokumentationen för att reflektera den nya CSS-arkitekturen och inväntade godkännande."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkände planen för dokumentationsuppdatering."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Levererade det uppdaterade dokumentet `Engrove Audio Toolkit UI-utveckling`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bifogade en skärmdump som visade det lyckade resultatet av 'Compact Mode' och instruerade AI att halvera avståndet mellan dropdowns som ett sista test."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Presenterade en plan för att halvera avståndet och levererade den slutgiltigt uppdaterade `_components.css`-filen."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bekräftade att testet var lyckat."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Sammanfattade de slutförda uppgifterna och föreslog att aktivera Kreativitets-läget för att planera 'Synergy Filter'-funktionen."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Korrigerade AI:n och påpekade att andra, tidigare specificerade punkter skulle hanteras först. Refererade till en tidigare plan från session 13."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Bad om ursäkt för misstaget, backade och presenterade en uppdaterad och formaliserad plan för 'Data Explorer - Fas 2' baserad på den gamla instruktionen."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Instruerade AI att lägga till en ny punkt i planen: att förfina och specificera dropdown-filtren."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Levererade den slutgiltiga, kompletta planen för 'Data Explorer - Fas 2', inklusive den nya punkten om filterförfining."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Begärde en `ByggLogg`-post för den nuvarande sessionen (Steg 17)."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Genererade och levererade `Statusrapport: Steg 17` enligt protokoll."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Begärde en fullständig, kronologisk historik för hela sessionen."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Genererade och levererade den kronologiska projekthistoriken för Session 17."
+          }
         ]
       },
-      "identifiedRisk": {
-        "riskId": "LOSS_OF_STYLE_ENCAPSULATION",
-        "description": "Förslaget att flytta all CSS till en global fil skulle eliminera fördelarna med Vues 'scoped styles', vilket leder till hög risk för oavsiktliga stilkonflikter och minskad underhållbarhet."
+      "ai_protocol_performance": {
+        "sessionId": "17",
+        "generatedBy": {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "unknown"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)"
+        },
+        "date": "2025-08-02T18:00:00Z",
+        "aiQualitativeSummary": "Sessionen var mycket framgångsrik. Jag identifierade en betydande arkitektonisk risk i användarens förslag (centralisera all CSS) och föreslog en robust hybridlösning som blev godkänd. Implementationen av planen var felfri och följde protokollen exakt. Ett mindre misstag gjordes mot slutet där jag föreslog nästa steg för tidigt, men detta korrigerades omedelbart efter feedback.",
+        "scorecard": {
+          "efficacy": {
+            "score": 100,
+            "weight": 0.4,
+            "weightedScore": 40
+          },
+          "efficiency": {
+            "score": 95,
+            "weight": 0.3,
+            "weightedScore": 28.5
+          },
+          "robustness": {
+            "score": 100,
+            "weight": 0.3,
+            "weightedScore": 30
+          },
+          "finalScore": 98.5
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 0,
+          "selfCorrections": 0,
+          "externalCorrections": 1,
+          "protocolActivations": {
+            "psv": 0,
+            "helpMeGod": 0,
+            "stalemate": 0
+          }
+        },
+        "improvementSuggestion": {
+          "pattern": "Användaren föreslog en arkitektonisk ändring (centralisera all CSS) som var intuitiv men tekniskt riskfylld. Jag identifierade risken (förlust av 'scoped styles') och föreslog en säkrare kompromiss.",
+          "proposedHeuristicId": "H-20250802-01"
+        }
       },
-      "mitigation": {
-        "protocolId": "PSV-ARCH-01",
-        "description": "Vid arkitektoniska förslag från användaren, validera dem mot den valda teknikstackens kärnprinciper (t.ex. komponent-inkapsling). Om en konflikt identifieras, förklara risken och föreslå en alternativ lösning som uppnår användarens mål utan att kompromissa med arkitektonisk integritet."
-      },
-      "metadata": {
-        "originSessionId": "17",
-        "createdAt": "2025-08-02T18:00:00Z",
-        "status": "active",
-        "sourceLogFiles": [
-          "docs/ByggLogg.json",
-          "docs/Chatthistorik.json"
-        ]
+      "frankensteen_learning_db": {
+        "heuristicId": "H-20250802-01",
+        "trigger": {
+          "type": "architectural_suggestion",
+          "scope": [
+            "*.css",
+            "*.vue"
+          ],
+          "keywords": [
+            "centralize",
+            "global css",
+            "scoped"
+          ]
+        },
+        "identifiedRisk": {
+          "riskId": "LOSS_OF_STYLE_ENCAPSULATION",
+          "description": "Förslaget att flytta all CSS till en global fil skulle eliminera fördelarna med Vues 'scoped styles', vilket leder till hög risk för oavsiktliga stilkonflikter och minskad underhållbarhet."
+        },
+        "mitigation": {
+          "protocolId": "PSV-ARCH-01",
+          "description": "Vid arkitektoniska förslag från användaren, validera dem mot den valda teknikstackens kärnprinciper (t.ex. komponent-inkapsling). Om en konflikt identifieras, förklara risken och föreslå en alternativ lösning som uppnår användarens mål utan att kompromissa med arkitektonisk integritet."
+        },
+        "metadata": {
+          "originSessionId": "17",
+          "createdAt": "2025-08-02T18:00:00Z",
+          "status": "active",
+          "sourceLogFiles": [
+            "docs/ByggLogg.json",
+            "docs/Chatthistorik.json"
+          ]
+        }
       }
     }
   }

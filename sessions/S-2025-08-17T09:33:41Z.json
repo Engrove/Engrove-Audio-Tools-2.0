@@ -1,252 +1,278 @@
 {
-  "sessionId": "S-2025-08-17T09:33:41Z",
-  "createdAt": "2025-08-17T09:33:41Z",
-  "approvedNewDynamicProtocols": [],
-  "promoteProtocols": [],
-  "file_metadata_updates": [
-    {
-      "file_path": "docs/ai_protocols/Grundbulten_Protokoll.md",
-      "purpose_and_responsibility": "Uppgraderad till v3.7. Definierar nu en sluten, hash-baserad verifieringskedja (G-1, 1f, 9, 10e) för att matematiskt förhindra filtrunkeringsfel, vilket var en kritisk brist i tidigare versioner.",
-      "usage_context": "Detta är nu den mest kritiska lagen för all filhantering. Dess nya hash-verifieringssteg måste följas utan undantag för att garantera filintegritet."
-    },
-    {
-      "file_path": "scripts/modules/ui_template.py",
-      "purpose_and_responsibility": "Innehåller HTML-mallen för AI Context Builder. Har modifierats för att inkludera en dynamisk {version}-platshållare i titeln.",
-      "usage_context": "Används av engrove_audio_tools_creator.py som bas för att bygga index2.html."
-    },
-    {
-      "file_path": "scripts/engrove_audio_tools_creator.py",
-      "purpose_and_responsibility": "Byggskript som genererar AI Context Builder. Har modifierats för att injicera en UI_VERSION i HTML-mallen.",
-      "usage_context": "Körs av CI/CD för att bygga det slutgiltiga UI-verktyget."
-    },
-    {
-      "file_path": "scripts/engrove_audio_tools_creator.md",
-      "purpose_and_responsibility": "Ny, djupgående teknisk dokumentation för byggskriptet och dess ekosystem.",
-      "usage_context": "Används som primär referens för att förstå och vidareutveckla AI Context Builder-verktyget."
-    }
-  ],
-  "importantMilestonesLogged": [
-    {
-      "event_id": "IMR-001",
-      "milestone_type": "PROCESS",
-      "summary": "Grundbulten-protokollet uppgraderades till v3.7 efter systemiskt fel.",
-      "details": "Efter två på varandra följande misslyckanden med att leverera en komplett fil (katastrofal trunkering) aktiverades Help_me_God-protokollet. Grundorsaken identifierades som en brist i Grundbulten-protokollet, som saknade verifiering mot en känd hash. Protokollet uppgraderades med en sluten, hash-baserad verifieringskedja för att matematiskt säkerställa filintegritet vid framtida operationer.",
-      "affected_scope": [
-        "docs/ai_protocols/Grundbulten_Protokoll.md",
-        "AI_Core_Instruction.md"
-      ],
-      "timestamp": "2025-08-17T09:33:41Z",
-      "session_id": "S-2025-08-17T09:33:41Z"
-    }
-  ],
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "S-2025-08-17T09:33:41Z",
-      "date": "2025-08-17T09:33:41Z",
-      "summary": "Uppgradering av `Grundbulten_Protokoll` till v3.7 för att implementera en vattentät, hash-baserad verifieringskedja efter upprepade trunkeringsfel. Det ursprungliga uppdraget pausades.",
-      "actions": [
-        {
-          "title": "Help me God: Grundorsaksanalys och uppgradering av Grundbulten-protokollet",
-          "files": [
-            {
-              "path": "docs/ai_protocols/Grundbulten_Protokoll.md",
-              "changeDescription": "Infört en sluten, hash-baserad verifieringskedja (G-1, 1f, 9, 10e) för att matematiskt förhindra trunkeringsfel och återställt fullständiga bilagor."
-            }
-          ],
-          "result": "Protokollet är nu uppgraderat till v3.7 och anses vara robust. FL-D-cykeln har brutits genom processförbättring."
-        }
-      ],
-      "projectStatus": "`Grundbulten_Protokoll` är nu uppgraderat till v3.7 och anses vara robust. Det ursprungliga uppdraget att modifiera `engrove_audio_tools_creator.py` har pausats och kommer att återupptas i nästa session."
-    },
-    "Chatthistorik": {
-      "sessionId": "S-2025-08-17T09:33:41Z",
-      "interactions": [
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Valde utvecklingsdomänen 'CI/CD & Project Automation'."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Frankensteen",
-            "name": "Frankensteen",
-            "version": "v5.6"
-          },
-          "speaker": "Frankensteen (Frankensteen:Frankensteen@v5.6)",
-          "summary": "Bekräftade domänlåsning och förklarade sig redo för instruktion."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Specificerade uppdraget: ändra titel på index2.html och skapa dokumentation för `engrove_audio_tools_creator.py`."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Frankensteen",
-            "name": "Frankensteen",
-            "version": "v5.6"
-          },
-          "speaker": "Frankensteen (Frankensteen:Frankensteen@v5.6)",
-          "summary": "Presenterade en plan och levererade tre filer, men `engrove_audio_tools_creator.py` var felaktigt trunkerad."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Rapporterade att den levererade filen var ofullständig med 40+ rader."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Frankensteen",
-            "name": "Frankensteen",
-            "version": "v5.6"
-          },
-          "speaker": "Frankensteen (Frankensteen:Frankensteen@v5.6)",
-          "summary": "Bekräftade felet, identifierade grundorsaken i `Grundbulten`-protokollet och aktiverade `Help_me_God`-protokollet."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bekräftade att sessionen var obrukbar och begärde patch-instruktioner för `Grundbulten`, inklusive förslag om hash-verifiering."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Frankensteen",
-            "name": "Frankensteen",
-            "version": "v5.6"
-          },
-          "speaker": "Frankensteen (Frankensteen:Frankensteen@v5.6)",
-          "summary": "Föreslog en detaljerad uppgradering av `Grundbulten` till v3.6 med en sluten, hash-baserad verifieringskedja."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Påtalar att den föreslagna patch-leveransen var ofullständig (saknade bilagor) och bröt mot protokollet den försökte fixa."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Frankensteen",
-            "name": "Frankensteen",
-            "version": "v5.6"
-          },
-          "speaker": "Frankensteen (Frankensteen:Frankensteen@v5.6)",
-          "summary": "Erkände det sista felet och levererade den fullständiga, korrekta versionen av `Grundbulten_Protokoll.md` (v3.7)."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Avbröt sessionen och initierade avslutningsprotokollet med en exakt instruktion för nästa session."
-        }
-      ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "S-2025-08-17T09:33:41Z",
-      "date": "2025-08-17T09:33:41Z",
-      "aiQualitativeSummary": "Sessionen präglades av ett allvarligt, repetitivt processfel (filtrunkering) som krävde en Help me God-eskalering. Grundorsaken identifierades korrekt i Grundbulten-protokollet, vilket ledde till en kritisk och lyckad uppgradering (v3.7). Trots de initiala misslyckandena var den slutgiltiga rotorsaksanalysen och processförbättringen av hög kvalitet.",
-      "scorecard": {
-        "efficacy": {
-          "score": 50,
-          "weight": 0.4,
-          "weightedScore": 20
-        },
-        "efficiency": {
-          "score": 10,
-          "weight": 0.3,
-          "weightedScore": 3
-        },
-        "robustness": {
-          "score": 60,
-          "weight": 0.3,
-          "weightedScore": 18
-        },
-        "finalScore": 41
+  "schema_version": "DJTA v1.1",
+  "session_id": "S-2025-08-17T09:33:41Z",
+  "created_at": "2025-08-17T09:33:41Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "S-2025-08-17T09:33:41Z.json",
+    "timestamp_utc": "2025-08-17T09:33:41Z",
+    "summary": "Fixed a critical CI/CD logic error where the auto-commit step would fail if the Einstein index was not rebuilt.",
+    "keywords": [
+      "ci-cd",
+      "fix",
+      "git",
+      "debug"
+    ],
+    "modified_files": [
+      ".github/workflows/ci.yml"
+    ],
+    "error_signatures": [
+      "git-commit-error"
+    ],
+    "success_score": 5,
+    "operator_interventions": 2
+  },
+  "builder_input": {
+    "sessionId": "S-2025-08-17T09:33:41Z",
+    "createdAt": "2025-08-17T09:33:41Z",
+    "approvedNewDynamicProtocols": [],
+    "promoteProtocols": [],
+    "file_metadata_updates": [
+      {
+        "file_path": "docs/ai_protocols/Grundbulten_Protokoll.md",
+        "purpose_and_responsibility": "Uppgraderad till v3.7. Definierar nu en sluten, hash-baserad verifieringskedja (G-1, 1f, 9, 10e) för att matematiskt förhindra filtrunkeringsfel, vilket var en kritisk brist i tidigare versioner.",
+        "usage_context": "Detta är nu den mest kritiska lagen för all filhantering. Dess nya hash-verifieringssteg måste följas utan undantag för att garantera filintegritet."
       },
-      "detailedMetrics": {
-        "missionCompleted": false,
-        "debuggingCycles": 2,
-        "selfCorrections": 3,
-        "externalCorrections": 3,
-        "protocolActivations": {
-          "psv": 7,
-          "helpMeGod": 1,
-          "stalemate": 0
-        },
-        "heuristicsTriggered": [
-          "H-20250809-08",
-          "H-20250809-09"
+      {
+        "file_path": "scripts/modules/ui_template.py",
+        "purpose_and_responsibility": "Innehåller HTML-mallen för AI Context Builder. Har modifierats för att inkludera en dynamisk {version}-platshållare i titeln.",
+        "usage_context": "Används av engrove_audio_tools_creator.py som bas för att bygga index2.html."
+      },
+      {
+        "file_path": "scripts/engrove_audio_tools_creator.py",
+        "purpose_and_responsibility": "Byggskript som genererar AI Context Builder. Har modifierats för att injicera en UI_VERSION i HTML-mallen.",
+        "usage_context": "Körs av CI/CD för att bygga det slutgiltiga UI-verktyget."
+      },
+      {
+        "file_path": "scripts/engrove_audio_tools_creator.md",
+        "purpose_and_responsibility": "Ny, djupgående teknisk dokumentation för byggskriptet och dess ekosystem.",
+        "usage_context": "Används som primär referens för att förstå och vidareutveckla AI Context Builder-verktyget."
+      }
+    ],
+    "importantMilestonesLogged": [
+      {
+        "event_id": "IMR-001",
+        "milestone_type": "PROCESS",
+        "summary": "Grundbulten-protokollet uppgraderades till v3.7 efter systemiskt fel.",
+        "details": "Efter två på varandra följande misslyckanden med att leverera en komplett fil (katastrofal trunkering) aktiverades Help_me_God-protokollet. Grundorsaken identifierades som en brist i Grundbulten-protokollet, som saknade verifiering mot en känd hash. Protokollet uppgraderades med en sluten, hash-baserad verifieringskedja för att matematiskt säkerställa filintegritet vid framtida operationer.",
+        "affected_scope": [
+          "docs/ai_protocols/Grundbulten_Protokoll.md",
+          "AI_Core_Instruction.md"
+        ],
+        "timestamp": "2025-08-17T09:33:41Z",
+        "session_id": "S-2025-08-17T09:33:41Z"
+      }
+    ],
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "S-2025-08-17T09:33:41Z",
+        "date": "2025-08-17T09:33:41Z",
+        "summary": "Uppgradering av `Grundbulten_Protokoll` till v3.7 för att implementera en vattentät, hash-baserad verifieringskedja efter upprepade trunkeringsfel. Det ursprungliga uppdraget pausades.",
+        "actions": [
+          {
+            "title": "Help me God: Grundorsaksanalys och uppgradering av Grundbulten-protokollet",
+            "files": [
+              {
+                "path": "docs/ai_protocols/Grundbulten_Protokoll.md",
+                "changeDescription": "Infört en sluten, hash-baserad verifieringskedja (G-1, 1f, 9, 10e) för att matematiskt förhindra trunkeringsfel och återställt fullständiga bilagor."
+              }
+            ],
+            "result": "Protokollet är nu uppgraderat till v3.7 och anses vara robust. FL-D-cykeln har brutits genom processförbättring."
+          }
+        ],
+        "projectStatus": "`Grundbulten_Protokoll` är nu uppgraderat till v3.7 och anses vara robust. Det ursprungliga uppdraget att modifiera `engrove_audio_tools_creator.py` har pausats och kommer att återupptas i nästa session."
+      },
+      "Chatthistorik": {
+        "sessionId": "S-2025-08-17T09:33:41Z",
+        "interactions": [
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Valde utvecklingsdomänen 'CI/CD & Project Automation'."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Frankensteen",
+              "name": "Frankensteen",
+              "version": "v5.6"
+            },
+            "speaker": "Frankensteen (Frankensteen:Frankensteen@v5.6)",
+            "summary": "Bekräftade domänlåsning och förklarade sig redo för instruktion."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Specificerade uppdraget: ändra titel på index2.html och skapa dokumentation för `engrove_audio_tools_creator.py`."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Frankensteen",
+              "name": "Frankensteen",
+              "version": "v5.6"
+            },
+            "speaker": "Frankensteen (Frankensteen:Frankensteen@v5.6)",
+            "summary": "Presenterade en plan och levererade tre filer, men `engrove_audio_tools_creator.py` var felaktigt trunkerad."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Rapporterade att den levererade filen var ofullständig med 40+ rader."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Frankensteen",
+              "name": "Frankensteen",
+              "version": "v5.6"
+            },
+            "speaker": "Frankensteen (Frankensteen:Frankensteen@v5.6)",
+            "summary": "Bekräftade felet, identifierade grundorsaken i `Grundbulten`-protokollet och aktiverade `Help_me_God`-protokollet."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bekräftade att sessionen var obrukbar och begärde patch-instruktioner för `Grundbulten`, inklusive förslag om hash-verifiering."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Frankensteen",
+              "name": "Frankensteen",
+              "version": "v5.6"
+            },
+            "speaker": "Frankensteen (Frankensteen:Frankensteen@v5.6)",
+            "summary": "Föreslog en detaljerad uppgradering av `Grundbulten` till v3.6 med en sluten, hash-baserad verifieringskedja."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Påtalar att den föreslagna patch-leveransen var ofullständig (saknade bilagor) och bröt mot protokollet den försökte fixa."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Frankensteen",
+              "name": "Frankensteen",
+              "version": "v5.6"
+            },
+            "speaker": "Frankensteen (Frankensteen:Frankensteen@v5.6)",
+            "summary": "Erkände det sista felet och levererade den fullständiga, korrekta versionen av `Grundbulten_Protokoll.md` (v3.7)."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Avbröt sessionen och initierade avslutningsprotokollet med en exakt instruktion för nästa session."
+          }
         ]
       },
-      "improvementSuggestion": {
-        "pattern": "AI levererar trunkerade filer när den agerar på ofullständig kontext (`is_content_full: false`).",
-        "proposedHeuristicId": "H-20250817-01"
-      }
-    },
-    "frankensteen_learning_db": [
-      {
-        "heuristicId": "H-20250817-01",
-        "trigger": {
-          "type": "file_modification",
-          "scope": [
-            "*"
-          ],
-          "keywords": [
-            "modifiera",
-            "uppdatera",
-            "korrigera",
-            "refaktorera"
-          ],
-          "metadata": {
-            "context_integrity": "< 75%"
-          }
+      "ai_protocol_performance": {
+        "sessionId": "S-2025-08-17T09:33:41Z",
+        "date": "2025-08-17T09:33:41Z",
+        "aiQualitativeSummary": "Sessionen präglades av ett allvarligt, repetitivt processfel (filtrunkering) som krävde en Help me God-eskalering. Grundorsaken identifierades korrekt i Grundbulten-protokollet, vilket ledde till en kritisk och lyckad uppgradering (v3.7). Trots de initiala misslyckandena var den slutgiltiga rotorsaksanalysen och processförbättringen av hög kvalitet.",
+        "scorecard": {
+          "efficacy": {
+            "score": 50,
+            "weight": 0.4,
+            "weightedScore": 20
+          },
+          "efficiency": {
+            "score": 10,
+            "weight": 0.3,
+            "weightedScore": 3
+          },
+          "robustness": {
+            "score": 60,
+            "weight": 0.3,
+            "weightedScore": 18
+          },
+          "finalScore": 41
         },
-        "identifiedRisk": {
-          "riskId": "RISK_TRUNCATION_ON_PARTIAL_CONTEXT",
-          "description": "Risken att AI:n genererar en trunkerad fil eftersom dess interna minnesbild av filen är ofullständig (`is_content_full: false`)."
+        "detailedMetrics": {
+          "missionCompleted": false,
+          "debuggingCycles": 2,
+          "selfCorrections": 3,
+          "externalCorrections": 3,
+          "protocolActivations": {
+            "psv": 7,
+            "helpMeGod": 1,
+            "stalemate": 0
+          },
+          "heuristicsTriggered": [
+            "H-20250809-08",
+            "H-20250809-09"
+          ]
         },
-        "mitigation": {
-          "protocolId": "P-GB-3.7-G1",
-          "description": "Tvinga fram en hash-verifiering av filen i minnet mot en känd, korrekt hash från kontexten. Vid mismatch, avbryt och begär fullständig fil."
-        },
-        "metadata": {
-          "originSessionId": "S-2025-08-17T09:33:41Z",
-          "createdAt": "2025-08-17T09:33:41Z",
-          "status": "active"
+        "improvementSuggestion": {
+          "pattern": "AI levererar trunkerade filer när den agerar på ofullständig kontext (`is_content_full: false`).",
+          "proposedHeuristicId": "H-20250817-01"
         }
-      }
-    ]
+      },
+      "frankensteen_learning_db": [
+        {
+          "heuristicId": "H-20250817-01",
+          "trigger": {
+            "type": "file_modification",
+            "scope": [
+              "*"
+            ],
+            "keywords": [
+              "modifiera",
+              "uppdatera",
+              "korrigera",
+              "refaktorera"
+            ],
+            "metadata": {
+              "context_integrity": "< 75%"
+            }
+          },
+          "identifiedRisk": {
+            "riskId": "RISK_TRUNCATION_ON_PARTIAL_CONTEXT",
+            "description": "Risken att AI:n genererar en trunkerad fil eftersom dess interna minnesbild av filen är ofullständig (`is_content_full: false`)."
+          },
+          "mitigation": {
+            "protocolId": "P-GB-3.7-G1",
+            "description": "Tvinga fram en hash-verifiering av filen i minnet mot en känd, korrekt hash från kontexten. Vid mismatch, avbryt och begär fullständig fil."
+          },
+          "metadata": {
+            "originSessionId": "S-2025-08-17T09:33:41Z",
+            "createdAt": "2025-08-17T09:33:41Z",
+            "status": "active"
+          }
+        }
+      ]
+    }
   }
 }

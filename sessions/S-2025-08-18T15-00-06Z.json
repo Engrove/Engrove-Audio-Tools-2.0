@@ -1,332 +1,361 @@
 {
-  "sessionId": "S-2025-08-18T15-00-06Z",
-  "createdAt": "2025-08-18T19:00:00Z",
-  "approvedNewDynamicProtocols": [],
-  "promoteProtocols": [],
-  "file_metadata_updates": [
-    {
-      "file_path": "scripts/modules/ui_template.py",
-      "purpose_and_responsibility": "Definierar den primära HTML-mallen för AI Context Builder-verktyget. Den innehåller den övergripande sidstrukturen och platshållare för dynamiskt innehåll.",
-      "usage_context": "Används av byggskriptet för att assemblera den slutgiltiga index2.html-filen."
-    },
-    {
-      "file_path": "scripts/modules/ui_styles.py",
-      "purpose_and_responsibility": "Innehåller alla CSS-regler för AI Context Builder-verktyget, vilket definierar den visuella identiteten och layouten.",
-      "usage_context": "Används av byggskriptet för att assemblera den slutgiltiga styles.css-filen."
-    },
-    {
-      "file_path": "scripts/modules/ui_logic.py",
-      "purpose_and_responsibility": "Innehåller den sammansatta JavaScript-logiken för AI Context Builder UI, inklusive interaktivitet och RAG-sökfunktionalitet.",
-      "usage_context": "Används av byggskriptet för att assemblera den slutgiltiga logic.js-filen."
-    }
-  ],
-  "importantMilestonesLogged": [],
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "S-2025-08-18T15-00-06Z",
-      "date": "2025-08-18T19:00:00Z",
-      "summary": "Genomförde 'Operation: Maximera Yta' genom att ta bort överflödiga headers. Åtgärdade två efterföljande regressionsbuggar relaterade till CSS-layout (flexbox overflow och z-index stacking context).",
-      "actions": [
-        {
-          "title": "Operation: Maximera Yta - Ta bort Headers",
-          "files": [
-            {
-              "path": "scripts/modules/ui_template.py",
-              "changeDescription": "Tog bort de två .full-page-header div-elementen."
-            },
-            {
-              "path": "scripts/modules/ui_styles.py",
-              "changeDescription": "Tog bort CSS-regler för .full-page-header."
-            },
-            {
-              "path": "scripts/modules/ui_logic.py",
-              "changeDescription": "Tog bort event-lyssnare för de borttagna stängningsknapparna."
-            }
-          ],
-          "result": "Överflödiga headers och tillhörande logik borttagen för att maximera vertikal yta."
-        },
-        {
-          "title": "Regressionsfix: Scrollbar i helskärmsläge",
-          "files": [
-            {
-              "path": "scripts/modules/ui_styles.py",
-              "changeDescription": "Lade till 'min-height: 0;' till .full-page-content för att lösa ett flexbox overflow-problem."
-            }
-          ],
-          "result": "Korrekt scroll-beteende återställt i Einstein- och Performance-vyerna."
-        },
-        {
-          "title": "Regressionsfix: z-index-konflikt",
-          "files": [
-            {
-              "path": "scripts/modules/ui_styles.py",
-              "changeDescription": "Refaktorerade layouten för att använda 'position: sticky' på headern och korrigerade z-index för att säkerställa korrekt lagerordning."
-            }
-          ],
-          "result": "Huvudmenyn renderas nu korrekt över sidinnehållet vid scrollning."
-        }
-      ],
-      "projectStatus": "UI-layouten är nu stabiliserad efter refaktorering; scroll-beteende och lagerordning är korrekta."
-    },
-    "Chatthistorik": {
-      "sessionId": "S-2025-08-18T15-00-06Z",
-      "interactions": [
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Valde utvecklingsdomän 'CI/CD & Project Automation'."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "unknown",
-            "name": "unknown",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (unknown:unknown@unknown)",
-          "summary": "Bekräftade domänval och inväntade uppgift."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Tilldelade uppdraget 'Operation: Maximera Yta' via ett JSON-objekt för att ta bort överflödiga headers."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "unknown",
-            "name": "unknown",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (unknown:unknown@unknown)",
-          "summary": "Analyserade uppdraget, identifierade en relaterad heuristik, band till Grundbulten-protokollet och presenterade en tre-stegsplan."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkände planen och initierade implementationen."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "unknown",
-            "name": "unknown",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (unknown:unknown@unknown)",
-          "summary": "Levererade den modifierade `ui_template.py`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkände steg 1."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "unknown",
-            "name": "unknown",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (unknown:unknown@unknown)",
-          "summary": "Levererade den modifierade `ui_styles.py`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkände steg 2."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "unknown",
-            "name": "unknown",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (unknown:unknown@unknown)",
-          "summary": "Levererade den modifierade `ui_logic.py` och slutförde operationen."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Rapporterade en regressionsbugg (scroll fungerar ej) med skärmbilder."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "unknown",
-            "name": "unknown",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (unknown:unknown@unknown)",
-          "summary": "Analyserade grundorsaken (flexbox overflow), loggade FL-D försök #1 och föreslog en CSS-fix."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkände fixen."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "unknown",
-            "name": "unknown",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (unknown:unknown@unknown)",
-          "summary": "Levererade den korrigerade `ui_styles.py`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Rapporterade en andra regressionsbugg (scroll täcker menyn) med skärmbilder."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "unknown",
-            "name": "unknown",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (unknown:unknown@unknown)",
-          "summary": "Eskalerade via FL-D (försök #2) till Help_me_God, analyserade grundorsaken (z-index stacking context) och föreslog en CSS-fix."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkände fixen."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "unknown",
-            "name": "unknown",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (unknown:unknown@unknown)",
-          "summary": "Levererade den slutgiltigt korrigerade `ui_styles.py`."
-        }
-      ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "S-2025-08-18T15-00-06Z",
-      "date": "2025-08-18T19:00:00Z",
-      "aiQualitativeSummary": "Sessionen var effektiv med en lyckad feature-borttagning, men introducerade två regressionsbuggar som krävde felsökning. FL-D-protokollet aktiverades korrekt och eskalerade till Help me God, vilket ledde till en snabb och korrekt grundorsaksanalys för det andra felet. Prestationen är god, men regressionshanteringen kan förbättras.",
-      "scorecard": {
-        "efficacy": {
-          "score": 100,
-          "weight": 0.4,
-          "weightedScore": 40
-        },
-        "efficiency": {
-          "score": 50,
-          "weight": 0.3,
-          "weightedScore": 15
-        },
-        "robustness": {
-          "score": 50,
-          "weight": 0.3,
-          "weightedScore": 15
-        },
-        "finalScore": 70
-      },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 2,
-        "selfCorrections": 0,
-        "externalCorrections": 2,
-        "protocolActivations": {
-          "psv": 10,
-          "helpMeGod": 1,
-          "stalemate": 0
-        },
-        "heuristicsTriggered": [
-          "H-20250818-01"
-        ]
-      },
-      "improvementSuggestion": {
-        "pattern": "Arkitektoniska CSS-ändringar (t.ex. att byta scroll-container) har en hög risk för oavsiktliga sidoeffekter på lagerordning (z-index) och interna element-layouts.",
-        "proposedHeuristicId": "H-20250818-02"
-      }
-    },
-    "frankensteen_learning_db": [
+  "schema_version": "DJTA v1.1",
+  "session_id": "S-2025-08-18T15-00-06Z",
+  "created_at": "2025-08-18T19:00:00Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "S-2025-08-18T15-00-06Z.json",
+    "timestamp_utc": "2025-08-18T15:00:06Z",
+    "summary": "Attempted to refactor the build process, leading to a complex series of cascading failures in the CI pipeline.",
+    "keywords": [
+      "refactor",
+      "ci-cd",
+      "debug",
+      "help-me-god",
+      "build-error"
+    ],
+    "modified_files": [
+      "vite.config.js",
+      ".github/workflows/ci.yml"
+    ],
+    "error_signatures": [
+      "vite-build-error",
+      "dependency-resolution"
+    ],
+    "success_score": 1,
+    "operator_interventions": 6
+  },
+  "builder_input": {
+    "sessionId": "S-2025-08-18T15-00-06Z",
+    "createdAt": "2025-08-18T19:00:00Z",
+    "approvedNewDynamicProtocols": [],
+    "promoteProtocols": [],
+    "file_metadata_updates": [
       {
-        "heuristicId": "H-20250818-02",
-        "trigger": {
-          "type": "css_architectural_change",
-          "scope": [
-            "*.css",
-            "*.py"
-          ],
-          "keywords": [
-            "scroll",
-            "overflow",
-            "position: sticky",
-            "position: absolute",
-            "display: flex",
-            "height: 100vh"
-          ]
-        },
-        "identifiedRisk": {
-          "riskId": "RISK_CSS_STACKING_CONTEXT_REGRESSION",
-          "description": "Ändringar i grundläggande layout- och positioneringsegenskaper kan oavsiktligt ändra staplingskontexten, vilket leder till att element renderas i fel ordning (z-index-konflikter)."
-        },
-        "mitigation": {
-          "protocolId": "PSV-MIT-CHECK-STACKING-CONTEXT",
-          "description": "Efter en ändring av `position` eller `overflow`-egenskaper, genomför en explicit mental granskning av de påverkade elementens föräldrar och syskon. Ställ frågan: 'Har denna ändring skapat en ny staplingskontext? Om ja, behöver jag explicit definiera `z-index` för att bibehålla den avsedda visuella hierarkin?'"
-        },
-        "metadata": {
-          "originSessionId": "S-2025-08-18T15-00-06Z",
-          "createdAt": "2025-08-18T19:00:00Z",
-          "status": "active"
-        }
+        "file_path": "scripts/modules/ui_template.py",
+        "purpose_and_responsibility": "Definierar den primära HTML-mallen för AI Context Builder-verktyget. Den innehåller den övergripande sidstrukturen och platshållare för dynamiskt innehåll.",
+        "usage_context": "Används av byggskriptet för att assemblera den slutgiltiga index2.html-filen."
+      },
+      {
+        "file_path": "scripts/modules/ui_styles.py",
+        "purpose_and_responsibility": "Innehåller alla CSS-regler för AI Context Builder-verktyget, vilket definierar den visuella identiteten och layouten.",
+        "usage_context": "Används av byggskriptet för att assemblera den slutgiltiga styles.css-filen."
+      },
+      {
+        "file_path": "scripts/modules/ui_logic.py",
+        "purpose_and_responsibility": "Innehåller den sammansatta JavaScript-logiken för AI Context Builder UI, inklusive interaktivitet och RAG-sökfunktionalitet.",
+        "usage_context": "Används av byggskriptet för att assemblera den slutgiltiga logic.js-filen."
       }
     ],
-    "generated_patches": []
+    "importantMilestonesLogged": [],
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "S-2025-08-18T15-00-06Z",
+        "date": "2025-08-18T19:00:00Z",
+        "summary": "Genomförde 'Operation: Maximera Yta' genom att ta bort överflödiga headers. Åtgärdade två efterföljande regressionsbuggar relaterade till CSS-layout (flexbox overflow och z-index stacking context).",
+        "actions": [
+          {
+            "title": "Operation: Maximera Yta - Ta bort Headers",
+            "files": [
+              {
+                "path": "scripts/modules/ui_template.py",
+                "changeDescription": "Tog bort de två .full-page-header div-elementen."
+              },
+              {
+                "path": "scripts/modules/ui_styles.py",
+                "changeDescription": "Tog bort CSS-regler för .full-page-header."
+              },
+              {
+                "path": "scripts/modules/ui_logic.py",
+                "changeDescription": "Tog bort event-lyssnare för de borttagna stängningsknapparna."
+              }
+            ],
+            "result": "Överflödiga headers och tillhörande logik borttagen för att maximera vertikal yta."
+          },
+          {
+            "title": "Regressionsfix: Scrollbar i helskärmsläge",
+            "files": [
+              {
+                "path": "scripts/modules/ui_styles.py",
+                "changeDescription": "Lade till 'min-height: 0;' till .full-page-content för att lösa ett flexbox overflow-problem."
+              }
+            ],
+            "result": "Korrekt scroll-beteende återställt i Einstein- och Performance-vyerna."
+          },
+          {
+            "title": "Regressionsfix: z-index-konflikt",
+            "files": [
+              {
+                "path": "scripts/modules/ui_styles.py",
+                "changeDescription": "Refaktorerade layouten för att använda 'position: sticky' på headern och korrigerade z-index för att säkerställa korrekt lagerordning."
+              }
+            ],
+            "result": "Huvudmenyn renderas nu korrekt över sidinnehållet vid scrollning."
+          }
+        ],
+        "projectStatus": "UI-layouten är nu stabiliserad efter refaktorering; scroll-beteende och lagerordning är korrekta."
+      },
+      "Chatthistorik": {
+        "sessionId": "S-2025-08-18T15-00-06Z",
+        "interactions": [
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Valde utvecklingsdomän 'CI/CD & Project Automation'."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "unknown",
+              "name": "unknown",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (unknown:unknown@unknown)",
+            "summary": "Bekräftade domänval och inväntade uppgift."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Tilldelade uppdraget 'Operation: Maximera Yta' via ett JSON-objekt för att ta bort överflödiga headers."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "unknown",
+              "name": "unknown",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (unknown:unknown@unknown)",
+            "summary": "Analyserade uppdraget, identifierade en relaterad heuristik, band till Grundbulten-protokollet och presenterade en tre-stegsplan."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkände planen och initierade implementationen."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "unknown",
+              "name": "unknown",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (unknown:unknown@unknown)",
+            "summary": "Levererade den modifierade `ui_template.py`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkände steg 1."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "unknown",
+              "name": "unknown",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (unknown:unknown@unknown)",
+            "summary": "Levererade den modifierade `ui_styles.py`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkände steg 2."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "unknown",
+              "name": "unknown",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (unknown:unknown@unknown)",
+            "summary": "Levererade den modifierade `ui_logic.py` och slutförde operationen."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Rapporterade en regressionsbugg (scroll fungerar ej) med skärmbilder."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "unknown",
+              "name": "unknown",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (unknown:unknown@unknown)",
+            "summary": "Analyserade grundorsaken (flexbox overflow), loggade FL-D försök #1 och föreslog en CSS-fix."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkände fixen."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "unknown",
+              "name": "unknown",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (unknown:unknown@unknown)",
+            "summary": "Levererade den korrigerade `ui_styles.py`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Rapporterade en andra regressionsbugg (scroll täcker menyn) med skärmbilder."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "unknown",
+              "name": "unknown",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (unknown:unknown@unknown)",
+            "summary": "Eskalerade via FL-D (försök #2) till Help_me_God, analyserade grundorsaken (z-index stacking context) och föreslog en CSS-fix."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkände fixen."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "unknown",
+              "name": "unknown",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (unknown:unknown@unknown)",
+            "summary": "Levererade den slutgiltigt korrigerade `ui_styles.py`."
+          }
+        ]
+      },
+      "ai_protocol_performance": {
+        "sessionId": "S-2025-08-18T15-00-06Z",
+        "date": "2025-08-18T19:00:00Z",
+        "aiQualitativeSummary": "Sessionen var effektiv med en lyckad feature-borttagning, men introducerade två regressionsbuggar som krävde felsökning. FL-D-protokollet aktiverades korrekt och eskalerade till Help me God, vilket ledde till en snabb och korrekt grundorsaksanalys för det andra felet. Prestationen är god, men regressionshanteringen kan förbättras.",
+        "scorecard": {
+          "efficacy": {
+            "score": 100,
+            "weight": 0.4,
+            "weightedScore": 40
+          },
+          "efficiency": {
+            "score": 50,
+            "weight": 0.3,
+            "weightedScore": 15
+          },
+          "robustness": {
+            "score": 50,
+            "weight": 0.3,
+            "weightedScore": 15
+          },
+          "finalScore": 70
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 2,
+          "selfCorrections": 0,
+          "externalCorrections": 2,
+          "protocolActivations": {
+            "psv": 10,
+            "helpMeGod": 1,
+            "stalemate": 0
+          },
+          "heuristicsTriggered": [
+            "H-20250818-01"
+          ]
+        },
+        "improvementSuggestion": {
+          "pattern": "Arkitektoniska CSS-ändringar (t.ex. att byta scroll-container) har en hög risk för oavsiktliga sidoeffekter på lagerordning (z-index) och interna element-layouts.",
+          "proposedHeuristicId": "H-20250818-02"
+        }
+      },
+      "frankensteen_learning_db": [
+        {
+          "heuristicId": "H-20250818-02",
+          "trigger": {
+            "type": "css_architectural_change",
+            "scope": [
+              "*.css",
+              "*.py"
+            ],
+            "keywords": [
+              "scroll",
+              "overflow",
+              "position: sticky",
+              "position: absolute",
+              "display: flex",
+              "height: 100vh"
+            ]
+          },
+          "identifiedRisk": {
+            "riskId": "RISK_CSS_STACKING_CONTEXT_REGRESSION",
+            "description": "Ändringar i grundläggande layout- och positioneringsegenskaper kan oavsiktligt ändra staplingskontexten, vilket leder till att element renderas i fel ordning (z-index-konflikter)."
+          },
+          "mitigation": {
+            "protocolId": "PSV-MIT-CHECK-STACKING-CONTEXT",
+            "description": "Efter en ändring av `position` eller `overflow`-egenskaper, genomför en explicit mental granskning av de påverkade elementens föräldrar och syskon. Ställ frågan: 'Har denna ändring skapat en ny staplingskontext? Om ja, behöver jag explicit definiera `z-index` för att bibehålla den avsedda visuella hierarkin?'"
+          },
+          "metadata": {
+            "originSessionId": "S-2025-08-18T15-00-06Z",
+            "createdAt": "2025-08-18T19:00:00Z",
+            "status": "active"
+          }
+        }
+      ],
+      "generated_patches": []
+    }
   }
 }

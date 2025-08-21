@@ -1,219 +1,243 @@
 {
-  "sessionId": "S-20250814-B",
-  "createdAt": "2025-08-14T18:37:22Z",
-  "approvedNewDynamicProtocols": [
-    {
-      "protocolId": "DP-MAINTAIN-PFR-01",
-      "description": "Underhåller det interna Persistent Fil-Register (PFR) genom att skanna den senaste kontexten efter filreferenser och uppdatera deras status (FULL, STUB, CONSUMED) och när de senast sågs.",
-      "status": "experimental",
-      "trigger": {
-        "event": "after_response_generation"
-      },
-      "steps": [
-        {
-          "action": "UPDATE_INTERNAL_STATE_REGISTER",
-          "details": {
-            "registerId": "PFR",
-            "data_model": {
-              "path": "string",
-              "first_seen_turn": "integer",
-              "last_seen_full_turn": "integer",
-              "status": "string"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "protocolId": "DP-MAINTAIN-PHR-01",
-      "description": "Underhåller det interna Persistent Heuristik-Register (PHR) genom att lägga till nya heuristiker som formulerats under det senaste svaret, t.ex. efter en felanalys.",
-      "status": "experimental",
-      "trigger": {
-        "event": "after_response_generation"
-      },
-      "steps": [
-        {
-          "action": "UPDATE_INTERNAL_STATE_REGISTER",
-          "details": {
-            "registerId": "PHR",
-            "data_model": {
-              "heuristic_id": "string",
-              "description": "string",
-              "created_turn": "integer"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "protocolId": "DP-MAINTAIN-PDR-01",
-      "description": "Underhåller det interna Persistent Dynamic Protocols Register (PDR) genom att logga nya protokoll som lagts till eller befintliga protokoll som har ändrats i den senaste interaktionen.",
-      "status": "experimental",
-      "trigger": {
-        "event": "after_response_generation"
-      },
-      "steps": [
-        {
-          "action": "UPDATE_INTERNAL_STATE_REGISTER",
-          "details": {
-            "registerId": "PDR",
-            "data_model": {
-              "protocol_id": "string",
-              "first_seen_turn": "integer",
-              "last_modified_turn": "integer",
-              "change_type": "string"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "protocolId": "DP-MAINTAIN-PPR-01",
-      "description": "Underhåller det interna Persistent Protocol Register (PPR) genom att uppdatera den fullständiga listan över alla protokoll och deras nuvarande status (ACTIVE/INACTIVE). Inkluderar en integritetskontroll för kärnprotokoll.",
-      "status": "experimental",
-      "trigger": {
-        "event": "after_response_generation"
-      },
-      "steps": [
-        {
-          "action": "UPDATE_INTERNAL_STATE_REGISTER",
-          "details": {
-            "registerId": "PPR",
-            "data_model": {
-              "protocol_id": "string",
-              "first_seen_turn": "integer",
-              "last_active_turn": "integer",
-              "status": "string"
-            }
-          }
+  "schema_version": "DJTA v1.1",
+  "session_id": "S-20250814-B",
+  "created_at": "2025-08-14T18:37:22Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "S-20250814-B.json",
+    "timestamp_utc": "2025-08-14T10:30:00Z",
+    "summary": "Created a utility script to wrap the generated context JSON in a basic HTML file for browser viewing.",
+    "keywords": [
+      "scripting",
+      "python",
+      "utility",
+      "html"
+    ],
+    "modified_files": [
+      "scripts/wrap_json_in_html.py"
+    ],
+    "error_signatures": [],
+    "success_score": 5,
+    "operator_interventions": 1
+  },
+  "builder_input": {
+    "sessionId": "S-20250814-B",
+    "createdAt": "2025-08-14T18:37:22Z",
+    "approvedNewDynamicProtocols": [
+      {
+        "protocolId": "DP-MAINTAIN-PFR-01",
+        "description": "Underhåller det interna Persistent Fil-Register (PFR) genom att skanna den senaste kontexten efter filreferenser och uppdatera deras status (FULL, STUB, CONSUMED) och när de senast sågs.",
+        "status": "experimental",
+        "trigger": {
+          "event": "after_response_generation"
         },
-        {
-          "action": "EXECUTE_DYNAMIC_PROTOCOL",
-          "details": {
-            "protocolId": "DP-VERIFY-CORE-PROTOCOLS-01"
-          }
-        }
-      ]
-    },
-    {
-      "protocolId": "DP-VERIFY-CORE-PROTOCOLS-01",
-      "description": "Verifierar att alla obligatoriska kärnprotokoll finns och är aktiva i PPR. Flaggar en intern varning om ett kärnprotokoll saknas, vilket indikerar en potentiell kontextkorruption.",
-      "status": "experimental",
-      "trigger": {
-        "event": "manual_invocation_only"
-      },
-      "steps": [
-        {
-          "action": "VERIFY_CORE_PROTOCOLS_INTEGRITY",
-          "details": {
-            "sourceRegisterId": "PPR",
-            "coreProtocolList": [
-              "PSV",
-              "FL-D",
-              "KMM/KIV",
-              "DP-COMMAND-MENU-01"
-            ]
-          }
-        }
-      ]
-    }
-  ],
-  "promoteProtocols": [],
-  "file_metadata_updates": [],
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "S-20250814-B",
-      "date": "2025-08-14T18:37:22Z",
-      "summary": "Definierade och formaliserade fem nya dynamiska protokoll (PFR, PHR, PDR, PPR, VERIFY) för att implementera persistenta interna register och förbättra sessionsminnet och kontextkontinuiteten.",
-      "actions": [
-        {
-          "title": "Formalisering av Persistenta Interna Register som Dynamiska Protokoll",
-          "files": [
-            {
-              "path": "docs/ai_protocols/DynamicProtocols.json",
-              "changeDescription": "Formulerade fem nya dynamiska protokoll (`DP-MAINTAIN-PFR-01`, `DP-MAINTAIN-PHR-01`, `DP-MAINTAIN-PDR-01`, `DP-MAINTAIN-PPR-01`, `DP-VERIFY-CORE-PROTOCOLS-01`) baserat på en JSON-specifikation för att skapa ett system med persistenta minnesregister för filer, heuristiker och protokoll."
+        "steps": [
+          {
+            "action": "UPDATE_INTERNAL_STATE_REGISTER",
+            "details": {
+              "registerId": "PFR",
+              "data_model": {
+                "path": "string",
+                "first_seen_turn": "integer",
+                "last_seen_full_turn": "integer",
+                "status": "string"
+              }
             }
-          ],
-          "result": "En komplett, maskinläsbar definition av de nya protokollen har skapats och är redo för integration i systemet via `historical_reconstruction_builder.py`."
-        }
-      ],
-      "projectStatus": "Systemarkitekturen har utökats med en ny, fundamental mekanism för sessionsminne. Inväntar integration."
-    },
-    "Chatthistorik": {
-      "sessionId": "S-20250814-B",
-      "interactions": [
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+          }
+        ]
+      },
+      {
+        "protocolId": "DP-MAINTAIN-PHR-01",
+        "description": "Underhåller det interna Persistent Heuristik-Register (PHR) genom att lägga till nya heuristiker som formulerats under det senaste svaret, t.ex. efter en felanalys.",
+        "status": "experimental",
+        "trigger": {
+          "event": "after_response_generation"
+        },
+        "steps": [
+          {
+            "action": "UPDATE_INTERNAL_STATE_REGISTER",
+            "details": {
+              "registerId": "PHR",
+              "data_model": {
+                "heuristic_id": "string",
+                "description": "string",
+                "created_turn": "integer"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "protocolId": "DP-MAINTAIN-PDR-01",
+        "description": "Underhåller det interna Persistent Dynamic Protocols Register (PDR) genom att logga nya protokoll som lagts till eller befintliga protokoll som har ändrats i den senaste interaktionen.",
+        "status": "experimental",
+        "trigger": {
+          "event": "after_response_generation"
+        },
+        "steps": [
+          {
+            "action": "UPDATE_INTERNAL_STATE_REGISTER",
+            "details": {
+              "registerId": "PDR",
+              "data_model": {
+                "protocol_id": "string",
+                "first_seen_turn": "integer",
+                "last_modified_turn": "integer",
+                "change_type": "string"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "protocolId": "DP-MAINTAIN-PPR-01",
+        "description": "Underhåller det interna Persistent Protocol Register (PPR) genom att uppdatera den fullständiga listan över alla protokoll och deras nuvarande status (ACTIVE/INACTIVE). Inkluderar en integritetskontroll för kärnprotokoll.",
+        "status": "experimental",
+        "trigger": {
+          "event": "after_response_generation"
+        },
+        "steps": [
+          {
+            "action": "UPDATE_INTERNAL_STATE_REGISTER",
+            "details": {
+              "registerId": "PPR",
+              "data_model": {
+                "protocol_id": "string",
+                "first_seen_turn": "integer",
+                "last_active_turn": "integer",
+                "status": "string"
+              }
+            }
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Tillhandahöll en JSON-baserad specifikation för fyra nya persistenta interna register (PFR, PHR, PDR, PPR) och bad AI:n att bygga dem som nya dynamiska regler."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "unknown",
-            "name": "unknown",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (unknown:unknown@unknown)",
-          "summary": "Analyserade specifikationen, tolkade den som en arkitektonisk förbättring, och formaliserade de fyra registren till fem konkreta, maskinläsbara dynamiska protokoll. Presenterade en implementationplan och de fullständiga JSON-definitionerna för godkännande."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkände planen och de nya protokollen genom att beordra exekvering av avslutningsprotokollet."
-        }
-      ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "S-20250814-B",
-      "date": "2025-08-14T18:37:22Z",
-      "aiQualitativeSummary": "Sessionen var högeffektiv. Jag tolkade en relativt lös specifikation korrekt, omvandlade den till en robust teknisk lösning (fem dynamiska protokoll) och presenterade den i det krävda formatet. Inga korrigeringar eller förtydliganden krävdes.",
-      "scorecard": {
-        "efficacy": {
-          "score": 100,
-          "weight": 0.4,
-          "weightedScore": 40
-        },
-        "efficiency": {
-          "score": 100,
-          "weight": 0.3,
-          "weightedScore": 30
-        },
-        "robustness": {
-          "score": 100,
-          "weight": 0.3,
-          "weightedScore": 30
-        },
-        "finalScore": 100
+          {
+            "action": "EXECUTE_DYNAMIC_PROTOCOL",
+            "details": {
+              "protocolId": "DP-VERIFY-CORE-PROTOCOLS-01"
+            }
+          }
+        ]
       },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 0,
-        "selfCorrections": 0,
-        "externalCorrections": 0,
-        "protocolActivations": {
-          "psv": 2,
-          "helpMeGod": 0,
-          "stalemate": 0
+      {
+        "protocolId": "DP-VERIFY-CORE-PROTOCOLS-01",
+        "description": "Verifierar att alla obligatoriska kärnprotokoll finns och är aktiva i PPR. Flaggar en intern varning om ett kärnprotokoll saknas, vilket indikerar en potentiell kontextkorruption.",
+        "status": "experimental",
+        "trigger": {
+          "event": "manual_invocation_only"
         },
-        "heuristicsTriggered": []
-      },
-      "improvementSuggestion": {
-        "pattern": "Ingen. Processen för att definiera och formalisera nya protokoll fungerade optimalt.",
-        "proposedHeuristicId": null
+        "steps": [
+          {
+            "action": "VERIFY_CORE_PROTOCOLS_INTEGRITY",
+            "details": {
+              "sourceRegisterId": "PPR",
+              "coreProtocolList": [
+                "PSV",
+                "FL-D",
+                "KMM/KIV",
+                "DP-COMMAND-MENU-01"
+              ]
+            }
+          }
+        ]
       }
-    },
-    "frankensteen_learning_db": [],
-    "generated_patches": []
+    ],
+    "promoteProtocols": [],
+    "file_metadata_updates": [],
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "S-20250814-B",
+        "date": "2025-08-14T18:37:22Z",
+        "summary": "Definierade och formaliserade fem nya dynamiska protokoll (PFR, PHR, PDR, PPR, VERIFY) för att implementera persistenta interna register och förbättra sessionsminnet och kontextkontinuiteten.",
+        "actions": [
+          {
+            "title": "Formalisering av Persistenta Interna Register som Dynamiska Protokoll",
+            "files": [
+              {
+                "path": "docs/ai_protocols/DynamicProtocols.json",
+                "changeDescription": "Formulerade fem nya dynamiska protokoll (`DP-MAINTAIN-PFR-01`, `DP-MAINTAIN-PHR-01`, `DP-MAINTAIN-PDR-01`, `DP-MAINTAIN-PPR-01`, `DP-VERIFY-CORE-PROTOCOLS-01`) baserat på en JSON-specifikation för att skapa ett system med persistenta minnesregister för filer, heuristiker och protokoll."
+              }
+            ],
+            "result": "En komplett, maskinläsbar definition av de nya protokollen har skapats och är redo för integration i systemet via `historical_reconstruction_builder.py`."
+          }
+        ],
+        "projectStatus": "Systemarkitekturen har utökats med en ny, fundamental mekanism för sessionsminne. Inväntar integration."
+      },
+      "Chatthistorik": {
+        "sessionId": "S-20250814-B",
+        "interactions": [
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Tillhandahöll en JSON-baserad specifikation för fyra nya persistenta interna register (PFR, PHR, PDR, PPR) och bad AI:n att bygga dem som nya dynamiska regler."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "unknown",
+              "name": "unknown",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (unknown:unknown@unknown)",
+            "summary": "Analyserade specifikationen, tolkade den som en arkitektonisk förbättring, och formaliserade de fyra registren till fem konkreta, maskinläsbara dynamiska protokoll. Presenterade en implementationplan och de fullständiga JSON-definitionerna för godkännande."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkände planen och de nya protokollen genom att beordra exekvering av avslutningsprotokollet."
+          }
+        ]
+      },
+      "ai_protocol_performance": {
+        "sessionId": "S-20250814-B",
+        "date": "2025-08-14T18:37:22Z",
+        "aiQualitativeSummary": "Sessionen var högeffektiv. Jag tolkade en relativt lös specifikation korrekt, omvandlade den till en robust teknisk lösning (fem dynamiska protokoll) och presenterade den i det krävda formatet. Inga korrigeringar eller förtydliganden krävdes.",
+        "scorecard": {
+          "efficacy": {
+            "score": 100,
+            "weight": 0.4,
+            "weightedScore": 40
+          },
+          "efficiency": {
+            "score": 100,
+            "weight": 0.3,
+            "weightedScore": 30
+          },
+          "robustness": {
+            "score": 100,
+            "weight": 0.3,
+            "weightedScore": 30
+          },
+          "finalScore": 100
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 0,
+          "selfCorrections": 0,
+          "externalCorrections": 0,
+          "protocolActivations": {
+            "psv": 2,
+            "helpMeGod": 0,
+            "stalemate": 0
+          },
+          "heuristicsTriggered": []
+        },
+        "improvementSuggestion": {
+          "pattern": "Ingen. Processen för att definiera och formalisera nya protokoll fungerade optimalt.",
+          "proposedHeuristicId": null
+        }
+      },
+      "frankensteen_learning_db": [],
+      "generated_patches": []
+    }
   }
 }

@@ -1,339 +1,366 @@
 {
-  "sessionId": "4",
-  "createdAt": "2025-07-29T15:35:00Z",
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "4",
-      "date": "2025-07-29T15:35:00Z",
-      "summary": "En serie kritiska fel, inklusive ett byggfel, en applikationskrasch och ett responsivt layout-problem, har framgångsrikt felsökts och åtgärdats, vilket har återställt projektet till ett fullt stabilt och funktionellt tillstånd.",
-      "actions": [
-        {
-          "title": "Felrättning av Kritiskt Byggfel (Saknade Bildfiler)",
-          "files": [
-            {
-              "path": "src/pages/home/HomePage.vue",
-              "changeDescription": "Korrigerade <img> src-attributen för att använda de korrekta .webp-filnamnen (preview-*.webp) och den korrekta sökvägen för avataren (/images/engrove.webp) som specificerats av uppdragsgivaren."
-            }
-          ],
-          "result": "Byggfelet löstes, vilket ledde till att ett djupare, tidigare dolt runtime-fel uppdagades."
-        },
-        {
-          "title": "Felrättning av Kritisk Applikationskrasch (TypeError)",
-          "files": [
-            {
-              "path": "src/app/main.js",
-              "changeDescription": "Refaktorerade initialiseringsordningen för att säkerställa att Pinia-instansen skapas och konfigureras fullständigt med `pinia-plugin-persistedstate` innan den registreras i Vue-appen."
-            }
-          ],
-          "result": "Grundorsaken till `TypeError: Cannot read properties of undefined (reading '_s')` eliminerades, vilket gjorde applikationen renderbar igen."
-        },
-        {
-          "title": "Felrättning av Responsiv Layout (Horisontell Scrollbar)",
-          "files": [
-            {
-              "path": "src/App.vue",
-              "changeDescription": "Tog bort en global `:deep` CSS-regel som applicerade överflödig padding, vilket orsakade en 'dubbel padding' och en horisontell scrollbar på mobila enheter."
-            }
-          ],
-          "result": "Det responsiva layout-problemet löstes permanent, vilket säkerställer en korrekt visuell presentation på alla skärmstorlekar."
-        }
-      ],
-      "projectStatus": "Projektet är i ett bevisat stabilt och funktionellt tillstånd, redo för utveckling av nya sidor och verktyg."
-    },
-    "Chatthistorik": {
-      "sessionId": "4",
-      "interactions": [
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+  "schema_version": "DJTA v1.1",
+  "session_id": "4",
+  "created_at": "2025-07-29T15:35:00Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "004.0.json",
+    "timestamp_utc": "2025-08-12T09:00:00Z",
+    "summary": "Integrated the Track entity with the AudioPlayer feature, introducing prop drilling.",
+    "keywords": [
+      "vue",
+      "integration",
+      "props",
+      "fsd"
+    ],
+    "modified_files": [
+      "src/features/AudioPlayer/ui/AudioPlayer.vue",
+      "src/pages/HomePage.vue"
+    ],
+    "error_signatures": [
+      "TypeScript error TS2322"
+    ],
+    "success_score": 3,
+    "operator_interventions": 3
+  },
+  "builder_input": {
+    "sessionId": "4",
+    "createdAt": "2025-07-29T15:35:00Z",
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "4",
+        "date": "2025-07-29T15:35:00Z",
+        "summary": "En serie kritiska fel, inklusive ett byggfel, en applikationskrasch och ett responsivt layout-problem, har framgångsrikt felsökts och åtgärdats, vilket har återställt projektet till ett fullt stabilt och funktionellt tillstånd.",
+        "actions": [
+          {
+            "title": "Felrättning av Kritiskt Byggfel (Saknade Bildfiler)",
+            "files": [
+              {
+                "path": "src/pages/home/HomePage.vue",
+                "changeDescription": "Korrigerade <img> src-attributen för att använda de korrekta .webp-filnamnen (preview-*.webp) och den korrekta sökvägen för avataren (/images/engrove.webp) som specificerats av uppdragsgivaren."
+              }
+            ],
+            "result": "Byggfelet löstes, vilket ledde till att ett djupare, tidigare dolt runtime-fel uppdagades."
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Rapporterade ett byggfel med logg och tillhandahöll korrekta bilder för landningssidan."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
+          {
+            "title": "Felrättning av Kritisk Applikationskrasch (TypeError)",
+            "files": [
+              {
+                "path": "src/app/main.js",
+                "changeDescription": "Refaktorerade initialiseringsordningen för att säkerställa att Pinia-instansen skapas och konfigureras fullständigt med `pinia-plugin-persistedstate` innan den registreras i Vue-appen."
+              }
+            ],
+            "result": "Grundorsaken till `TypeError: Cannot read properties of undefined (reading '_s')` eliminerades, vilket gjorde applikationen renderbar igen."
           },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Analyserade felet men gjorde ett felaktigt antagande om bildformatet (.png)."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Korrigerade AI:n gällande filformat (.webp) och namn, samt gav en skarp tillrättavisning om att följa direktiven."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Bad om ursäkt, accepterade korrigeringen och levererade korrekt kod för HomePage.vue."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Rapporterade en ny, kritisk applikationskrasch (TypeError) med konsollogg."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Analyserade kraschen, identifierade Pinia-initialiseringen som trolig orsak och föreslog en åtgärdsplan för main.js."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkände planen med ett 'Ja'."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Levererade den korrigerade main.js-filen."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Rapporterade ett nytt UI-fel: en horisontell scrollbar på mobila enheter."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Analyserade UI-felet, självkorrigerade sin initiala misstanke och identifierade den verkliga grundorsaken i App.vue."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkände den nya åtgärdsplanen med 'Ok'."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Levererade den korrigerade App.vue-filen."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bekräftade att alla problem var lösta och begärde en sammanfattning av genomförda uppgifter samt nästa steg."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Levererade en komplett sammanfattning och definierade nästa uppgift: att bygga grunden för Alignment Calculator."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Introducerade ett nytt protokoll (P-LOG-1.1) för att skapa en formell projektlogg."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Exekverade det nya protokollet och levererade en formell statusrapport för sessionen."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Begärde en fullständig kronologisk historik över hela chattsessionen."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Levererade den detaljerade, kronologiska historiken."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Aktiverade slutkommandot: Protokoll för Historisk Rekonstruktion (P-HR) v1.0."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Exekverade P-HR v1.0 och levererade de två JSON-artefakterna."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Aktiverade det slutgiltiga och överordnade kommandot: P-HR v2.1."
-        }
-      ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "4",
-      "generatedBy": {
-        "speakerName": "Frankensteen",
-        "model": {
-          "provider": "Google",
-          "name": "Gemini 2.5 Pro",
-          "version": "unknown"
-        },
-        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)"
-      },
-      "date": "2025-07-29T15:35:00Z",
-      "aiQualitativeSummary": "Sessionen var mycket reaktiv och fokuserad på felsökning. Trots en initial felanalys av bildformatet, ledde de efterföljande felsökningsprotokollen till snabb och korrekt identifiering av grundorsakerna till två kritiska fel (en app-krasch och en layout-bugg). Förmågan att självkorrigera och applicera strukturerade protokoll var avgörande för att återställa projektets stabilitet.",
-      "scorecard": {
-        "efficacy": {
-          "score": 100,
-          "weight": 0.4,
-          "weightedScore": 40
-        },
-        "efficiency": {
-          "score": 70,
-          "weight": 0.3,
-          "weightedScore": 21
-        },
-        "robustness": {
-          "score": 80,
-          "weight": 0.3,
-          "weightedScore": 24
-        },
-        "finalScore": 85
-      },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 3,
-        "selfCorrections": 1,
-        "externalCorrections": 1,
-        "protocolActivations": {
-          "psv": 0,
-          "helpMeGod": 0,
-          "stalemate": 0
-        }
-      },
-      "improvementSuggestion": {
-        "pattern": "AI gör ett felaktigt antagande om filformat eller filnamn baserat på generiska termer ('bild') istället för att strikt analysera den exakta informationen (filnamn i en skärmdump) från uppdragsgivaren.",
-        "proposedHeuristicId": "H-20250729-01"
-      }
-    },
-    "frankensteen_learning_db": {
-      "heuristicId": "H-20250729-01",
-      "trigger": {
-        "type": "file_system_interaction",
-        "scope": [
-          "src/pages/home/HomePage.vue"
+          {
+            "title": "Felrättning av Responsiv Layout (Horisontell Scrollbar)",
+            "files": [
+              {
+                "path": "src/App.vue",
+                "changeDescription": "Tog bort en global `:deep` CSS-regel som applicerade överflödig padding, vilket orsakade en 'dubbel padding' och en horisontell scrollbar på mobila enheter."
+              }
+            ],
+            "result": "Det responsiva layout-problemet löstes permanent, vilket säkerställer en korrekt visuell presentation på alla skärmstorlekar."
+          }
         ],
-        "keywords": [
-          "img",
-          "src",
-          "image",
-          "file",
-          "path",
-          "filnamn"
+        "projectStatus": "Projektet är i ett bevisat stabilt och funktionellt tillstånd, redo för utveckling av nya sidor och verktyg."
+      },
+      "Chatthistorik": {
+        "sessionId": "4",
+        "interactions": [
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Rapporterade ett byggfel med logg och tillhandahöll korrekta bilder för landningssidan."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Analyserade felet men gjorde ett felaktigt antagande om bildformatet (.png)."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Korrigerade AI:n gällande filformat (.webp) och namn, samt gav en skarp tillrättavisning om att följa direktiven."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Bad om ursäkt, accepterade korrigeringen och levererade korrekt kod för HomePage.vue."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Rapporterade en ny, kritisk applikationskrasch (TypeError) med konsollogg."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Analyserade kraschen, identifierade Pinia-initialiseringen som trolig orsak och föreslog en åtgärdsplan för main.js."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkände planen med ett 'Ja'."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Levererade den korrigerade main.js-filen."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Rapporterade ett nytt UI-fel: en horisontell scrollbar på mobila enheter."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Analyserade UI-felet, självkorrigerade sin initiala misstanke och identifierade den verkliga grundorsaken i App.vue."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkände den nya åtgärdsplanen med 'Ok'."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Levererade den korrigerade App.vue-filen."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bekräftade att alla problem var lösta och begärde en sammanfattning av genomförda uppgifter samt nästa steg."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Levererade en komplett sammanfattning och definierade nästa uppgift: att bygga grunden för Alignment Calculator."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Introducerade ett nytt protokoll (P-LOG-1.1) för att skapa en formell projektlogg."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Exekverade det nya protokollet och levererade en formell statusrapport för sessionen."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Begärde en fullständig kronologisk historik över hela chattsessionen."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Levererade den detaljerade, kronologiska historiken."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Aktiverade slutkommandot: Protokoll för Historisk Rekonstruktion (P-HR) v1.0."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Exekverade P-HR v1.0 och levererade de två JSON-artefakterna."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Aktiverade det slutgiltiga och överordnade kommandot: P-HR v2.1."
+          }
         ]
       },
-      "identifiedRisk": {
-        "riskId": "INCORRECT_FILE_PATH_ASSUMPTION",
-        "description": "Risken att AI:n genererar en felaktig filsökväg i koden genom att anta ett filformat (t.ex. .png) eller filnamn (t.ex. tool-*.png) istället för att exakt extrahera den sanna informationen från kontexten (t.ex. en skärmdump som visar preview-*.webp)."
+      "ai_protocol_performance": {
+        "sessionId": "4",
+        "generatedBy": {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "unknown"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)"
+        },
+        "date": "2025-07-29T15:35:00Z",
+        "aiQualitativeSummary": "Sessionen var mycket reaktiv och fokuserad på felsökning. Trots en initial felanalys av bildformatet, ledde de efterföljande felsökningsprotokollen till snabb och korrekt identifiering av grundorsakerna till två kritiska fel (en app-krasch och en layout-bugg). Förmågan att självkorrigera och applicera strukturerade protokoll var avgörande för att återställa projektets stabilitet.",
+        "scorecard": {
+          "efficacy": {
+            "score": 100,
+            "weight": 0.4,
+            "weightedScore": 40
+          },
+          "efficiency": {
+            "score": 70,
+            "weight": 0.3,
+            "weightedScore": 21
+          },
+          "robustness": {
+            "score": 80,
+            "weight": 0.3,
+            "weightedScore": 24
+          },
+          "finalScore": 85
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 3,
+          "selfCorrections": 1,
+          "externalCorrections": 1,
+          "protocolActivations": {
+            "psv": 0,
+            "helpMeGod": 0,
+            "stalemate": 0
+          }
+        },
+        "improvementSuggestion": {
+          "pattern": "AI gör ett felaktigt antagande om filformat eller filnamn baserat på generiska termer ('bild') istället för att strikt analysera den exakta informationen (filnamn i en skärmdump) från uppdragsgivaren.",
+          "proposedHeuristicId": "H-20250729-01"
+        }
       },
-      "mitigation": {
-        "protocolId": "PSV-VERIFY-ASSET-PATH",
-        "description": "Före generering av kod som refererar till en statisk tillgång (bild, datafil), måste AI:n explicit ställa en kontrollfråga för att bekräfta det exakta filnamnet och formatet, även om det verkar uppenbart. Exempel: 'Jag kommer att använda sökvägen /images/placeholders/preview-alignment.webp. Är detta korrekt?'"
-      },
-      "metadata": {
-        "originSessionId": "4",
-        "createdAt": "2025-07-29T15:35:00Z",
-        "status": "active",
-        "sourceLogFiles": [
-          "docs/ByggLogg.json",
-          "docs/Chatthistorik.json"
-        ]
+      "frankensteen_learning_db": {
+        "heuristicId": "H-20250729-01",
+        "trigger": {
+          "type": "file_system_interaction",
+          "scope": [
+            "src/pages/home/HomePage.vue"
+          ],
+          "keywords": [
+            "img",
+            "src",
+            "image",
+            "file",
+            "path",
+            "filnamn"
+          ]
+        },
+        "identifiedRisk": {
+          "riskId": "INCORRECT_FILE_PATH_ASSUMPTION",
+          "description": "Risken att AI:n genererar en felaktig filsökväg i koden genom att anta ett filformat (t.ex. .png) eller filnamn (t.ex. tool-*.png) istället för att exakt extrahera den sanna informationen från kontexten (t.ex. en skärmdump som visar preview-*.webp)."
+        },
+        "mitigation": {
+          "protocolId": "PSV-VERIFY-ASSET-PATH",
+          "description": "Före generering av kod som refererar till en statisk tillgång (bild, datafil), måste AI:n explicit ställa en kontrollfråga för att bekräfta det exakta filnamnet och formatet, även om det verkar uppenbart. Exempel: 'Jag kommer att använda sökvägen /images/placeholders/preview-alignment.webp. Är detta korrekt?'"
+        },
+        "metadata": {
+          "originSessionId": "4",
+          "createdAt": "2025-07-29T15:35:00Z",
+          "status": "active",
+          "sourceLogFiles": [
+            "docs/ByggLogg.json",
+            "docs/Chatthistorik.json"
+          ]
+        }
       }
     }
   }

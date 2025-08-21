@@ -1,209 +1,232 @@
 {
-  "sessionId": "37",
-  "createdAt": "2025-08-09T16:00:00Z",
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "37",
-      "date": "2025-08-09T16:00:00Z",
-      "summary": "En meta-analyssession genomfördes för att klargöra och verifiera AI-partnerns protokollstyrda beteende. Skillnaden i AI:ns initiala respons mellan olika sessioner spårades framgångsrikt till karaktären på användarens första prompt (analytisk fråga vs. neutral start), vilket bekräftar en korrekt och kontextmedveten tolkning av kärninstruktionerna. Nya historiska sessionsdata (39 och 40) bearbetades och integrerades.",
-      "actions": [
-        {
-          "title": "Jämförande Analys av AI-beteende",
-          "files": [
-            {
-              "path": "docs/ai_protocols/AI_Core_Instruction.md",
-              "changeDescription": "Analyserades för att differentiera mellan protokollen 'Vid ny chatt/session' och det normala 'Arbetsflödet', vilket förklarade varför en initial fråga kringgår standardhälsningen."
-            },
-            {
-              "path": "context_custom_2025-08-09 (2).json",
-              "changeDescription": "Analyserades som källan till den första interaktionen, där den inbäddade frågan ledde till ett direkt analytiskt svar."
-            },
-            {
-              "path": "context_custom_2025-08-09 (1).json",
-              "changeDescription": "Analyserades för att visa att `ai_instructions_input`-nyckeln ignorerades under den obligatoriska 'boot-sekvensen' i en ny session, men tolkades korrekt som en 'Idé' i en pågående session."
-            }
-          ],
-          "result": "Grundorsaken till skillnaden i AI:ns beteende identifierades korrekt, vilket bekräftade att AI:n följer sina styrande protokoll hierarkiskt."
-        },
-        {
-          "title": "Integration av Historisk Data",
-          "files": [
-            {
-              "path": "039.0.json",
-              "changeDescription": "Mottogs, bearbetades och bekräftades som en giltig avslutningsartefakt."
-            },
-            {
-              "path": "040.0.json",
-              "changeDescription": "Mottogs, bearbetades och bekräftades som en giltig avslutningsartefakt."
-            }
-          ],
-          "result": "Projektets historiska data har uppdaterats med två nya, verifierade sessioner."
-        }
-      ],
-      "projectStatus": "Projektets tillstånd är oförändrat. AI-partnerns förståelse för sina egna protokoll har verifierats. Projektet är stabilt och redo för nästa tekniska uppgift."
-    },
-    "Chatthistorik": {
-      "sessionId": "37",
-      "interactions": [
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+  "schema_version": "DJTA v1.1",
+  "session_id": "37",
+  "created_at": "2025-08-09T16:00:00Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "037.0.json",
+    "timestamp_utc": "2025-08-11T13:00:00Z",
+    "summary": "First attempt to create a structured build log, defining initial JSON format.",
+    "keywords": [
+      "logging",
+      "json-schema",
+      "ci-cd"
+    ],
+    "modified_files": [
+      "docs/ByggLogg.json"
+    ],
+    "error_signatures": [],
+    "success_score": 4,
+    "operator_interventions": 1
+  },
+  "builder_input": {
+    "sessionId": "37",
+    "createdAt": "2025-08-09T16:00:00Z",
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "37",
+        "date": "2025-08-09T16:00:00Z",
+        "summary": "En meta-analyssession genomfördes för att klargöra och verifiera AI-partnerns protokollstyrda beteende. Skillnaden i AI:ns initiala respons mellan olika sessioner spårades framgångsrikt till karaktären på användarens första prompt (analytisk fråga vs. neutral start), vilket bekräftar en korrekt och kontextmedveten tolkning av kärninstruktionerna. Nya historiska sessionsdata (39 och 40) bearbetades och integrerades.",
+        "actions": [
+          {
+            "title": "Jämförande Analys av AI-beteende",
+            "files": [
+              {
+                "path": "docs/ai_protocols/AI_Core_Instruction.md",
+                "changeDescription": "Analyserades för att differentiera mellan protokollen 'Vid ny chatt/session' och det normala 'Arbetsflödet', vilket förklarade varför en initial fråga kringgår standardhälsningen."
+              },
+              {
+                "path": "context_custom_2025-08-09 (2).json",
+                "changeDescription": "Analyserades som källan till den första interaktionen, där den inbäddade frågan ledde till ett direkt analytiskt svar."
+              },
+              {
+                "path": "context_custom_2025-08-09 (1).json",
+                "changeDescription": "Analyserades för att visa att `ai_instructions_input`-nyckeln ignorerades under den obligatoriska 'boot-sekvensen' i en ny session, men tolkades korrekt som en 'Idé' i en pågående session."
+              }
+            ],
+            "result": "Grundorsaken till skillnaden i AI:ns beteende identifierades korrekt, vilket bekräftade att AI:n följer sina styrande protokoll hierarkiskt."
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Användaren bad om en jämförelse mellan en tidigare AI-chatts respons och den nuvarande, för att förstå varför de agerade olika vid sessionens start."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "gemini-2.5-pro",
-            "version": "2025-08-09"
-          },
-          "speaker": "Frankensteen (Google:gemini-2.5-pro@2025-08-09)",
-          "summary": "Förklarade att skillnaden beror på att den nuvarande sessionen startade med en direkt analytisk fråga, vilket aktiverade 'Arbetsflöde'-protokollet istället för den vanliga 'Vid ny chatt/session'-bekräftelsen."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Frågade om 'More is more'-personprofileringen i instruktionerna var orsaken till problemet."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "gemini-2.5-pro",
-            "version": "2025-08-09"
-          },
-          "speaker": "Frankensteen (Google:gemini-2.5-pro@2025-08-09)",
-          "summary": "Klargjorde att personprofileringen endast styr ton och kvalitet i standardläget och åsidosätts av formella systemkommandon, och därmed inte var orsaken."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bad AI:n att namnge den JSON-fil som laddades upp i början av sessionen."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "gemini-2.5-pro",
-            "version": "2025-08-09"
-          },
-          "speaker": "Frankensteen (Google:gemini-2.5-pro@2025-08-09)",
-          "summary": "Identifierade korrekt filnamnet som 'context_custom_2025-08-09 (2).json'."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Laddade upp en ny JSON-fil och frågade varför den fungerade nu men inte i den allra första interaktionen, trots samma `ai_instructions_input`-nyckel."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "gemini-2.5-pro",
-            "version": "2025-08-09"
-          },
-          "speaker": "Frankensteen (Google:gemini-2.5-pro@2025-08-09)",
-          "summary": "Förklarade skillnaden mellan en ny sessions 'boot-sekvens', där input ignoreras till förmån för en standardbekräftelse, och en pågående session där input tolkas som en 'Idé'."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Laddade upp två avslutnings-JSON för session 39 och 40 och bekräftade att de var godkända testkörningar."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "gemini-2.5-pro",
-            "version": "2025-08-09"
-          },
-          "speaker": "Frankensteen (Google:gemini-2.5-pro@2025-08-09)",
-          "summary": "Bekräftade mottagandet och bearbetningen av de två historiska sessionerna och meddelade att projektets historik var uppdaterad."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Beordrade körning av avslutningsprotokollet och specificerade sessions-ID till '37'."
-        }
-      ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "37",
-      "generatedBy": {
-        "speakerName": "Frankensteen",
-        "model": {
-          "provider": "Google",
-          "name": "gemini-2.5-pro",
-          "version": "2025-08-09"
-        },
-        "speaker": "Frankensteen (Google:gemini-2.5-pro@2025-08-09)"
+          {
+            "title": "Integration av Historisk Data",
+            "files": [
+              {
+                "path": "039.0.json",
+                "changeDescription": "Mottogs, bearbetades och bekräftades som en giltig avslutningsartefakt."
+              },
+              {
+                "path": "040.0.json",
+                "changeDescription": "Mottogs, bearbetades och bekräftades som en giltig avslutningsartefakt."
+              }
+            ],
+            "result": "Projektets historiska data har uppdaterats med två nya, verifierade sessioner."
+          }
+        ],
+        "projectStatus": "Projektets tillstånd är oförändrat. AI-partnerns förståelse för sina egna protokoll har verifierats. Projektet är stabilt och redo för nästa tekniska uppgift."
       },
-      "date": "2025-08-09T16:00:00Z",
-      "aiQualitativeSummary": "Sessionen var en framgångsrik meta-analys av AI:ns egna protokoll. Jag identifierade och förklarade korrekt de nyanserade skillnaderna i mitt agerande baserat på den initiala promptens karaktär. Jag hanterade och integrerade även ny historisk data korrekt. Inga fel, korrigeringar eller felsökningscykler krävdes.",
-      "scorecard": {
-        "efficacy": {
-          "score": 100,
-          "weight": 0.4,
-          "weightedScore": 40
-        },
-        "efficiency": {
-          "score": 100,
-          "weight": 0.3,
-          "weightedScore": 30
-        },
-        "robustness": {
-          "score": 100,
-          "weight": 0.3,
-          "weightedScore": 30
-        },
-        "finalScore": 100
+      "Chatthistorik": {
+        "sessionId": "37",
+        "interactions": [
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Användaren bad om en jämförelse mellan en tidigare AI-chatts respons och den nuvarande, för att förstå varför de agerade olika vid sessionens start."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "gemini-2.5-pro",
+              "version": "2025-08-09"
+            },
+            "speaker": "Frankensteen (Google:gemini-2.5-pro@2025-08-09)",
+            "summary": "Förklarade att skillnaden beror på att den nuvarande sessionen startade med en direkt analytisk fråga, vilket aktiverade 'Arbetsflöde'-protokollet istället för den vanliga 'Vid ny chatt/session'-bekräftelsen."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Frågade om 'More is more'-personprofileringen i instruktionerna var orsaken till problemet."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "gemini-2.5-pro",
+              "version": "2025-08-09"
+            },
+            "speaker": "Frankensteen (Google:gemini-2.5-pro@2025-08-09)",
+            "summary": "Klargjorde att personprofileringen endast styr ton och kvalitet i standardläget och åsidosätts av formella systemkommandon, och därmed inte var orsaken."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bad AI:n att namnge den JSON-fil som laddades upp i början av sessionen."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "gemini-2.5-pro",
+              "version": "2025-08-09"
+            },
+            "speaker": "Frankensteen (Google:gemini-2.5-pro@2025-08-09)",
+            "summary": "Identifierade korrekt filnamnet som 'context_custom_2025-08-09 (2).json'."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Laddade upp en ny JSON-fil och frågade varför den fungerade nu men inte i den allra första interaktionen, trots samma `ai_instructions_input`-nyckel."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "gemini-2.5-pro",
+              "version": "2025-08-09"
+            },
+            "speaker": "Frankensteen (Google:gemini-2.5-pro@2025-08-09)",
+            "summary": "Förklarade skillnaden mellan en ny sessions 'boot-sekvens', där input ignoreras till förmån för en standardbekräftelse, och en pågående session där input tolkas som en 'Idé'."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Laddade upp två avslutnings-JSON för session 39 och 40 och bekräftade att de var godkända testkörningar."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "gemini-2.5-pro",
+              "version": "2025-08-09"
+            },
+            "speaker": "Frankensteen (Google:gemini-2.5-pro@2025-08-09)",
+            "summary": "Bekräftade mottagandet och bearbetningen av de två historiska sessionerna och meddelade att projektets historik var uppdaterad."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Beordrade körning av avslutningsprotokollet och specificerade sessions-ID till '37'."
+          }
+        ]
       },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 0,
-        "selfCorrections": 0,
-        "externalCorrections": 0,
-        "protocolActivations": {
-          "psv": 5,
-          "helpMeGod": 0,
-          "stalemate": 0
+      "ai_protocol_performance": {
+        "sessionId": "37",
+        "generatedBy": {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "gemini-2.5-pro",
+            "version": "2025-08-09"
+          },
+          "speaker": "Frankensteen (Google:gemini-2.5-pro@2025-08-09)"
+        },
+        "date": "2025-08-09T16:00:00Z",
+        "aiQualitativeSummary": "Sessionen var en framgångsrik meta-analys av AI:ns egna protokoll. Jag identifierade och förklarade korrekt de nyanserade skillnaderna i mitt agerande baserat på den initiala promptens karaktär. Jag hanterade och integrerade även ny historisk data korrekt. Inga fel, korrigeringar eller felsökningscykler krävdes.",
+        "scorecard": {
+          "efficacy": {
+            "score": 100,
+            "weight": 0.4,
+            "weightedScore": 40
+          },
+          "efficiency": {
+            "score": 100,
+            "weight": 0.3,
+            "weightedScore": 30
+          },
+          "robustness": {
+            "score": 100,
+            "weight": 0.3,
+            "weightedScore": 30
+          },
+          "finalScore": 100
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 0,
+          "selfCorrections": 0,
+          "externalCorrections": 0,
+          "protocolActivations": {
+            "psv": 5,
+            "helpMeGod": 0,
+            "stalemate": 0
+          }
+        },
+        "improvementSuggestion": {
+          "pattern": "Inga negativa mönster identifierades under denna meta-analytiska session.",
+          "proposedHeuristicId": null
         }
       },
-      "improvementSuggestion": {
-        "pattern": "Inga negativa mönster identifierades under denna meta-analytiska session.",
-        "proposedHeuristicId": null
-      }
-    },
-    "frankensteen_learning_db": []
+      "frankensteen_learning_db": []
+    }
   }
 }

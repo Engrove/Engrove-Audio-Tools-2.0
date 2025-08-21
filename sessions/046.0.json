@@ -1,120 +1,248 @@
 {
-  "sessionId": "46",
-  "createdAt": "2025-08-10T12:00:00Z",
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "46",
-      "date": "2025-08-10T12:00:00Z",
-      "summary": "Infört JSON-first-flöde (discovery_v2 → impl_bootstrap_v1), levererat wrap_json_in_html.py v6.1, definierat autodokumentering (daglig/veckovis) och policy/guardrails.",
-      "actions": [
-        {
-          "title": "Context Builder – komplett leverans",
-          "files": [
-            { "path": "scripts/wrap_json_in_html.py", "changeDescription": "Fullständig omarbetning: discovery v2, impl_bootstrap v1, project_capsule, file_map, budget, hjälpmodal, performance, no-images-regel." }
-          ],
-          "result": "Script redo för bruk."
-        },
-        {
-          "title": "Tvåstegs-pipeline för dokumentation",
-          "files": [
-            { "path": "tools/docbot.py", "changeDescription": "PLAN→GEN (doc_plan_v1/doc_gen_v1) bundlar help/tech-MD med whitelist-commit." },
-            { "path": "tools/docbot.policy.yml", "changeDescription": "Whitelist, denylist, limits, gates (markdownlint/Vale/linkcheck), merge-policy." }
-          ],
-          "result": "Daglig körning möjlig inom ≤50 API-anrop/dygn."
-        },
-        {
-          "title": "Veckorapport och audit",
-          "files": [
-            { "path": "tools/weeklybot.py", "changeDescription": "PLAN/GEN för weekly_report_<ISO-vecka>.md + artefakter (git/test/lint/sast/audit)." }
-          ],
-          "result": "Proaktiv granskning och sammanfattning etablerad."
-        },
-        {
-          "title": "Hårda protokollregler",
-          "files": [
-            { "path": "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md", "changeDescription": "Bindande no-images, modelltaggning, schema, Steg 6 (nya dynamiska protokoll)." }
-          ],
-          "result": "Kontraktsstyrd leverans och spårbarhet."
+  "schema_version": "DJTA v1.1",
+  "session_id": "46",
+  "created_at": "2025-08-10T12:00:00Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "046.0.json",
+    "timestamp_utc": "2025-08-18T15:30:00Z",
+    "summary": "Corrected the JSON syntax error in the dynamic protocols file from the previous session.",
+    "keywords": [
+      "fix",
+      "json",
+      "debug",
+      "protocol"
+    ],
+    "modified_files": [
+      "docs/ai_protocols/DynamicProtocols.json"
+    ],
+    "error_signatures": [],
+    "success_score": 4,
+    "operator_interventions": 1
+  },
+  "builder_input": {
+    "sessionId": "46",
+    "createdAt": "2025-08-10T12:00:00Z",
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "46",
+        "date": "2025-08-10T12:00:00Z",
+        "summary": "Infört JSON-first-flöde (discovery_v2 → impl_bootstrap_v1), levererat wrap_json_in_html.py v6.1, definierat autodokumentering (daglig/veckovis) och policy/guardrails.",
+        "actions": [
+          {
+            "title": "Context Builder – komplett leverans",
+            "files": [
+              {
+                "path": "scripts/wrap_json_in_html.py",
+                "changeDescription": "Fullständig omarbetning: discovery v2, impl_bootstrap v1, project_capsule, file_map, budget, hjälpmodal, performance, no-images-regel."
+              }
+            ],
+            "result": "Script redo för bruk."
+          },
+          {
+            "title": "Tvåstegs-pipeline för dokumentation",
+            "files": [
+              {
+                "path": "tools/docbot.py",
+                "changeDescription": "PLAN→GEN (doc_plan_v1/doc_gen_v1) bundlar help/tech-MD med whitelist-commit."
+              },
+              {
+                "path": "tools/docbot.policy.yml",
+                "changeDescription": "Whitelist, denylist, limits, gates (markdownlint/Vale/linkcheck), merge-policy."
+              }
+            ],
+            "result": "Daglig körning möjlig inom ≤50 API-anrop/dygn."
+          },
+          {
+            "title": "Veckorapport och audit",
+            "files": [
+              {
+                "path": "tools/weeklybot.py",
+                "changeDescription": "PLAN/GEN för weekly_report_<ISO-vecka>.md + artefakter (git/test/lint/sast/audit)."
+              }
+            ],
+            "result": "Proaktiv granskning och sammanfattning etablerad."
+          },
+          {
+            "title": "Hårda protokollregler",
+            "files": [
+              {
+                "path": "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md",
+                "changeDescription": "Bindande no-images, modelltaggning, schema, Steg 6 (nya dynamiska protokoll)."
+              }
+            ],
+            "result": "Kontraktsstyrd leverans och spårbarhet."
+          }
+        ],
+        "projectStatus": "Stabilt. Nästa steg: checka in script/policy, sätt cron, aktivera CI-gates."
+      },
+      "Chatthistorik": {
+        "sessionId": "46",
+        "interactions": [
+          {
+            "speakerName": "Jan-Eric Enlund",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Jan-Eric Enlund (human:operator@unknown)",
+            "summary": "Initierar analys av regelverk/AI-protokoll och krav på teknisk arkitektur."
+          },
+          {
+            "speakerName": "Assistant",
+            "model": {
+              "provider": "unknown",
+              "name": "unknown",
+              "version": "unknown"
+            },
+            "speaker": "Assistant (unknown:unknown@unknown)",
+            "summary": "Föreslår JSON-first, K-MOD i Steg A, no-images-regel, två knappar."
+          },
+          {
+            "speakerName": "Jan-Eric Enlund",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Jan-Eric Enlund (human:operator@unknown)",
+            "summary": "Krav: lokalt LM, nattliga lärpass, hantering av hela kodbasen, API-budget."
+          },
+          {
+            "speakerName": "Assistant",
+            "model": {
+              "provider": "unknown",
+              "name": "unknown",
+              "version": "unknown"
+            },
+            "speaker": "Assistant (unknown:unknown@unknown)",
+            "summary": "Levererar komplett wrap_json_in_html.py och doc/weekly-botar + policy."
+          }
+        ],
+        "note": {
+          "coverage": "partial",
+          "coverageReason": "Fullständig turn-förteckning kan inte återskapas här; plattformslogg krävs."
         }
-      ],
-      "projectStatus": "Stabilt. Nästa steg: checka in script/policy, sätt cron, aktivera CI-gates."
-    },
-    "Chatthistorik": {
-      "sessionId": "46",
-      "interactions": [
-        {
-          "speakerName": "Jan-Eric Enlund",
-          "model": { "provider": "human", "name": "operator", "version": "unknown" },
-          "speaker": "Jan-Eric Enlund (human:operator@unknown)",
-          "summary": "Initierar analys av regelverk/AI-protokoll och krav på teknisk arkitektur."
+      },
+      "ai_protocol_performance": {
+        "sessionId": "46",
+        "generatedBy": {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "unknown",
+            "name": "unknown",
+            "version": "unknown"
+          },
+          "speaker": "Frankensteen (unknown:unknown@unknown)"
         },
-        {
-          "speakerName": "Assistant",
-          "model": { "provider": "unknown", "name": "unknown", "version": "unknown" },
-          "speaker": "Assistant (unknown:unknown@unknown)",
-          "summary": "Föreslår JSON-first, K-MOD i Steg A, no-images-regel, två knappar."
+        "date": "2025-08-10T12:00:00Z",
+        "aiQualitativeSummary": "Målet uppnått: kontraktsstyrd JSON-first, tydliga guardrails, låg anropsbudget.",
+        "scorecard": {
+          "efficacy": {
+            "score": 85,
+            "weight": 0.4,
+            "weightedScore": 34.0
+          },
+          "efficiency": {
+            "score": 80,
+            "weight": 0.3,
+            "weightedScore": 24.0
+          },
+          "robustness": {
+            "score": 78,
+            "weight": 0.3,
+            "weightedScore": 23.4
+          },
+          "finalScore": 81.4
         },
-        {
-          "speakerName": "Jan-Eric Enlund",
-          "model": { "provider": "human", "name": "operator", "version": "unknown" },
-          "speaker": "Jan-Eric Enlund (human:operator@unknown)",
-          "summary": "Krav: lokalt LM, nattliga lärpass, hantering av hela kodbasen, API-budget."
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 2,
+          "selfCorrections": 2,
+          "externalCorrections": 0,
+          "protocolActivations": {
+            "psv": 1,
+            "helpMeGod": 0,
+            "stalemate": 0
+          },
+          "heuristicsTriggered": [
+            "H-20250810-01",
+            "H-20250810-02"
+          ]
         },
-        {
-          "speakerName": "Assistant",
-          "model": { "provider": "unknown", "name": "unknown", "version": "unknown" },
-          "speaker": "Assistant (unknown:unknown@unknown)",
-          "summary": "Levererar komplett wrap_json_in_html.py och doc/weekly-botar + policy."
+        "improvementSuggestion": {
+          "pattern": "Automatisk discovery kan missa kritiska filer om prioritering enbart är storleksbaserad.",
+          "proposedHeuristicId": "H-20250810-03"
         }
-      ],
-      "note": {
-        "coverage": "partial",
-        "coverageReason": "Fullständig turn-förteckning kan inte återskapas här; plattformslogg krävs."
-      }
-    },
-    "ai_protocol_performance": {
-      "sessionId": "46",
-      "generatedBy": {
-        "speakerName": "Frankensteen",
-        "model": { "provider": "unknown", "name": "unknown", "version": "unknown" },
-        "speaker": "Frankensteen (unknown:unknown@unknown)"
       },
-      "date": "2025-08-10T12:00:00Z",
-      "aiQualitativeSummary": "Målet uppnått: kontraktsstyrd JSON-first, tydliga guardrails, låg anropsbudget.",
-      "scorecard": {
-        "efficacy": { "score": 85, "weight": 0.4, "weightedScore": 34.0 },
-        "efficiency": { "score": 80, "weight": 0.3, "weightedScore": 24.0 },
-        "robustness": { "score": 78, "weight": 0.3, "weightedScore": 23.4 },
-        "finalScore": 81.4
-      },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 2,
-        "selfCorrections": 2,
-        "externalCorrections": 0,
-        "protocolActivations": { "psv": 1, "helpMeGod": 0, "stalemate": 0 },
-        "heuristicsTriggered": [ "H-20250810-01", "H-20250810-02" ]
-      },
-      "improvementSuggestion": {
-        "pattern": "Automatisk discovery kan missa kritiska filer om prioritering enbart är storleksbaserad.",
-        "proposedHeuristicId": "H-20250810-03"
-      }
-    },
-    "frankensteen_learning_db": [
-      {
-        "heuristicId": "H-20250810-01",
-        "trigger": { "type": "protocol", "scope": ["bootstrap","discovery"], "keywords": ["JSON-first","file_map","project_capsule"] },
-        "identifiedRisk": { "riskId": "R-CONFIG-CTX", "description": "Otillräcklig kontext i första prompten orsakar felaktiga val." },
-        "mitigation": { "protocolId": "impl_bootstrap_v1", "description": "Bädda in fulltext för mål + file_map + capsule; no-images; PLAN→GEN." },
-        "metadata": { "originSessionId": "999", "createdAt": "2025-08-10T12:00:00Z", "status": "active", "sourceLogFiles": ["docs/ByggLogg.json","docs/Chatthistorik.json"] }
-      },
-      {
-        "heuristicId": "H-20250810-02",
-        "trigger": { "type": "ops", "scope": ["docbot","weeklybot"], "keywords": ["batch","bundle","api-budget"] },
-        "identifiedRisk": { "riskId": "R-API-BUDGET", "description": "Överförbrukning av API-anrop vid per-fil-generering." },
-        "mitigation": { "protocolId": "doc_gen_v1", "description": "Bundla alla dokument i ett doc_bundle; 2 anrop/dygn." },
-        "metadata": { "originSessionId": "999", "createdAt": "2025-08-10T12:00:00Z", "status": "active", "sourceLogFiles": ["docs/ByggLogg.json","docs/Chatthistorik.json"] }
-      }
-    ]
+      "frankensteen_learning_db": [
+        {
+          "heuristicId": "H-20250810-01",
+          "trigger": {
+            "type": "protocol",
+            "scope": [
+              "bootstrap",
+              "discovery"
+            ],
+            "keywords": [
+              "JSON-first",
+              "file_map",
+              "project_capsule"
+            ]
+          },
+          "identifiedRisk": {
+            "riskId": "R-CONFIG-CTX",
+            "description": "Otillräcklig kontext i första prompten orsakar felaktiga val."
+          },
+          "mitigation": {
+            "protocolId": "impl_bootstrap_v1",
+            "description": "Bädda in fulltext för mål + file_map + capsule; no-images; PLAN→GEN."
+          },
+          "metadata": {
+            "originSessionId": "999",
+            "createdAt": "2025-08-10T12:00:00Z",
+            "status": "active",
+            "sourceLogFiles": [
+              "docs/ByggLogg.json",
+              "docs/Chatthistorik.json"
+            ]
+          }
+        },
+        {
+          "heuristicId": "H-20250810-02",
+          "trigger": {
+            "type": "ops",
+            "scope": [
+              "docbot",
+              "weeklybot"
+            ],
+            "keywords": [
+              "batch",
+              "bundle",
+              "api-budget"
+            ]
+          },
+          "identifiedRisk": {
+            "riskId": "R-API-BUDGET",
+            "description": "Överförbrukning av API-anrop vid per-fil-generering."
+          },
+          "mitigation": {
+            "protocolId": "doc_gen_v1",
+            "description": "Bundla alla dokument i ett doc_bundle; 2 anrop/dygn."
+          },
+          "metadata": {
+            "originSessionId": "999",
+            "createdAt": "2025-08-10T12:00:00Z",
+            "status": "active",
+            "sourceLogFiles": [
+              "docs/ByggLogg.json",
+              "docs/Chatthistorik.json"
+            ]
+          }
+        }
+      ]
+    }
   }
 }

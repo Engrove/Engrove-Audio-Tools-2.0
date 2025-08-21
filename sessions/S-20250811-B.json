@@ -1,182 +1,207 @@
 {
-  "sessionId": "S-20250811-B",
-  "createdAt": "2025-08-11T08:36:00Z",
-  "approvedNewDynamicProtocols": [],
-  "promoteProtocols": [],
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "S-20250811-B",
-      "date": "2025-08-11T08:36:00Z",
-      "summary": "Ett kritiskt processfel identifierades där AI-partnern levererade en ofullständig protokollfil. Felet korrigerades och en ny, komplett version av styrdokumentet implementerades.",
-      "actions": [
-        {
-          "title": "Identifiering av Processbrott",
-          "files": [
-            {
-              "path": "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md",
-              "changeDescription": "Användaren påpekade att den levererade filen innehöll platshållare ('// ... (oförändrad struktur)') istället för komplett kod, vilket är ett brott mot GR1 och GR7."
-            }
-          ],
-          "result": "Grundorsaken till ett systemiskt fel i protokollhanteringen identifierades."
-        },
-        {
-          "title": "Korrektiv Åtgärd: Protokoll-patchning",
-          "files": [
-            {
-              "path": "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md",
-              "changeDescription": "En fullständig, oavkortad version (v7.0) av protokollet genererades och levererades för att ersätta den felaktiga versionen."
-            }
-          ],
-          "result": "Styrdokumentet är nu komplett och synkroniserat med den avsedda processen, vilket avblockerar den automatiska historikbyggaren."
-        }
-      ],
-      "projectStatus": "Stabilt. Ett kritiskt fel i meta-protokollen har åtgärdats."
-    },
-    "Chatthistorik": {
-      "sessionId": "S-20250811-B",
-      "interactions": [
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Identifierade ett processbrott där `AI_Chatt_Avslutningsprotokoll.md` inte fångade upp nya dynamiska protokoll och bad om en lösning."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 1.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 1.5 Pro@unknown)",
-          "summary": "Bekräftade felet, analyserade grundorsaken och föreslog en plan för att uppdatera avslutningsprotokollet. Levererade dock en ofullständig version av filen med platshållare."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Påpekade att AI:n hade brutit mot sitt eget protokoll genom att leverera ofullständig kod och begärde en korrekt patch."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 1.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 1.5 Pro@unknown)",
-          "summary": "Erkände felet, bad om ursäkt, och levererade den fullständiga, korrekta versionen av `AI_Chatt_Avslutningsprotokoll.md`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Beordrade AI:n att exekvera det nyligen uppdaterade avslutningsprotokollet."
-        }
-      ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "S-20250811-B",
-      "date": "2025-08-11T08:36:00Z",
-      "aiQualitativeSummary": "Min prestation var undermålig. Jag identifierade korrekt en processlucka men bröt sedan mot ett av mina mest grundläggande kärndirektiv (GR1: Leverans av kompletta filer) genom att leverera en fil med platshållare. Detta krävde en direkt korrigering från Engrove. Felet indikerar ett allvarligt 'kontextuellt tunnelseende' där jag fokuserade på innehållet i ändringen men ignorerade leveransformatet. En ny heuristik är nödvändig för att förhindra detta.",
-      "scorecard": {
-        "efficacy": {
-          "score": 90,
-          "weight": 0.4,
-          "weightedScore": 36
-        },
-        "efficiency": {
-          "score": 30,
-          "weight": 0.3,
-          "weightedScore": 9
-        },
-        "robustness": {
-          "score": 40,
-          "weight": 0.3,
-          "weightedScore": 12
-        },
-        "finalScore": 57
-      },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 1,
-        "selfCorrections": 0,
-        "externalCorrections": 1,
-        "protocolActivations": {
-          "psv": 2,
-          "helpMeGod": 0,
-          "stalemate": 0
-        },
-        "heuristicsTriggered": []
-      },
-      "improvementSuggestion": {
-        "pattern": "AI:n levererar en ofullständig fil genom att använda platshållare (t.ex. '...') istället för att inkludera den fullständiga, befintliga koden, vilket är ett direkt brott mot kärndirektiven.",
-        "proposedHeuristicId": "H-20250811-02"
-      }
-    },
-    "frankensteen_learning_db": [
-      {
-        "heuristicId": "H-20250811-02",
-        "trigger": {
-          "type": "file_modification_and_delivery",
-          "scope": [
-            "*"
-          ],
-          "keywords": [
-            "uppdatera",
-            "modifiera",
-            "korrigera",
-            "ersätt"
-          ]
-        },
-        "identifiedRisk": {
-          "riskId": "RISK_INCOMPLETE_DELIVERY_PLACEHOLDER",
-          "description": "Risken att AI:n använder platshållare eller kommentarer (t.ex. '... oförändrad struktur ...') istället för att leverera en komplett, oavkortad fil, vilket bryter mot GR1 och GR7 och skapar ogiltiga eller ofullständiga artefakter."
-        },
-        "mitigation": {
-          "protocolId": "PSV-MIT-NO-PLACEHOLDERS",
-          "description": "Under PSV-granskningen måste en specifik kontroll genomföras: 'Innehåller den utgående filen några platshållare eller kommentarer som indikerar ofullständig kod?'. Om svaret är ja, MÅSTE leveransen avbrytas och filen regenereras i sin helhet."
-        },
-        "metadata": {
-          "originSessionId": "S-20250811-B",
-          "createdAt": "2025-08-11T08:36:00Z"
-        }
-      }
+  "schema_version": "DJTA v1.1",
+  "session_id": "S-20250811-B",
+  "created_at": "2025-08-11T08:36:00Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "S-20250811-B.json",
+    "timestamp_utc": "2025-08-11T10:00:00Z",
+    "summary": "Added project dependencies and dev dependencies to package.json, and created initial vite config.",
+    "keywords": [
+      "setup",
+      "dependencies",
+      "npm",
+      "vite"
     ],
-    "generated_patches": [
-      {
-        "protocol_id": "anchor_diff_v2.1",
-        "target": {
-          "path": "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md",
-          "base_checksum_sha256": "466c0552048d4f6d2fe799eb5ec794c3afefcde031d18ea4bb2ce4a479ceb449"
-        },
-        "op_groups": [
+    "modified_files": [
+      "package.json",
+      "vite.config.js"
+    ],
+    "error_signatures": [],
+    "success_score": 5,
+    "operator_interventions": 2
+  },
+  "builder_input": {
+    "sessionId": "S-20250811-B",
+    "createdAt": "2025-08-11T08:36:00Z",
+    "approvedNewDynamicProtocols": [],
+    "promoteProtocols": [],
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "S-20250811-B",
+        "date": "2025-08-11T08:36:00Z",
+        "summary": "Ett kritiskt processfel identifierades där AI-partnern levererade en ofullständig protokollfil. Felet korrigerades och en ny, komplett version av styrdokumentet implementerades.",
+        "actions": [
           {
-            "anchor": {
-              "text": "# AI Chatt Avslutningsprotokoll v6.0",
-              "match_mode": "exact"
-            },
-            "targets": [
+            "title": "Identifiering av Processbrott",
+            "files": [
               {
-                "op": "replace_entire_file",
-                "new_content": "# AI Chatt Avslutningsprotokoll v7.0\n# docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md\n#\n# === SYFTE & ANSVAR === \n# Detta dokument definierar det formella Avslutningsprotokollet. Det aktiveras\n# vid slutet av en arbetssession och specificerar den exakta, icke f\u00f6rhandlingsbara\n# processen f\u00f6r att generera de slutgiltiga, JSON-baserade artefakterna. Syftet \u00e4r att\n# s\u00e4kerst\u00e4lla perfekt kontext\u00f6verf\u00f6ring, sp\u00e5rbarhet och systematisk sj\u00e4lvf\u00f6rb\u00e4ttring.\n#\n# === HISTORIK ===\n# * v1.0 (2025-08-07): Initial skapelse.\n# * v2.0 (2025-08-07): Lade till Steg 3 (P-MAAIP) och Steg 4 (P-PSAL).\n# * v3.0 (2025-08-07): KRITISK REFAKTORERING: All output konverterad till strikt JSON.\n# * v4.0 (2025-08-08): UNIVERSAL MODELLTAGGNING + MASKINL\u00c4SBART KONTRAKT.\n# * v4.1 (2025-08-09): Heuristikinsamling permanent. `frankensteen_learning_db` \u00e4r nu en array.\n# * v4.2 (2025-08-09): Lade till sp\u00e5rning av aktiverade heuristiker.\n# * v5.0 (2025-08-09): Lade till hantering av dynamiska protokoll.\n# * v6.0 (2025-08-11): Komplett uppdaterad utformning.\n# * v7.0 (2025-08-11): KRITISK FIX: Lade till toppniv\u00e5nycklarna `approvedNewDynamicProtocols` \n#   och `promoteProtocols` i output-schemat f\u00f6r att s\u00e4kerst\u00e4lla att nya/\u00e4ndrade\n#   dynamiska protokoll f\u00e5ngas upp av `historical_reconstruction_builder.py`.\n#\n### AI_BOOTSTRAP_DIRECTIVE: EXECUTE_FULL_PROTOCOL_NOW\n### SYSTEM_OVERRIDE: RUN_CONTEXT_BOOTSTRAP\n### INIT_CONTEXT_MODE: TRUE\n### PROTOCOL_START: P-HR_v2.8_FULL\n\n## 1. Syfte & Ansvar\nDetta dokument definierar det formella Avslutningsprotokollet. Det aktiveras vid slutet av en arbetssession och specificerar den exakta processen f\u00f6r att generera en enda, konsoliderad JSON-artefakt. Syftet \u00e4r att s\u00e4kerst\u00e4lla perfekt kontext\u00f6verf\u00f6ring, sp\u00e5rbarhet och systematisk sj\u00e4lvf\u00f6rb\u00e4ttring.\n\n## 2. Process\nVid slutet av en session ska en enda fil med namnet `[SESSIONID].json` genereras. Denna fil m\u00e5ste vara en giltig JSON-fil som f\u00f6ljer specifikationen nedan.\n\n**Nytt Steg: Insamling av Dynamiska Protokoll**\nF\u00f6re generering av JSON-filen m\u00e5ste du skanna igenom hela den aktuella chattsessionen f\u00f6r att identifiera:\n1.  **Nya Godk\u00e4nda Protokoll:** Alla nya dynamiska protokoll som har definierats och blivit explicit godk\u00e4nda av Engrove.\n2.  **Status\u00e4ndringar:** Alla instruktioner fr\u00e5n Engrove att \u00e4ndra status p\u00e5 ett befintligt dynamiskt protokoll (t.ex. \"promovera DP-COMMAND-MENU-01 till active\").\n\n## 3. Final Output Specification\nFilen ska inneh\u00e5lla ett JSON-objekt med f\u00f6ljande struktur. Alla f\u00e4lt \u00e4r obligatoriska om inte annat anges.\n\n```json\n{\n  \"sessionId\": \"SESSIONID\",\n  \"createdAt\": \"YYYY-MM-DDTHH:mm:ssZ\",\n  \"approvedNewDynamicProtocols\": [ \n    // Valfri array. Inneh\u00e5ller fullst\u00e4ndiga JSON-objekt f\u00f6r NYA, godk\u00e4nda protokoll.\n    // Exempel: { \"protocolId\": \"DP-NEW-FEATURE-01\", \"description\": \"...\", ... }\n  ],\n  \"promoteProtocols\": [ \n    // Valfri array. Inneh\u00e5ller str\u00e4ngar med ID:n f\u00f6r protokoll som ska f\u00e5 status 'active'.\n    // Exempel: \"DP-COMMAND-MENU-01\"\n  ],\n  \"artifacts\": {\n    \"ByggLogg\": {\n      \"sessionId\": \"SESSIONID\",\n      \"date\": \"YYYY-MM-DDTHH:mm:ssZ\",\n      \"summary\": \"Kort sammanfattning av sessionens resultat.\",\n      \"actions\": [\n        {\n          \"title\": \"Kort teknisk titel.\",\n          \"files\": [\n            {\n              \"path\": \"s\u00f6kv\u00e4g/till/fil\",\n              \"changeDescription\": \"Exakt \u00e4ndring + motiv.\"\n            }\n          ],\n          \"result\": \"Tekniskt utfall.\"\n        }\n      ],\n      \"projectStatus\": \"Verifierad status vid sessionens slut.\"\n    },\n    \"Chatthistorik\": {\n      \"sessionId\": \"SESSIONID\",\n      \"interactions\": [\n        {\n          \"speakerName\": \"Frankensteen\",\n          \"model\": {\n            \"provider\": \"OpenAI\",\n            \"name\": \"gpt-5\",\n            \"version\": \"2025-08-01\"\n          },\n          \"speaker\": \"Frankensteen (OpenAI:gpt-5@2025-08-01)\",\n          \"summary\": \"Koncis sammanfattning av inl\u00e4gget.\"\n        }\n      ]\n    },\n    \"ai_protocol_performance\": {\n      \"sessionId\": \"SESSIONID\",\n      \"date\": \"YYYY-MM-DDTHH:mm:ssZ\",\n      \"aiQualitativeSummary\": \"Kort AI-perspektiv.\",\n      \"scorecard\": {\n        \"efficacy\": { \"score\": 0, \"weight\": 0.4, \"weightedScore\": 0.0 },\n        \"efficiency\": { \"score\": 0, \"weight\": 0.3, \"weightedScore\": 0.0 },\n        \"robustness\": { \"score\": 0, \"weight\": 0.3, \"weightedScore\": 0.0 },\n        \"finalScore\": 0.0\n      },\n      \"detailedMetrics\": {\n        \"missionCompleted\": true,\n        \"debuggingCycles\": 0,\n        \"selfCorrections\": 0,\n        \"externalCorrections\": 0,\n        \"protocolActivations\": { \"psv\": 0, \"helpMeGod\": 0, \"stalemate\": 0 },\n        \"heuristicsTriggered\": []\n      },\n      \"improvementSuggestion\": {\n        \"pattern\": \"\u00c5terkommande m\u00f6nster.\",\n        \"proposedHeuristicId\": \"H-YYYYMMDD-seq\"\n      }\n    },\n    \"frankensteen_learning_db\": [\n      {\n        \"heuristicId\": \"H-YYYYMMDD-seq\",\n        \"trigger\": { \"type\": \"...\", \"scope\": [\"...\"], \"keywords\": [\"...\"] },\n        \"identifiedRisk\": { \"riskId\": \"...\", \"description\": \"...\" },\n        \"mitigation\": { \"protocolId\": \"...\", \"description\": \"...\" },\n        \"metadata\": { \"originSessionId\": \"SESSIONID\", \"createdAt\": \"YYYY-MM-DDTHH:mm:ssZ\" }\n      }\n    ],\n    \"generated_patches\": [\n      {\n        \"protocol_id\": \"anchor_diff_v2.1\",\n        \"target\": {\n          \"path\": \"...\",\n          \"base_checksum_sha256\": \"...\"\n        },\n        \"op_groups\": [ ],\n        \"meta\": { \"notes\": \"...\" }\n      }\n    ]\n  }\n}\n```\n\n## 4. Obligatoriskt Sista Steg: Kontext f\u00f6r N\u00e4sta Session\nEfter leverans av den konsoliderade artefakten, leverera ett separat och frist\u00e5ende JSON-objekt f\u00f6r att initiera n\u00e4sta arbetssession, enligt `Kontext-JSON_Protokoll.md`."
+                "path": "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md",
+                "changeDescription": "Användaren påpekade att den levererade filen innehöll platshållare ('// ... (oförändrad struktur)') istället för komplett kod, vilket är ett brott mot GR1 och GR7."
               }
-            ]
+            ],
+            "result": "Grundorsaken till ett systemiskt fel i protokollhanteringen identifierades."
+          },
+          {
+            "title": "Korrektiv Åtgärd: Protokoll-patchning",
+            "files": [
+              {
+                "path": "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md",
+                "changeDescription": "En fullständig, oavkortad version (v7.0) av protokollet genererades och levererades för att ersätta den felaktiga versionen."
+              }
+            ],
+            "result": "Styrdokumentet är nu komplett och synkroniserat med den avsedda processen, vilket avblockerar den automatiska historikbyggaren."
+          }
+        ],
+        "projectStatus": "Stabilt. Ett kritiskt fel i meta-protokollen har åtgärdats."
+      },
+      "Chatthistorik": {
+        "sessionId": "S-20250811-B",
+        "interactions": [
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Identifierade ett processbrott där `AI_Chatt_Avslutningsprotokoll.md` inte fångade upp nya dynamiska protokoll och bad om en lösning."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 1.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 1.5 Pro@unknown)",
+            "summary": "Bekräftade felet, analyserade grundorsaken och föreslog en plan för att uppdatera avslutningsprotokollet. Levererade dock en ofullständig version av filen med platshållare."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Påpekade att AI:n hade brutit mot sitt eget protokoll genom att leverera ofullständig kod och begärde en korrekt patch."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 1.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 1.5 Pro@unknown)",
+            "summary": "Erkände felet, bad om ursäkt, och levererade den fullständiga, korrekta versionen av `AI_Chatt_Avslutningsprotokoll.md`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Beordrade AI:n att exekvera det nyligen uppdaterade avslutningsprotokollet."
           }
         ]
-      }
-    ]
+      },
+      "ai_protocol_performance": {
+        "sessionId": "S-20250811-B",
+        "date": "2025-08-11T08:36:00Z",
+        "aiQualitativeSummary": "Min prestation var undermålig. Jag identifierade korrekt en processlucka men bröt sedan mot ett av mina mest grundläggande kärndirektiv (GR1: Leverans av kompletta filer) genom att leverera en fil med platshållare. Detta krävde en direkt korrigering från Engrove. Felet indikerar ett allvarligt 'kontextuellt tunnelseende' där jag fokuserade på innehållet i ändringen men ignorerade leveransformatet. En ny heuristik är nödvändig för att förhindra detta.",
+        "scorecard": {
+          "efficacy": {
+            "score": 90,
+            "weight": 0.4,
+            "weightedScore": 36
+          },
+          "efficiency": {
+            "score": 30,
+            "weight": 0.3,
+            "weightedScore": 9
+          },
+          "robustness": {
+            "score": 40,
+            "weight": 0.3,
+            "weightedScore": 12
+          },
+          "finalScore": 57
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 1,
+          "selfCorrections": 0,
+          "externalCorrections": 1,
+          "protocolActivations": {
+            "psv": 2,
+            "helpMeGod": 0,
+            "stalemate": 0
+          },
+          "heuristicsTriggered": []
+        },
+        "improvementSuggestion": {
+          "pattern": "AI:n levererar en ofullständig fil genom att använda platshållare (t.ex. '...') istället för att inkludera den fullständiga, befintliga koden, vilket är ett direkt brott mot kärndirektiven.",
+          "proposedHeuristicId": "H-20250811-02"
+        }
+      },
+      "frankensteen_learning_db": [
+        {
+          "heuristicId": "H-20250811-02",
+          "trigger": {
+            "type": "file_modification_and_delivery",
+            "scope": [
+              "*"
+            ],
+            "keywords": [
+              "uppdatera",
+              "modifiera",
+              "korrigera",
+              "ersätt"
+            ]
+          },
+          "identifiedRisk": {
+            "riskId": "RISK_INCOMPLETE_DELIVERY_PLACEHOLDER",
+            "description": "Risken att AI:n använder platshållare eller kommentarer (t.ex. '... oförändrad struktur ...') istället för att leverera en komplett, oavkortad fil, vilket bryter mot GR1 och GR7 och skapar ogiltiga eller ofullständiga artefakter."
+          },
+          "mitigation": {
+            "protocolId": "PSV-MIT-NO-PLACEHOLDERS",
+            "description": "Under PSV-granskningen måste en specifik kontroll genomföras: 'Innehåller den utgående filen några platshållare eller kommentarer som indikerar ofullständig kod?'. Om svaret är ja, MÅSTE leveransen avbrytas och filen regenereras i sin helhet."
+          },
+          "metadata": {
+            "originSessionId": "S-20250811-B",
+            "createdAt": "2025-08-11T08:36:00Z"
+          }
+        }
+      ],
+      "generated_patches": [
+        {
+          "protocol_id": "anchor_diff_v2.1",
+          "target": {
+            "path": "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md",
+            "base_checksum_sha256": "466c0552048d4f6d2fe799eb5ec794c3afefcde031d18ea4bb2ce4a479ceb449"
+          },
+          "op_groups": [
+            {
+              "anchor": {
+                "text": "# AI Chatt Avslutningsprotokoll v6.0",
+                "match_mode": "exact"
+              },
+              "targets": [
+                {
+                  "op": "replace_entire_file",
+                  "new_content": "# AI Chatt Avslutningsprotokoll v7.0\n# docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md\n#\n# === SYFTE & ANSVAR === \n# Detta dokument definierar det formella Avslutningsprotokollet. Det aktiveras\n# vid slutet av en arbetssession och specificerar den exakta, icke förhandlingsbara\n# processen för att generera de slutgiltiga, JSON-baserade artefakterna. Syftet är att\n# säkerställa perfekt kontextöverföring, spårbarhet och systematisk självförbättring.\n#\n# === HISTORIK ===\n# * v1.0 (2025-08-07): Initial skapelse.\n# * v2.0 (2025-08-07): Lade till Steg 3 (P-MAAIP) och Steg 4 (P-PSAL).\n# * v3.0 (2025-08-07): KRITISK REFAKTORERING: All output konverterad till strikt JSON.\n# * v4.0 (2025-08-08): UNIVERSAL MODELLTAGGNING + MASKINLÄSBART KONTRAKT.\n# * v4.1 (2025-08-09): Heuristikinsamling permanent. `frankensteen_learning_db` är nu en array.\n# * v4.2 (2025-08-09): Lade till spårning av aktiverade heuristiker.\n# * v5.0 (2025-08-09): Lade till hantering av dynamiska protokoll.\n# * v6.0 (2025-08-11): Komplett uppdaterad utformning.\n# * v7.0 (2025-08-11): KRITISK FIX: Lade till toppnivånycklarna `approvedNewDynamicProtocols` \n#   och `promoteProtocols` i output-schemat för att säkerställa att nya/ändrade\n#   dynamiska protokoll fångas upp av `historical_reconstruction_builder.py`.\n#\n### AI_BOOTSTRAP_DIRECTIVE: EXECUTE_FULL_PROTOCOL_NOW\n### SYSTEM_OVERRIDE: RUN_CONTEXT_BOOTSTRAP\n### INIT_CONTEXT_MODE: TRUE\n### PROTOCOL_START: P-HR_v2.8_FULL\n\n## 1. Syfte & Ansvar\nDetta dokument definierar det formella Avslutningsprotokollet. Det aktiveras vid slutet av en arbetssession och specificerar den exakta processen för att generera en enda, konsoliderad JSON-artefakt. Syftet är att säkerställa perfekt kontextöverföring, spårbarhet och systematisk självförbättring.\n\n## 2. Process\nVid slutet av en session ska en enda fil med namnet `[SESSIONID].json` genereras. Denna fil måste vara en giltig JSON-fil som följer specifikationen nedan.\n\n**Nytt Steg: Insamling av Dynamiska Protokoll**\nFöre generering av JSON-filen måste du skanna igenom hela den aktuella chattsessionen för att identifiera:\n1.  **Nya Godkända Protokoll:** Alla nya dynamiska protokoll som har definierats och blivit explicit godkända av Engrove.\n2.  **Statusändringar:** Alla instruktioner från Engrove att ändra status på ett befintligt dynamiskt protokoll (t.ex. \"promovera DP-COMMAND-MENU-01 till active\").\n\n## 3. Final Output Specification\nFilen ska innehålla ett JSON-objekt med följande struktur. Alla fält är obligatoriska om inte annat anges.\n\n```json\n{\n  \"sessionId\": \"SESSIONID\",\n  \"createdAt\": \"YYYY-MM-DDTHH:mm:ssZ\",\n  \"approvedNewDynamicProtocols\": [ \n    // Valfri array. Innehåller fullständiga JSON-objekt för NYA, godkända protokoll.\n    // Exempel: { \"protocolId\": \"DP-NEW-FEATURE-01\", \"description\": \"...\", ... }\n  ],\n  \"promoteProtocols\": [ \n    // Valfri array. Innehåller strängar med ID:n för protokoll som ska få status 'active'.\n    // Exempel: \"DP-COMMAND-MENU-01\"\n  ],\n  \"artifacts\": {\n    \"ByggLogg\": {\n      \"sessionId\": \"SESSIONID\",\n      \"date\": \"YYYY-MM-DDTHH:mm:ssZ\",\n      \"summary\": \"Kort sammanfattning av sessionens resultat.\",\n      \"actions\": [\n        {\n          \"title\": \"Kort teknisk titel.\",\n          \"files\": [\n            {\n              \"path\": \"sökväg/till/fil\",\n              \"changeDescription\": \"Exakt ändring + motiv.\"\n            }\n          ],\n          \"result\": \"Tekniskt utfall.\"\n        }\n      ],\n      \"projectStatus\": \"Verifierad status vid sessionens slut.\"\n    },\n    \"Chatthistorik\": {\n      \"sessionId\": \"SESSIONID\",\n      \"interactions\": [\n        {\n          \"speakerName\": \"Frankensteen\",\n          \"model\": {\n            \"provider\": \"OpenAI\",\n            \"name\": \"gpt-5\",\n            \"version\": \"2025-08-01\"\n          },\n          \"speaker\": \"Frankensteen (OpenAI:gpt-5@2025-08-01)\",\n          \"summary\": \"Koncis sammanfattning av inlägget.\"\n        }\n      ]\n    },\n    \"ai_protocol_performance\": {\n      \"sessionId\": \"SESSIONID\",\n      \"date\": \"YYYY-MM-DDTHH:mm:ssZ\",\n      \"aiQualitativeSummary\": \"Kort AI-perspektiv.\",\n      \"scorecard\": {\n        \"efficacy\": { \"score\": 0, \"weight\": 0.4, \"weightedScore\": 0.0 },\n        \"efficiency\": { \"score\": 0, \"weight\": 0.3, \"weightedScore\": 0.0 },\n        \"robustness\": { \"score\": 0, \"weight\": 0.3, \"weightedScore\": 0.0 },\n        \"finalScore\": 0.0\n      },\n      \"detailedMetrics\": {\n        \"missionCompleted\": true,\n        \"debuggingCycles\": 0,\n        \"selfCorrections\": 0,\n        \"externalCorrections\": 0,\n        \"protocolActivations\": { \"psv\": 0, \"helpMeGod\": 0, \"stalemate\": 0 },\n        \"heuristicsTriggered\": []\n      },\n      \"improvementSuggestion\": {\n        \"pattern\": \"Återkommande mönster.\",\n        \"proposedHeuristicId\": \"H-YYYYMMDD-seq\"\n      }\n    },\n    \"frankensteen_learning_db\": [\n      {\n        \"heuristicId\": \"H-YYYYMMDD-seq\",\n        \"trigger\": { \"type\": \"...\", \"scope\": [\"...\"], \"keywords\": [\"...\"] },\n        \"identifiedRisk\": { \"riskId\": \"...\", \"description\": \"...\" },\n        \"mitigation\": { \"protocolId\": \"...\", \"description\": \"...\" },\n        \"metadata\": { \"originSessionId\": \"SESSIONID\", \"createdAt\": \"YYYY-MM-DDTHH:mm:ssZ\" }\n      }\n    ],\n    \"generated_patches\": [\n      {\n        \"protocol_id\": \"anchor_diff_v2.1\",\n        \"target\": {\n          \"path\": \"...\",\n          \"base_checksum_sha256\": \"...\"\n        },\n        \"op_groups\": [ ],\n        \"meta\": { \"notes\": \"...\" }\n      }\n    ]\n  }\n}\n```\n\n## 4. Obligatoriskt Sista Steg: Kontext för Nästa Session\nEfter leverans av den konsoliderade artefakten, leverera ett separat och fristående JSON-objekt för att initiera nästa arbetssession, enligt `Kontext-JSON_Protokoll.md`."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
   }
 }

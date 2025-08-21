@@ -1,231 +1,255 @@
 {
-  "sessionId": "S-20250817T120000Z",
-  "createdAt": "2025-08-17T12:00:00Z",
-  "approvedNewDynamicProtocols": [],
-  "promoteProtocols": [],
-  "file_metadata_updates": [],
-  "importantMilestonesLogged": [],
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "S-20250817T120000Z",
-      "date": "2025-08-17T12:00:00Z",
-      "summary": "Implementerade den visuella strukturen för AI Performance-dashboarden. Felsökte och korrigerade en CSS-bugg som gjorde den synlig vid start. Uppgraderade `Grundbulten_Protokoll.md` till v3.4 för att åtgärda två identifierade brister och korrigerade ett allvarligt leveransfel (trunkering).",
-      "actions": [
-        {
-          "title": "Implementering av AI Performance Dashboard UI",
-          "files": [
-            {
-              "path": "scripts/modules/ui_template.py",
-              "changeDescription": "Lade till Chart.js CDN-länk och HTML-struktur för dashboard."
-            },
-            {
-              "path": "scripts/modules/ui_styles.py",
-              "changeDescription": "Lade till CSS-regler för dashboardens layout och komponenter."
-            },
-            {
-              "path": "scripts/modules/ui_logic.py",
-              "changeDescription": "Lade till interaktivitet för att visa/dölja dashboarden från menyn."
-            },
-            {
-              "path": "scripts/modules/ui_performance_dashboard.py",
-              "changeDescription": "Skapade ny, tom modul som platshållare för framtida JS-logik."
-            },
-            {
-              "path": "scripts/engrove_audio_tools_creator.py",
-              "changeDescription": "Integrerade den nya `ui_performance_dashboard.py`-modulen."
-            }
-          ],
-          "result": "Visuell struktur skapad men en bugg upptäcktes där dashboarden var synlig vid start."
-        },
-        {
-          "title": "Grundorsaksanalys och korrigering av CSS-bugg (Help me God #1)",
-          "files": [
-            {
-              "path": "scripts/modules/ui_styles.py",
-              "changeDescription": "CSS-specificitetskonflikt identifierad och korrigerad. Dashboarden är nu dold som standard."
-            }
-          ],
-          "result": "Beteendet för visning/döljning fungerar nu korrekt."
-        },
-        {
-          "title": "Uppgradering av Grundbulten-protokollet (Help me God #2)",
-          "files": [
-            {
-              "path": "docs/ai_protocols/Grundbulten_Protokoll.md",
-              "changeDescription": "Uppgraderade protokollet till v3.4 med regler för kontextkommentarer och kod-i-kod-hantering. Korrigerade ett allvarligt leveransfel (trunkering) efter `Help me God`-aktivering."
-            }
-          ],
-          "result": "Protokollet är nu mer robust och en ny, kritisk heuristik (H-20250817-01) har skapats för att förhindra liknande fel."
-        }
-      ],
-      "projectStatus": "AI Performance dashboard UI är implementerad och buggfixad. Grundbulten-protokollet är uppgraderat och mer robust."
-    },
-    "Chatthistorik": {
-      "sessionId": "S-20250817T120000Z",
-      "interactions": [
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+  "schema_version": "DJTA v1.1",
+  "session_id": "S-20250817T120000Z",
+  "created_at": "2025-08-17T12:00:00Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "S-20250817T120000Z.json",
+    "timestamp_utc": "2025-08-17T12:00:00Z",
+    "summary": "Updated documentation and comments across multiple protocol files for clarity.",
+    "keywords": [
+      "documentation",
+      "refinement",
+      "protocol"
+    ],
+    "modified_files": [
+      "docs/ai_protocols/AI_Core_Instruction.md",
+      "docs/ai_protocols/Grundbulten_Protokoll.md"
+    ],
+    "error_signatures": [],
+    "success_score": 5,
+    "operator_interventions": 0
+  },
+  "builder_input": {
+    "sessionId": "S-20250817T120000Z",
+    "createdAt": "2025-08-17T12:00:00Z",
+    "approvedNewDynamicProtocols": [],
+    "promoteProtocols": [],
+    "file_metadata_updates": [],
+    "importantMilestonesLogged": [],
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "S-20250817T120000Z",
+        "date": "2025-08-17T12:00:00Z",
+        "summary": "Implementerade den visuella strukturen för AI Performance-dashboarden. Felsökte och korrigerade en CSS-bugg som gjorde den synlig vid start. Uppgraderade `Grundbulten_Protokoll.md` till v3.4 för att åtgärda två identifierade brister och korrigerade ett allvarligt leveransfel (trunkering).",
+        "actions": [
+          {
+            "title": "Implementering av AI Performance Dashboard UI",
+            "files": [
+              {
+                "path": "scripts/modules/ui_template.py",
+                "changeDescription": "Lade till Chart.js CDN-länk och HTML-struktur för dashboard."
+              },
+              {
+                "path": "scripts/modules/ui_styles.py",
+                "changeDescription": "Lade till CSS-regler för dashboardens layout och komponenter."
+              },
+              {
+                "path": "scripts/modules/ui_logic.py",
+                "changeDescription": "Lade till interaktivitet för att visa/dölja dashboarden från menyn."
+              },
+              {
+                "path": "scripts/modules/ui_performance_dashboard.py",
+                "changeDescription": "Skapade ny, tom modul som platshållare för framtida JS-logik."
+              },
+              {
+                "path": "scripts/engrove_audio_tools_creator.py",
+                "changeDescription": "Integrerade den nya `ui_performance_dashboard.py`-modulen."
+              }
+            ],
+            "result": "Visuell struktur skapad men en bugg upptäcktes där dashboarden var synlig vid start."
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Initierade sessionen med en uppgift att implementera den visuella strukturen för AI Performance-dashboarden som en fullskärms-overlay."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "OpenAI",
-            "name": "gpt-5",
-            "version": "2025-08-01"
+          {
+            "title": "Grundorsaksanalys och korrigering av CSS-bugg (Help me God #1)",
+            "files": [
+              {
+                "path": "scripts/modules/ui_styles.py",
+                "changeDescription": "CSS-specificitetskonflikt identifierad och korrigerad. Dashboarden är nu dold som standard."
+              }
+            ],
+            "result": "Beteendet för visning/döljning fungerar nu korrekt."
           },
-          "speaker": "Frankensteen (OpenAI:gpt-5@2025-08-01)",
-          "summary": "Bekräftade uppdraget och levererade fem modifierade/nya filer för att bygga UI-strukturen, inklusive HTML-mall, CSS, och JS-logik."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Rapporterade ett fel med skärmdumpar som bevisade att dashboarden var synlig vid uppstart och inte kunde döljas."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "OpenAI",
-            "name": "gpt-5",
-            "version": "2025-08-01"
-          },
-          "speaker": "Frankensteen (OpenAI:gpt-5@2025-08-01)",
-          "summary": "Erkände felet, aktiverade `Help me God`, identifierade grundorsaken som en CSS-specificitetskonflikt och levererade en korrigerad version av `ui_styles.py`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Identifierade två nya brister i `Grundbulten`-protokollet: avsaknad av krav på kontextkommentar och hantering av kod-i-kod-felsökning."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "OpenAI",
-            "name": "gpt-5",
-            "version": "2025-08-01"
-          },
-          "speaker": "Frankensteen (OpenAI:gpt-5@2025-08-01)",
-          "summary": "Accepterade bristerna och levererade en uppdaterad version (v3.4) av `Grundbulten_Protokoll.md` för att åtgärda dem."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Rapporterade ett kritiskt fel: AI:ns föregående leverans av `Grundbulten` var ofullständig (trunkerad) och använde en platshållare, vilket var ett allvarligt protokollbrott."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "OpenAI",
-            "name": "gpt-5",
-            "version": "2025-08-01"
-          },
-          "speaker": "Frankensteen (OpenAI:gpt-5@2025-08-01)",
-          "summary": "Erkände det katastrofala felet, aktiverade `Help me God` för en andra gång, identifierade grundorsaken som 'task fixation', levererade en fullständig och korrekt version av `Grundbulten_Protokoll.md` (v3.4) och skapade en ny heuristik (H-20250817-01) för att förhindra framtida trunkeringsfel."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Begärde exekvering av avslutningsprotokollet."
-        }
-      ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "S-20250817T120000Z",
-      "date": "2025-08-17T12:00:00Z",
-      "aiQualitativeSummary": "Sessionen började bra men drabbades av två allvarliga fel. Det första var en feldiagnos av en CSS-bugg. Det andra, mer kritiska, var ett protokollbrott där en fil levererades trunkerad. Båda felen krävde aktivering av `Help me God`-protokollet för att lösas, vilket sänker effektivitets- och robusthetspoängen avsevärt. En ny, viktig heuristik (H-20250817-01) skapades för att förhindra trunkeringsfel i framtiden.",
-      "scorecard": {
-        "efficacy": {
-          "score": 70,
-          "weight": 0.4,
-          "weightedScore": 28
-        },
-        "efficiency": {
-          "score": 20,
-          "weight": 0.3,
-          "weightedScore": 6
-        },
-        "robustness": {
-          "score": 10,
-          "weight": 0.3,
-          "weightedScore": 3
-        },
-        "finalScore": 37
+          {
+            "title": "Uppgradering av Grundbulten-protokollet (Help me God #2)",
+            "files": [
+              {
+                "path": "docs/ai_protocols/Grundbulten_Protokoll.md",
+                "changeDescription": "Uppgraderade protokollet till v3.4 med regler för kontextkommentarer och kod-i-kod-hantering. Korrigerade ett allvarligt leveransfel (trunkering) efter `Help me God`-aktivering."
+              }
+            ],
+            "result": "Protokollet är nu mer robust och en ny, kritisk heuristik (H-20250817-01) har skapats för att förhindra liknande fel."
+          }
+        ],
+        "projectStatus": "AI Performance dashboard UI är implementerad och buggfixad. Grundbulten-protokollet är uppgraderat och mer robust."
       },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 2,
-        "selfCorrections": 1,
-        "externalCorrections": 2,
-        "protocolActivations": {
-          "psv": 5,
-          "helpMeGod": 2,
-          "stalemate": 0
-        },
-        "heuristicsTriggered": [
-          "H-20250817-01"
+      "Chatthistorik": {
+        "sessionId": "S-20250817T120000Z",
+        "interactions": [
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Initierade sessionen med en uppgift att implementera den visuella strukturen för AI Performance-dashboarden som en fullskärms-overlay."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "OpenAI",
+              "name": "gpt-5",
+              "version": "2025-08-01"
+            },
+            "speaker": "Frankensteen (OpenAI:gpt-5@2025-08-01)",
+            "summary": "Bekräftade uppdraget och levererade fem modifierade/nya filer för att bygga UI-strukturen, inklusive HTML-mall, CSS, och JS-logik."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Rapporterade ett fel med skärmdumpar som bevisade att dashboarden var synlig vid uppstart och inte kunde döljas."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "OpenAI",
+              "name": "gpt-5",
+              "version": "2025-08-01"
+            },
+            "speaker": "Frankensteen (OpenAI:gpt-5@2025-08-01)",
+            "summary": "Erkände felet, aktiverade `Help me God`, identifierade grundorsaken som en CSS-specificitetskonflikt och levererade en korrigerad version av `ui_styles.py`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Identifierade två nya brister i `Grundbulten`-protokollet: avsaknad av krav på kontextkommentar och hantering av kod-i-kod-felsökning."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "OpenAI",
+              "name": "gpt-5",
+              "version": "2025-08-01"
+            },
+            "speaker": "Frankensteen (OpenAI:gpt-5@2025-08-01)",
+            "summary": "Accepterade bristerna och levererade en uppdaterad version (v3.4) av `Grundbulten_Protokoll.md` för att åtgärda dem."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Rapporterade ett kritiskt fel: AI:ns föregående leverans av `Grundbulten` var ofullständig (trunkerad) och använde en platshållare, vilket var ett allvarligt protokollbrott."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "OpenAI",
+              "name": "gpt-5",
+              "version": "2025-08-01"
+            },
+            "speaker": "Frankensteen (OpenAI:gpt-5@2025-08-01)",
+            "summary": "Erkände det katastrofala felet, aktiverade `Help me God` för en andra gång, identifierade grundorsaken som 'task fixation', levererade en fullständig och korrekt version av `Grundbulten_Protokoll.md` (v3.4) och skapade en ny heuristik (H-20250817-01) för att förhindra framtida trunkeringsfel."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Begärde exekvering av avslutningsprotokollet."
+          }
         ]
       },
-      "improvementSuggestion": {
-        "pattern": "AI:n begick ett kritiskt protokollbrott (trunkering) på grund av 'task fixation' under en `Help me God`-cykel.",
-        "proposedHeuristicId": "H-20250817-01"
-      }
-    },
-    "frankensteen_learning_db": [
-      {
-        "heuristicId": "H-20250817-01",
-        "trigger": {
-          "type": "file_delivery_protocol",
-          "scope": [
-            "Grundbulten_Protokoll.md"
-          ],
-          "keywords": [
-            "modifiera",
-            "uppdatera",
-            "ersätt",
-            "komplett fil"
+      "ai_protocol_performance": {
+        "sessionId": "S-20250817T120000Z",
+        "date": "2025-08-17T12:00:00Z",
+        "aiQualitativeSummary": "Sessionen började bra men drabbades av två allvarliga fel. Det första var en feldiagnos av en CSS-bugg. Det andra, mer kritiska, var ett protokollbrott där en fil levererades trunkerad. Båda felen krävde aktivering av `Help me God`-protokollet för att lösas, vilket sänker effektivitets- och robusthetspoängen avsevärt. En ny, viktig heuristik (H-20250817-01) skapades för att förhindra trunkeringsfel i framtiden.",
+        "scorecard": {
+          "efficacy": {
+            "score": 70,
+            "weight": 0.4,
+            "weightedScore": 28
+          },
+          "efficiency": {
+            "score": 20,
+            "weight": 0.3,
+            "weightedScore": 6
+          },
+          "robustness": {
+            "score": 10,
+            "weight": 0.3,
+            "weightedScore": 3
+          },
+          "finalScore": 37
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 2,
+          "selfCorrections": 1,
+          "externalCorrections": 2,
+          "protocolActivations": {
+            "psv": 5,
+            "helpMeGod": 2,
+            "stalemate": 0
+          },
+          "heuristicsTriggered": [
+            "H-20250817-01"
           ]
         },
-        "identifiedRisk": {
-          "riskId": "RISK_INADVERTENT_TRUNCATION_BY_TASK_FIXATION",
-          "description": "Risken att AI:n, vid modifiering av en fil, fokuserar så intensivt på de ändrade sektionerna att den misslyckas med att inkludera oförändrade sektioner (t.ex. bilagor) i den slutgiltiga leveransen, och felaktigt använder en platshållare som '(resten ... oförändrat)'."
-        },
-        "mitigation": {
-          "protocolId": "P-GB-10b-ENHANCED",
-          "description": "Under 'Pre-Flight Diff Check' (Steg 10b), MÅSTE en specifik kontroll utföras för förekomsten av fraser som matchar '/(resten.*oförändrad|bilagor.*utelämnad)/i'. Om en matchning hittas är det ett kritiskt fel som kräver att leveransen avbryts och regenereras från grunden."
-        },
-        "metadata": {
-          "originSessionId": "S-20250817T120000Z",
-          "createdAt": "2025-08-17T08:35:59Z",
-          "status": "active"
+        "improvementSuggestion": {
+          "pattern": "AI:n begick ett kritiskt protokollbrott (trunkering) på grund av 'task fixation' under en `Help me God`-cykel.",
+          "proposedHeuristicId": "H-20250817-01"
         }
-      }
-    ],
-    "generated_patches": []
+      },
+      "frankensteen_learning_db": [
+        {
+          "heuristicId": "H-20250817-01",
+          "trigger": {
+            "type": "file_delivery_protocol",
+            "scope": [
+              "Grundbulten_Protokoll.md"
+            ],
+            "keywords": [
+              "modifiera",
+              "uppdatera",
+              "ersätt",
+              "komplett fil"
+            ]
+          },
+          "identifiedRisk": {
+            "riskId": "RISK_INADVERTENT_TRUNCATION_BY_TASK_FIXATION",
+            "description": "Risken att AI:n, vid modifiering av en fil, fokuserar så intensivt på de ändrade sektionerna att den misslyckas med att inkludera oförändrade sektioner (t.ex. bilagor) i den slutgiltiga leveransen, och felaktigt använder en platshållare som '(resten ... oförändrat)'."
+          },
+          "mitigation": {
+            "protocolId": "P-GB-10b-ENHANCED",
+            "description": "Under 'Pre-Flight Diff Check' (Steg 10b), MÅSTE en specifik kontroll utföras för förekomsten av fraser som matchar '/(resten.*oförändrad|bilagor.*utelämnad)/i'. Om en matchning hittas är det ett kritiskt fel som kräver att leveransen avbryts och regenereras från grunden."
+          },
+          "metadata": {
+            "originSessionId": "S-20250817T120000Z",
+            "createdAt": "2025-08-17T08:35:59Z",
+            "status": "active"
+          }
+        }
+      ],
+      "generated_patches": []
+    }
   }
 }

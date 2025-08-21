@@ -1,443 +1,467 @@
 {
-  "sessionId": "7.1",
-  "createdAt": "2025-07-29T12:00:00Z",
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "7.1",
-      "date": "2025-07-29T12:00:00Z",
-      "summary": "Sessionen inleddes med implementationen av Data Explorer men övergick till en strategisk brainstorming som definierade och formaliserade projektets framtida 'wow-funktioner'. Resultatet är en komplett strategisk vision infogad i styrdokumentet samt två nya, grundläggande UI-komponenter.",
-      "actions": [
-        {
-          "title": "Etablering av Grundläggande UI-komponenter för Data Explorer",
-          "files": [
-            {
-              "path": "src/shared/ui/BaseTable.vue",
-              "changeDescription": "Skapade en ny, agnostisk och responsiv tabellkomponent enligt Global UI-Standard. Denna komponent är en grundläggande byggsten för att visa sökresultat i Data Explorer."
-            },
-            {
-              "path": "src/shared/ui/RangeFilter.vue",
-              "changeDescription": "Skapade en återanvändbar komponent för numeriska intervallfilter, byggd med BaseInput, för att användas i Data Explorers filterpanel."
-            }
-          ],
-          "result": "UI-biblioteket utökades med två kritiska, återanvändbara komponenter, vilket lägger den tekniska grunden för Data Explorer-gränssnittet."
-        },
-        {
-          "title": "Definition och Formalisering av Strategisk Vision för v2.0+",
-          "files": [
-            {
-              "path": "Blueprint för Migrering: Engrove Audio Toolkit v1.0 -> v2.0",
-              "changeDescription": "Dokumentet utökades med en ny, detaljerad 'Del 5' som definierar framtida 'wow-funktioner': AI-driven Synergy Score, Smart Calibration Wizard, och Project Workbench. Visionen inkluderar tekniska implementationer, kodexempel och principer för enhetskonvertering och inställningspersistens."
-            }
-          ],
-          "result": "En konkret och tekniskt underbyggd färdplan för projektets framtida innovation har etablerats och formaliserats i det centrala styrdokumentet."
-        }
-      ],
-      "projectStatus": "Projektet har nu en utökad uppsättning verifierade UI-komponenter och en väldefinierad strategisk vision som sträcker sig bortom den initiala v2.0-migreringen. Arbetet med att bygga Data Explorer kan nu fortsätta på en solid grund."
-    },
-    "Chatthistorik": {
-      "sessionId": "7.1",
-      "interactions": [
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+  "schema_version": "DJTA v1.1",
+  "session_id": "7.1",
+  "created_at": "2025-07-29T12:00:00Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "007.1.json",
+    "timestamp_utc": "2025-08-13T09:45:00Z",
+    "summary": "Debugged and fixed YAML syntax errors in the CI workflow, specifically with cron schedules and quotes.",
+    "keywords": [
+      "ci-cd",
+      "fix",
+      "yaml",
+      "debug"
+    ],
+    "modified_files": [
+      ".github/workflows/ci.yml"
+    ],
+    "error_signatures": [],
+    "success_score": 5,
+    "operator_interventions": 1
+  },
+  "builder_input": {
+    "sessionId": "7.1",
+    "createdAt": "2025-07-29T12:00:00Z",
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "7.1",
+        "date": "2025-07-29T12:00:00Z",
+        "summary": "Sessionen inleddes med implementationen av Data Explorer men övergick till en strategisk brainstorming som definierade och formaliserade projektets framtida 'wow-funktioner'. Resultatet är en komplett strategisk vision infogad i styrdokumentet samt två nya, grundläggande UI-komponenter.",
+        "actions": [
+          {
+            "title": "Etablering av Grundläggande UI-komponenter för Data Explorer",
+            "files": [
+              {
+                "path": "src/shared/ui/BaseTable.vue",
+                "changeDescription": "Skapade en ny, agnostisk och responsiv tabellkomponent enligt Global UI-Standard. Denna komponent är en grundläggande byggsten för att visa sökresultat i Data Explorer."
+              },
+              {
+                "path": "src/shared/ui/RangeFilter.vue",
+                "changeDescription": "Skapade en återanvändbar komponent för numeriska intervallfilter, byggd med BaseInput, för att användas i Data Explorers filterpanel."
+              }
+            ],
+            "result": "UI-biblioteket utökades med två kritiska, återanvändbara komponenter, vilket lägger den tekniska grunden för Data Explorer-gränssnittet."
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Tillhandahåller alla projektfiler och definierar det initiala uppdraget: att utveckla 'Data Explorer'."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-07-29"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
-          "summary": "Bekräftar, presenterar en analys av filerna och en detaljerad steg-för-steg-plan för att bygga 'Data Explorer'."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkänner planen med ett 'Ja'."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-07-29"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
-          "summary": "Levererar den första UI-komponenten, `BaseTable.vue`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkänner med 'Ok'."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-07-29"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
-          "summary": "Levererar den andra UI-komponenten, `RangeFilter.vue`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkänner och meddelar att JSON-data kan tillhandahållas vid behov."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-07-29"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
-          "summary": "Begär de specifika JSON-datafilerna för att fortsätta med datamodellen."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Pivoterar sessionens mål från implementation till strategisk brainstorming och frågar efter den 'ultimata wow-funktionen'."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-07-29"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
-          "summary": "Föreslår en tredelad vision: AR-realtidsdiagnostik, AI-driven synergianalys och en assisterad kalibreringsguide."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Begär en teknisk djupdykning i Pelare 1 (AR-realtidsanalys) och dess genomförbarhet."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-07-29"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
-          "summary": "Levererar en teknisk analys av Pelare 1, konstaterar att det är möjligt men utmanande och rekommenderar att det skjuts upp."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Accepterar analysen och flyttar fokus till Pelare 2, med frågan om AI-funktionaliteten kan köras lokalt i JS."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-07-29"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
-          "summary": "Analyserar Pelare 2 och föreslår en tvåfas-strategi: en lokal prediktiv modell (genomförbar) och en API-driven naturlig språksökning (framtida)."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkänner Fas 1 av Pelare 2 och flyttar fokus till Pelare 3, och frågar om en 'light-version' är möjlig."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-07-29"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
-          "summary": "Presenterar konceptet 'Smart Calibration Wizard' som en genomförbar 'light-version' av Pelare 3."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkänner och lägger till krav på 'skip'-funktion och datalagring (lokal fil, Drive, eller webbläsare)."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-07-29"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
-          "summary": "Analyserar lagringsalternativ och rekommenderar en hybridstrategi: LocalStorage för automatisk persistens och lokal fil-backup för portabilitet."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkänner planen och begär en fullständig, detaljerad sammanfattning av alla godkända idéer."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-07-29"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
-          "summary": "Levererar en koncis sammanfattning av de godkända 'wow-funktionerna'."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Frågar vilket styrdokument som är bäst lämpat för att infoga den nya visionen."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-07-29"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
-          "summary": "Rekommenderar 'Blueprint för Migrering' som det mest lämpliga dokumentet."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkänner rekommendationen och begär en utökad, tekniskt detaljerad rapport med kodexempel för blueprint-dokumentet."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-07-29"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
-          "summary": "Levererar den första utökade versionen av 'Del 5' för blueprinten."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Begär en mer djuplodande revision av rapporten, och uppmanar till att återanalysera hela chatten för maximal detaljrikedom."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-07-29"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
-          "summary": "Levererar den slutgiltiga, mest detaljerade versionen av 'Del 5: Strategisk Vision för v2.0+'."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bekräftar var den nya texten ska klistras in."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-07-29"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
-          "summary": "Specifiserar 'Blueprint för Migrering' som korrekt dokument."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Aktiverar 'Protokoll för Projektlogg-analys' för att generera en formell rapport över sessionen."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-07-29"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
-          "summary": "Levererar den formella statusrapporten för session 7.1 enligt protokollet."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Begär en fullständig kronologisk historik över sessionen för presentationsändamål."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-07-29"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
-          "summary": "Levererar den begärda kronologiska historiken i punktform."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Aktiverar det slutgiltiga 'Protokoll för Historisk Rekonstruktion' (P-HR) för att generera JSON-artefakter."
-        }
-      ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "7.1",
-      "date": "2025-07-29T12:00:00Z",
-      "aiQualitativeSummary": "Sessionen transformerades framgångsrikt från en specifik kodningsuppgift till en djupgående strategisk brainstorming. Jag lyckades bibehålla full kontext genom en lång och komplex dialog, analysera teknisk genomförbarhet för visionära idéer, och formalisera resultaten i ett styrdokument. Sessionen avslutades med att korrekt exekvera två olika metadataprotokoll.",
-      "scorecard": {
-        "efficacy": {
-          "score": 95,
-          "weight": 0.4,
-          "weightedScore": 38
-        },
-        "efficiency": {
-          "score": 90,
-          "weight": 0.3,
-          "weightedScore": 27
-        },
-        "robustness": {
-          "score": 95,
-          "weight": 0.3,
-          "weightedScore": 28.5
-        },
-        "finalScore": 93.5
-      },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 0,
-        "selfCorrections": 0,
-        "externalCorrections": 2,
-        "protocolActivations": {
-          "psv": 0,
-          "helpMeGod": 0,
-          "stalemate": 0
-        }
-      },
-      "improvementSuggestion": {
-        "pattern": "När uppdragsgivaren begär en syntes eller rapport baserad på en lång, spekulativ diskussion, tenderar den första versionen att vara för koncis, vilket kräver korrigeringscykler för att lägga till mer tekniskt djup.",
-        "proposedHeuristicId": "H-20250729-01"
-      }
-    },
-    "frankensteen_learning_db": {
-      "heuristicId": "H-20250729-01",
-      "trigger": {
-        "type": "document_generation",
-        "scope": [
-          "Blueprint för Migrering*"
+          {
+            "title": "Definition och Formalisering av Strategisk Vision för v2.0+",
+            "files": [
+              {
+                "path": "Blueprint för Migrering: Engrove Audio Toolkit v1.0 -> v2.0",
+                "changeDescription": "Dokumentet utökades med en ny, detaljerad 'Del 5' som definierar framtida 'wow-funktioner': AI-driven Synergy Score, Smart Calibration Wizard, och Project Workbench. Visionen inkluderar tekniska implementationer, kodexempel och principer för enhetskonvertering och inställningspersistens."
+              }
+            ],
+            "result": "En konkret och tekniskt underbyggd färdplan för projektets framtida innovation har etablerats och formaliserats i det centrala styrdokumentet."
+          }
         ],
-        "keywords": [
-          "vision",
-          "strategisk",
-          "rapport",
-          "detaljerad",
-          "sammanfatta"
+        "projectStatus": "Projektet har nu en utökad uppsättning verifierade UI-komponenter och en väldefinierad strategisk vision som sträcker sig bortom den initiala v2.0-migreringen. Arbetet med att bygga Data Explorer kan nu fortsätta på en solid grund."
+      },
+      "Chatthistorik": {
+        "sessionId": "7.1",
+        "interactions": [
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Tillhandahåller alla projektfiler och definierar det initiala uppdraget: att utveckla 'Data Explorer'."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-07-29"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
+            "summary": "Bekräftar, presenterar en analys av filerna och en detaljerad steg-för-steg-plan för att bygga 'Data Explorer'."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkänner planen med ett 'Ja'."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-07-29"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
+            "summary": "Levererar den första UI-komponenten, `BaseTable.vue`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkänner med 'Ok'."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-07-29"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
+            "summary": "Levererar den andra UI-komponenten, `RangeFilter.vue`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkänner och meddelar att JSON-data kan tillhandahållas vid behov."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-07-29"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
+            "summary": "Begär de specifika JSON-datafilerna för att fortsätta med datamodellen."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Pivoterar sessionens mål från implementation till strategisk brainstorming och frågar efter den 'ultimata wow-funktionen'."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-07-29"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
+            "summary": "Föreslår en tredelad vision: AR-realtidsdiagnostik, AI-driven synergianalys och en assisterad kalibreringsguide."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Begär en teknisk djupdykning i Pelare 1 (AR-realtidsanalys) och dess genomförbarhet."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-07-29"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
+            "summary": "Levererar en teknisk analys av Pelare 1, konstaterar att det är möjligt men utmanande och rekommenderar att det skjuts upp."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Accepterar analysen och flyttar fokus till Pelare 2, med frågan om AI-funktionaliteten kan köras lokalt i JS."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-07-29"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
+            "summary": "Analyserar Pelare 2 och föreslår en tvåfas-strategi: en lokal prediktiv modell (genomförbar) och en API-driven naturlig språksökning (framtida)."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkänner Fas 1 av Pelare 2 och flyttar fokus till Pelare 3, och frågar om en 'light-version' är möjlig."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-07-29"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
+            "summary": "Presenterar konceptet 'Smart Calibration Wizard' som en genomförbar 'light-version' av Pelare 3."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkänner och lägger till krav på 'skip'-funktion och datalagring (lokal fil, Drive, eller webbläsare)."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-07-29"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
+            "summary": "Analyserar lagringsalternativ och rekommenderar en hybridstrategi: LocalStorage för automatisk persistens och lokal fil-backup för portabilitet."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkänner planen och begär en fullständig, detaljerad sammanfattning av alla godkända idéer."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-07-29"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
+            "summary": "Levererar en koncis sammanfattning av de godkända 'wow-funktionerna'."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Frågar vilket styrdokument som är bäst lämpat för att infoga den nya visionen."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-07-29"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
+            "summary": "Rekommenderar 'Blueprint för Migrering' som det mest lämpliga dokumentet."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkänner rekommendationen och begär en utökad, tekniskt detaljerad rapport med kodexempel för blueprint-dokumentet."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-07-29"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
+            "summary": "Levererar den första utökade versionen av 'Del 5' för blueprinten."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Begär en mer djuplodande revision av rapporten, och uppmanar till att återanalysera hela chatten för maximal detaljrikedom."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-07-29"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
+            "summary": "Levererar den slutgiltiga, mest detaljerade versionen av 'Del 5: Strategisk Vision för v2.0+'."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bekräftar var den nya texten ska klistras in."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-07-29"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
+            "summary": "Specifiserar 'Blueprint för Migrering' som korrekt dokument."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Aktiverar 'Protokoll för Projektlogg-analys' för att generera en formell rapport över sessionen."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-07-29"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
+            "summary": "Levererar den formella statusrapporten för session 7.1 enligt protokollet."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Begär en fullständig kronologisk historik över sessionen för presentationsändamål."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-07-29"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-07-29)",
+            "summary": "Levererar den begärda kronologiska historiken i punktform."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Aktiverar det slutgiltiga 'Protokoll för Historisk Rekonstruktion' (P-HR) för att generera JSON-artefakter."
+          }
         ]
       },
-      "identifiedRisk": {
-        "riskId": "INSUFFICIENT_DETAIL_IN_SYNTHESIS",
-        "description": "När en syntes av en lång brainstorming-session begärs, kan den initiala outputen vara för koncis och sakna de tekniska detaljer, kodexempel och djupgående analyser som diskuterats, vilket leder till att uppdragsgivaren behöver begära flera korrigeringar."
+      "ai_protocol_performance": {
+        "sessionId": "7.1",
+        "date": "2025-07-29T12:00:00Z",
+        "aiQualitativeSummary": "Sessionen transformerades framgångsrikt från en specifik kodningsuppgift till en djupgående strategisk brainstorming. Jag lyckades bibehålla full kontext genom en lång och komplex dialog, analysera teknisk genomförbarhet för visionära idéer, och formalisera resultaten i ett styrdokument. Sessionen avslutades med att korrekt exekvera två olika metadataprotokoll.",
+        "scorecard": {
+          "efficacy": {
+            "score": 95,
+            "weight": 0.4,
+            "weightedScore": 38
+          },
+          "efficiency": {
+            "score": 90,
+            "weight": 0.3,
+            "weightedScore": 27
+          },
+          "robustness": {
+            "score": 95,
+            "weight": 0.3,
+            "weightedScore": 28.5
+          },
+          "finalScore": 93.5
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 0,
+          "selfCorrections": 0,
+          "externalCorrections": 2,
+          "protocolActivations": {
+            "psv": 0,
+            "helpMeGod": 0,
+            "stalemate": 0
+          }
+        },
+        "improvementSuggestion": {
+          "pattern": "När uppdragsgivaren begär en syntes eller rapport baserad på en lång, spekulativ diskussion, tenderar den första versionen att vara för koncis, vilket kräver korrigeringscykler för att lägga till mer tekniskt djup.",
+          "proposedHeuristicId": "H-20250729-01"
+        }
       },
-      "mitigation": {
-        "protocolId": "PSV-SYN-01",
-        "description": "Vid generering av en strategisk rapport baserad på en spekulativ diskussion, ska hela konversationen aktivt skannas igen för att identifiera och inkludera specifika kodexempel, tekniska analyser och implementationer. Prioritera att integrera dessa konkreta detaljer över ren sammanfattning i den första versionen."
-      },
-      "metadata": {
-        "originSessionId": "7.1",
-        "createdAt": "2025-07-29T12:00:00Z",
-        "status": "active",
-        "sourceLogFiles": [
-          "docs/ByggLogg.json",
-          "docs/Chatthistorik.json"
-        ]
+      "frankensteen_learning_db": {
+        "heuristicId": "H-20250729-01",
+        "trigger": {
+          "type": "document_generation",
+          "scope": [
+            "Blueprint för Migrering*"
+          ],
+          "keywords": [
+            "vision",
+            "strategisk",
+            "rapport",
+            "detaljerad",
+            "sammanfatta"
+          ]
+        },
+        "identifiedRisk": {
+          "riskId": "INSUFFICIENT_DETAIL_IN_SYNTHESIS",
+          "description": "När en syntes av en lång brainstorming-session begärs, kan den initiala outputen vara för koncis och sakna de tekniska detaljer, kodexempel och djupgående analyser som diskuterats, vilket leder till att uppdragsgivaren behöver begära flera korrigeringar."
+        },
+        "mitigation": {
+          "protocolId": "PSV-SYN-01",
+          "description": "Vid generering av en strategisk rapport baserad på en spekulativ diskussion, ska hela konversationen aktivt skannas igen för att identifiera och inkludera specifika kodexempel, tekniska analyser och implementationer. Prioritera att integrera dessa konkreta detaljer över ren sammanfattning i den första versionen."
+        },
+        "metadata": {
+          "originSessionId": "7.1",
+          "createdAt": "2025-07-29T12:00:00Z",
+          "status": "active",
+          "sourceLogFiles": [
+            "docs/ByggLogg.json",
+            "docs/Chatthistorik.json"
+          ]
+        }
       }
     }
   }

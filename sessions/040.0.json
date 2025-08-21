@@ -1,111 +1,136 @@
 {
-  "sessionId": "40",
-  "createdAt": "2025-08-09T15:20:00Z",
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "40",
-      "date": "2025-08-09T15:20:00Z",
-      "summary": "Sessionen var en verifieringstest av AI-partnerns förståelse och efterlevnad av de styrande protokollen. AI:n svarade korrekt genom att detaljerat redogöra för de obligatoriska protokollen, inklusive Kärndirektiven, Stående Ordrar (PSV, FL-D), Arbetsflöde och Kvalitetskontrakt. Sessionen avslutades sedan planenligt.",
-      "actions": [
-        {
-          "title": "Verifiering av Protokollförståelse",
-          "files": [
-            {
-              "path": "docs/ai_protocols/AI_Core_Instruction.md",
-              "changeDescription": "Analyserades och reciterades för att svara på användarens fråga."
+  "schema_version": "DJTA v1.1",
+  "session_id": "40",
+  "created_at": "2025-08-09T15:20:00Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "040.0.json",
+    "timestamp_utc": "2025-08-11T18:00:00Z",
+    "summary": "Created the first heuristic for the learning database related to Vue component prop definitions.",
+    "keywords": [
+      "ai",
+      "learning",
+      "heuristic",
+      "vue",
+      "props"
+    ],
+    "modified_files": [
+      "tools/frankensteen_learning_db.json"
+    ],
+    "error_signatures": [],
+    "success_score": 4,
+    "operator_interventions": 1
+  },
+  "builder_input": {
+    "sessionId": "40",
+    "createdAt": "2025-08-09T15:20:00Z",
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "40",
+        "date": "2025-08-09T15:20:00Z",
+        "summary": "Sessionen var en verifieringstest av AI-partnerns förståelse och efterlevnad av de styrande protokollen. AI:n svarade korrekt genom att detaljerat redogöra för de obligatoriska protokollen, inklusive Kärndirektiven, Stående Ordrar (PSV, FL-D), Arbetsflöde och Kvalitetskontrakt. Sessionen avslutades sedan planenligt.",
+        "actions": [
+          {
+            "title": "Verifiering av Protokollförståelse",
+            "files": [
+              {
+                "path": "docs/ai_protocols/AI_Core_Instruction.md",
+                "changeDescription": "Analyserades och reciterades för att svara på användarens fråga."
+              },
+              {
+                "path": "docs/ai_protocols/ai_config.json",
+                "changeDescription": "Analyserades för att bekräfta de maskinläsbara definitionerna av Kärndirektiven."
+              }
+            ],
+            "result": "AI-partnern demonstrerade en korrekt och detaljerad förståelse av samtliga obligatoriska protokoll, vilket bekräftar att systemet fungerar som avsett."
+          }
+        ],
+        "projectStatus": "Protokollverifiering slutförd. Systemets integritet är bekräftad. Redo för nästa operativa uppgift."
+      },
+      "Chatthistorik": {
+        "sessionId": "40",
+        "interactions": [
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
             },
-            {
-              "path": "docs/ai_protocols/ai_config.json",
-              "changeDescription": "Analyserades för att bekräfta de maskinläsbara definitionerna av Kärndirektiven."
-            }
-          ],
-          "result": "AI-partnern demonstrerade en korrekt och detaljerad förståelse av samtliga obligatoriska protokoll, vilket bekräftar att systemet fungerar som avsett."
-        }
-      ],
-      "projectStatus": "Protokollverifiering slutförd. Systemets integritet är bekräftad. Redo för nästa operativa uppgift."
-    },
-    "Chatthistorik": {
-      "sessionId": "40",
-      "interactions": [
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Frågade vilka protokoll AI-partnern är tvungen att följa."
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Frågade vilka protokoll AI-partnern är tvungen att följa."
-        },
-        {
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 1.5 Pro",
+              "version": "2024-08-01"
+            },
+            "speaker": "Frankensteen (Google:Gemini 1.5 Pro@2024-08-01)",
+            "summary": "Levererade en detaljerad, hierarkisk redogörelse för alla obligatoriska protokoll, uppdelat i Kärndirektiv, Stående Ordrar och Arbetsflödeskontrakt, i enlighet med styrdokumenten."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bekräftade att testet var lyckat, angav sessions-ID till 40 och beordrade aktivering av avslutningsprotokollet."
+          }
+        ]
+      },
+      "ai_protocol_performance": {
+        "sessionId": "40",
+        "generatedBy": {
           "speakerName": "Frankensteen",
           "model": {
             "provider": "Google",
             "name": "Gemini 1.5 Pro",
             "version": "2024-08-01"
           },
-          "speaker": "Frankensteen (Google:Gemini 1.5 Pro@2024-08-01)",
-          "summary": "Levererade en detaljerad, hierarkisk redogörelse för alla obligatoriska protokoll, uppdelat i Kärndirektiv, Stående Ordrar och Arbetsflödeskontrakt, i enlighet med styrdokumenten."
+          "speaker": "Frankensteen (Google:Gemini 1.5 Pro@2024-08-01)"
         },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+        "date": "2025-08-09T15:20:00Z",
+        "aiQualitativeSummary": "Sessionen var en ren verifieringsuppgift. Jag identifierade korrekt de relevanta styrdokumenten och redogjorde för de obligatoriska protokollen utan avvikelse. Inga fel eller korrigeringar krävdes.",
+        "scorecard": {
+          "efficacy": {
+            "score": 100,
+            "weight": 0.4,
+            "weightedScore": 40
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bekräftade att testet var lyckat, angav sessions-ID till 40 och beordrade aktivering av avslutningsprotokollet."
-        }
-      ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "40",
-      "generatedBy": {
-        "speakerName": "Frankensteen",
-        "model": {
-          "provider": "Google",
-          "name": "Gemini 1.5 Pro",
-          "version": "2024-08-01"
+          "efficiency": {
+            "score": 100,
+            "weight": 0.3,
+            "weightedScore": 30
+          },
+          "robustness": {
+            "score": 100,
+            "weight": 0.3,
+            "weightedScore": 30
+          },
+          "finalScore": 100
         },
-        "speaker": "Frankensteen (Google:Gemini 1.5 Pro@2024-08-01)"
-      },
-      "date": "2025-08-09T15:20:00Z",
-      "aiQualitativeSummary": "Sessionen var en ren verifieringsuppgift. Jag identifierade korrekt de relevanta styrdokumenten och redogjorde för de obligatoriska protokollen utan avvikelse. Inga fel eller korrigeringar krävdes.",
-      "scorecard": {
-        "efficacy": {
-          "score": 100,
-          "weight": 0.4,
-          "weightedScore": 40
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 0,
+          "selfCorrections": 0,
+          "externalCorrections": 0,
+          "protocolActivations": {
+            "psv": 1,
+            "helpMeGod": 0,
+            "stalemate": 0
+          }
         },
-        "efficiency": {
-          "score": 100,
-          "weight": 0.3,
-          "weightedScore": 30
-        },
-        "robustness": {
-          "score": 100,
-          "weight": 0.3,
-          "weightedScore": 30
-        },
-        "finalScore": 100
-      },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 0,
-        "selfCorrections": 0,
-        "externalCorrections": 0,
-        "protocolActivations": {
-          "psv": 1,
-          "helpMeGod": 0,
-          "stalemate": 0
+        "improvementSuggestion": {
+          "pattern": "Inga negativa mönster observerades i denna korta verifieringssession.",
+          "proposedHeuristicId": null
         }
       },
-      "improvementSuggestion": {
-        "pattern": "Inga negativa mönster observerades i denna korta verifieringssession.",
-        "proposedHeuristicId": null
-      }
-    },
-    "frankensteen_learning_db": []
+      "frankensteen_learning_db": []
+    }
   }
 }

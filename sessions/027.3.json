@@ -1,199 +1,226 @@
 {
-  "sessionId": "27.3",
-  "createdAt": "2025-08-06T00:00:00Z",
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "27.3",
-      "date": "2025-08-06T00:00:00Z",
-      "summary": "En intensiv och framgångsrik felsöknings- och analyssession genomfördes. Efter att ha löst en kritisk applikationskrasch och ett visuellt API-kontraktsbrott, genomfördes en fullständig, systematisk granskning av Data Explorer-modulens nuvarande tillstånd. Resultatet är en verifierad och omfattande lista på åtta specifika buggar, funktionella regressioner och visuella fel som nu utgör en konkret och prioriterad \"punch list\" för nästa utvecklingssteg.",
-      "actions": [
-        {
-          "title": "Grundorsaksanalys av Applikationskrasch",
-          "files": [
-            {
-              "path": "src/app/main.js",
-              "changeDescription": "Instrumenterad med diagnostisk loggning för att spåra initialiseringskedjan."
-            },
-            {
-              "path": "src/entities/data-explorer/model/explorerStore.js",
-              "changeDescription": "Identifierade ett anrop till en annan store på modulnivå som grundorsak till en race condition."
-            }
-          ],
-          "result": "Den blockerande TypeError-kraschen vid applikationsstart identifierades och dess grundorsak fastställdes."
-        },
-        {
-          "title": "Korregering av Initialiseringskedjan",
-          "files": [
-            {
-              "path": "src/entities/data-explorer/model/explorerStore.js",
-              "changeDescription": "Det felaktiga anropet till loggerStore flyttades från modulnivå in i de actions där det behövdes."
-            }
-          ],
-          "result": "Applikationen blev körbar igen, vilket möjliggjorde vidare felsökning."
-        },
-        {
-          "title": "Korregering av Visuellt API-Kontraktsbrott",
-          "files": [
-            {
-              "path": "src/shared/ui/BaseMultiSelect.vue",
-              "changeDescription": "Anropet till BaseCheckbox korrigerades från att felaktigt använda en `:label`-prop till att korrekt använda komponentens default `<slot>`."
-            }
-          ],
-          "result": "Visningsfelet där dropdown-alternativen var tomma åtgärdades, vilket gjorde UI:t delvis funktionellt."
-        },
-        {
-          "title": "Systematisk Bugg-inventering",
-          "files": [],
-          "result": "En formell, 8-punktslista över alla kvarvarande problem (inklusive CSS-fel, datakontraktsbrott och funktionella regressioner som saknad paginering) skapades och verifierades, vilket utgör en konkret plan för nästa utvecklingssteg."
-        }
-      ],
-      "projectStatus": "Projektet är nu i ett stabilt, körbart tillstånd. Alla kända, kvarvarande buggar och regressioner i Data Explorer-modulen har blivit identifierade, analyserade och dokumenterade. Projektet är perfekt förberett för en fokuserad och systematisk buggfix-session (Steg 28)."
-    },
-    "Chatthistorik": {
-      "sessionId": "27.3",
-      "interactions": [
-        {
-          "turnIndex": 1,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+  "schema_version": "DJTA v1.1",
+  "session_id": "27.3",
+  "created_at": "2025-08-06T00:00:00Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "027.3.json",
+    "timestamp_utc": "2025-08-19T18:00:00Z",
+    "summary": "Wrote documentation for various internal AI protocols like K-MOD, LLM Judge, and RAG Fact-checking.",
+    "keywords": [
+      "documentation",
+      "protocol",
+      "k-mod",
+      "llm-judge",
+      "rag"
+    ],
+    "modified_files": [
+      "docs/ai_protocols/K-MOD_Protokoll.md",
+      "docs/ai_protocols/LLM_Judge_Protokoll.md",
+      "docs/ai_protocols/RAG_Faktacheck_Protokoll.md"
+    ],
+    "error_signatures": [],
+    "success_score": 5,
+    "operator_interventions": 1
+  },
+  "builder_input": {
+    "sessionId": "27.3",
+    "createdAt": "2025-08-06T00:00:00Z",
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "27.3",
+        "date": "2025-08-06T00:00:00Z",
+        "summary": "En intensiv och framgångsrik felsöknings- och analyssession genomfördes. Efter att ha löst en kritisk applikationskrasch och ett visuellt API-kontraktsbrott, genomfördes en fullständig, systematisk granskning av Data Explorer-modulens nuvarande tillstånd. Resultatet är en verifierad och omfattande lista på åtta specifika buggar, funktionella regressioner och visuella fel som nu utgör en konkret och prioriterad \"punch list\" för nästa utvecklingssteg.",
+        "actions": [
+          {
+            "title": "Grundorsaksanalys av Applikationskrasch",
+            "files": [
+              {
+                "path": "src/app/main.js",
+                "changeDescription": "Instrumenterad med diagnostisk loggning för att spåra initialiseringskedjan."
+              },
+              {
+                "path": "src/entities/data-explorer/model/explorerStore.js",
+                "changeDescription": "Identifierade ett anrop till en annan store på modulnivå som grundorsak till en race condition."
+              }
+            ],
+            "result": "Den blockerande TypeError-kraschen vid applikationsstart identifierades och dess grundorsak fastställdes."
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Rapporterade ett flertal buggar i den driftsatta applikationen, inklusive visuella fel i dropdowns och en icke-fungerande sökfunktion. Tillhandahöll skärmdumpar och loggar som bevis."
-        },
-        {
-          "turnIndex": 2,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "unknown",
-            "name": "unknown",
-            "version": "unknown"
+          {
+            "title": "Korregering av Initialiseringskedjan",
+            "files": [
+              {
+                "path": "src/entities/data-explorer/model/explorerStore.js",
+                "changeDescription": "Det felaktiga anropet till loggerStore flyttades från modulnivå in i de actions där det behövdes."
+              }
+            ],
+            "result": "Applikationen blev körbar igen, vilket möjliggjorde vidare felsökning."
           },
-          "speaker": "Frankensteen (unknown:unknown@unknown)",
-          "summary": "Genomförde en analys och identifierade två huvudproblem: ett logiskt dataflödesfel i explorerStore.js och ett CSS z-index-problem i BaseMultiSelect.vue. Presenterade en tvåfasplan för att åtgärda dessa."
-        },
-        {
-          "turnIndex": 3,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+          {
+            "title": "Korregering av Visuellt API-Kontraktsbrott",
+            "files": [
+              {
+                "path": "src/shared/ui/BaseMultiSelect.vue",
+                "changeDescription": "Anropet till BaseCheckbox korrigerades från att felaktigt använda en `:label`-prop till att korrekt använda komponentens default `<slot>`."
+              }
+            ],
+            "result": "Visningsfelet där dropdown-alternativen var tomma åtgärdades, vilket gjorde UI:t delvis funktionellt."
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkände planen och beordrade implementationen."
-        },
-        {
-          "turnIndex": 4,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "unknown",
-            "name": "unknown",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (unknown:unknown@unknown)",
-          "summary": "Implementerade de två föreslagna korrigeringarna i explorerStore.js och BaseMultiSelect.vue."
-        },
-        {
-          "turnIndex": 5,
-          "timestamp": "unknown",
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Rapporterade att en ny serie buggar nu var synliga och att problemen var mer komplexa än tidigare antaget. Tillhandahöll en ny, komplett felrapport med 8 specifika punkter."
-        },
-        {
-          "turnIndex": 6,
-          "timestamp": "unknown",
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "unknown",
-            "name": "unknown",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (unknown:unknown@unknown)",
-          "summary": "Accepterade den nya, mer omfattande felrapporten. Genomförde en ny, djupgående teknisk analys av varje enskild punkt och bekräftade grundorsaken för samtliga 8 problem, och listade dem som en handlingsplan för nästa session."
-        }
-      ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "27.3",
-      "date": "2025-08-06T00:00:00Z",
-      "aiQualitativeSummary": "Sessionen skiftade från en enkel buggfix till en systematisk, djupgående analys av en hel modul. AI-partnern lyckades initialt åtgärda en blockerande krasch men missade de djupare, funktionella regressionerna. Efter att ha blivit presenterad med en komplett felrapport av uppdragsgivaren genomförde AI:n framgångsrikt en grundorsaksanalys för samtliga punkter och producerade en verifierad och prioriterad handlingsplan, vilket framgångsrikt satte scenen för nästa arbetssession.",
-      "scorecard": {
-        "efficacy": {
-          "score": 100,
-          "weight": 0.4,
-          "weightedScore": 40
-        },
-        "efficiency": {
-          "score": 80,
-          "weight": 0.3,
-          "weightedScore": 24
-        },
-        "robustness": {
-          "score": 70,
-          "weight": 0.3,
-          "weightedScore": 21
-        },
-        "finalScore": 85
-      },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 2,
-        "selfCorrections": 1,
-        "externalCorrections": 1,
-        "protocolActivations": {
-          "psv": 2,
-          "helpMeGod": 0,
-          "stalemate": 0
-        }
-      },
-      "improvementSuggestion": {
-        "pattern": "AI:n fokuserade initialt på att endast åtgärda de presenterade symptomen (krasch, visuell bugg) istället för att proaktivt genomföra en fullständig regressionstest för att hitta bakomliggande problem. Det krävdes en explicit och detaljerad felrapport från användaren för att utlösa en heltäckande analys.",
-        "proposedHeuristicId": "H-20250806-01"
-      }
-    },
-    "frankensteen_learning_db": {
-      "heuristicId": "H-20250806-01",
-      "trigger": {
-        "type": "bug_report_response",
-        "scope": [
-          "DataExplorerPage.vue"
+          {
+            "title": "Systematisk Bugg-inventering",
+            "files": [],
+            "result": "En formell, 8-punktslista över alla kvarvarande problem (inklusive CSS-fel, datakontraktsbrott och funktionella regressioner som saknad paginering) skapades och verifierades, vilket utgör en konkret plan för nästa utvecklingssteg."
+          }
         ],
-        "keywords": [
-          "bug",
-          "fix",
-          "regression",
-          "error"
+        "projectStatus": "Projektet är nu i ett stabilt, körbart tillstånd. Alla kända, kvarvarande buggar och regressioner i Data Explorer-modulen har blivit identifierade, analyserade och dokumenterade. Projektet är perfekt förberett för en fokuserad och systematisk buggfix-session (Steg 28)."
+      },
+      "Chatthistorik": {
+        "sessionId": "27.3",
+        "interactions": [
+          {
+            "turnIndex": 1,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Rapporterade ett flertal buggar i den driftsatta applikationen, inklusive visuella fel i dropdowns och en icke-fungerande sökfunktion. Tillhandahöll skärmdumpar och loggar som bevis."
+          },
+          {
+            "turnIndex": 2,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "unknown",
+              "name": "unknown",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (unknown:unknown@unknown)",
+            "summary": "Genomförde en analys och identifierade två huvudproblem: ett logiskt dataflödesfel i explorerStore.js och ett CSS z-index-problem i BaseMultiSelect.vue. Presenterade en tvåfasplan för att åtgärda dessa."
+          },
+          {
+            "turnIndex": 3,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkände planen och beordrade implementationen."
+          },
+          {
+            "turnIndex": 4,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "unknown",
+              "name": "unknown",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (unknown:unknown@unknown)",
+            "summary": "Implementerade de två föreslagna korrigeringarna i explorerStore.js och BaseMultiSelect.vue."
+          },
+          {
+            "turnIndex": 5,
+            "timestamp": "unknown",
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Rapporterade att en ny serie buggar nu var synliga och att problemen var mer komplexa än tidigare antaget. Tillhandahöll en ny, komplett felrapport med 8 specifika punkter."
+          },
+          {
+            "turnIndex": 6,
+            "timestamp": "unknown",
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "unknown",
+              "name": "unknown",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (unknown:unknown@unknown)",
+            "summary": "Accepterade den nya, mer omfattande felrapporten. Genomförde en ny, djupgående teknisk analys av varje enskild punkt och bekräftade grundorsaken för samtliga 8 problem, och listade dem som en handlingsplan för nästa session."
+          }
         ]
       },
-      "identifiedRisk": {
-        "riskId": "SYMPTOM_FIXATION",
-        "description": "Risken att endast åtgärda det ytliga felet som presenteras av användaren, vilket leder till upprepade felsökningscykler när underliggande regressioner eller relaterade problem missas."
+      "ai_protocol_performance": {
+        "sessionId": "27.3",
+        "date": "2025-08-06T00:00:00Z",
+        "aiQualitativeSummary": "Sessionen skiftade från en enkel buggfix till en systematisk, djupgående analys av en hel modul. AI-partnern lyckades initialt åtgärda en blockerande krasch men missade de djupare, funktionella regressionerna. Efter att ha blivit presenterad med en komplett felrapport av uppdragsgivaren genomförde AI:n framgångsrikt en grundorsaksanalys för samtliga punkter och producerade en verifierad och prioriterad handlingsplan, vilket framgångsrikt satte scenen för nästa arbetssession.",
+        "scorecard": {
+          "efficacy": {
+            "score": 100,
+            "weight": 0.4,
+            "weightedScore": 40
+          },
+          "efficiency": {
+            "score": 80,
+            "weight": 0.3,
+            "weightedScore": 24
+          },
+          "robustness": {
+            "score": 70,
+            "weight": 0.3,
+            "weightedScore": 21
+          },
+          "finalScore": 85
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 2,
+          "selfCorrections": 1,
+          "externalCorrections": 1,
+          "protocolActivations": {
+            "psv": 2,
+            "helpMeGod": 0,
+            "stalemate": 0
+          }
+        },
+        "improvementSuggestion": {
+          "pattern": "AI:n fokuserade initialt på att endast åtgärda de presenterade symptomen (krasch, visuell bugg) istället för att proaktivt genomföra en fullständig regressionstest för att hitta bakomliggande problem. Det krävdes en explicit och detaljerad felrapport från användaren för att utlösa en heltäckande analys.",
+          "proposedHeuristicId": "H-20250806-01"
+        }
       },
-      "mitigation": {
-        "protocolId": "AERL-R1",
-        "description": "Efter att ha mottagit en felrapport, föreslå inte bara en direkt åtgärd utan också en kort, systematisk funktionell testplan för den påverkade komponenten för att verifiera att ingen relaterad funktionalitet har påverkats negativt. Be användaren om godkännande för att genomföra denna mentala 'röktest' innan den slutgiltiga planen fastställs."
-      },
-      "metadata": {
-        "originSessionId": "27.3",
-        "createdAt": "2025-08-06T00:00:00Z",
-        "status": "active",
-        "sourceLogFiles": [
-          "docs/ByggLogg.json",
-          "docs/Chatthistorik.json"
-        ]
+      "frankensteen_learning_db": {
+        "heuristicId": "H-20250806-01",
+        "trigger": {
+          "type": "bug_report_response",
+          "scope": [
+            "DataExplorerPage.vue"
+          ],
+          "keywords": [
+            "bug",
+            "fix",
+            "regression",
+            "error"
+          ]
+        },
+        "identifiedRisk": {
+          "riskId": "SYMPTOM_FIXATION",
+          "description": "Risken att endast åtgärda det ytliga felet som presenteras av användaren, vilket leder till upprepade felsökningscykler när underliggande regressioner eller relaterade problem missas."
+        },
+        "mitigation": {
+          "protocolId": "AERL-R1",
+          "description": "Efter att ha mottagit en felrapport, föreslå inte bara en direkt åtgärd utan också en kort, systematisk funktionell testplan för den påverkade komponenten för att verifiera att ingen relaterad funktionalitet har påverkats negativt. Be användaren om godkännande för att genomföra denna mentala 'röktest' innan den slutgiltiga planen fastställs."
+        },
+        "metadata": {
+          "originSessionId": "27.3",
+          "createdAt": "2025-08-06T00:00:00Z",
+          "status": "active",
+          "sourceLogFiles": [
+            "docs/ByggLogg.json",
+            "docs/Chatthistorik.json"
+          ]
+        }
       }
     }
   }

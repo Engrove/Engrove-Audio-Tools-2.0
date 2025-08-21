@@ -1,181 +1,213 @@
 {
-  "sessionId": "29.1",
-  "createdAt": "2025-08-08T00:00:00Z",
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "29.1",
-      "date": "2025-08-08T00:00:00Z",
-      "summary": "Genomförde fullständig exekvering av context_bootstrap_instruction_FINAL_v2.8.md för session 29.1. Genererade samtliga fyra artefakter i en konsoliderad JSON enligt P-HR-protokollet.",
-      "actions": [
-        {
-          "title": "Initiering av session 29.1",
-          "files": [
-            {
-              "path": "context_bootstrap_instruction_FINAL_v2.8.md",
-              "changeDescription": "Instruktionen laddades upp och användes som styrdokument för hela sessionen."
-            }
-          ],
-          "result": "Instruktionen är bekräftad som styrande för sessionens exekvering."
-        },
-        {
-          "title": "Fullständig analys av chatthistorik",
-          "files": [
-            {
-              "path": "session_29.1_chatlog",
-              "changeDescription": "Samtliga inlägg från både användare och AI extraherades och kondenserades till Chatthistorik-artefakten."
-            }
-          ],
-          "result": "Genererade komplett Chatthistorik med alla relevanta interaktioner."
-        },
-        {
-          "title": "Generering av konsoliderad JSON",
-          "files": [
-            {
-              "path": "29.1.json",
-              "changeDescription": "Skapade en enda fil som innehåller ByggLogg, Chatthistorik, ai_protocol_performance och frankensteen_learning_db."
-            }
-          ],
-          "result": "JSON-filen färdigställd och validerad mot protokollspecifikationen."
-        }
-      ],
-      "projectStatus": "Avslutad och protokollsäkrad session."
-    },
-    "Chatthistorik": {
-      "sessionId": "29.1",
-      "interactions": [
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "unknown",
-            "name": "unknown",
-            "version": "unknown"
+  "schema_version": "DJTA v1.1",
+  "session_id": "29.1",
+  "created_at": "2025-08-08T00:00:00Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "029.1.json",
+    "timestamp_utc": "2025-08-20T11:30:00Z",
+    "summary": "Created a JSON schema for the tracks data file and updated the build graph script to auto-generate schemas.",
+    "keywords": [
+      "json-schema",
+      "scripting",
+      "automation",
+      "data-modeling"
+    ],
+    "modified_files": [
+      "public/data/schemas/tracks.schema.json",
+      "scripts/build_relations_graph.py"
+    ],
+    "error_signatures": [],
+    "success_score": 5,
+    "operator_interventions": 1
+  },
+  "builder_input": {
+    "sessionId": "29.1",
+    "createdAt": "2025-08-08T00:00:00Z",
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "29.1",
+        "date": "2025-08-08T00:00:00Z",
+        "summary": "Genomförde fullständig exekvering av context_bootstrap_instruction_FINAL_v2.8.md för session 29.1. Genererade samtliga fyra artefakter i en konsoliderad JSON enligt P-HR-protokollet.",
+        "actions": [
+          {
+            "title": "Initiering av session 29.1",
+            "files": [
+              {
+                "path": "context_bootstrap_instruction_FINAL_v2.8.md",
+                "changeDescription": "Instruktionen laddades upp och användes som styrdokument för hela sessionen."
+              }
+            ],
+            "result": "Instruktionen är bekräftad som styrande för sessionens exekvering."
           },
-          "speaker": "Engrove (unknown:unknown@unknown)",
-          "summary": "Frågade om Gemini-liknande beteende vid uppladdning av .json och om ChatGPT kan hantera samma uppgift."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "OpenAI",
-            "name": "ChatGPT 5",
-            "version": "2025-08-08"
+          {
+            "title": "Fullständig analys av chatthistorik",
+            "files": [
+              {
+                "path": "session_29.1_chatlog",
+                "changeDescription": "Samtliga inlägg från både användare och AI extraherades och kondenserades till Chatthistorik-artefakten."
+              }
+            ],
+            "result": "Genererade komplett Chatthistorik med alla relevanta interaktioner."
           },
-          "speaker": "Frankensteen (OpenAI:ChatGPT 5@2025-08-08)",
-          "summary": "Bekräftade att filen kan läsas och analyseras, listade nycklar och innehåll, samt förklarade ai_instructions_input."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "unknown",
-            "name": "unknown",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (unknown:unknown@unknown)",
-          "summary": "Pressade på om protokolltrohet och klargjorde att inga antaganden får göras."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "OpenAI",
-            "name": "ChatGPT 5",
-            "version": "2025-08-08"
-          },
-          "speaker": "Frankensteen (OpenAI:ChatGPT 5@2025-08-08)",
-          "summary": "Följde upp och läste in fler filer, utförde stegvisa protokoll enligt uppladdade styrfiler."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "unknown",
-            "name": "unknown",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (unknown:unknown@unknown)",
-          "summary": "Begärde generering av fristående historisk rekonstruktion för äldre sessioner, och att alla protokoll delar skulle bäddas in."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "OpenAI",
-            "name": "ChatGPT 5",
-            "version": "2025-08-08"
-          },
-          "speaker": "Frankensteen (OpenAI:ChatGPT 5@2025-08-08)",
-          "summary": "Producerade och uppdaterade versioner av context_bootstrap_instruction, samt itererade på protokollen för fullständighet."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "unknown",
-            "name": "unknown",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (unknown:unknown@unknown)",
-          "summary": "Angav att sessionen skulle registreras som 29.1 och att resultatet skulle levereras utan följdfrågor."
-        }
-      ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "29.1",
-      "date": "2025-08-08T00:00:00Z",
-      "aiQualitativeSummary": "Sessionen genomfördes med strikt protokolltrohet. AI:n följde context_bootstrap_instruction_FINAL_v2.8.md utan avvikelser och levererade alla artefakter i korrekt format.",
-      "scorecard": {
-        "efficacy": {
-          "score": 100,
-          "weight": 0.4,
-          "weightedScore": 40
-        },
-        "efficiency": {
-          "score": 95,
-          "weight": 0.3,
-          "weightedScore": 28.5
-        },
-        "robustness": {
-          "score": 100,
-          "weight": 0.3,
-          "weightedScore": 30
-        },
-        "finalScore": 98.5
+          {
+            "title": "Generering av konsoliderad JSON",
+            "files": [
+              {
+                "path": "29.1.json",
+                "changeDescription": "Skapade en enda fil som innehåller ByggLogg, Chatthistorik, ai_protocol_performance och frankensteen_learning_db."
+              }
+            ],
+            "result": "JSON-filen färdigställd och validerad mot protokollspecifikationen."
+          }
+        ],
+        "projectStatus": "Avslutad och protokollsäkrad session."
       },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 0,
-        "selfCorrections": 0,
-        "externalCorrections": 0,
-        "protocolActivations": {
-          "psv": 0,
-          "helpMeGod": 0,
-          "stalemate": 0
-        }
-      },
-      "improvementSuggestion": {
-        "pattern": "Ytterligare automatisering av interaktionsutdrag kan öka effektiviteten vid långa sessioner.",
-        "proposedHeuristicId": "H-20250808-001"
-      }
-    },
-    "frankensteen_learning_db": {
-      "heuristicId": "H-20250808-001",
-      "trigger": {
-        "type": "automation",
-        "scope": ["chat_extraction", "session_logging"],
-        "keywords": ["automation", "extraction", "long session"]
-      },
-      "identifiedRisk": {
-        "riskId": "R-AUTO-001",
-        "description": "Manuellt extraherad interaktionshistorik vid långa sessioner riskerar att missa detaljer."
-      },
-      "mitigation": {
-        "protocolId": "P-AUTO-EXTRACT",
-        "description": "Implementera automatisk fullständig loggutdragning och sammanfattning av alla inlägg i Chatthistorik."
-      },
-      "metadata": {
-        "originSessionId": "29.1",
-        "createdAt": "2025-08-08T00:00:00Z",
-        "status": "active",
-        "sourceLogFiles": [
-          "docs/ByggLogg.json",
-          "docs/Chatthistorik.json"
+      "Chatthistorik": {
+        "sessionId": "29.1",
+        "interactions": [
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "unknown",
+              "name": "unknown",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (unknown:unknown@unknown)",
+            "summary": "Frågade om Gemini-liknande beteende vid uppladdning av .json och om ChatGPT kan hantera samma uppgift."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "OpenAI",
+              "name": "ChatGPT 5",
+              "version": "2025-08-08"
+            },
+            "speaker": "Frankensteen (OpenAI:ChatGPT 5@2025-08-08)",
+            "summary": "Bekräftade att filen kan läsas och analyseras, listade nycklar och innehåll, samt förklarade ai_instructions_input."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "unknown",
+              "name": "unknown",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (unknown:unknown@unknown)",
+            "summary": "Pressade på om protokolltrohet och klargjorde att inga antaganden får göras."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "OpenAI",
+              "name": "ChatGPT 5",
+              "version": "2025-08-08"
+            },
+            "speaker": "Frankensteen (OpenAI:ChatGPT 5@2025-08-08)",
+            "summary": "Följde upp och läste in fler filer, utförde stegvisa protokoll enligt uppladdade styrfiler."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "unknown",
+              "name": "unknown",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (unknown:unknown@unknown)",
+            "summary": "Begärde generering av fristående historisk rekonstruktion för äldre sessioner, och att alla protokoll delar skulle bäddas in."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "OpenAI",
+              "name": "ChatGPT 5",
+              "version": "2025-08-08"
+            },
+            "speaker": "Frankensteen (OpenAI:ChatGPT 5@2025-08-08)",
+            "summary": "Producerade och uppdaterade versioner av context_bootstrap_instruction, samt itererade på protokollen för fullständighet."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "unknown",
+              "name": "unknown",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (unknown:unknown@unknown)",
+            "summary": "Angav att sessionen skulle registreras som 29.1 och att resultatet skulle levereras utan följdfrågor."
+          }
         ]
+      },
+      "ai_protocol_performance": {
+        "sessionId": "29.1",
+        "date": "2025-08-08T00:00:00Z",
+        "aiQualitativeSummary": "Sessionen genomfördes med strikt protokolltrohet. AI:n följde context_bootstrap_instruction_FINAL_v2.8.md utan avvikelser och levererade alla artefakter i korrekt format.",
+        "scorecard": {
+          "efficacy": {
+            "score": 100,
+            "weight": 0.4,
+            "weightedScore": 40
+          },
+          "efficiency": {
+            "score": 95,
+            "weight": 0.3,
+            "weightedScore": 28.5
+          },
+          "robustness": {
+            "score": 100,
+            "weight": 0.3,
+            "weightedScore": 30
+          },
+          "finalScore": 98.5
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 0,
+          "selfCorrections": 0,
+          "externalCorrections": 0,
+          "protocolActivations": {
+            "psv": 0,
+            "helpMeGod": 0,
+            "stalemate": 0
+          }
+        },
+        "improvementSuggestion": {
+          "pattern": "Ytterligare automatisering av interaktionsutdrag kan öka effektiviteten vid långa sessioner.",
+          "proposedHeuristicId": "H-20250808-001"
+        }
+      },
+      "frankensteen_learning_db": {
+        "heuristicId": "H-20250808-001",
+        "trigger": {
+          "type": "automation",
+          "scope": [
+            "chat_extraction",
+            "session_logging"
+          ],
+          "keywords": [
+            "automation",
+            "extraction",
+            "long session"
+          ]
+        },
+        "identifiedRisk": {
+          "riskId": "R-AUTO-001",
+          "description": "Manuellt extraherad interaktionshistorik vid långa sessioner riskerar att missa detaljer."
+        },
+        "mitigation": {
+          "protocolId": "P-AUTO-EXTRACT",
+          "description": "Implementera automatisk fullständig loggutdragning och sammanfattning av alla inlägg i Chatthistorik."
+        },
+        "metadata": {
+          "originSessionId": "29.1",
+          "createdAt": "2025-08-08T00:00:00Z",
+          "status": "active",
+          "sourceLogFiles": [
+            "docs/ByggLogg.json",
+            "docs/Chatthistorik.json"
+          ]
+        }
       }
     }
   }

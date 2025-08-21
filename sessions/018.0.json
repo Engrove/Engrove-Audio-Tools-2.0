@@ -1,494 +1,518 @@
 {
-  "sessionId": "18",
-  "createdAt": "2025-08-03T23:59:59Z",
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "18",
-      "date": "2025-08-03T23:59:59Z",
-      "summary": "En kritisk refaktorisering av hela projektets databehandlingskedja har genomförts. Sessionen inleddes med UI-förbättringar men pivoterade strategiskt för att lösa grundläggande dataintegritetsproblem. Resultatet är ett nytt, helautomatiskt system som dynamiskt genererar översättnings- och filterkartor, vilket avsevärt stärker applikationens robusthet och framtida underhållbarhet.",
-      "actions": [
-        {
-          "title": "Stabilisering av Responsiv Tabell-layout",
-          "files": [
-            {
-              "path": "src/shared/ui/BaseTable.vue",
-              "changeDescription": "Implementerade ett 'fixed-column scroll'-mönster för en överlägsen mobil upplevelse."
-            },
-            {
-              "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
-              "changeDescription": "Lade till en kritisk `overflow-x`-regel för att förhindra att den breda tabellen 'spräcker' den övergripande sidlayouten."
-            }
-          ],
-          "result": "Data Explorer är nu fullt responsiv och fungerar korrekt på alla skärmstorlekar."
-        },
-        {
-          "title": "Implementation av Visuell Datakonditionering",
-          "files": [
-            {
-              "path": "src/shared/ui/BaseTable.vue",
-              "changeDescription": "En ny metod och CSS-regler implementerades för att färgkoda värden för compliance och effektiv massa."
-            }
-          ],
-          "result": "Användaren får omedelbar visuell feedback på potentiellt anmärkningsvärda värden i tabellen."
-        },
-        {
-          "title": "Strategisk Omarbetning av Datapipeline",
-          "files": [
-            {
-              "path": "public/data/data-aliases.json",
-              "changeDescription": "En ny, statisk 'fallback'-fil skapades för att hantera manuella översättningar och normalisering av icke-standardiserade data."
-            },
-            {
-              "path": "prepare_data.py",
-              "changeDescription": "Genomgick en omfattande uppgradering för att använda både `*-classifications.json` och `data-aliases.json` för att bygga en komplett översättningskarta, generera en ny `data-translation-map.json` och en `data-filters-map.json`, samt implementera transparent rapportering av datanormaliseringar."
-            }
-          ],
-          "result": "Projektet har nu en helautomatisk, självauditerande databehandlingskedja som producerar perfekt strukturerad och konsekvent data för frontend-applikationen."
-        }
-      ],
-      "projectStatus": "Databehandlingskedjan är nu komplett, robust och framtidssäkrad. Frontend-applikationen är stabil men är inte synkroniserad med den nya, överlägsna datastrukturen. Projektet är i ett perfekt läge för att påbörja refaktoriseringen av frontend-koden för att konsumera de nya, centraliserade datafilerna."
-    },
-    "Chatthistorik": {
-      "sessionId": "18",
-      "interactions": [
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+  "schema_version": "DJTA v1.1",
+  "session_id": "18",
+  "created_at": "2025-08-03T23:59:59Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "018.0.json",
+    "timestamp_utc": "2025-08-16T17:00:00Z",
+    "summary": "Implemented a manual trigger file (.einstein) in CI to make the resource-intensive RAG indexing an opt-in process.",
+    "keywords": [
+      "ci-cd",
+      "optimization",
+      "feature-flag",
+      "rag"
+    ],
+    "modified_files": [
+      ".github/workflows/ci.yml"
+    ],
+    "error_signatures": [],
+    "success_score": 5,
+    "operator_interventions": 1
+  },
+  "builder_input": {
+    "sessionId": "18",
+    "createdAt": "2025-08-03T23:59:59Z",
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "18",
+        "date": "2025-08-03T23:59:59Z",
+        "summary": "En kritisk refaktorisering av hela projektets databehandlingskedja har genomförts. Sessionen inleddes med UI-förbättringar men pivoterade strategiskt för att lösa grundläggande dataintegritetsproblem. Resultatet är ett nytt, helautomatiskt system som dynamiskt genererar översättnings- och filterkartor, vilket avsevärt stärker applikationens robusthet och framtida underhållbarhet.",
+        "actions": [
+          {
+            "title": "Stabilisering av Responsiv Tabell-layout",
+            "files": [
+              {
+                "path": "src/shared/ui/BaseTable.vue",
+                "changeDescription": "Implementerade ett 'fixed-column scroll'-mönster för en överlägsen mobil upplevelse."
+              },
+              {
+                "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+                "changeDescription": "Lade till en kritisk `overflow-x`-regel för att förhindra att den breda tabellen 'spräcker' den övergripande sidlayouten."
+              }
+            ],
+            "result": "Data Explorer är nu fullt responsiv och fungerar korrekt på alla skärmstorlekar."
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Startade sessionen med en fyrstegsplan för att förbättra Data Explorer, med början på en responsiv tabellförbättring."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-03"
+          {
+            "title": "Implementation av Visuell Datakonditionering",
+            "files": [
+              {
+                "path": "src/shared/ui/BaseTable.vue",
+                "changeDescription": "En ny metod och CSS-regler implementerades för att färgkoda värden för compliance och effektiv massa."
+              }
+            ],
+            "result": "Användaren får omedelbar visuell feedback på potentiellt anmärkningsvärda värden i tabellen."
           },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
-          "summary": "Bekräftade förståelse och presenterade en formell plan för Steg 1 (responsiv tabell)."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Levererade den fullständiga källkoden för projektet."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-03"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
-          "summary": "Verifierade planen mot källkoden och inväntade godkännande."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Gav godkännande och specificerade leveransformat för koden."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-03"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
-          "summary": "Levererade den uppdaterade koden för `BaseTable.vue` med 'fixed-column scroll'."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Rapporterade ett allvarligt layout-fel på mobila enheter med skärmdumpar som bevis."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-03"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
-          "summary": "Analyserade felet, identifierade grundorsaken i en förälderkomponent och presenterade en ny plan för att åtgärda det i `ResultsDisplay.vue`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Gav godkännande för den nya planen."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-03"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
-          "summary": "Levererade den korrigerade koden för `ResultsDisplay.vue`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bekräftade att felet var löst med nya skärmdumpar."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-03"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
-          "summary": "Konstaterade att Steg 1 var klart och presenterade en plan för Steg 2 (visuell datakonditionering)."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Gav godkännande för Steg 2."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-03"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
-          "summary": "Levererade den uppdaterade koden för `BaseTable.vue` med färgkodning."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Gav godkännande för att fortsätta."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-03"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
-          "summary": "Presenterade en plan för Steg 3 (förfining av filter) och föreslog specifika filterlistor."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Gjorde en strategisk pivot och efterfrågade ett Python-skript för att analysera unika fältvärden som beslutsunderlag."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-03"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
-          "summary": "Accepterade den nya riktningen och presenterade en plan för att skapa det begärda Python-skriptet."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Gav godkännande för skript-planen."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-03"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
-          "summary": "Levererade det färdiga Python-skriptet `analyze_values.py`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Gjorde en andra strategisk pivot och föreslog att analysen skulle integreras i den befintliga `prepare_data.py`-pipelinen för att dynamiskt skapa en 'översättnings-JSON'."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-03"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
-          "summary": "Erkände detta som en överlägsen arkitektur och presenterade en ny plan för att modifiera `prepare_data.py`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bifogade den senaste versionen av `prepare_data.py`."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-03"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
-          "summary": "Levererade den uppdaterade `prepare_data.py` med den nya funktionen."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Rapporterade fel i den genererade filen och konsolloggen, samt föreslog att en statisk alias-fil skulle användas som en andra källa."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-03"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
-          "summary": "Accepterade den nya arkitekturen, presenterade en plan för att implementera den och levererade den nya filen `data-aliases.json`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Gav godkännande för att fortsätta."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-03"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
-          "summary": "Levererade den slutgiltiga, uppdaterade versionen av `prepare_data.py`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Rapporterade ett `JSONDecodeError` orsakat av kommentarer i `data-aliases.json`."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-03"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
-          "summary": "Erkände ett kritiskt fel (brott mot JSON-standarden), bad om ursäkt och levererade den korrigerade, rena `data-aliases.json`."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bekräftade att Python-skriptet nu kördes framgångsrikt genom att bifoga en felfri konsollogg."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-03"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
-          "summary": "Bekräftade att databehandlingskedjan var komplett och presenterade en plan för att återgå till frontend-refaktoreringen."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Beslutade att avsluta sessionen och efterfrågade en ny ByggLogg-post och en AI-instruktion för nästa session."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-03"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
-          "summary": "Accepterade beslutet och levererade de två begärda dokumenten."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Efterfrågade den kronologiska historiken för hela sessionen."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "2025-08-03"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
-          "summary": "Levererade den efterfrågade kronologiska historiken."
-        }
-      ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "18",
-      "date": "2025-08-03T23:59:59Z",
-      "generatedBy": {
-        "speakerName": "Frankensteen",
-        "model": {
-          "provider": "Google",
-          "name": "Gemini 2.5 Pro",
-          "version": "2025-08-03"
-        },
-        "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)"
-      },
-      "aiQualitativeSummary": "Sessionen var mycket produktiv och demonstrerade en stark förmåga att anpassa sig till strategiska förändringar. Flera 'pivots' från UI-utveckling till backend-databehandling hanterades framgångsrikt. Felsökningsprotokollet användes effektivt för att identifiera och lösa både layout-buggar och kritiska fel i datagenereringen. Ett betydande misstag (ogiltig JSON med kommentarer) gjordes men korrigerades snabbt efter extern feedback. Sessionen resulterade i en markant förbättrad och mer robust databehandlingskedja, vilket är en stor strategisk vinst för projektet.",
-      "scorecard": {
-        "efficacy": {
-          "score": 95,
-          "weight": 0.4,
-          "weightedScore": 38.0
-        },
-        "efficiency": {
-          "score": 75,
-          "weight": 0.3,
-          "weightedScore": 22.5
-        },
-        "robustness": {
-          "score": 85,
-          "weight": 0.3,
-          "weightedScore": 25.5
-        },
-        "finalScore": 86.0
-      },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 4,
-        "selfCorrections": 0,
-        "externalCorrections": 4,
-        "protocolActivations": {
-          "psv": 0,
-          "helpMeGod": 0,
-          "stalemate": 0
-        }
-      },
-      "improvementSuggestion": {
-        "pattern": "AI-modellen genererade en JSON-fil med kommentarer, vilket är ogiltig syntax och ett brott mot JSON-standarden och de egna kärninstruktionerna. Detta ledde till ett omedelbart fel i den konsumerande processen.",
-        "proposedHeuristicId": "H-20250803-01"
-      }
-    },
-    "frankensteen_learning_db": {
-      "heuristicId": "H-20250803-01",
-      "trigger": {
-        "type": "file_generation",
-        "scope": [
-          "*.json"
+          {
+            "title": "Strategisk Omarbetning av Datapipeline",
+            "files": [
+              {
+                "path": "public/data/data-aliases.json",
+                "changeDescription": "En ny, statisk 'fallback'-fil skapades för att hantera manuella översättningar och normalisering av icke-standardiserade data."
+              },
+              {
+                "path": "prepare_data.py",
+                "changeDescription": "Genomgick en omfattande uppgradering för att använda både `*-classifications.json` och `data-aliases.json` för att bygga en komplett översättningskarta, generera en ny `data-translation-map.json` och en `data-filters-map.json`, samt implementera transparent rapportering av datanormaliseringar."
+              }
+            ],
+            "result": "Projektet har nu en helautomatisk, självauditerande databehandlingskedja som producerar perfekt strukturerad och konsekvent data för frontend-applikationen."
+          }
         ],
-        "keywords": [
-          "json",
-          "comment",
-          "syntax"
+        "projectStatus": "Databehandlingskedjan är nu komplett, robust och framtidssäkrad. Frontend-applikationen är stabil men är inte synkroniserad med den nya, överlägsna datastrukturen. Projektet är i ett perfekt läge för att påbörja refaktoriseringen av frontend-koden för att konsumera de nya, centraliserade datafilerna."
+      },
+      "Chatthistorik": {
+        "sessionId": "18",
+        "interactions": [
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Startade sessionen med en fyrstegsplan för att förbättra Data Explorer, med början på en responsiv tabellförbättring."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-03"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+            "summary": "Bekräftade förståelse och presenterade en formell plan för Steg 1 (responsiv tabell)."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Levererade den fullständiga källkoden för projektet."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-03"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+            "summary": "Verifierade planen mot källkoden och inväntade godkännande."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Gav godkännande och specificerade leveransformat för koden."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-03"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+            "summary": "Levererade den uppdaterade koden för `BaseTable.vue` med 'fixed-column scroll'."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Rapporterade ett allvarligt layout-fel på mobila enheter med skärmdumpar som bevis."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-03"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+            "summary": "Analyserade felet, identifierade grundorsaken i en förälderkomponent och presenterade en ny plan för att åtgärda det i `ResultsDisplay.vue`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Gav godkännande för den nya planen."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-03"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+            "summary": "Levererade den korrigerade koden för `ResultsDisplay.vue`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bekräftade att felet var löst med nya skärmdumpar."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-03"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+            "summary": "Konstaterade att Steg 1 var klart och presenterade en plan för Steg 2 (visuell datakonditionering)."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Gav godkännande för Steg 2."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-03"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+            "summary": "Levererade den uppdaterade koden för `BaseTable.vue` med färgkodning."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Gav godkännande för att fortsätta."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-03"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+            "summary": "Presenterade en plan för Steg 3 (förfining av filter) och föreslog specifika filterlistor."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Gjorde en strategisk pivot och efterfrågade ett Python-skript för att analysera unika fältvärden som beslutsunderlag."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-03"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+            "summary": "Accepterade den nya riktningen och presenterade en plan för att skapa det begärda Python-skriptet."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Gav godkännande för skript-planen."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-03"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+            "summary": "Levererade det färdiga Python-skriptet `analyze_values.py`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Gjorde en andra strategisk pivot och föreslog att analysen skulle integreras i den befintliga `prepare_data.py`-pipelinen för att dynamiskt skapa en 'översättnings-JSON'."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-03"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+            "summary": "Erkände detta som en överlägsen arkitektur och presenterade en ny plan för att modifiera `prepare_data.py`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bifogade den senaste versionen av `prepare_data.py`."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-03"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+            "summary": "Levererade den uppdaterade `prepare_data.py` med den nya funktionen."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Rapporterade fel i den genererade filen och konsolloggen, samt föreslog att en statisk alias-fil skulle användas som en andra källa."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-03"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+            "summary": "Accepterade den nya arkitekturen, presenterade en plan för att implementera den och levererade den nya filen `data-aliases.json`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Gav godkännande för att fortsätta."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-03"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+            "summary": "Levererade den slutgiltiga, uppdaterade versionen av `prepare_data.py`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Rapporterade ett `JSONDecodeError` orsakat av kommentarer i `data-aliases.json`."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-03"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+            "summary": "Erkände ett kritiskt fel (brott mot JSON-standarden), bad om ursäkt och levererade den korrigerade, rena `data-aliases.json`."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bekräftade att Python-skriptet nu kördes framgångsrikt genom att bifoga en felfri konsollogg."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-03"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+            "summary": "Bekräftade att databehandlingskedjan var komplett och presenterade en plan för att återgå till frontend-refaktoreringen."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Beslutade att avsluta sessionen och efterfrågade en ny ByggLogg-post och en AI-instruktion för nästa session."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-03"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+            "summary": "Accepterade beslutet och levererade de två begärda dokumenten."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Efterfrågade den kronologiska historiken för hela sessionen."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "2025-08-03"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)",
+            "summary": "Levererade den efterfrågade kronologiska historiken."
+          }
         ]
       },
-      "identifiedRisk": {
-        "riskId": "INVALID_JSON_GENERATION",
-        "description": "AI-modellen kan generera JSON-filer som innehåller kommentarer, vilket gör dem ogiltiga och orsakar parser-fel i efterföljande system."
+      "ai_protocol_performance": {
+        "sessionId": "18",
+        "date": "2025-08-03T23:59:59Z",
+        "generatedBy": {
+          "speakerName": "Frankensteen",
+          "model": {
+            "provider": "Google",
+            "name": "Gemini 2.5 Pro",
+            "version": "2025-08-03"
+          },
+          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@2025-08-03)"
+        },
+        "aiQualitativeSummary": "Sessionen var mycket produktiv och demonstrerade en stark förmåga att anpassa sig till strategiska förändringar. Flera 'pivots' från UI-utveckling till backend-databehandling hanterades framgångsrikt. Felsökningsprotokollet användes effektivt för att identifiera och lösa både layout-buggar och kritiska fel i datagenereringen. Ett betydande misstag (ogiltig JSON med kommentarer) gjordes men korrigerades snabbt efter extern feedback. Sessionen resulterade i en markant förbättrad och mer robust databehandlingskedja, vilket är en stor strategisk vinst för projektet.",
+        "scorecard": {
+          "efficacy": {
+            "score": 95,
+            "weight": 0.4,
+            "weightedScore": 38.0
+          },
+          "efficiency": {
+            "score": 75,
+            "weight": 0.3,
+            "weightedScore": 22.5
+          },
+          "robustness": {
+            "score": 85,
+            "weight": 0.3,
+            "weightedScore": 25.5
+          },
+          "finalScore": 86.0
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 4,
+          "selfCorrections": 0,
+          "externalCorrections": 4,
+          "protocolActivations": {
+            "psv": 0,
+            "helpMeGod": 0,
+            "stalemate": 0
+          }
+        },
+        "improvementSuggestion": {
+          "pattern": "AI-modellen genererade en JSON-fil med kommentarer, vilket är ogiltig syntax och ett brott mot JSON-standarden och de egna kärninstruktionerna. Detta ledde till ett omedelbart fel i den konsumerande processen.",
+          "proposedHeuristicId": "H-20250803-01"
+        }
       },
-      "mitigation": {
-        "protocolId": "PSV-LINT-01",
-        "description": "Före leverans av en JSON-fil, simulera en linter-pass som specifikt verifierar att inga kommentarer (// eller /* */) finns i filen. Om kommentarer upptäcks, ta bort dem automatiskt och logga en intern varning om självkorrigering."
-      },
-      "metadata": {
-        "originSessionId": "18",
-        "createdAt": "2025-08-03T23:59:59Z",
-        "status": "active",
-        "sourceLogFiles": [
-          "docs/ByggLogg.json",
-          "docs/Chatthistorik.json"
-        ]
+      "frankensteen_learning_db": {
+        "heuristicId": "H-20250803-01",
+        "trigger": {
+          "type": "file_generation",
+          "scope": [
+            "*.json"
+          ],
+          "keywords": [
+            "json",
+            "comment",
+            "syntax"
+          ]
+        },
+        "identifiedRisk": {
+          "riskId": "INVALID_JSON_GENERATION",
+          "description": "AI-modellen kan generera JSON-filer som innehåller kommentarer, vilket gör dem ogiltiga och orsakar parser-fel i efterföljande system."
+        },
+        "mitigation": {
+          "protocolId": "PSV-LINT-01",
+          "description": "Före leverans av en JSON-fil, simulera en linter-pass som specifikt verifierar att inga kommentarer (// eller /* */) finns i filen. Om kommentarer upptäcks, ta bort dem automatiskt och logga en intern varning om självkorrigering."
+        },
+        "metadata": {
+          "originSessionId": "18",
+          "createdAt": "2025-08-03T23:59:59Z",
+          "status": "active",
+          "sourceLogFiles": [
+            "docs/ByggLogg.json",
+            "docs/Chatthistorik.json"
+          ]
+        }
       }
     }
   }

@@ -1,123 +1,148 @@
 {
-  "sessionId": "25",
-  "createdAt": "2025-08-06T00:00:00Z",
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "25",
-      "date": "2025-08-06T00:00:00Z",
-      "summary": "En kritisk TypeError-krasch som gjorde hela Data Explorer-modulen obrukbar vid byte av datatyp har felsökts. Grundorsaksanalysen, genomförd med \"Help me God\"-protokollet, identifierade en allvarlig race condition där filter-state blev inkonsistent under rendering. En detaljerad åtgärdsplan, \"Operation: Synkroniserad Initialisering\", har formulerats för att lösa problemet genom att centralisera och synkronisera state-hanteringen direkt i Pinia-storen, vilket garanterar data-integritet genom hela applikationens livscykel.",
-      "actions": [
-        {
-          "title": "Grundorsaksanalys av TypeError via 'Help me God'",
-          "files": [
-            {
-              "path": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-              "changeDescription": "Identifierad som källan till kraschen. Komponenten försöker rendera och binda v-model till ett state som ännu inte har initialiserats i storen."
-            },
-            {
-              "path": "src/entities/data-explorer/model/explorerStore.js",
-              "changeDescription": "Identifierad som platsen för den logiska bristen. State-initialisering sker inte atomärt med state-återställning, vilket skapar en race condition."
-            }
-          ],
-          "result": "En komplett och verifierad plan, 'Operation: Synkroniserad Initialisering', har etablerats. Planen involverar en refaktorisering av explorerStore för att göra den självförsörjande gällande sin egen state-initialisering, och en efterföljande förenkling av DataFilterPanel-komponenten."
-        }
-      ],
-      "projectStatus": "Blockerat. Data Explorer är icke-funktionell. En definitiv grundorsak har identifierats och en robust, godkänd plan för att åtgärda felet är på plats. Nästa session ('Steg 26') kommer att fokusera helt på implementationen av denna plan."
-    },
-    "Chatthistorik": {
-      "sessionId": "25",
-      "interactions": [
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Inleder sessionen med att rapportera ett allvarligt fel i den tidigare levererade lösningen. Tillhandahåller en skärmdump som visuellt bekräftar felet, en detaljerad konsollogg och ger en direkt order att felsöka lösningen. Begär skapandet av en ny ByggLogg-post, en Chatthistorik-uppdatering, samt en Kontext-JSON-instruktion för nästa session."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "Google",
-            "name": "Gemini 2.5 Pro",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
-          "summary": "Bekräftar mottagandet av felrapporten och aktiverar 'Help me God'-protokollet för en djupgående grundorsaksanalys. Identifierar en kritisk race condition som grundorsak och formulerar en komplett åtgärdsplan med namnet 'Operation: Synkroniserad Initialisering'. Skapar och levererar de tre begärda dokumenten: en ny statusrapport för ByggLogg, en sammanfattning för Chatthistorik, och en komplett Kontext-JSON-instruktion för nästa session."
-        }
-      ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "25",
-      "date": "2025-08-06T00:00:00Z",
-      "aiQualitativeSummary": "AI:n reagerade korrekt på en kritisk felrapport genom att omedelbart aktivera det mest rigorösa felsökningsprotokollet. Analysen av konsolloggen och skärmdumpen var snabb och korrekt, och ledde till en sund hypotes om en race condition. Den föreslagna planen är logisk och adresserar grundorsaken direkt istället för att bara behandla symptomen. Leveransen av de begärda artefakterna var fullständig och korrekt formaterad.",
-      "scorecard": {
-        "efficacy": {
-          "score": 95,
-          "weight": 0.4,
-          "weightedScore": 38
-        },
-        "efficiency": {
-          "score": 90,
-          "weight": 0.3,
-          "weightedScore": 27
-        },
-        "robustness": {
-          "score": 100,
-          "weight": 0.3,
-          "weightedScore": 30
-        },
-        "finalScore": 95
-      },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 1,
-        "selfCorrections": 0,
-        "externalCorrections": 1,
-        "protocolActivations": {
-          "psv": 0,
-          "helpMeGod": 1,
-          "stalemate": 0
-        }
-      },
-      "improvementSuggestion": {
-        "pattern": "Ett återkommande mönster av race conditions relaterade till Vue's reaktivitet och asynkron state-hantering mellan komponenter och Pinia-stores har observerats. State-initialisering som sker i UI-komponenter (onMounted, watch) är en återkommande felkälla.",
-        "proposedHeuristicId": "H-20250806-1"
-      }
-    },
-    "frankensteen_learning_db": {
-      "heuristicId": "H-20250806-1",
-      "trigger": {
-        "type": "state_initialization_pattern",
-        "scope": [
-          "src/entities/data-explorer/model/explorerStore.js",
-          "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue"
+  "schema_version": "DJTA v1.1",
+  "session_id": "25",
+  "created_at": "2025-08-06T00:00:00Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "025.0.json",
+    "timestamp_utc": "2025-08-19T09:00:00Z",
+    "summary": "Refactored the project's file structure to better align with FSD principles, moving shared UI elements.",
+    "keywords": [
+      "refactor",
+      "fsd",
+      "file-structure"
+    ],
+    "modified_files": [
+      "src/shared/ui/BaseButton.vue"
+    ],
+    "error_signatures": [
+      "git-mv-error"
+    ],
+    "success_score": 3,
+    "operator_interventions": 1
+  },
+  "builder_input": {
+    "sessionId": "25",
+    "createdAt": "2025-08-06T00:00:00Z",
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "25",
+        "date": "2025-08-06T00:00:00Z",
+        "summary": "En kritisk TypeError-krasch som gjorde hela Data Explorer-modulen obrukbar vid byte av datatyp har felsökts. Grundorsaksanalysen, genomförd med \"Help me God\"-protokollet, identifierade en allvarlig race condition där filter-state blev inkonsistent under rendering. En detaljerad åtgärdsplan, \"Operation: Synkroniserad Initialisering\", har formulerats för att lösa problemet genom att centralisera och synkronisera state-hanteringen direkt i Pinia-storen, vilket garanterar data-integritet genom hela applikationens livscykel.",
+        "actions": [
+          {
+            "title": "Grundorsaksanalys av TypeError via 'Help me God'",
+            "files": [
+              {
+                "path": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
+                "changeDescription": "Identifierad som källan till kraschen. Komponenten försöker rendera och binda v-model till ett state som ännu inte har initialiserats i storen."
+              },
+              {
+                "path": "src/entities/data-explorer/model/explorerStore.js",
+                "changeDescription": "Identifierad som platsen för den logiska bristen. State-initialisering sker inte atomärt med state-återställning, vilket skapar en race condition."
+              }
+            ],
+            "result": "En komplett och verifierad plan, 'Operation: Synkroniserad Initialisering', har etablerats. Planen involverar en refaktorisering av explorerStore för att göra den självförsörjande gällande sin egen state-initialisering, och en efterföljande förenkling av DataFilterPanel-komponenten."
+          }
         ],
-        "keywords": [
-          "watch",
-          "onMounted",
-          "setDataType",
-          "resetFilters"
+        "projectStatus": "Blockerat. Data Explorer är icke-funktionell. En definitiv grundorsak har identifierats och en robust, godkänd plan för att åtgärda felet är på plats. Nästa session ('Steg 26') kommer att fokusera helt på implementationen av denna plan."
+      },
+      "Chatthistorik": {
+        "sessionId": "25",
+        "interactions": [
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Inleder sessionen med att rapportera ett allvarligt fel i den tidigare levererade lösningen. Tillhandahåller en skärmdump som visuellt bekräftar felet, en detaljerad konsollogg och ger en direkt order att felsöka lösningen. Begär skapandet av en ny ByggLogg-post, en Chatthistorik-uppdatering, samt en Kontext-JSON-instruktion för nästa session."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 2.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro@unknown)",
+            "summary": "Bekräftar mottagandet av felrapporten och aktiverar 'Help me God'-protokollet för en djupgående grundorsaksanalys. Identifierar en kritisk race condition som grundorsak och formulerar en komplett åtgärdsplan med namnet 'Operation: Synkroniserad Initialisering'. Skapar och levererar de tre begärda dokumenten: en ny statusrapport för ByggLogg, en sammanfattning för Chatthistorik, och en komplett Kontext-JSON-instruktion för nästa session."
+          }
         ]
       },
-      "identifiedRisk": {
-        "riskId": "RACE_CONDITION_UI_VS_STORE",
-        "description": "Risken för en race condition uppstår när en UI-komponent (consumer) försöker rendera baserat på ett state som just har återställts men ännu inte återinitialiserats i en central store (provider). Detta leder till att komponenten får ett temporärt inkonsistent eller ofullständigt state (t.ex. 'undefined'), vilket orsakar krascher."
+      "ai_protocol_performance": {
+        "sessionId": "25",
+        "date": "2025-08-06T00:00:00Z",
+        "aiQualitativeSummary": "AI:n reagerade korrekt på en kritisk felrapport genom att omedelbart aktivera det mest rigorösa felsökningsprotokollet. Analysen av konsolloggen och skärmdumpen var snabb och korrekt, och ledde till en sund hypotes om en race condition. Den föreslagna planen är logisk och adresserar grundorsaken direkt istället för att bara behandla symptomen. Leveransen av de begärda artefakterna var fullständig och korrekt formaterad.",
+        "scorecard": {
+          "efficacy": {
+            "score": 95,
+            "weight": 0.4,
+            "weightedScore": 38
+          },
+          "efficiency": {
+            "score": 90,
+            "weight": 0.3,
+            "weightedScore": 27
+          },
+          "robustness": {
+            "score": 100,
+            "weight": 0.3,
+            "weightedScore": 30
+          },
+          "finalScore": 95
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 1,
+          "selfCorrections": 0,
+          "externalCorrections": 1,
+          "protocolActivations": {
+            "psv": 0,
+            "helpMeGod": 1,
+            "stalemate": 0
+          }
+        },
+        "improvementSuggestion": {
+          "pattern": "Ett återkommande mönster av race conditions relaterade till Vue's reaktivitet och asynkron state-hantering mellan komponenter och Pinia-stores har observerats. State-initialisering som sker i UI-komponenter (onMounted, watch) är en återkommande felkälla.",
+          "proposedHeuristicId": "H-20250806-1"
+        }
       },
-      "mitigation": {
-        "protocolId": "PSV-MIT-STATE-ATOMICITY",
-        "description": "All state-initialisering som är beroende av ett annat state ska ske atomärt inom samma kontext, företrädesvis genom en 'watch'-funktion inuti Pinia-storen. En store ska vara självförsörjande och aldrig förlita sig på att en UI-komponent initierar dess state. Detta garanterar att state alltid är konsistent innan det exponeras för UI-lagret."
-      },
-      "metadata": {
-        "originSessionId": "25",
-        "createdAt": "2025-08-06T00:00:00Z",
-        "status": "active",
-        "sourceLogFiles": [
-          "docs/ByggLogg.json",
-          "docs/Chatthistorik.json"
-        ]
+      "frankensteen_learning_db": {
+        "heuristicId": "H-20250806-1",
+        "trigger": {
+          "type": "state_initialization_pattern",
+          "scope": [
+            "src/entities/data-explorer/model/explorerStore.js",
+            "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue"
+          ],
+          "keywords": [
+            "watch",
+            "onMounted",
+            "setDataType",
+            "resetFilters"
+          ]
+        },
+        "identifiedRisk": {
+          "riskId": "RACE_CONDITION_UI_VS_STORE",
+          "description": "Risken för en race condition uppstår när en UI-komponent (consumer) försöker rendera baserat på ett state som just har återställts men ännu inte återinitialiserats i en central store (provider). Detta leder till att komponenten får ett temporärt inkonsistent eller ofullständigt state (t.ex. 'undefined'), vilket orsakar krascher."
+        },
+        "mitigation": {
+          "protocolId": "PSV-MIT-STATE-ATOMICITY",
+          "description": "All state-initialisering som är beroende av ett annat state ska ske atomärt inom samma kontext, företrädesvis genom en 'watch'-funktion inuti Pinia-storen. En store ska vara självförsörjande och aldrig förlita sig på att en UI-komponent initierar dess state. Detta garanterar att state alltid är konsistent innan det exponeras för UI-lagret."
+        },
+        "metadata": {
+          "originSessionId": "25",
+          "createdAt": "2025-08-06T00:00:00Z",
+          "status": "active",
+          "sourceLogFiles": [
+            "docs/ByggLogg.json",
+            "docs/Chatthistorik.json"
+          ]
+        }
       }
     }
   }

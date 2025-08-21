@@ -1,236 +1,262 @@
 {
-  "sessionId": "S-2025-08-18T11-22-45Z",
-  "createdAt": "2025-08-18T11:22:45Z",
-  "approvedNewDynamicProtocols": [],
-  "promoteProtocols": [],
-  "file_metadata_updates": [],
-  "importantMilestonesLogged": [
-    {
-      "event_id": "IMR-001",
-      "milestone_type": "PROCESS",
-      "summary": "Resolution of Stalemate Protocol (UI Rendering)",
-      "details": "Successfully resolved a multi-stage debugging session concerning a UI rendering failure by applying the Stalemate Protocol. An external arbitration (domslut) provided the correct root cause, leading to a definitive fix.",
-      "affected_scope": [
-        "scripts/modules/ui_logic.py"
-      ],
-      "timestamp": "2025-08-18T11:22:45Z",
-      "session_id": "S-2025-08-18T11-22-45Z"
-    }
-  ],
-  "artifacts": {
-    "ByggLogg": {
-      "sessionId": "S-2025-08-18T11-22-45Z",
-      "date": "2025-08-18T11:22:45Z",
-      "summary": "Genomförde en komplex UI-refaktorering ('Operation Outlook Layout') som krävde flera felsökningscykler. Ett arkitektoniskt fel identifierades och löstes via Help_me_God och Stalemate-protokollen, vilket resulterade i en fungerande 'Ribbon UI' med hybrid-vy-kontroll.",
-      "actions": [
-        {
-          "title": "Försök 1: Felaktig 'Outlook Layout'-refaktorering",
-          "files": [
-            {
-              "path": "scripts/modules/ui_template.py",
-              "changeDescription": "Felaktigt flyttade ribbon-innehållet från header till main."
-            },
-            {
-              "path": "scripts/modules/ui_styles.py",
-              "changeDescription": "Anpassade CSS för den felaktiga layouten."
-            },
-            {
-              "path": "scripts/modules/ui_logic.py",
-              "changeDescription": "Implementerade felaktig panel-växlingslogik."
-            }
-          ],
-          "result": "Misslyckad implementation. Layouten var felaktig och interaktivitet bröts, vilket ledde till eskalering."
-        },
-        {
-          "title": "Försök 2: Korrigering via 'Help me God' och 'Stalemate'",
-          "files": [
-            {
-              "path": "scripts/modules/ui_template.py",
-              "changeDescription": "Återställde korrekt, enhetlig header-struktur."
-            },
-            {
-              "path": "scripts/modules/ui_styles.py",
-              "changeDescription": "Återställde CSS för att matcha den korrekta header-strukturen."
-            },
-            {
-              "path": "scripts/modules/ui_logic.py",
-              "changeDescription": "Implementerade korrekt 'Hybrid View Control'-logik baserat på externt domslut."
-            }
-          ],
-          "result": "Lyckad implementation. Layout och funktionalitet återställd. Uppdraget slutfört."
-        }
-      ],
-      "projectStatus": "UI-verktyget är nu funktionellt med den korrigerade 'Ribbon UI'-layouten. En ny uppgift för att ta bort överflödiga rubriker har definierats för nästa session."
-    },
-    "Chatthistorik": {
-      "sessionId": "S-2025-08-18T11-22-45Z",
-      "interactions": [
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
+  "schema_version": "DJTA v1.1",
+  "session_id": "S-2025-08-18T11-22-45Z",
+  "created_at": "2025-08-18T11:22:45Z",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "S-2025-08-18T11-22-45Z.json",
+    "timestamp_utc": "2025-08-18T11:22:45Z",
+    "summary": "Implemented a theme-switcher feature using Pinia and CSS custom properties.",
+    "keywords": [
+      "feature",
+      "ui",
+      "css",
+      "state-management",
+      "pinia"
+    ],
+    "modified_files": [
+      "src/features/ThemeSwitcher/ui/ThemeToggle.vue",
+      "src/entities/app/model/appStore.ts"
+    ],
+    "error_signatures": [],
+    "success_score": 5,
+    "operator_interventions": 1
+  },
+  "builder_input": {
+    "sessionId": "S-2025-08-18T11-22-45Z",
+    "createdAt": "2025-08-18T11:22:45Z",
+    "approvedNewDynamicProtocols": [],
+    "promoteProtocols": [],
+    "file_metadata_updates": [],
+    "importantMilestonesLogged": [
+      {
+        "event_id": "IMR-001",
+        "milestone_type": "PROCESS",
+        "summary": "Resolution of Stalemate Protocol (UI Rendering)",
+        "details": "Successfully resolved a multi-stage debugging session concerning a UI rendering failure by applying the Stalemate Protocol. An external arbitration (domslut) provided the correct root cause, leading to a definitive fix.",
+        "affected_scope": [
+          "scripts/modules/ui_logic.py"
+        ],
+        "timestamp": "2025-08-18T11:22:45Z",
+        "session_id": "S-2025-08-18T11-22-45Z"
+      }
+    ],
+    "artifacts": {
+      "ByggLogg": {
+        "sessionId": "S-2025-08-18T11-22-45Z",
+        "date": "2025-08-18T11:22:45Z",
+        "summary": "Genomförde en komplex UI-refaktorering ('Operation Outlook Layout') som krävde flera felsökningscykler. Ett arkitektoniskt fel identifierades och löstes via Help_me_God och Stalemate-protokollen, vilket resulterade i en fungerande 'Ribbon UI' med hybrid-vy-kontroll.",
+        "actions": [
+          {
+            "title": "Försök 1: Felaktig 'Outlook Layout'-refaktorering",
+            "files": [
+              {
+                "path": "scripts/modules/ui_template.py",
+                "changeDescription": "Felaktigt flyttade ribbon-innehållet från header till main."
+              },
+              {
+                "path": "scripts/modules/ui_styles.py",
+                "changeDescription": "Anpassade CSS för den felaktiga layouten."
+              },
+              {
+                "path": "scripts/modules/ui_logic.py",
+                "changeDescription": "Implementerade felaktig panel-växlingslogik."
+              }
+            ],
+            "result": "Misslyckad implementation. Layouten var felaktig och interaktivitet bröts, vilket ledde till eskalering."
           },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Rapporterade att den tidigare leveransen resulterade i en felaktig layout och bifogade en bild som klargjorde felet."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "unknown",
-            "name": "unknown",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (unknown:unknown@unknown)",
-          "summary": "Initierade 'Help_me_God'-protokollet, analyserade grundorsaken och presenterade en ny, korrigerad plan."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Godkände den nya planen."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "unknown",
-            "name": "unknown",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (unknown:unknown@unknown)",
-          "summary": "Levererade korrigerade versioner av ui_template.py, ui_styles.py och ui_logic.py."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Rapporterade en ny regression: sökresultaten renderades inte trots att sökningen lyckades."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "unknown",
-            "name": "unknown",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (unknown:unknown@unknown)",
-          "summary": "Eskalerade till 'Stalemate_Protocol' och presenterade en formell Stalemate_Request.json för extern granskning."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Levererade ett externt domslut med grundorsaksanalys och en konkret kod-fix."
-        },
-        {
-          "speakerName": "Frankensteen",
-          "model": {
-            "provider": "unknown",
-            "name": "unknown",
-            "version": "unknown"
-          },
-          "speaker": "Frankensteen (unknown:unknown@unknown)",
-          "summary": "Implementerade den anvisade fixen i ui_logic.py och levererade den slutgiltiga, fungerande versionen."
-        },
-        {
-          "speakerName": "Engrove",
-          "model": {
-            "provider": "human",
-            "name": "operator",
-            "version": "unknown"
-          },
-          "speaker": "Engrove (human:operator@unknown)",
-          "summary": "Bekräftade att allt fungerar, definierade ett nytt uppdrag för nästa session (ta bort headers) och begärde avslutningsprotokoll."
-        }
-      ]
-    },
-    "ai_protocol_performance": {
-      "sessionId": "S-2025-08-18T11-22-45Z",
-      "date": "2025-08-18T11:22:45Z",
-      "aiQualitativeSummary": "Sessionen var utmanande med flera misslyckade försök som krävde eskalering till de högsta felsökningsprotokollen (Help_me_God, Stalemate). Grundorsaken till felen var en initial misstolkning av arkitektoniska krav. Trots detta ledde protokollen till en korrekt slutgiltig lösning.",
-      "scorecard": {
-        "efficacy": {
-          "score": 75,
-          "weight": 0.4,
-          "weightedScore": 30
-        },
-        "efficiency": {
-          "score": 0,
-          "weight": 0.3,
-          "weightedScore": 0
-        },
-        "robustness": {
-          "score": 50,
-          "weight": 0.3,
-          "weightedScore": 15
-        },
-        "finalScore": 45
+          {
+            "title": "Försök 2: Korrigering via 'Help me God' och 'Stalemate'",
+            "files": [
+              {
+                "path": "scripts/modules/ui_template.py",
+                "changeDescription": "Återställde korrekt, enhetlig header-struktur."
+              },
+              {
+                "path": "scripts/modules/ui_styles.py",
+                "changeDescription": "Återställde CSS för att matcha den korrekta header-strukturen."
+              },
+              {
+                "path": "scripts/modules/ui_logic.py",
+                "changeDescription": "Implementerade korrekt 'Hybrid View Control'-logik baserat på externt domslut."
+              }
+            ],
+            "result": "Lyckad implementation. Layout och funktionalitet återställd. Uppdraget slutfört."
+          }
+        ],
+        "projectStatus": "UI-verktyget är nu funktionellt med den korrigerade 'Ribbon UI'-layouten. En ny uppgift för att ta bort överflödiga rubriker har definierats för nästa session."
       },
-      "detailedMetrics": {
-        "missionCompleted": true,
-        "debuggingCycles": 2,
-        "selfCorrections": 0,
-        "externalCorrections": 2,
-        "protocolActivations": {
-          "psv": 10,
-          "helpMeGod": 2,
-          "stalemate": 1
-        },
-        "heuristicsTriggered": [
-          "H-20250818-02"
+      "Chatthistorik": {
+        "sessionId": "S-2025-08-18T11-22-45Z",
+        "interactions": [
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Rapporterade att den tidigare leveransen resulterade i en felaktig layout och bifogade en bild som klargjorde felet."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "unknown",
+              "name": "unknown",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (unknown:unknown@unknown)",
+            "summary": "Initierade 'Help_me_God'-protokollet, analyserade grundorsaken och presenterade en ny, korrigerad plan."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Godkände den nya planen."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "unknown",
+              "name": "unknown",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (unknown:unknown@unknown)",
+            "summary": "Levererade korrigerade versioner av ui_template.py, ui_styles.py och ui_logic.py."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Rapporterade en ny regression: sökresultaten renderades inte trots att sökningen lyckades."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "unknown",
+              "name": "unknown",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (unknown:unknown@unknown)",
+            "summary": "Eskalerade till 'Stalemate_Protocol' och presenterade en formell Stalemate_Request.json för extern granskning."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Levererade ett externt domslut med grundorsaksanalys och en konkret kod-fix."
+          },
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "unknown",
+              "name": "unknown",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (unknown:unknown@unknown)",
+            "summary": "Implementerade den anvisade fixen i ui_logic.py och levererade den slutgiltiga, fungerande versionen."
+          },
+          {
+            "speakerName": "Engrove",
+            "model": {
+              "provider": "human",
+              "name": "operator",
+              "version": "unknown"
+            },
+            "speaker": "Engrove (human:operator@unknown)",
+            "summary": "Bekräftade att allt fungerar, definierade ett nytt uppdrag för nästa session (ta bort headers) och begärde avslutningsprotokoll."
+          }
         ]
       },
-      "improvementSuggestion": {
-        "pattern": "AI misstolkar visuella krav när en textplan också finns.",
-        "proposedHeuristicId": "H-20250818-02"
-      }
-    },
-    "frankensteen_learning_db": [
-      {
-        "heuristicId": "H-20250818-02",
-        "trigger": {
-          "type": "task_receipt",
-          "scope": [
-            "*"
-          ],
-          "keywords": [
-            "layout",
-            "design",
-            "UI",
-            "refactor"
-          ],
-          "metadata": {
-            "has_visual_reference": "true",
-            "has_textual_plan": "true"
-          }
+      "ai_protocol_performance": {
+        "sessionId": "S-2025-08-18T11-22-45Z",
+        "date": "2025-08-18T11:22:45Z",
+        "aiQualitativeSummary": "Sessionen var utmanande med flera misslyckade försök som krävde eskalering till de högsta felsökningsprotokollen (Help_me_God, Stalemate). Grundorsaken till felen var en initial misstolkning av arkitektoniska krav. Trots detta ledde protokollen till en korrekt slutgiltig lösning.",
+        "scorecard": {
+          "efficacy": {
+            "score": 75,
+            "weight": 0.4,
+            "weightedScore": 30
+          },
+          "efficiency": {
+            "score": 0,
+            "weight": 0.3,
+            "weightedScore": 0
+          },
+          "robustness": {
+            "score": 50,
+            "weight": 0.3,
+            "weightedScore": 15
+          },
+          "finalScore": 45
         },
-        "identifiedRisk": {
-          "riskId": "RISK_VISUAL_PLAN_MISALIGNMENT",
-          "description": "Risken att en textuell plan implementeras korrekt, men att planen i sig inte matchar den visuella målbilden, vilket leder till en funktionellt felaktig leverans."
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 2,
+          "selfCorrections": 0,
+          "externalCorrections": 2,
+          "protocolActivations": {
+            "psv": 10,
+            "helpMeGod": 2,
+            "stalemate": 1
+          },
+          "heuristicsTriggered": [
+            "H-20250818-02"
+          ]
         },
-        "mitigation": {
-          "protocolId": "PSV-MIT-VERBALIZE_VISUAL_INTERPRETATION",
-          "description": "Före godkännande av planen, verbalisera en koncis, en-menings tolkning av den visuella referensen och be om bekräftelse. Om tolkningen avviker, avbryt och begär ett förtydligande av den textuella planen."
-        },
-        "metadata": {
-          "originSessionId": "S-2025-08-18T11-22-45Z",
-          "createdAt": "2025-08-18T11:22:45Z",
-          "status": "active"
+        "improvementSuggestion": {
+          "pattern": "AI misstolkar visuella krav när en textplan också finns.",
+          "proposedHeuristicId": "H-20250818-02"
         }
-      }
-    ]
+      },
+      "frankensteen_learning_db": [
+        {
+          "heuristicId": "H-20250818-02",
+          "trigger": {
+            "type": "task_receipt",
+            "scope": [
+              "*"
+            ],
+            "keywords": [
+              "layout",
+              "design",
+              "UI",
+              "refactor"
+            ],
+            "metadata": {
+              "has_visual_reference": "true",
+              "has_textual_plan": "true"
+            }
+          },
+          "identifiedRisk": {
+            "riskId": "RISK_VISUAL_PLAN_MISALIGNMENT",
+            "description": "Risken att en textuell plan implementeras korrekt, men att planen i sig inte matchar den visuella målbilden, vilket leder till en funktionellt felaktig leverans."
+          },
+          "mitigation": {
+            "protocolId": "PSV-MIT-VERBALIZE_VISUAL_INTERPRETATION",
+            "description": "Före godkännande av planen, verbalisera en koncis, en-menings tolkning av den visuella referensen och be om bekräftelse. Om tolkningen avviker, avbryt och begär ett förtydligande av den textuella planen."
+          },
+          "metadata": {
+            "originSessionId": "S-2025-08-18T11-22-45Z",
+            "createdAt": "2025-08-18T11:22:45Z",
+            "status": "active"
+          }
+        }
+      ]
+    }
   }
 }
