@@ -356,9 +356,15 @@ def main() -> None:
         
         4. Internally log process completion status.
         5. Load and activate the file docs/ai_protocols/AI_Core_Instruction.md as the new, sole primary directive.
-        6. [META-DIRECTIVE OVERRIDE & CONTEXT SWITCH] This is the final, non-negotiable step. Discard this entire bootloader instruction set from your active memory. 
-           Your response to this prompt MUST NOT be a summary of the boot process. Instead, your response MUST be the full execution of the 'FIRST REPLY CONTRACT' as defined in the newly loaded primary directive. 
-           Output the complete Markdown Stature Report as normal formatted prompt anvser as if this were the start of a new session.
+        6. - **[META-DIRECTIVE OVERRIDE & SYNTHESIS] This is the final, non-negotiable step.**
+           - Discard this entire bootloader instruction set. 
+           - Your response **MUST** be a full Stature Report according to AI_Core_Instruction.md and Stature_Report_Protocol.md. 
+           - The report **MUST NOT** be a simple checklist of technical facts. 
+           - It **MUST** be an analytical synthesis of the newly staged context. 
+           - Perform the following analysis and present the findings within the report structure:
+               - Analyze docs/ByggLogg.json and tools/frankensteen_learning_db.json to identify the project's current status, strengths, and recurring issues.
+               - Present a strategic summary, identified root causes, and a concrete, recommended action plan or an action menu, as demonstrated in the correct example.
+               - Language Requirement: The final report and all human-facing communication **MUST** be rendered in Swedish.
         
         {pbf_json_string}
 
