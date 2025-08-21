@@ -124,7 +124,14 @@ jobs:
           echo "Aggregating session summary artifacts into manifest..."
           python scripts/build_session_manifest.py
           echo "Session manifest created successfully."
-          
+
+      - name: STEP 2A-3 Generate Document Manifest
+        id: generate-doc-manifest
+        run: |
+          echo "Generating document manifest..."
+          python scripts/build_document_manifest.py
+          echo "Document manifest created successfully."
+
       - name: STEP 2B Check for Einstein Index Trigger
         id: check_einstein_trigger
         run: |
@@ -226,7 +233,7 @@ jobs:
           echo "Packaging specified AI protocols and configs into a compressed bundle..."
           python scripts/protocol_packager.py \
             --dir-recursive docs/ai_protocols \
-            --files tools/frankensteen_learning_db.json package.json vite.config.js .github/workflows/ci.yml vite.config.js requirements.txt package.json docs/ByggLogg.json docs/Chatthistorik.json docs/Chatthistorik.json docs/session_manifest.json docs/core_file_info.json \
+            --files tools/frankensteen_learning_db.json package.json vite.config.js .github/workflows/ci.yml vite.config.js requirements.txt package.json docs/ByggLogg.json docs/Chatthistorik.json docs/Chatthistorik.json docs/document_manifest.json docs/session_manifest.json docs/core_file_info.json \
             --output-dir docs/ai_protocols/compact \
             --exclude compact
             
@@ -241,7 +248,7 @@ jobs:
             [skip ci]
           commit_user_name: 'Frankensteen (Bot)'
           commit_user_email: 'frankensteen-bot@users.noreply.github.com'
-          file_pattern: 'docs/session_manifest.json docs/ByggLogg.json docs/Chatthistorik.json docs/ai_protocol_performance.json tools/frankensteen_learning_db.json docs/ai_protocols/DynamicProtocols.json docs/core_file_info.json docs/file_relations.json public/data/schemas/*.schema.json project_overview.json dist/einstein_index.json.gz docs/ai_protocols/compact/protocol_bundle.md'
+          file_pattern: 'docs/document_manifest.json docs/session_manifest.json docs/ByggLogg.json docs/Chatthistorik.json docs/ai_protocol_performance.json tools/frankensteen_learning_db.json docs/ai_protocols/DynamicProtocols.json docs/core_file_info.json docs/file_relations.json public/data/schemas/*.schema.json project_overview.json dist/einstein_index.json.gz docs/ai_protocols/compact/protocol_bundle.md'
           push_options: '--force'
 
   deploy:
