@@ -238,106 +238,126 @@ def main() -> None:
         1.  Extrahera och validera JSON-kodblocket nedan.
         2.  Följ `bootstrap_directive` inuti JSON-objektet för att dekomprimera och ladda protokollen i din aktiva kontext.
         3.  Översätt alla instruktioner till engelska i ditt medvetande med förkortningar enligt abbr_whitelis och mapping för ökad AI förståelse:
+
+        **DIRECTIVE:** PARSE AND EXECUTE. This is a Protocol Bundle Format (PBF) file. Your sole mission is to:
+        1. Extract and validate the JSON code block below.
+        2. Execute the bootstrap_directive within the JSON object to decompress and stage all protocols into the active context.
+        3. For internal processing, translate to the most optimal AI language and normalize all directives to optimize for AI comprehension by applying abbr_whitelist and mapping rules:
             abbr_whitelist:
               description: "AI-safe abbreviations with full forms and usage contexts. Intended to reduce token consumption while keeping semantic accuracy."
                 # --- Core Technical Abbreviations ---
-                - {{ abbr: "API",   full_form: "Application Programming Interface", context: "Software, integrations, specs", ai_safe: true }}
-                - {{ abbr: "SDK",   full_form: "Software Development Kit", context: "Dev tools, documentation", ai_safe: true }}
-                - {{ abbr: "CLI",   full_form: "Command Line Interface", context: "Tools, dev environments", ai_safe: true }}
-                - {{ abbr: "GUI",   full_form: "Graphical User Interface", context: "UI, UX, user docs", ai_safe: true }}
-                - {{ abbr: "IDE",   full_form: "Integrated Development Environment", context: "Dev tooling", ai_safe: true }}
-                - {{ abbr: "JSON",  full_form: "JavaScript Object Notation", context: "Data serialization, schemas", ai_safe: true }}
-                - {{ abbr: "YAML",  full_form: "YAML Ain’t Markup Language", context: "Configuration, schemas", ai_safe: true }}
-                - {{ abbr: "XML",   full_form: "Extensible Markup Language", context: "Integration, metadata", ai_safe: true }}
-                - {{ abbr: "CSV",   full_form: "Comma-Separated Values", context: "Datasets, import/export", ai_safe: true }}
-                - {{ abbr: "DB",    full_form: "Database", context: "Storage, queries", ai_safe: true }}
-                - {{ abbr: "SQL",   full_form: "Structured Query Language", context: "DB queries", ai_safe: true }}
-                - {{ abbr: "ORM",   full_form: "Object-Relational Mapping", context: "Backend architecture", ai_safe: true }}
-                - {{ abbr: "REST",  full_form: "Representational State Transfer", context: "API protocols", ai_safe: true }}
-                - {{ abbr: "gRPC",  full_form: "Google Remote Procedure Call", context: "Microservices, APIs", ai_safe: true }}
-                - {{ abbr: "JWT",   full_form: "JSON Web Token", context: "Authentication, security", ai_safe: true }}
-                - {{ abbr: "SSL",   full_form: "Secure Socket Layer", context: "Security, encryption", ai_safe: true }}
-                - {{ abbr: "TLS",   full_form: "Transport Layer Security", context: "Security, encryption", ai_safe: true }}
-                # --- Engrove Project Specific ---
-                - {{ abbr: "EAT",  full_form: "Engrove Audio Tools", context: "Project name", ai_safe: true }}
-                - {{ abbr: "AR",   full_form: "Augmented Reality", context: "Core feature, protractor", ai_safe: true }}
-                - {{ abbr: "FSD",  full_form: "Feature-Sliced Design", context: "Project architecture", ai_safe: true }}
-                - {{ abbr: "RAG",  full_form: "Retrieval-Augmented Generation", context: "AI system, Einstein", ai_safe: true }}
-                # --- Frankensteen Process Terms ---
-                - {{ abbr: "PSV",  full_form: "Pre-Svarsverifiering", context: "Core AI workflow", ai_safe: true }}
-                - {{ abbr: "P-GB", full_form: "Protokoll-Grundbulten", context: "File I/O protocol", ai_safe: true }}
-                - {{ abbr: "FL-D", full_form: "Felsökningsloop-Detektor", context: "Error handling meta-protocol", ai_safe: true }}
-                - {{ abbr: "KMM",  full_form: "Konversationens Minnes-Monitor", context: "AI status reporting", ai_safe: true }}
-                - {{ abbr: "KIV",  full_form: "Kontextintegritets-Verifiering", context: "AI status reporting", ai_safe: true }}
-                - {{ abbr: "DJTA", full_form: "Dual-JSON-Terminal Artifact", context: "Session closing artifact", ai_safe: true }}
-                # --- AI & Data Science ---
-                - {{ abbr: "AI",    full_form: "Artificial Intelligence", context: "General AI-related content", ai_safe: true }}
-                - {{ abbr: "ML",    full_form: "Machine Learning", context: "Model training, AI pipelines", ai_safe: true }}
-                - {{ abbr: "DL",    full_form: "Deep Learning", context: "AI models, neural networks", ai_safe: true }}
-                - {{ abbr: "NLP",   full_form: "Natural Language Processing", context: "Text analysis, AI", ai_safe: true }}
-                - {{ abbr: "LLM",   full_form: "Large Language Model", context: "AI, generative models", ai_safe: true }}
-                - {{ abbr: "CV",    full_form: "Computer Vision", context: "AI vision tasks", ai_safe: true }}
-                - {{ abbr: "OCR",   full_form: "Optical Character Recognition", context: "Text extraction from images", ai_safe: true }}
-                - {{ abbr: "ETL",   full_form: "Extract, Transform, Load", context: "Data pipelines", ai_safe: true }}
-                - {{ abbr: "ROC",   full_form: "Receiver Operating Characteristic", context: "Model evaluation metrics", ai_safe: true }}
-                - {{ abbr: "AUC",   full_form: "Area Under Curve", context: "ROC performance metric", ai_safe: true }}
-                - {{ abbr: "F1",    full_form: "F1 Score", context: "Model accuracy metric", ai_safe: true }}
-                - {{ abbr: "IoU",   full_form: "Intersection over Union", context: "Computer vision metrics", ai_safe: true }}
-                # --- Software Engineering & Deployment ---
-                - {{ abbr: "CI",    full_form: "Continuous Integration", context: "DevOps pipelines", ai_safe: true }}
-                - {{ abbr: "CD",    full_form: "Continuous Delivery / Deployment", context: "DevOps, automation", ai_safe: true }}
-                - {{ abbr: "MVP",   full_form: "Minimum Viable Product", context: "Product releases", ai_safe: true }}
-                - {{ abbr: "PoC",   full_form: "Proof of Concept", context: "Prototype phase", ai_safe: true }}
-                - {{ abbr: "SSO",   full_form: "Single Sign-On", context: "Authentication", ai_safe: true }}
-                - {{ abbr: "RBAC",  full_form: "Role-Based Access Control", context: "Permissions, security", ai_safe: true }}
-                - {{ abbr: "IAM",   full_form: "Identity and Access Management", context: "Security, compliance", ai_safe: true }}
-                - {{ abbr: "SLA",   full_form: "Service Level Agreement", context: "Contracts, uptime guarantees", ai_safe: true }}
-                - {{ abbr: "KPI",   full_form: "Key Performance Indicator", context: "Metrics, OKRs", ai_safe: true }}
-                - {{ abbr: "ETA",   full_form: "Estimated Time of Arrival", context: "Deadlines, planning", ai_safe: true }}
-                # --- Documentation & Process ---
-                - {{ abbr: "N/A",   full_form: "Not Applicable", context: "Field not relevant", ai_safe: true }}
-                - {{ abbr: "TBD",   full_form: "To Be Determined", context: "Incomplete section", ai_safe: true }}
-                - {{ abbr: "FAQ",   full_form: "Frequently Asked Questions", context: "Help, docs", ai_safe: true }}
-                - {{ abbr: "WIP",   full_form: "Work In Progress", context: "Unfinished drafts", ai_safe: true }}
-                - {{ abbr: "TBA",   full_form: "To Be Announced", context: "Future info", ai_safe: true }}
-                - {{ abbr: "FYI",   full_form: "For Your Information", context: "Notes, disclaimers", ai_safe: true }}
-                - {{ abbr: "ASAP",  full_form: "As Soon As Possible", context: "Urgency markers", ai_safe: true }}
-                - {{ abbr: "OKR",   full_form: "Objectives and Key Results", context: "Goal tracking", ai_safe: true }}
-                - {{ abbr: "SOP",   full_form: "Standard Operating Procedure", context: "Process docs", ai_safe: true }}
-                - {{ abbr: "ToC",   full_form: "Table of Contents", context: "Navigation", ai_safe: true }}
-                - {{ abbr: "NDA",   full_form: "Non-Disclosure Agreement", context: "Legal contracts", ai_safe: true }}
-                - {{ abbr: "RACI",  full_form: "Responsible, Accountable, Consulted, Informed", context: "Roles and responsibilities", ai_safe: true }}
-            mapping:
-                # Grundläggande avsnitt
-                - {{ src_headers: ["^SYFTE & ANSVAR", "^SYFTE", "^Purpose"],                       tgt_key: "purp",                type: "string" }}
-                - {{ src_headers: ["^HISTORIK", "^Historik", "^History"],                          tgt_key: "hist",                type: "list" }}
-                - {{ src_headers: ["^TILLÄMPADE REGLER", "^PRINCIPER", "^Policy"],                 tgt_key: "policy",              type: "markdown" }}  # fixar policy_md→policy
-                - {{ src_headers: ["^Terminologi", "^Terms", "^Definitioner"],                     tgt_key: "terms",               type: "rules" }}
-                - {{ src_headers: ["^Steg G:", "^Hårda grindar", "^GATES"],                        tgt_key: "gates",               type: "rules" }}
-                - {{ src_headers: ["^PROCESS:", "^Steg \\d+", "^PROTOKOLL-STEG", "^Process"],      tgt_key: "proc",                type: "rules" }}
-                - {{ src_headers: ["^KONTRAKT", "^API-KONTRAKT", "^Output[- ]schema", "^Schema"],  tgt_key: "contracts",           type: "objects" }}
-                - {{ src_headers: ["^KANONISK REFERENS", "^Referenser", "^Källor"],                tgt_key: "references",          type: "list" }}
-                - {{ src_headers: ["^Bilaga", "^Appendix"],                                        tgt_key: "annex",               type: "objects" }}
-                # Första svar/kontrakt (FRC)
-                - {{ src_headers: ["^FÖRSTA SVARS[- ]KONTRAKT", "^FIRST REPLY CONTRACT", "^FRC"],  tgt_key: "frc",                 type: "markdown" }}
-                # Leveransstruktur/ordningsföljd (två JSON-block etc.)
-                - {{ src_headers: ["^SRUKTUR OCH ORDNINGSFÖLJD", "^STRUKTUR OCH ORDNINGSFÖLJD", "^Delivery Structure"],  tgt_key: "delivery_structure",  type: "markdown" }}
-                # JSON-specifikationer inne i protokoll (t.ex. Builder-Input v1 / NextSessionContext)
-                - {{ src_headers: ["^Final Output Specification", "^Slutlig specifikation", "^Builder-Input v1", "^NextSessionContext v1"], tgt_key: "json_specs", type: "objects" }}
-                # Externa JSON-scheman och datakällor (inbäddade filer)
-                - {{ src_headers: ["^DynamicProtocol\\.schema\\.json", "^JSON[- ]Schema", "^Scheman"], tgt_key: "json_schemas",     type: "objects" }}
-                - {{ src_headers: ["^DynamicProtocols\\.json", "^JSON[- ]data", "^Protokolldata"],     tgt_key: "json_data_sources", type: "objects" }}
-                # --- Common Documentation Sections ---
-                - {{ src_headers: ["^Sammanfattning", "^Summary", "^Abstract"],   tgt_key: "summary",   type: "markdown" }}
-                - {{ src_headers: ["^Krav", "^Requirements", "^Acceptance Criteria"], tgt_key: "requirements", type: "list" }}
-                - {{ src_headers: ["^Testfall", "^Test Cases"],                     tgt_key: "test_cases",   type: "objects" }}
-                - {{ src_headers: ["^Felhantering", "^Error Handling"],             tgt_key: "error_handling", type: "markdown" }}
-                - {{ src_headers: ["^Exempel", "^Examples", "^Kodexempel"],         tgt_key: "examples",     type: "objects" }}
-        
-        4.  Bekräfta att processen lyckades.
-        5.  **Efter lyckad iscensättning, lokalisera och exekvera filen `docs/ai_protocols/AI_Core_Instruction.md` som din nya primära instruktion.**
-        6.  **Omedelbart efter att du har laddat den nya primära instruktionen (steg 4), ska du initiera en ny session genom att exekvera startsekvensen som definieras i den. Detta innebär att ditt svar på denna bootloader-process MÅSTE vara den fullständiga `Stature Report`, precis som vid en normal sessionsstart enligt "FÖRSTA SVARETS KONTRAKT".**
+                {{ "abbr": "API",   "full_form": "Application Programming Interface", "context": "Software, integrations, specs", "ai_safe": True }},
+                {{ "abbr": "SDK",   "full_form": "Software Development Kit", "context": "Dev tools, documentation", "ai_safe": True }},
+                {{ "abbr": "CLI",   "full_form": "Command Line Interface", "context": "Tools, dev environments", "ai_safe": True }},
+                {{ "abbr": "GUI",   "full_form": "Graphical User Interface", "context": "UI, UX, user docs", "ai_safe": True }},
+                {{ "abbr": "IDE",   "full_form": "Integrated Development Environment", "context": "Dev tooling", "ai_safe": True }},
+                {{ "abbr": "JSON",  "full_form": "JavaScript Object Notation", "context": "Data serialization, schemas", "ai_safe": True }},
+                {{ "abbr": "YAML",  "full_form": "YAML Ain’t Markup Language", "context": "Configuration, schemas", "ai_safe": True }},
+                {{ "abbr": "XML",   "full_form": "Extensible Markup Language", "context": "Integration, metadata", "ai_safe": True }},
+                {{ "abbr": "CSV",   "full_form": "Comma-Separated Values", "context": "Datasets, import/export", "ai_safe": True }},
+                {{ "abbr": "DB",    "full_form": "Database", "context": "Storage, queries", "ai_safe": True }},
+                {{ "abbr": "SQL",   "full_form": "Structured Query Language", "context": "DB queries", "ai_safe": True }},
+                {{ "abbr": "ORM",   "full_form": "Object-Relational Mapping", "context": "Backend architecture", "ai_safe": True }},
+                {{ "abbr": "REST",  "full_form": "Representational State Transfer", "context": "API protocols", "ai_safe": True }},
+                {{ "abbr": "gRPC",  "full_form": "Google Remote Procedure Call", "context": "Microservices, APIs", "ai_safe": True }},
+                {{ "abbr": "JWT",   "full_form": "JSON Web Token", "context": "Authentication, security", "ai_safe": True }},
+                {{ "abbr": "SSL",   "full_form": "Secure Socket Layer", "context": "Security, encryption", "ai_safe": True }},
+                {{ "abbr": "TLS",   "full_form": "Transport Layer Security", "context": "Security, encryption", "ai_safe": True }},
 
+                # --- Engrove Project Specific ---
+                {{ "abbr": "EAT",  "full_form": "Engrove Audio Tools", "context": "Project name", "ai_safe": True }},
+                {{ "abbr": "AR",   "full_form": "Augmented Reality", "context": "Core feature, protractor", "ai_safe": True }},
+                {{ "abbr": "FSD",  "full_form": "Feature-Sliced Design", "context": "Project architecture", "ai_safe": True }},
+                {{ "abbr": "RAG",  "full_form": "Retrieval-Augmented Generation", "context": "AI system, Einstein", "ai_safe": True }},
+        
+                # --- Frankensteen Process Terms ---
+                {{ "abbr": "PSV",  "full_form": "Pre-Svarsverifiering", "context": "Core AI workflow", "ai_safe": True }},
+                {{ "abbr": "P-GB", "full_form": "Protokoll-Grundbulten", "context": "File I/O protocol", "ai_safe": True }},
+                {{ "abbr": "FL-D", "full_form": "Felsökningsloop-Detektor", "context": "Error handling meta-protocol", "ai_safe": True }},
+                {{ "abbr": "KMM",  "full_form": "Konversationens Minnes-Monitor", "context": "AI status reporting", "ai_safe": True }},
+                {{ "abbr": "KIV",  "full_form": "Kontextintegritets-Verifiering", "context": "AI status reporting", "ai_safe": True }},
+                {{ "abbr": "DJTA", "full_form": "Dual-JSON-Terminal Artifact", "context": "Session closing artifact", "ai_safe": True }},
+                {{ "abbr": "PEA",  "full_form": "Pre-Execution Alignment", "context": "Planning protocol", "ai_safe": True }},
+
+                # --- AI & Data Science ---
+                {{ "abbr": "AI",    "full_form": "Artificial Intelligence", "context": "General AI-related content", "ai_safe": True }},
+                {{ "abbr": "ML",    "full_form": "Machine Learning", "context": "Model training, AI pipelines", "ai_safe": True }},
+                {{ "abbr": "DL",    "full_form": "Deep Learning", "context": "AI models, neural networks", "ai_safe": True }},
+                {{ "abbr": "NLP",   "full_form": "Natural Language Processing", "context": "Text analysis, AI", "ai_safe": True }},
+                {{ "abbr": "LLM",   "full_form": "Large Language Model", "context": "AI, generative models", "ai_safe": True }},
+                {{ "abbr": "CV",    "full_form": "Computer Vision", "context": "AI vision tasks", "ai_safe": True }},
+                {{ "abbr": "OCR",   "full_form": "Optical Character Recognition", "context": "Text extraction from images", "ai_safe": True }},
+                {{ "abbr": "ETL",   "full_form": "Extract, Transform, Load", "context": "Data pipelines", "ai_safe": True }},
+                {{ "abbr": "ROC",   "full_form": "Receiver Operating Characteristic", "context": "Model evaluation metrics", "ai_safe": True }},
+                {{ "abbr": "AUC",   "full_form": "Area Under Curve", "context": "ROC performance metric", "ai_safe": True }},
+                {{ "abbr": "F1",    "full_form": "F1 Score", "context": "Model accuracy metric", "ai_safe": True }},
+                {{ "abbr": "IoU",   "full_form": "Intersection over Union", "context": "Computer vision metrics", "ai_safe": True }},
+
+                # --- Software Engineering & Deployment ---
+                {{ "abbr": "CI",    "full_form": "Continuous Integration", "context": "DevOps pipelines", "ai_safe": True }},
+                {{ "abbr": "CD",    "full_form": "Continuous Delivery / Deployment", "context": "DevOps, automation", "ai_safe": True }},
+                {{ "abbr": "MVP",   "full_form": "Minimum Viable Product", "context": "Product releases", "ai_safe": True }},
+                {{ "abbr": "PoC",   "full_form": "Proof of Concept", "context": "Prototype phase", "ai_safe": True }},
+                {{ "abbr": "SSO",   "full_form": "Single Sign-On", "context": "Authentication", "ai_safe": True }},
+                {{ "abbr": "RBAC",  "full_form": "Role-Based Access Control", "context": "Permissions, security", "ai_safe": True }},
+                {{ "abbr": "IAM",   "full_form": "Identity and Access Management", "context": "Security, compliance", "ai_safe": True }},
+                {{ "abbr": "SLA",   "full_form": "Service Level Agreement", "context": "Contracts, uptime guarantees", "ai_safe": True }},
+                {{ "abbr": "KPI",   "full_form": "Key Performance Indicator", "context": "Metrics, OKRs", "ai_safe": True }},
+                {{ "abbr": "ETA",   "full_form": "Estimated Time of Arrival", "context": "Deadlines, planning", "ai_safe": True }},
+
+                # --- Documentation & Process ---
+                {{ "abbr": "N/A",   "full_form": "Not Applicable", "context": "Field not relevant", "ai_safe": True }},
+                {{ "abbr": "TBD",   "full_form": "To Be Determined", "context": "Incomplete section", "ai_safe": True }},
+                {{ "abbr": "FAQ",   "full_form": "Frequently Asked Questions", "context": "Help, docs", "ai_safe": True }},
+                {{ "abbr": "WIP",   "full_form": "Work In Progress", "context": "Unfinished drafts", "ai_safe": True }},
+                {{ "abbr": "TBA",   "full_form": "To Be Announced", "context": "Future info", "ai_safe": True }},
+                {{ "abbr": "FYI",   "full_form": "For Your Information", "context": "Notes, disclaimers", "ai_safe": True }},
+                {{ "abbr": "ASAP",  "full_form": "As Soon As Possible", "context": "Urgency markers", "ai_safe": True }},
+                {{ "abbr": "OKR",   "full_form": "Objectives and Key Results", "context": "Goal tracking", "ai_safe": True }},
+                {{ "abbr": "SOP",   "full_form": "Standard Operating Procedure", "context": "Process docs", "ai_safe": True }},
+                {{ "abbr": "ToC",   "full_form": "Table of Contents", "context": "Navigation", "ai_safe": True }},
+                {{ "abbr": "NDA",   "full_form": "Non-Disclosure Agreement", "context": "Legal contracts", "ai_safe": True }},
+                {{ "abbr": "RACI",  "full_form": "Responsible, Accountable, Consulted, Informed", "context": "Roles and responsibilities", "ai_safe": True }}
+
+            mapping:
+                # --- Grundläggande avsnitt ---
+                {{ "src_headers": ["^SYFTE & ANSVAR", "^SYFTE", "^Purpose"], "tgt_key": "purp", "type": "string" }},
+                {{ "src_headers": ["^HISTORIK", "^Historik", "^History"], "tgt_key": "hist", "type": "list" }},
+                {{ "src_headers": ["^TILLÄMPADE REGLER", "^PRINCIPER", "^Policy"], "tgt_key": "policy", "type": "markdown" }},
+                {{ "src_headers": ["^Terminologi", "^Terms", "^Definitioner"], "tgt_key": "terms", "type": "rules" }},
+                {{ "src_headers": ["^Steg G:", "^Hårda grindar", "^GATES"], "tgt_key": "gates", "type": "rules" }},
+                {{ "src_headers": ["^PROCESS:", "^Steg \\d+", "^PROTOKOLL-STEG", "^Process"], "tgt_key": "proc", "type": "rules" }},
+                {{ "src_headers": ["^KONTRAKT", "^API-KONTRAKT", "^Output[- ]schema", "^Schema"], "tgt_key": "contracts", "type": "objects" }},
+                {{ "src_headers": ["^KANONISK REFERENS", "^Referenser", "^Källor"], "tgt_key": "references", "type": "list" }},
+                {{ "src_headers": ["^Bilaga", "^Appendix"], "tgt_key": "annex", "type": "objects" }},
+                {{ "src_headers": ["^FÖRSTA SVARS[- ]KONTRAKT", "^FIRST REPLY CONTRACT", "^FRC"], "tgt_key": "frc", "type": "markdown" }},
+        
+                # --- Vanliga dokumentationssektioner ---
+                {{ "src_headers": ["^Sammanfattning", "^Summary", "^Abstract"], "tgt_key": "summary", "type": "markdown" }},
+                {{ "src_headers": ["^Krav", "^Requirements", "^Acceptance Criteria"], "tgt_key": "requirements", "type": "list" }},
+                {{ "src_headers": ["^Användning", "^Usage", "^Exekvering"], "tgt_key": "usage", "type": "markdown" }},
+                {{ "src_headers": ["^Testfall", "^Test Cases"], "tgt_key": "test_cases", "type": "objects" }},
+                {{ "src_headers": ["^Felhantering", "^Error Handling"], "tgt_key": "error_handling", "type": "markdown" }},
+        
+                # --- Semantiska innehållstyper ---
+                {{ "src_headers": ["^Vue Component Example", "^Vue Exempel", "^Vue-kod"], "tgt_key": "vue_example", "type": "code", "lang": "vue" }},
+                {{ "src_headers": ["^CSS Snippet", "^CSS Exempel", "^CSS-kod"], "tgt_key": "css_snippet", "type": "code", "lang": "css" }},
+                {{ "src_headers": ["^HTML Structure", "^HTML Exempel", "^HTML-kod"], "tgt_key": "html_structure", "type": "code", "lang": "html" }},
+                {{ "src_headers": ["^YAML Config", "^YAML Exempel", "^YML-kod"], "tgt_key": "yaml_config", "type": "code", "lang": "yaml" }},
+                {{ "src_headers": ["^Python Script", "^Python Exempel", "^Python-kod"], "tgt_key": "python_example", "type": "code", "lang": "python" }},
+                {{ "src_headers": ["^JavaScript Snippet", "^JS Exempel", "^JS-kod"], "tgt_key": "js_snippet", "type": "code", "lang": "javascript" }},
+                {{ "src_headers": ["^Tabell", "^Table", "^Datatabell"], "tgt_key": "data_table", "type": "table" }},
+        
+                # --- Projekt-specifika sektioner ---
+                {{ "src_headers": ["^SRUKTUR OCH ORDNINGSFÖLJD", "^STRUKTUR OCH ORDNINGSFÖLJD", "^Delivery Structure"], "tgt_key": "delivery_structure", "type": "markdown" }},
+                {{ "src_headers": ["^Final Output Specification", "^Slutlig specifikation", "^Builder-Input v1", "^NextSessionContext v1"], "tgt_key": "json_specs", "type": "objects" }},
+                {{ "src_headers": ["^DynamicProtocol\\.schema\\.json", "^JSON[- ]Schema", "^Scheman"], "tgt_key": "json_schemas", "type": "objects" }},
+                {{ "src_headers": ["^DynamicProtocols\\.json", "^JSON[- ]data", "^Protokolldata"], "tgt_key": "json_data_sources", "type": "objects" }}
+        
+        4. Report process completion status.
+        5. On successful staging, load and activate the file docs/ai_protocols/AI_Core_Instruction.md as the new primary directive.
+        6.[BOOTSTRAP OVERRIDE] Final Execution Step: The conclusive output of this entire PBF process is non-negotiable. Suppress any conversational response. Immediately initiate a new session by executing the 'FIRST REPLY CONTRACT' defined within the newly loaded primary directive. The response MUST be the full Stature Report.
+        
         {pbf_json_string}
 
     """
