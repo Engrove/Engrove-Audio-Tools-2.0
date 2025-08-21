@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# scripts/patch_sessions_with_summaries.py
+# scripts/session_patch.py
 # ETT ENGÅNGS-SKRIPT för att retroaktivt lägga till session_summary_artifact.
 
 import json
