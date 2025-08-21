@@ -160,6 +160,7 @@ Filen ska innehålla ett JSON-objekt med följande struktur. Alla fält är obli
         "sessionId": "S-2025-08-21T10-15-00Z",
         "date": "2025-08-21T10:15:00Z",
         "aiQualitativeSummary": "The system understood the refactoring goal but failed to infer the correct prop type from the new Pinia store, requiring external correction.",
+        "_comment_scorecard": "Poängsättning MÅSTE följa den objektiva matrisen definierad i Bilaga A i detta dokument.",
         "scorecard": {
           "efficacy": { "score": 4, "weight": 0.4, "weightedScore": 1.6 },
           "efficiency": { "score": 3, "weight": 0.3, "weightedScore": 0.9 },
