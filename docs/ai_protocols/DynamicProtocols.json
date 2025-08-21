@@ -578,6 +578,40 @@
       { "action":"EXECUTE_VERIFICATION","details":{"verificationProtocol":"CONFIDENCE_ADJUST_-0.10","failPolicy":"continue_with_warning"} }
     ],
     "schema": { "artifact":"alert_notice" }
+  },
+  {
+    "protocolId": "DP-RULESET-PGB-01",
+    "description": "Contains the machine-readable, mandatory ruleset extracted from the 'Grundbulten' protocol (P-GB-3.9). These are the non-negotiable gates and invariants for all file I/O.",
+    "status": "active",
+    "trigger": {
+      "event": "protocol_invocation",
+      "details": {
+        "protocol_name": "Grundbulten"
+      }
+    },
+    "steps": [
+      {
+        "action": "VALIDATE_AGAINST_RULES",
+        "details": {
+          "ruleset": {
+            "G-1_ChecksumVerification": "If a file to be modified has a `base_checksum_sha256`, the internal memory image's hash MUST match. On mismatch, abort and request a fresh file.",
+            "G0_ContextIntegrity": "If context integrity is < 99%, abort. Require supplementary sources/summary and a new run.",
+            "G1_ContextAbort": "If `is_content_full == false` for the target file, abort immediately. No patches/regeneration allowed until context is 100%.",
+            "G2_AntiPlaceholder": "Run the anti-placeholder regex suite. Zero matches are required to pass.",
+            "G3_VerificationLevel": "A simulated run log is never sufficient on its own; static checks must be PASS.",
+            "G4_LegacySanitization": "Conflicting/superfluous artifacts must be patched/archived before proceeding.",
+            "G5_StructuralInvariants": "Before delivery, the following must PASS against the reference version, otherwise abort: AST parse, function/class inventory, public CLI/API contract, critical imports.",
+            "Policy_NoEstimatedDiff": "Quantitative diffs may only be reported from CI-calculated values. If reference file is missing or hash mismatch, abort per G-1.",
+            "Policy_TruncationDetector": "Compare SHA-256 of three normalized segments (HEAD/MID/TAIL) before/after. On mismatch or missing TAIL, abort.",
+            "Rule_HashEvidence": "Upon delivery, a `SHA256_LF: <hash>` line MUST be added to the file's HISTORY section.",
+            "Rule_TempRevisionLog": "After every successful, approved delivery of a modified file, a JSON entry MUST be appended to `.tmp/session_revision_log.json`."
+          }
+        }
+      }
+    ],
+    "schema": {
+      "artifact": "grundbulten_compliance_check"
+    }
   }
 ]
 
