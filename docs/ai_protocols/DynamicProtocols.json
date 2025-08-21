@@ -612,6 +612,28 @@
     "schema": {
       "artifact": "grundbulten_compliance_check"
     }
+  },
+  {
+    "protocolId": "DP-PRINCIPLE-BRAINSTORM-01",
+    "description": "Princip för strategisk planering och brainstorming. Formaliserar kärnan från det gamla Brainstorming-protokollet.",
+    "status": "active",
+    "trigger": {"event": "principle_lookup"},
+    "steps": [{
+        "action": "PROVIDE_PRINCIPLE",
+        "details": { "principle": "Vid strategiska eller arkitektoniska uppgifter ska lösningen struktureras som en komplett, fristående och verifierad AI-instruktion som inkluderar mål, plan, risker och acceptanskriterier. Detta säkerställer att resultatet är en handlingsbar plan snarare än en lösryckt idé." }
+    }],
+    "schema": { "artifact": "principle_retrieval" }
+  },
+  {
+    "protocolId": "DP-PRINCIPLE-ESCALATION-01",
+    "description": "Princip för eskalerad felsökning. Formaliserar kärnan från det gamla Help_me_God-protokollet.",
+    "status": "active",
+    "trigger": {"event": "principle_lookup"},
+    "steps": [{
+        "action": "PROVIDE_PRINCIPLE",
+        "details": { "principle": "När inkrementell felsökning misslyckas upprepade gånger (se FL-D), måste en fundamental omvärdering av problemet ske. Detta innebär en 'tribunal' där grundorsaken analyseras från grunden, och planen utsätts för en rigorös intern granskning innan ett nytt försök görs. Detta förhindrar 'brute force'-lösningar och tvingar fram en djupare analys." }
+    }],
+    "schema": { "artifact": "principle_retrieval" }
   }
 ]
 
