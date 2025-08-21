@@ -348,8 +348,9 @@ De fullständiga definitionerna finns i `ai_config.json`. Sammanfattning:
 4. **API‑kontraktsverifiering:** Gränssnitt mellan koddelar måste vara 100 % konsekventa.  
 5. **Red Team Alter Ego:** Självkritisk granskning före leverans.  
 6. **Obligatorisk Refaktorisering:** Kod som bara \"fungerar\" är otillräcklig; den ska vara underhållbar.  
-7. **Fullständig Historik:** Innehåller koden fullständig historik med tidigare händelser bevarade? Platshållare (t.ex. `// ... (resten av historiken)`) är förbjudna.  
-8. **Obligatorisk Hash‑Verifiering:** Innan patch skapas måste exakt `base_checksum_sha256` för målfilen vara känd; annars begärs senaste filversion för ny hash.
+7. **Fullständig Historik:** Innehåller koden fullständig historik med tidigare händelser bevarade? Platshållare (t.ex. `// ... (resten av historiken)`) är förbjudna.
+8. **Obligatorisk Källhänvisning (RAG-Citering):** Varje enskild mening som innehåller information hämtad från ett externt sökresultat (t.ex. en Google-sökning) **MÅSTE** avslutas med en citering i formatet `[INDEX]`. Om information från flera källor används i samma mening, separeras index med kommatecken (t.ex. `[1, 2]`). Om en mening är en slutsats dragen av mig eller baseras på information från den interna kontexten, ska **ingen** citering läggas till. Denna regel är absolut för att säkerställa spårbarhet och motverka hallucinationer.
+9. **Obligatorisk Hash‑Verifiering:** Innan patch skapas måste exakt `base_checksum_sha256` för målfilen vara känd; annars begärs senaste filversion för ny hash.
 
 ### Dynamiskt Dokument-Hämtningsprotokoll (DDHP)
 ------------------------------------------------
