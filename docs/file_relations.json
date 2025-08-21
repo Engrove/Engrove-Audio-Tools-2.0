@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-21T10:28:13.155029+00:00",
+    "generated_at": "2025-08-21T11:01:05.942001+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -842,35 +842,6 @@
         "language": "md",
         "exports": [],
         "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "scripts/session_patch.py": {
-        "type": "Python Script",
-        "category": "code",
-        "language": "py",
-        "exports": [
-          {
-            "symbol": "main",
-            "type": "function"
-          }
-        ],
-        "imports": [
-          {
-            "source": "json",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "pathlib",
-            "symbols": [
-              "Path"
-            ],
-            "type": "library_import"
-          }
-        ],
         "dependents_count": 0,
         "criticality_score": 0.0
       },
@@ -1969,15 +1940,6 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "docs/Analys_av_AI-regelverk_i_JSON_.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
       "docs/Blueprint_för_Migrering_v1_till_v2.md": {
         "type": "Markdown Document",
         "category": "documentation",
@@ -2009,15 +1971,6 @@
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/Gemini_chatthistorik.txt": {
-        "type": "Unknown",
-        "category": "documentation",
-        "language": "txt",
         "exports": [],
         "imports": [],
         "dependents_count": 0,
