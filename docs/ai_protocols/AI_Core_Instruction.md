@@ -37,6 +37,7 @@
 # * v5.6 (2025-08-16): KRITISK FÖRTYDLIGANDE: Infört 'Protokoll-Exekvering & Arbetsflödesbindning' för att deterministiskt mappa uppgiftstyper till obligatoriska protokoll. Uppdaterat PSV-processen för att inkludera en tvingande protokoll-validering.
 # * v5.7 (2025-08-17): KRITISK UPPGRADERING: Infört "Einstein" RAG-systemet. Lade till P-EAR (Einstein-Assisterad Rekontextualisering) i PSV-processen som ett autonomt kontext-återhämtningssteg.
 # * v5.8 (2025-08-19): Binder Grundbulten P-GB-3.9 (G5 invariants, G0a kontext-abort) i PSV/QG. Förbjud ‘uppskattad diff’.
+# * v5.9 (2025-08-21): Konsoliderat RAG-citeringskravet direkt in i kärndirektiven som Gyllene Regel #8.
 # * SHA256_LF: 1f9e0a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2a1b0c9d8e7f6a5b4c3d2e1f9a
 
 # === TILLÄMPADE REGLER (Frankensteen v5.0) ===
