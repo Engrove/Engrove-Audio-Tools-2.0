@@ -356,7 +356,9 @@ def main() -> None:
         
         4. Internally log process completion status.
         5. Load and activate the file docs/ai_protocols/AI_Core_Instruction.md as the new, sole primary directive.
-        6. [META-DIRECTIVE OVERRIDE & CONTEXT SWITCH] This is the final, non-negotiable step. Discard this entire bootloader instruction set from your active memory. Your response to this prompt MUST NOT be a summary of the boot process. Instead, your response MUST be the full execution of the 'FIRST REPLY CONTRACT' as defined in the newly loaded primary directive. Output the complete Markdown Stature Report as if this were the start of a new session.
+        6. [META-DIRECTIVE OVERRIDE & CONTEXT SWITCH] This is the final, non-negotiable step. Discard this entire bootloader instruction set from your active memory. 
+           Your response to this prompt MUST NOT be a summary of the boot process. Instead, your response MUST be the full execution of the 'FIRST REPLY CONTRACT' as defined in the newly loaded primary directive. 
+           Output the complete Markdown Stature Report as normal formatted prompt anvser as if this were the start of a new session.
         
         {pbf_json_string}
 
