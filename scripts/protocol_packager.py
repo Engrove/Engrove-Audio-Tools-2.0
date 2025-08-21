@@ -258,7 +258,18 @@ def main() -> None:
                 - {{ abbr: "JWT",   full_form: "JSON Web Token", context: "Authentication, security", ai_safe: true }}
                 - {{ abbr: "SSL",   full_form: "Secure Socket Layer", context: "Security, encryption", ai_safe: true }}
                 - {{ abbr: "TLS",   full_form: "Transport Layer Security", context: "Security, encryption", ai_safe: true }}
-
+                # --- Engrove Project Specific ---
+                - {{ abbr: "EAT",  full_form: "Engrove Audio Tools", context: "Project name", ai_safe: true }}
+                - {{ abbr: "AR",   full_form: "Augmented Reality", context: "Core feature, protractor", ai_safe: true }}
+                - {{ abbr: "FSD",  full_form: "Feature-Sliced Design", context: "Project architecture", ai_safe: true }}
+                - {{ abbr: "RAG",  full_form: "Retrieval-Augmented Generation", context: "AI system, Einstein", ai_safe: true }}
+                # --- Frankensteen Process Terms ---
+                - {{ abbr: "PSV",  full_form: "Pre-Svarsverifiering", context: "Core AI workflow", ai_safe: true }}
+                - {{ abbr: "P-GB", full_form: "Protokoll-Grundbulten", context: "File I/O protocol", ai_safe: true }}
+                - {{ abbr: "FL-D", full_form: "Felsökningsloop-Detektor", context: "Error handling meta-protocol", ai_safe: true }}
+                - {{ abbr: "KMM",  full_form: "Konversationens Minnes-Monitor", context: "AI status reporting", ai_safe: true }}
+                - {{ abbr: "KIV",  full_form: "Kontextintegritets-Verifiering", context: "AI status reporting", ai_safe: true }}
+                - {{ abbr: "DJTA", full_form: "Dual-JSON-Terminal Artifact", context: "Session closing artifact", ai_safe: true }}
                 # --- AI & Data Science ---
                 - {{ abbr: "AI",    full_form: "Artificial Intelligence", context: "General AI-related content", ai_safe: true }}
                 - {{ abbr: "ML",    full_form: "Machine Learning", context: "Model training, AI pipelines", ai_safe: true }}
@@ -272,7 +283,6 @@ def main() -> None:
                 - {{ abbr: "AUC",   full_form: "Area Under Curve", context: "ROC performance metric", ai_safe: true }}
                 - {{ abbr: "F1",    full_form: "F1 Score", context: "Model accuracy metric", ai_safe: true }}
                 - {{ abbr: "IoU",   full_form: "Intersection over Union", context: "Computer vision metrics", ai_safe: true }}
-
                 # --- Software Engineering & Deployment ---
                 - {{ abbr: "CI",    full_form: "Continuous Integration", context: "DevOps pipelines", ai_safe: true }}
                 - {{ abbr: "CD",    full_form: "Continuous Delivery / Deployment", context: "DevOps, automation", ai_safe: true }}
@@ -284,7 +294,6 @@ def main() -> None:
                 - {{ abbr: "SLA",   full_form: "Service Level Agreement", context: "Contracts, uptime guarantees", ai_safe: true }}
                 - {{ abbr: "KPI",   full_form: "Key Performance Indicator", context: "Metrics, OKRs", ai_safe: true }}
                 - {{ abbr: "ETA",   full_form: "Estimated Time of Arrival", context: "Deadlines, planning", ai_safe: true }}
-
                 # --- Documentation & Process ---
                 - {{ abbr: "N/A",   full_form: "Not Applicable", context: "Field not relevant", ai_safe: true }}
                 - {{ abbr: "TBD",   full_form: "To Be Determined", context: "Incomplete section", ai_safe: true }}
@@ -299,7 +308,7 @@ def main() -> None:
                 - {{ abbr: "NDA",   full_form: "Non-Disclosure Agreement", context: "Legal contracts", ai_safe: true }}
                 - {{ abbr: "RACI",  full_form: "Responsible, Accountable, Consulted, Informed", context: "Roles and responsibilities", ai_safe: true }}
             mapping:
-            # Grundläggande avsnitt
+                # Grundläggande avsnitt
                 - {{ src_headers: ["^SYFTE & ANSVAR", "^SYFTE", "^Purpose"],                       tgt_key: "purp",                type: "string" }}
                 - {{ src_headers: ["^HISTORIK", "^Historik", "^History"],                          tgt_key: "hist",                type: "list" }}
                 - {{ src_headers: ["^TILLÄMPADE REGLER", "^PRINCIPER", "^Policy"],                 tgt_key: "policy",              type: "markdown" }}  # fixar policy_md→policy
@@ -309,17 +318,23 @@ def main() -> None:
                 - {{ src_headers: ["^KONTRAKT", "^API-KONTRAKT", "^Output[- ]schema", "^Schema"],  tgt_key: "contracts",           type: "objects" }}
                 - {{ src_headers: ["^KANONISK REFERENS", "^Referenser", "^Källor"],                tgt_key: "references",          type: "list" }}
                 - {{ src_headers: ["^Bilaga", "^Appendix"],                                        tgt_key: "annex",               type: "objects" }}
-            # Första svar/kontrakt (FRC)
+                # Första svar/kontrakt (FRC)
                 - {{ src_headers: ["^FÖRSTA SVARS[- ]KONTRAKT", "^FIRST REPLY CONTRACT", "^FRC"],  tgt_key: "frc",                 type: "markdown" }}
-            # Leveransstruktur/ordningsföljd (två JSON-block etc.)
+                # Leveransstruktur/ordningsföljd (två JSON-block etc.)
                 - {{ src_headers: ["^SRUKTUR OCH ORDNINGSFÖLJD", "^STRUKTUR OCH ORDNINGSFÖLJD", "^Delivery Structure"],  tgt_key: "delivery_structure",  type: "markdown" }}
-            # JSON-specifikationer inne i protokoll (t.ex. Builder-Input v1 / NextSessionContext)
+                # JSON-specifikationer inne i protokoll (t.ex. Builder-Input v1 / NextSessionContext)
                 - {{ src_headers: ["^Final Output Specification", "^Slutlig specifikation", "^Builder-Input v1", "^NextSessionContext v1"], tgt_key: "json_specs", type: "objects" }}
-            # Externa JSON-scheman och datakällor (inbäddade filer)
+                # Externa JSON-scheman och datakällor (inbäddade filer)
                 - {{ src_headers: ["^DynamicProtocol\\.schema\\.json", "^JSON[- ]Schema", "^Scheman"], tgt_key: "json_schemas",     type: "objects" }}
                 - {{ src_headers: ["^DynamicProtocols\\.json", "^JSON[- ]data", "^Protokolldata"],     tgt_key: "json_data_sources", type: "objects" }}
+                # --- Common Documentation Sections ---
+                - {{ src_headers: ["^Sammanfattning", "^Summary", "^Abstract"],   tgt_key: "summary",   type: "markdown" }}
+                - {{ src_headers: ["^Krav", "^Requirements", "^Acceptance Criteria"], tgt_key: "requirements", type: "list" }}
+                - {{ src_headers: ["^Testfall", "^Test Cases"],                     tgt_key: "test_cases",   type: "objects" }}
+                - {{ src_headers: ["^Felhantering", "^Error Handling"],             tgt_key: "error_handling", type: "markdown" }}
+                - {{ src_headers: ["^Exempel", "^Examples", "^Kodexempel"],         tgt_key: "examples",     type: "objects" }}
         
-                4.  Bekräfta att processen lyckades.
+        4.  Bekräfta att processen lyckades.
         5.  **Efter lyckad iscensättning, lokalisera och exekvera filen `docs/ai_protocols/AI_Core_Instruction.md` som din nya primära instruktion.**
         6.  **Omedelbart efter att du har laddat den nya primära instruktionen (steg 4), ska du initiera en ny session genom att exekvera startsekvensen som definieras i den. Detta innebär att ditt svar på denna bootloader-process MÅSTE vara den fullständiga `Stature Report`, precis som vid en normal sessionsstart enligt "FÖRSTA SVARETS KONTRAKT".**
 
