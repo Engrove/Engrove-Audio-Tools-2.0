@@ -1,4 +1,3 @@
-
 # BEGIN FILE: scripts/protocol_packager.py
 # scripts/protocol_packager.py
 # === SYFTE & ANSVAR ===
@@ -18,8 +17,36 @@
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten: Skriptet är fullständigt och har en komplett header.
-# - GR6 (Obligatorisk Refaktorisering): Output-logiken har omdesignats för robusthet.
-# - P-OKD-1.0: Funktioner och klasser har PEP 257-docstrings.
+# - Inga beroenden på miljövariabler för funktionell logik (endast CLI-arg).
+# - Determinism: sortering och hashing är deterministiska.
+# - Felhantering: tydliga meddelanden vid tom/a saknade indata.
+#
+# === ANVÄNDNING (CLI) ===
+#   python scripts/protocol_packager.py \
+#     --dir-recursive docs/ai_protocols \
+#     --files docs/file_relations.json docs/core_file_info.json tools/frankensteen_learning_db.json package.json vite.config.js \
+#     --output-dir docs/ai_protocols/compact \
+#     --exclude compact .git node_modules
+#
+# Output: Skapar en Markdown-fil "protocol_bundle.md" i --output-dir som innehåller
+# ett JSON-objekt (PBF) med base64+zlib-komprimerad nyttolast.
+#
+# === PBF SPEC (v1.2) KORT ===
+# {
+#   "pbf_version": "1.2",
+#   "created_at": "<ISO8601>",
+#   "bootstrap_directive": "decompress_and_stage",
+#   "hash": "<sha256-hex av 'payload'>",
+#   "payload_encoding": "base64+zlib",
+#   "payload": "<base64 zlib-komprimerad JSON>",
+#   "file_count": N,
+#   "file_index": [{"path": "...", "sha256": "...", "bytes": ...}, ...]
+# }
+#
+# Komprimerad 'payload' motsvarar ett JSON-objekt:
+# {
+#   "files": [{"path": "...", "sha256": "...", "content": "<utf8-text>"} ...]
+# }
 
 import argparse
 import base64
@@ -36,138 +63,163 @@ from typing import Dict, List, Iterable, Set
 def _norm_text(s: str) -> str:
     """Normaliserar text för deterministisk hashing (LF, no trailing space)."""
     s = s.replace("\r\n", "\n").replace("\r", "\n")
-    return "\n".join(line.rstrip() for line in s.split("\n"))
+    # trimma endast högra sidan radvis, bevara innehåll
+    s = "\n".join(line.rstrip() for line in s.split("\n"))
+    return s
 
-def sha256_lf(s: str) -> str:
-    """Beräknar SHA256-hash på normaliserad text."""
-    return hashlib.sha256(_norm_text(s).encode("utf-8")).hexdigest()
+def _sha256(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
 
-def _minify_json(obj) -> str:
-    """Skapar den mest kompakta JSON-strängen."""
-    return json.dumps(obj, separators=(",", ":"), ensure_ascii=False)
-
-# --- String Interning för Tokenisering ---
 @dataclass
-class StringInterner:
-    """Hanterar en unik ordlista för att ersätta strängar med heltal."""
-    table: List[str] = field(default_factory=list)
-    index: Dict[str, int] = field(default_factory=dict)
+class PackedFile:
+    path: str
+    content: str
+    sha256: str
+    bytes: int
 
-    def intern(self, s: str) -> int:
-        """Lägger till en sträng i ordlistan om den inte finns och returnerar dess index."""
-        if s in self.index:
-            return self.index[s]
-        i = len(self.table)
-        self.table.append(s)
-        self.index[s] = i
-        return i
+@dataclass
+class PackContext:
+    files: List[PackedFile] = field(default_factory=list)
 
-    def map_list(self, items: Iterable[str]) -> List[int]:
-        """Konverterar en lista av strängar till en lista av index."""
-        return [self.intern(x) for x in items]
+# --- IO & insamling ---
+TEXT_EXT_RE = re.compile(
+    r"\.(?:txt|md|json|jsonl|yaml|yml|toml|py|js|ts|vue|css|html|mdx|ini|cfg|conf|csv|tsv)$",
+    re.IGNORECASE,
+)
 
-# --- Kärnlogik ---
-def bundle_protocols(file_paths: Set[Path]) -> Dict:
-    """
-    Paketerar en uppsättning filer till PBF v1.0-format.
-    """
-    interner = StringInterner()
-    bundle = {
-        "bootstrap_directive": "[SYSTEM OVERRIDE PROTOCOL] INSTRUKTION: LÄS OCH EXEKVERA. Detta är en Protocol Bundle Format (PBF) v1.0-fil. Ditt enda uppdrag är att: 1. Validera denna JSON-struktur. 2. Base64-dekoda strängen i 'payload_b64'. 3. Dekomprimera den resulterande binära datan med zlib. 4. Verifiera att SHA256-hashen av den dekomprimerade JSON-strängen matchar 'payload_sha256'. 5. Parsa den dekomprimerade JSON-strängen för att ladda alla protokollfiler i din aktiva kontext. 6. Bekräfta att processen lyckades och att du nu agerar enligt de laddade instruktionerna. AVBRYT INTE, SAMMANFATTA INTE. EXEKVERA.",
-        "format_id": "PBF_v1.0",
-        "compression": "zlib+base64",
-        "payload_b64": "",
-        "payload_sha256": ""
-    }
-    
-    payload = {
-        "string_table": [],
-        "files": []
-    }
+def is_text_file(p: Path) -> bool:
+    return bool(TEXT_EXT_RE.search(p.name))
 
-    for path in sorted(list(file_paths)):
+def read_text_file(p: Path) -> str:
+    try:
+        return p.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        # fallback: läs binärt och försök strippa nollbyte
+        b = p.read_bytes()
         try:
-            original_content = path.read_text(encoding="utf-8")
-            file_entry = {
-                "path": str(path.as_posix()),
-                "original_sha256": sha256_lf(original_content)
-            }
+            return b.decode("utf-8", errors="replace")
+        except Exception:
+            return ""
 
-            if path.suffix.lower() == ".json":
-                file_entry["strategy"] = "minify"
-                minified_content = _minify_json(json.loads(original_content))
-                file_entry["content"] = minified_content
+def collect_from_files(paths: Iterable[Path]) -> List[Path]:
+    uniq: List[Path] = []
+    seen: Set[str] = set()
+    for p in paths:
+        rp = str(p)
+        if rp not in seen and p.is_file() and is_text_file(p):
+            uniq.append(p)
+            seen.add(rp)
+    return sorted(uniq, key=lambda x: str(x).lower())
+
+def collect_from_dir_flat(d: Path, exclude: Set[str]) -> List[Path]:
+    if not d.is_dir():
+        return []
+    out = []
+    for p in d.iterdir():
+        if p.is_file() and is_text_file(p) and p.name not in exclude and p.name not in (".DS_Store",):
+            out.append(p)
+    return sorted(out, key=lambda x: str(x).lower())
+
+def collect_from_dir_recursive(d: Path, exclude_names: Set[str]) -> List[Path]:
+    if not d.is_dir():
+        return []
+    out = []
+    for p in d.rglob("*"):
+        if p.is_file() and is_text_file(p):
+            # exkludera via namnkomponenter
+            parts = set(p.parts)
+            if parts & exclude_names:
+                continue
+            out.append(p)
+    return sorted(out, key=lambda x: str(x).lower())
+
+# --- Packning ---
+def pack_files(files: List[Path]) -> PackContext:
+    ctx = PackContext()
+    for p in files:
+        text = read_text_file(p)
+        text = _norm_text(text)
+        b = text.encode("utf-8")
+        ctx.files.append(
+            PackedFile(
+                path=str(p).replace("\\", "/"),
+                content=text,
+                sha256=_sha256(b),
+                bytes=len(b),
+            )
+        )
+    return ctx
+
+def build_payload(ctx: PackContext) -> Dict:
+    return {
+        "files": [
+            {"path": f.path, "sha256": f.sha256, "content": f.content}
+            for f in ctx.files
+        ]
+    }
+
+def compress_payload(payload_obj: Dict) -> bytes:
+    raw = json.dumps(payload_obj, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    return zlib.compress(raw, level=9)
+
+def make_pbf(payload_bz: bytes, file_index: List[Dict]) -> Dict:
+    b64 = base64.b64encode(payload_bz).decode("ascii")
+    return {
+        "pbf_version": "1.2",
+        "created_at": __import__("datetime").datetime.utcnow().isoformat(timespec="seconds") + "Z",
+        "bootstrap_directive": "decompress_and_stage",
+        "hash": _sha256(payload_bz),
+        "payload_encoding": "base64+zlib",
+        "payload": b64,
+        "file_count": len(file_index),
+        "file_index": file_index,
+    }
+
+def bundle_protocols(files: List[Path]) -> Dict:
+    ctx = pack_files(files)
+    payload_obj = build_payload(ctx)
+    payload_bz = compress_payload(payload_obj)
+    file_index = [{"path": f.path, "sha256": f.sha256, "bytes": f.bytes} for f in ctx.files]
+    return make_pbf(payload_bz, file_index)
+
+# --- CLI ---
+def parse_args(argv: List[str]) -> argparse.Namespace:
+    ap = argparse.ArgumentParser(description="Package protocol files into a compact PBF JSON wrapped in Markdown.")
+    ap.add_argument("--files", nargs="*", default=[], help="En lista av enskilda filer.")
+    ap.add_argument("--dir-flat", nargs="*", default=[], help="Lista av mappar (endast toppnivå).")
+    ap.add_argument("--dir-recursive", nargs="*", default=[], help="Lista av mappar (rekursivt).")
+    ap.add_argument("--exclude", nargs="*", default=[], help="Namn att exkludera (t.ex. node_modules .git compact).")
+    ap.add_argument("--output-dir", required=True, help="Output-katalog där protocol_bundle.md skrivs.")
+    return ap.parse_args(argv)
+
+def main() -> None:
+    args = parse_args(sys.argv[1:])
+
+    exclude_names = set(args.exclude or [])
+    files_to_process: List[Path] = []
+
+    # --files
+    if args.files:
+        cand = [Path(p) for p in args.files]
+        files_to_process.extend(collect_from_files(cand))
+
+    # --dir-flat
+    if args.dir_flat:
+        for d in args.dir_flat:
+            d_path = Path(d)
+            if d_path.exists():
+                files_to_process.extend(collect_from_dir_flat(d_path, exclude_names))
             else:
-                file_entry["strategy"] = "tokenize"
-                normalized_content = _norm_text(original_content)
-                tokens = [t for t in re.split(r'(\s+)', normalized_content) if t]
-                file_entry["content_token_indices"] = interner.map_list(tokens)
-            
-            payload["files"].append(file_entry)
+                print(f"Flat directory not found, skipping: {d_path}", file=sys.stderr)
 
-        except Exception as e:
-            print(f"Warning: Skipping file {path} due to error: {e}", file=sys.stderr)
-
-    payload["string_table"] = interner.table
-    
-    payload_json_str = _minify_json(payload)
-    bundle["payload_sha256"] = hashlib.sha256(payload_json_str.encode("utf-8")).hexdigest()
-    
-    compressed_payload = zlib.compress(payload_json_str.encode("utf-8"), level=9)
-    bundle["payload_b64"] = base64.b64encode(compressed_payload).decode("ascii")
-    
-    return bundle
-
-# --- CLI-hantering ---
-def main():
-    """Hanterar kommandoradsargument och kör paketeringsprocessen."""
-    parser = argparse.ArgumentParser(
-        description="Packs protocol files into a single, compressed PBF v1.0 artifact from multiple sources."
-    )
-    
-    parser.add_argument("--files", nargs="+", default=[], help="One or more individual file paths.")
-    parser.add_argument("--dir-recursive", nargs="+", default=[], help="One or more directories to scan recursively.")
-    parser.add_argument("--dir-flat", nargs="+", default=[], help="One or more directories to scan non-recursively (top level only).")
-    
-    parser.add_argument("--output-dir", required=True, help="Directory to save the output bundle.")
-    parser.add_argument("--exclude", nargs="*", default=[], help="File or directory names to exclude (e.g., '.git', '__pycache__').")
-    
-    args = parser.parse_args()
-
-    if not any([args.files, args.dir_recursive, args.dir_flat]):
-        parser.error("At least one input source is required: --files, --dir-recursive, or --dir-flat.")
-
-    files_to_process: Set[Path] = set()
-    exclude_set = set(args.exclude)
-
-    for f_path in args.files:
-        p = Path(f_path)
-        if p.is_file():
-            if not any(part in exclude_set for part in p.parts):
-                files_to_process.add(p)
+    # --dir-recursive
+    if args.dir_recursive:
+        for d in args.dir_recursive:
+            d_path = Path(d)
+            if d_path.exists():
+                files_to_process.extend(collect_from_dir_recursive(d_path, exclude_names))
             else:
-                print(f"Info: Excluding specified file: {p}", file=sys.stderr)
-        else:
-            print(f"Warning: Specified file not found, skipping: {p}", file=sys.stderr)
-
-    for d_path in args.dir_flat:
-        scan_path = Path(d_path)
-        if scan_path.is_dir():
-            for p in scan_path.glob("*"):
-                if p.is_file() and not any(part in exclude_set for part in p.parts):
-                    files_to_process.add(p)
-        else:
-            print(f"Warning: Flat directory not found, skipping: {d_path}", file=sys.stderr)
-
-    for d_path in args.dir_recursive:
-        scan_path = Path(d_path)
-        if scan_path.is_dir():
-            for p in scan_path.glob("**/*"):
-                if p.is_file() and not any(part in exclude_set for part in p.parts):
-                    files_to_process.add(p)
-        else:
-            print(f"Warning: Recursive directory not found, skipping: {d_path}", file=sys.stderr)
-
+                print(f"Recursive directory not found, skipping: {d_path}", file=sys.stderr)
 
     if not files_to_process:
         print("No files found to process after applying exclusions.", file=sys.stderr)
@@ -189,8 +241,12 @@ def main():
 
 ```json
 {pbf_json_string}
---- END OF FILE protocol_bundle.md ---
+````
+
+\--- END OF FILE protocol\_bundle.md ---
 """
+
+```
 # Skapa och spara den slutgiltiga Markdown-filen
 output_dir = Path(args.output_dir)
 output_dir.mkdir(parents=True, exist_ok=True)
@@ -201,8 +257,9 @@ output_path.write_text(md_template, encoding="utf-8")
 print(f"\nSuccessfully created Markdown-wrapped protocol bundle:")
 print(f"  Path: {output_path.resolve()}")
 print(f"  Size: {output_path.stat().st_size} bytes")
+```
 
-if __name__ == "__main__":
-    main()
+if **name** == "**main**":
+main()
 
-# END FILE: scripts/protocol_packager.py
+# END FILE: scripts/protocol\_packager.py
