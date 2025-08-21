@@ -226,7 +226,7 @@ jobs:
           echo "Packaging specified AI protocols and configs into a compressed bundle..."
           python scripts/protocol_packager.py \
             --dir-recursive docs/ai_protocols \
-            --files tools/frankensteen_learning_db.json package.json vite.config.js .github/workflows/ci.yml vite.config.js requirements.txt package.json \
+            --files tools/frankensteen_learning_db.json package.json vite.config.js .github/workflows/ci.yml vite.config.js requirements.txt package.json docs/ByggLogg.json docs/Chatthistorik.json docs/Chatthistorik.json docs/session_manifest.json docs/core_file_info.json \
             --output-dir docs/ai_protocols/compact \
             --exclude compact
             
