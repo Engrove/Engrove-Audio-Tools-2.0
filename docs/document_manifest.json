@@ -148,6 +148,15 @@
     "sha256": "f132251792b54338921ed4491546def43910f2bb9342fa21bdca790ad509b7bc"
   },
   {
+    "file_path": "docs/Product_Roadmap.md",
+    "purpose": "Detta dokument definierar projektets \"varför\", \"för vem\" och \"när\". Det är den primära strategiska guiden för all utveckling och ska användas av AI:n för att förstå uppgifters prioritet och kontext.",
+    "keywords": [
+      "product",
+      "roadmap"
+    ],
+    "sha256": "e1929b4f605fb1130f9da9150c63ef268cc220a48bc199e6b70bc4274e9cc01c"
+  },
+  {
     "file_path": "docs/Teknisk_Beskrivning_Engrove_Audio_Toolkit.md",
     "purpose": "No purpose statement found.",
     "keywords": [
@@ -158,6 +167,15 @@
       "toolkit"
     ],
     "sha256": "d623c613799d4f73e23b6f791e67711f571ff994783b035453fe79f358d951f5"
+  },
+  {
+    "file_path": "docs/Testing_Strategy.md",
+    "purpose": "Detta dokument definierar den pragmatiska teststrategin för EAT-projektet. Det beskriver vilka typer av tester som ska användas, var de ska placeras i FSD-arkitekturen, och hur de integreras i CI/CD-pipelinen. Målet är att säkerställa hög kodkvalitet och stabilitet med en rimlig arbetsinsats.",
+    "keywords": [
+      "testing",
+      "strategy"
+    ],
+    "sha256": "d64424374c8ae9d000f9f45ac6231700733664c87db72228ba5cec4cfdc43572"
   },
   {
     "file_path": "docs/UI_Testverktyg_Showcase.html.md",

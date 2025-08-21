@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-21T11:33:05.049587+00:00",
+    "generated_at": "2025-08-21T12:20:19.648369+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -1911,6 +1911,15 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
+      "docs/document_manifest.json": {
+        "type": "JSON Config",
+        "category": "configuration",
+        "language": "json",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
       "docs/HomePage_Tekniska_Detaljer.md": {
         "type": "Markdown Document",
         "category": "documentation",
@@ -2010,6 +2019,15 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
+      "docs/Testing_Strategy.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
       "docs/Teknisk_Beskrivning_Engrove_Audio_Toolkit.md": {
         "type": "Markdown Document",
         "category": "documentation",
@@ -2020,6 +2038,15 @@
         "criticality_score": 0.0
       },
       "docs/AR_Protractor_Förbättrad_Precision.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/Product_Roadmap.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
