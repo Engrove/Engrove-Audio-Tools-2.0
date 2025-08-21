@@ -325,7 +325,7 @@ def main() -> None:
 
         {pbf_json_string}
 
-        """
+    """
 
     # Skapa och spara den slutgiltiga Markdown-filen
     output_dir = Path(args.output_dir)
