@@ -39,6 +39,7 @@
 # * v5.8 (2025-08-19): Binder Grundbulten P-GB-3.9 (G5 invariants, G0a kontext-abort) i PSV/QG. Förbjud ‘uppskattad diff’.
 # * v5.9 (2025-08-21): Konsoliderat RAG-citeringskravet direkt in i kärndirektiven som Gyllene Regel #8.
 # * SHA256_LF: 1f9e0a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2a1b0c9d8e7f6a5b4c3d2e1f9a
+# * v5.11 (2025-08-21): Integrerat obligatoriskt "Uppgifts-Kontrakt" i PSV-processen för att säkerställa alignment vid komplexa uppgifter.
 
 # === TILLÄMPADE REGLER (Frankensteen v5.0) ===
 # - Obligatorisk Refaktorisering: Instruktionen har refaktorerats för att hantera dynamiska protokoll.
