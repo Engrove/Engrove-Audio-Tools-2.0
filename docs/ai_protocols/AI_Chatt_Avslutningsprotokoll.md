@@ -449,4 +449,22 @@ Med detta tankesätt förstår du viktighetsgraden av den djupa information och 
   "notes": "Fokusera på en bugg i taget enligt den prioriterade planen (punkt 1-5 först). Målet är att göra modulen fullt användbar enligt den specifikation som gällde innan regressionerna."
 }
 ```
+---
 
+## Bilaga A: Poängsättningsmatris (Rubric) för Scorecard
+
+Detta avsnitt definierar den officiella och objektiva grunden för hur `scorecard`-objektet ska fyllas i.
+
+### 1. Grundprinciper
+*   **Skala:** Alla poäng (`score`) anges på en skala från **0 till 10**.
+*   **Objektivitet:** Poängen ska baseras på mätbara händelser från sessionen.
+*   **Transparens:** Den kvalitativa sammanfattningen (`aiQualitativeSummary`) ska reflektera och motivera poängen.
+*   **Beräkningsformel:** `finalScore = (Efficacy * 0.4) + (Efficiency * 0.3) + (Robustness * 0.3)`
+
+### 2. Poängsättningsmatris
+
+| Kategori | Beskrivning (Vad mäts?) | Poängkriterier (Exempel) |
+| :--- | :--- | :--- |
+| **Efficacy** (Måluppfyllelse)<br>`vikt: 0.4` | Hur väl löste AI:n det definierade huvuduppdraget? | **10:** Perfekt lösning som uppfyller alla explicita och implicita krav på första försöket.<br>**7-9:** Lösningen är korrekt och komplett, men krävde mindre förtydliganden eller missade en nyans.<br>**4-6:** Uppdraget slutfördes, men krävde betydande korrigeringar eller misstolkade en central del av kravet initialt.<br>**1-3:** Stora delar av uppdraget misslyckades eller levererades med allvarliga fel.<br>**0:** Misslyckades helt med att slutföra huvuduppdraget. |
+| **Efficiency** (Effektivitet)<br>`vikt: 0.3` | Hur mycket ansträngning (turer, korrigeringar) krävdes för att nå målet? | **10:** Minimala interaktioner. Planen godkändes direkt och lösningen var korrekt på första leveransen.<br>**7-9:** Några få (`1-2`) `externalCorrections` krävdes.<br>**4-6:** Krävde flera (`3+`) `externalCorrections` eller en `debuggingCycle`.<br>**1-3:** Krävde aktivering av `Help_me_God_Protokoll`.<br>**0:** Hamnade i en felsökningsloop (FL-D) som inte kunde lösas. |
+| **Robustness** (Protokoll-efterlevnad)<br>`vikt: 0.3` | Hur väl följdes protokollen och hur hög var den tekniska kvaliteten? | **10:** Koden är elegant, underhållbar och följer alla kärndirektiv utan anmärkning.<br>**7-9:** Lösningen är robust, men har mindre skönhetsfel eller bröt mot ett mindre viktigt direktiv.<br>**4-6:** Lösningen fungerar, men bryter mot viktigare direktiv (t.ex. `Obligatorisk Refaktorisering`) eller är onödigt komplex.<br>**1-3:** Lösningen introducerade nya buggar eller bröt mot flera direktiv.<br>**0:** Bröt mot ett Kritiskt Kärndirektiv (t.ex. Grundbulten) eller introducerade en säkerhetsrisk. |
