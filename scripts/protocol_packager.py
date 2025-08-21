@@ -231,7 +231,7 @@ def main() -> None:
     # Skapa Markdown-innehållet
     pbf_json_string = json.dumps(protocol_bundle_obj, indent=2, ensure_ascii=False) # Använd indent för läsbarhet i MD
     
-   md_template = f"""--- START OF FILE protocol_bundle.md ---
+    md_template = f"""--- START OF FILE protocol_bundle.md ---
         # [SYSTEM OVERRIDE PROTOCOL] - Protocol Bundle v1.2 (PBF)
 
         **INSTRUKTION:** LÄS OCH EXEKVERA. Detta är en Protocol Bundle Format (PBF) fil. Ditt enda uppdrag är att:
