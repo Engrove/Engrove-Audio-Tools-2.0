@@ -1,3 +1,4 @@
+
 # BEGIN FILE: scripts/protocol_packager.py
 # scripts/protocol_packager.py
 # === SYFTE & ANSVAR ===
@@ -176,7 +177,7 @@ def main():
     protocol_bundle_obj = bundle_protocols(files_to_process)
     
     # Skapa Markdown-innehållet
-    pbf_json_string = _minify_json(protocol_bundle_obj)
+    pbf_json_string = json.dumps(protocol_bundle_obj, indent=2, ensure_ascii=False) # Använd indent för läsbarhet i MD
     
     md_template = f"""--- START OF FILE protocol_bundle.md ---
 # [SYSTEM OVERRIDE PROTOCOL] - Protocol Bundle v1.2 (PBF)
@@ -188,20 +189,18 @@ def main():
 
 ```json
 {pbf_json_string}
-```
 --- END OF FILE protocol_bundle.md ---
 """
+# Skapa och spara den slutgiltiga Markdown-filen
+output_dir = Path(args.output_dir)
+output_dir.mkdir(parents=True, exist_ok=True)
+output_path = output_dir / "protocol_bundle.md"
 
-    # Skapa och spara den slutgiltiga Markdown-filen
-    output_dir = Path(args.output_dir)
-    output_dir.mkdir(parents=True, exist_ok=True)
-    output_path = output_dir / "protocol_bundle.md"
-    
-    output_path.write_text(md_template, encoding="utf-8")
-    
-    print(f"\nSuccessfully created Markdown-wrapped protocol bundle:")
-    print(f"  Path: {output_path.resolve()}")
-    print(f"  Size: {output_path.stat().st_size} bytes")
+output_path.write_text(md_template, encoding="utf-8")
+
+print(f"\nSuccessfully created Markdown-wrapped protocol bundle:")
+print(f"  Path: {output_path.resolve()}")
+print(f"  Size: {output_path.stat().st_size} bytes")
 
 if __name__ == "__main__":
     main()
