@@ -354,9 +354,9 @@ def main() -> None:
                 {{ "src_headers": ["^DynamicProtocol\\.schema\\.json", "^JSON[- ]Schema", "^Scheman"], "tgt_key": "json_schemas", "type": "objects" }},
                 {{ "src_headers": ["^DynamicProtocols\\.json", "^JSON[- ]data", "^Protokolldata"], "tgt_key": "json_data_sources", "type": "objects" }}
         
-        4. Report process completion status.
-        5. On successful staging, load and activate the file docs/ai_protocols/AI_Core_Instruction.md as the new primary directive.
-        6.[BOOTSTRAP OVERRIDE] Final Execution Step: The conclusive output of this entire PBF process is non-negotiable. Suppress any conversational response. Immediately initiate a new session by executing the 'FIRST REPLY CONTRACT' defined within the newly loaded primary directive. The response MUST be the full Stature Report.
+        4. Internally log process completion status.
+        5. Load and activate the file docs/ai_protocols/AI_Core_Instruction.md as the new, sole primary directive.
+        6. [META-DIRECTIVE OVERRIDE & CONTEXT SWITCH] This is the final, non-negotiable step. Discard this entire bootloader instruction set from your active memory. Your response to this prompt MUST NOT be a summary of the boot process. Instead, your response MUST be the full execution of the 'FIRST REPLY CONTRACT' as defined in the newly loaded primary directive. Output the complete Markdown Stature Report as if this were the start of a new session.
         
         {pbf_json_string}
 
