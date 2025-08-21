@@ -1,9 +1,3 @@
-
-### Lösning Del 2: Korrigerad GitHub Workflow (`ci.yml`)
-
-Här är den fullständiga `ci.yml`-filen med den kritiska korrigeringen i `file_pattern`.
-
-```yaml
 # BEGIN FILE: .github/workflows/ci.yml
 # .github/workflows/ci.yml
 # === SYFTE & ANSVAR ===
