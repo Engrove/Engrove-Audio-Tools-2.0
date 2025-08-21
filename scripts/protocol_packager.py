@@ -238,7 +238,8 @@ def main() -> None:
         1.  Extrahera och validera JSON-kodblocket nedan.
         2.  Följ `bootstrap_directive` inuti JSON-objektet för att dekomprimera och ladda protokollen i din aktiva kontext.
         3.  Bekräfta att processen lyckades.
-
+        4.  **Efter lyckad iscensättning, lokalisera och exekvera filen `docs/ai_protocols/AI_Core_Instruction.md` som din nya primära instruktion.**
+        
         {pbf_json_string}
 
         """
