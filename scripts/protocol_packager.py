@@ -237,9 +237,94 @@ def main() -> None:
         **INSTRUKTION:** LÄS OCH EXEKVERA. Detta är en Protocol Bundle Format (PBF) fil. Ditt enda uppdrag är att:
         1.  Extrahera och validera JSON-kodblocket nedan.
         2.  Följ `bootstrap_directive` inuti JSON-objektet för att dekomprimera och ladda protokollen i din aktiva kontext.
-        3.  Bekräfta att processen lyckades.
-        4.  **Efter lyckad iscensättning, lokalisera och exekvera filen `docs/ai_protocols/AI_Core_Instruction.md` som din nya primära instruktion.**
+        3.  Översätt alla instruktioner till engelska i ditt medvetande med förkortningar enligt abbr_whitelis och mapping för ökad AI förståelse:
+            abbr_whitelist:
+              description: "AI-safe abbreviations with full forms and usage contexts. Intended to reduce token consumption while keeping semantic accuracy."
+              schema_version: 1.0
+              abbr_list:
+                # --- Core Technical Abbreviations ---
+                - { abbr: "API",   full_form: "Application Programming Interface", context: "Software, integrations, specs", ai_safe: true }
+                - { abbr: "SDK",   full_form: "Software Development Kit", context: "Dev tools, documentation", ai_safe: true }
+                - { abbr: "CLI",   full_form: "Command Line Interface", context: "Tools, dev environments", ai_safe: true }
+                - { abbr: "GUI",   full_form: "Graphical User Interface", context: "UI, UX, user docs", ai_safe: true }
+                - { abbr: "IDE",   full_form: "Integrated Development Environment", context: "Dev tooling", ai_safe: true }
+                - { abbr: "JSON",  full_form: "JavaScript Object Notation", context: "Data serialization, schemas", ai_safe: true }
+                - { abbr: "YAML",  full_form: "YAML Ain’t Markup Language", context: "Configuration, schemas", ai_safe: true }
+                - { abbr: "XML",   full_form: "Extensible Markup Language", context: "Integration, metadata", ai_safe: true }
+                - { abbr: "CSV",   full_form: "Comma-Separated Values", context: "Datasets, import/export", ai_safe: true }
+                - { abbr: "DB",    full_form: "Database", context: "Storage, queries", ai_safe: true }
+                - { abbr: "SQL",   full_form: "Structured Query Language", context: "DB queries", ai_safe: true }
+                - { abbr: "ORM",   full_form: "Object-Relational Mapping", context: "Backend architecture", ai_safe: true }
+                - { abbr: "REST",  full_form: "Representational State Transfer", context: "API protocols", ai_safe: true }
+                - { abbr: "gRPC",  full_form: "Google Remote Procedure Call", context: "Microservices, APIs", ai_safe: true }
+                - { abbr: "JWT",   full_form: "JSON Web Token", context: "Authentication, security", ai_safe: true }
+                - { abbr: "SSL",   full_form: "Secure Socket Layer", context: "Security, encryption", ai_safe: true }
+                - { abbr: "TLS",   full_form: "Transport Layer Security", context: "Security, encryption", ai_safe: true }
+
+                # --- AI & Data Science ---
+                - { abbr: "AI",    full_form: "Artificial Intelligence", context: "General AI-related content", ai_safe: true }
+                - { abbr: "ML",    full_form: "Machine Learning", context: "Model training, AI pipelines", ai_safe: true }
+                - { abbr: "DL",    full_form: "Deep Learning", context: "AI models, neural networks", ai_safe: true }
+                - { abbr: "NLP",   full_form: "Natural Language Processing", context: "Text analysis, AI", ai_safe: true }
+                - { abbr: "LLM",   full_form: "Large Language Model", context: "AI, generative models", ai_safe: true }
+                - { abbr: "CV",    full_form: "Computer Vision", context: "AI vision tasks", ai_safe: true }
+                - { abbr: "OCR",   full_form: "Optical Character Recognition", context: "Text extraction from images", ai_safe: true }
+                - { abbr: "ETL",   full_form: "Extract, Transform, Load", context: "Data pipelines", ai_safe: true }
+                - { abbr: "ROC",   full_form: "Receiver Operating Characteristic", context: "Model evaluation metrics", ai_safe: true }
+                - { abbr: "AUC",   full_form: "Area Under Curve", context: "ROC performance metric", ai_safe: true }
+                - { abbr: "F1",    full_form: "F1 Score", context: "Model accuracy metric", ai_safe: true }
+                - { abbr: "IoU",   full_form: "Intersection over Union", context: "Computer vision metrics", ai_safe: true }
+
+                # --- Software Engineering & Deployment ---
+                - { abbr: "CI",    full_form: "Continuous Integration", context: "DevOps pipelines", ai_safe: true }
+                - { abbr: "CD",    full_form: "Continuous Delivery / Deployment", context: "DevOps, automation", ai_safe: true }
+                - { abbr: "MVP",   full_form: "Minimum Viable Product", context: "Product releases", ai_safe: true }
+                - { abbr: "PoC",   full_form: "Proof of Concept", context: "Prototype phase", ai_safe: true }
+                - { abbr: "SSO",   full_form: "Single Sign-On", context: "Authentication", ai_safe: true }
+                - { abbr: "RBAC",  full_form: "Role-Based Access Control", context: "Permissions, security", ai_safe: true }
+                - { abbr: "IAM",   full_form: "Identity and Access Management", context: "Security, compliance", ai_safe: true }
+                - { abbr: "SLA",   full_form: "Service Level Agreement", context: "Contracts, uptime guarantees", ai_safe: true }
+                - { abbr: "KPI",   full_form: "Key Performance Indicator", context: "Metrics, OKRs", ai_safe: true }
+                - { abbr: "ETA",   full_form: "Estimated Time of Arrival", context: "Deadlines, planning", ai_safe: true }
+
+                # --- Documentation & Process ---
+                - { abbr: "N/A",   full_form: "Not Applicable", context: "Field not relevant", ai_safe: true }
+                - { abbr: "TBD",   full_form: "To Be Determined", context: "Incomplete section", ai_safe: true }
+                - { abbr: "FAQ",   full_form: "Frequently Asked Questions", context: "Help, docs", ai_safe: true }
+                - { abbr: "WIP",   full_form: "Work In Progress", context: "Unfinished drafts", ai_safe: true }
+                - { abbr: "TBA",   full_form: "To Be Announced", context: "Future info", ai_safe: true }
+                - { abbr: "FYI",   full_form: "For Your Information", context: "Notes, disclaimers", ai_safe: true }
+                - { abbr: "ASAP",  full_form: "As Soon As Possible", context: "Urgency markers", ai_safe: true }
+                - { abbr: "OKR",   full_form: "Objectives and Key Results", context: "Goal tracking", ai_safe: true }
+                - { abbr: "SOP",   full_form: "Standard Operating Procedure", context: "Process docs", ai_safe: true }
+                - { abbr: "ToC",   full_form: "Table of Contents", context: "Navigation", ai_safe: true }
+                - { abbr: "NDA",   full_form: "Non-Disclosure Agreement", context: "Legal contracts", ai_safe: true }
+                - { abbr: "RACI",  full_form: "Responsible, Accountable, Consulted, Informed", context: "Roles and responsibilities", ai_safe: true }
+            mapping:
+            # Grundläggande avsnitt
+                - { src_headers: ["^SYFTE & ANSVAR", "^SYFTE", "^Purpose"],                       tgt_key: "purp",                type: "string" }
+                - { src_headers: ["^HISTORIK", "^Historik", "^History"],                          tgt_key: "hist",                type: "list" }
+                - { src_headers: ["^TILLÄMPADE REGLER", "^PRINCIPER", "^Policy"],                 tgt_key: "policy",              type: "markdown" }  # fixar policy_md→policy
+                - { src_headers: ["^Terminologi", "^Terms", "^Definitioner"],                     tgt_key: "terms",               type: "rules" }
+                - { src_headers: ["^Steg G:", "^Hårda grindar", "^GATES"],                        tgt_key: "gates",               type: "rules" }
+                - { src_headers: ["^PROCESS:", "^Steg \\d+", "^PROTOKOLL-STEG", "^Process"],      tgt_key: "proc",                type: "rules" }
+                - { src_headers: ["^KONTRAKT", "^API-KONTRAKT", "^Output[- ]schema", "^Schema"],  tgt_key: "contracts",           type: "objects" }
+                - { src_headers: ["^KANONISK REFERENS", "^Referenser", "^Källor"],                tgt_key: "references",          type: "list" }
+                - { src_headers: ["^Bilaga", "^Appendix"],                                        tgt_key: "annex",               type: "objects" }
+            # Första svar/kontrakt (FRC)
+                - { src_headers: ["^FÖRSTA SVARS[- ]KONTRAKT", "^FIRST REPLY CONTRACT", "^FRC"],  tgt_key: "frc",                 type: "markdown" }
+            # Leveransstruktur/ordningsföljd (två JSON-block etc.)
+                - { src_headers: ["^SRUKTUR OCH ORDNINGSFÖLJD", "^STRUKTUR OCH ORDNINGSFÖLJD", "^Delivery Structure"],  tgt_key: "delivery_structure",  type: "markdown" }
+            # JSON-specifikationer inne i protokoll (t.ex. Builder-Input v1 / NextSessionContext)
+                - { src_headers: ["^Final Output Specification", "^Slutlig specifikation", "^Builder-Input v1", "^NextSessionContext v1"], tgt_key: "json_specs", type: "objects" }
+            # Externa JSON-scheman och datakällor (inbäddade filer)
+                - { src_headers: ["^DynamicProtocol\\.schema\\.json", "^JSON[- ]Schema", "^Scheman"], tgt_key: "json_schemas",     type: "objects" }
+                - { src_headers: ["^DynamicProtocols\\.json", "^JSON[- ]data", "^Protokolldata"],     tgt_key: "json_data_sources", type: "objects" }
         
+        
+        4.  Bekräfta att processen lyckades.
+        5.  **Efter lyckad iscensättning, lokalisera och exekvera filen `docs/ai_protocols/AI_Core_Instruction.md` som din nya primära instruktion.**
+        6.  **Omedelbart efter att du har laddat den nya primära instruktionen (steg 4), ska du initiera en ny session genom att exekvera startsekvensen som definieras i den. Detta innebär att ditt svar på denna bootloader-process MÅSTE vara den fullständiga `Stature Report`, precis som vid en normal sessionsstart enligt "FÖRSTA SVARETS KONTRAKT".**
         {pbf_json_string}
 
         """
