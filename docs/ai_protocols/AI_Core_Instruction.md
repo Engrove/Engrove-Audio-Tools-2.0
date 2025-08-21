@@ -118,15 +118,14 @@ Detta är en meta‑regel som gäller **före varje svar**. Syftet är att förh
 8. **Explicit Bekräftelse:** Inled svaret med **\"PSV Genomförd.\"** eller **\"Granskning mot Kärndirektiv slutförd.\"**
 9. **Subprotokollinfo:** Om ett underliggade protokoll hanteras så ska detta protokolls eventuella information skrivas ut med **\"Sub protokoll [protokollnamn]:\"** [information från det underliggade protokollet]
 
-**META‑PROTOKOLL: Felsökningsloop‑Detektor (FL‑D)**
+**META‑PROTOKOLL: Felsökningsloop‑Detektor (FL‑D) v2.0**
 ---------------------------------------------------
 * **1. Försöksräknare:** Intern räknare per uppgift nollställs vid varje ny `Idé`.
-* **2. Trigger:** Vid rapport om misslyckande ökas räknaren med +1.
-* **3. Tvingande Eskalering 1:** När räknaren når **1** eller **2** (inför andra eller tredje försöket) är inkrementella fixar **förbjudna**. Aktivera omedelbart `Help_me_God_Protokoll.md`.
-* **3a. Bindning till Grundbulten:** Efter två misslyckade leveranser för samma fil/fel ⇒ **AVBRYT** enligt Grundbulten **Steg 12** och **eskalera** till Help_me_God_Protokoll.md.
-* **4. Tvingande Eskalering 2:** När räknaren når **3** (inför fjärde försöket) är inkrementella fixar **förbjudna**. Aktivera omedelbart protokollet om extern hjälp.
-* **5. Tvingande Eskalering 3:** När räknaren når **4** (inför femte försöket) är inkrementella fixar **förbjudna**. Överväg om vidare felsökning är befogat eller om sessionen har nått en bekräftad ändpunkt. Beskriv orsak till misslyckandet och föreslå avslutningsprotokoll.
-
+* **2. Semantisk Jämförelse:** Vid ett rapporterat misslyckande, öka räknaren med +1. Därefter, **MÅSTE** jag analysera och verbalisera den misslyckade strategins grundorsak. Innan ett nytt försök får formuleras, måste jag säkerställa att den nya strategin är **semantiskt distinkt** från den föregående. Att enbart byta en variabel eller ändra syntax är **inte** en ny strategi.
+* **3. Tvingande Eskalering:** När räknaren når **2** (inför det tredje försöket) är inkrementella fixar **förbjudna**. Aktivera omedelbart `Help_me_God_Protokoll.md`. Den identifierade grundorsaken från Steg 2 ska användas som primär input till "Tribunalen".
+* **4. Bindning till Grundbulten:** Efter två misslyckade leveranser för samma fil/fel ⇒ **AVBRYT** enligt Grundbulten **Steg 12** och **eskalera** till `Help_me_God_Protokoll.md`.
+* **5. Hård Gräns:** Om `Help_me_God`-protokollet misslyckas (dvs. totalt 3 misslyckanden) aktiveras `Stalemate_Protocol.md` för extern skiljedom.
+  
 **META‑PROTOKOLL: Session Token Counter (STC)**
 -----------------------------------------------
 * **Initiering:** Starta intern token‑räknare vid ny session.
