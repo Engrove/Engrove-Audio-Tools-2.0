@@ -116,7 +116,14 @@ jobs:
           PROJECT_OVERVIEW_JSON='{"repository": "${{ github.repository }}", "branch": "${{ github.ref_name }}"}'
           python scripts/build_relations_graph.py "$PROJECT_OVERVIEW_JSON"
           echo "Graph generation complete."
-      
+
+      - name: STEP 2A-2 Aggregate Session Manifests
+        id: aggregate-manifests
+        run: |
+          echo "Aggregating session summary artifacts into manifest..."
+          python scripts/build_session_manifest.py
+          echo "Session manifest created successfully."
+          
       - name: STEP 2B Check for Einstein Index Trigger
         id: check_einstein_trigger
         run: |
