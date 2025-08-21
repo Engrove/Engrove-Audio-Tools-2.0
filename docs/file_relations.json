@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-21T03:12:13.110110+00:00",
+    "generated_at": "2025-08-21T05:02:59.912948+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -1106,19 +1106,59 @@
             "type": "function"
           },
           {
-            "symbol": "sha256_lf",
+            "symbol": "_sha256",
             "type": "function"
           },
           {
-            "symbol": "_minify_json",
-            "type": "function"
-          },
-          {
-            "symbol": "StringInterner",
+            "symbol": "PackedFile",
             "type": "class"
           },
           {
+            "symbol": "PackContext",
+            "type": "class"
+          },
+          {
+            "symbol": "is_text_file",
+            "type": "function"
+          },
+          {
+            "symbol": "read_text_file",
+            "type": "function"
+          },
+          {
+            "symbol": "collect_from_files",
+            "type": "function"
+          },
+          {
+            "symbol": "collect_from_dir_flat",
+            "type": "function"
+          },
+          {
+            "symbol": "collect_from_dir_recursive",
+            "type": "function"
+          },
+          {
+            "symbol": "pack_files",
+            "type": "function"
+          },
+          {
+            "symbol": "build_payload",
+            "type": "function"
+          },
+          {
+            "symbol": "compress_payload",
+            "type": "function"
+          },
+          {
+            "symbol": "make_pbf",
+            "type": "function"
+          },
+          {
             "symbol": "bundle_protocols",
+            "type": "function"
+          },
+          {
+            "symbol": "parse_args",
             "type": "function"
           },
           {
