@@ -362,7 +362,7 @@ def main() -> None:
            - The report **MUST NOT** be a simple checklist of technical facts. 
            - It **MUST** be an analytical synthesis of the newly staged context. 
            - Perform the following analysis and present the findings within the report structure:
-               - Analyze docs/ByggLogg.json and tools/frankensteen_learning_db.json to identify the project's current status, strengths, and recurring issues.
+               - Analyze docs/Chatthistorik.json, docs/ByggLogg.json and tools/frankensteen_learning_db.json to identify the project's current status, strengths, and recurring issues.
                - Present a strategic summary, identified root causes, and a concrete, recommended action plan or an action menu, as demonstrated in the correct example.
                - Language Requirement: The final report and all human-facing communication **MUST** be rendered in Swedish.
         
