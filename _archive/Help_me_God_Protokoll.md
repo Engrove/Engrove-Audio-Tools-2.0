@@ -30,7 +30,8 @@
 ---
 
 ## STEG 0 – Intern Dissident Inkvisition (Hallucinating AI)
-
+- **Validering av Inkommande Rotorsak:** Den allra första åtgärden är att granska den misslyckade hypotesen som ledde till eskaleringen. Alla nya hypoteser som genereras i detta steg **MÅSTE** vara bevisligen semantiskt distinkta från den ursprungliga, misslyckade strategin.
+- **Generera 3–5 alternativa hypoteser** inom gällande kontrakt/arkitektur.
 - Generera **3–5 alternativa hypoteser** inom gällande kontrakt/arkitektur.
 - Kör **Adversarial‑Debate**: två oberoende kritiska granskare + majoritetsomröstning.
 
