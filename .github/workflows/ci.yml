@@ -226,7 +226,7 @@ jobs:
           python scripts/protocol_packager.py \
             --dir-recursive docs/ai_protocols \
             --dir-flat sessions \
-            --files docs/file_relations.json docs/core_file_info.json tools/frankensteen_learning_db.json package.json vite.config.js \
+            --files docs/session_manifest.json docs/file_relations.json docs/core_file_info.json tools/frankensteen_learning_db.json package.json vite.config.js \
             --output-dir docs/ai_protocols/compact \
             --exclude compact
 
