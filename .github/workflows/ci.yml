@@ -1,3 +1,9 @@
+
+### Lösning Del 2: Korrigerad GitHub Workflow (`ci.yml`)
+
+Här är den fullständiga `ci.yml`-filen med den kritiska korrigeringen i `file_pattern`.
+
+```yaml
 # BEGIN FILE: .github/workflows/ci.yml
 # .github/workflows/ci.yml
 # === SYFTE & ANSVAR ===
@@ -37,7 +43,7 @@
 # * v2.13 (2025-08-17): (Help me God - Grundorsaksanalys) Korrigerat ett kritiskt fel där CI/CD misslyckades om `.einstein`-filen saknades. Commit-steget försöker inte längre committa den temporära trigger-filen och den raderas korrekt efter bygge.
 # * v2.14 (2025-08-17): (Help me God - Domslut) Lade till ett villkorligt steg för att skapa en tom "dummy" `einstein_index.json.gz` när den riktiga indexeringen hoppas över. Detta löste ett 404-fel på klient-sidan.
 # * v2.15 (2025-08-18): (Help me God - Domslut) Korrigerat grundorsaken till 404-felet. Säkerställer nu att `einstein_index.json.gz` (både äkta och dummy) alltid placeras i `dist/`-mappen före uppladdning.
-# * v2.17 (2025-08-20): Lade till steg (6B) för att paketera AI-protokoll med protocol_packager.py v1.1. Förbättrat logiken i STEP 2D för att undvika att skriva över en befintlig indexfil.
+# * v2.18 (2025-08-20): (Help me God - Grundorsaksanalys) Korrigerat `file_pattern` i commit-steget för att inkludera den nya `protocol_bundle.md`-artefakten istället för den föråldrade `.pbf.json`.
 # * SHA256_LF: UNVERIFIED
 
 name: Consolidated CI/CD and Tools Pipeline
@@ -217,7 +223,7 @@ jobs:
         run: |
           echo "Packaging specified AI protocols and configs into a compressed bundle..."
           python scripts/protocol_packager.py \
-            --dir-flat docs/ai_protocols \
+            --dir-recursive docs/ai_protocols \
             --files docs/file_relations.json docs/core_file_info.json tools/frankensteen_learning_db.json package.json vite.config.js \
             --output-dir docs/ai_protocols/compact \
             --exclude compact
@@ -233,7 +239,7 @@ jobs:
             [skip ci]
           commit_user_name: 'Frankensteen (Bot)'
           commit_user_email: 'frankensteen-bot@users.noreply.github.com'
-          file_pattern: 'docs/ByggLogg.json docs/Chatthistorik.json docs/ai_protocol_performance.json tools/frankensteen_learning_db.json docs/ai_protocols/DynamicProtocols.json docs/core_file_info.json docs/file_relations.json public/data/schemas/*.schema.json project_overview.json dist/einstein_index.json.gz docs/ai_protocols/compact/protocol_bundle.pbf.json'
+          file_pattern: 'docs/ByggLogg.json docs/Chatthistorik.json docs/ai_protocol_performance.json tools/frankensteen_learning_db.json docs/ai_protocols/DynamicProtocols.json docs/core_file_info.json docs/file_relations.json public/data/schemas/*.schema.json project_overview.json dist/einstein_index.json.gz docs/ai_protocols/compact/protocol_bundle.md'
           push_options: '--force'
 
   deploy:
@@ -247,4 +253,5 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
 # END FILE: .github/workflows/ci.yml
