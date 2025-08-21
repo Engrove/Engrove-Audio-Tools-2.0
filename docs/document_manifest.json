@@ -1,0 +1,184 @@
+[
+  {
+    "file_path": "docs/AR_Protractor_Förbättrad_Precision.md",
+    "purpose": "No purpose statement found.",
+    "keywords": [
+      "ar",
+      "protractor",
+      "förbättrad",
+      "precision"
+    ],
+    "sha256": "56a7451f4d8e029ce95110e5a4c34d506ca3f69add8894fa62d2b8e09cdc7b91"
+  },
+  {
+    "file_path": "docs/AR_Protractor_Teknisk_Analys.md",
+    "purpose": "No purpose statement found.",
+    "keywords": [
+      "ar",
+      "protractor",
+      "teknisk",
+      "analys"
+    ],
+    "sha256": "bf69965ebff421b1da2206e9af0acc2db088319f7b08033bd450d0d55887f644"
+  },
+  {
+    "file_path": "docs/AR_Protractor_Teknisk_Dokumentation.md",
+    "purpose": "Denna modul tillhandahåller en komplett svit av verktyg för realtidsmätning och visualisering av både statisk geometri och dynamisk prestanda. Målet är att eliminera gissningar och mänskliga felkällor (som parallaxfel) som är vanliga med traditionella, fysiska justeringsmallar.",
+    "keywords": [
+      "ar",
+      "protractor",
+      "teknisk",
+      "dokumentation"
+    ],
+    "sha256": "b6df8063ce527b18c5f75f4330525f6e7c3dd90b1a5185ddc1a5e54abbb5dacc"
+  },
+  {
+    "file_path": "docs/Blueprint_för_Migrering_v1_till_v2.md",
+    "purpose": "No purpose statement found.",
+    "keywords": [
+      "blueprint",
+      "för",
+      "migrering",
+      "v1",
+      "till",
+      "v2"
+    ],
+    "sha256": "daeea98d5316e661e1f41669f4d0af1c2b1b1ca17d2bde8eb3cf7158c1a7c4e4"
+  },
+  {
+    "file_path": "docs/Databehandlingskedja_för_Engrove_Audio_Toolkit.md",
+    "purpose": "No purpose statement found.",
+    "keywords": [
+      "databehandlingskedja",
+      "för",
+      "engrove",
+      "audio",
+      "toolkit"
+    ],
+    "sha256": "744f93e94a11a54bc895c47f5c2877502939002a4624350d90e29b8829422681"
+  },
+  {
+    "file_path": "docs/Engrove_Audio_Toolkit_Datainsamlings_och_Berikningssystem.md",
+    "purpose": "No purpose statement found.",
+    "keywords": [
+      "engrove",
+      "audio",
+      "toolkit",
+      "datainsamlings",
+      "och",
+      "berikningssystem"
+    ],
+    "sha256": "6302fb8e0fb68f400cbd58c21e20fd2d62902f142411f5984ce4cd05a74ed271"
+  },
+  {
+    "file_path": "docs/Engrove_Audio_Toolkit_v2.0_Analys.md",
+    "purpose": "No purpose statement found.",
+    "keywords": [
+      "engrove",
+      "audio",
+      "toolkit",
+      "v2.0",
+      "analys"
+    ],
+    "sha256": "8f22c63fe547b8cd24f52a23946a61e04dfc43cc1e350964fb22eea8c622c3ff"
+  },
+  {
+    "file_path": "docs/Global_UI-Standard_Komponentspecifikation.md",
+    "purpose": "No purpose statement found.",
+    "keywords": [
+      "global",
+      "ui-standard",
+      "komponentspecifikation"
+    ],
+    "sha256": "47f3d3a7c76163b699c250e92af1d7f1702cd4de42a39d33c03b8db20ba5c2bc"
+  },
+  {
+    "file_path": "docs/Global_UI-Standard_för_Engrove-plattformen.md",
+    "purpose": "No purpose statement found.",
+    "keywords": [
+      "global",
+      "ui-standard",
+      "för",
+      "engrove-plattformen"
+    ],
+    "sha256": "421dcdd6e83fbde27f21d46e68391d8e07eaa1e24b0b535854fe0b8442c5f8c9"
+  },
+  {
+    "file_path": "docs/Governance_Driven_Component_Logic_Analysis.md",
+    "purpose": "t är inte att ersätta de befintliga, processorienterade Frankensteen-protokollen – som styr *hur* kod produceras för att säkerställa kvalitet – utan att komplettera dem med ett datadrivet system som styr *vad* den producerade koden gör när den körs. Detta skapar en mer flexibel, underhållbar och transparent applikation.",
+    "keywords": [
+      "governance",
+      "driven",
+      "component",
+      "logic",
+      "analysis"
+    ],
+    "sha256": "90d83ca96d70785ef2d155a7b77877adacf9abe5cbf82bd2fa92ce00c162e191"
+  },
+  {
+    "file_path": "docs/HomePage_Tekniska_Detaljer.md",
+    "purpose": "No purpose statement found.",
+    "keywords": [
+      "homepage",
+      "tekniska",
+      "detaljer"
+    ],
+    "sha256": "e38ab9f72a834ccc920e5a9fe1d102c5a0eb7449a4b10ea918db7a610aa641bf"
+  },
+  {
+    "file_path": "docs/Interaktiva_Animationer_för_Verktygskort.md",
+    "purpose": "No purpose statement found.",
+    "keywords": [
+      "interaktiva",
+      "animationer",
+      "för",
+      "verktygskort"
+    ],
+    "sha256": "8f438299b3a9059cedcfb4570e38cf10ba63b84956ff85e91da0c6684d8f873d"
+  },
+  {
+    "file_path": "docs/Manufacturers_URL_Database_Instruktion.md",
+    "purpose": "No purpose statement found.",
+    "keywords": [
+      "manufacturers",
+      "url",
+      "database",
+      "instruktion"
+    ],
+    "sha256": "f132251792b54338921ed4491546def43910f2bb9342fa21bdca790ad509b7bc"
+  },
+  {
+    "file_path": "docs/Teknisk_Beskrivning_Engrove_Audio_Toolkit.md",
+    "purpose": "No purpose statement found.",
+    "keywords": [
+      "teknisk",
+      "beskrivning",
+      "engrove",
+      "audio",
+      "toolkit"
+    ],
+    "sha256": "d623c613799d4f73e23b6f791e67711f571ff994783b035453fe79f358d951f5"
+  },
+  {
+    "file_path": "docs/UI_Testverktyg_Showcase.html.md",
+    "purpose": "No purpose statement found.",
+    "keywords": [
+      "ui",
+      "testverktyg",
+      "showcase.html"
+    ],
+    "sha256": "e15f24421fe5957527bb3f4e4836448af412cb2d5886630d6862f36ab84f7ab3"
+  },
+  {
+    "file_path": "docs/Wow_Effekten_och_UX_Strategi.md",
+    "purpose": "No purpose statement found.",
+    "keywords": [
+      "wow",
+      "effekten",
+      "och",
+      "ux",
+      "strategi"
+    ],
+    "sha256": "9dd5cafe217f5b80b6161a59e18d4f5160a2abf24d67cb4d35c141736eb4e687"
+  }
+]
