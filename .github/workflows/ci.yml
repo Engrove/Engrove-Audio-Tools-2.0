@@ -99,12 +99,6 @@ jobs:
       - name: Prepare Output Directory
         run: mkdir -p "${{ env.SITE_DIR }}"
 
-      - name: STEP 0 Patch sessions files once
-        id: session_patc
-        run: |
-          echo "Patching sessions files..."
-          python scripts/session_patch.py
-          echo "Patching sessions files complete."
           
       - name: STEP 1 Process Session Data (if needed)
         id: process-sessions
@@ -231,11 +225,11 @@ jobs:
         run: |
           echo "Packaging specified AI protocols and configs into a compressed bundle..."
           python scripts/protocol_packager.py \
-            --dir-recursive docs/ai_protocols \
-            --dir-flat sessions \
-            --files docs/session_manifest.json docs/file_relations.json docs/core_file_info.json tools/frankensteen_learning_db.json package.json vite.config.js \
-            --output-dir docs/ai_protocols/compact \
+            --dir-recursive docs \
             --exclude compact
+            --files tools/frankensteen_learning_db.json package.json vite.config.js .github/workflows/ci.yml vite.config.js requirements.txt package.json  \
+            --output-dir docs/ai_protocols/compact \
+            
 
       - name: STEP 7 Commit Documentation and Session Artifacts
         uses: stefanzweifel/git-auto-commit-action@v5
