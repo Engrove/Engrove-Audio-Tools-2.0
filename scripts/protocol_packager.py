@@ -254,7 +254,7 @@ print(f"\nSuccessfully created Markdown-wrapped protocol bundle:")
 print(f"  Path: {output_path.resolve()}")
 print(f"  Size: {output_path.stat().st_size} bytes")
 
-if **name** == "**main**":
+if __name__ == "__main__":
 main()
 
 # END FILE: scripts/protocol\_packager.py
