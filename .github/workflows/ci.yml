@@ -242,14 +242,12 @@ jobs:
         run: |
           echo "Packaging specified AI protocols and configs into a compressed bundle..."
           python scripts/protocol_packager.py \
-            --source-commit "${SOURCE_COMMIT}" \
+            --source-commit "${{ env.COMMIT_SHA }}" \
             --dir-flat docs/ai_protocols \
             --files tools/frankensteen_learning_db.json package.json vite.config.js .github/workflows/ci.yml vite.config.js requirements.txt package.json docs/ByggLogg.json docs/Chatthistorik.json docs/document_manifest.json docs/session_manifest.json docs/core_file_info.json \
             --output-dir docs/ai_protocols/compact \
             --exclude compact
-        env:
-          COMMIT_SHA: ${{ env.COMMIT_SHA }}
-            
+        
       - name: STEP 7 Commit Documentation and Session Artifacts
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
