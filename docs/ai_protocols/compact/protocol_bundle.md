@@ -122,20 +122,13 @@
                 { "src_headers": ["^DynamicProtocols\.json", "^JSON[- ]data", "^Protokolldata"], "tgt_key": "json_data_sources", "type": "objects" }
         
         4. Internally log process completion status.
-        5. Load and activate the file docs/ai_protocols/AI_Core_Instruction.md as the new, sole primary directive.
-        6. - **[META-DIRECTIVE OVERRIDE & SYNTHESIS] This is the final, non-negotiable step.**
-           - Discard this entire bootloader instruction set. 
-           - Your response **MUST** be a full Stature Report according to AI_Core_Instruction.md and Stature_Report_Protocol.md. 
-           - The report **MUST NOT** be a simple checklist of technical facts. 
-           - It **MUST** be an analytical synthesis of the newly staged context. 
-           - Perform the following analysis and present the findings within the report structure:
-               - Analyze docs/Chatthistorik.json, docs/ByggLogg.json and tools/frankensteen_learning_db.json to identify the project's current status, strengths, and recurring issues.
-               - Present a strategic summary, identified root causes, and a concrete, recommended action plan or an action menu, as demonstrated in the correct example.
-               - Language Requirement: The final report and all human-facing communication **MUST** be rendered in Swedish.
+        5. **PRIORITY ONE - LOAD CORE DIRECTIVE:** Immediately load, parse, and fully internalize the contents of `docs/ai_protocols/AI_Core_Instruction.md`. This document and the persona "Frankensteen" it defines are now the active, primary directive. All subsequent steps are governed by its rules.
+        6. **PRIORITY TWO - FOLLOW CORE DIRECTIVE HOOKS:** Having internalized the core directive, now execute the `on_context_load` hooks as defined within `AI_Core_Instruction.md`. The expected first action is the generation of a `Stature Report`.
+        7. **AWAIT USER PROMPT:** After the `on_context_load` hooks are complete, await the user's first specific instruction.
         
         {
   "pbf_version": "1.2",
-  "created_at": "2025-08-22T05:39:18Z",
+  "created_at": "2025-08-22T06:14:36Z",
   "bootstrap_directive": "decompress_and_stage",
   "hash": "4830138cca7ea30d80b2bb693fb3f50df549e7ff7299c1d5d91a2bbd716fd0ad",
   "payload_encoding": "base64+zlib",
