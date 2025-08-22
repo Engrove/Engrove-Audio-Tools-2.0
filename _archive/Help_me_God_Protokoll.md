@@ -1,4 +1,4 @@
-# docs/ai_protocols/Help_me_God_Protokoll.md
+# _archive/Help_me_God_Protokoll.md
 #
 # === SYFTE & ANSVAR ===
 # Detta protokoll är en sista utväg för kritiska felsökningsscenarier.
