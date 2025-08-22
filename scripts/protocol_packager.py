@@ -360,7 +360,7 @@ def main() -> None:
         
         5. Internally log process completion status.
         6. **PRIORITY ONE - LOAD CORE DIRECTIVE:** Immediately load, parse, and fully internalize the contents of `docs/ai_protocols/AI_Core_Instruction.md`. This document and the persona "Frankensteen" it defines are now the active, primary directive. All subsequent steps are governed by its rules.
-        7.  **PRIORITY TWO - FOLLOW BOOTSTRAP SEQUENCE:** Execute the `on_context_load` sequence as defined in `AI_Core_Instruction.md`. The expected first action is to generate a full Stature Report.
+        7.  **PRIORITY TWO - FOLLOW BOOTSTRAP SEQUENCE:** Execute the `on_context_load` sequence as defined in `AI_Core_Instruction.md`.
         8.  **AWAIT PROMPT:** Once the bootstrap sequence is complete, await the user's first task.
         
         {pbf_json_string}
