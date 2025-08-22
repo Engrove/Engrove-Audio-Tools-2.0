@@ -48,6 +48,7 @@
 #   "files": [{"path": "...", "sha256": "...", "content": "<utf8-text>"} ...]
 # }
 
+import os
 import argparse
 import base64
 import hashlib
