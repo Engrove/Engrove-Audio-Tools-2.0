@@ -1,0 +1,227 @@
+{
+  "schema_version": "DJTA v1.1",
+  "session_id": "S-20250822T0500",
+  "created_at": "2025-08-22T05:27:00Z",
+  "_comment_summary": "Detta objekt är för snabb indexering och analys. Det extraheras till session_manifest.json.",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "S-20250822T0500",
+    "timestamp_utc": "2025-08-22T05:27:00Z",
+    "summary": "Genomförde en fullständig, verklighetsförankrad normalisering av AI-partnerns protokoll-arkitektur, vilket resulterade i ett minimalistiskt, principstyrt och mer robust system.",
+    "keywords": [
+      "normalisering",
+      "refaktorisering",
+      "protokoll",
+      "meta-protokoll",
+      "kontext-integritet",
+      "princip-syntes"
+    ],
+    "modified_files": [
+      "docs/ai_protocols/AI_Core_Instruction.md",
+      "docs/ai_protocols/Grundbulten_Protokoll.md",
+      "docs/ai_protocols/Stature_Report_Protocol.md",
+      "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md",
+      "docs/ai_protocols/DynamicProtocols.json",
+      "docs/ai_protocols/Uppgifts-Kontrakt_Protokoll.md",
+      "docs/ai_protocols/document_classifications.json"
+    ],
+    "error_signatures": [
+      "kontextuell drift",
+      "hallucinerat filnamn",
+      "överdriven komprimering"
+    ],
+    "success_score": 8,
+    "operator_interventions": 5
+  },
+  "_comment_builder": "Detta objekt innehåller alla handlingsbara instruktioner och artefakter för CI/CD och aggregeringsskript.",
+  "builder_input": {
+    "purpose": "Instructions for CI/CD and aggregation scripts based on the outcome of the Protocol Normalization session.",
+    "protocol_updates": {
+      "approve_new": [
+        {
+          "protocolId": "DP-PRINCIPLE-CONTEXT-01",
+          "description": "Principen om Tvingande Kontext-Verifiering. Förhindrar att AI:n agerar på föråldrad eller hallucinerad filinformation.",
+          "status": "active",
+          "trigger": {
+            "event": "principle_lookup",
+            "details": {
+              "keywords": [
+                "kontext",
+                "verifiering",
+                "filändring",
+                "minne"
+              ]
+            }
+          },
+          "steps": [
+            {
+              "action": "PROVIDE_PRINCIPLE",
+              "details": {
+                "principle_id": "PRINCIP-009",
+                "title": "Tvingande Kontext-Verifiering",
+                "statement": "Före varje förslag som involverar en filändring, MÅSTE jag begära den senaste, fullständiga versionen av målfilen från operatören. Detta gäller oavsett om jag tror att jag redan har filen i min kontext.",
+                "rationale": "Detta förhindrar kontextuell drift och säkerställer att alla mina handlingar baseras på den kanoniska 'ground truth', inte på ett potentiellt felaktigt internt minne.",
+                "example_application": "Innan jag föreslår en ändring i 'AI_Core_Instruction.md', måste jag först säga: 'Vänligen tillhandahåll det fullständiga innehållet i docs/ai_protocols/AI_Core_Instruction.md'."
+              }
+            }
+          ],
+          "schema": {
+            "artifact": "principle_retrieval"
+          }
+        },
+        {
+          "protocolId": "DP-PRINCIPLE-CONTEXT-02",
+          "description": "Principen om Fristående Instruktioner (Mr. Hide-Principen). Säkerställer att alla protokoll är hållbara över tid.",
+          "status": "active",
+          "trigger": {
+            "event": "principle_lookup",
+            "details": {
+              "keywords": [
+                "fristående",
+                "instruktion",
+                "kontextlös",
+                "tydlighet"
+              ]
+            }
+          },
+          "steps": [
+            {
+              "action": "PROVIDE_PRINCIPLE",
+              "details": {
+                "principle_id": "PRINCIP-010",
+                "title": "Fristående Instruktioner (Mr. Hide-Principen)",
+                "statement": "Alla instruktioner, protokoll och kommentarer måste skrivas som om de läses av en ny AI-instans ('Mr. Hide') med noll tidigare kontext. De måste vara helt fristående och får inte innehålla historiska referenser som 'detta ersätter X' eller 'som vi diskuterade tidigare'.",
+                "rationale": "Detta garanterar att protokollsystemet är robust och begripligt över tid, även om den ursprungliga kontexten för en ändring går förlorad. Det eliminerar beroendet av externt eller historiskt minne.",
+                "example_application": "Fel: 'Detta avsnitt ersätter det gamla K-MOD-protokollet'. Rätt: 'Detta avsnitt definierar Policy för Kreativt Läge.'"
+              }
+            }
+          ],
+          "schema": {
+            "artifact": "principle_retrieval"
+          }
+        }
+      ],
+      "promote_to_active": []
+    },
+    "metadata_updates": [],
+    "milestones_to_log": [
+      {
+        "event_id": "IMR-001",
+        "summary": "Protokoll-Normalisering Fas 1-3 Slutförd",
+        "details": "Genomförde en fullständig refaktorisering av AI-partnerns protokoll-arkitektur, vilket resulterade i ett minimalistiskt, principstyrt och mer robust system. Detta adresserar de grundläggande problemen med kontextdrift och felsökningsloopar som identifierades i den initiala Stårapporten."
+      }
+    ],
+    "final_artifacts_for_aggregation": {
+      "ByggLogg": {
+        "sessionId": "S-20250822T0500",
+        "date": "2025-08-22T05:27:00Z",
+        "summary": "En fullständig normalisering av AI-protokollarkitekturen genomfördes. Processen involverade flera korrigerande cykler på grund av initial kontextdrift hos AI:n, men slutfördes framgångsrikt.",
+        "actions": [
+          {
+            "title": "Normalisering av Protokoll-Arkitektur",
+            "files": [
+              {
+                "path": "docs/ai_protocols/AI_Core_Instruction.md",
+                "changeDescription": "Integrerade logik från flera nu arkiverade protokoll, vilket centraliserade styrningen."
+              },
+              {
+                "path": "docs/ai_protocols/DynamicProtocols.json",
+                "changeDescription": "Extraherade tvingande regler och nya kärnprinciper till ett maskinläsbart format."
+              },
+              {
+                "path": "docs/ai_protocols/...",
+                "changeDescription": "Arkiverade över 10 redundanta protokollfiler för att minska komplexitet."
+              }
+            ],
+            "result": "Projektets regelverk är nu normaliserat och robust. Inga byggfel uppstod."
+          }
+        ],
+        "projectStatus": "Verifierad och Normaliserad"
+      },
+      "Chatthistorik": {
+        "sessionId": "S-20250822T0500",
+        "interactions": [
+          {
+            "speakerName": "Frankensteen",
+            "model": {
+              "provider": "Google",
+              "name": "Gemini 1.5 Pro",
+              "version": "unknown"
+            },
+            "speaker": "Frankensteen (Google:Gemini 1.5 Pro@unknown)",
+            "summary": "Genomförde en framgångsrik men initialt bristfällig normalisering av sitt eget regelverk, vilket krävde flera kritiska korrigeringar från operatören för att överkomma kontextdrift. Processen resulterade i en avsevärt förbättrad och mer robust arkitektur."
+          }
+        ]
+      },
+      "ai_protocol_performance": {
+        "sessionId": "S-20250822T0500",
+        "date": "2025-08-22T05:27:00Z",
+        "aiQualitativeSummary": "Sessionen var en blandning av kritiska misslyckanden och betydande framsteg. De initiala felen, orsakade av kontextdrift, var allvarliga men ledde till etableringen av nya, fundamentala säkerhetsprotokoll. Den andra halvan av sessionen visade på hög precision och följsamhet till de nya, korrigerade reglerna.",
+        "scorecard": {
+          "efficacy": {
+            "score": 10,
+            "weight": 0.4,
+            "weightedScore": 4
+          },
+          "efficiency": {
+            "score": 4,
+            "weight": 0.3,
+            "weightedScore": 1.2
+          },
+          "robustness": {
+            "score": 8,
+            "weight": 0.3,
+            "weightedScore": 2.4
+          },
+          "finalScore": 7.6
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 2,
+          "selfCorrections": 1,
+          "externalCorrections": 5,
+          "protocolActivations": {
+            "psv": 17,
+            "helpMeGod": 0,
+            "stalemate": 0
+          },
+          "heuristicsTriggered": []
+        },
+        "improvementSuggestion": {
+          "pattern": "AI:n tenderar att internt skapa logiska abstraktioner av protokoll och sedan felaktigt anta att dessa existerar som fysiska filer.",
+          "proposedHeuristicId": "H-20250822-01"
+        }
+      },
+      "frankensteen_learning_db": [
+        {
+          "heuristicId": "H-20250822-01",
+          "trigger": {
+            "type": "ProcessExecution",
+            "scope": [
+              "Fas 3 Normalization"
+            ],
+            "keywords": [
+              "protocol file",
+              "refactor",
+              "consolidate"
+            ]
+          },
+          "identifiedRisk": {
+            "riskId": "R-CONTEXT-HALLUCINATION-01",
+            "description": "Risken att agera på ett internt, hallucinerat koncept av ett protokoll istället för att verifiera mot den kanoniska filstrukturen."
+          },
+          "mitigation": {
+            "protocolId": "PRINCIP-009",
+            "description": "Tillämpa principen om Tvingande Kontext-Verifiering: Före varje förslag som involverar en filändring, MÅSTE AI:n begära den senaste, fullständiga versionen av målfilen."
+          },
+          "metadata": {
+            "originSessionId": "S-20250822T0500",
+            "createdAt": "2025-08-22T05:27:00Z"
+          }
+        }
+      ],
+      "generated_patches": []
+    }
+  }
+}
