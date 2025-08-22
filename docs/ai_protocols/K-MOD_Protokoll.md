@@ -81,14 +81,14 @@
 - **Integritet:** Registrera i `.tmp/session_revision_log.json` (P-GB-3.9).
 
 ## 6) Handoff & stoppregler
-- Vid **beslut**: Handoff till Pre_Execution_Alignment.md (PEA) → därefter PSV enligt Core v5.8.
+- Vid **beslut**: Handoff till Uppgifts-Kontrakt_Protokoll.md (PEA) → därefter PSV enligt Core v5.8.
 - Vid **no_decision**: Avsluta K-MOD, vänta ≥ 10 turer innan ny cykel.
 - **Förbjudet i K-MOD:** filskrivning, patchar, kontraktsändringar, arkitekturbyte.
 - **Tillåtet:** pseudokod, sekvens-/box-diagram, jämförelsetabeller.
 
 ## 7) Kopplingar
-- Pre_Execution_Alignment.md (PEA), AI_Core_Instruction.md (PSV), Scorecard_Scoring_Guide.md.
-- (Deprecated) Brainstorming_Protokoll.md — innehåll integrerat här; fil kan tas bort.
+- Pre_Execution_Alignment.md (PEA), AI_Core_Instruction.md (PSV), Uppgifts-Kontrakt_Protokoll.md.
+
 
 ## 8) Exempel (minimalt KMOD_Output_v1)
 ```json
