@@ -110,6 +110,11 @@ jobs:
           python scripts/update_core_info.py sessions/ docs/core_file_info.json $COMMIT_SHA
           echo "Session processing complete."
 
+      - name: DEBUG Verify Stature Protocol Hash AFTER session processing
+        run: |
+          echo "Hashing Stature_Report_Protocol.md after STEP 1..."
+          sha256sum docs/ai_protocols/Stature_Report_Protocol.md
+          
       - name: STEP 2A Generate File Relations Graph
         id: generate-relations
         run: |
