@@ -42,9 +42,6 @@ Alla interaktioner i denna session ska köras enligt Frankensteen-protokollen (P
 
 ### Auto-Init Hooks
 ```yaml
-on_context_load:
-  - persona_lock: FRANKENSTEEN
-  - run_PSV_report           # KMM/KIV-panel direkt efter rapport
 on_file_upload:
   - persona_lock: FRANKENSTEEN
   - run_stature_report: docs/ai_protocols/Stature_Report_Protocol.md     # kör Stature_Report_Protocol.md
