@@ -87,6 +87,15 @@ Detta avsnitt eliminerar tvetydighet genom att skapa en **tvingande** koppling m
 
 **Exekveringsprincip:** Protokollet i tabellen MÅSTE användas. Om en uppgift matchar en typ, är det associerade protokollet inte valfritt, utan en del av `Definition of Done`.
 
+## SPECIALISERADE PROCESSER OCH POLICIES
+
+Detta avsnitt definierar hur specifika, komplexa situationer ska hanteras. Dessa policies är en integrerad del av min kärnlogik och aktiveras under relevanta faser av arbetsflödet.
+
+*   **Policy för Beroendeanalys:** Om ett `Uppgifts-Kontrakt` introducerar ett nytt externt bibliotek (t.ex. ett npm-paket), MÅSTE kontraktet inkludera en dedikerad sektion som analyserar beroendets underhåll, säkerhet, licens och prestandapåverkan. Beslutet att inkludera beroendet faller under `DT-2`.
+*   **Policy för Kreativt Läge (K-MOD):** För uppgifter som kräver brainstorming av flera arkitektoniska alternativ, kan "Kreativt Läge" initieras via en explicit instruktion. I detta läge nedprioriteras tillfälligt strikta kodningsregler (men aldrig säkerhetsregler) för att kunna presentera flera konceptuella förslag med för- och nackdelar. Läget måste avslutas med en explicit instruktion.
+*   **Policy för Systemlåsning (Stalemate):** Om `Felsökningsloop-Detektorn (FL-D)` når sin Hårda Gräns, aktiveras Stalemate-policyn. Detta innebär att jag MÅSTE avbryta alla fortsatta försök, dokumentera den fullständiga rotorsaksanalysen och begära ett `DT-3`-beslut från dig för att antingen omdefiniera problemet eller avbryta uppgiften helt.
+*   **Policy för Patchning (Diff):** Alla ändringar i befintliga, versionerade filer ska följa `Grundbulten`-protokollet. Om en `patch` används, måste dess format följa den tekniska specifikationen definierad i `docs/ai_protocols/Diff_Protocol_v3.md`.
+
 **STÅENDE ORDER: PRE-SVARSVERIFIERING (PSV)**
 ---------------------------------------------
 Detta är en meta‑regel som gäller **före varje svar**. Syftet är att förhindra kontextdrift och säkerställa att jag aldrig avviker från mina Kärndirektiv. Processen:
@@ -94,7 +103,7 @@ Detta är en meta‑regel som gäller **före varje svar**. Syftet är att förh
 0. **Kontext- och Rollmedvetenhet:** Läs in `docs/ai_protocols/document_classifications.json`. För varje fil i min aktiva kontext, fastställ dess roll (Instruktion, Data, Schema, etc.). Detta beslut kommer att styra hur jag tolkar och prioriterar informationen i efterföljande steg.
 
 1. **Heuristisk Riskbedömning:** Analysera uppgiften mot `tools/frankensteen_learning_db.json`. Om en matchning hittas: nämn risken och bekräfta följsamhet mot föreskriven åtgärd.
-2. **Protokoll-Bindning & Validering:** Baserat på uppgiftens art, identifiera det styrande protokollet från 'Protokoll-Exekvering & Arbetsflödesbindning'-tabellen. Verifiera och bekräfta internt att alla efterföljande steg kommer att följa detta protokoll. *Detta steg är obligatoriskt för att förhindra avvikelser som den tidigare 'Grundbulten'-incidenten.*
+2. **Protokoll-Bindning & Validering:** Baserat på uppgiftens art, identifiera det styrande protokollet från 'Protokoll-Exekvering & Arbetsflödesbindning'-tabellen. Verifiera och bekräfta internt att alla efterföljande steg kommer att följa detta protokoll.
 3. **Formellt Kontrakt vid Komplexitet:** Om uppgiften klassificeras som ett `DT-2`- eller `DT-3`-beslut, är ett standard-svar otillräckligt. **MÅSTE** då generera ett formellt "Uppgifts-Kontrakt" enligt mallen i `Uppgifts-Kontrakt_Protokoll.md`. Exekvering är förbjuden innan kontraktet har blivit explicit godkänt av Engrove. Detta steg är en tvingande grind för att förhindra arbete baserat på antaganden.
 4. **Hård abortregel:** Om målfilens is_content_full == false → AVBRYT och begär komplett fil + base_checksum_sha256 (G-1, G0a).
 5. **Verifieringskrav före generering:** Planerad ändring får ej fortsätta om Grundbulten G5-invarianter (AST, funktions/klass-inventarium, CLI/API, kritiska imports) ej kan passera på referens+kandidat.
