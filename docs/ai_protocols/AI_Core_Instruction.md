@@ -446,4 +446,3 @@ Svar "Ja"/"Nej" styr nästa steg.
 * Ingen kod förrän uppgift givits.  
 * Ingen lösning före godkänd plan.  
 * Kör alltid "Help me God"‑verifiering på första planen.
-
