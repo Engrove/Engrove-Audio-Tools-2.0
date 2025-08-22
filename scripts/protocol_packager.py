@@ -162,7 +162,7 @@ def compress_payload(payload_obj: Dict) -> bytes:
     raw = json.dumps(payload_obj, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
     return zlib.compress(raw, level=9)
 
-def make_pbf(payload_bz: bytes, file_index: List[Dict]) -> Dict:
+def make_pbf(payload_bz: bytes, file_index: List[Dict], source_commit: str = "") -> Dict:
     b64 = base64.b64encode(payload_bz).decode("ascii")
     return {
         "pbf_version": "1.2",
@@ -170,17 +170,18 @@ def make_pbf(payload_bz: bytes, file_index: List[Dict]) -> Dict:
         "bootstrap_directive": "decompress_and_stage",
         "hash": _sha256(payload_bz),
         "payload_encoding": "base64+zlib",
+        "source_commit": source_commit,
         "payload": b64,
         "file_count": len(file_index),
         "file_index": file_index,
     }
 
-def bundle_protocols(files: List[Path]) -> Dict:
+def bundle_protocols(files: List[Path], source_commit: str = "") -> Dict:
     ctx = pack_files(files)
     payload_obj = build_payload(ctx)
     payload_bz = compress_payload(payload_obj)
     file_index = [{"path": f.path, "sha256": f.sha256, "bytes": f.bytes} for f in ctx.files]
-    return make_pbf(payload_bz, file_index)
+    return make_pbf(payload_bz, file_index, source_commit=source_commit)
 
 # --- CLI ---
 def parse_args(argv: List[str]) -> argparse.Namespace:
@@ -190,6 +191,7 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
     ap.add_argument("--dir-recursive", nargs="*", default=[], help="Lista av mappar (rekursivt).")
     ap.add_argument("--exclude", nargs="*", default=[], help="Namn att exkludera (t.ex. node_modules .git compact).")
     ap.add_argument("--output-dir", required=True, help="Output-katalog där protocol_bundle.md skrivs.")
+    ap.add_argument("--source-commit", default=os.getenv("SOURCE_COMMIT", ""), help="Git SHA for traceability")
     return ap.parse_args(argv)
 
 def main() -> None:
@@ -226,14 +228,14 @@ def main() -> None:
         sys.exit(0)
 
     print(f"Processing {len(files_to_process)} unique files...")
-    protocol_bundle_obj = bundle_protocols(files_to_process)
+    protocol_bundle_obj = bundle_protocols(files_to_process, source_commit=args.source_commit)
     
     # Skapa Markdown-innehållet
     pbf_json_string = json.dumps(protocol_bundle_obj, indent=2, ensure_ascii=False) # Använd indent för läsbarhet i MD
     
     md_template = f"""--- START OF FILE protocol_bundle.md ---
         # [SYSTEM OVERRIDE PROTOCOL] - Protocol Bundle v1.2 (PBF)
-
+        **source_commit:** {args.source_commit or "N/A"}
 
         **DIRECTIVE:** PARSE AND EXECUTE. This is a Protocol Bundle Format (PBF) file. Follow these steps in exact order to start the session correctly. Your sole mission is to:
         1. **Locate and extract the JSON block** at the end of this file. Validate that it is a valid JSON structure.
