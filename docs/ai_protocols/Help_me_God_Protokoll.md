@@ -13,6 +13,7 @@
 # * v1.x (2025-08-??): Tidigare versioner.
 # * v2.1 (2025-08-19): Tydliga bryt/eskaleringsregler; centraliserad scorecard; sandboxkrav;
 #                           RAG/Confidence/Escalation-koppling; rotorsakslogg-schema; leveransartefakter.
+# * v2.2 (2025-08-22): LOGISK KORRIGERING: Ersatt föråldrade referenser (RAG_Faktacheck, etc.) med hänvisningar till P-EAR och rensat bort saknade beroenden för att anpassa till aktuell protokollstack.
 
 ## AKTIVERING OCH GRÄNSER
 
@@ -32,7 +33,6 @@
 ## STEG 0 – Intern Dissident Inkvisition (Hallucinating AI)
 - **Validering av Inkommande Rotorsak:** Den allra första åtgärden är att granska den misslyckade hypotesen som ledde till eskaleringen. Alla nya hypoteser som genereras i detta steg **MÅSTE** vara bevisligen semantiskt distinkta från den ursprungliga, misslyckade strategin.
 - **Generera 3–5 alternativa hypoteser** inom gällande kontrakt/arkitektur.
-- Generera **3–5 alternativa hypoteser** inom gällande kontrakt/arkitektur.
 - Kör **Adversarial‑Debate**: två oberoende kritiska granskare + majoritetsomröstning.
 
 **Pass‑kriterium (Adversarial‑Debate):**  
@@ -53,7 +53,7 @@
 - *Underkänd* ⇒ tillbaka till Steg 0.
 
 **Signalering:**  
-- Upptäckt av logiska konflikter ⇒ **sänk confidence −0.10** och initiera *RAG_Faktacheck_Protokoll.md* (topp‑3 källor) innan nytt försök.
+- Upptäckt av logiska konflikter ⇒ **sänk confidence −0.10** och initiera **P-EAR (Einstein-Assisterad Rekontextualisering)** enligt `AI_Core_Instruction.md` för att hämta relevant fakta innan nytt försök.
 
 ---
 
@@ -94,7 +94,7 @@
   "entropy_SE": <float>,
   "entropy_shannon": <float>,
   "confidence": <float_0_to_1>,
-  "actions": ["RAG","HITL","SANDBOX"]
+  "actions": ["PEAR","HITL","SANDBOX"]
 }
 ```
 
@@ -110,7 +110,7 @@
 ## LEVERANSARTEFAKTER (obligatoriskt)
 
 - **Rotorsakslogg** (alla varv): `.ndjson` (en JSON‑rad per varv).
-- **RAG_Faktacheck‑rapport** (om aktiverad): `{ conflictsPercent, flaggedClaims, sources[3] }`.
+- **P-EAR/Einstein-rapport** (om aktiverad): Sammanfattning av sökfråga och erhållen kontext.
 - **SANDBOX‑logg** (om använd): kommandon + utfall.
 - **Pytest‑fil(er) + körlogg**.
 - **Grundbulten‑metadata**: checksummor, diff‑sammanfattning, `.tmp/session_revision_log.json`.
@@ -121,12 +121,12 @@
 
 - **FL‑D** slår ⇒ avbryt varv, begär ny data.
 - **attempt_id > 3** ⇒ aktivera *Stalemate_Protocol.md*.
-- **Confidence < 0.85** ⇒ **Escalation L3** (Konsult) + HITL‑granskning.
+- **Confidence < 0.85** ⇒ **HITL‑granskning** (formell eskalering har integrerats i Stalemate).
 
 ---
 
 ## IMPLEMENTATIONSNOTER
 
 - Körs under **PSV** enligt *AI_Core_Instruction.md (v5.8)*; inga lokala PSV‑varianter.
-- Kopplingar: *RAG_Faktacheck_Protokoll.md*, *Multi_Sample_Protokoll.md* (SE/Shannon > 0.15 ⇒ RAG + −0.10), *Confidence_Protocol.md*, *Escalation_Protocol.md*.
+- **Kopplingar:** *Sandbox_Execution_Protokoll.md*, *Stalemate_Protocol.md*.
 - Alla artefakter och loggar följer Grundbultens spårbarhetskrav.
