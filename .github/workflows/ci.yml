@@ -38,6 +38,7 @@
 # * v2.14 (2025-08-17): (Help me God - Domslut) Lade till ett villkorligt steg för att skapa en tom "dummy" `einstein_index.json.gz` när den riktiga indexeringen hoppas över. Detta löste ett 404-fel på klient-sidan.
 # * v2.15 (2025-08-18): (Help me God - Domslut) Korrigerat grundorsaken till 404-felet. Säkerställer nu att `einstein_index.json.gz` (både äkta och dummy) alltid placeras i `dist/`-mappen före uppladdning.
 # * v2.18 (2025-08-20): (Help me God - Grundorsaksanalys) Korrigerat `file_pattern` i commit-steget för att inkludera den nya `protocol_bundle.md`-artefakten istället för den föråldrade `.pbf.json`.
+# * v3.1 (2025-08-22): (Frankensteen) Infört ett 'git pull'-steg för att tvinga synkronisering till main-branchens HEAD. Detta anpassar sig till operatörens workflow men offrar deterministisk spårbarhet.
 # * SHA256_LF: UNVERIFIED
 
 name: Consolidated CI/CD and Tools Pipeline
@@ -47,7 +48,12 @@ on:
     branches: [ "main" ]
     paths:
       - '.buildtrigger'
-      - 'sessions/**.json'
+      # Notera: Jag behåller min tidigare rekommendation som utkommenterad.
+      # Om den manuella processen fallerar är detta den robusta lösningen.
+      # - 'docs/**.md'
+      # - 'docs/**.json'
+      # - 'scripts/**.py'
+      # - 'tools/**.json'
   workflow_dispatch:
   schedule:
     - cron: '0 2 * * *'
@@ -79,6 +85,13 @@ jobs:
             ref: main
             fetch-depth: 0
             clean: true
+
+      # KORRIGERING: Tvinga synkronisering till den absolut senaste versionen av 'main'.
+      - name: STEP 0 Force Sync to Latest Main
+        run: |
+          echo "Forcing sync to latest 'main' branch HEAD..."
+          git pull origin main
+          echo "Workspace is now at HEAD of main."
 
       - name: Print HEAD and export SOURCE_COMMIT
         run: |
