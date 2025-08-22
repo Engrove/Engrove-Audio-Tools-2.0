@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-22T03:02:30.050652+00:00",
+    "generated_at": "2025-08-22T05:38:28.262740+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -2281,15 +2281,6 @@
         "criticality_score": 0.0
       },
       "docs/ai_protocols/In-Session_Amnesiac_Reset_Protocol.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/ai_protocols/Help_me_God_Protokoll.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
