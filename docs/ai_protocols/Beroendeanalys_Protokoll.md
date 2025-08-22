@@ -1,4 +1,4 @@
-# _archive/Beroendeanalys_Protokoll.md
+# docs/ai_protocols/Beroendeanalys_Protokoll.md
 #
 # === SYFTE & ANSVAR ===
 # Detta dokument definierar det obligatoriska protokollet för att analysera och
