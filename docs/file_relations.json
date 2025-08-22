@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-22T07:45:30.652051+00:00",
+    "generated_at": "2025-08-22T10:00:33.239963+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -2235,6 +2235,15 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
+      "docs/ai_protocols/K-MOD_Protokoll.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
       "docs/ai_protocols/ai_config.json": {
         "type": "JSON Config",
         "category": "configuration",
@@ -2254,6 +2263,15 @@
         "criticality_score": 0.0
       },
       "docs/ai_protocols/Mappstruktur_och_Arbetsflöde.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/Stalemate_Protocol.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
@@ -2289,7 +2307,25 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
+      "docs/ai_protocols/Help_me_God_Protokoll.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
       "docs/ai_protocols/Confidence_Protocol.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/Levande_Kontext_Protokoll.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
@@ -2307,7 +2343,25 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
+      "docs/ai_protocols/Beroendeanalys_Protokoll.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
       "docs/ai_protocols/Grundbulten_Protokoll.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/Scorecard_Scoring_Guide.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
