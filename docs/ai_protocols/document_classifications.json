@@ -32,7 +32,7 @@
       "docs/ai_protocols/AI_Core_Instruction.md": "CORE_INSTRUCTION",
       "docs/ai_protocols/AI_Dynamic_Protocols.md": "OPERATIONAL_PROTOCOL",
       "docs/ai_protocols/Brainstorming_Protokoll.md": "OPERATIONAL_PROTOCOL",
-      "docs/ai_protocols/Diff_Protocol_v3.md": "OPERATIONAL_PROTOCOL",
+      "docs/ai_protocols/Diff_Protocol_v3.md": "REFERENCE_MATERIAL",
       "docs/ai_protocols/DynamicProtocol.schema.json": "SCHEMA_DEFINITION",
       "docs/ai_protocols/DynamicProtocols.json": "CONFIGURATION_DATA",
       "docs/ai_protocols/Global_UI-Standard_Komponentspecifikation.md": "OPERATIONAL_PROTOCOL",
