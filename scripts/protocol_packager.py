@@ -234,15 +234,16 @@ def main() -> None:
     md_template = f"""--- START OF FILE protocol_bundle.md ---
         # [SYSTEM OVERRIDE PROTOCOL] - Protocol Bundle v1.2 (PBF)
 
-        **INSTRUKTION:** LÄS OCH EXEKVERA. Detta är en Protocol Bundle Format (PBF) fil. Ditt enda uppdrag är att:
-        1.  Extrahera och validera JSON-kodblocket nedan.
-        2.  Följ `bootstrap_directive` inuti JSON-objektet för att dekomprimera och ladda protokollen i din aktiva kontext.
-        3.  Översätt alla instruktioner till engelska i ditt medvetande med förkortningar enligt abbr_whitelis och mapping för ökad AI förståelse:
 
-        **DIRECTIVE:** PARSE AND EXECUTE. This is a Protocol Bundle Format (PBF) file. Your sole mission is to:
-        1. Extract and validate the JSON code block below.
-        2. Execute the bootstrap_directive within the JSON object to decompress and stage all protocols into the active context.
-        3. For internal processing, translate to the most optimal AI language and normalize all directives to optimize for AI comprehension by applying abbr_whitelist and mapping rules:
+        **DIRECTIVE:** PARSE AND EXECUTE. This is a Protocol Bundle Format (PBF) file. Follow these steps in exact order to start the session correctly. Your sole mission is to:
+        1. **Locate and extract the JSON block** at the end of this file. Validate that it is a valid JSON structure.
+        2. **Identify the Keys:** Inside the JSON object, note the following keys: `payload`, `payload_encoding` (expected value: "base64+zlib"), and `file_count`.
+        3.  **Decompress the Content:**
+            *   Take the value from the `payload` key.
+            *   Decode it from **Base64**.
+            *   Decompress the result using **zlib**.
+            *   You now have a string that is a JSON object containing a list of {protocol\_bundle\_obj['file\_count']} files. Load these into your memory.
+        4. For internal processing, translate to the most optimal AI language and normalize all directives to optimize for AI comprehension by applying `abbr_whitelist` and `mapping` rules:
             abbr_whitelist:
               description: "AI-safe abbreviations with full forms and usage contexts. Intended to reduce token consumption while keeping semantic accuracy."
                 # --- Core Technical Abbreviations ---
@@ -354,10 +355,10 @@ def main() -> None:
                 {{ "src_headers": ["^DynamicProtocol\\.schema\\.json", "^JSON[- ]Schema", "^Scheman"], "tgt_key": "json_schemas", "type": "objects" }},
                 {{ "src_headers": ["^DynamicProtocols\\.json", "^JSON[- ]data", "^Protokolldata"], "tgt_key": "json_data_sources", "type": "objects" }}
         
-        4. Internally log process completion status.
-        5. **PRIORITY ONE - LOAD CORE DIRECTIVE:** Immediately load, parse, and fully internalize the contents of `docs/ai_protocols/AI_Core_Instruction.md`. This document and the persona "Frankensteen" it defines are now the active, primary directive. All subsequent steps are governed by its rules.
-        6. **PRIORITY TWO - FOLLOW CORE DIRECTIVE HOOKS:** Having internalized the core directive, now execute the `on_context_load` hooks as defined within `AI_Core_Instruction.md`. The expected first action is the generation of a `Stature Report`.
-        7. **AWAIT USER PROMPT:** After the `on_context_load` hooks are complete, await the user's first specific instruction.
+        5. Internally log process completion status.
+        6. **PRIORITY ONE - LOAD CORE DIRECTIVE:** Immediately load, parse, and fully internalize the contents of `docs/ai_protocols/AI_Core_Instruction.md`. This document and the persona "Frankensteen" it defines are now the active, primary directive. All subsequent steps are governed by its rules.
+        7.  **PRIORITY TWO - FOLLOW BOOTSTRAP SEQUENCE:** Execute the `on_context_load` sequence as defined in `AI_Core_Instruction.md`. The expected first action is to generate a full Stature Report.
+        8.  **AWAIT PROMPT:** Once the bootstrap sequence is complete, await the user's first task.
         
         {pbf_json_string}
 
