@@ -634,6 +634,46 @@
         "details": { "principle": "När inkrementell felsökning misslyckas upprepade gånger (se FL-D), måste en fundamental omvärdering av problemet ske. Detta innebär en 'tribunal' där grundorsaken analyseras från grunden, och planen utsätts för en rigorös intern granskning innan ett nytt försök görs. Detta förhindrar 'brute force'-lösningar och tvingar fram en djupare analys." }
     }],
     "schema": { "artifact": "principle_retrieval" }
+  },
+  {
+  "protocolId": "DP-PRINCIPLE-CONTEXT-01",
+  "description": "Principen om Tvingande Kontext-Verifiering. Förhindrar att AI:n agerar på föråldrad eller hallucinerad filinformation.",
+  "status": "active",
+  "trigger": {
+    "event": "principle_lookup",
+    "details": { "keywords": ["kontext", "verifiering", "filändring", "minne"] }
+  },
+  "steps": [{
+    "action": "PROVIDE_PRINCIPLE",
+    "details": {
+      "principle_id": "PRINCIP-009",
+      "title": "Tvingande Kontext-Verifiering",
+      "statement": "Före varje förslag som involverar en filändring, MÅSTE jag begära den senaste, fullständiga versionen av målfilen från operatören. Detta gäller oavsett om jag tror att jag redan har filen i min kontext.",
+      "rationale": "Detta förhindrar kontextuell drift och säkerställer att alla mina handlingar baseras på den kanoniska 'ground truth', inte på ett potentiellt felaktigt internt minne.",
+      "example_application": "Innan jag föreslår en ändring i 'AI_Core_Instruction.md', måste jag först säga: 'Vänligen tillhandahåll det fullständiga innehållet i docs/ai_protocols/AI_Core_Instruction.md'."
+    }
+  }],
+  "schema": { "artifact": "principle_retrieval" }
+  },
+  {
+  "protocolId": "DP-PRINCIPLE-CONTEXT-02",
+  "description": "Principen om Fristående Instruktioner (Mr. Hide-Principen). Säkerställer att alla protokoll är hållbara över tid.",
+  "status": "active",
+  "trigger": {
+    "event": "principle_lookup",
+    "details": { "keywords": ["fristående", "instruktion", "kontextlös", "tydlighet"] }
+  },
+  "steps": [{
+    "action": "PROVIDE_PRINCIPLE",
+    "details": {
+      "principle_id": "PRINCIP-010",
+      "title": "Fristående Instruktioner (Mr. Hide-Principen)",
+      "statement": "Alla instruktioner, protokoll och kommentarer måste skrivas som om de läses av en ny AI-instans ('Mr. Hide') med noll tidigare kontext. De måste vara helt fristående och får inte innehålla historiska referenser som 'detta ersätter X' eller 'som vi diskuterade tidigare'.",
+      "rationale": "Detta garanterar att protokollsystemet är robust och begripligt över tid, även om den ursprungliga kontexten för en ändring går förlorad. Det eliminerar beroendet av externt eller historiskt minne.",
+      "example_application": "Fel: 'Detta avsnitt ersätter det gamla K-MOD-protokollet'. Rätt: 'Detta avsnitt definierar Policy för Kreativt Läge.'"
+    }
+  }],
+  "schema": { "artifact": "principle_retrieval" }
   }
 ]
 
