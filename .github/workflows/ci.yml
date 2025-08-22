@@ -80,6 +80,10 @@ jobs:
             fetch-depth: 0
             clean: true
 
+      - name: Print HEAD and export SOURCE_COMMIT
+        run: |
+          git rev-parse HEAD
+          echo "SOURCE_COMMIT=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
       - name: Export Commit SHA
         id: get_sha
@@ -238,6 +242,7 @@ jobs:
         run: |
           echo "Packaging specified AI protocols and configs into a compressed bundle..."
           python scripts/protocol_packager.py \
+            --source-commit "${SOURCE_COMMIT}" \
             --dir-flat docs/ai_protocols \
             --files tools/frankensteen_learning_db.json package.json vite.config.js .github/workflows/ci.yml vite.config.js requirements.txt package.json docs/ByggLogg.json docs/Chatthistorik.json docs/document_manifest.json docs/session_manifest.json docs/core_file_info.json \
             --output-dir docs/ai_protocols/compact \
