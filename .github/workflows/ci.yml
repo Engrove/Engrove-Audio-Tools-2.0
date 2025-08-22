@@ -76,8 +76,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
-          clean: true
+            ref: main
+            fetch-depth: 0
+            clean: true
+
 
       - name: Export Commit SHA
         id: get_sha
@@ -255,7 +257,7 @@ jobs:
           commit_user_name: 'Frankensteen (Bot)'
           commit_user_email: 'frankensteen-bot@users.noreply.github.com'
           file_pattern: 'docs/document_manifest.json docs/session_manifest.json docs/ByggLogg.json docs/Chatthistorik.json docs/ai_protocol_performance.json tools/frankensteen_learning_db.json docs/ai_protocols/DynamicProtocols.json docs/core_file_info.json docs/file_relations.json public/data/schemas/*.schema.json project_overview.json dist/einstein_index.json.gz docs/ai_protocols/compact/protocol_bundle.md'
-          push_options: '--force'
+          push_options: '--force-with-lease'
 
   deploy:
     needs: build
