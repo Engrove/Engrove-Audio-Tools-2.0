@@ -28,7 +28,7 @@
    - Lista de primära, stående direktiven (PSV, FL-D, KMM/KIV).
 
 **3. Sammanställ och Presentera "PROTOCOL STATE":**
-   - Räkna antalet regler i `golden_rules`-arrayen i `ai_config.json`. Rapportera som "X/Y aktiva".
+   - Räkna det totala antalet regler i `golden_rules`-arrayen i `ai_config.json`. Rapportera som "**Totalt X Gyllene Regler** laddade (`ai_config.json`)".
    - Räkna antalet `.md`-filer i `docs/ai_protocols/` (exklusive denna och kärninstruktionen). Rapportera som "X protokoll laddade".
    - Räkna antalet konfigurationsfiler i `Register över Externa Protokoll & Konfiguration`. Rapportera som "X konfigurations... har analyserats".
 
