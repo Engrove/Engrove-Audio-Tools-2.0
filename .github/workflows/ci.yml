@@ -79,6 +79,10 @@ jobs:
           fetch-depth: 1
           clean: true
 
+      - name: Export Commit SHA
+        id: get_sha
+        run: echo "COMMIT_SHA=$(git rev-parse HEAD)" >> $GITHUB_ENV
+
       - name: Set up Python ${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v4
         with:
@@ -103,18 +107,13 @@ jobs:
       - name: STEP 1 Process Session Data (if needed)
         id: process-sessions
         env:
-          COMMIT_SHA: ${{ github.sha }}
+          COMMIT_SHA: ${{ env.COMMIT_SHA }}
         run: |
           echo "Running session data processing..."
           python scripts/history/historical_reconstruction_builder.py sessions/ .
           python scripts/update_core_info.py sessions/ docs/core_file_info.json $COMMIT_SHA
           echo "Session processing complete."
 
-      - name: DEBUG Verify Stature Protocol Hash AFTER session processing
-        run: |
-          echo "Hashing Stature_Report_Protocol.md after STEP 1..."
-          sha256sum docs/ai_protocols/Stature_Report_Protocol.md
-          
       - name: STEP 2A Generate File Relations Graph
         id: generate-relations
         run: |
@@ -241,6 +240,8 @@ jobs:
             --files tools/frankensteen_learning_db.json package.json vite.config.js .github/workflows/ci.yml vite.config.js requirements.txt package.json docs/ByggLogg.json docs/Chatthistorik.json docs/document_manifest.json docs/session_manifest.json docs/core_file_info.json \
             --output-dir docs/ai_protocols/compact \
             --exclude compact
+        env:
+          COMMIT_SHA: ${{ env.COMMIT_SHA }}
             
       - name: STEP 7 Commit Documentation and Session Artifacts
         uses: stefanzweifel/git-auto-commit-action@v5
