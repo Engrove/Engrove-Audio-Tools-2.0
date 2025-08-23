@@ -21,6 +21,7 @@
 # * v5.3 (2025-08-18): Tog bort de överflödiga .full-page-header elementen från Einstein- och Performance-vyerna för att maximera ytan.
 # * v5.4 (2025-08-18): (K-MOD Plan) Omstrukturerat UI. "Verktyg" -> "Start", lade till "Data"-flik, och gjorde högerpanelen kontextkänslig (dummy-implementation).
 # * v5.5 (2025-08-18): Uppdaterat ID för 'Skapa Filer'-knappen.
+# * v6.0 (2025-08-23): (ARKITEKTURÄNDRING) Infört platshållare för "Data Islands" i <head> för robust datainjektion.
 # * SHA256_LF: 9295d32aeb4a4fdbbc47ff0439a91a8fa9980e4d
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
@@ -34,6 +35,7 @@ HTML_TEMPLATE = """
     <meta charset=\"UTF-8\">
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
     <title>Engrove Audio Tools v3.0 - Analysverktyg</title>
+    <!-- __INJECT_DATA_ISLANDS__ -->
     <link rel=\"stylesheet\" href=\"styles.css\">
     <script src=\"https://cdn.jsdelivr.net/npm/chart.js@4.4.1\"></script>
     <script src=\"https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js\"></script>
