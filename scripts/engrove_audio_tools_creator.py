@@ -32,6 +32,14 @@
 #   som objekt i samtliga moduler.
 # * v10.3.3 (2025-08-23): (Help me God - Domslut) Återinför JSON.parse() för injicerade strängar i JS-moduler
 #   och lägger till dynamisk hash till UI_VERSION för spårbarhet.
+# * v10.4 (2025-08-23): (KRITISK STABILITET) Tvingar **stränglitteral-injektion** för alla JSON-payloads.
+#   - Ny funktion _inject_js_string_literal() som alltid producerar korrekt citerad JS-sträng (single quotes),
+#     med säker escapning av backslash och enkla citattecken.
+#   - Fallback-replacer som hanterar tre varianter av platshållare i käll-JS:
+#       '__TOKEN__', "__TOKEN__", __TOKEN__
+#   - Validering: _verify_no_unresolved_placeholders() larmar om kvarvarande __INJECT__-tokens.
+#   - Detta eliminerar SyntaxError: Unexpected identifier '_meta' och "[object Object] is not valid JSON"
+#     när modulerna använder JSON.parse().
 # * SHA256_LF: UNVERIFIED
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
@@ -42,6 +50,7 @@
 import os
 import sys
 import json
+import re
 import hashlib
 from datetime import datetime
 from modules.ui_template import HTML_TEMPLATE
@@ -52,19 +61,23 @@ from modules.ui_performance_dashboard import JS_PERFORMANCE_LOGIC
 from modules.ui_einstein_search import JS_EINSTEIN_LOGIC
 
 # Lägger till en kort hash av aktuell tidsstämpel i UI_VERSION
-UI_VERSION = f"10.3.3-{hashlib.sha256(datetime.now().isoformat().encode()).hexdigest()[:6]}"
+UI_VERSION = f"10.4-{hashlib.sha256(datetime.now().isoformat().encode()).hexdigest()[:6]}"
 
 def _is_node(obj):
     return isinstance(obj, dict) and 'type' in obj
 
 def calculate_node_size(node):
+    """
+    Summerar storlek (size_bytes) rekursivt för katalognoder.
+    Sätter 'size_bytes' på kataloger och returnerar bytes.
+    """
     if not isinstance(node, dict):
         return 0
     if _is_node(node):
         if node.get('type') == 'file':
             return node.get('size_bytes', 0)
         total = 0
-        for child in node.get('children', {}).values():
+        for child in (node.get('children', {}) or {}).values():
             total += calculate_node_size(child)
         node['size_bytes'] = total
         return total
@@ -74,7 +87,11 @@ def calculate_node_size(node):
     return total
 
 def _build_relations_index(relations_data):
-    nodes = relations_data.get("graph_data", {}).get("nodes", {})
+    """
+    Normaliserar relationsgrafens nodindex till en dict { path: node }.
+    Accepterar både dict och list i relations_data['graph_data']['nodes'].
+    """
+    nodes = (relations_data.get("graph_data", {}) or {}).get("nodes", {})
     if isinstance(nodes, dict):
         return nodes
     index = {}
@@ -86,6 +103,10 @@ def _build_relations_index(relations_data):
     return index
 
 def transform_structure_to_tree(structure, relations_nodes, path_prefix=''):
+    """
+    Omvandlar den hierarkiska file_structure till en lista av trädnoder för UI:t.
+    Lägger till 'tags' (t.ex. category) och 'size' (bytes).
+    """
     tree = []
     sorted_items = sorted(
         structure.items(),
@@ -118,35 +139,77 @@ def _write_text(path: str, content: str):
     with open(path, 'w', encoding='utf-8') as f:
         f.write(content)
 
-def _inject_js_object(js_source: str, placeholder: str, obj) -> str:
-    # `json.dumps` producerar en JSON-sträng.
-    # Denna sträng injiceras i JS-koden som en strängliteral,
-    # och måste parsas av klient-JS med JSON.parse().
-    payload = json.dumps(obj, ensure_ascii=False)
-    return js_source.replace(f"'{placeholder}'", payload)
+def _to_js_single_quoted_string(json_text: str) -> str:
+    """
+    Tar en JSON-text (med dubbelcitat) och returnerar en säker JS-strängliteral
+    omsluten av enkla citattecken, med korrekt escapning.
+    - Escapar backslash (\\ -> \\\\)
+    - Escapar enkla citattecken (' -> \\\')
+    Not: JSON-texten innehåller redan escapade dubbla citattecken.
+    """
+    escaped = json_text.replace('\\', '\\\\').replace("'", "\\'")
+    return f"'{escaped}'"
 
-def _inject_scripts_into_html(html: str, extra_script_tags: str) -> str:
-    insertion_point = html.rfind("</body>")
-    if insertion_point == -1:
-        return html + extra_script_tags
-    return html[:insertion_point] + extra_script_tags + html[insertion_point:]
+def _inject_js_string_literal(js_source: str, placeholder: str, obj) -> str:
+    """
+    Ersätter alla förekomster av placeholdern (tre varianter) med en **strängliteral**:
+      '__TOKEN__'  |  "__TOKEN__"  |  __TOKEN__
+    där strängliteral = '...json...' (single quotes), avsedd för JSON.parse().
+    """
+    # Serialisera Python-objekt till JSON-text (med dubbla citattecken)
+    json_text = json.dumps(obj, ensure_ascii=False, separators=(',', ':'))
+    js_literal = _to_js_single_quoted_string(json_text)
+
+    # Bygg tre säkra regex-varianter
+    # 1) 'PLACEHOLDER'
+    pat1 = re.compile(re.escape("'" + placeholder + "'"))
+    # 2) "PLACEHOLDER"
+    pat2 = re.compile(re.escape('"' + placeholder + '"'))
+    # 3) PLACEHOLDER (bar token)
+    #    Matcha endast om token inte redan omges av bokstäver/siffror/underscore
+    pat3 = re.compile(rf'(?<![\w]){re.escape(placeholder)}(?![\w])')
+
+    js_source = pat1.sub(js_literal, js_source)
+    js_source = pat2.sub(js_literal, js_source)
+    js_source = pat3.sub(js_literal, js_source)
+    return js_source
+
+def _verify_no_unresolved_placeholders(*assets: str) -> None:
+    """
+    Skannar givna textassets och varnar om __INJECT__-platshållare finns kvar.
+    Stoppar inte builden, men skriver tydlig varning till STDERR.
+    """
+    unresolved = []
+    inject_re = re.compile(r'__INJECT_[A-Z0-9_]+__')
+    for idx, text in enumerate(assets):
+        hits = inject_re.findall(text or '')
+        if hits:
+            unresolved.append((idx, sorted(set(hits))))
+    if unresolved:
+        sys.stderr.write("VARNING: Oersatta __INJECT__-platshållare upptäckta:\n")
+        for idx, tokens in unresolved:
+            sys.stderr.write(f"  - Asset[{idx}]: {', '.join(tokens)}\n")
 
 def build_ui(output_html_path, context_data, relations_data, overview_data, core_info_data):
     try:
+        # 1) Beräkna storlekar & bygg relationsindex
         file_structure = context_data.get('file_structure', {}) or {}
         relations_index = _build_relations_index(relations_data)
         calculate_node_size(file_structure)
+
+        # 2) Transformera till UI-vänligt filträd
         file_tree_list = transform_structure_to_tree(file_structure, relations_index)
         file_tree_payload = {"children": file_tree_list}
 
-        final_js_logic = JS_LOGIC
-        final_js_logic = _inject_js_object(final_js_logic, "__INJECT_CONTEXT_JSON_PAYLOAD__", context_data)
-        final_js_logic = _inject_js_object(final_js_logic, "__INJECT_RELATIONS_JSON_PAYLOAD__", relations_data)
-        final_js_logic = _inject_js_object(final_js_logic, "__INJECT_OVERVIEW_JSON_PAYLOAD__", overview_data)
-        
-        final_js_file_tree = _inject_js_object(JS_FILE_TREE_LOGIC, "__INJECT_FILE_TREE__", file_tree_payload)
-        final_js_einstein = _inject_js_object(JS_EINSTEIN_LOGIC, "__INJECT_CORE_FILE_INFO__", core_info_data)
-        
+        # 3) Injicera **stränglitteraler** (för JSON.parse) i samtliga JS-moduler
+        final_js_logic = _inject_js_string_literal(JS_LOGIC, "__INJECT_CONTEXT_JSON_PAYLOAD__", context_data)
+        final_js_logic = _inject_js_string_literal(final_js_logic, "__INJECT_RELATIONS_JSON_PAYLOAD__", relations_data)
+        final_js_logic = _inject_js_string_literal(final_js_logic, "__INJECT_OVERVIEW_JSON_PAYLOAD__", overview_data)
+
+        final_js_file_tree = _inject_js_string_literal(JS_FILE_TREE_LOGIC, "__INJECT_FILE_TREE__", file_tree_payload)
+        final_js_einstein  = _inject_js_string_literal(JS_EINSTEIN_LOGIC, "__INJECT_CORE_FILE_INFO__", core_info_data)
+
+        # 4) Skriv ut assets
         out_dir = os.path.dirname(output_html_path) or "."
         _write_text(os.path.join(out_dir, "styles.css"), CSS_STYLES)
         _write_text(os.path.join(out_dir, "logic.js"), final_js_logic)
@@ -154,17 +217,29 @@ def build_ui(output_html_path, context_data, relations_data, overview_data, core
         _write_text(os.path.join(out_dir, "einstein.js"), final_js_einstein)
         _write_text(os.path.join(out_dir, "perf.js"), JS_PERFORMANCE_LOGIC)
 
-        version_tag = f"{(overview_data.get('repository') or 'Engrove/Engrove-Audio-Tools-2.0').split('/')[-1]} - UI v{UI_VERSION}"
+        # 5) Sammansätt HTML och injicera script-taggar (type=module)
+        repo_name = (overview_data.get('repository') or 'Engrove/Engrove-Audio-Tools-2.0').split('/')[-1]
+        version_tag = f"{repo_name} - UI v{UI_VERSION}"
         html_content = HTML_TEMPLATE.format(version=version_tag)
-        
+
         extra_tags = (
             "\n    <script type='module' src='logic.js'></script>"
             "\n    <script type='module' src='file_tree.js'></script>"
             "\n    <script type='module' src='einstein.js'></script>"
             "\n    <script type='module' src='perf.js'></script>\n"
         )
-        html_content = _inject_scripts_into_html(html_content, extra_tags)
+        # För enkelhet: injicera extra taggar nära </body> om den inte redan finns
+        insertion_point = html_content.rfind("</body>")
+        if insertion_point == -1:
+            html_content = html_content + extra_tags
+        else:
+            html_content = html_content[:insertion_point] + extra_tags + html_content[insertion_point:]
+
         _write_text(output_html_path, html_content)
+
+        # 6) Validering av oersatta platshållare (icke-fatal)
+        _verify_no_unresolved_placeholders(final_js_logic, final_js_file_tree, final_js_einstein, html_content)
+
         print("UI byggt framgångsrikt.")
     except Exception as e:
         print(f"Ett oväntat fel uppstod under build-ui: {e}", file=sys.stderr)
