@@ -123,7 +123,7 @@ def _inject_js_object(js_source: str, placeholder: str, obj) -> str:
     # Denna sträng injiceras i JS-koden som en strängliteral,
     # och måste parsas av klient-JS med JSON.parse().
     payload = json.dumps(obj, ensure_ascii=False)
-    return js_source.replace(placeholder, payload)
+    return js_source.replace(f"'{placeholder}'", payload)
 
 def _inject_scripts_into_html(html: str, extra_script_tags: str) -> str:
     insertion_point = html.rfind("</body>")
