@@ -145,10 +145,6 @@ function renderNode(nodeData) {
         }
     });
 
-    // *** FIX START ***
-    // Återställer den korrekta DOM-strukturen från v2.0
-    
-    // 1. Om det är en mapp, skapa och lägg till toggle-ikonen som ett DIREKT barn till <li>
     if (isDir) {
         const toggle = document.createElement('span');
         toggle.className = 'toggle-icon';
@@ -158,11 +154,10 @@ function renderNode(nodeData) {
             li.classList.toggle('collapsed');
             toggle.textContent = li.classList.contains('collapsed') ? '►' : '▼';
         });
-        li.appendChild(toggle); // Korrekt: toggle är syskon till label
+        li.appendChild(toggle);
         li.classList.add('collapsed');
     }
 
-    // 2. Bygg upp label-elementet med dess innehåll
     label.appendChild(checkbox);
 
     const icon = document.createElement('span');
@@ -173,8 +168,7 @@ function renderNode(nodeData) {
     const text = document.createElement('span');
     text.className = 'node-text';
     text.textContent = nodeData.name;
-    
-    // Lägg till klick-händelse på texten för att öppna filer/mappar
+
     text.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -212,10 +206,8 @@ function renderNode(nodeData) {
         label.appendChild(tagsContainer);
     }
 
-    // 3. Lägg till det färdiga label-elementet till <li>
     li.appendChild(label);
 
-    // 4. Lägg till eventuell underlista (ul) som ett DIREKT barn till <li>
     if (isDir && nodeData.children && nodeData.children.length > 0) {
         const ul = document.createElement('ul');
         nodeData.children.forEach(childNode => {
@@ -223,7 +215,6 @@ function renderNode(nodeData) {
         });
         li.appendChild(ul);
     }
-    // *** FIX END ***
     
     return li;
 }
