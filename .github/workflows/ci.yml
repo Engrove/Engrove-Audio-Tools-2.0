@@ -86,13 +86,15 @@ jobs:
             fetch-depth: 0
             clean: true
 
-      # KORRIGERING: Tvinga synkronisering till den absolut senaste versionen av 'main'.
+      # Tvinga synkronisering till den absolut senaste versionen av 'main'.
       - name: STEP 0 Force Sync to Latest Main
         run: |
           echo "Forcing sync to latest 'main' branch HEAD..."
-          git pull origin main
+          git fetch origin main
+          git checkout main
+          git reset --hard origin/main
           echo "Workspace is now at HEAD of main."
-
+          
       - name: Print HEAD and export SOURCE_COMMIT
         run: |
           git rev-parse HEAD
