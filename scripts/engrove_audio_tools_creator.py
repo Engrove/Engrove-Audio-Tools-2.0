@@ -28,6 +28,8 @@
 #   - HTML-version formatteras via .format(version=...)
 # * v10.3.1 (2025-08-23): Fixar SyntaxError '_meta' — injicerar **sträng**-payloads i logic.js
 #   (kompatibelt med JSON.parse), objekt i file_tree.js och einstein.js lämnas oförändrade.
+# * v10.3.3 (2025-08-23): Robust injektion (auto-detekterar citattecken/JSON.parse) för att
+#   undvika "Unexpected token" i blandade modulversioner.
 # * SHA256_LF: UNVERIFIED
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
@@ -45,7 +47,7 @@ from modules.ui_file_tree import JS_FILE_TREE_LOGIC
 from modules.ui_performance_dashboard import JS_PERFORMANCE_LOGIC
 from modules.ui_einstein_search import JS_EINSTEIN_LOGIC
 
-UI_VERSION = "10.3.1"
+UI_VERSION = "10.3.3"
 
 
 def _is_node(obj):
@@ -171,6 +173,49 @@ def _inject_scripts_into_html(html: str, extra_script_tags: str) -> str:
     return html[:insertion_point] + extra_script_tags + html[insertion_point:]
 
 
+def _smart_inject_json_string(js_source: str, placeholder: str, obj) -> str:
+    """
+    Detektera citattecken runt plats­hållaren och injicera korrekt.
+    - Om plats­hållaren står inom '' eller "" → ersätt med *escaped* JSON-stränginnehåll (utan egna citattecken).
+    - Annars → ersätt med komplett JS-stränglitteral (inklusive citattecken).
+    """
+    idx = js_source.find(placeholder)
+    if idx == -1:
+        return js_source
+
+    before = js_source[idx-1] if idx > 0 else ''
+    after = js_source[idx+len(placeholder)] if idx + len(placeholder) < len(js_source) else ''
+
+    # JSON-serialiserad objekttext, t.ex. {"a":1}
+    raw_json = json.dumps(obj, ensure_ascii=False)
+
+    if before in "\"'" and after == before:
+        # Inuti sträng → injicera escaped innehåll, utan omslutande citattecken
+        escaped = json.dumps(raw_json, ensure_ascii=False)  # "\"{\\\"a\\\":1}\""
+        return js_source.replace(placeholder, escaped[1:-1])
+    else:
+        # Utanför sträng → injicera komplett stränglitteral
+        quoted = json.dumps(raw_json, ensure_ascii=False)   # "\"{\\\"a\\\":1}\""
+        return js_source.replace(placeholder, quoted)
+
+
+def _smart_inject_object_or_string(js_source: str, placeholder: str, obj) -> str:
+    """
+    För moduler med okänd förväntan:
+      - Om uttryck nära plats­hållaren innehåller JSON.parse → använd stränginjektion.
+      - Annars → injicera objekt direkt.
+    """
+    window = 48
+    idx = js_source.find(placeholder)
+    if idx == -1:
+        return js_source
+    context = js_source[max(0, idx-window): idx+len(placeholder)+window]
+    if "JSON.parse" in context:
+        return _smart_inject_json_string(js_source, placeholder, obj)
+    else:
+        return js_source.replace(placeholder, json.dumps(obj, ensure_ascii=False))
+
+
 def build_ui(output_html_path, context_data, relations_data, overview_data, core_info_data):
     try:
         print("Bygger och berikar trädstruktur...")
@@ -183,26 +228,21 @@ def build_ui(output_html_path, context_data, relations_data, overview_data, core
         file_tree_payload = {"children": file_tree_list}  # matcha UI-modulen
 
         print("Genererar JS/CSS-innehåll...")
-        # 1) Objekt-serialisering
-        js_full_context_obj = json.dumps(context_data, ensure_ascii=False)
-        js_relations_obj = json.dumps(relations_data, ensure_ascii=False)
-        js_overview_obj = json.dumps(overview_data, ensure_ascii=False)
-        js_core_info_obj = json.dumps(core_info_data, ensure_ascii=False)
-        js_file_tree_obj = json.dumps(file_tree_payload, ensure_ascii=False)
+        # JS_LOGIC: tre payloads → alltid kompatibelt med JSON.parse, oavsett citattecken
+        final_js_logic = JS_LOGIC
+        final_js_logic = _smart_inject_json_string(final_js_logic, "__INJECT_CONTEXT_JSON_PAYLOAD__", context_data)
+        final_js_logic = _smart_inject_json_string(final_js_logic, "__INJECT_RELATIONS_JSON_PAYLOAD__", relations_data)
+        final_js_logic = _smart_inject_json_string(final_js_logic, "__INJECT_OVERVIEW_JSON_PAYLOAD__", overview_data)
 
-        # 2) Dubbel-serialisera till JS-strängar för logic.js (använder JSON.parse(...))
-        ctx_str = json.dumps(js_full_context_obj, ensure_ascii=False)
-        rel_str = json.dumps(js_relations_obj, ensure_ascii=False)
-        ovw_str = json.dumps(js_overview_obj, ensure_ascii=False)
+        # file_tree.js – direkt objekt
+        final_js_file_tree = JS_FILE_TREE_LOGIC.replace(
+            "__INJECT_FILE_TREE__", json.dumps(file_tree_payload, ensure_ascii=False)
+        )
 
-        # 3) Token-replacement
-        final_js_logic = (JS_LOGIC
-                          .replace("__INJECT_CONTEXT_JSON_PAYLOAD__", ctx_str)
-                          .replace("__INJECT_RELATIONS_JSON_PAYLOAD__", rel_str)
-                          .replace("__INJECT_OVERVIEW_JSON_PAYLOAD__", ovw_str))
-
-        final_js_file_tree = JS_FILE_TREE_LOGIC.replace("__INJECT_FILE_TREE__", js_file_tree_obj)
-        final_js_einstein = JS_EINSTEIN_LOGIC.replace("__INJECT_CORE_FILE_INFO__", js_core_info_obj)
+        # einstein.js – autodetektera
+        final_js_einstein = _smart_inject_object_or_string(
+            JS_EINSTEIN_LOGIC, "__INJECT_CORE_FILE_INFO__", core_info_data
+        )
 
         print("Skriver statiska tillgångar...")
         out_dir = os.path.dirname(output_html_path) or "."
