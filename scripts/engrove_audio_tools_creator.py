@@ -1,3 +1,4 @@
+# BEGIN FILE: scripts/engrove_audio_tools_creator.py
 # scripts/engrove_audio_tools_creator.py
 #
 # === SYFTE & ANSVAR ===
@@ -47,6 +48,7 @@
 #   - Datan serialiseras till JSON och bäddas in i <script type="application/json">-taggar i HTML:en.
 #   - JavaScript-moduler läser nu sin data från DOM istället för från injicerade variabler.
 #   - Detta eliminerar alla komplexa escaping-problem och löser grundorsaken till `SyntaxError`.
+# * v11.1 (2025-08-23): Lägger till protocol_packager.js i output + <script type="module"> i HTML.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.9: Korrigeringar efter rotorsaksanalys.
@@ -70,6 +72,7 @@ try:
     from modules.ui_file_tree import JS_FILE_TREE_LOGIC
     from modules.ui_performance_dashboard import JS_PERFORMANCE_LOGIC
     from modules.ui_einstein_search import JS_EINSTEIN_LOGIC
+    from modules.ui_protocol_packager import JS_PROTOCOL_PACKAGER
 except ModuleNotFoundError:
     # Direktkörning bredvid filen: lägg till scripts/modules på sys.path och importera utan prefix
     _BASE = os.path.dirname(os.path.abspath(__file__))
@@ -82,9 +85,10 @@ except ModuleNotFoundError:
     from ui_file_tree import JS_FILE_TREE_LOGIC
     from ui_performance_dashboard import JS_PERFORMANCE_LOGIC
     from ui_einstein_search import JS_EINSTEIN_LOGIC
+    from ui_protocol_packager import JS_PROTOCOL_PACKAGER
 
 # Lägger till en kort hash av aktuell tidsstämpel i UI_VERSION
-UI_VERSION = f"11.0-{hashlib.sha256(datetime.now().isoformat().encode()).hexdigest()[:6]}"
+UI_VERSION = f"11.1-{hashlib.sha256(datetime.now().isoformat().encode()).hexdigest()[:6]}"
 
 
 def _is_node(obj):
@@ -176,11 +180,7 @@ def _create_data_island_script_tag(dom_id: str, data_obj) -> str:
     Hanterar HTML-specifik escaping.
     """
     json_string = json.dumps(data_obj, ensure_ascii=False, separators=(',', ':'))
-    
-    # KRITISK SÄKERHETSÅTGÄRD: Förhindra att strängen "</script>" i datan
-    # av misstag avslutar HTML-taggen. Ersätt med en säker variant.
     safe_json_string = json_string.replace('</script>', '<\\/script>')
-    
     return f'<script type="application/json" id="{html.escape(dom_id)}">{safe_json_string}</script>'
 
 
@@ -212,6 +212,7 @@ def build_ui(output_html_path, context_data, relations_data, overview_data, core
         _write_text(os.path.join(out_dir, "file_tree.js"), JS_FILE_TREE_LOGIC)
         _write_text(os.path.join(out_dir, "einstein.js"), JS_EINSTEIN_LOGIC)
         _write_text(os.path.join(out_dir, "perf.js"), JS_PERFORMANCE_LOGIC)
+        _write_text(os.path.join(out_dir, "protocol_packager.js"), JS_PROTOCOL_PACKAGER)
 
         # 5) Sammansätt HTML, injicera data islands och script-taggar
         repo_name = (overview_data.get('repository') or 'Engrove/Engrove-Audio-Tools-2.0').split('/')[-1]
@@ -219,18 +220,15 @@ def build_ui(output_html_path, context_data, relations_data, overview_data, core
         html_content = HTML_TEMPLATE.format(version=version_tag)
         
         # Injicera data islands
-        html_content = html_content.replace(
-            '<!-- __INJECT_DATA_ISLANDS__ -->', 
-            data_islands_html
-        )
+        html_content = html_content.replace('<!-- __INJECT_DATA_ISLANDS__ -->', data_islands_html)
         
-        # Inkludera alla JS-moduler
+        # Inkludera alla JS-moduler (behåll ordning; packager sist pga knappbinding)
         extra_tags = (
             "\n    <script type='module' src='file_tree.js'></script>"
             "\n    <script type='module' src='einstein.js'></script>"
-            "\n    <script type='module' src='perf.js'></script>\n"
+            "\n    <script type='module' src='perf.js'></script>"
+            "\n    <script type='module' src='protocol_packager.js'></script>\n"
         )
-        # Ersätt den gamla, enskilda logic.js-taggen med den nya listan
         html_content = html_content.replace(
             '<script type="module" src="logic.js"></script>',
             '<script type="module" src="logic.js"></script>' + extra_tags
@@ -238,7 +236,7 @@ def build_ui(output_html_path, context_data, relations_data, overview_data, core
 
         _write_text(output_html_path, html_content)
 
-        print("UI byggt framgångsrikt med robust 'Data Island'-metod.")
+        print("UI byggt framgångsrikt med robust 'Data Island'-metod + protocol_packager.js.")
     except Exception as e:
         print(f"Ett oväntat fel uppstod under build-ui: {e}", file=sys.stderr)
         sys.exit(1)
@@ -269,3 +267,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+# END FILE: scripts/engrove_audio_tools_creator.py
