@@ -130,10 +130,6 @@ def _build_relations_index(relations_data):
 
 
 def transform_structure_to_tree(structure, relations_nodes, path_prefix=''):
-    """
-    Omvandlar den hierarkiska file_structure till en lista av trädnoder för UI:t.
-    Lägger till 'tags' (t.ex. category) och 'size' (bytes).
-    """
     tree = []
     sorted_items = sorted(
         structure.items(),
@@ -147,17 +143,21 @@ def transform_structure_to_tree(structure, relations_nodes, path_prefix=''):
             cat = rel.get('category')
             if cat:
                 tags.append(cat)
-        size_bytes = node.get('size_bytes', 0)
+
         tree_node = {
             "name": name,
             "path": current_path,
             "type": node.get('type', 'directory'),
             "tags": tags,
-            "size": size_bytes
+            "size_bytes": node.get('size_bytes', 0)
         }
-        if node.get('type') == 'directory':
-            children = node.get('children', {}) or {}
-            tree_node["children"] = transform_structure_to_tree(children, relations_nodes, current_path)
+
+        # NYTT: hantera mappar utan 'children' (dvs rena dicts)
+        is_dir = node.get('type', 'directory') == 'directory'
+        if is_dir:
+            children_dict = node['children'] if isinstance(node.get('children'), dict) else node
+            tree_node["children"] = transform_structure_to_tree(children_dict, relations_nodes, current_path)
+
         tree.append(tree_node)
     return tree
 
