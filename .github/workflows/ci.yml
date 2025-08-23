@@ -49,12 +49,8 @@ on:
     branches: [ "main" ]
     paths:
       - '.buildtrigger'
-      # Notera: Jag behåller min tidigare rekommendation som utkommenterad.
-      # Om den manuella processen fallerar är detta den robusta lösningen.
-      # - 'docs/**.md'
-      # - 'docs/**.json'
-      # - 'scripts/**.py'
-      # - 'tools/**.json'
+      - '.github/workflows/ci.yml'
+
   workflow_dispatch:
   schedule:
     - cron: '0 2 * * *'
