@@ -39,6 +39,7 @@
 # * v2.15 (2025-08-18): (Help me God - Domslut) Korrigerat grundorsaken till 404-felet. Säkerställer nu att `einstein_index.json.gz` (både äkta och dummy) alltid placeras i `dist/`-mappen före uppladdning.
 # * v2.18 (2025-08-20): (Help me God - Grundorsaksanalys) Korrigerat `file_pattern` i commit-steget för att inkludera den nya `protocol_bundle.md`-artefakten istället för den föråldrade `.pbf.json`.
 # * v3.1 (2025-08-22): (Frankensteen) Infört ett 'git pull'-steg för att tvinga synkronisering till main-branchens HEAD. Detta anpassar sig till operatörens workflow men offrar deterministisk spårbarhet.
+# * v3.2 (2025-08-23): (Help me God - Domslut) Korrigerat den felaktiga argumentordningen till engrove_audio_tools_creator.py för att säkerställa att den fullständiga context.json används vid bygget av UI:t.
 # * SHA256_LF: UNVERIFIED
 
 name: Consolidated CI/CD and Tools Pipeline
@@ -197,11 +198,10 @@ jobs:
         run: |
           echo "Generating full context from potentially updated file system..."
           set -e
-          if python scripts/generate_full_context.py > "${{ env.SITE_DIR }}/${{ env.JSON_FILE }}" 2> generation.log; then
+          if python scripts/generate_full_context.py > "${{ env.SITE_DIR }}/${{ env.JSON_FILE }}"; then
             echo "success=true" >> "$GITHUB_OUTPUT"
           else
             echo "success=false" >> "$GITHUB_OUTPUT"
-            cat generation.log
             exit 1
           fi
 
@@ -235,6 +235,9 @@ jobs:
         id: create-new-html
         run: |
           echo "Generating new UI from engrove_audio_tools_creator.py..."
+          # KORRIGERING: Argumentordningen har justerats för att matcha
+          # exakt vad engrove_audio_tools_creator.py förväntar sig.
+          # context.json måste vara det första data-argumentet.
           python scripts/engrove_audio_tools_creator.py build-ui \
             "${{ env.SITE_DIR }}/${{ env.NEW_HTML_FILE }}" \
             "${{ env.SITE_DIR }}/${{ env.JSON_FILE }}" \
