@@ -1,4 +1,3 @@
-# BEGIN FILE: scripts/engrove_audio_tools_creator.py
 # scripts/engrove_audio_tools_creator.py
 #
 # === SYFTE & ANSVAR ===
@@ -27,11 +26,13 @@
 # * v9.0 (2025-08-18): (Engrove Mandate) Modifierad för att importera och injicera den nya ui_einstein_search-modulen och dess datakälla (core_file_info.json).
 # * v10.0 (2025-08-19): (Help me God - Domslut) Korrigerat ett NameError genom att korrekt definiera variabeln 'js_full_context_string' innan den används.
 # * v10.1 (2025-08-19): (Help me God - Domslut) Återställt trunkerad logik och korrekt implementerat injicering av hela context.json.
-# * SHA256_LF: 013731f125a9e948300225dc951451ca026b1dc08599ba3ed5c9ef46e129bb2d
+# * v10.2 (2025-08-23): (Root-safe) Gjort `calculate_node_size` rot-säker och robust mot top-level mappings.
+#   Lagt till robust indexering av relationsnoder (stöd för både dict och lista).
+# * SHA256_LF: UNVERIFIED
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.9: Denna fil har modifierats enligt en grundorsaksanalys.
-# - Help me God: Felet var ett `NameError` som ledde till en katastrofal trunkering, vilket krävde en fullständig återställning och verifiering.
+# - Help me God: Felet var ett `KeyError('type')` vid storleksberäkning av roten.
 
 import os
 import sys
@@ -43,42 +44,91 @@ from modules.ui_file_tree import JS_FILE_TREE_LOGIC
 from modules.ui_performance_dashboard import JS_PERFORMANCE_LOGIC
 from modules.ui_einstein_search import JS_EINSTEIN_LOGIC
 
-UI_VERSION = "10.1"
+UI_VERSION = "10.2"
+
+def _is_node(obj):
+    """Returnerar True om obj liknar en nod med 'type'."""
+    return isinstance(obj, dict) and 'type' in obj
+
+def _iter_children(node):
+    """Returnerar iterator över barn oavsett representation."""
+    if not isinstance(node, dict):
+        return []
+    if _is_node(node):
+        return node.get('children', {}).values()
+    # top-level mapping: namn -> nod
+    return node.values()
 
 def calculate_node_size(node):
-    if node['type'] == 'file':
-        return node.get('size_bytes', 0)
-    total_size = 0
-    if 'children' in node:
-        for child in node['children'].values():
-            total_size += calculate_node_size(child)
-    node['size_bytes'] = total_size
-    return total_size
+    """
+    Rot-säker storleksberäkning.
+    - Om node är en mappnings-rot (utan 'type'): summera alla barn.
+    - Om node är en nod med 'type': hantera fil/dir.
+    - Annars: 0.
+    """
+    if not isinstance(node, dict):
+        return 0
+
+    if _is_node(node):
+        if node['type'] == 'file':
+            return node.get('size_bytes', 0)
+        total = 0
+        for child in node.get('children', {}).values():
+            total += calculate_node_size(child)
+        node['size_bytes'] = total
+        return total
+
+    # Top-level mapping (rot utan 'type')
+    total = 0
+    for child in node.values():
+        total += calculate_node_size(child)
+    return total
+
+def _build_relations_index(relations_data):
+    """
+    Normaliserar relationsnoder till en dict indexerad på sökväg.
+    Stödjer både:
+      - dict: { "<path>": {...} }
+      - list: [ {"id"|"path"|"name": "<path>", ...}, ... ]
+    """
+    nodes = relations_data.get("graph_data", {}).get("nodes", {})
+    if isinstance(nodes, dict):
+        return nodes
+    index = {}
+    if isinstance(nodes, list):
+        for n in nodes:
+            p = n.get('id') or n.get('path') or n.get('name')
+            if p:
+                index[p] = n
+    return index
 
 def transform_structure_to_tree(structure, relations_nodes, path_prefix=''):
     tree = []
+    # sortera mappar före filer, sedan alfabetiskt
     sorted_items = sorted(
         structure.items(),
         key=lambda item: (item[1].get('type', 'directory') != 'directory', item[0])
     )
     for name, node in sorted_items:
-        current_path = os.path.join(path_prefix, name)
+        current_path = os.path.join(path_prefix, name) if path_prefix else name
         tags = []
-        if node['type'] == 'file':
-            relations_data = relations_nodes.get(current_path, {})
-            if relations_data.get('category'):
-                tags.append(relations_data['category'])
-        
+        if node.get('type') == 'file':
+            rel = relations_nodes.get(current_path, {})
+            cat = rel.get('category')
+            if cat:
+                tags.append(cat)
+
         tree_node = {
             "name": name,
             "path": current_path,
-            "type": node['type'],
+            "type": node.get('type', 'directory'),
             "tags": tags,
             "size_bytes": node.get('size_bytes', 0)
         }
-        if node['type'] == 'directory':
-            tree_node["children"] = transform_structure_to_tree(node.get('children', {}), relations_nodes, current_path)
-        
+        if node.get('type') == 'directory':
+            children = node.get('children', {}) or {}
+            tree_node["children"] = transform_structure_to_tree(children, relations_nodes, current_path)
+
         tree.append(tree_node)
     return tree
 
@@ -86,20 +136,22 @@ def build_ui(output_html_path, context_data, relations_data, overview_data, core
     try:
         print("Bygger och berikar trädstruktur...")
         file_structure = context_data.get('file_structure', {})
-        relations_nodes = relations_data.get("graph_data", {}).get("nodes", {})
+        relations_index = _build_relations_index(relations_data)
+
+        # Rot-säker storleksberäkning
         calculate_node_size(file_structure)
-        file_tree_data = transform_structure_to_tree(file_structure, relations_nodes)
+        file_tree_data = transform_structure_to_tree(file_structure, relations_index)
 
         print("Genererar UI-filer...")
-        
+
         js_full_context_string = json.dumps(context_data)
-        js_file_tree_string = json.dumps(file_tree_data)
-        js_relations_string = json.dumps(relations_data)
-        js_overview_string = json.dumps(overview_data)
-        js_core_info_string = json.dumps(core_info_data)
-        
+        js_file_tree_string   = json.dumps(file_tree_data)
+        js_relations_string   = json.dumps(relations_data)
+        js_overview_string    = json.dumps(overview_data)
+        js_core_info_string   = json.dumps(core_info_data)
+
         final_js_file_tree = JS_FILE_TREE_LOGIC.replace("`__INJECT_FILE_TREE_DATA__`", js_file_tree_string)
-        
+
         final_js_logic = JS_LOGIC.replace("'__INJECT_CONTEXT_JSON_PAYLOAD__'", js_full_context_string)
         final_js_logic = final_js_logic.replace("'__INJECT_RELATIONS_JSON_PAYLOAD__'", js_relations_string)
         final_js_logic = final_js_logic.replace("'__INJECT_OVERVIEW_JSON_PAYLOAD__'", js_overview_string)
@@ -107,7 +159,7 @@ def build_ui(output_html_path, context_data, relations_data, overview_data, core
         final_einstein_logic = JS_EINSTEIN_LOGIC.replace("'__INJECT_CORE_FILE_INFO__'", js_core_info_string)
 
         version_tag = overview_data.get('repository', 'Engrove/Engrove-Audio-Tools-2.0').split('/')[-1]
-        
+
         html_content = HTML_TEMPLATE
         html_content = html_content.replace("<!-- INJECT_STYLES -->", f"<style>{CSS_STYLES}</style>")
         html_content = html_content.replace("<!-- INJECT_LOGIC -->", f"<script type='module'>{final_js_logic}</script>")
@@ -128,17 +180,15 @@ def main():
         if len(sys.argv) != 7:
             print("Användning: python engrove_audio_tools_creator.py build-ui <output_html> <context_json> <relations_json> <overview_json> <core_info_json>", file=sys.stderr)
             sys.exit(1)
-        
         try:
             print("Läser in datakällor...")
             with open(sys.argv[3], 'r', encoding='utf-8') as f: context_data = json.load(f)
             with open(sys.argv[4], 'r', encoding='utf-8') as f: relations_data = json.load(f)
             with open(sys.argv[5], 'r', encoding='utf-8') as f: overview_data = json.load(f)
             with open(sys.argv[6], 'r', encoding='utf-8') as f: core_info_data = json.load(f)
-            
+
             build_ui(sys.argv[2], context_data, relations_data, overview_data, core_info_data)
             print("Klar. UI med dynamiskt filträd har genererats.")
-
         except FileNotFoundError as e:
             print(f"Fel: Kunde inte hitta en av indatafilerna: {e}", file=sys.stderr)
             sys.exit(1)
@@ -154,5 +204,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# END FILE: scripts/engrove_audio_tools_creator.py
