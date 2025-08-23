@@ -43,6 +43,10 @@
 # * v10.4.1 (2025-08-23): (JS-litteralfix) Rör inte backslashes från json.dumps, escapa ENDAST enkla citattecken.
 #   Förhindrar "missing ) after argument list".
 # * v10.4.1-fallback (2025-08-23): Robust modulimport (stöd både scripts/modules och modules).
+# * v11.0 (2025-08-23): (ARKITEKTURÄNDRING) Ersatt den bräckliga stränginjektionen med en robust "Data Island"-metod.
+#   - Datan serialiseras till JSON och bäddas in i <script type="application/json">-taggar i HTML:en.
+#   - JavaScript-moduler läser nu sin data från DOM istället för från injicerade variabler.
+#   - Detta eliminerar alla komplexa escaping-problem och löser grundorsaken till `SyntaxError`.
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.9: Korrigeringar efter rotorsaksanalys.
@@ -54,6 +58,7 @@ import sys
 import json
 import re
 import hashlib
+import html
 from datetime import datetime
 
 # --- robust modulimport (stöd både scripts/modules och modules) ---
@@ -79,7 +84,7 @@ except ModuleNotFoundError:
     from ui_einstein_search import JS_EINSTEIN_LOGIC
 
 # Lägger till en kort hash av aktuell tidsstämpel i UI_VERSION
-UI_VERSION = f"10.4.1-{hashlib.sha256(datetime.now().isoformat().encode()).hexdigest()[:6]}"
+UI_VERSION = f"11.0-{hashlib.sha256(datetime.now().isoformat().encode()).hexdigest()[:6]}"
 
 
 def _is_node(obj):
@@ -164,55 +169,19 @@ def _write_text(path: str, content: str):
         f.write(content)
 
 
-def _to_js_single_quoted_string(json_text: str) -> str:
+def _create_data_island_script_tag(dom_id: str, data_obj) -> str:
     """
-    Gör om JSON-text (från json.dumps) till en säker JS-strängliteral.
-    - Ändra inte backslashes: json.dumps har redan korrekta escape-sekvenser.
-    - Escapa ENDAST enkla citattecken så att omslutande '...' inte spräcks.
+    Serialiserar ett Python-objekt till en JSON-sträng och bäddar in det
+    i en säker <script type="application/json">-tagg.
+    Hanterar HTML-specifik escaping.
     """
-    safe_json = json_text.replace("'", "\\'")
-    return f"'{safe_json}'"
-
-
-def _inject_js_string_literal(js_source: str, placeholder: str, obj) -> str:
-    """
-    Ersätter alla förekomster av placeholdern (tre varianter) med en **strängliteral**:
-      '__TOKEN__'  |  "__TOKEN__"  |  __TOKEN__
-    där strängliteral = '...json...' (single quotes), avsedd för JSON.parse().
-    """
-    # Serialisera Python-objekt till JSON-text (med dubbla citattecken)
-    json_text = json.dumps(obj, ensure_ascii=False, separators=(',', ':'))
-    js_literal = _to_js_single_quoted_string(json_text)
-
-    # Bygg tre säkra regex-varianter
-    # 1) 'PLACEHOLDER'
-    pat1 = re.compile(re.escape("'" + placeholder + "'"))
-    # 2) "PLACEHOLDER"
-    pat2 = re.compile(re.escape('"' + placeholder + '"'))
-    # 3) PLACEHOLDER (bar token) — matcha inte inuti ord
-    pat3 = re.compile(rf'(?<![\w]){re.escape(placeholder)}(?![\w])')
-
-    js_source = pat1.sub(js_literal, js_source)
-    js_source = pat2.sub(js_literal, js_source)
-    js_source = pat3.sub(js_literal, js_source)
-    return js_source
-
-
-def _verify_no_unresolved_placeholders(*assets: str) -> None:
-    """
-    Skannar givna textassets och varnar om __INJECT__-platshållare finns kvar.
-    Stoppar inte builden, men skriver tydlig varning till STDERR.
-    """
-    unresolved = []
-    inject_re = re.compile(r'__INJECT_[A-Z0-9_]+__')
-    for idx, text in enumerate(assets):
-        hits = inject_re.findall(text or '')
-        if hits:
-            unresolved.append((idx, sorted(set(hits))))
-    if unresolved:
-        sys.stderr.write("VARNING: Oersatta __INJECT__-platshållare upptäckta:\n")
-        for idx, tokens in unresolved:
-            sys.stderr.write(f"  - Asset[{idx}]: {', '.join(tokens)}\n")
+    json_string = json.dumps(data_obj, ensure_ascii=False, separators=(',', ':'))
+    
+    # KRITISK SÄKERHETSÅTGÄRD: Förhindra att strängen "</script>" i datan
+    # av misstag avslutar HTML-taggen. Ersätt med en säker variant.
+    safe_json_string = json_string.replace('</script>', '<\\/script>')
+    
+    return f'<script type="application/json" id="{html.escape(dom_id)}">{safe_json_string}</script>'
 
 
 def build_ui(output_html_path, context_data, relations_data, overview_data, core_info_data):
@@ -225,46 +194,51 @@ def build_ui(output_html_path, context_data, relations_data, overview_data, core
         # 2) Transformera till UI-vänligt filträd
         file_tree_list = transform_structure_to_tree(file_structure, relations_index)
         file_tree_payload = {"children": file_tree_list}
+        
+        # 3) Skapa alla data island-taggar
+        data_islands = [
+            _create_data_island_script_tag('data-island-context', context_data),
+            _create_data_island_script_tag('data-island-relations', relations_data),
+            _create_data_island_script_tag('data-island-overview', overview_data),
+            _create_data_island_script_tag('data-island-core-info', core_info_data),
+            _create_data_island_script_tag('data-island-file-tree', file_tree_payload)
+        ]
+        data_islands_html = "\n    ".join(data_islands)
 
-        # 3) Injicera **stränglitteraler** (för JSON.parse) i samtliga JS-moduler
-        final_js_logic = _inject_js_string_literal(JS_LOGIC, "__INJECT_CONTEXT_JSON_PAYLOAD__", context_data)
-        final_js_logic = _inject_js_string_literal(final_js_logic, "__INJECT_RELATIONS_JSON_PAYLOAD__", relations_data)
-        final_js_logic = _inject_js_string_literal(final_js_logic, "__INJECT_OVERVIEW_JSON_PAYLOAD__", overview_data)
-
-        final_js_file_tree = _inject_js_string_literal(JS_FILE_TREE_LOGIC, "__INJECT_FILE_TREE__", file_tree_payload)
-        final_js_einstein = _inject_js_string_literal(JS_EINSTEIN_LOGIC, "__INJECT_CORE_FILE_INFO__", core_info_data)
-
-        # 4) Skriv ut assets
+        # 4) Skriv ut de rena (icke-injicerade) JS- och CSS-filerna
         out_dir = os.path.dirname(output_html_path) or "."
         _write_text(os.path.join(out_dir, "styles.css"), CSS_STYLES)
-        _write_text(os.path.join(out_dir, "logic.js"), final_js_logic)
-        _write_text(os.path.join(out_dir, "file_tree.js"), final_js_file_tree)
-        _write_text(os.path.join(out_dir, "einstein.js"), final_js_einstein)
+        _write_text(os.path.join(out_dir, "logic.js"), JS_LOGIC)
+        _write_text(os.path.join(out_dir, "file_tree.js"), JS_FILE_TREE_LOGIC)
+        _write_text(os.path.join(out_dir, "einstein.js"), JS_EINSTEIN_LOGIC)
         _write_text(os.path.join(out_dir, "perf.js"), JS_PERFORMANCE_LOGIC)
 
-        # 5) Sammansätt HTML och injicera script-taggar (type=module)
+        # 5) Sammansätt HTML, injicera data islands och script-taggar
         repo_name = (overview_data.get('repository') or 'Engrove/Engrove-Audio-Tools-2.0').split('/')[-1]
         version_tag = f"{repo_name} - UI v{UI_VERSION}"
         html_content = HTML_TEMPLATE.format(version=version_tag)
-
+        
+        # Injicera data islands
+        html_content = html_content.replace(
+            '<!-- __INJECT_DATA_ISLANDS__ -->', 
+            data_islands_html
+        )
+        
+        # Inkludera alla JS-moduler
         extra_tags = (
-            "\n    <script type='module' src='logic.js'></script>"
             "\n    <script type='module' src='file_tree.js'></script>"
             "\n    <script type='module' src='einstein.js'></script>"
             "\n    <script type='module' src='perf.js'></script>\n"
         )
-        insertion = html_content.rfind("</body>")
-        if insertion == -1:
-            html_content = html_content + extra_tags
-        else:
-            html_content = html_content[:insertion] + extra_tags + html_content[insertion:]
+        # Ersätt den gamla, enskilda logic.js-taggen med den nya listan
+        html_content = html_content.replace(
+            '<script type="module" src="logic.js"></script>',
+            '<script type="module" src="logic.js"></script>' + extra_tags
+        )
 
         _write_text(output_html_path, html_content)
 
-        # 6) Validering av oersatta platshållare (icke-fatal)
-        _verify_no_unresolved_placeholders(final_js_logic, final_js_file_tree, final_js_einstein, html_content)
-
-        print("UI byggt framgångsrikt.")
+        print("UI byggt framgångsrikt med robust 'Data Island'-metod.")
     except Exception as e:
         print(f"Ett oväntat fel uppstod under build-ui: {e}", file=sys.stderr)
         sys.exit(1)
