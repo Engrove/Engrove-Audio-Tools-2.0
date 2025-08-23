@@ -34,21 +34,20 @@
 #   och lägger till dynamisk hash till UI_VERSION för spårbarhet.
 # * v10.4 (2025-08-23): (KRITISK STABILITET) Tvingar **stränglitteral-injektion** för alla JSON-payloads.
 #   - Ny funktion _inject_js_string_literal() som alltid producerar korrekt citerad JS-sträng (single quotes),
-#     med säker escapning av backslash och enkla citattecken.
+#     med säker escapning av enkla citattecken.
 #   - Fallback-replacer som hanterar tre varianter av platshållare i käll-JS:
 #       '__TOKEN__', "__TOKEN__", __TOKEN__
 #   - Validering: _verify_no_unresolved_placeholders() larmar om kvarvarande __INJECT__-tokens.
-#   - Detta eliminerar SyntaxError: Unexpected identifier '_meta' och "[object Object] is not valid JSON"
+#   - Eliminerar SyntaxError: Unexpected identifier '_meta' och "[object Object] is not valid JSON"
 #     när modulerna använder JSON.parse().
-# * v10.4.1 (2025-08-23): (JS-litteralfix) Ändrar escapningsstrategi för att eliminera
-#   "missing ) after argument list": rör inte backslashes från json.dumps, escapa ENDAST enkla citattecken.
-#   Detta förhindrar över-escapning av \\ som kunde spräcka stränglitteralen i JS.
-# * SHA256_LF: UNVERIFIED
+# * v10.4.1 (2025-08-23): (JS-litteralfix) Rör inte backslashes från json.dumps, escapa ENDAST enkla citattecken.
+#   Förhindrar "missing ) after argument list".
+# * v10.4.1-fallback (2025-08-23): Robust modulimport (stöd både scripts/modules och modules).
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.9: Korrigeringar efter rotorsaksanalys.
 # - Help me God: Eliminering av platshållar-mismatch, 404 och ES-module-fel.
-# - GR7 (Fullständig Historik): Historiken har uppdaterats korrekt.
+# - GR7 (Fullständig Historik): Historiken uppdaterad.
 
 import os
 import sys
@@ -56,18 +55,36 @@ import json
 import re
 import hashlib
 from datetime import datetime
-from modules.ui_template import HTML_TEMPLATE
-from modules.ui_styles import CSS_STYLES
-from modules.ui_logic import JS_LOGIC
-from modules.ui_file_tree import JS_FILE_TREE_LOGIC
-from modules.ui_performance_dashboard import JS_PERFORMANCE_LOGIC
-from modules.ui_einstein_search import JS_EINSTEIN_LOGIC
+
+# --- robust modulimport (stöd både scripts/modules och modules) ---
+try:
+    # Vanlig layout i repo (körs från repo-rot): scripts/modules/...
+    from modules.ui_template import HTML_TEMPLATE
+    from modules.ui_styles import CSS_STYLES
+    from modules.ui_logic import JS_LOGIC
+    from modules.ui_file_tree import JS_FILE_TREE_LOGIC
+    from modules.ui_performance_dashboard import JS_PERFORMANCE_LOGIC
+    from modules.ui_einstein_search import JS_EINSTEIN_LOGIC
+except ModuleNotFoundError:
+    # Direktkörning bredvid filen: lägg till scripts/modules på sys.path och importera utan prefix
+    _BASE = os.path.dirname(os.path.abspath(__file__))
+    _MOD = os.path.join(_BASE, "modules")
+    if _MOD not in sys.path:
+        sys.path.insert(0, _MOD)
+    from ui_template import HTML_TEMPLATE
+    from ui_styles import CSS_STYLES
+    from ui_logic import JS_LOGIC
+    from ui_file_tree import JS_FILE_TREE_LOGIC
+    from ui_performance_dashboard import JS_PERFORMANCE_LOGIC
+    from ui_einstein_search import JS_EINSTEIN_LOGIC
 
 # Lägger till en kort hash av aktuell tidsstämpel i UI_VERSION
 UI_VERSION = f"10.4.1-{hashlib.sha256(datetime.now().isoformat().encode()).hexdigest()[:6]}"
 
+
 def _is_node(obj):
     return isinstance(obj, dict) and 'type' in obj
+
 
 def calculate_node_size(node):
     """
@@ -89,6 +106,7 @@ def calculate_node_size(node):
         total += calculate_node_size(child)
     return total
 
+
 def _build_relations_index(relations_data):
     """
     Normaliserar relationsgrafens nodindex till en dict { path: node }.
@@ -104,6 +122,7 @@ def _build_relations_index(relations_data):
             if p:
                 index[p] = n
     return index
+
 
 def transform_structure_to_tree(structure, relations_nodes, path_prefix=''):
     """
@@ -137,10 +156,13 @@ def transform_structure_to_tree(structure, relations_nodes, path_prefix=''):
         tree.append(tree_node)
     return tree
 
+
 def _write_text(path: str, content: str):
-    os.makedirs(os.path.dirname(path), exist_ok=True)
+    os.makedirs(os.path.dirname(path), exist_ok=True
+                if os.path.dirname(path) else True)
     with open(path, 'w', encoding='utf-8') as f:
         f.write(content)
+
 
 def _to_js_single_quoted_string(json_text: str) -> str:
     """
@@ -150,6 +172,7 @@ def _to_js_single_quoted_string(json_text: str) -> str:
     """
     safe_json = json_text.replace("'", "\\'")
     return f"'{safe_json}'"
+
 
 def _inject_js_string_literal(js_source: str, placeholder: str, obj) -> str:
     """
@@ -166,14 +189,14 @@ def _inject_js_string_literal(js_source: str, placeholder: str, obj) -> str:
     pat1 = re.compile(re.escape("'" + placeholder + "'"))
     # 2) "PLACEHOLDER"
     pat2 = re.compile(re.escape('"' + placeholder + '"'))
-    # 3) PLACEHOLDER (bar token)
-    #    Matcha endast om token inte redan omges av bokstäver/siffror/underscore
+    # 3) PLACEHOLDER (bar token) — matcha inte inuti ord
     pat3 = re.compile(rf'(?<![\w]){re.escape(placeholder)}(?![\w])')
 
     js_source = pat1.sub(js_literal, js_source)
     js_source = pat2.sub(js_literal, js_source)
     js_source = pat3.sub(js_literal, js_source)
     return js_source
+
 
 def _verify_no_unresolved_placeholders(*assets: str) -> None:
     """
@@ -190,6 +213,7 @@ def _verify_no_unresolved_placeholders(*assets: str) -> None:
         sys.stderr.write("VARNING: Oersatta __INJECT__-platshållare upptäckta:\n")
         for idx, tokens in unresolved:
             sys.stderr.write(f"  - Asset[{idx}]: {', '.join(tokens)}\n")
+
 
 def build_ui(output_html_path, context_data, relations_data, overview_data, core_info_data):
     try:
@@ -208,7 +232,7 @@ def build_ui(output_html_path, context_data, relations_data, overview_data, core
         final_js_logic = _inject_js_string_literal(final_js_logic, "__INJECT_OVERVIEW_JSON_PAYLOAD__", overview_data)
 
         final_js_file_tree = _inject_js_string_literal(JS_FILE_TREE_LOGIC, "__INJECT_FILE_TREE__", file_tree_payload)
-        final_js_einstein  = _inject_js_string_literal(JS_EINSTEIN_LOGIC, "__INJECT_CORE_FILE_INFO__", core_info_data)
+        final_js_einstein = _inject_js_string_literal(JS_EINSTEIN_LOGIC, "__INJECT_CORE_FILE_INFO__", core_info_data)
 
         # 4) Skriv ut assets
         out_dir = os.path.dirname(output_html_path) or "."
@@ -229,12 +253,11 @@ def build_ui(output_html_path, context_data, relations_data, overview_data, core
             "\n    <script type='module' src='einstein.js'></script>"
             "\n    <script type='module' src='perf.js'></script>\n"
         )
-        # För enkelhet: injicera extra taggar nära </body> om den inte redan finns
-        insertion_point = html_content.rfind("</body>")
-        if insertion_point == -1:
+        insertion = html_content.rfind("</body>")
+        if insertion == -1:
             html_content = html_content + extra_tags
         else:
-            html_content = html_content[:insertion_point] + extra_tags + html_content[insertion_point:]
+            html_content = html_content[:insertion] + extra_tags + html_content[insertion:]
 
         _write_text(output_html_path, html_content)
 
@@ -245,6 +268,7 @@ def build_ui(output_html_path, context_data, relations_data, overview_data, core
     except Exception as e:
         print(f"Ett oväntat fel uppstod under build-ui: {e}", file=sys.stderr)
         sys.exit(1)
+
 
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == 'build-ui':
@@ -268,23 +292,6 @@ def main():
         print("Okänt kommando. Tillgängliga kommandon: 'build-ui'")
         sys.exit(1)
 
+
 if __name__ == "__main__":
     main()
-'''
-out_path = "/mnt/data/engrove_audio_tools_creator.py"
-with open(out_path, "w", encoding="utf-8") as f:
-    f.write(updated_code)
-
-import hashlib, pathlib, ast
-content = pathlib.Path(out_path).read_text(encoding="utf-8")
-sha256 = hashlib.sha256(content.encode("utf-8")).hexdigest()
-lines = content.count("\n") + (0 if content.endswith("\n") else 1)
-tree = ast.parse(content)
-funcs = len([n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef)])
-classes = len([n for n in ast.walk(tree) if isinstance(n, ast.ClassDef)])
-
-print("Path:", out_path)
-print("Lines:", lines)
-print("Functions:", funcs)
-print("Classes:", classes)
-print("SHA-256:", sha256) ​:contentReference[oaicite:1]{index=1}​
