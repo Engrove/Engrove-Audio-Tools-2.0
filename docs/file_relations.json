@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-23T18:58:21.142218+00:00",
+    "generated_at": "2025-08-23T20:19:07.626208+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -734,6 +734,13 @@
             "type": "library_import"
           },
           {
+            "source": "modules.ui_protocol_packager",
+            "symbols": [
+              "JS_PROTOCOL_PACKAGER"
+            ],
+            "type": "library_import"
+          },
+          {
             "source": "ui_template",
             "symbols": [
               "HTML_TEMPLATE"
@@ -772,6 +779,13 @@
             "source": "ui_einstein_search",
             "symbols": [
               "JS_EINSTEIN_LOGIC"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "ui_protocol_packager",
+            "symbols": [
+              "JS_PROTOCOL_PACKAGER"
             ],
             "type": "library_import"
           }
@@ -1804,6 +1818,44 @@
         "type": "Python Script",
         "category": "code",
         "language": "py",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/modules/ui_protocol_packager.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [
+          {
+            "symbol": "get_js_protocol_packager",
+            "type": "function"
+          }
+        ],
+        "imports": [
+          {
+            "source": "__future__",
+            "symbols": [
+              "annotations"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "pathlib",
+            "symbols": [
+              "Path"
+            ],
+            "type": "library_import"
+          }
+        ],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/modules/ui_protocol_packager.js": {
+        "type": "JavaScript Module",
+        "category": "code",
+        "language": "js",
         "exports": [],
         "imports": [],
         "dependents_count": 0,
