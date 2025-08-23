@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-23T14:42:39.451017+00:00",
+    "generated_at": "2025-08-23T15:47:41.178475+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -729,6 +729,48 @@
           },
           {
             "source": "modules.ui_einstein_search",
+            "symbols": [
+              "JS_EINSTEIN_LOGIC"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "ui_template",
+            "symbols": [
+              "HTML_TEMPLATE"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "ui_styles",
+            "symbols": [
+              "CSS_STYLES"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "ui_logic",
+            "symbols": [
+              "JS_LOGIC"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "ui_file_tree",
+            "symbols": [
+              "JS_FILE_TREE_LOGIC"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "ui_performance_dashboard",
+            "symbols": [
+              "JS_PERFORMANCE_LOGIC"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "ui_einstein_search",
             "symbols": [
               "JS_EINSTEIN_LOGIC"
             ],
