@@ -22,6 +22,7 @@
 # * v4.2 (2025-08-18): (Help me God - Grundorsaksanalys) Helt omskriven `findPathsUnder`-funktion för robusthet.
 # * v4.3 (2025-08-23): (Help me God - Domslut) Reintroducerade JSON.parse() för injicerad payload för att åtgärda SyntaxError.
 # * v5.0 (2025-08-23): (ARKITEKTURÄNDRING) Ersatt platshållarinjektion med robust "Data Island"-läsning från DOM.
+# * v5.1 (2025-08-23): (Help me God - Domslut) Korrigerat en händelsehanteringskonflikt mellan label och checkbox som förhindrade att filer i undermappar kunde öppnas. Logiken har konsoliderats till en enda, robust hanterare på label-elementet.
 # * SHA256_LF: UNVERIFIED
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
@@ -30,7 +31,7 @@
 # - GR7 (Fullständig Historik): Historiken har uppdaterats korrekt.
 
 JS_FILE_TREE_LOGIC = """
-// === Engrove File Tree Logic v5.0 ===
+// === Engrove File Tree Logic v5.1 ===
 
 /**
  * Läser och parsar en JSON "Data Island" från en <script>-tagg i DOM.
@@ -133,14 +134,6 @@ function renderNode(nodeData) {
         e.stopPropagation();
         updateChildren(li, checkbox.checked);
         updateParents(li);
-        
-        if (isDir && checkbox.checked) {
-            const toggle = li.querySelector(':scope > .toggle-icon');
-            if (toggle && li.classList.contains('collapsed')) {
-                li.classList.remove('collapsed');
-                toggle.textContent = '▼';
-            }
-        }
     });
 
     label.appendChild(checkbox);
@@ -166,26 +159,33 @@ function renderNode(nodeData) {
     const text = document.createElement('span');
     text.className = 'node-text';
     text.textContent = nodeData.name;
+    label.appendChild(text);
     
-    if (isDir) {
-        text.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+    // *** FIX START ***
+    // Konsoliderad händelsehanterare på labeln för att undvika konflikter.
+    label.addEventListener('click', (e) => {
+        // Om klicket var direkt på checkboxen, gör ingenting.
+        // Dess egen 'click'-hanterare kommer att sköta logiken.
+        if (e.target.type === 'checkbox') {
+            return;
+        }
+        
+        // Förhindra standardbeteendet (som att texten markerar checkboxen igen)
+        e.preventDefault();
+
+        if (isDir) {
+            // Om det är en mapp, hitta dess expandera/kollapsa-ikon och klicka på den
             const toggle = li.querySelector(':scope > .toggle-icon');
             if (toggle) toggle.click();
-        });
-    } else {
-        text.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+        } else {
+            // Om det är en fil, öppna filgranskningsmodalen
             if (window.openFileModal) {
                 window.openFileModal(nodeData.path);
             }
-        });
-    }
-    
-    label.appendChild(text);
-    
+        }
+    });
+    // *** FIX END ***
+
     const tagsContainer = document.createElement('div');
     tagsContainer.className = 'metadata-tags';
 
