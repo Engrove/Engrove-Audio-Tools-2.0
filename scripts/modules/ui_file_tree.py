@@ -20,16 +20,37 @@
 # * v4.0 (2025-08-18): Exponerat kontrollfunktioner (selectAll, deselectAll, selectCore) på window-objektet för extern åtkomst.
 # * v4.1 (2025-08-18): Omarbetat `selectCoreInTree` till `addPathsToSelection` för additivt och dynamiskt urval.
 # * v4.2 (2025-08-18): (Help me God - Grundorsaksanalys) Helt omskriven `findPathsUnder`-funktion för robusthet.
-# * SHA256_LF: 062d3a3910c838817a26f03d51b3f9909249e0839f1a2b1c0d3e4f5a6b7c8d9e
+# * v5.0 (2025-08-23): (ARKITEKTURÄNDRING) Ersatt platshållarinjektion med robust "Data Island"-läsning från DOM.
+# * SHA256_LF: UNVERIFIED
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
-# - Grundbulten v3.9: Denna fil har modifierats enligt en grundorsaksanalys.
-# - Help me God: Den felaktiga logiken har ersatts med en bevisat robustare algoritm.
+# - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, reviderade planen.
+# - GR6 (Obligatorisk Refaktorisering): Datainläsning har anpassats till den nya "Data Island"-arkitekturen.
 
 JS_FILE_TREE_LOGIC = """
-// === Engrove File Tree Logic v4.2 ===
+// === Engrove File Tree Logic v5.0 ===
 
-const FILE_TREE_DATA = __INJECT_FILE_TREE__;
+/**
+ * Läser och parsar en JSON "Data Island" från en <script>-tagg i DOM.
+ * @param {string} id - DOM ID för script-taggen.
+ * @returns {object|null} Det parsade JavaScript-objektet, eller null vid fel.
+ */
+function readDataIsland(id) {
+    const element = document.getElementById(id);
+    if (!element) {
+        console.error(`Data Island med ID "${id}" hittades inte i DOM.`);
+        return null;
+    }
+    try {
+        return JSON.parse(element.textContent);
+    } catch (e) {
+        console.error(`Kunde inte parsa JSON från Data Island "${id}":`, e);
+        return null;
+    }
+}
+
+// Läs in data från "Data Island".
+const FILE_TREE_DATA = readDataIsland('data-island-file-tree');
 
 /**
  * Formaterar bytes till en läsbar sträng (kB, MB, etc.).
@@ -240,6 +261,10 @@ function findPathsUnder(directoryPath) {
         return findStartNode(node.children || [], pathParts);
     }
 
+    if (!FILE_TREE_DATA || !FILE_TREE_DATA.children) {
+        console.warn("findPathsUnder: FILE_TREE_DATA är inte tillgänglig.");
+        return [];
+    }
     startNode = findStartNode(FILE_TREE_DATA.children, directoryPath.split('/'));
 
     if (!startNode || startNode.type !== 'directory') {
@@ -308,9 +333,9 @@ window.addPathsToSelection = function(staticPaths = [], dynamicPaths = []) {
 function initializeFileTree() {
     const container = document.getElementById('file-tree-container');
     const navContainer = document.getElementById('navigation-container');
-    if (!container || typeof FILE_TREE_DATA === 'undefined' || FILE_TREE_DATA === '__INJECT_FILE_TREE__') {
-        if(container) container.innerHTML = '<h2>Filträd</h2><p style=\"color: #ffc107;\">Data-injektion misslyckades under bygget.</p>';
-        console.error("Filträdets data saknas eller blev inte injicerad.");
+    if (!container || !FILE_TREE_DATA) {
+        if(container) container.innerHTML = '<p style=\"color: #ffc107;\">Kunde inte läsa data för filträdet från DOM (data-island-file-tree saknas eller är ogiltig).</p>';
+        console.error("Filträdets data (FILE_TREE_DATA) är null. Kontrollera att 'data-island-file-tree' existerar och innehåller giltig JSON.");
         return;
     }
     
