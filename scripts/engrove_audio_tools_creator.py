@@ -30,15 +30,20 @@
 #   (kompatibelt med JSON.parse), objekt i file_tree.js och einstein.js lämnas oförändrade.
 # * v10.3.2 (2025-08-23): Säkerställer att logic.js laddas som ES-modul och injicerar payloads
 #   som objekt i samtliga moduler.
+# * v10.3.3 (2025-08-23): (Help me God - Domslut) Återinför JSON.parse() för injicerade strängar i JS-moduler
+#   och lägger till dynamisk hash till UI_VERSION för spårbarhet.
 # * SHA256_LF: UNVERIFIED
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.9: Korrigeringar efter rotorsaksanalys.
 # - Help me God: Eliminering av platshållar-mismatch, 404 och ES-module-fel.
+# - GR7 (Fullständig Historik): Historiken har uppdaterats korrekt.
 
 import os
 import sys
 import json
+import hashlib
+from datetime import datetime
 from modules.ui_template import HTML_TEMPLATE
 from modules.ui_styles import CSS_STYLES
 from modules.ui_logic import JS_LOGIC
@@ -46,7 +51,8 @@ from modules.ui_file_tree import JS_FILE_TREE_LOGIC
 from modules.ui_performance_dashboard import JS_PERFORMANCE_LOGIC
 from modules.ui_einstein_search import JS_EINSTEIN_LOGIC
 
-UI_VERSION = "10.3.2"
+# Lägger till en kort hash av aktuell tidsstämpel i UI_VERSION
+UI_VERSION = f"10.3.3-{hashlib.sha256(datetime.now().isoformat().encode()).hexdigest()[:6]}"
 
 def _is_node(obj):
     return isinstance(obj, dict) and 'type' in obj
@@ -113,6 +119,9 @@ def _write_text(path: str, content: str):
         f.write(content)
 
 def _inject_js_object(js_source: str, placeholder: str, obj) -> str:
+    # `json.dumps` producerar en JSON-sträng.
+    # Denna sträng injiceras i JS-koden som en strängliteral,
+    # och måste parsas av klient-JS med JSON.parse().
     payload = json.dumps(obj, ensure_ascii=False)
     return js_source.replace(placeholder, payload)
 
@@ -129,20 +138,25 @@ def build_ui(output_html_path, context_data, relations_data, overview_data, core
         calculate_node_size(file_structure)
         file_tree_list = transform_structure_to_tree(file_structure, relations_index)
         file_tree_payload = {"children": file_tree_list}
+
         final_js_logic = JS_LOGIC
         final_js_logic = _inject_js_object(final_js_logic, "__INJECT_CONTEXT_JSON_PAYLOAD__", context_data)
         final_js_logic = _inject_js_object(final_js_logic, "__INJECT_RELATIONS_JSON_PAYLOAD__", relations_data)
         final_js_logic = _inject_js_object(final_js_logic, "__INJECT_OVERVIEW_JSON_PAYLOAD__", overview_data)
+        
         final_js_file_tree = _inject_js_object(JS_FILE_TREE_LOGIC, "__INJECT_FILE_TREE__", file_tree_payload)
         final_js_einstein = _inject_js_object(JS_EINSTEIN_LOGIC, "__INJECT_CORE_FILE_INFO__", core_info_data)
+        
         out_dir = os.path.dirname(output_html_path) or "."
         _write_text(os.path.join(out_dir, "styles.css"), CSS_STYLES)
         _write_text(os.path.join(out_dir, "logic.js"), final_js_logic)
         _write_text(os.path.join(out_dir, "file_tree.js"), final_js_file_tree)
         _write_text(os.path.join(out_dir, "einstein.js"), final_js_einstein)
         _write_text(os.path.join(out_dir, "perf.js"), JS_PERFORMANCE_LOGIC)
+
         version_tag = f"{(overview_data.get('repository') or 'Engrove/Engrove-Audio-Tools-2.0').split('/')[-1]} - UI v{UI_VERSION}"
         html_content = HTML_TEMPLATE.format(version=version_tag)
+        
         extra_tags = (
             "\n    <script type='module' src='logic.js'></script>"
             "\n    <script type='module' src='file_tree.js'></script>"
