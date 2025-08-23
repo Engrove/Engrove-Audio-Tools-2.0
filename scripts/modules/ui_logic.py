@@ -29,6 +29,7 @@
 # * v9.2 (2025-08-18): Omarbetat "Markera Kärndokument" för att vara additivt och dynamiskt inkludera alla protokollfiler.
 # * v10.0 (2025-08-19): Implementerat den fullständiga, robusta `generateFiles()`-funktionen, inklusive hash-verifiering och metadata-berikning.
 # * v10.1 (2025-08-23): (Help me God - Domslut) Reintroducerade JSON.parse() för alla injicerade payloads för att åtgärda SyntaxError.
+# * v11.0 (2025-08-23): (ARKITEKTURÄNDRING) Ersatt platshållarinjektion med robust "Data Island"-läsning från DOM.
 # * SHA256_LF: UNVERIFIED
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
@@ -40,10 +41,29 @@
 JS_LOGIC = """
 import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1';
 
-// Injektionspunkter för data från byggskriptet. All JSON injiceras som strängar och måste parsas.
-const ENGROVE_CONFIG = JSON.parse('__INJECT_OVERVIEW_JSON_PAYLOAD__');
-const FULL_CONTEXT = JSON.parse('__INJECT_CONTEXT_JSON_PAYLOAD__'); // Ny, komplett datakälla
-const RELATIONS_DATA = JSON.parse('__INJECT_RELATIONS_JSON_PAYLOAD__');
+/**
+ * Läser och parsar en JSON "Data Island" från en <script>-tagg i DOM.
+ * @param {string} id - DOM ID för script-taggen.
+ * @returns {object} Det parsade JavaScript-objektet.
+ * @throws {Error} Om elementet inte hittas eller om JSON-datan är ogiltig.
+ */
+function readDataIsland(id) {
+    const element = document.getElementById(id);
+    if (!element) {
+        throw new Error(`Data Island med ID "${id}" hittades inte i DOM.`);
+    }
+    try {
+        return JSON.parse(element.textContent);
+    } catch (e) {
+        console.error(`Kunde inte parsa JSON från Data Island "${id}":`, e);
+        throw e;
+    }
+}
+
+// Läs in all data från "Data Islands" i DOM:en.
+const ENGROVE_CONFIG = readDataIsland('data-island-overview');
+const FULL_CONTEXT = readDataIsland('data-island-context');
+const RELATIONS_DATA = readDataIsland('data-island-relations');
 
 const STATIC_CORE_PATHS = [
     'docs/core_file_info.json',
@@ -328,13 +348,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if(selectAllBtn) selectAllBtn.addEventListener('click', () => window.selectAllInTree && window.selectAllInTree());
     if(deselectAllBtn) deselectAllBtn.addEventListener('click', () => window.deselectAllInTree && window.deselectAllInTree());
     if(selectCoreBtn) selectCoreBtn.addEventListener('click', () => window.addPathsToSelection && window.addPathsToSelection(STATIC_CORE_PATHS, DYNAMIC_CORE_PATHS));
-    if(createFilesBtn) createFilesBtn.addEventListener('click', generateFiles);\n    if(clearSessionBtn) clearSessionBtn.addEventListener('click', clearSession);
+    if(createFilesBtn) createFilesBtn.addEventListener('click', generateFiles);
+    if(clearSessionBtn) clearSessionBtn.addEventListener('click', clearSession);
     if(refreshDataBtn) refreshDataBtn.addEventListener('click', reloadData);
 
-    ribbonTabs.forEach(tab => {\
+    ribbonTabs.forEach(tab => {
         tab.addEventListener('click', () => {
             const targetTab = tab.dataset.tab;
-            const targetPaneId = `tab-${targetTab}`;\
+            const targetPaneId = `tab-${targetTab}`;
             ribbonTabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
             ribbonPanes.forEach(pane => { pane.classList.toggle('active', pane.id === targetPaneId); });
@@ -343,9 +364,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     if(resizer && leftPane) {
-        let isResizing = false;\
+        let isResizing = false;
         resizer.addEventListener('mousedown', () => { isResizing = true; });
-        document.addEventListener('mousemove', (e) => {\
+        document.addEventListener('mousemove', (e) => {
             if (!isResizing) return;
             const newWidth = e.clientX;
             const minWidth = 200;
