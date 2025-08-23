@@ -2,22 +2,25 @@
 // scripts/modules/ui_protocol_packager.js
 //
 // === SYFTE & ANSVAR ===
-// Denna modul skapar en PBF v1.2-bundle (Markdown-skal) i webbläsaren
+// Denna modul skapar en PBF-bundle (Markdown-skal) i webbläsaren
 // från valda filer i filträdet. Den LF-normaliserar innehåll, beräknar
 // SHA-256 (LF), komprimerar med zlib (deflate via Pako) och base64-kodar
-// nyttolasten. Modulen återanvänder befintlig "Skapa Filer"-knapp genom
-// att byta etikett och koppla händelseloggik för bundling.
+// nyttolasten. Modulen anpassar PBF-versionen (1.2/1.3) baserat på
+// om en kärninstruktion inkluderas ("ad hoc"-läge).
 //
 // === HISTORIK ===
 // * v1.0 (2025-08-23): Initial skapelse. Implementerar fullständig PBF v1.2-bundling,
 //   progress-UI, deterministisk sortering och Markdown-skal med AI-instruktioner.
+// * v1.1 (2025-08-23): Introducerar villkorlig PBF v1.3-generering ("ad hoc"). Om
+//   AI_Core_Instruction.md väljs, skapas en själv-initialiserande bundle med ett
+//   utökat bootstrap_directive-objekt och uppdaterade AI-instruktioner.
 // * SHA256_LF: UNVERIFIED
 //
 // === TILLÄMPADE REGLER (Frankensteen v5.7) ===
-// - Grundbulten v3.9: Komplett, deterministisk och självständig modul.
+// - Grundbulten v3.9: Komplett, deterministisk, självständig och kontextmedveten (GR3) modul.
 // - GR6 (Obligatorisk Refaktorisering): Isolerad från UI; exponerar endast en publikt API-funktion.
 // - GR7 (Fullständig Historik): Historik och metadata uppdaterade.
-// - PBF v1.2-kontrakt: matchar Python-packern (payload=base64+zlib, hash på okomprimerad payload).
+// - PBF v1.2/v1.3-kontrakt: matchar Python-packern (payload=base64+zlib, hash på okomprimerad payload).
 //
 // === PUBLIKT API ===
 // createProtocolBundle(selectedPaths: string[], onProgress?: (p)=>void) => Promise<{ blob, filename, pbf, stats }>
@@ -140,19 +143,21 @@ function compressPayload(jsonString) {
 }
 
 /**
- * Bygger PBF v1.2-objektet.
+ * Bygger PBF-objektet (v1.2 eller v1.3).
  * @param {object} payloadObj
  * @param {{path:string, sha256:string, bytes:number}[]} fileIndex
+ * @param {string} pbfVersion - '1.2' eller '1.3'
+ * @param {string|object} bootstrapDirective - Direktivet att inkludera
  * @returns {Promise<object>}
  */
-async function buildPbfObject(payloadObj, fileIndex) {
+async function buildPbfObject(payloadObj, fileIndex, pbfVersion, bootstrapDirective) { // MODIFIED
   const payloadJson = JSON.stringify(payloadObj);
   const payloadHash = await sha256HexLF(payloadJson); // hash på okomprimerad payload
-  const { base64, compressedBytes } = compressPayload(payloadJson);
+  const { base64 } = compressPayload(payloadJson);
   return {
-    pbf_version: "1.2",
+    pbf_version: pbfVersion, // MODIFIED
     created_at: new Date().toISOString(),
-    bootstrap_directive: "decompress_and_stage",
+    bootstrap_directive: bootstrapDirective, // MODIFIED
     hash: payloadHash,
     payload_encoding: "base64+zlib",
     payload: base64,
@@ -168,22 +173,20 @@ async function buildPbfObject(payloadObj, fileIndex) {
  * @param {object} pbf
  * @param {{fileCount:number, originalBytes:number, compressedBytes:number}} stats
  * @param {string[]} topPaths
+ * @param {string} pbfVersion - '1.2' eller '1.3'
+ * @param {string[]} aiInstructions - Lista med instruktionstexter.
  * @returns {string}
  */
-function wrapMarkdown(pbf, stats, topPaths) {
+function wrapMarkdown(pbf, stats, topPaths, pbfVersion, aiInstructions) { // MODIFIED
   const header = [
-    '# Engrove PBF Bundle v1.2',
+    `# Engrove PBF Bundle v${pbfVersion}`, // MODIFIED
     '',
     'Detta dokument innehåller en PBF-bundle med valda **textfiler** för AI-initialisering.',
     'Payload är JSON med `files[]`, komprimerad med **zlib (deflate)** och **base64**-kodad.',
     'Fältet `hash` är **SHA-256** av den **okomprimerade** payloaden för integritetsverifikation.',
     '',
     '## AI-instruktioner',
-    '1. Dekoda `payload` (base64 → zlib → JSON).',
-    '2. Verifiera `hash` (SHA-256) mot dekodad payload.',
-    '3. Ladda `files[]` i arbetsminnet; bevara lexikografisk ordning.',
-    '4. Svara enbart utifrån dessa filer och **citera `path`** per referens.',
-    '5. Rapportera mismatch mellan `hash` och payload eller saknade filer.',
+    ...aiInstructions.map((line, i) => `${i + 1}. ${line}`), // MODIFIED
     '',
     '## Sammanfattning',
     `- Antal filer: ${stats.fileCount}`,
@@ -268,6 +271,42 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
     throw new Error('Inga filer valda.');
   }
 
+  // --- START: MODIFIED LOGIC FOR AD-HOC v1.3 ---
+  const CORE_INSTRUCTION_PATH = 'docs/ai_protocols/AI_Core_Instruction.md';
+  const isAdHocMode = selectedPaths.includes(CORE_INSTRUCTION_PATH);
+
+  let pbfConfig;
+  if (isAdHocMode) {
+    pbfConfig = {
+      pbfVersion: "1.3",
+      bootstrapDirective: {
+        action: "decompress_stage_and_apply",
+        apply_protocol_path: CORE_INSTRUCTION_PATH
+      },
+      aiInstructions: [
+        'Dekoda `payload` (base64 → zlib → JSON).',
+        'Verifiera `hash` (SHA-256) mot dekodad payload.',
+        'Ladda `files[]` i arbetsminnet; bevara lexikografisk ordning.',
+        'Utför åtgärder specificerade i `bootstrap_directive`-objektet.',
+        'Svara enbart utifrån dessa filer och **citera `path`** per referens.',
+        'Rapportera mismatch mellan `hash` och payload eller saknade filer.'
+      ]
+    };
+  } else {
+    pbfConfig = {
+      pbfVersion: "1.2",
+      bootstrapDirective: "decompress_and_stage",
+      aiInstructions: [
+        'Dekoda `payload` (base64 → zlib → JSON).',
+        'Verifiera `hash` (SHA-256) mot dekodad payload.',
+        'Ladda `files[]` i arbetsminnet; bevara lexikografisk ordning.',
+        'Svara enbart utifrån dessa filer och **citera `path`** per referens.',
+        'Rapportera mismatch mellan `hash` och payload eller saknade filer.'
+      ]
+    };
+  }
+  // --- END: MODIFIED LOGIC ---
+
   const overlay = createProgressOverlay();
   overlay.setPhase('Läser filer…');
   const entries = [];
@@ -305,22 +344,24 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
     .map(e => ({ path: e.path, sha256: e.sha256, bytes: e.bytes }));
 
   overlay.setPhase('Komprimerar & skriver metadata…');
-  const pbf = await buildPbfObject(payload, fileIndex);
+  // MODIFIED: Passar PBF-konfigurationen
+  const pbf = await buildPbfObject(payload, fileIndex, pbfConfig.pbfVersion, pbfConfig.bootstrapDirective);
 
   // Skapa Markdown
   overlay.setPhase('Skapar Markdown…');
-  const { base64 } = compressPayload(JSON.stringify(payload)); // för stats
-  const md = wrapMarkdown(pbf, {
+  const { compressedBytes } = compressPayload(JSON.stringify(payload));
+  const stats = {
     fileCount: fileIndex.length,
     originalBytes,
-    compressedBytes: base64.length * 0.75 // uppskattning: base64 overhead
-  }, fileIndex.map(f=>f.path));
+    compressedBytes
+  };
+  // MODIFIED: Passar PBF-konfigurationen
+  const md = wrapMarkdown(pbf, stats, fileIndex.map(f=>f.path), pbfConfig.pbfVersion, pbfConfig.aiInstructions);
 
   const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
   overlay.update(selectedPaths.length, selectedPaths.length, 'Klar');
   overlay.setPhase('Klar.');
 
-  // Ge liten fördröjning innan stäng (så användaren hinner se 100%)
   setTimeout(()=>overlay.close(), 500);
 
   return {
@@ -328,9 +369,9 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
     filename: 'protocol_bundle.md',
     pbf,
     stats: {
-      fileCount: fileIndex.length,
-      originalBytes,
-      compressedBytes: utf8ByteLength(md) // faktiska MD-bytes
+      fileCount: stats.fileCount,
+      originalBytes: stats.originalBytes,
+      compressedBytes: stats.compressedBytes
     }
   };
 }
@@ -340,9 +381,7 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
 function bindButton() {
   const btn = document.getElementById('create-files-btn'); // befintligt ID
   if (!btn) return;
-  // Byt etikett
   btn.textContent = 'Skapa Bundle (PBF)';
-  // Koppla handler
   btn.addEventListener('click', async () => {
     try {
       if (typeof window.selectedFiles !== 'function') {
@@ -351,7 +390,6 @@ function bindButton() {
       }
       const paths = window.selectedFiles();
       const result = await createProtocolBundle(paths);
-      // Ladda ner
       const url = URL.createObjectURL(result.blob);
       const a = document.createElement('a');
       a.href = url;
