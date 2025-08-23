@@ -26,6 +26,8 @@
 #   - Skriv ut styles.css, logic.js, file_tree.js, einstein.js (404-fix)
 #   - Injektera extra <script type="module">-taggar före </body>
 #   - HTML-version formatteras via .format(version=...)
+# * v10.3.1 (2025-08-23): Fixar SyntaxError '_meta' — injicerar **sträng**-payloads i logic.js
+#   (kompatibelt med JSON.parse), objekt i file_tree.js och einstein.js lämnas oförändrade.
 # * SHA256_LF: UNVERIFIED
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
@@ -43,7 +45,7 @@ from modules.ui_file_tree import JS_FILE_TREE_LOGIC
 from modules.ui_performance_dashboard import JS_PERFORMANCE_LOGIC
 from modules.ui_einstein_search import JS_EINSTEIN_LOGIC
 
-UI_VERSION = "10.3"
+UI_VERSION = "10.3.1"
 
 
 def _is_node(obj):
@@ -181,20 +183,26 @@ def build_ui(output_html_path, context_data, relations_data, overview_data, core
         file_tree_payload = {"children": file_tree_list}  # matcha UI-modulen
 
         print("Genererar JS/CSS-innehåll...")
-        js_full_context = json.dumps(context_data, ensure_ascii=False)
-        js_relations = json.dumps(relations_data, ensure_ascii=False)
-        js_overview = json.dumps(overview_data, ensure_ascii=False)
-        js_core_info = json.dumps(core_info_data, ensure_ascii=False)
-        js_file_tree = json.dumps(file_tree_payload, ensure_ascii=False)
+        # 1) Objekt-serialisering
+        js_full_context_obj = json.dumps(context_data, ensure_ascii=False)
+        js_relations_obj = json.dumps(relations_data, ensure_ascii=False)
+        js_overview_obj = json.dumps(overview_data, ensure_ascii=False)
+        js_core_info_obj = json.dumps(core_info_data, ensure_ascii=False)
+        js_file_tree_obj = json.dumps(file_tree_payload, ensure_ascii=False)
 
-        # Korrekt token-replacement (utan citattecken)
-        final_js_logic = JS_LOGIC
-        final_js_logic = final_js_logic.replace("__INJECT_CONTEXT_JSON_PAYLOAD__", js_full_context)
-        final_js_logic = final_js_logic.replace("__INJECT_RELATIONS_JSON_PAYLOAD__", js_relations)
-        final_js_logic = final_js_logic.replace("__INJECT_OVERVIEW_JSON_PAYLOAD__", js_overview)
+        # 2) Dubbel-serialisera till JS-strängar för logic.js (använder JSON.parse(...))
+        ctx_str = json.dumps(js_full_context_obj, ensure_ascii=False)
+        rel_str = json.dumps(js_relations_obj, ensure_ascii=False)
+        ovw_str = json.dumps(js_overview_obj, ensure_ascii=False)
 
-        final_js_file_tree = JS_FILE_TREE_LOGIC.replace("__INJECT_FILE_TREE__", js_file_tree)
-        final_js_einstein = JS_EINSTEIN_LOGIC.replace("__INJECT_CORE_FILE_INFO__", js_core_info)
+        # 3) Token-replacement
+        final_js_logic = (JS_LOGIC
+                          .replace("__INJECT_CONTEXT_JSON_PAYLOAD__", ctx_str)
+                          .replace("__INJECT_RELATIONS_JSON_PAYLOAD__", rel_str)
+                          .replace("__INJECT_OVERVIEW_JSON_PAYLOAD__", ovw_str))
+
+        final_js_file_tree = JS_FILE_TREE_LOGIC.replace("__INJECT_FILE_TREE__", js_file_tree_obj)
+        final_js_einstein = JS_EINSTEIN_LOGIC.replace("__INJECT_CORE_FILE_INFO__", js_core_info_obj)
 
         print("Skriver statiska tillgångar...")
         out_dir = os.path.dirname(output_html_path) or "."
@@ -204,13 +212,9 @@ def build_ui(output_html_path, context_data, relations_data, overview_data, core
         _write_text(os.path.join(out_dir, "einstein.js"), final_js_einstein)
 
         print("Sammansätter HTML...")
-        # Versionstagg: repo-namn + UI-version
         version_tag = f"{(overview_data.get('repository') or 'Engrove/Engrove-Audio-Tools-2.0').split('/')[-1]} - UI v{UI_VERSION}"
-
-        # HTML_TEMPLATE använder {version} – formatera; inga INJECT_* placeholders i mallen.
         html_content = HTML_TEMPLATE.format(version=version_tag)
 
-        # Lägg till extra script-taggar för moduler som inte finns i mallen
         extra_tags = (
             "\n    <script type='module' src='file_tree.js'></script>"
             "\n    <script type='module' src='einstein.js'></script>\n"
