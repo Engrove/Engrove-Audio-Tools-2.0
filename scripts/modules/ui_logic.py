@@ -11,7 +11,7 @@
 # * v5.0 (2025-08-16): (Help me God) Återställd och verifierad. Lade till
 #   förberedande, vilande funktioner för "Operation: Dold Grund".
 # * v6.0 (2025-08-16): Refaktorerad för modularitet. All logik för filträdet har
-#   flyttats till den dedikerade modulen `ui_file_tree.py`./.
+#   flyttats till den dedikerade modulen `ui_file_tree.py`.
 # * v6.1 (2025-08-16): Lade till fullständig logik för filgranskningsmodalen.
 # * v6.2 (2025-08-17): Uppdaterat ribbon-logiken för att hantera visning av
 #   den nya AI Performance-dashboarden som en fullskärms-overlay.
@@ -35,14 +35,15 @@
 # - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, reviderade planen.
 # - P-OKD-1.0: Nya funktioner har JSDoc-kommentarer.
 # - GR6 (Obligatorisk Refaktorisering): Funktionaliteten har implementerats modulärt och återanvänder befintliga hjälpfunktioner.
+# - GR7 (Fullständig Historik): Historiken har uppdaterats korrekt.
 
 JS_LOGIC = """
 import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1';
 
 // Injektionspunkter för data från byggskriptet. All JSON injiceras som strängar och måste parsas.
-const ENGROVE_CONFIG = JSON.parse(__INJECT_OVERVIEW_JSON_PAYLOAD__);
-const FULL_CONTEXT = JSON.parse(__INJECT_CONTEXT_JSON_PAYLOAD__); // Ny, komplett datakälla
-const RELATIONS_DATA = JSON.parse(__INJECT_RELATIONS_JSON_PAYLOAD__);
+const ENGROVE_CONFIG = JSON.parse('__INJECT_OVERVIEW_JSON_PAYLOAD__');
+const FULL_CONTEXT = JSON.parse('__INJECT_CONTEXT_JSON_PAYLOAD__'); // Ny, komplett datakälla
+const RELATIONS_DATA = JSON.parse('__INJECT_RELATIONS_JSON_PAYLOAD__');
 
 const STATIC_CORE_PATHS = [
     'docs/core_file_info.json',
