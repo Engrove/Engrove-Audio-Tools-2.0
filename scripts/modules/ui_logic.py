@@ -41,8 +41,8 @@ import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17
 // Injektionspunkt för projektkonfiguration (repo/branch)
 const ENGROVE_CONFIG = __INJECT_OVERVIEW_JSON_PAYLOAD__;
 const FULL_CONTEXT = __INJECT_CONTEXT_JSON_PAYLOAD__; // Ny, komplett datakälla
+const RELATIONS_DATA = __INJECT_RELATIONS_JSON_PAYLOAD__;
 
-// Statiska sökvägar för "Markera Kärndokument"
 const STATIC_CORE_PATHS = [
     'docs/core_file_info.json',
     'docs/file_relations.json',
