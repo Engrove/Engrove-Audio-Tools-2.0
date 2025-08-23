@@ -1,14 +1,22 @@
-# FILE: scripts/modules/ui_core_docs_store.py
-# === SYFTE ===
-# Innehåller inkapslad JS-modul som hanterar localStorage för "kärndokument".
-# === HISTORIK ===
-# * v1.0 (2025-08-23): Första versionen.
-JS_CORE_DOCS_STORE = r"""/**
- * scripts/modules/ui_core_docs_store.py (embedded JS)
- * Exponerar en enkel wrapper kring localStorage för "kärndokument".
- * Nyckel: 'coreDocs'
- */
-(function() {
+# scripts/modules/ui_core_docs_store.py
+# -*- coding: utf-8 -*-
+#
+# SYFTE
+#   Hanterar localStorage-listan över "kärndokument" (core docs) i webbläsaren.
+#   Python-filen exponerar inkapslad, körbar JS-kod som skrivs till core_store.js.
+#
+# FÖRKLARING
+#   - STORAGE_KEY = 'coreDocs'
+#   - API (på window.CoreDocsStore):
+#       loadCoreDocs():  -> list[str]
+#       saveCoreDocs(list[str]): -> list[str] | null
+#       isCoreDoc(path: str): -> bool
+#       selectCoreInTree(): -> markerar sparade kärndok i filträdet om addPathsToSelection finns
+#
+# HISTORIK
+#   v1.0  (2025-08-23): Första versionen.
+JS_CORE_DOCS_STORE = r"""(function() {
+  'use strict';
   const STORAGE_KEY = 'coreDocs';
 
   function _read() {
@@ -16,7 +24,7 @@ JS_CORE_DOCS_STORE = r"""/**
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return [];
       const arr = JSON.parse(raw);
-      return Array.isArray(arr) ? Array.from(new Set(arr)) : [];
+      return Array.isArray(arr) ? Array.from(new Set(arr.filter(Boolean))) : [];
     } catch (e) {
       console.warn('Kunde inte läsa coreDocs från localStorage:', e);
       return [];
@@ -25,7 +33,7 @@ JS_CORE_DOCS_STORE = r"""/**
 
   function _write(list) {
     try {
-      const clean = Array.isArray(list) ? Array.from(new Set(list)) : [];
+      const clean = Array.isArray(list) ? Array.from(new Set(list.filter(Boolean))) : [];
       localStorage.setItem(STORAGE_KEY, JSON.stringify(clean));
       return clean;
     } catch (e) {
@@ -42,21 +50,18 @@ JS_CORE_DOCS_STORE = r"""/**
     return set.has(path);
   }
 
-  // Hjälp: markera i trädet genom att återanvända addPathsToSelection
   function selectCoreInTree() {
     const staticList = _read();
-    if (staticList.length && window.addPathsToSelection) {
-      window.addPathsToSelection(staticList, []); // inga dynamiska mappar här
+    if (staticList.length && typeof window.addPathsToSelection === 'function') {
+      window.addPathsToSelection(staticList, []);
     }
   }
 
-  window.CoreDocsStore = {
+  window.CoreDocsStore = Object.freeze({
     loadCoreDocs,
     saveCoreDocs,
     isCoreDoc,
     selectCoreInTree,
     STORAGE_KEY,
-  };
-})();
-"""
-# END FILE
+  });
+})();"""
