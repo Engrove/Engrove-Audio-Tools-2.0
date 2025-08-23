@@ -16,10 +16,10 @@
 # - GR7 (Fullständig Historik): Historiken har uppdaterats korrekt.
 
 JS_EINSTEIN_LOGIC = """
-// === Engrove Einstein Search Logic v1.0 ===
+// === Engrove Einstein Search Logic v1.1 ===
 
 // Injektionspunkt för EINSTEIN_CORE_FILE_INFO, injiceras som sträng och måste parsas.
-const EINSTEIN_CORE_FILE_INFO = JSON.parse(__INJECT_CORE_FILE_INFO__);
+const EINSTEIN_CORE_FILE_INFO = JSON.parse('__INJECT_CORE_FILE_INFO__');
 
 function renderEinsteinResults(container, results) {
     container.innerHTML = '';
