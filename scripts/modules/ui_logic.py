@@ -30,6 +30,7 @@
 # * v10.0 (2025-08-19): Implementerat den fullständiga, robusta `generateFiles()`-funktionen, inklusive hash-verifiering och metadata-berikning.
 # * v10.1 (2025-08-23): (Help me God - Domslut) Reintroducerade JSON.parse() för alla injicerade payloads för att åtgärda SyntaxError.
 # * v11.0 (2025-08-23): (ARKITEKTURÄNDRING) Ersatt platshållarinjektion med robust "Data Island"-läsning från DOM.
+# * v11.1 (2025-08-23): Knappbindning för “Skapa Filer” borttagen – ägs nu av protocol_packager.js.
 # * SHA256_LF: UNVERIFIED
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
@@ -348,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if(selectAllBtn) selectAllBtn.addEventListener('click', () => window.selectAllInTree && window.selectAllInTree());
     if(deselectAllBtn) deselectAllBtn.addEventListener('click', () => window.deselectAllInTree && window.deselectAllInTree());
     if(selectCoreBtn) selectCoreBtn.addEventListener('click', () => window.addPathsToSelection && window.addPathsToSelection(STATIC_CORE_PATHS, DYNAMIC_CORE_PATHS));
-    if(createFilesBtn) createFilesBtn.addEventListener('click', generateFiles);
+    // create-files-btn binds nu i protocol_packager.js (knapp ägs där)
     if(clearSessionBtn) clearSessionBtn.addEventListener('click', clearSession);
     if(refreshDataBtn) refreshDataBtn.addEventListener('click', reloadData);
 
@@ -379,3 +380,4 @@ document.addEventListener('DOMContentLoaded', () => {
     handleViewSwitch('start');
 });
 """
+# END FILE: scripts/modules/ui_logic.py
