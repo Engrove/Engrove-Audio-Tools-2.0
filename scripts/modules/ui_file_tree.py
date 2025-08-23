@@ -22,7 +22,8 @@
 # * v4.2 (2025-08-18): (Help me God - Grundorsaksanalys) Helt omskriven `findPathsUnder`-funktion för robusthet.
 # * v4.3 (2025-08-23): (Help me God - Domslut) Reintroducerade JSON.parse() för injicerad payload för att åtgärda SyntaxError.
 # * v5.0 (2025-08-23): (ARKITEKTURÄNDRING) Ersatt platshållarinjektion med robust "Data Island"-läsning från DOM.
-# * v5.1 (2025-08-23): (Help me God - Domslut) Korrigerat en händelsehanteringskonflikt mellan label och checkbox som förhindrade att filer i undermappar kunde öppnas. Logiken har konsoliderats till en enda, robust hanterare på label-elementet.
+# * v5.1 (2025-08-23): (Help me God - Domslut) Korrigerat en händelsehanteringskonflikt.
+# * v5.2 (2025-08-23): (Help me God - Grundorsaksanalys) Återställt den korrekta DOM-strukturen från v2.0 där toggle-ikonen är ett syskon till label-elementet. Detta åtgärdar felet där undermappar inte renderades.
 # * SHA256_LF: UNVERIFIED
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
@@ -31,7 +32,7 @@
 # - GR7 (Fullständig Historik): Historiken har uppdaterats korrekt.
 
 JS_FILE_TREE_LOGIC = """
-// === Engrove File Tree Logic v5.1 ===
+// === Engrove File Tree Logic v5.2 ===
 
 /**
  * Läser och parsar en JSON "Data Island" från en <script>-tagg i DOM.
@@ -76,10 +77,10 @@ function updateParents(element) {
     const parentLi = element.parentElement.closest('li.tree-node');
     if (!parentLi) return;
 
-    const parentCheckbox = parentLi.querySelector(':scope > .node-label > input[type=\\"checkbox\\"]');
+    const parentCheckbox = parentLi.querySelector(':scope > .node-label > input[type="checkbox"]');
     if (!parentCheckbox) return;
     
-    const childCheckboxes = Array.from(parentLi.querySelectorAll(':scope > ul > li > .node-label > input[type=\\"checkbox\\"]'));
+    const childCheckboxes = Array.from(parentLi.querySelectorAll(':scope > ul > li > .node-label > input[type="checkbox"]'));
 
     if (childCheckboxes.length === 0) return;
 
@@ -105,7 +106,7 @@ function updateParents(element) {
  * @param {boolean} isChecked Om checkboxes ska vara markerade eller ej.
  */
 function updateChildren(element, isChecked) {
-    const childCheckboxes = element.querySelectorAll('li .node-label > input[type=\\"checkbox\\"]');
+    const childCheckboxes = element.querySelectorAll('li .node-label > input[type="checkbox"]');
     childCheckboxes.forEach(cb => {
         cb.checked = isChecked;
         cb.indeterminate = false;
@@ -134,10 +135,20 @@ function renderNode(nodeData) {
         e.stopPropagation();
         updateChildren(li, checkbox.checked);
         updateParents(li);
+        
+        if (isDir && checkbox.checked) {
+            const toggle = li.querySelector(':scope > .toggle-icon');
+            if (toggle && li.classList.contains('collapsed')) {
+                li.classList.remove('collapsed');
+                toggle.textContent = '▼';
+            }
+        }
     });
 
-    label.appendChild(checkbox);
-
+    // *** FIX START ***
+    // Återställer den korrekta DOM-strukturen från v2.0
+    
+    // 1. Om det är en mapp, skapa och lägg till toggle-ikonen som ett DIREKT barn till <li>
     if (isDir) {
         const toggle = document.createElement('span');
         toggle.className = 'toggle-icon';
@@ -147,9 +158,12 @@ function renderNode(nodeData) {
             li.classList.toggle('collapsed');
             toggle.textContent = li.classList.contains('collapsed') ? '►' : '▼';
         });
-        li.appendChild(toggle);
+        li.appendChild(toggle); // Korrekt: toggle är syskon till label
         li.classList.add('collapsed');
     }
+
+    // 2. Bygg upp label-elementet med dess innehåll
+    label.appendChild(checkbox);
 
     const icon = document.createElement('span');
     icon.className = 'node-icon';
@@ -159,33 +173,22 @@ function renderNode(nodeData) {
     const text = document.createElement('span');
     text.className = 'node-text';
     text.textContent = nodeData.name;
-    label.appendChild(text);
     
-    // *** FIX START ***
-    // Konsoliderad händelsehanterare på labeln för att undvika konflikter.
-    label.addEventListener('click', (e) => {
-        // Om klicket var direkt på checkboxen, gör ingenting.
-        // Dess egen 'click'-hanterare kommer att sköta logiken.
-        if (e.target.type === 'checkbox') {
-            return;
-        }
-        
-        // Förhindra standardbeteendet (som att texten markerar checkboxen igen)
+    // Lägg till klick-händelse på texten för att öppna filer/mappar
+    text.addEventListener('click', (e) => {
         e.preventDefault();
-
+        e.stopPropagation();
         if (isDir) {
-            // Om det är en mapp, hitta dess expandera/kollapsa-ikon och klicka på den
             const toggle = li.querySelector(':scope > .toggle-icon');
             if (toggle) toggle.click();
         } else {
-            // Om det är en fil, öppna filgranskningsmodalen
             if (window.openFileModal) {
                 window.openFileModal(nodeData.path);
             }
         }
     });
-    // *** FIX END ***
-
+    label.appendChild(text);
+    
     const tagsContainer = document.createElement('div');
     tagsContainer.className = 'metadata-tags';
 
@@ -209,8 +212,10 @@ function renderNode(nodeData) {
         label.appendChild(tagsContainer);
     }
 
+    // 3. Lägg till det färdiga label-elementet till <li>
     li.appendChild(label);
 
+    // 4. Lägg till eventuell underlista (ul) som ett DIREKT barn till <li>
     if (isDir && nodeData.children && nodeData.children.length > 0) {
         const ul = document.createElement('ul');
         nodeData.children.forEach(childNode => {
@@ -218,6 +223,7 @@ function renderNode(nodeData) {
         });
         li.appendChild(ul);
     }
+    // *** FIX END ***
     
     return li;
 }
@@ -227,7 +233,7 @@ function renderNode(nodeData) {
  */
 window.selectAllInTree = function() {
     const container = document.getElementById('file-tree-container');
-    container.querySelectorAll('input[type=\\"checkbox\\\"]').forEach(cb => {
+    container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
         cb.checked = true;
         cb.indeterminate = false;
     });
@@ -238,7 +244,7 @@ window.selectAllInTree = function() {
  */
 window.deselectAllInTree = function() {
     const container = document.getElementById('file-tree-container');
-    container.querySelectorAll('input[type=\\"checkbox\\\"]').forEach(cb => {
+    container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
         cb.checked = false;
         cb.indeterminate = false;
     });
@@ -295,7 +301,7 @@ window.addPathsToSelection = function(staticPaths = [], dynamicPaths = []) {
     });
 
     const container = document.getElementById('file-tree-container');
-    const allCheckboxes = Array.from(container.querySelectorAll('input[type=\\"checkbox\\\"]'));
+    const allCheckboxes = Array.from(container.querySelectorAll('input[type="checkbox"]'));
     
     const selectionSet = new Set(pathsToSelect);
 
@@ -331,7 +337,7 @@ window.addPathsToSelection = function(staticPaths = [], dynamicPaths = []) {
 function initializeFileTree() {
     const container = document.getElementById('file-tree-container');
     if (!container || !FILE_TREE_DATA) {
-        if(container) container.innerHTML = '<p style=\\"color: #ffc107;\\">Kunde inte ladda filträdets data.</p>';
+        if(container) container.innerHTML = '<p style="color: #ffc107;">Kunde inte ladda filträdets data.</p>';
         console.error("Filträdets data kunde inte läsas från DOM.");
         return;
     }
