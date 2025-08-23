@@ -11,7 +11,7 @@
 # * v5.0 (2025-08-16): (Help me God) Återställd och verifierad. Lade till
 #   förberedande, vilande funktioner för "Operation: Dold Grund".
 # * v6.0 (2025-08-16): Refaktorerad för modularitet. All logik för filträdet har
-#   flyttats till den dedikerade modulen `ui_file_tree.py`.
+#   flyttats till den dedikerade modulen `ui_file_tree.py`./.
 # * v6.1 (2025-08-16): Lade till fullständig logik för filgranskningsmodalen.
 # * v6.2 (2025-08-17): Uppdaterat ribbon-logiken för att hantera visning av
 #   den nya AI Performance-dashboarden som en fullskärms-overlay.
@@ -28,7 +28,8 @@
 # * v9.1 (2025-08-18): Implementerat händelselyssnare för alla nya kontroller i "Start"- och "Data"-flikarna.
 # * v9.2 (2025-08-18): Omarbetat "Markera Kärndokument" för att vara additivt och dynamiskt inkludera alla protokollfiler.
 # * v10.0 (2025-08-19): Implementerat den fullständiga, robusta `generateFiles()`-funktionen, inklusive hash-verifiering och metadata-berikning.
-# * SHA256_LF: 2d89061efc7bcfba4969729601fd120ec911914ffbad544a53124f5a9cd72a42
+# * v10.1 (2025-08-23): (Help me God - Domslut) Reintroducerade JSON.parse() för alla injicerade payloads för att åtgärda SyntaxError.
+# * SHA256_LF: UNVERIFIED
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, reviderade planen.
@@ -38,10 +39,10 @@
 JS_LOGIC = """
 import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1';
 
-// Injektionspunkt för projektkonfiguration (repo/branch)
-const ENGROVE_CONFIG = __INJECT_OVERVIEW_JSON_PAYLOAD__;
-const FULL_CONTEXT = __INJECT_CONTEXT_JSON_PAYLOAD__; // Ny, komplett datakälla
-const RELATIONS_DATA = __INJECT_RELATIONS_JSON_PAYLOAD__;
+// Injektionspunkter för data från byggskriptet. All JSON injiceras som strängar och måste parsas.
+const ENGROVE_CONFIG = JSON.parse(__INJECT_OVERVIEW_JSON_PAYLOAD__);
+const FULL_CONTEXT = JSON.parse(__INJECT_CONTEXT_JSON_PAYLOAD__); // Ny, komplett datakälla
+const RELATIONS_DATA = JSON.parse(__INJECT_RELATIONS_JSON_PAYLOAD__);
 
 const STATIC_CORE_PATHS = [
     'docs/core_file_info.json',
@@ -326,14 +327,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if(selectAllBtn) selectAllBtn.addEventListener('click', () => window.selectAllInTree && window.selectAllInTree());
     if(deselectAllBtn) deselectAllBtn.addEventListener('click', () => window.deselectAllInTree && window.deselectAllInTree());
     if(selectCoreBtn) selectCoreBtn.addEventListener('click', () => window.addPathsToSelection && window.addPathsToSelection(STATIC_CORE_PATHS, DYNAMIC_CORE_PATHS));
-    if(createFilesBtn) createFilesBtn.addEventListener('click', generateFiles);
-    if(clearSessionBtn) clearSessionBtn.addEventListener('click', clearSession);
+    if(createFilesBtn) createFilesBtn.addEventListener('click', generateFiles);\n    if(clearSessionBtn) clearSessionBtn.addEventListener('click', clearSession);
     if(refreshDataBtn) refreshDataBtn.addEventListener('click', reloadData);
 
-    ribbonTabs.forEach(tab => {
+    ribbonTabs.forEach(tab => {\
         tab.addEventListener('click', () => {
             const targetTab = tab.dataset.tab;
-            const targetPaneId = `tab-${targetTab}`;
+            const targetPaneId = `tab-${targetTab}`;\
             ribbonTabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
             ribbonPanes.forEach(pane => { pane.classList.toggle('active', pane.id === targetPaneId); });
@@ -342,9 +342,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     if(resizer && leftPane) {
-        let isResizing = false;
+        let isResizing = false;\
         resizer.addEventListener('mousedown', () => { isResizing = true; });
-        document.addEventListener('mousemove', (e) => {
+        document.addEventListener('mousemove', (e) => {\
             if (!isResizing) return;
             const newWidth = e.clientX;
             const minWidth = 200;
@@ -357,5 +357,3 @@ document.addEventListener('DOMContentLoaded', () => {
     handleViewSwitch('start');
 });
 """
-
-# END FILE: scripts/modules/ui_logic.py
