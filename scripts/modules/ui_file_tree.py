@@ -29,9 +29,9 @@
 # - GR7 (Fullständig Historik): Historiken har uppdaterats korrekt.
 
 JS_FILE_TREE_LOGIC = """
-// === Engrove File Tree Logic v4.2 ===
+// === Engrove File Tree Logic v4.3 ===
 
-const FILE_TREE_DATA = JSON.parse(__INJECT_FILE_TREE__);
+const FILE_TREE_DATA = JSON.parse('__INJECT_FILE_TREE__');
 
 /**
  * Formaterar bytes till en läsbar sträng (kB, MB, etc.).
