@@ -7,22 +7,24 @@
 #
 # === HISTORIK ===
 # * v1.0 (2025-08-18): Initial skapelse som en del av arkitektonisk refaktorering av sök.
-# * SHA256_LF: 06dd8718a38520857b2803b98357a70a04918e97669d71c4840e698822003c27
+# * v1.1 (2025-08-23): (Help me God - Domslut) Reintroducerade JSON.parse() för injicerad payload för att åtgärda SyntaxError.
+# * SHA256_LF: UNVERIFIED
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.8: Denna nya fil har skapats enligt gällande protokoll.
 # - GR6 (Obligatorisk Refaktorisering): Söklogiken har isolerats i denna dedikerade modul.
+# - GR7 (Fullständig Historik): Historiken har uppdaterats korrekt.
 
 JS_EINSTEIN_LOGIC = """
 // === Engrove Einstein Search Logic v1.0 ===
 
-// Förväntar sig att EINSTEIN_CORE_FILE_INFO injiceras globalt av byggskriptet.
-const EINSTEIN_CORE_FILE_INFO = __INJECT_CORE_FILE_INFO__;
+// Injektionspunkt för EINSTEIN_CORE_FILE_INFO, injiceras som sträng och måste parsas.
+const EINSTEIN_CORE_FILE_INFO = JSON.parse(__INJECT_CORE_FILE_INFO__);
 
 function renderEinsteinResults(container, results) {
     container.innerHTML = '';
     if (!results || results.length === 0) {
-        container.innerHTML = '<p class="einstein-no-results">Inga relevanta resultat hittades.</p>';
+        container.innerHTML = '<p class=\"einstein-no-results\">Inga relevanta resultat hittades.</p>';
         return;
     }
 
@@ -40,22 +42,22 @@ function renderEinsteinResults(container, results) {
         const escapeHtml = (unsafe) => {
             if (typeof unsafe !== 'string') return '';
             return unsafe
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
+                .replace(/&/g, \"&amp;\")
+                .replace(/</g, \"&lt;\")
+                .replace(/>/g, \"&gt;\")
+                .replace(/\"/g, \"&quot;\")
+                .replace(/'/g, \"&#039;\");
         }
 
         itemEl.innerHTML = `
-            <div class="einstein-result-header">
-                <a href="#" class="einstein-result-path" data-path="${escapeHtml(result.chunk.source)}">${escapeHtml(result.chunk.source)}</a>
-                <span class="einstein-result-score">Relevans: ${(result.similarity * 100).toFixed(1)}%</span>
+            <div class=\"einstein-result-header\">
+                <a href=\"#\" class=\"einstein-result-path\" data-path=\"${escapeHtml(result.chunk.source)}\">${escapeHtml(result.chunk.source)}</a>
+                <span class=\"einstein-result-score\">Relevans: ${(result.similarity * 100).toFixed(1)}%</span>
             </div>
-            <div class="einstein-result-metadata">
+            <div class=\"einstein-result-metadata\">
                 <p><strong>Syfte:</strong> ${escapeHtml(fileInfo.purpose_and_responsibility)}</p>
             </div>
-            <details class="einstein-result-details">
+            <details class=\"einstein-result-details\">
                 <summary>Visa semantisk träff</summary>
                 <pre>${escapeHtml(result.chunk.content)}</pre>
             </details>
@@ -94,11 +96,11 @@ async function handleEinsteinSearch() {
         // Förutsätter att performSemanticSearch är globalt tillgänglig från ui_logic.py
         const results = await performSemanticSearch(query);
         renderEinsteinResults(resultsContainer, results);
-        statusEl.textContent = `Hittade ${results.length} resultat för "${query}"`;
+        statusEl.textContent = `Hittade ${results.length} resultat för \"${query}\"`;
     } catch (error) {
         console.error("Fel vid Einstein-sökning:", error);
         statusEl.textContent = `Sökningen misslyckades: ${error.message}`;
-        resultsContainer.innerHTML = '<p class="einstein-error">Ett fel uppstod. Kontrollera webbläsarkonsolen för mer information.</p>';
+        resultsContainer.innerHTML = '<p class=\"einstein-error\">Ett fel uppstod. Kontrollera webbläsarkonsolen för mer information.</p>';
     }
 }
 
@@ -126,5 +128,3 @@ if (document.readyState === 'loading') {
     initEinsteinSearch();
 }
 """
-
-# scripts/modules/ui_einstein_search.py
