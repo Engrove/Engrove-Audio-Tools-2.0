@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-23T15:47:41.178475+00:00",
+    "generated_at": "2025-08-23T16:40:44.859864+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -629,15 +629,7 @@
             "type": "function"
           },
           {
-            "symbol": "_to_js_single_quoted_string",
-            "type": "function"
-          },
-          {
-            "symbol": "_inject_js_string_literal",
-            "type": "function"
-          },
-          {
-            "symbol": "_verify_no_unresolved_placeholders",
+            "symbol": "_create_data_island_script_tag",
             "type": "function"
           },
           {
@@ -680,6 +672,13 @@
           },
           {
             "source": "hashlib",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "html",
             "symbols": [
               "*"
             ],
