@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-23T06:12:58.711557+00:00",
+    "generated_at": "2025-08-23T07:00:23.933234+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -604,6 +604,120 @@
         "criticality_score": 0.0
       },
       "scripts/engrove_audio_tools_creator.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [
+          {
+            "symbol": "_is_node",
+            "type": "function"
+          },
+          {
+            "symbol": "_iter_children",
+            "type": "function"
+          },
+          {
+            "symbol": "calculate_node_size",
+            "type": "function"
+          },
+          {
+            "symbol": "_build_relations_index",
+            "type": "function"
+          },
+          {
+            "symbol": "transform_structure_to_tree",
+            "type": "function"
+          },
+          {
+            "symbol": "_ensure_dir",
+            "type": "function"
+          },
+          {
+            "symbol": "_write_text",
+            "type": "function"
+          },
+          {
+            "symbol": "_inject_scripts_into_html",
+            "type": "function"
+          },
+          {
+            "symbol": "build_ui",
+            "type": "function"
+          },
+          {
+            "symbol": "main",
+            "type": "function"
+          }
+        ],
+        "imports": [
+          {
+            "source": "os",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "sys",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "json",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "modules.ui_template",
+            "symbols": [
+              "HTML_TEMPLATE"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "modules.ui_styles",
+            "symbols": [
+              "CSS_STYLES"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "modules.ui_logic",
+            "symbols": [
+              "JS_LOGIC"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "modules.ui_file_tree",
+            "symbols": [
+              "JS_FILE_TREE_LOGIC"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "modules.ui_performance_dashboard",
+            "symbols": [
+              "JS_PERFORMANCE_LOGIC"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "modules.ui_einstein_search",
+            "symbols": [
+              "JS_EINSTEIN_LOGIC"
+            ],
+            "type": "library_import"
+          }
+        ],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/engrove_audio_tools_creator_v10.2.py": {
         "type": "Python Script",
         "category": "code",
         "language": "py",
