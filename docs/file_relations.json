@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-23T07:14:45.543087+00:00",
+    "generated_at": "2025-08-23T07:28:21.961858+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -638,6 +638,14 @@
           },
           {
             "symbol": "_inject_scripts_into_html",
+            "type": "function"
+          },
+          {
+            "symbol": "_smart_inject_json_string",
+            "type": "function"
+          },
+          {
+            "symbol": "_smart_inject_object_or_string",
             "type": "function"
           },
           {
