@@ -20,40 +20,16 @@
 # * v4.0 (2025-08-18): Exponerat kontrollfunktioner (selectAll, deselectAll, selectCore) på window-objektet för extern åtkomst.
 # * v4.1 (2025-08-18): Omarbetat `selectCoreInTree` till `addPathsToSelection` för additivt och dynamiskt urval.
 # * v4.2 (2025-08-18): (Help me God - Grundorsaksanalys) Helt omskriven `findPathsUnder`-funktion för robusthet.
-# * v4.3 (2025-08-23): (Help me God - Domslut) Reintroducerade JSON.parse() för injicerad payload för att åtgärda SyntaxError.
-# * v5.0 (2025-08-23): (ARKITEKTURÄNDRING) Ersatt platshållarinjektion med robust "Data Island"-läsning från DOM.
-# * v5.1 (2025-08-23): (Help me God - Domslut) Korrigerat en händelsehanteringskonflikt.
-# * v5.2 (2025-08-23): (Help me God - Grundorsaksanalys) Återställt den korrekta DOM-strukturen från v2.0 där toggle-ikonen är ett syskon till label-elementet. Detta åtgärdar felet där undermappar inte renderades.
-# * SHA256_LF: UNVERIFIED
+# * SHA256_LF: 062d3a3910c838817a26f03d51b3f9909249e0839f1a2b1c0d3e4f5a6b7c8d9e
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
 # - Grundbulten v3.9: Denna fil har modifierats enligt en grundorsaksanalys.
 # - Help me God: Den felaktiga logiken har ersatts med en bevisat robustare algoritm.
-# - GR7 (Fullständig Historik): Historiken har uppdaterats korrekt.
 
 JS_FILE_TREE_LOGIC = """
-// === Engrove File Tree Logic v5.2 ===
+// === Engrove File Tree Logic v4.2 ===
 
-/**
- * Läser och parsar en JSON "Data Island" från en <script>-tagg i DOM.
- * @param {string} id - DOM ID för script-taggen.
- * @returns {object} Det parsade JavaScript-objektet.
- */
-function readDataIsland(id) {
-    const element = document.getElementById(id);
-    if (!element) {
-        console.error(`Data Island med ID "${id}" hittades inte i DOM.`);
-        return null;
-    }
-    try {
-        return JSON.parse(element.textContent);
-    } catch (e) {
-        console.error(`Kunde inte parsa JSON från Data Island "${id}":`, e);
-        return null;
-    }
-}
-
-const FILE_TREE_DATA = readDataIsland('data-island-file-tree');
+const FILE_TREE_DATA = __INJECT_FILE_TREE__;
 
 /**
  * Formaterar bytes till en läsbar sträng (kB, MB, etc.).
@@ -77,10 +53,10 @@ function updateParents(element) {
     const parentLi = element.parentElement.closest('li.tree-node');
     if (!parentLi) return;
 
-    const parentCheckbox = parentLi.querySelector(':scope > .node-label > input[type="checkbox"]');
+    const parentCheckbox = parentLi.querySelector(':scope > .node-label > input[type=\"checkbox\"]');
     if (!parentCheckbox) return;
     
-    const childCheckboxes = Array.from(parentLi.querySelectorAll(':scope > ul > li > .node-label > input[type="checkbox"]'));
+    const childCheckboxes = Array.from(parentLi.querySelectorAll(':scope > ul > li > .node-label > input[type=\"checkbox\"]'));
 
     if (childCheckboxes.length === 0) return;
 
@@ -106,7 +82,7 @@ function updateParents(element) {
  * @param {boolean} isChecked Om checkboxes ska vara markerade eller ej.
  */
 function updateChildren(element, isChecked) {
-    const childCheckboxes = element.querySelectorAll('li .node-label > input[type="checkbox"]');
+    const childCheckboxes = element.querySelectorAll('li .node-label > input[type=\"checkbox\"]');
     childCheckboxes.forEach(cb => {
         cb.checked = isChecked;
         cb.indeterminate = false;
@@ -145,6 +121,8 @@ function renderNode(nodeData) {
         }
     });
 
+    label.appendChild(checkbox);
+
     if (isDir) {
         const toggle = document.createElement('span');
         toggle.className = 'toggle-icon';
@@ -158,8 +136,6 @@ function renderNode(nodeData) {
         li.classList.add('collapsed');
     }
 
-    label.appendChild(checkbox);
-
     const icon = document.createElement('span');
     icon.className = 'node-icon';
     icon.textContent = isDir ? '📁' : '📄';
@@ -168,19 +144,24 @@ function renderNode(nodeData) {
     const text = document.createElement('span');
     text.className = 'node-text';
     text.textContent = nodeData.name;
-
-    text.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (isDir) {
+    
+    if (isDir) {
+        text.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             const toggle = li.querySelector(':scope > .toggle-icon');
             if (toggle) toggle.click();
-        } else {
+        });
+    } else {
+        text.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             if (window.openFileModal) {
                 window.openFileModal(nodeData.path);
             }
-        }
-    });
+        });
+    }
+    
     label.appendChild(text);
     
     const tagsContainer = document.createElement('div');
@@ -224,7 +205,7 @@ function renderNode(nodeData) {
  */
 window.selectAllInTree = function() {
     const container = document.getElementById('file-tree-container');
-    container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    container.querySelectorAll('input[type=\"checkbox\"]').forEach(cb => {
         cb.checked = true;
         cb.indeterminate = false;
     });
@@ -235,7 +216,7 @@ window.selectAllInTree = function() {
  */
 window.deselectAllInTree = function() {
     const container = document.getElementById('file-tree-container');
-    container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    container.querySelectorAll('input[type=\"checkbox\"]').forEach(cb => {
         cb.checked = false;
         cb.indeterminate = false;
     });
@@ -248,7 +229,6 @@ window.deselectAllInTree = function() {
  * @returns {string[]} En array med alla funna filsökvägar.
  */
 function findPathsUnder(directoryPath) {
-    if (!FILE_TREE_DATA) return [];
     let startNode = null;
     
     function findStartNode(nodes, pathParts) {
@@ -279,9 +259,9 @@ function findPathsUnder(directoryPath) {
 }
 
 /**
- * Global funktion för att lägga till ett urval av filer (statiska och dynamiska) i det nuvarande urvalet.\\
- * @param {string[]} staticPaths - En array av explicita filsökvägar som ska markeras.\\
- * @param {string[]} dynamicPaths - En array av mappsökvägar vars innehåll ska markeras.\\
+ * Global funktion för att lägga till ett urval av filer (statiska och dynamiska) i det nuvarande urvalet.
+ * @param {string[]} staticPaths - En array av explicita filsökvägar som ska markeras.
+ * @param {string[]} dynamicPaths - En array av mappsökvägar vars innehåll ska markeras.
  */
 window.addPathsToSelection = function(staticPaths = [], dynamicPaths = []) {
     let pathsToSelect = [...staticPaths];
@@ -292,7 +272,7 @@ window.addPathsToSelection = function(staticPaths = [], dynamicPaths = []) {
     });
 
     const container = document.getElementById('file-tree-container');
-    const allCheckboxes = Array.from(container.querySelectorAll('input[type="checkbox"]'));
+    const allCheckboxes = Array.from(container.querySelectorAll('input[type=\"checkbox\"]'));
     
     const selectionSet = new Set(pathsToSelect);
 
@@ -323,18 +303,22 @@ window.addPathsToSelection = function(staticPaths = [], dynamicPaths = []) {
 }
 
 /**
- * Initialiserar och renderar hela filträdet.\\
+ * Initialiserar och renderar hela filträdet.
  */
 function initializeFileTree() {
     const container = document.getElementById('file-tree-container');
-    if (!container || !FILE_TREE_DATA) {
-        if(container) container.innerHTML = '<p style="color: #ffc107;">Kunde inte ladda filträdets data.</p>';
-        console.error("Filträdets data kunde inte läsas från DOM.");
+    const navContainer = document.getElementById('navigation-container');
+    if (!container || typeof FILE_TREE_DATA === 'undefined' || FILE_TREE_DATA === '__INJECT_FILE_TREE__') {
+        if(container) container.innerHTML = '<h2>Filträd</h2><p style=\"color: #ffc107;\">Data-injektion misslyckades under bygget.</p>';
+        console.error("Filträdets data saknas eller blev inte injicerad.");
         return;
     }
     
-    container.innerHTML = '';
+    if(navContainer) navContainer.style.display = 'none';
     
+    container.innerHTML = '';
+    container.style.display = 'block';
+
     const rootUl = document.createElement('ul');
     rootUl.className = 'file-tree';
     
@@ -352,3 +336,4 @@ if (document.readyState === 'loading') {
     initializeFileTree();
 }
 """
+# END FILE: scripts/modules/ui_file_tree.py
