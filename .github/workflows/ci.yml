@@ -123,19 +123,8 @@ jobs:
 
       - name: Prepare Output Directory
         run: mkdir -p "${{ env.SITE_DIR }}"
-
-      - name: STEP 1 Package AI Protocols
-        id: package-protocols
-        run: |
-          echo "Packaging specified AI protocols and configs into a compressed bundle..."
-          python scripts/protocol_packager.py \
-            --source-commit "${{ env.COMMIT_SHA }}" \
-            --dir-flat docs/ai_protocols \
-            --files tools/frankensteen_learning_db.json package.json vite.config.js .github/workflows/ci.yml vite.config.js requirements.txt package.json docs/ByggLogg.json docs/Chatthistorik.json docs/document_manifest.json docs/session_manifest.json docs/core_file_info.json \
-            --output-dir docs/ai_protocols/compact \
-            --exclude compact
-          
-      - name: STEP 1a Process Session Data (if needed)
+         
+      - name: STEP 1 Process Session Data (if needed)
         id: process-sessions
         env:
           COMMIT_SHA: ${{ env.COMMIT_SHA }}
@@ -232,17 +221,28 @@ jobs:
           printf '{"repository": "%s", "branch": "%s"}' "${{ github.repository }}" "${{ github.ref_name }}" > "${{ env.PROJECT_OVERVIEW_FILE }}"
           echo "Artifact created at ${{ env.PROJECT_OVERVIEW_FILE }}"
 
-#      - name: STEP 4C Create New UI HTML (index2.html)
-#        id: create-new-html
-#        run: |
-#          echo "Generating new UI from engrove_audio_tools_creator.py..."
-#          python scripts/engrove_audio_tools_creator.py build-ui \
-#            "${{ env.SITE_DIR }}/${{ env.NEW_HTML_FILE }}" \
-#            "${{ env.SITE_DIR }}/${{ env.JSON_FILE }}" \
-#            "docs/file_relations.json" \
-#            "${{ env.PROJECT_OVERVIEW_FILE }}" \
-#            "docs/core_file_info.json"
-#          echo "New UI HTML created successfully."
+      - name: STEP Package AI Protocols
+        id: package-protocols
+        run: |
+          echo "Packaging specified AI protocols and configs into a compressed bundle..."
+          python scripts/protocol_packager.py \
+            --source-commit "${{ env.COMMIT_SHA }}" \
+            --dir-flat docs/ai_protocols \
+            --files tools/frankensteen_learning_db.json package.json vite.config.js .github/workflows/ci.yml vite.config.js requirements.txt package.json docs/ByggLogg.json docs/Chatthistorik.json docs/document_manifest.json docs/session_manifest.json docs/core_file_info.json \
+            --output-dir docs/ai_protocols/compact \
+            --exclude compact
+            
+      - name: STEP 4C Create New UI HTML (index2.html)
+        id: create-new-html
+        run: |
+          echo "Generating new UI from engrove_audio_tools_creator.py..."
+          python scripts/engrove_audio_tools_creator.py build-ui \
+            "${{ env.SITE_DIR }}/${{ env.NEW_HTML_FILE }}" \
+            "${{ env.SITE_DIR }}/${{ env.JSON_FILE }}" \
+            "docs/file_relations.json" \
+            "${{ env.PROJECT_OVERVIEW_FILE }}" \
+            "docs/core_file_info.json"
+          echo "New UI HTML created successfully."
 
       - name: STEP 5 Create Metadata for Deployment
         if: steps.create-legacy-html.outputs.success == 'true'
