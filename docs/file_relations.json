@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-23T07:28:21.961858+00:00",
+    "generated_at": "2025-08-23T07:45:45.481636+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -613,10 +613,6 @@
             "type": "function"
           },
           {
-            "symbol": "_iter_children",
-            "type": "function"
-          },
-          {
             "symbol": "calculate_node_size",
             "type": "function"
           },
@@ -629,23 +625,15 @@
             "type": "function"
           },
           {
-            "symbol": "_ensure_dir",
-            "type": "function"
-          },
-          {
             "symbol": "_write_text",
             "type": "function"
           },
           {
+            "symbol": "_inject_js_object",
+            "type": "function"
+          },
+          {
             "symbol": "_inject_scripts_into_html",
-            "type": "function"
-          },
-          {
-            "symbol": "_smart_inject_json_string",
-            "type": "function"
-          },
-          {
-            "symbol": "_smart_inject_object_or_string",
             "type": "function"
           },
           {
