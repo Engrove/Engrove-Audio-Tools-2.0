@@ -40,6 +40,9 @@
 #   - Validering: _verify_no_unresolved_placeholders() larmar om kvarvarande __INJECT__-tokens.
 #   - Detta eliminerar SyntaxError: Unexpected identifier '_meta' och "[object Object] is not valid JSON"
 #     när modulerna använder JSON.parse().
+# * v10.4.1 (2025-08-23): (JS-litteralfix) Ändrar escapningsstrategi för att eliminera
+#   "missing ) after argument list": rör inte backslashes från json.dumps, escapa ENDAST enkla citattecken.
+#   Detta förhindrar över-escapning av \\ som kunde spräcka stränglitteralen i JS.
 # * SHA256_LF: UNVERIFIED
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
@@ -61,7 +64,7 @@ from modules.ui_performance_dashboard import JS_PERFORMANCE_LOGIC
 from modules.ui_einstein_search import JS_EINSTEIN_LOGIC
 
 # Lägger till en kort hash av aktuell tidsstämpel i UI_VERSION
-UI_VERSION = f"10.4-{hashlib.sha256(datetime.now().isoformat().encode()).hexdigest()[:6]}"
+UI_VERSION = f"10.4.1-{hashlib.sha256(datetime.now().isoformat().encode()).hexdigest()[:6]}"
 
 def _is_node(obj):
     return isinstance(obj, dict) and 'type' in obj
@@ -141,14 +144,12 @@ def _write_text(path: str, content: str):
 
 def _to_js_single_quoted_string(json_text: str) -> str:
     """
-    Tar en JSON-text (med dubbelcitat) och returnerar en säker JS-strängliteral
-    omsluten av enkla citattecken, med korrekt escapning.
-    - Escapar backslash (\\ -> \\\\)
-    - Escapar enkla citattecken (' -> \\\')
-    Not: JSON-texten innehåller redan escapade dubbla citattecken.
+    Gör om JSON-text (från json.dumps) till en säker JS-strängliteral.
+    - Ändra inte backslashes: json.dumps har redan korrekta escape-sekvenser.
+    - Escapa ENDAST enkla citattecken så att omslutande '...' inte spräcks.
     """
-    escaped = json_text.replace('\\', '\\\\').replace("'", "\\'")
-    return f"'{escaped}'"
+    safe_json = json_text.replace("'", "\\'")
+    return f"'{safe_json}'"
 
 def _inject_js_string_literal(js_source: str, placeholder: str, obj) -> str:
     """
@@ -269,3 +270,21 @@ def main():
 
 if __name__ == "__main__":
     main()
+'''
+out_path = "/mnt/data/engrove_audio_tools_creator.py"
+with open(out_path, "w", encoding="utf-8") as f:
+    f.write(updated_code)
+
+import hashlib, pathlib, ast
+content = pathlib.Path(out_path).read_text(encoding="utf-8")
+sha256 = hashlib.sha256(content.encode("utf-8")).hexdigest()
+lines = content.count("\n") + (0 if content.endswith("\n") else 1)
+tree = ast.parse(content)
+funcs = len([n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef)])
+classes = len([n for n in ast.walk(tree) if isinstance(n, ast.ClassDef)])
+
+print("Path:", out_path)
+print("Lines:", lines)
+print("Functions:", funcs)
+print("Classes:", classes)
+print("SHA-256:", sha256) ​:contentReference[oaicite:1]{index=1}​
