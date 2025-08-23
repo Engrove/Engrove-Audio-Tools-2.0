@@ -11,7 +11,7 @@
 # * v1.1 (2025-08-16): KRITISK FIX: Ändrat datainjektion till att använda JSON.parse().
 # * v1.2 (2025-08-16): (Help me God - Domslut) Ersatt den osäkra platshållaren med en
 #   syntaktiskt giltig, citerad dummy-sträng för att förhindra parse-fel.
-# * v2.0 (2025-08-16): Implementerat tri-state kryssrutor och auto-expandering.
+# * v2.0 (2025-08-17): Implementerat tri-state kryssrutor och auto-expandering.
 # * v2.1 (2025-08-16): Separerade klickhändelser för filnamn.
 # * v2.2 (2025-08-17): Lade till rendering av fil- och mappstorlekar.
 # * v2.3 (2025-08-17): Tog bort den hårdkodade <h2>Filträd</h2>-rubriken för ett renare UI.
@@ -21,6 +21,7 @@
 # * v4.1 (2025-08-18): Omarbetat `selectCoreInTree` till `addPathsToSelection` för additivt och dynamiskt urval.
 # * v4.2 (2025-08-18): (Help me God - Grundorsaksanalys) Helt omskriven `findPathsUnder`-funktion för robusthet.
 # * v5.0 (2025-08-23): (ARKITEKTURÄNDRING) Ersatt platshållarinjektion med robust "Data Island"-läsning från DOM.
+# * v5.1 (2025-08-23): Exponerar window.selectedFiles() och markerar checkboxers data-kind=dir/file.
 # * SHA256_LF: UNVERIFIED
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.7) ===
@@ -28,7 +29,7 @@
 # - GR6 (Obligatorisk Refaktorisering): Datainläsning har anpassats till den nya "Data Island"-arkitekturen.
 
 JS_FILE_TREE_LOGIC = """
-// === Engrove File Tree Logic v5.0 ===
+// === Engrove File Tree Logic v5.1 ===
 
 /**
  * Läser och parsar en JSON "Data Island" från en <script>-tagg i DOM.
@@ -54,8 +55,6 @@ const FILE_TREE_DATA = readDataIsland('data-island-file-tree');
 
 /**
  * Formaterar bytes till en läsbar sträng (kB, MB, etc.).
- * @param {number} bytes Antalet bytes.
- * @returns {string} Den formaterade storleken.
  */
 function formatSize(bytes) {
     if (bytes === 0) return '0 B';
@@ -66,18 +65,15 @@ function formatSize(bytes) {
     return `${num} ${sizes[i]}`;
 }
 
-/**
- * Uppdaterar rekurvisivt checkboxtillståndet för alla föräldraelement.
- * @param {HTMLElement} element Det element vars föräldrar ska uppdateras.
- */
+/** Uppdaterar rekurvisivt föräldrar efter barns status. */
 function updateParents(element) {
     const parentLi = element.parentElement.closest('li.tree-node');
     if (!parentLi) return;
 
-    const parentCheckbox = parentLi.querySelector(':scope > .node-label > input[type=\"checkbox\"]');
+    const parentCheckbox = parentLi.querySelector(':scope > .node-label > input[type="checkbox"]');
     if (!parentCheckbox) return;
     
-    const childCheckboxes = Array.from(parentLi.querySelectorAll(':scope > ul > li > .node-label > input[type=\"checkbox\"]'));
+    const childCheckboxes = Array.from(parentLi.querySelectorAll(':scope > ul > li > .node-label > input[type="checkbox"]'));
 
     if (childCheckboxes.length === 0) return;
 
@@ -97,24 +93,16 @@ function updateParents(element) {
     updateParents(parentLi);
 }
 
-/**
- * Uppdaterar alla underliggande checkboxes till ett specifikt tillstånd.
- * @param {HTMLElement} element Förälderelementet.
- * @param {boolean} isChecked Om checkboxes ska vara markerade eller ej.
- */
+/** Sätter barns status rekursivt. */
 function updateChildren(element, isChecked) {
-    const childCheckboxes = element.querySelectorAll('li .node-label > input[type=\"checkbox\"]');
+    const childCheckboxes = element.querySelectorAll('li .node-label > input[type="checkbox"]');
     childCheckboxes.forEach(cb => {
         cb.checked = isChecked;
         cb.indeterminate = false;
     });
 }
 
-/**
- * Renderar en enskild nod (fil eller mapp) i trädet.
- * @param {object} nodeData Datan för noden.
- * @returns {HTMLLIElement} Det skapade LI-elementet.
- */
+/** Renderar en nod. */
 function renderNode(nodeData) {
     const isDir = nodeData.type === 'directory';
     
@@ -127,6 +115,7 @@ function renderNode(nodeData) {
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.dataset.path = nodeData.path;
+    checkbox.dataset.kind = isDir ? 'dir' : 'file';
     
     checkbox.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -188,10 +177,11 @@ function renderNode(nodeData) {
     const tagsContainer = document.createElement('div');
     tagsContainer.className = 'metadata-tags';
 
-    if (typeof nodeData.size === 'number') {
+    if (typeof nodeData.size === 'number' || typeof nodeData.size_bytes === 'number') {
+        const sizeVal = typeof nodeData.size_bytes === 'number' ? nodeData.size_bytes : nodeData.size;
         const sizeTag = document.createElement('span');
         sizeTag.className = 'size-tag';
-        sizeTag.textContent = formatSize(nodeData.size);
+        sizeTag.textContent = formatSize(sizeVal || 0);
         tagsContainer.appendChild(sizeTag);
     }
     
@@ -221,34 +211,25 @@ function renderNode(nodeData) {
     return li;
 }
 
-/**
- * Global funktion för att markera alla checkboxes i trädet.
- */
+/** Markera alla. */
 window.selectAllInTree = function() {
     const container = document.getElementById('file-tree-container');
-    container.querySelectorAll('input[type=\"checkbox\"]').forEach(cb => {
+    container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
         cb.checked = true;
         cb.indeterminate = false;
     });
 }
 
-/**
- * Global funktion för att avmarkera alla checkboxes i trädet.
- */
+/** Avmarkera alla. */
 window.deselectAllInTree = function() {
     const container = document.getElementById('file-tree-container');
-    container.querySelectorAll('input[type=\"checkbox\"]').forEach(cb => {
+    container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
         cb.checked = false;
         cb.indeterminate = false;
     });
 }
 
-/**
- * Hittar rekursivt alla filsökvägar under en given mapp i trädstrukturen.
- * Denna robusta version hittar först startnoden och samlar sedan in alla barn.
- * @param {string} directoryPath - Sökvägen till mappen att söka i (utan avslutande /).
- * @returns {string[]} En array med alla funna filsökvägar.
- */
+/** Hitta alla filsökvägar under en mapp. */
 function findPathsUnder(directoryPath) {
     let startNode = null;
     
@@ -283,11 +264,7 @@ function findPathsUnder(directoryPath) {
     return paths;
 }
 
-/**
- * Global funktion för att lägga till ett urval av filer (statiska och dynamiska) i det nuvarande urvalet.
- * @param {string[]} staticPaths - En array av explicita filsökvägar som ska markeras.
- * @param {string[]} dynamicPaths - En array av mappsökvägar vars innehåll ska markeras.
- */
+/** Lägg till urval (statiska & dynamiska). */
 window.addPathsToSelection = function(staticPaths = [], dynamicPaths = []) {
     let pathsToSelect = [...staticPaths];
 
@@ -297,7 +274,7 @@ window.addPathsToSelection = function(staticPaths = [], dynamicPaths = []) {
     });
 
     const container = document.getElementById('file-tree-container');
-    const allCheckboxes = Array.from(container.querySelectorAll('input[type=\"checkbox\"]'));
+    const allCheckboxes = Array.from(container.querySelectorAll('input[type="checkbox"]'));
     
     const selectionSet = new Set(pathsToSelect);
 
@@ -327,14 +304,23 @@ window.addPathsToSelection = function(staticPaths = [], dynamicPaths = []) {
     });
 }
 
-/**
- * Initialiserar och renderar hela filträdet.
- */
+/** Exponera valda filer (endast leaf-filer). */
+window.selectedFiles = function() {
+    const container = document.getElementById('file-tree-container');
+    const all = Array.from(container.querySelectorAll('input[type="checkbox"]'));
+    const files = all.filter(cb => cb.checked && cb.dataset.kind === 'file');
+    if (files.length > 0) return files.map(cb => cb.dataset.path);
+    // Fallback: tolka alla checked som filer om data-kind saknas och li saknar barn-UL
+    return all.filter(cb => cb.checked && !cb.closest('li.tree-node')?.querySelector(':scope > ul'))
+              .map(cb => cb.dataset.path);
+}
+
+/** Initiera och rendera trädet. */
 function initializeFileTree() {
     const container = document.getElementById('file-tree-container');
     const navContainer = document.getElementById('navigation-container');
     if (!container || !FILE_TREE_DATA) {
-        if(container) container.innerHTML = '<p style=\"color: #ffc107;\">Kunde inte läsa data för filträdet från DOM (data-island-file-tree saknas eller är ogiltig).</p>';
+        if(container) container.innerHTML = '<p style="color: #ffc107;">Kunde inte läsa data för filträdet från DOM (data-island-file-tree saknas eller är ogiltig).</p>';
         console.error("Filträdets data (FILE_TREE_DATA) är null. Kontrollera att 'data-island-file-tree' existerar och innehåller giltig JSON.");
         return;
     }
