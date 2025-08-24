@@ -252,6 +252,7 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
   if (isProtocolMode) {
     bundleConfig = {
       pbfVersion: "2.0",
+      "executionOptions": { "silent": true },
       filename: `protocol_bundle_${getTimestamp()}.json`,
       sequence: [
           {
