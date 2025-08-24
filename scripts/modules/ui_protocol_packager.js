@@ -185,7 +185,12 @@ async function buildBundleObject(payloadObj, bundleConfig) {
       sha256: f.sha256,
       bytes: utf8ByteLength(f.content)
   }));
-
+  
+  // --- NYTT: pass-through av extra kontrakt/alternativ ---
+  if (bundleConfig.executionOptions)  finalObject.executionOptions  = bundleConfig.executionOptions;
+  if (bundleConfig.toolsContract)     finalObject.toolsContract     = bundleConfig.toolsContract;
+  if (bundleConfig.firstReplyContract)finalObject.firstReplyContract= bundleConfig.firstReplyContract;
+  
   return finalObject;
 }
 
