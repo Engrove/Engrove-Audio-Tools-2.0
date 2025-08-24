@@ -216,16 +216,17 @@ jobs:
           printf '{"repository": "%s", "branch": "%s"}' "${{ github.repository }}" "${{ github.ref_name }}" > "${{ env.PROJECT_OVERVIEW_FILE }}"
           echo "Artifact created at ${{ env.PROJECT_OVERVIEW_FILE }}"
 
-      - name: STEP Package AI Protocols
-        id: package-protocols
-        run: |
-          echo "Packaging specified AI protocols and configs into a compressed bundle..."
-          python scripts/protocol_packager.py \
-            --source-commit "${{ env.COMMIT_SHA }}" \
-            --dir-flat docs/ai_protocols \
-            --files tools/frankensteen_learning_db.json package.json vite.config.js .github/workflows/ci.yml vite.config.js requirements.txt package.json docs/ByggLogg.json docs/Chatthistorik.json docs/document_manifest.json docs/session_manifest.json docs/core_file_info.json \
-            --output-dir docs/ai_protocols/compact \
-            --exclude compact
+#      DO NOT ENABLE THIS STEP, KEEP COMMENTED OUT
+#      - name: STEP Package AI Protocols
+#        id: package-protocols
+#        run: |
+#          echo "Packaging specified AI protocols and configs into a compressed bundle..."
+#          python scripts/protocol_packager.py \
+#            --source-commit "${{ env.COMMIT_SHA }}" \
+#            --dir-flat docs/ai_protocols \
+#            --files tools/frankensteen_learning_db.json package.json vite.config.js .github/workflows/ci.yml vite.config.js requirements.txt package.json docs/ByggLogg.json docs/Chatthistorik.json docs/document_manifest.json docs/session_manifest.json docs/core_file_info.json \
+#            --output-dir docs/ai_protocols/compact \
+#            --exclude compact
             
       - name: STEP 4C Create New UI HTML (index2.html)
         id: create-new-html
