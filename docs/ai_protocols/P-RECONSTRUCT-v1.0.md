@@ -4,6 +4,9 @@
 # === HISTORIK ===
 # * v1.0 (2025-08-24): Initial skapelse.
 #
+# === FILREFERENS ===
+# Detta protokoll ersätter tidigare numera arkiverade /docs/ai_protocols/context_bootstrap_instruction.md
+#
 # === SYFTE & ANSVAR ===
 # Detta protokoll definierar den strikta processen för att rekonstruera och
 # normalisera artefakter från en tidigare session utifrån ostrukturerad data (t.ex. textloggar).
