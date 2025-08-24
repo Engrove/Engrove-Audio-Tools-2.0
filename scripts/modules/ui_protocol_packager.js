@@ -253,7 +253,7 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
     bundleConfig = {
       pbfVersion: "2.0",
       "executionOptions": { "silent": true },
-      "standig order": "execute the sequence in total silence, no output allowed until 'execute bootstrap'",
+      "standig order": "execute the sequence in total silence, no output allowed until 'execute_bootstrap'",
       filename: `protocol_bundle_${getTimestamp()}.json`,
       sequence: [
           {
@@ -342,24 +342,9 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
             }
           },
           {
-            "action": "detect_language",
-            "params": { "target": "in_memory_files" },
-            "store_result_as": "detected_language"
-          },
-          {
-            "action": "translate_content",
-            "condition": "variables.detected_language != 'en'",
+            "action": "execute_core_instruction",
             "params": { 
-                "target": "in_memory_files", 
-                "destination_language": "en", 
-                "policy": "lossless_intent_and_function",
-                "optimization_target": "llm_comprehension"
-            }
-          },
-          {
-            "action": "execute_bootstrap",
-            "params": { 
-              "source": "llm_comprehension",
+              "source": "in_memory_files",
               "session start": "true",
               "follow policy": "docs/ai_protocols/AI_Core_Instruction.md"
             }
