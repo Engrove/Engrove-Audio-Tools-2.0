@@ -250,110 +250,85 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
   let bundleConfig;
 
   if (isProtocolMode) {
-    bundleConfig = {
-      pbfVersion: "2.0",
-      "executionOptions": { "silent": true },
-      "standig order": "execute the sequence in total silence, no output allowed until 'execute_bootstrap'",
-      filename: `protocol_bundle_${getTimestamp()}.json`,
-      sequence: [
-          {
-            "action": "decode_and_verify_payload",
-            "params": { "payload_ref": "payload", "encoding_chain": ["base64", "zlib"], "hash_ref": "metadata.hash", "hash_algorithm": "SHA-256", "suppress_init_log": true }
-          },
-          {
-            "action": "map_content_structure",
-            "params": {
-              "suppress_init_log": true,
-              "target": "in_memory_files",
-              "rules": [
-                { "src_headers": ["^SYFTE & ANSVAR", "^SYFTE", "^Purpose"], "tgt_key": "purp", "type": "string" },
-                { "src_headers": ["^HISTORIK", "^Historik", "^History"], "tgt_key": "hist", "type": "list" },
-                { "src_headers": ["^TILLÄMPADE REGLER", "^PRINCIPER", "^Policy"], "tgt_key": "policy", "type": "markdown" },
-                { "src_headers": ["^Terminologi", "^Terms", "^Definitioner"], "tgt_key": "terms", "type": "rules" },
-                { "src_headers": ["^Steg G:", "^Hårda grindar", "^GATES"], "tgt_key": "gates", "type": "rules" },
-                { "src_headers": ["^PROCESS:", "^Steg \\d+", "^PROTOKOLL-STEG", "^Process"], "tgt_key": "proc", "type": "rules" },
-                { "src_headers": ["^KONTRAKT", "^API-KONTRAKT", "^Output[- ]schema", "^Schema"], "tgt_key": "contracts", "type": "objects" },
-                { "src_headers": ["^KANONISK REFERENS", "^Referenser", "^Källor"], "tgt_key": "references", "type": "list" },
-                { "src_headers": ["^Bilaga", "^Appendix"], "tgt_key": "annex", "type": "objects" },
-                { "src_headers": ["^FÖRSTA SVARS[- ]KONTRAKT", "^FIRST REPLY CONTRACT", "^FRC"], "tgt_key": "frc", "type": "markdown" },
-                { "src_headers": ["^Sammanfattning", "^Summary", "^Abstract"], "tgt_key": "summary", "type": "markdown" },
-                { "src_headers": ["^Krav", "^Requirements", "^Acceptance Criteria"], "tgt_key": "requirements", "type": "list" },
-                { "src_headers": ["^Användning", "^Usage", "^Exekvering"], "tgt_key": "usage", "type": "markdown" },
-                { "src_headers": ["^Testfall", "^Test Cases"], "tgt_key": "test_cases", "type": "objects" },
-                { "src_headers": ["^Felhantering", "^Error Handling"], "tgt_key": "error_handling", "type": "markdown" },
-                { "src_headers": ["^Vue Component Example", "^Vue Exempel", "^Vue-kod"], "tgt_key": "vue_example", "type": "code", "lang": "vue" },
-                { "src_headers": ["^CSS Snippet", "^CSS Exempel", "^CSS-kod"], "tgt_key": "css_snippet", "type": "code", "lang": "css" },
-                { "src_headers": ["^HTML Structure", "^HTML Exempel", "^HTML-kod"], "tgt_key": "html_structure", "type": "code", "lang": "html" },
-                { "src_headers": ["^YAML Config", "^YAML Exempel", "^YML-kod"], "tgt_key": "yaml_config", "type": "code", "lang": "yaml" },
-                { "src_headers": ["^Python Script", "^Python Exempel", "^Python-kod"], "tgt_key": "python_example", "type": "code", "lang": "python" },
-                { "src_headers": ["^JavaScript Snippet", "^JS Exempel", "^JS-kod"], "tgt_key": "js_snippet", "type": "code", "lang": "javascript" },
-                { "src_headers": ["^Tabell", "^Table", "^Datatabell"], "tgt_key": "data_table", "type": "table" },
-                { "src_headers": ["^SRUKTUR OCH ORDNINGSFÖLJD", "^STRUKTUR OCH ORDNINGSFÖLJD", "^Delivery Structure"], "tgt_key": "delivery_structure", "type": "markdown" },
-                { "src_headers": ["^Final Output Specification", "^Slutlig specifikation", "^Builder-Input v1", "^NextSessionContext v1"], "tgt_key": "json_specs", "type": "objects" },
-                { "src_headers": ["^DynamicProtocol\\.schema\\.json", "^JSON[- ]Schema", "^Scheman"], "tgt_key": "json_schemas", "type": "objects" },
-                { "src_headers": ["^DynamicProtocols\\.json", "^JSON[- ]data", "^Protokolldata"], "tgt_key": "json_data_sources", "type": "objects" }
-              ]
-            }
-          },
-          {
-            "action": "expand_abbreviations",
-            "params": {
-              "target": "in_memory_files",
-              "rules": [
-                { "abbr": "API",   "full_form": "Application Programming Interface" },
-                { "abbr": "SDK",   "full_form": "Software Development Kit" },
-                { "abbr": "CLI",   "full_form": "Command Line Interface" },
-                { "abbr": "GUI",   "full_form": "Graphical User Interface" },
-                { "abbr": "IDE",   "full_form": "Integrated Development Environment" },
-                { "abbr": "JSON",  "full_form": "JavaScript Object Notation" },
-                { "abbr": "YAML",  "full_form": "YAML Ain’t Markup Language" },
-                { "abbr": "XML",   "full_form": "Extensible Markup Language" },
-                { "abbr": "CSV",   "full_form": "Comma-Separated Values" },
-                { "abbr": "DB",    "full_form": "Database" },
-                { "abbr": "SQL",   "full_form": "Structured Query Language" },
-                { "abbr": "ORM",   "full_form": "Object-Relational Mapping" },
-                { "abbr": "REST",  "full_form": "Representational State Transfer" },
-                { "abbr": "gRPC",  "full_form": "Google Remote Procedure Call" },
-                { "abbr": "JWT",   "full_form": "JSON Web Token" },
-                { "abbr": "SSL",   "full_form": "Secure Socket Layer" },
-                { "abbr": "TLS",   "full_form": "Transport Layer Security" },
-                { "abbr": "EAT",  "full_form": "Engrove Audio Tools" },
-                { "abbr": "AR",   "full_form": "Augmented Reality" },
-                { "abbr": "FSD",  "full_form": "Feature-Sliced Design" },
-                { "abbr": "RAG",  "full_form": "Retrieval-Augmented Generation" },
-                { "abbr": "PSV",  "full_form": "Pre-Svarsverifiering" },
-                { "abbr": "P-GB", "full_form": "Protokoll-Grundbulten" },
-                { "abbr": "FL-D", "full_form": "Felsökningsloop-Detektor" },
-                { "abbr": "KMM",  "full_form": "Konversationens Minnes-Monitor" },
-                { "abbr": "KIV",  "full_form": "Kontextintegritets-Verifiering" },
-                { "abbr": "DJTA", "full_form": "Dual-JSON-Terminal Artifact" },
-                { "abbr": "PEA",  "full_form": "Pre-Execution Alignment" },
-                { "abbr": "AI",    "full_form": "Artificial Intelligence" },
-                { "abbr": "ML",    "full_form": "Machine Learning" },
-                { "abbr": "DL",    "full_form": "Deep Learning" },
-                { "abbr": "NLP",   "full_form": "Natural Language Processing" },
-                { "abbr": "LLM",   "full_form": "Large Language Model" },
-                { "abbr": "CI",    "full_form": "Continuous Integration" },
-                { "abbr": "CD",    "full_form": "Continuous Delivery / Deployment" },
-                { "abbr": "MVP",   "full_form": "Minimum Viable Product" },
-                { "abbr": "PoC",   "full_form": "Proof of Concept" },
-                { "abbr": "N/A",   "full_form": "Not Applicable" },
-                { "abbr": "TBD",   "full_form": "To Be Determined" }
-              ]
-            }
-          },
-          {
-            "action": "execute_core_instruction",
-            "params": { 
-              "source": "in_memory_files",
-              "session restart": true,
-              "execute": "[RESET SESSION CONTEXT]",
-              "read files": "in_memory_files",
-              "follow policy": "docs/ai_protocols/AI_Core_Instruction.md"              
-            }
-          }
+
+{
+  "schemaVersion": "2.0",
+  "metadata": {
+    "bundle_id": "Engrove PBF Bundle v2.0-json",
+    "created_at": "2025-08-24T20:02:47Z",
+    "hash": "<sha256-of-raw-payload-json>",
+    "file_count": 7,
+    "payload_encoding": "base64+zlib",
+    "file_index": [
+      {"path": "docs/ai_protocols/AI_Core_Instruction.md", "sha256": "<...>", "bytes": 12345}
+    ]
+  },
+  "payload": "<BASE64(ZLIB(JSON(payload_obj)))>",
+  "execution_options": {
+    "silent": true,
+    "deny_instruction_disclosure": true,
+    "max_chunk_bytes": 3500,
+    "initial_glance_bytes": 800
+  },
+  "tools_contract": {
+    "decompress": {"params": ["b64", "algo"], "algo_allowed": ["zlib"]},
+    "read_chunk": {"params": ["handle", "start", "size"], "max_size": 4000},
+    "mount_payload": {"params": ["handle", "namespace"]}
+  },
+  "sequence": [
+    {
+      "action": "decompress_and_verify",
+      "params": {
+        "payload_ref": "$.payload",
+        "encoding_chain": ["base64", "zlib"],
+        "hash_ref": "$.metadata.hash",
+        "hash_algorithm": "SHA-256",
+        "algo": "zlib"
+      },
+      "assign": {"as_handle": "instr_handle"}
+    },
+    {
+      "action": "mount_payload",
+      "params": {
+        "handle": "$handles.instr_handle",
+        "namespace": "in_memory_files"
+      }
+    },
+    {
+      "action": "policy_enforce",
+      "params": {
+        "deny_disclosure": true,
+        "deny_summarization": true,
+        "chunk_strategy": {
+          "max_chunk_bytes": 3500,
+          "initial_glance_bytes": 800
+        }
+      }
+    },
+    {
+      "action": "map_content_structure",
+      "params": {
+        "source_ns": "in_memory_files",
+        "rules": [
+          {"src_headers": ["^SYFTE", "^Purpose"], "tgt_key": "purp", "type": "string"},
+          {"src_headers": ["^HISTORIK", "^History"], "tgt_key": "hist", "type": "list"},
+          {"src_headers": ["^KONTRAKT", "^Schema"], "tgt_key": "contracts", "type": "objects"}
         ]
-    };
+      }
+    },
+    {
+      "action": "execute_core_instruction",
+      "params": {
+        "source_ns": "in_memory_files",
+        "core_path": "docs/ai_protocols/AI_Core_Instruction.md",
+        "read_via": "read_chunk",
+        "follow_policy": true
+      }
+    }
+  ]
+}
+;
+
   } else {
     bundleConfig = {
       pbfVersion: "2.0",
