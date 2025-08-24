@@ -294,7 +294,6 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
         }
       },
       { action: "exit_tool_only_mode" },
-      { action: "release_output", params: { allowed_pattern: "^(READY|OK)$" } }
     ]
   };
 } else {
