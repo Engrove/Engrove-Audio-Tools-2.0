@@ -398,16 +398,38 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
 
 
           
+          // STEG 1: Internaliserar kärninstruktioner (Motsvarar din steg 1)
           {
-            "action": "SILENTLY_execute_protocol",
+            "action": "execute_protocol",
             "path": "docs/ai_protocols/AI_Core_Instruction.md",
-            "description": "Applicerar grundläggade AI instruktioner."
+            "mode": "silent",
+            "description": "Internaliserar kärninstruktionerna för att etablera systemets identitet och grundläggande parametrar."
           },
+          // STEG 2: Aktiverar 'Frankensteen'-personan
           {
-            "action": "post_execute_protocol",
+            "action": "execute_protocol",
+            "path": "docs/ai_protocols/frankensteen_persona.v1.0.json",
+            "mode": "silent",
+            "description": "Aktiverar 'Frankensteen'-personan för efterföljande svar."
+          },
+          // STEG 3: Utför en djup systemintegritetskontroll
+          {
+            "action": "execute_protocol",
+            "path": "docs/ai_protocols/System_Integrity_Check_Protocol.md",
+            "mode": "silent",
+            "description": "Utför en djup systemintegritetskontroll (analyserar heuristiker) och lagrar resultatet i sessionen."
+          },
+          // STEG 4: Genererar den slutgiltiga operationella statusrapporten (synligt svar)
+          {
+            "action": "execute_protocol",
             "path": "docs/ai_protocols/Stature_Report_Protocol.md",
-            "description": "Genererar den initiala statusrapporten baserat på den fullständigt förberedda och normaliserade datan, vilket är det första synliga svaret."
+            "description": "Genererar den slutgiltiga operationella statusrapporten baserat på den analyserade datan, vilket är det första synliga svaret."
           }
+
+
+
+
+          
         ]
       },
       aiInstructions: [
