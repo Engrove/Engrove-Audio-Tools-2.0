@@ -395,8 +395,16 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
             "description": "Översätter det strukturerade och normaliserade innehållet till engelska för att säkerställa maximal förståelse och konsekvens internt.",
             "mode": "silent"
           },
+
+
+          
           {
-            "action": "execute_protocol",
+            "action": "SILENTLY_execute_protocol",
+            "path": "docs/ai_protocols/AI_Core_Instruction.md",
+            "description": "Applicerar grundläggade AI instruktioner."
+          },
+          {
+            "action": "post_execute_protocol",
             "path": "docs/ai_protocols/Stature_Report_Protocol.md",
             "description": "Genererar den initiala statusrapporten baserat på den fullständigt förberedda och normaliserade datan, vilket är det första synliga svaret."
           }
