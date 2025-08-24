@@ -257,12 +257,10 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
       sequence: [
           {
             "action": "decode_and_verify_payload",
-            "description": "Dekodar och verifierar den inbäddade payloaden.",
             "params": { "payload_ref": "payload", "encoding_chain": ["base64", "zlib"], "hash_ref": "metadata.hash", "hash_algorithm": "SHA-256" }
           },
           {
             "action": "map_content_structure",
-            "description": "Strukturerar om innehållet i minnet genom att mappa dokumentrubriker till standardiserade nycklar.",
             "params": {
               "target": "in_memory_files",
               "rules": [
@@ -297,7 +295,6 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
           },
           {
             "action": "expand_abbreviations",
-            "description": "Expanderar förkortningar i textinnehållet enligt en godkänd lista för AI-optimering.",
             "params": {
               "target": "in_memory_files",
               "rules": [
@@ -345,13 +342,11 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
           },
           {
             "action": "detect_language",
-            "description": "Analyserar språket i de inlästa filerna och sparar resultatet för villkorlig översättning.",
             "params": { "target": "in_memory_files" },
             "store_result_as": "detected_language"
           },
           {
             "action": "translate_content",
-            "description": "Översätter innehållet till engelska om det inte redan är det. Översättningen optimeras för LLM-förståelse. Funktionellt innehåll och avsikt bevaras strikt.",
             "condition": "variables.detected_language != 'en'",
             "params": { 
                 "target": "in_memory_files", 
