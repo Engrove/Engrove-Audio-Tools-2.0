@@ -398,9 +398,9 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
             "mode": "silent"
           },
           {
-            "action": "set_context_boundary", // <-- NYCKELFÖRÄNDRING 2
+            "action": "set_context_boundary", 
             "params": {"scope": "payload_files_only"},
-            "description": "Slutför initieringen genom att begränsa arbetsminnet till endast payload-filer. Denna laddare kommer inte längre att vara tillgänglig.",
+            "description": "Slutför initieringen genom att begränsa arbetsminnet till endast payload-filer. Denna laddare kommer inte längre att vara tillgänglig."
           }
         ]
       },
