@@ -282,10 +282,10 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
   let pbfConfig;
   if (isAdHocMode) {
     pbfConfig = {
-      pbfVersion: "1.3",
-      bootstrapDirective: {
-        action: "decompress_stage_and_apply",
-        apply_protocol_path: CORE_INSTRUCTION_PATH
+      pbfVersion: "1.5",
+        "bootstrap_directive": {
+        "action": "decompress_stage_and_execute",
+        "execute_protocol_path": "docs/ai_protocols/Stature_Report_Protocol.md"
       },
       aiInstructions: [
         'Dekoda `payload` (base64 → zlib → JSON).',
