@@ -284,7 +284,8 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
   // === START KORRIGERAT BLOCK ===
   if (isAdHocMode) {
     pbfConfig = {
-      pbfVersion: "1.5",
+      pbfVersion: "1.6",
+      scope: "payload_files_only",
       bootstrap_directive: {
         "sequence": [
           {
@@ -395,8 +396,12 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
             "params": { "target": "in_memory_files", "destination_language": "en", "policy": "lossless_intent" },
             "description": "Översätter det strukturerade och normaliserade innehållet till engelska för att säkerställa maximal förståelse och konsekvens internt.",
             "mode": "silent"
+          },
+          {
+            "action": "set_context_boundary", // <-- NYCKELFÖRÄNDRING 2
+            "params": {"scope": "payload_files_only"},
+            "description": "Slutför initieringen genom att begränsa arbetsminnet till endast payload-filer. Denna laddare kommer inte längre att vara tillgänglig.",
           }
-         
         ]
       },
       aiInstructions: [
@@ -408,11 +413,7 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
     };
   } else {
     pbfConfig = {
-      pbfVersion: "1.3",
-      bootstrap_directive: {
-        "action": "execute_protocol",
-        "path": "docs/ai_protocols/Stature_Report_Protocol.md"
-      },
+      pbfVersion: "1.6",
       aiInstructions: [
         'Dekoda `payload` (base64 → zlib → JSON).',
         'Verifiera `hash` (SHA-256) mot dekodad payload.',
