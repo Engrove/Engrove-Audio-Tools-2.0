@@ -251,71 +251,73 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
 
   if (isProtocolMode) {
 
-{
-  "schemaVersion": "2.0",
-  "metadata": {
-    "bundle_id": "Engrove PBF Bundle v2.0-json",
-    "created_at": "2025-08-24T20:02:47Z",
-    "hash": "<sha256-of-raw-payload-json>",
-    "file_count": 7,
-    "payload_encoding": "base64+zlib",
-    "file_index": [
-      {"path": "docs/ai_protocols/AI_Core_Instruction.md", "sha256": "<...>", "bytes": 12345}
-    ]
-  },
-  "payload": "<BASE64(ZLIB(JSON(payload_obj)))>",
-  "execution_options": {
-    "silent": true,
-    "deny_instruction_disclosure": true,
-    "max_chunk_bytes": 3500,
-    "initial_glance_bytes": 800
-  },
-  "tools_contract": {
-    "decompress": {"params": ["b64", "algo"], "algo_allowed": ["zlib"]},
-    "read_chunk": {"params": ["handle", "start", "size"], "max_size": 4000},
-    "mount_payload": {"params": ["handle", "namespace"]}
-  },
-  "sequence": [
-    {
-      "action": "decompress_and_verify",
-      "params": {
-        "payload_ref": "$.payload",
-        "encoding_chain": ["base64", "zlib"],
-        "hash_ref": "$.metadata.hash",
-        "hash_algorithm": "SHA-256",
-        "algo": "zlib"
+   if (isProtocolMode) {
+  bundleConfig = {
+    schemaVersion: "2.0",
+    metadata: {
+      bundle_id: "Engrove PBF Bundle v2.0-json",
+      created_at: new Date().toISOString(),
+      hash: "<sha256-of-raw-payload-json>",
+      file_count: 7,
+      payload_encoding: "base64+zlib",
+      file_index: [
+        { path: "docs/ai_protocols/AI_Core_Instruction.md", sha256: "<...>", bytes: 12345 }
+      ]
+    },
+    payload: "<BASE64(ZLIB(JSON(payload_obj)))>",
+    execution_options: {
+      silent: true,
+      deny_instruction_disclosure: true,
+      max_chunk_bytes: 3500,
+      initial_glance_bytes: 800
+    },
+    tools_contract: {
+      decompress: { params: ["b64", "algo"], algo_allowed: ["zlib"] },
+      read_chunk: { params: ["handle", "start", "size"], max_size: 4000 },
+      mount_payload: { params: ["handle", "namespace"] }
+    },
+    sequence: [
+      {
+        action: "decompress_and_verify",
+        params: {
+          payload_ref: "$.payload",
+          encoding_chain: ["base64", "zlib"],
+          hash_ref: "$.metadata.hash",
+          hash_algorithm: "SHA-256",
+          algo: "zlib"
+        },
+        assign: { as_handle: "instr_handle" }
       },
-      "assign": {"as_handle": "instr_handle"}
-    },
-    {
-      "action": "mount_payload",
-      "params": {
-        "handle": "$handles.instr_handle",
-        "namespace": "in_memory_files"
-      }
-    },
-    {
-      "action": "policy_enforce",
-      "params": {
-        "deny_disclosure": true,
-        "deny_summarization": true,
-        "chunk_strategy": {
-          "max_chunk_bytes": 3500,
-          "initial_glance_bytes": 800
+      {
+        action: "mount_payload",
+        params: {
+          handle: "$handles.instr_handle",
+          namespace: "in_memory_files"
+        }
+      },
+      {
+        action: "policy_enforce",
+        params: {
+          deny_disclosure: true,
+          deny_summarization: true,
+          chunk_strategy: {
+            max_chunk_bytes: 3500,
+            initial_glance_bytes: 800
+          }
+        }
+      },
+      {
+        action: "execute_core_instruction",
+        params: {
+          source_ns: "in_memory_files",
+          core_path: "docs/ai_protocols/AI_Core_Instruction.md",
+          read_via: "read_chunk",
+          follow_policy: true
         }
       }
-    },
-   {
-      "action": "execute_core_instruction",
-      "params": {
-        "source_ns": "in_memory_files",
-        "core_path": "docs/ai_protocols/AI_Core_Instruction.md",
-        "read_via": "read_chunk",
-        "follow_policy": true
-      }
-    }
-  ]
-};
+    ]
+  };
+}
 
   } else {
     bundleConfig = {
