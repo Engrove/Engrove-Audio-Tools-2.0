@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-24T16:05:57.899343+00:00",
+    "generated_at": "2025-08-24T16:21:47.799281+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -2549,6 +2549,15 @@
         "type": "JSON Config",
         "category": "configuration",
         "language": "json",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/AI_JSON_standard.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
         "exports": [],
         "imports": [],
         "dependents_count": 0,
