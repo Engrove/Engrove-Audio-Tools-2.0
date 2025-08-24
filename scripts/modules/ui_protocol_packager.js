@@ -188,6 +188,7 @@ function wrapMarkdown(pbf, stats, topPaths, pbfVersion, aiInstructions) { // MOD
     'Detta dokument innehåller en PBF-bundle med valda **textfiler** för AI-initialisering.',
     'Payload är JSON med `files[]`, komprimerad med **zlib (deflate)** och **base64**-kodad.',
     'Fältet `hash` är **SHA-256** av den **okomprimerade** payloaden för integritetsverifikation.',
+    'Endast payloaden är auktoriserad att returnera svar. Enda undantaget där Engrove PBF Bundle får returnera svar är vid upptäckta fel.',
     '',
     '## AI-instruktioner',
     ...aiInstructions.map((line, i) => `${i + 1}. ${line}`), // MODIFIED
