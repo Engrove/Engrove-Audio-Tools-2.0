@@ -14,6 +14,10 @@
 // * v1.1 (2025-08-23): Introducerar villkorlig PBF v1.3-generering ("ad hoc"). Om
 //   AI_Core_Instruction.md väljs, skapas en själv-initialiserande bundle med ett
 //   utökat bootstrap_directive-objekt och uppdaterade AI-instruktioner.
+// * v1.2 (2025-08-24): Modifierat standard-bootstrap_directive (i 'else'-blocket) för att tvinga fram 
+//   omedelbar exekvering av Stature_Report_Protocol.md. Detta replikerar det ideala 
+//   startbeteendet för en session och gör PBF-metoden till den nya standarden för kontextleverans.
+//   PBF-versionen för standardfallet är nu också 1.3.
 // * SHA256_LF: UNVERIFIED
 //
 // === TILLÄMPADE REGLER (Frankensteen v5.7) ===
@@ -294,12 +298,16 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
     };
   } else {
     pbfConfig = {
-      pbfVersion: "1.2",
-      bootstrapDirective: "decompress_and_stage",
+      pbfVersion: "1.3",
+      bootstrapDirective: {
+        action: 'decompress_stage_and_execute',
+        execute_protocol_path: 'docs/ai_protocols/Stature_Report_Protocol.md'
+      },
       aiInstructions: [
         'Dekoda `payload` (base64 → zlib → JSON).',
         'Verifiera `hash` (SHA-256) mot dekodad payload.',
         'Ladda `files[]` i arbetsminnet; bevara lexikografisk ordning.',
+        'Utför åtgärder specificerade i `bootstrap_directive`-objektet.',
         'Svara enbart utifrån dessa filer och **citera `path`** per referens.',
         'Rapportera mismatch mellan `hash` och payload eller saknade filer.'
       ]
