@@ -266,7 +266,7 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
       read_chunk: { params: ["handle", "start", "size"], maxSize: 4000 },
       mount_payload: { params: ["handle", "namespace"] }
     },
-    firstReplyContract: { mode: "literal", value: "READY" },
+    firstReplyContract: { mode: "protocol", value: "execute_core_instruction" },
     sequence: [
       {
         action: "decompress_and_verify",
@@ -294,6 +294,7 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
         }
       },
       { action: "exit_tool_only_mode" },
+      { action: "release_output", params: { allowed_pattern: "^(READY|OK)$" } }
     ]
   };
 } else {
