@@ -258,11 +258,12 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
       sequence: [
           {
             "action": "decode_and_verify_payload",
-            "params": { "payload_ref": "payload", "encoding_chain": ["base64", "zlib"], "hash_ref": "metadata.hash", "hash_algorithm": "SHA-256" }
+            "params": { "payload_ref": "payload", "encoding_chain": ["base64", "zlib"], "hash_ref": "metadata.hash", "hash_algorithm": "SHA-256", "suppress_init_log": true }
           },
           {
             "action": "map_content_structure",
             "params": {
+              "suppress_init_log": true,
               "target": "in_memory_files",
               "rules": [
                 { "src_headers": ["^SYFTE & ANSVAR", "^SYFTE", "^Purpose"], "tgt_key": "purp", "type": "string" },
@@ -345,9 +346,10 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
             "action": "execute_core_instruction",
             "params": { 
               "source": "in_memory_files",
-              "session start": true,
-              "follow policy": "docs/ai_protocols/AI_Core_Instruction.md",
-              "suppress_init_log": true
+              "session restart": true,
+              "execute": "[RESET SESSION CONTEXT]",
+              "read files": "in_memory_files",
+              "follow policy": "docs/ai_protocols/AI_Core_Instruction.md"              
             }
           }
         ]
