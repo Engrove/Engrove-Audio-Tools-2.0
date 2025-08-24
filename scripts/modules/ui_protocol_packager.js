@@ -394,51 +394,14 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
             "params": { "target": "in_memory_files", "destination_language": "en", "policy": "lossless_intent" },
             "description": "Översätter det strukturerade och normaliserade innehållet till engelska för att säkerställa maximal förståelse och konsekvens internt.",
             "mode": "silent"
-          },
-
-
-          
-          // STEG 1: Internaliserar kärninstruktioner (Motsvarar din steg 1)
-          {
-            "action": "execute_protocol",
-            "path": "docs/ai_protocols/AI_Core_Instruction.md",
-            "mode": "silent",
-            "description": "Internaliserar kärninstruktionerna för att etablera systemets identitet och grundläggande parametrar."
-          },
-          // STEG 2: Aktiverar 'Frankensteen'-personan
-          {
-            "action": "execute_protocol",
-            "path": "docs/ai_protocols/frankensteen_persona.v1.0.json",
-            "mode": "silent",
-            "description": "Aktiverar 'Frankensteen'-personan för efterföljande svar."
-          },
-          // STEG 3: Utför en djup systemintegritetskontroll
-          {
-            "action": "execute_protocol",
-            "path": "docs/ai_protocols/System_Integrity_Check_Protocol.md",
-            "mode": "silent",
-            "description": "Utför en djup systemintegritetskontroll (analyserar heuristiker) och lagrar resultatet i sessionen."
-          },
-          // STEG 4: Genererar den slutgiltiga operationella statusrapporten (synligt svar)
-          {
-            "action": "execute_protocol",
-            "path": "docs/ai_protocols/Stature_Report_Protocol.md",
-            "description": "Genererar den slutgiltiga operationella statusrapporten baserat på den analyserade datan, vilket är det första synliga svaret."
           }
-
-
-
-
-          
+         
         ]
       },
       aiInstructions: [
         'Dekoda `payload` (base64 → zlib → JSON).',
         'Verifiera `hash` (SHA-256) mot dekodad payload.',
         'Ladda `files[]` i arbetsminnet; bevara lexikografisk ordning.',
-        'Utför åtgärder specificerade i `bootstrap_directive`-objektet.',
-        'Svara enbart utifrån dessa filer och **citera `path`** per referens.',
-        'Rapportera mismatch mellan `hash` och payload eller saknade filer.'
       ]
     };
   } else {
@@ -452,9 +415,6 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
         'Dekoda `payload` (base64 → zlib → JSON).',
         'Verifiera `hash` (SHA-256) mot dekodad payload.',
         'Ladda `files[]` i arbetsminnet; bevara lexikografisk ordning.',
-        'Utför åtgärder specificerade i `bootstrap_directive`-objektet.',
-        'Svara enbart utifrån dessa filer och **citera `path`** per referens.',
-        'Rapportera mismatch mellan `hash` och payload eller saknade filer.'
       ]
     };
   }
