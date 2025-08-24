@@ -56,7 +56,7 @@
 1) Validera schema + `content_hash_sha256`. Mismatch ⇒ **avbryt**.  
 2) Rensa **endast** KMM; bevara långtidsloggar/ISR.  
 3) Återställ omedelbar kontext från `preserved_context`.  
-4) Kör **RUN_CONTEXT_BOOTSTRAP v2.8** (/docs/ai_protocols/P-RECONSTRUCT.md).  
+4) Kör **RUN_CONTEXT_BOOTSTRAP v2.8** (docs/ai_protocols/context_instruction.md).  
 5) ISR append: `{ "event":"isr_reset", "base_session_id":"...", "content_hash_sha256":"..." }`.  
 6) Kör **SIC → Stature**. Vid `WARNING|ERROR`: rekommendera HITL Plan Review.
 
