@@ -305,18 +305,7 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
         }
       }
     },
-    {
-      "action": "map_content_structure",
-      "params": {
-        "source_ns": "in_memory_files",
-        "rules": [
-          {"src_headers": ["^SYFTE", "^Purpose"], "tgt_key": "purp", "type": "string"},
-          {"src_headers": ["^HISTORIK", "^History"], "tgt_key": "hist", "type": "list"},
-          {"src_headers": ["^KONTRAKT", "^Schema"], "tgt_key": "contracts", "type": "objects"}
-        ]
-      }
-    },
-    {
+   {
       "action": "execute_core_instruction",
       "params": {
         "source_ns": "in_memory_files",
@@ -326,8 +315,7 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
       }
     }
   ]
-}
-;
+};
 
   } else {
     bundleConfig = {
