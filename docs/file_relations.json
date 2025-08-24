@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-24T08:58:00.111497+00:00",
+    "generated_at": "2025-08-24T11:04:57.334967+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -2428,6 +2428,15 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
+      "docs/ai_protocols/context_instruction.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
       "docs/ai_protocols/HITL_Interrupt_Points.md": {
         "type": "Markdown Document",
         "category": "documentation",
@@ -2654,15 +2663,6 @@
         "criticality_score": 0.0
       },
       "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/ai_protocols/context_bootstrap_instruction.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
