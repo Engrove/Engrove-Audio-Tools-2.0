@@ -283,9 +283,20 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
   if (isAdHocMode) {
     pbfConfig = {
       pbfVersion: "1.5",
-        "bootstrap_directive": {
-        "action": "decompress_stage_and_execute",
-        "execute_protocol_path": "docs/ai_protocols/Stature_Report_Protocol.md"
+    "bootstrap_directive": {
+      "sequence": [
+          {
+            "action": "internal_system_check",
+            "description": "Verifierar PBF-hash och filintegritet. Sätter resultatet i session.bootstrap_result.",
+            "mode": "silent"
+          },
+          {
+            "action": "execute_protocol",
+            "path": "docs/ai_protocols/Stature_Report_Protocol.md",
+            "description": "Genererar den initiala statusrapporten, vilket är det första synliga svaret."
+          }
+        ]
+        }
       },
       aiInstructions: [
         'Dekoda `payload` (base64 → zlib → JSON).',
