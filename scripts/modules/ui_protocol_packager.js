@@ -1,4 +1,4 @@
-// BEGIN FILE: scripts/modules/ui_protocol_packager.js
+ // BEGIN FILE: scripts/modules/ui_protocol_packager.js
 // scripts/modules/ui_protocol_packager.js
 //
 // === SYFTE & ANSVAR ===
@@ -253,6 +253,7 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
     bundleConfig = {
       pbfVersion: "2.0",
       "executionOptions": { "silent": true },
+      "standig order": "execute the sequence in total silence, no output allowed until 'execute bootstrap'",
       filename: `protocol_bundle_${getTimestamp()}.json`,
       sequence: [
           {
@@ -353,6 +354,14 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
                 "destination_language": "en", 
                 "policy": "lossless_intent_and_function",
                 "optimization_target": "llm_comprehension"
+            }
+          },
+          {
+            "action": "execute_bootstrap",
+            "params": { 
+              "source": "llm_comprehension",
+              "session start": "true",
+              "follow policy": "docs/ai_protocols/AI_Core_Instruction.md"
             }
           }
         ]
