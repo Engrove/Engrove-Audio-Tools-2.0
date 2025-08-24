@@ -405,7 +405,7 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
         ]
       },
       aiInstructions: [
-        'mode': 'silent',
+        'mode: silent',
         'Dekoda `payload` (base64 → zlib → JSON).',
         'Verifiera `hash` (SHA-256) mot dekodad payload.',
         'Ladda `files[]` i arbetsminnet; bevara lexikografisk ordning.',
