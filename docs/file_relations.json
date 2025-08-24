@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-24T05:08:29.044619+00:00",
+    "generated_at": "2025-08-24T06:06:16.180555+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -2699,6 +2699,15 @@
         "criticality_score": 0.0
       },
       "docs/ai_protocols/AI_Dynamic_Protocols.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/compact/protocol_bundle.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
