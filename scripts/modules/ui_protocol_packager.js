@@ -345,8 +345,9 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
             "action": "execute_core_instruction",
             "params": { 
               "source": "in_memory_files",
-              "session start": "true",
-              "follow policy": "docs/ai_protocols/AI_Core_Instruction.md"
+              "session start": true,
+              "follow policy": "docs/ai_protocols/AI_Core_Instruction.md",
+              "suppress_init_log": true
             }
           }
         ]
