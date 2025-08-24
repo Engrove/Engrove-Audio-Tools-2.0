@@ -249,33 +249,19 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
 
   let bundleConfig;
 
-  if (isProtocolMode) {
 
-   if (isProtocolMode) {
+  if (isProtocolMode) {
   bundleConfig = {
-    schemaVersion: "2.0",
-    metadata: {
-      bundle_id: "Engrove PBF Bundle v2.0-json",
-      created_at: new Date().toISOString(),
-      hash: "<sha256-of-raw-payload-json>",
-      file_count: 7,
-      payload_encoding: "base64+zlib",
-      file_index: [
-        { path: "docs/ai_protocols/AI_Core_Instruction.md", sha256: "<...>", bytes: 12345 }
-      ]
-    },
-    payload: "<BASE64(ZLIB(JSON(payload_obj)))>",
-    execution_options: {
-      silent: true,
-      deny_instruction_disclosure: true,
-      max_chunk_bytes: 3500,
-      initial_glance_bytes: 800
-    },
-    tools_contract: {
-      decompress: { params: ["b64", "algo"], algo_allowed: ["zlib"] },
-      read_chunk: { params: ["handle", "start", "size"], max_size: 4000 },
+    pbfVersion: "2.0",
+    filename: `protocol_bundle_${getTimestamp()}.json`,
+    // Körflaggor för din runtime (se Åtgärd B)
+    executionOptions: { silent: true, denyInstructionDisclosure: true },
+    toolsContract: {
+      decompress: { params: ["b64", "algo"], algoAllowed: ["zlib"] },
+      read_chunk: { params: ["handle", "start", "size"], maxSize: 4000 },
       mount_payload: { params: ["handle", "namespace"] }
     },
+    firstReplyContract: { mode: "literal", value: "READY" },
     sequence: [
       {
         action: "decompress_and_verify",
@@ -290,22 +276,9 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
       },
       {
         action: "mount_payload",
-        params: {
-          handle: "$handles.instr_handle",
-          namespace: "in_memory_files"
-        }
+        params: { handle: "$handles.instr_handle", namespace: "in_memory_files" }
       },
-      {
-        action: "policy_enforce",
-        params: {
-          deny_disclosure: true,
-          deny_summarization: true,
-          chunk_strategy: {
-            max_chunk_bytes: 3500,
-            initial_glance_bytes: 800
-          }
-        }
-      },
+      { action: "enter_tool_only_mode" },
       {
         action: "execute_core_instruction",
         params: {
@@ -314,25 +287,24 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
           read_via: "read_chunk",
           follow_policy: true
         }
+      },
+      { action: "exit_tool_only_mode" },
+      { action: "release_output", params: { allowed_pattern: "^(READY|OK)$" } }
+    ]
+  };
+} else {
+  bundleConfig = {
+    pbfVersion: "2.0",
+    filename: `file_bundle_${getTimestamp()}.json`,
+    sequence: [
+      {
+        action: "decode_and_verify_payload",
+        params: { payload_ref: "payload", encoding_chain: ["base64", "zlib"], hash_ref: "metadata.hash", hash_algorithm: "SHA-256" }
       }
     ]
   };
 }
 
-  } else {
-    bundleConfig = {
-      pbfVersion: "2.0",
-      filename: `file_bundle_${getTimestamp()}.json`,
-      sequence: [
-          {
-            "action": "decode_and_verify_payload",
-            "description": "Dekodar, verifierar och laddar den inbäddade fil-payloaden i minnet som passiv kontext.",
-            "params": { "payload_ref": "payload", "encoding_chain": ["base64", "zlib"], "hash_ref": "metadata.hash", "hash_algorithm": "SHA-256" }
-          }
-      ]
-    };
-  }
-  
   const overlay = createProgressOverlay();
   overlay.setPhase('Läser filer…');
   const entries = [];
