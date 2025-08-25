@@ -37,7 +37,6 @@
 # === TILLÄMPADE REGLER (Frankensteen v5.13) ===
 # - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, korrigerade planen.
 # - Help me God: Grundorsaken till de inaktiva knapparna (saknat anrop av `init`-funktion) har identifierats och åtgärdats.
-# - GR7 (Fullständig Historik): Fullständig historik är återställd och verifierad.
 
 JS_LOGIC = """
 import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1';
