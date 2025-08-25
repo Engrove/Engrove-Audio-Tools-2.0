@@ -513,6 +513,13 @@ export async function createProtocolBundle(isProtocolMode, selectedPaths, onProg
         },
         { action: "enter_tool_only_mode" },
         {
+          "action": "load_all_to_context",
+          "params": {
+            "source_ns": "in_memory_files",
+            "files_ref": "$.metadata.fileIndex"
+          }
+        },
+        {
           action: "execute_core_instruction",
           params: {
             source_ns: "in_memory_files",
