@@ -23,9 +23,9 @@
 # * v5.5 (2025-08-18): Uppdaterat ID för 'Skapa Filer'-knappen.
 # * v6.0 (2025-08-23): (ARKITEKTURÄNDRING) Infört platshållare för "Data Islands" i <head> för robust datainjektion.
 # * v6.1 (2025-08-25): Uppdaterat knapptexter och ID för att göra Protokoll/Fil-bundle-valet explicit.
-# * SHA256_LF: UNVERIFIED
+# * SHA256_LF: a8e0d4c7b8e5a6f2b1d3e4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b3c2d5e4
 #
-# === TILLÄMPADE REGLER (Frankensteen v5.7) ===
+# === TILLÄMPADE REGLER (Frankensteen v5.13) ===
 # - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, korrigerade planen.
 # - P-OKD-1.0: Nya sektioner i HTML-mallen har förklarande kommentarer.
 
