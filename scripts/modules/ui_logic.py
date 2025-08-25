@@ -31,16 +31,17 @@
 # * v10.1 (2025-08-23): (Help me God - Domslut) Reintroducerade JSON.parse() för alla injicerade payloads för att åtgärda SyntaxError.
 # * v11.0 (2025-08-23): (ARKITEKTURÄNDRING) Ersatt platshållarinjektion med robust "Data Island"-läsning från DOM.
 # * v11.1 (2025-08-23): Knappbindning för “Skapa Filer” borttagen – ägs nu av protocol_packager.js.
+# * v11.2 (2025-08-25): KRITISK FIX: Importerar och anropar `initProtocolPackager` för att binda händelselyssnare till bundle-knapparna, vilket löser felet där de var inaktiva.
 # * SHA256_LF: UNVERIFIED
 #
-# === TILLÄMPADE REGLER (Frankensteen v5.7) ===
-# - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, reviderade planen.
-# - P-OKD-1.0: Nya funktioner har JSDoc-kommentarer.
-# - GR6 (Obligatorisk Refaktorisering): Funktionaliteten har implementerats modulärt och återanvänder befintliga hjälpfunktioner.
-# - GR7 (Fullständig Historik): Historiken har uppdaterats korrekt.
+# === TILLÄMPADE REGLER (Frankensteen v5.13) ===
+# - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, korrigerade planen.
+# - Help me God: Grundorsaken till de inaktiva knapparna (saknat anrop av `init`-funktion) har identifierats och åtgärdats.
+# - GR7 (Fullständig Historik): Fullständig historik är återställd och verifierad.
 
 JS_LOGIC = """
 import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1';
+import { initProtocolPackager } from './protocol_packager.js';
 
 /**
  * Läser och parsar en JSON "Data Island" från en <script>-tagg i DOM.
@@ -320,11 +321,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectAllBtn = document.getElementById('select-all');
     const deselectAllBtn = document.getElementById('deselect-all');
     const selectCoreBtn = document.getElementById('select-core');
-    const createFilesBtn = document.getElementById('create-files-btn');
     const clearSessionBtn = document.getElementById('clear-session');
     const refreshDataBtn = document.getElementById('refresh-data');
     
     initializeEinstein();
+    initProtocolPackager();
 
     if (modalOverlay) {
         modalCloseBtn.addEventListener('click', closeFileModal);
@@ -349,7 +350,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if(selectAllBtn) selectAllBtn.addEventListener('click', () => window.selectAllInTree && window.selectAllInTree());
     if(deselectAllBtn) deselectAllBtn.addEventListener('click', () => window.deselectAllInTree && window.deselectAllInTree());
     if(selectCoreBtn) selectCoreBtn.addEventListener('click', () => window.addPathsToSelection && window.addPathsToSelection(STATIC_CORE_PATHS, DYNAMIC_CORE_PATHS));
-    // create-files-btn binds nu i protocol_packager.js (knapp ägs där)
     if(clearSessionBtn) clearSessionBtn.addEventListener('click', clearSession);
     if(refreshDataBtn) refreshDataBtn.addEventListener('click', reloadData);
 
