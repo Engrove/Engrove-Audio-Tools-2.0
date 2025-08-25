@@ -2,9 +2,9 @@
 # scripts/modules/ui_logic.py
 #
 # === SYFTE & ANSVAR ===
-# Denna modul innehåller den sammansatta JavaScript-logiken för AI Context Builder UI,
-# inklusive hantering av ribbon-meny, filgranskning och den underliggande motorn
-# för Einstein RAG-sökfunktionaliteten.
+# Huvudfilen för UI-logik. Den binder samman alla UI-moduler, hanterar
+# globala event listeners (t.ex. för flik-växling och sökning),
+# och orkestrerar interaktionen mellan de olika delarna av applikationen.
 #
 # === HISTORIK ===
 # * v3.0 (2025-08-15): Lade till logik för ribbon-menyn och resizer.
@@ -41,6 +41,7 @@
 
 JS_LOGIC = """
 import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1';
+import { initProtocolPackager } from './protocol_packager.js';
 
 /**
  * Läser och parsar en JSON "Data Island" från en <script>-tagg i DOM.
@@ -306,6 +307,22 @@ function handleViewSwitch(targetTab) {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Engrove Audio Tools UI Initialized.');
 
+    // Importera och initiera modulerna som behövs
+    import('./file_tree.js').then(({ initFileTree, getSelectedFilePaths, selectAllInTree, deselectAllInTree, addPathsToSelection, filterTree }) => {
+        window.Engrove = { getSelectedFilePaths, selectAllInTree, deselectAllInTree, addPathsToSelection, filterTree };
+        initFileTree();
+        
+        const selectAllBtn = document.getElementById('select-all');
+        const deselectAllBtn = document.getElementById('deselect-all');
+        const selectCoreBtn = document.getElementById('select-core');
+
+        if(selectAllBtn) selectAllBtn.addEventListener('click', () => window.Engrove.selectAllInTree());
+        if(deselectAllBtn) deselectAllBtn.addEventListener('click', () => window.Engrove.deselectAllInTree());
+        if(selectCoreBtn) selectCoreBtn.addEventListener('click', () => window.Engrove.addPathsToSelection(STATIC_CORE_PATHS, DYNAMIC_CORE_PATHS));
+    });
+
+    initProtocolPackager();
+
     const ribbonTabs = document.querySelectorAll('.ribbon-tab');
     const ribbonPanes = document.querySelectorAll('.ribbon-pane');
     const resizer = document.getElementById('resizer');
@@ -317,10 +334,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalCopyContentBtn = document.getElementById('modal-copy-content');
     const modalDownloadFileBtn = document.getElementById('modal-download-file');
 
-    const selectAllBtn = document.getElementById('select-all');
-    const deselectAllBtn = document.getElementById('deselect-all');
-    const selectCoreBtn = document.getElementById('select-core');
-    const createFilesBtn = document.getElementById('create-files-btn');
     const clearSessionBtn = document.getElementById('clear-session');
     const refreshDataBtn = document.getElementById('refresh-data');
     
@@ -346,10 +359,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    if(selectAllBtn) selectAllBtn.addEventListener('click', () => window.selectAllInTree && window.selectAllInTree());
-    if(deselectAllBtn) deselectAllBtn.addEventListener('click', () => window.deselectAllInTree && window.deselectAllInTree());
-    if(selectCoreBtn) selectCoreBtn.addEventListener('click', () => window.addPathsToSelection && window.addPathsToSelection(STATIC_CORE_PATHS, DYNAMIC_CORE_PATHS));
-    // create-files-btn binds nu i protocol_packager.js (knapp ägs där)
     if(clearSessionBtn) clearSessionBtn.addEventListener('click', clearSession);
     if(refreshDataBtn) refreshDataBtn.addEventListener('click', reloadData);
 
@@ -380,4 +389,5 @@ document.addEventListener('DOMContentLoaded', () => {
     handleViewSwitch('start');
 });
 """
+
 # END FILE: scripts/modules/ui_logic.py
