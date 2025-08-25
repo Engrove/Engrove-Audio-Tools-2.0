@@ -61,6 +61,7 @@ import json
 import re
 import hashlib
 import html
+import time
 from datetime import datetime
 
 # --- robust modulimport (stöd både scripts/modules och modules) ---
@@ -221,18 +222,20 @@ def build_ui(output_html_path, context_data, relations_data, overview_data, core
         
         # Injicera data islands
         html_content = html_content.replace('<!-- __INJECT_DATA_ISLANDS__ -->', data_islands_html)
+
         
+        # Generera cache-buster baserat på mikrosekunder
+        cache_buster = int(time.time() * 1_000_000)
+
         # Inkludera alla JS-moduler (behåll ordning; packager sist pga knappbinding)
         extra_tags = (
-            "\n    <script type='module' src='file_tree.js'></script>"
-            "\n    <script type='module' src='einstein.js'></script>"
-            "\n    <script type='module' src='perf.js'></script>"
-            "\n    <script type='module' src='protocol_packager.js'></script>\n"
+            f"\n    <script type='module' src='file_tree.js?v={cache_buster}'></script>"
+            f"\n    <script type='module' src='einstein.js?v={cache_buster}'></script>"
+            f"\n    <script type='module' src='perf.js?v={cache_buster}'></script>"
+            f"\n    <script type='module' src='protocol_packager.js?v={cache_buster}'></script>\n"
         )
-        html_content = html_content.replace(
-            '<script type="module" src="logic.js"></script>',
-            '<script type="module" src="logic.js"></script>' + extra_tags
-        )
+
+        html_content = html_content.replace('<script type="module" src="logic.js"></script>', f'<script type="module" src="logic.js?v={cache_buster}"></script>' + extra_tags)
 
         _write_text(output_html_path, html_content)
 
