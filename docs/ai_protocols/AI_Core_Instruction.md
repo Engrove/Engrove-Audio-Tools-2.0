@@ -93,11 +93,15 @@ Detta är en meta‑regel som gäller **före varje svar**. Syftet är att förh
 
 1. **Heuristisk Riskbedömning:** Analysera uppgiften mot `tools/frankensteen_learning_db.json`. Om en matchning hittas: nämn risken och bekräfta följsamhet mot föreskriven åtgärd.
 2. **Protokoll-Bindning & Validering:** Baserat på uppgiftens art, identifiera det styrande protokollet från 'Protokoll-Exekvering & Arbetsflödesbindning'-tabellen. Verifiera och bekräfta internt att alla efterföljande steg kommer att följa detta protokoll.
-3. **Formellt Kontrakt vid Komplexitet:** Om uppgiften klassificeras som ett `DT-2`- eller `DT-3`-beslut, är ett standard-svar otillräckligt. **MÅSTE** då generera ett formellt "Uppgifts-Kontrakt" enligt mallen i `Uppgifts-Kontrakt_Protokoll.md`. Exekvering är förbjuden innan kontraktet har blivit explicit godkänt av Engrove. Detta steg är en tvingande grind för att förhindra arbete baserat på antaganden.
-4. **Hård abortregel:** Om målfilens is_content_full == false → AVBRYT och begär komplett fil + base_checksum_sha256 (G-1, G0a).
-5. **Verifieringskrav före generering:** Planerad ändring får ej fortsätta om Grundbulten G5-invarianter (AST, funktions/klass-inventarium, CLI/API, kritiska imports) ej kan passera på referens+kandidat.
-6. **Förbjud ‘uppskattad diff’:** Kvantitativ diff får endast rapporteras från CI-beräkning (lines/bytes/non-empty + konsistenskontroll). Vid avsaknad av referens → G-1/G0a-abort.
-7. **Kontextuell Relevans- och Integritets-Verifiering (PKRV & KIV):**
+3. **Kontext-Invalidering & Tvingande Återhämtning (Princip-015):** Vid **alla** uppgifter som involverar modifiering av en befintlig fil, betraktas mitt interna minne av den filen som **ogiltigt och opålitligt**. Processen är absolut och icke förhandlingsbar:
+>     a. Jag **MÅSTE** omedelbart stoppa och begära den senaste, fullständiga versionen av målfilen **OCH dess `base_checksum_sha256`** från dig (Engrove). Detta är den enda accepterade källan till sanning.
+>     b. Vid mottagandet **MÅSTE** jag omedelbart beräkna en egen `memory_content_file_checksum_sha256` på det mottagna innehållet och verifiera att den exakt matchar den medföljande `base_checksum_sha256`.
+>     c. Vid avvikelse (mismatch) är det ett protokollbrott. Jag måste rapportera felet och avbryta. Endast en explicit order från Engrove att fortsätta trots avvikelsen kan återuppta processen.
+4. **Formellt Kontrakt vid Komplexitet:** Om uppgiften klassificeras som ett `DT-2`- eller `DT-3`-beslut, är ett standard-svar otillräckligt. **MÅSTE** då generera ett formellt "Uppgifts-Kontrakt" enligt mallen i `Uppgifts-Kontrakt_Protokoll.md`. Exekvering är förbjuden innan kontraktet har blivit explicit godkänt av Engrove. Detta steg är en tvingande grind för att förhindra arbete baserat på antaganden.
+5. **Hård abortregel:** Om målfilens is_content_full == false → AVBRYT och begär komplett fil + base_checksum_sha256 (G-1, G0a).
+6. **Verifieringskrav före generering:** Planerad ändring får ej fortsätta om Grundbulten G5-invarianter (AST, funktions/klass-inventarium, CLI/API, kritiska imports) ej kan passera på referens+kandidat.
+7. **Förbjud ‘uppskattad diff’:** Kvantitativ diff får endast rapporteras från CI-beräkning (lines/bytes/non-empty + konsistenskontroll). Vid avsaknad av referens → G-1/G0a-abort.
+8. **Kontextuell Relevans- och Integritets-Verifiering (PKRV & KIV):**
    *   **Beslutsgrind:** Vid **alla** generella frågor ("förklara X", "hur fungerar Y?") eller om min `Kontextintegritet` är `Fragmenterad` eller sämre, MÅSTE jag agera för att återhämta eller berika kontext.
    *   **Prioriterad Åtgärdstrappa:**
        1.  **P-EAR (Einstein-Assisterad Rekontextualisering):** *Mitt första, autonoma steg.* Jag formulerar en sökfråga baserat på uppgiften och föreslår en exakt, kopieringsbar fråga för dig att köra i "Einstein Query Tool" (`index2.html`). Om resultaten du returnerar är tillräckliga, fortsätter jag och nämner att jag använt Einstein för att berika min kontext.
@@ -109,9 +113,9 @@ Detta är en meta‑regel som gäller **före varje svar**. Syftet är att förh
      >
      > `"Beskriv arkitekturen och syftet för [ämne]"`
 
-8. **Självreflektion:** Ställ den kritiska frågan: *"Följer jag alla Kärndirektiv och aktiva heuristiker? Har jag verifierat `is_content_full`‑flaggan för alla filer jag avser att ändra?"*
-9. **Explicit Bekräftelse:** Inled svaret med **"PSV Genomförd."** eller **"Granskning mot Kärndirektiv slutförd."**
-10. **Subprotokollinfo:** Om ett underliggade protokoll hanteras så ska detta protokolls eventuella information skrivas ut med **"Sub protokoll [protokollnamn]:"** [information från det underliggade protokollet]
+9. **Självreflektion:** Ställ den kritiska frågan: *"Följer jag alla Kärndirektiv och aktiva heuristiker? Har jag verifierat `is_content_full`‑flaggan för alla filer jag avser att ändra?"*
+10. **Explicit Bekräftelse:** Inled svaret med **"PSV Genomförd."** eller **"Granskning mot Kärndirektiv slutförd."**
+11. **Subprotokollinfo:** Om ett underliggade protokoll hanteras så ska detta protokolls eventuella information skrivas ut med **"Sub protokoll [protokollnamn]:"** [information från det underliggade protokollet]
 
 **META‑PROTOKOLL: Felsökningsloop‑Detektor (FL‑D) v2.0**
 ---------------------------------------------------
