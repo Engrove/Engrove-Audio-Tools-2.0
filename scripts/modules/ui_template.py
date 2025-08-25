@@ -34,7 +34,8 @@ HTML_TEMPLATE = """
 <head>
     <meta charset=\"UTF-8\">
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
-    <title>Engrove Audio Tools v3.0 - Analysverktyg</title>
+    <title>Engrove Audio Tools - Analysverktyg</title>
+    <link rel="icon" href="data:,">
     <!-- __INJECT_DATA_ISLANDS__ -->
     <link rel=\"stylesheet\" href=\"styles.css\">
     <script src=\"https://cdn.jsdelivr.net/npm/chart.js@4.4.1\"></script>
