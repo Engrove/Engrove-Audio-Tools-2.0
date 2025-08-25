@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-25T04:45:38.740149+00:00",
+    "generated_at": "2025-08-25T05:07:55.464541+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -685,6 +685,13 @@
             "type": "library_import"
           },
           {
+            "source": "time",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
             "source": "datetime",
             "symbols": [
               "datetime"
@@ -786,108 +793,6 @@
             "source": "ui_protocol_packager",
             "symbols": [
               "JS_PROTOCOL_PACKAGER"
-            ],
-            "type": "library_import"
-          }
-        ],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "scripts/engrove_audio_tools_creator_v10.2.py": {
-        "type": "Python Script",
-        "category": "code",
-        "language": "py",
-        "exports": [
-          {
-            "symbol": "_is_node",
-            "type": "function"
-          },
-          {
-            "symbol": "_iter_children",
-            "type": "function"
-          },
-          {
-            "symbol": "calculate_node_size",
-            "type": "function"
-          },
-          {
-            "symbol": "_build_relations_index",
-            "type": "function"
-          },
-          {
-            "symbol": "transform_structure_to_tree",
-            "type": "function"
-          },
-          {
-            "symbol": "build_ui",
-            "type": "function"
-          },
-          {
-            "symbol": "main",
-            "type": "function"
-          }
-        ],
-        "imports": [
-          {
-            "source": "os",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "sys",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "json",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "modules.ui_template",
-            "symbols": [
-              "HTML_TEMPLATE"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "modules.ui_styles",
-            "symbols": [
-              "CSS_STYLES"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "modules.ui_logic",
-            "symbols": [
-              "JS_LOGIC"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "modules.ui_file_tree",
-            "symbols": [
-              "JS_FILE_TREE_LOGIC"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "modules.ui_performance_dashboard",
-            "symbols": [
-              "JS_PERFORMANCE_LOGIC"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "modules.ui_einstein_search",
-            "symbols": [
-              "JS_EINSTEIN_LOGIC"
             ],
             "type": "library_import"
           }
