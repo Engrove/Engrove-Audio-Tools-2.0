@@ -343,11 +343,12 @@ ${devMenuMd}
 
 /**
  * Skapa PBF-bundle från valda paths.
+ * @param {boolean} isProtocolMode - Styr om det är en protokoll- eller fil-bundle.
  * @param {string[]} selectedPaths
  * @param {(p:{current:number,total:number,file?:string})=>void} [onProgress]
  * @returns {Promise<{ blob: Blob, filename: string, bundleObject: object, stats: { fileCount:number, originalBytes:number, compressedBytes:number } }>}
  */
-export async function createProtocolBundle(selectedPaths, onProgress) {
+export async function createProtocolBundle(isProtocolMode, selectedPaths, onProgress) {
   if (!Array.isArray(selectedPaths) || selectedPaths.length === 0) {
     throw new Error('Inga filer valda.');
   }
@@ -358,8 +359,6 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
   const DEV_DOMAINS_PATH = 'docs/ai_protocols/development_domains.json';
   const AI_CONFIG_PATH = 'docs/ai_protocols/ai_config.json';
   const LEARNING_DB_PATH = 'tools/frankensteen_learning_db.json';
-
-  const isProtocolMode = selectedPaths.includes(CORE_INSTRUCTION_PATH);
 
   const overlay = createProgressOverlay();
   overlay.setPhase('Läser filer…');
@@ -594,41 +593,47 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
 }
 
 /**
- * Binder knapp ’Skapa Bundle (JSON)’ och triggar nedladdning.
+ * Binder händelselyssnare till UI-element för att skapa bundles.
+ * Detta körs av logic.js när DOM är redo.
  */
-function bindButton() {
-  const btn = document.getElementById('create-files-btn');
-  if (!btn) return;
-  btn.textContent = 'Skapa Bundle (JSON)';
-  btn.addEventListener('click', async () => {
-    try {
-      if (typeof window.selectedFiles !== 'function') {
-        alert('Filträdet är inte redo. Försök igen.');
-        return;
-      }
-      const paths = window.selectedFiles();
-      const result = await createProtocolBundle(paths);
+export function initProtocolPackager() {
+    const filesBtn = document.getElementById('create-files-btn');
+    const contextBtn = document.getElementById('create-context-btn');
 
-      const url = URL.createObjectURL(result.blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = result.filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
+    const handleClick = async (isProtocol) => {
+        try {
+            if (typeof window.Engrove.getSelectedFilePaths !== 'function') {
+                alert('Filträdet är inte redo. Försök igen.');
+                return;
+            }
+            const paths = window.Engrove.getSelectedFilePaths();
+            if (paths.length === 0) {
+                 alert('Inga filer är markerade. Välj minst en fil för att skapa en bundle.');
+                return;
+            }
+            
+            const result = await createProtocolBundle(isProtocol, paths);
 
-    } catch (e) {
-      console.error('Bundle-misslyckades:', e);
-      alert('Misslyckades att skapa bundle: ' + (e.message || e));
+            const url = URL.createObjectURL(result.blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = result.filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+
+        } catch (e) {
+            console.error('Bundle-misslyckades:', e);
+            alert('Misslyckades att skapa bundle: ' + (e.message || e));
+        }
+    };
+
+    if (filesBtn) {
+        filesBtn.addEventListener('click', () => handleClick(true));
     }
-  }, { once: false });
+    if (contextBtn) {
+        contextBtn.addEventListener('click', () => handleClick(false));
+    }
 }
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', bindButton);
-} else {
-  bindButton();
-}
-
 // END FILE: scripts/modules/ui_protocol_packager.js
