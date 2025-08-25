@@ -81,9 +81,12 @@ HTML_TEMPLATE = """
                     <button id=\"select-core\">Markera Kärndokument</button>
                 </div>
                 <div class=\"ribbon-group\">
-                    <button id=\"create-context\">Skapa Kontext</button>
-                    <button id=\"create-files-btn\">Skapa Filer</button>
-                    <label class=\"inline\"><input type=\"checkbox\" id=\"compact-json\" checked> Kompakt JSON</label>
+                    <button id=\"create-context-btn\">Skapa Fil-bundle</button>
+                    <button id=\"create-files-btn\">Skapa Protokoll-bundle</button>
+                     <label class=\"inline\">
+                        <input type=\"checkbox\" id=\"compact-json-checkbox\" checked>
+                        Kompakt JSON
+                    </label>
                 </div>
             </div>
             <div id=\"tab-einstein\" class=\"ribbon-pane\">
