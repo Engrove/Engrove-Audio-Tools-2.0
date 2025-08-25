@@ -114,14 +114,14 @@ function compressPayload(jsonString) {
 
 /**
  * Hämtar textinnehåll från repo via Raw URL.
+ * Alltid med fast bas enligt krav:
+ *   https://raw.githubusercontent.com/Engrove/Engrove-Audio-Tools-2.0/refs/heads/main/
  * @param {string} filePath
  * @returns {Promise<string>}
  */
 async function fetchTextFromRepo(filePath) {
-  const overview = readDataIsland('data-island-overview');
-  const repo = overview.repository;
-  const branch = overview.branch;
-  const url = `https://raw.githubusercontent.com/${repo}/${branch}/${filePath}`;
+  const RAW_BASE = 'https://raw.githubusercontent.com/Engrove/Engrove-Audio-Tools-2.0/refs/heads/main/';
+  const url = RAW_BASE + filePath.replace(/^\/+/, '');
   const res = await fetch(url);
   if (!res.ok) throw new Error(`HTTP ${res.status} för ${filePath}`);
   return await res.text();
@@ -356,7 +356,7 @@ export async function createProtocolBundle(selectedPaths, onProgress) {
   const SIC_PATH = 'docs/ai_protocols/System_Integrity_Check_Protocol.md';
   const STATURE_PATH = 'docs/ai_protocols/Stature_Report_Protocol.md';
   const DEV_DOMAINS_PATH = 'docs/ai_protocols/development_domains.json';
-  const AI_CONFIG_PATH = 'ai_config.json';
+  const AI_CONFIG_PATH = 'docs/ai_protocols/ai_config.json';
   const LEARNING_DB_PATH = 'tools/frankensteen_learning_db.json';
 
   const isProtocolMode = selectedPaths.includes(CORE_INSTRUCTION_PATH);
