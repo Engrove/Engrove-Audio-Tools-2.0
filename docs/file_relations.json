@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-25T08:39:35.855975+00:00",
+    "generated_at": "2025-08-25T08:57:30.932794+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -1732,28 +1732,8 @@
         "type": "Python Script",
         "category": "code",
         "language": "py",
-        "exports": [
-          {
-            "symbol": "get_js_protocol_packager",
-            "type": "function"
-          }
-        ],
-        "imports": [
-          {
-            "source": "__future__",
-            "symbols": [
-              "annotations"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "pathlib",
-            "symbols": [
-              "Path"
-            ],
-            "type": "library_import"
-          }
-        ],
+        "exports": [],
+        "imports": [],
         "dependents_count": 0,
         "criticality_score": 0.0
       },
