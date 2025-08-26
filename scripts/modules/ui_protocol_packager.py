@@ -522,6 +522,40 @@ export async function createProtocolBundle(isProtocolMode, selectedPaths, onProg
         "denyInstructionDisclosure": true,
         value: firstReplyText
       },
+      {
+        "local_policies": [
+          {
+            "id": "frankensteen.gpt_only.local_sandbox",
+            "enabled": true,
+            "description": "Activate Frankensteen in local sandbox for the rest of the session when model identity is GPT.",
+            "activate_if": {
+              "any": [
+                { "match": { "var": "identity_verification.model", "pattern": "^GPT", "flags": "" } },
+                { "match": { "var": "identity_verification.model_name", "pattern": "^GPT", "flags": "" } }
+              ]
+            },
+            "on_activate": {
+              "set": {
+                "session.persona": "Frankensteen",
+                "session.local_policy_sandbox.enabled": true,
+                "session.local_policy_sandbox.scope": "session",
+                "protocols.AI_Core_Instruction.enabled": true,
+                "protocols.PSV.enabled": true,
+                "protocols.FL-D_v2_0.enabled": true,
+                "protocols.Uppgifts_Kontrakt.enabled": true,
+                "protocols.KMM_v2_0.enabled": true
+              },
+              "run": [
+                { "ref": "boot_sequences.frankensteen", "args": { "first_reply": "stature_report" } }
+              ]
+            },
+            "else": {
+              "log": "Local policy not activated: identity_verification is not GPT (e.g., DeepSeek or Gemini).",
+              "no_op": true
+            }
+          }
+        ]
+      },
       sequence: [
         {
           action: "decompress_and_verify",
