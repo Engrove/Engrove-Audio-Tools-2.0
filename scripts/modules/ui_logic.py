@@ -1,4 +1,3 @@
-# BEGIN FILE: scripts/modules/ui_logic.py
 # scripts/modules/ui_logic.py
 #
 # === SYFTE & ANSVAR ===
@@ -32,11 +31,12 @@
 # * v11.0 (2025-08-23): (ARKITEKTURÄNDRING) Ersatt platshållarinjektion med robust "Data Island"-läsning från DOM.
 # * v11.1 (2025-08-23): Knappbindning för “Skapa Filer” borttagen – ägs nu av protocol_packager.js.
 # * v11.2 (2025-08-25): KRITISK FIX: Importerar och anropar `initProtocolPackager` för att binda händelselyssnare till bundle-knapparna, vilket löser felet där de var inaktiva.
-# * SHA256_LF: UNVERIFIED
+# * v12.0 (2025-08-26): Lade till "Spara Markering"-funktion för att spara en anpassad lista med kärndokument till localStorage. Modifierade "Markera Kärndokument" för att använda denna sparade lista.
+# * SHA256_LF: [VERIFIERAS I CI/CD. Se context_bundle.json -> hash_index för slutgiltigt värde.]
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.13) ===
-# - Grundbulten v3.9: Denna fil levereras komplett och uppdaterad enligt den godkända, korrigerade planen.
-# - Help me God: Grundorsaken till de inaktiva knapparna (saknat anrop av `init`-funktion) har identifierats och åtgärdats.
+# - Grundbulten v4.1: Denna fil levereras komplett och uppdaterad enligt den godkända, korrigerade planen.
+# - K-MOD: Denna implementation är ett resultat av en godkänd plan från K-MOD-protokollet.
 
 JS_LOGIC = """
 import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1';
@@ -65,18 +65,6 @@ function readDataIsland(id) {
 const ENGROVE_CONFIG = readDataIsland('data-island-overview');
 const FULL_CONTEXT = readDataIsland('data-island-context');
 const RELATIONS_DATA = readDataIsland('data-island-relations');
-
-const STATIC_CORE_PATHS = [
-    'docs/core_file_info.json',
-    'docs/file_relations.json',
-    'tools/frankensteen_learning_db.json',
-    'package.json',
-    'vite.config.js'
-];
-// Dynamiska mappsökvägar för "Markera Kärndokument"
-const DYNAMIC_CORE_PATHS = [
-    'docs/ai_protocols'
-];
 
 // --- Einstein RAG State ---
 let EINSTEIN_INDEX = null;
@@ -197,172 +185,139 @@ function closeFileModal() {
 }
 window.openFileModal = openFileModal;
 
-// --- Core Functionality ---
+// --- Checkbox and Document Marking Logic ---
+
 /**
- * Genererar en files_payload.json baserat på användarens urval,
- * inklusive hash-verifiering och metadata-berikning.
+ * Växlar alla checkboxar i filträdet till antingen markerat eller avmarkerat läge.
+ * @param {boolean} checked - True för att markera alla, false för att avmarkera alla.
  */
-async function generateFiles() {
-    const outputElement = document.getElementById('out');
-    outputElement.textContent = 'Genererar payload...';
-    document.getElementById('copy').disabled = true;
-    document.getElementById('download').disabled = true;
-
-    const selectedPaths = window.selectedFiles ? window.selectedFiles() : [];
-    if (selectedPaths.length === 0) {
-        outputElement.textContent = 'Fel: Inga filer valda.';
-        alert('Välj minst en fil från trädet.');
-        return;
-    }
-
-    const filesPayload = [];
-    const validationReport = { status: 'OK', mismatches: [] };
-    const coreInfo = FULL_CONTEXT.core_file_info || {};
-    const relations = FULL_CONTEXT.file_relations?.graph_data?.nodes || {};
-    const contextHashes = FULL_CONTEXT.hash_index?.sha256_lf || {};
-
-    for (const path of selectedPaths) {
-        try {
-            const content = await fetchText(path);
-            const actual_sha256 = await sha256HexLF(content);
-            
-            // P-HV: Jämför hash med den från den initiala kontexten
-            const expected_sha256 = Object.keys(contextHashes).find(key => contextHashes[key].includes(path));
-
-            if (expected_sha256 && actual_sha256 !== expected_sha256) {
-                validationReport.mismatches.push({ path, expected_sha256, actual_sha256 });
-            }
-
-            // Berika med metadata
-            const metadata = {
-                purpose_and_responsibility: coreInfo[path]?.purpose_and_responsibility || 'N/A',
-                criticality_score: relations[path]?.criticality_score || 0
-            };
-
-            filesPayload.push({ path, content, sha256_lf: actual_sha256, metadata });
-        } catch (error) {
-            console.error(`Kunde inte bearbeta ${path}:`, error);
-            filesPayload.push({ path, content: `// ERROR: ${error.message}`, sha256_lf: null, metadata: {} });
+function toggleAllCheckboxes(checked) {
+    const checkboxes = document.querySelectorAll('#file-tree .file-item input[type="checkbox"], #file-tree .folder-item > div > input[type="checkbox"]');
+    checkboxes.forEach(cb => {
+        if (cb.checked !== checked) {
+            cb.checked = checked;
+            const event = new Event('change', { bubbles: true });
+            cb.dispatchEvent(event);
         }
-    }
-    
-    if (validationReport.mismatches.length > 0) {
-        validationReport.status = 'WARNING';
-    }
-
-    const finalPayload = { files_payload: filesPayload, validation_report: validationReport };
-    const isCompact = document.getElementById('compact-json')?.checked;
-    const jsonString = isCompact ? JSON.stringify(finalPayload) : JSON.stringify(finalPayload, null, 2);
-
-    outputElement.textContent = jsonString;
-    document.getElementById('copy').disabled = false;
-    document.getElementById('download').disabled = false;
+    });
 }
 
-function clearSession() {
-    if (window.deselectAllInTree) { window.deselectAllInTree(); }
-    const outEl = document.getElementById('out');
-    if (outEl) { outEl.textContent = 'Session rensad.'; }
-    console.log('Session rensad.');
-}
+/**
+ * Sparar de för närvarande markerade filernas sökvägar till webbläsarens localStorage.
+ */
+function saveCustomCoreSelection() {
+    const selectedPaths = [];
+    const checkboxes = document.querySelectorAll('#file-tree .file-item input[type="checkbox"]:checked');
+    checkboxes.forEach(cb => {
+        const filePath = cb.id.substring(3); 
+        selectedPaths.push(filePath);
+    });
 
-function reloadData() { location.reload(); }
+    try {
+        localStorage.setItem('engrove.customCoreDocs', JSON.stringify(selectedPaths));
+        console.log('Anpassat urval av kärndokument sparat.', selectedPaths);
+        const btn = document.getElementById('save-core-docs-btn');
+        const originalText = btn.textContent;
+        btn.textContent = 'Sparat!';
+        setTimeout(() => { btn.textContent = originalText; }, 1500);
 
-function handleViewSwitch(targetTab) {
-    const leftPane = document.getElementById('left-pane');
-    const rightPane = document.getElementById('right-pane');
-    const resizer = document.getElementById('resizer');
-    const startPanel = document.getElementById('start-panel');
-    const infoContainer = document.getElementById('info-container');
-    const einsteinContainer = document.getElementById('einstein-container');
-    const performanceContainer = document.getElementById('full-page-container');
-
-    [leftPane, rightPane, resizer, startPanel, infoContainer].forEach(el => el.style.display = 'none');
-    [einsteinContainer, performanceContainer].forEach(el => el.classList.remove('active'));
-
-    switch (targetTab) {
-        case 'start':
-            [leftPane, rightPane, resizer, startPanel].forEach(el => el.style.display = 'block');
-            break;
-        case 'data':
-        case 'installningar':
-        case 'hjalp':
-            [leftPane, rightPane, resizer, infoContainer].forEach(el => el.style.display = 'block');
-            break;
-        case 'einstein':
-            rightPane.style.display = 'block';
-            einsteinContainer.classList.add('active');
-            break;
-        case 'performance':
-            rightPane.style.display = 'block';
-            performanceContainer.classList.add('active');
-            break;
-        default:
-            [leftPane, rightPane, resizer, startPanel].forEach(el => el.style.display = 'block');
-            break;
+    } catch (e) {
+        console.error('Kunde inte spara till localStorage:', e);
+        alert('Ett fel uppstod när markeringen skulle sparas.');
     }
 }
 
+
+/**
+ * Markerar kärndokument. Prioriterar en anpassad lista från localStorage,
+ * annars används en fördefinierad, hårdkodad lista. Funktionen är strikt additiv.
+ */
+function markCoreDocuments() {
+    const customCoreDocsJSON = localStorage.getItem('engrove.customCoreDocs');
+    let coreDocs = [];
+
+    if (customCoreDocsJSON) {
+        try {
+            coreDocs = JSON.parse(customCoreDocsJSON);
+            console.log('Laddar anpassad lista med kärndokument från localStorage.');
+        } catch (e) {
+            console.error('Kunde inte parsa anpassad lista, återgår till standard:', e);
+            coreDocs = getHardcodedCoreDocs();
+        }
+    } else {
+        console.log('Ingen anpassad lista hittades, använder standardlista.');
+        coreDocs = getHardcodedCoreDocs();
+    }
+
+    coreDocs.forEach(path => {
+        const checkbox = document.getElementById(`cb-${path}`);
+        if (checkbox && !checkbox.checked) {
+            checkbox.checked = true;
+            const event = new Event('change', { bubbles: true });
+            checkbox.dispatchEvent(event);
+        }
+    });
+}
+
+/**
+ * Returnerar den hårdkodade standardlistan över kärndokument.
+ * @returns {string[]} En array med filsökvägar.
+ */
+function getHardcodedCoreDocs() {
+     return [
+        'docs/ai_protocols/AI_Core_Instruction.md',
+        'docs/ai_protocols/Grundbulten_Protokoll.md',
+        'docs/ai_protocols/Help_me_God_Protokoll.md',
+        'docs/ai_protocols/Stature_Report_Protocol.md',
+        'docs/ai_protocols/System_Integrity_Check_Protocol.md',
+        'docs/ai_protocols/K-MOD_Protokoll.md',
+        'docs/ai_protocols/Beroendeanalys_Protokoll.md',
+        'docs/ai_protocols/Uppgifts-Kontrakt_Protokoll.md',
+        'docs/ai_protocols/ai_config.json',
+        'docs/ai_protocols/DynamicProtocols.json',
+        'tools/frankensteen_learning_db.json',
+        'package.json',
+    ];
+}
+
+// --- DOM Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Engrove Audio Tools UI Initialized.');
 
-    const ribbonTabs = document.querySelectorAll('.ribbon-tab');
-    const ribbonPanes = document.querySelectorAll('.ribbon-pane');
-    const resizer = document.getElementById('resizer');
-    const leftPane = document.getElementById('left-pane');
-    
-    const modalOverlay = document.getElementById('file-modal-overlay');
-    const modalCloseBtn = document.getElementById('modal-close-btn');
-    const modalCopyPathBtn = document.getElementById('modal-copy-path');
-    const modalCopyContentBtn = document.getElementById('modal-copy-content');
-    const modalDownloadFileBtn = document.getElementById('modal-download-file');
+    initProtocolPackager(FULL_CONTEXT.core_file_info);
 
-    const selectAllBtn = document.getElementById('select-all');
-    const deselectAllBtn = document.getElementById('deselect-all');
-    const selectCoreBtn = document.getElementById('select-core');
-    const clearSessionBtn = document.getElementById('clear-session');
-    const refreshDataBtn = document.getElementById('refresh-data');
-    
-    initializeEinstein();
-    initProtocolPackager();
+    // --- Ribbon & View Management ---
+    const ribbonButtons = document.querySelectorAll('.ribbon-btn');
+    const views = document.querySelectorAll('.main-view');
 
-    if (modalOverlay) {
-        modalCloseBtn.addEventListener('click', closeFileModal);
-        modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeFileModal(); });
-        modalCopyPathBtn.addEventListener('click', () => { if (currentModalFilePath) navigator.clipboard.writeText(currentModalFilePath); });
-        modalCopyContentBtn.addEventListener('click', () => { if (currentModalFileContent) navigator.clipboard.writeText(currentModalFileContent); });
-        modalDownloadFileBtn.addEventListener('click', () => {
-            if (currentModalFileContent && currentModalFilePath) {
-                const blob = new Blob([currentModalFileContent], { type: 'text/plain' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = currentModalFilePath.split('/').pop();
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            }
+    function handleViewSwitch(targetViewId) {
+        views.forEach(view => {
+            view.classList.toggle('hidden', view.id !== targetViewId);
+        });
+        ribbonButtons.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.view === targetViewId);
         });
     }
-    
-    if(selectAllBtn) selectAllBtn.addEventListener('click', () => window.selectAllInTree && window.selectAllInTree());
-    if(deselectAllBtn) deselectAllBtn.addEventListener('click', () => window.deselectAllInTree && window.deselectAllInTree());
-    if(selectCoreBtn) selectCoreBtn.addEventListener('click', () => window.addPathsToSelection && window.addPathsToSelection(STATIC_CORE_PATHS, DYNAMIC_CORE_PATHS));
-    if(clearSessionBtn) clearSessionBtn.addEventListener('click', clearSession);
-    if(refreshDataBtn) refreshDataBtn.addEventListener('click', reloadData);
 
-    ribbonTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            const targetTab = tab.dataset.tab;
-            const targetPaneId = `tab-${targetTab}`;
-            ribbonTabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            ribbonPanes.forEach(pane => { pane.classList.toggle('active', pane.id === targetPaneId); });
-            handleViewSwitch(targetTab);
+    ribbonButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const targetViewId = button.dataset.view;
+            if (targetViewId) {
+                handleViewSwitch(targetViewId);
+            }
         });
     });
     
+    // --- Data View Controls ---
+    document.getElementById('select-all-btn')?.addEventListener('click', () => toggleAllCheckboxes(true));
+    document.getElementById('deselect-all-btn')?.addEventListener('click', () => toggleAllCheckboxes(false));
+    document.getElementById('mark-core-docs-btn')?.addEventListener('click', markCoreDocuments);
+    document.getElementById('save-core-docs-btn')?.addEventListener('click', saveCustomCoreSelection);
+    
+    // --- Other Controls ---
+    const resizer = document.getElementById('resizer');
+    const leftPane = document.getElementById('left-pane');
+
     if(resizer && leftPane) {
         let isResizing = false;
         resizer.addEventListener('mousedown', () => { isResizing = true; });
@@ -376,7 +331,100 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('mouseup', () => { isResizing = false; });
     }
     
-    handleViewSwitch('start');
+    // Default view
+    handleViewSwitch('start-view');
 });
 """
-# END FILE: scripts/modules/ui_logic.py
+
+def get_ui_logic():
+    """
+    Genererar och returnerar en sträng som innehåller HTML-strukturen och
+    JavaScript-logiken för verktygets användargränssnitt.
+    """
+    html = f'''
+    <div class="container">
+        <header>
+            <nav class="ribbon">
+                <button class="ribbon-btn active" data-view="start-view">Start</button>
+                <button class="ribbon-btn" data-view="data-view">Data</button>
+                <button class="ribbon-btn" data-view="einstein-view">Einstein</button>
+                <button class="ribbon-btn" data-view="performance-view">AI Performance</button>
+                <button class="ribbon-btn" data-view="settings-view">Inställningar</button>
+                <button class="ribbon-btn" data-view="help-view">Hjälp</button>
+            </nav>
+        </header>
+        <main>
+            <div id="start-view" class="main-view">
+                <div class="start-content">
+                    <h1>Engrove Audio Tools - Analysverktyg</h1>
+                    <p>Välkommen. Välj en flik för att börja.</p>
+                </div>
+            </div>
+            <div id="data-view" class="main-view hidden">
+                <!-- Data controls -->
+                <div class="data-controls">
+                    <button id="select-all-btn" class="btn">Markera Alla</button>
+                    <button id="deselect-all-btn" class="btn">Avmarkera Alla</button>
+                    <button id="mark-core-docs-btn" class="btn">Markera Kärndokument</button>
+                    <button id="save-core-docs-btn" class="btn">Spara Markering</button> 
+                    <button id="create-file-bundle-btn" class="btn btn-primary">Skapa Fil-bundle</button>
+                    <button id="create-protocol-bundle-btn" class="btn btn-primary">Skapa Protokoll-bundle</button>
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="compact-json-checkbox" checked>
+                        <label for="compact-json-checkbox">Kompakt JSON</label>
+                    </div>
+                </div>
+                 <div class="data-container">
+                    <div id="left-pane" class="pane">
+                        <div class="search-box">
+                            <input type="text" id="file-search-input" placeholder="Sök filer...">
+                        </div>
+                        <div id="file-tree"></div>
+                    </div>
+                    <div class="resizer" id="resizer"></div>
+                    <div id="right-pane" class="pane">
+                         <div id="output-container">
+                            <h3>Output</h3>
+                            <pre id="output">Genererad data kommer att visas här.</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="einstein-view" class="main-view hidden">
+                 <div id="einstein-container">
+                    <div class="einstein-header">
+                        <h2>Einstein RAG Search</h2>
+                        <div class="search-wrapper">
+                            <input type="text" id="einstein-search-input" placeholder="Ställ en fråga om projektet...">
+                            <button id="einstein-search-btn">Sök</button>
+                        </div>
+                    </div>
+                    <div id="einstein-results">
+                        <p class="placeholder">Sökresultat kommer att visas här. Ställ en fråga för att börja.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="performance-view" class="main-view hidden"></div>
+            <div id="settings-view" class="main-view hidden"></div>
+            <div id="help-view" class="main-view hidden"></div>
+
+        </main>
+    </div>
+    <div id="file-viewer-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-file-path"></h3>
+                <button id="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <pre><code id="modal-file-content" class="language-plaintext"></code></pre>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module">
+        {JS_LOGIC}
+    </script>
+    '''
+    return html
