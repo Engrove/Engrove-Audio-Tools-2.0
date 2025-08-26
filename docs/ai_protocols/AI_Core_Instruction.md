@@ -52,6 +52,7 @@
 
 ```json
 {
+  "$schema": "docs/ai_protocols/schemas/AI_Core_Instruction.schema.json",
   "_meta": {
     "document_id": "AI_Core_Instruction",
     "version": "5.13.1-JSON",
