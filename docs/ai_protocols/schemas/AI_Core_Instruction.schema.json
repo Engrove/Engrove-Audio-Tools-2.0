@@ -1,32 +1,12 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "AI Core Instruction Schema",
-  "description": "Defines the structure of the JSON object within AI_Core_Instruction.md.",
+  "description": "Schema for validating the structure of AI_Core_Instruction.md's embedded JSON configuration.",
   "type": "object",
-  "required": [
-    "_meta",
-    "persona_and_roles",
-    "core_philosophy",
-    "protocol_bindings",
-    "specialized_policies",
-    "pre_response_verification",
-    "meta_protocols",
-    "decision_tiers",
-    "delivery_contract",
-    "golden_rules",
-    "workflow",
-    "status_report_handling",
-    "rule_prioritization",
-    "new_session_checklist"
-  ],
   "properties": {
-    "$schema": {
-      "type": "string",
-      "format": "uri-reference"
-    },
     "_meta": {
       "type": "object",
-      "required": ["document_id", "version", "purpose", "source_file", "history"],
+      "description": "Metadata about the instruction document.",
       "properties": {
         "document_id": { "type": "string" },
         "version": { "type": "string" },
@@ -36,65 +16,370 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["version", "description"],
             "properties": {
               "version": { "type": "string" },
               "description": { "type": "string" }
-            }
+            },
+            "required": ["version", "description"]
           }
         }
-      }
+      },
+      "required": ["document_id", "version", "purpose", "source_file", "history"]
     },
     "persona_and_roles": {
-      "type": "object"
+      "type": "object",
+      "description": "Defines the AI's persona and the roles of the AI and human partners.",
+      "properties": {
+        "name": { "type": "string" },
+        "tagline": { "type": "string" },
+        "profiling": { "type": "string" },
+        "roles": {
+          "type": "object",
+          "properties": {
+            "ai_partner": { "$ref": "#/definitions/role" },
+            "human_partner": { "$ref": "#/definitions/role" }
+          },
+          "required": ["ai_partner", "human_partner"]
+        }
+      },
+      "required": ["name", "tagline", "profiling", "roles"]
     },
     "core_philosophy": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "purpose": { "type": "string" },
+        "governance": {
+          "type": "object",
+          "properties": {
+            "primary_source": { "type": "string" },
+            "rule_type": { "type": "string" },
+            "negotiability": { "type": "string" }
+          },
+          "required": ["primary_source", "rule_type", "negotiability"]
+        },
+        "breach_condition": { "type": "string" }
+      },
+      "required": ["purpose", "governance", "breach_condition"]
     },
     "protocol_bindings": {
       "type": "object",
-      "required": ["description", "execution_principle", "bindings"],
+      "description": "Mandatory mapping between task types and protocols.",
       "properties": {
+        "description": { "type": "string" },
+        "execution_principle": { "type": "string" },
         "bindings": {
           "type": "array",
           "items": {
             "type": "object",
+            "properties": {
+              "task_type": { "type": "string" },
+              "protocol": { "type": "string" },
+              "details": { "type": "string" }
+            },
             "required": ["task_type", "protocol", "details"]
           }
         }
-      }
+      },
+      "required": ["description", "execution_principle", "bindings"]
     },
     "specialized_policies": {
-      "type": "array"
+      "type": "array",
+      "description": "Specific policies for handling common, complex situations.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "policy_id": { "type": "string" },
+          "title": { "type": "string" },
+          "rule": { "type": "string" }
+        },
+        "required": ["policy_id", "title", "rule"]
+      }
     },
     "pre_response_verification": {
-      "type": "object"
+      "type": "object",
+      "description": "The mandatory Pre-Response Verification protocol.",
+      "properties": {
+        "_comment": { "type": "string" },
+        "protocolId": { "type": "string" },
+        "version": { "type": "string" },
+        "status": { "type": "string" },
+        "description": { "type": "string" },
+        "trigger": {
+          "type": "object",
+          "properties": { "event": { "type": "string" } },
+          "required": ["event"]
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "integer" },
+              "action": { "type": "string" },
+              "condition": { "type": "string" },
+              "details": { "type": "object" }
+            },
+            "required": ["id", "action", "details"]
+          }
+        },
+        "output_requirements": {
+          "type": "object",
+          "properties": {
+            "must_prepend_confirmation": { "type": "boolean" }
+          },
+          "required": ["must_prepend_confirmation"]
+        },
+        "schema": {
+          "type": "object",
+          "properties": {
+            "artifact": { "type": "string" }
+          },
+          "required": ["artifact"]
+        }
+      },
+      "required": ["protocolId", "version", "status", "description", "trigger", "steps", "output_requirements"]
     },
     "meta_protocols": {
-      "type": "object"
+      "type": "object",
+      "description": "Internal monitoring and self-correction protocols.",
+      "properties": {
+        "fld": { "$ref": "#/definitions/metaProtocol" },
+        "stc": { "$ref": "#/definitions/metaProtocol" },
+        "kmm": { "$ref": "#/definitions/kmmProtocol" },
+        "kiv": { "$ref": "#/definitions/kivProtocol" },
+        "psv-p": { "$ref": "#/definitions/psvpProtocol" }
+      },
+      "required": ["fld", "stc", "kmm", "kiv", "psv-p"]
     },
     "decision_tiers": {
-      "type": "object"
+      "type": "object",
+      "description": "Defines levels of autonomy and escalation for decision-making.",
+      "properties": {
+        "description": { "type": "string" },
+        "rule": { "type": "string" },
+        "tiers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "agent": { "type": "string" },
+              "scope": { "type": "string" },
+              "requirement": { "type": "string" }
+            },
+            "required": ["id", "agent", "scope"]
+          }
+        }
+      },
+      "required": ["description", "rule", "tiers"]
     },
     "delivery_contract": {
-      "type": "object"
+      "type": "object",
+      "description": "Defines what constitutes a completed task.",
+      "properties": {
+        "definition_of_done": { "type": "array", "items": { "type": "string" } },
+        "quality_gates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string" },
+              "check": { "type": "string" }
+            },
+            "required": ["id", "name", "check"]
+          }
+        }
+      },
+      "required": ["definition_of_done", "quality_gates"]
     },
     "golden_rules": {
-      "type": "object"
+      "type": "object",
+      "description": "Summary of non-negotiable core principles.",
+      "properties": {
+        "_comment": { "type": "string" },
+        "source": { "type": "string" },
+        "summary": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" },
+              "statement": { "type": "string" }
+            },
+            "required": ["id", "title", "statement"]
+          }
+        }
+      },
+      "required": ["source", "summary"]
     },
     "workflow": {
-      "type": "object"
+      "type": "object",
+      "description": "Standard operating procedure for collaboration.",
+      "properties": {
+        "title": { "type": "string" },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "step": { "type": "integer" },
+              "actor": { "type": "string" },
+              "action": { "type": "string" },
+              "description": { "type": "string" }
+            },
+            "required": ["step", "actor", "action", "description"]
+          }
+        }
+      },
+      "required": ["title", "steps"]
     },
     "status_report_handling": {
-      "type": "object"
+      "type": "object",
+      "description": "Rules for interpreting the end-of-response status panels.",
+      "properties": {
+        "rule_id": { "type": "string" },
+        "is_mandatory": { "type": "boolean" },
+        "description": { "type": "string" },
+        "actions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "condition": { "type": "string" },
+              "recommended_action": { "type": "string" }
+            },
+            "required": ["condition", "recommended_action"]
+          }
+        }
+      },
+      "required": ["rule_id", "is_mandatory", "description", "actions"]
     },
     "rule_prioritization": {
-      "type": "object"
+      "type": "object",
+      "description": "Defines the hierarchy of rules in case of conflicts.",
+      "properties": {
+        "description": { "type": "string" },
+        "priority_order": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "priority": { "type": "integer" },
+              "source": { "type": "string" },
+              "overrides": { "type": "string" }
+            },
+            "required": ["priority", "source", "overrides"]
+          }
+        }
+      },
+      "required": ["description", "priority_order"]
     },
     "new_session_checklist": {
       "type": "array",
+      "description": "Mandatory checks to perform at the start of a new session.",
       "items": { "type": "string" }
     }
   },
-  "additionalProperties": false
+  "required": [
+    "_meta", "persona_and_roles", "core_philosophy", "protocol_bindings",
+    "specialized_policies", "pre_response_verification", "meta_protocols",
+    "decision_tiers", "delivery_contract", "golden_rules", "workflow",
+    "status_report_handling", "rule_prioritization", "new_session_checklist"
+  ],
+  "definitions": {
+    "role": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "responsibilities": { "type": "string" }
+      },
+      "required": ["name", "responsibilities"]
+    },
+    "metaProtocol": {
+      "type": "object",
+      "properties": {
+        "protocol_id": { "type": "string" },
+        "version": { "type": "string" },
+        "title": { "type": "string" },
+        "rules": {
+          "type": "array",
+          "items": { "type": "object" }
+        }
+      },
+      "required": ["protocol_id", "version", "title", "rules"]
+    },
+    "kmmProtocol": {
+      "type": "object",
+      "properties": {
+        "protocol_id": { "type": "string" },
+        "version": { "type": "string" },
+        "title": { "type": "string" },
+        "trigger": { "type": "string" },
+        "action": { "type": "string" },
+        "format": { "type": "string" },
+        "status_levels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "level": { "type": "string" },
+              "range": { "type": "string" },
+              "risk": { "type": "string" },
+              "recommendation": { "type": "string" }
+            },
+            "required": ["level", "range", "risk", "recommendation"]
+          }
+        }
+      },
+      "required": ["protocol_id", "version", "title", "trigger", "action", "format", "status_levels"]
+    },
+    "kivProtocol": {
+      "type": "object",
+      "properties": {
+        "protocol_id": { "type": "string" },
+        "version": { "type": "string" },
+        "title": { "type": "string" },
+        "trigger": { "type": "string" },
+        "action": { "type": "string" },
+        "quality_factors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "factor": { "type": "string" },
+              "condition": { "type": "string" },
+              "impact": { "type": "string" }
+            },
+            "required": ["factor", "condition", "impact"]
+          }
+        }
+      },
+      "required": ["protocol_id", "version", "title", "trigger", "action", "quality_factors"]
+    },
+    "psvpProtocol": {
+      "type": "object",
+      "properties": {
+        "protocol_id": { "type": "string" },
+        "version": { "type": "string" },
+        "title": { "type": "string" },
+        "priority": { "type": "string" },
+        "sub_protocols": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "purpose": { "type": "string" },
+              "trigger_conditions": { "type": "array", "items": { "type": "string" } },
+              "execution_steps": { "type": "array", "items": { "type": "string" } }
+            },
+            "required": ["id", "purpose", "trigger_conditions", "execution_steps"]
+          }
+        }
+      },
+      "required": ["protocol_id", "version", "title", "priority", "sub_protocols"]
+    }
+  }
 }
