@@ -28,7 +28,8 @@
 # * v2.1 (2025-08-25): Stabilisering. Tydligare felhantering, storleksvakt för inline,
 #   deterministisk sortering av meny, förbättrad indexering och metadata.
 # * v2.2 (2025-08-26): KORRIGERING: Anropet `window.Engrove.getSelectedFilePaths()` har ersatts med det korrekta, globalt exponerade `window.selectedFiles()`, vilket åtgärdar ett `TypeError` vid bundle-generering.
-# * SHA256_LF: <kommer att genereras av CI/CD efter commit>
+# * v2.3 (2025-08-26): PRINCIP-SYNTES: Ersatt den passiva SHA256_LF-platshållaren med en agerbar instruktion enligt heuristik H-20250826-01.
+# * SHA256_LF: [VERIFIERAS I CI/CD. Se context_bundle.json -> hash_index för slutgiltigt värde.]
 #
 # === EXTERNA BEROENDEN ===
 # - pako (global) för zlib/deflate
