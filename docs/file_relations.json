@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-26T13:29:42.782141+00:00",
+    "generated_at": "2025-08-26T13:36:07.817880+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -1782,7 +1782,12 @@
         "type": "Python Script",
         "category": "code",
         "language": "py",
-        "exports": [],
+        "exports": [
+          {
+            "symbol": "get_ui_logic",
+            "type": "function"
+          }
+        ],
         "imports": [],
         "dependents_count": 0,
         "criticality_score": 0.0
