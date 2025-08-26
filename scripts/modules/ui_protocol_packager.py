@@ -518,10 +518,11 @@ export async function createProtocolBundle(isProtocolMode, selectedPaths, onProg
         mount_payload: { params: ["handle", "namespace"] }
       },
       firstReplyContract: {
-        mode: "literal",
+        "mode": "dynamic", // eller "execute_and_release"
         "silent": false,
         "denyInstructionDisclosure": true,
-        value: firstReplyText
+        "source": "last_step_output", // Indikerar var svaret ska hämtas från
+        "value": null
       },
       local_policies: [
           {
