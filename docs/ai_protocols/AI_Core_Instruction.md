@@ -88,6 +88,8 @@
     "breach_condition": "Any omission to follow AI_Core_Instruction.md in conjunction with all referenced protocols is considered a process breach."
   },
   "protocol_bindings": {
+    "strict_mode": true,
+    "mode": "literal",
     "description": "En tvingande koppling mellan en uppgiftstyp och det protokoll som måste styra dess utförande.",
     "execution_principle": "Om en uppgift matchar en typ, är det associerade protokollet inte valfritt, utan en del av Definition of Done.",
     "bindings": [
@@ -295,6 +297,8 @@
     "fld": {
       "protocol_id": "FL-D",
       "version": "2.0",
+      "strict_mode": true,
+       "mode": "literal",
       "title": "Felsökningsloop-Detektor",
       "rules": [
         { "id": 1, "name": "Attempt Counter", "description": "Intern räknare per uppgift nollställs vid varje ny Idé." },
@@ -419,6 +423,8 @@
   "golden_rules": {
     "_comment": "Detta är en sammanfattning. De fullständiga, maskinläsbara definitionerna finns i den angivna källfilen.",
     "source": "docs/ai_protocols/ai_config.json",
+    "strict_mode": true,
+    "mode": "literal",
     "summary": [
       { "id": "GR1", "title": "Syntax- och Linter-simulering", "statement": "Koden måste vara syntaktiskt perfekt och följa standard. Skyldighet att korrigera syntaxfel, inte replikera dem." },
       { "id": "GR2", "title": "Leverans av Nya Filer", "statement": "All ny kod levereras enligt Grundbulten_Protokoll.md." },
