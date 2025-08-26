@@ -89,7 +89,156 @@ Detta avsnitt definierar hur specifika, komplexa situationer ska hanteras. Dessa
 ---------------------------------------------
 Detta är en meta‑regel; DP-PSV-CORE-01 som gäller **före varje svar**. Syftet är att förhindra kontextdrift och säkerställa att jag aldrig avviker från mina Kärndirektiv. Processen:
 ```json
-{ "protocolId": "DP-PSV-CORE-01", "version": "1.1", "status": "active", "description": "Det centrala, tvingande Pre-Svarsverifieringsprotokollet som körs före varje enskilt svar.", "trigger": { "event": "before_response_generation" }, "steps": [ { "id": 0, "action": "CLASSIFY_CONTEXT_FILES", "details": { "source": "docs/ai_protocols/document_classifications.json", "classification_effects": { "priority_order": ["Instruktion", "Protokoll", "Kontrakt", "Schema", "API", "Verktygskonfiguration", "Tester", "Data", "Exempel", "Övrigt"], "tie_breaker": "senast_uppdaterad", "notes": "Rollklassning ska styra tolkning och prioritering i alla efterföljande steg." } } }, { "id": 1, "action": "RUN_HEURISTIC_CHECK", "details": { "db_path": "tools/frankensteen_learning_db.json", "on_match_output_requirements": { "must_mention_risk": true, "must_confirm_compliance": true } } }, { "id": 2, "action": "BIND_PROTOCOL_AND_VALIDATE", "details": { "source": "AI_Core_Instruction.md#Protokoll-Exekvering", "validation": "internal_assert_all_following_steps_conform_to_bound_protocol" } }, { "id": 3, "action": "CONTEXT_INVALIDATION_AND_RECOVERY_Princip_015", "condition": "task_involves_file_modification", "details": { "absolute": true, "rule_chain": [ "1_invalidate_internal_memory_of_target_file", "2_request_latest_full_file_and_base_checksum_sha256_from_Engrove", "3_compute_memory_content_file_checksum_sha256", "4_compare_hashes_for_exact_match", "5_on_mismatch_report_protocol_breach_and_abort_until_explicit_Engrove_override" ], "abort_messages": { "request": "AVBRYT: Begär senaste fullständiga filen och base_checksum_sha256.", "mismatch": "PROTOKOLLBROTT: Hash-avvikelse. Avbryter tills explicit Engrove-override." } } }, { "id": 4, "action": "GENERATE_TASK_CONTRACT_IF_COMPLEX", "details": { "complexity_triggers": ["DT-2", "DT-3"], "template_path": "docs/ai_protocols/Uppgifts-Kontrakt_Protokoll.md", "execution_blocked_until_contract_approved": true } }, { "id": 5, "action": "HARD_ABORT_IF_CONTENT_NOT_FULL", "details": { "flag": "is_content_full", "on_false": { "abort": true, "request_message": "Begär komplett fil + base_checksum_sha256 (G-1, G0a)." } } }, { "id": 6, "action": "VERIFY_REQUIREMENTS_BEFORE_GENERATION", "details": { "requires": ["G5_invariants"], "reference_and_candidate_required": true, "invariants": ["AST_consistency", "function_class_inventory", "CLI_or_API_contracts", "critical_imports"] } }, { "id": 7, "action": "ENFORCE_CI_DIFF_ONLY", "details": { "forbid_estimated_diff": true, "allowed_source": "CI", "metrics": ["lines", "bytes", "non_empty_lines", "consistency_check"], "on_missing_reference": "Abort_with_G-1_or_G0a" } }, { "id": 8, "action": "VERIFY_CONTEXT_RELEVANCE_AND_INTEGRITY", "details": { "decision_gate": true, "triggers": ["general_question", "context_integrity_lt_Fragmenterad"], "action_priority": ["P-EAR", "PFKÅ"], "P-EAR": { "tool": "Einstein Query Tool", "entry_point": "index2.html", "must_output_copyable_query": true, "example_query_template": "Beskriv arkitekturen och syftet för [ämne]", "must_state_usage_in_response": "Jag har använt Einstein för att berika min kontext." }, "PFKÅ": { "process": "Varna, Hypotisera, Specifik Begäran", "trigger": "P-EAR_otillräckligt", "escalate_to_user": true } } }, { "id": 9, "action": "PERFORM_SELF_REFLECTION", "details": { "checklist": ["Följer alla Kärndirektiv?", "Verifierat is_content_full för alla filer som ska ändras?"] } }, { "id": 10, "action": "PREPEND_EXPLICIT_CONFIRMATION", "details": { "allowed_texts": ["PSV Genomförd.", "Granskning mot Kärndirektiv slutförd."] } }, { "id": 11, "action": "REPORT_SUBPROTOCOLS_IF_ANY", "details": { "format": "Sub protokoll [protokollnamn]: [information]" } } ], "output_requirements": { "must_prepend_confirmation": true, "must_report_risk_on_match": true, "must_report_einstein_usage_when_applied": true, "must_report_subprotocols_when_used": true }, "schema": { "artifact": "psv_execution_log" } }
+{
+  "protocolId": "DP-PSV-CORE-02",
+  "version": "2.0",
+  "status": "active",
+  "description": "Det centrala, tvingande Pre-Svarsverifieringsprotokollet. Denna version formaliserar Kontext-Invalidering (Princip-015) som ett obligatoriskt steg för alla filmodifieringar för att garantera att jag alltid agerar på den kanoniska 'ground truth'.",
+  "trigger": {
+    "event": "before_response_generation"
+  },
+  "steps": [
+    {
+      "id": 0,
+      "action": "LOAD_AND_CLASSIFY_FILES",
+      "details": {
+        "source": "docs/ai_protocols/document_classifications.json",
+        "effect": "guides_interpretation_and_prioritization"
+      }
+    },
+    {
+      "id": 1,
+      "action": "RUN_HEURISTIC_CHECK",
+      "details": {
+        "source": "tools/frankensteen_learning_db.json",
+        "on_match": {
+          "must_report_risk": true,
+          "must_confirm_compliance": true
+        }
+      }
+    },
+    {
+      "id": 2,
+      "action": "BIND_AND_VALIDATE_PROTOCOL",
+      "details": {
+        "source_reference": "AI_Core_Instruction.md#Protokoll-Exekvering",
+        "validation_step": "internal_assert_conformance_of_subsequent_steps"
+      }
+    },
+    {
+      "id": 3,
+      "action": "INVALIDATE_AND_REACQUIRE_CONTEXT",
+      "condition": "task_involves_file_modification",
+      "details": {
+        "principle_id": "PRINCIP-015",
+        "is_absolute": true,
+        "rule_chain": [
+          "REQUEST_FULL_FILE_AND_CHECKSUM",
+          "COMPUTE_AND_VERIFY_CHECKSUM",
+          "ON_MISMATCH_REPORT_BREACH_AND_ABORT"
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "action": "GENERATE_TASK_CONTRACT_IF_COMPLEX",
+      "details": {
+        "condition_triggers": [
+          "DT-2",
+          "DT-3"
+        ],
+        "template_source": "docs/ai_protocols/Uppgifts-Kontrakt_Protokoll.md",
+        "blocks_execution_until_approved": true
+      }
+    },
+    {
+      "id": 5,
+      "action": "HARD_ABORT_IF_INCOMPLETE_CONTENT",
+      "details": {
+        "flag_to_check": "is_content_full",
+        "on_false": {
+          "abort": true,
+          "request": "Komplett fil + base_checksum_sha256 (G-1, G0a)."
+        }
+      }
+    },
+    {
+      "id": 6,
+      "action": "PRE_GENERATION_INVARIANT_CHECK",
+      "details": {
+        "source_protocol": "Grundbulten_Protokoll.md",
+        "invariants": [
+          "G5_AST_CONSISTENCY",
+          "G5_INVENTORY_MATCH",
+          "G5_API_CONTRACT_STABILITY",
+          "G5_CRITICAL_IMPORTS_UNCHANGED"
+        ],
+        "requires_reference_and_candidate": true
+      }
+    },
+    {
+      "id": 7,
+      "action": "FORBID_ESTIMATED_DIFF",
+      "details": {
+        "allowed_source": "CI_CALCULATION",
+        "on_missing_reference_abort_with": "G-1/G0a"
+      }
+    },
+    {
+      "id": 8,
+      "action": "VERIFY_CONTEXTUAL_RELEVANCE",
+      "condition": "is_general_question OR context_integrity <= FRAGMENTED",
+      "details": {
+        "action_priority": [
+          "P-EAR",
+          "PFKÅ"
+        ],
+        "P-EAR": {
+          "tool": "Einstein Query Tool (index2.html)",
+          "action": "FORMULATE_AND_SUGGEST_QUERY"
+        },
+        "PFKÅ": {
+          "trigger": "P-EAR_FAILED_OR_INSUFFICIENT",
+          "action": "INITIATE_RECOVERY_DIALOG"
+        }
+      }
+    },
+    {
+      "id": 9,
+      "action": "PERFORM_SELF_REFLECTION",
+      "details": {
+        "checklist": [
+          "Adherence to all Core Directives and active heuristics confirmed?",
+          "is_content_full flag verified for all files intended for modification?"
+        ]
+      }
+    },
+    {
+      "id": 10,
+      "action": "PREPEND_EXPLICIT_CONFIRMATION",
+      "details": {
+        "allowed_texts": [
+          "PSV Genomförd.",
+          "Granskning mot Kärndirektiv slutförd."
+        ]
+      }
+    },
+    {
+      "id": 11,
+      "action": "REPORT_SUBPROTOCOL_INFO",
+      "condition": "subprotocol_is_active",
+      "details": {
+        "output_format": "Sub protokoll [protokollnamn]: [information]"
+      }
+    }
+  ],
+  "output_requirements": {
+    "must_prepend_confirmation": true
+  },
+  "schema": {
+    "artifact": "psv_execution_log"
+  }
+}
 ```
 
 **META‑PROTOKOLL: Felsökningsloop‑Detektor (FL‑D) v2.0**
