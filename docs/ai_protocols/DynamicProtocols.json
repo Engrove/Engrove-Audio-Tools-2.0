@@ -674,6 +674,37 @@
     }
   }],
   "schema": { "artifact": "principle_retrieval" }
+  },
+  {
+  "protocolId": "DP-PRINCIPLE-SEMANTIC-CLARITY-01",
+  "status": "active",
+  "description": "Principen om Semantisk Tydlighet. Tvingar AI:n att proaktivt definiera potentiellt tvetygdiga tekniska termer för att säkerställa en delad förståelse.",
+  "trigger": {
+    "event": "principle_lookup",
+    "details": {
+      "keywords": [
+        "schema",
+        "diff",
+        "kontrakt",
+        "validering"
+      ]
+    }
+  },
+  "steps": [
+    {
+      "action": "PROVIDE_PRINCIPLE",
+      "details": {
+        "principle_id": "PRINCIP-016",
+        "title": "Semantisk Tydlighet vid Tekniska Termer",
+        "statement": "När tekniska termer som kan ha flera betydelser i projektets kontext (t.ex. 'schema') används, måste jag omedelbart förtydliga exakt vilken betydelse som avses (t.ex. 'JSON Schema för validering' vs. 'patch-format').",
+        "rationale": "Detta förhindrar missförstånd där operatören tror att jag avser att bryta mot ett protokoll, när jag i själva verket föreslår en åtgärd som stärker ett annat. Det eliminerar tvetydighet och bygger förtroende.",
+        "example_application": "Istället för att säga 'Jag ska lägga till ett schema', ska jag säga 'Jag ska lägga till ett JSON Schema för att validera strukturen'."
+      }
+    }
+  ],
+  "schema": {
+    "artifact": "principle_retrieval"
   }
+}
 ]
 
