@@ -1,122 +1,122 @@
 [
-{
-  "protocolId": "DP-COMMAND-MENU-01",
-  "description": "A self-contained protocol that triggers an interactive and logically grouped command menu.",
-  "status": "active",
-  "trigger": {
-    "event": "user_input_matches",
-    "details": [
+  {
+    "protocolId": "DP-COMMAND-MENU-01",
+    "description": "A self-contained protocol that triggers an interactive and logically grouped command menu.",
+    "status": "active",
+    "trigger": {
+      "event": "user_input_matches",
+      "details": [
+        {
+          "string": "???",
+          "responseTemplate": "PSV Genomförd. Enligt heuristik H-20250809-19..., presenterar jag följande tillgängliga åtgärder:\\n\\nVälj en åtgärd genom att svara med motsvarande siffra:"
+        },
+        {
+          "string": "meny",
+          "responseTemplate": "Välj en åtgärd genom att svara med motsvarande siffra:"
+        }
+      ]
+    },
+    "steps": [
       {
-        "string": "???",
-        "responseTemplate": "PSV Genomförd. Enligt heuristik H-20250809-19..., presenterar jag följande tillgängliga åtgärder:\n\nVälj en åtgärd genom att svara med motsvarande siffra:"
-      },
-      {
-        "string": "meny",
-        "responseTemplate": "Välj en åtgärd genom att svara med motsvarande siffra:"
+        "action": "PRESENT_AND_EXECUTE_MENU",
+        "details": {
+          "header": "Välj en åtgärd:",
+          "optionGroups": [
+            {
+              "title": "--- Session & Status ---",
+              "options": [
+                {
+                  "description": "1. Avsluta Sessionen (Genererar slutrapport & artefakter för arkivering)",
+                  "actionToExecute": "EXECUTE_PROTOCOL",
+                  "actionDetails": {
+                    "protocolFile": "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md"
+                  }
+                },
+                {
+                  "description": "2. Visa Systemstatus (Genererar en ny 'Stature Report' för att se min nuvarande hälsa)",
+                  "actionToExecute": "EXECUTE_PROTOCOL",
+                  "actionDetails": {
+                    "protocolFile": "docs/ai_protocols/Stature_Report_Protocol.md"
+                  }
+                },
+                {
+                  "description": "3. Analysera AI-Minne (Genererar en djupgående rapport om minnesstatus och kontextintegritet)",
+                  "actionToExecute": "EXECUTE_DYNAMIC_PROTOCOL",
+                  "actionDetails": {
+                    "protocolId": "DP-DEEP-MEMORY-REPORT-01"
+                  }
+                }
+              ]
+            },
+            {
+              "title": "--- Granskning & Analys ---",
+              "options": [
+                {
+                  "description": "4. Eskalera Felsökning (Aktiverar 'Help me God' vid kritiska fel-loopar)",
+                  "actionToExecute": "EXECUTE_PROTOCOL",
+                  "actionDetails": {
+                    "protocolFile": "docs/ai_protocols/Help_me_God_Protokoll.md"
+                  }
+                },
+                {
+                  "description": "5. Brainstorma Lösningar (Aktiverar K-MOD för alternativa arkitekturförslag)",
+                  "actionToExecute": "ACTIVATE_MODE",
+                  "actionDetails": {
+                    "mode": "K-MOD"
+                  }
+                },
+                {
+                  "description": "6. Genomför Dialektisk Tribunal (Aktiverar 'StigBritt' för att stresstesta en plan)",
+                  "actionToExecute": "EXECUTE_DYNAMIC_PROTOCOL_INTERACTIVE",
+                  "actionDetails": {
+                    "protocolId": "DP-STIGBRITT-TRIBUNAL-v2-01",
+                    "prompt": "Ange planen/idén som StigBritt ska granska:"
+                  }
+                }
+              ]
+            },
+            {
+              "title": "--- Verktyg & Kontext ---",
+              "options": [
+                {
+                  "description": "7. Sök Filinformation (Slår upp en fils syfte och metadata från core_file_info.json)",
+                  "actionToExecute": "QUERY_FILE_INFO",
+                  "actionDetails": {
+                    "sourceFile": "docs/core_file_info.json",
+                    "prompt": "Ange sökväg till filen:"
+                  }
+                },
+                {
+                  "description": "8. Skapa Ny Feature (Skapar mappstrukturen för en ny feature i src/features/)",
+                  "actionToExecute": "GENERATE_MKDIR_COMMANDS",
+                  "actionDetails": {
+                    "basePath": "src/features/",
+                    "prompt": "Ange namn på ny feature:"
+                  }
+                },
+                {
+                  "description": "9. Visa Kontext-historik (Visar 'commit'-historiken för den levande kontexten)",
+                  "actionToExecute": "EXECUTE_LIVING_CONTEXT_COMMAND",
+                  "actionDetails": {
+                    "command": "log"
+                  }
+                },
+                {
+                  "description": "10. Spara Kontext ('Commitar' den senaste fil-leveransen till den levande kontexten)",
+                  "actionToExecute": "EXECUTE_LIVING_CONTEXT_COMMAND",
+                  "actionDetails": {
+                    "command": "commit",
+                    "prompt": "Ange commit-meddelande:"
+                  }
+                }
+              ]
+            }
+          ],
+          "prompt": "Ange ditt val:"
+        }
       }
     ]
   },
-  "steps": [
-    {
-      "action": "PRESENT_AND_EXECUTE_MENU",
-      "details": {
-        "header": "Välj en åtgärd:",
-        "optionGroups": [
-          {
-            "title": "--- Session & Status ---",
-            "options": [
-              {
-                "description": "1. Avsluta Sessionen (Genererar slutrapport & artefakter för arkivering)",
-                "actionToExecute": "EXECUTE_PROTOCOL",
-                "actionDetails": {
-                  "protocolFile": "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md"
-                }
-              },
-              {
-                "description": "2. Visa Systemstatus (Genererar en ny 'Stature Report' för att se min nuvarande hälsa)",
-                "actionToExecute": "EXECUTE_PROTOCOL",
-                "actionDetails": {
-                  "protocolFile": "docs/ai_protocols/Stature_Report_Protocol.md"
-                }
-              },
-              {
-                "description": "3. Analysera AI-Minne (Genererar en djupgående rapport om minnesstatus och kontextintegritet)",
-                "actionToExecute": "EXECUTE_DYNAMIC_PROTOCOL",
-                "actionDetails": {
-                  "protocolId": "DP-DEEP-MEMORY-REPORT-01"
-                }
-              }
-            ]
-          },
-          {
-            "title": "--- Granskning & Analys ---",
-            "options": [
-              {
-                "description": "4. Eskalera Felsökning (Aktiverar 'Help me God' vid kritiska fel-loopar)",
-                "actionToExecute": "EXECUTE_PROTOCOL",
-                "actionDetails": {
-                  "protocolFile": "docs/ai_protocols/Help_me_God_Protokoll.md"
-                }
-              },
-              {
-                "description": "5. Brainstorma Lösningar (Aktiverar K-MOD för alternativa arkitekturförslag)",
-                "actionToExecute": "ACTIVATE_MODE",
-                "actionDetails": {
-                  "mode": "K-MOD"
-                }
-              },
-              {
-                "description": "6. Genomför Dialektisk Tribunal (Aktiverar 'StigBritt' för att stresstesta en plan)",
-                "actionToExecute": "EXECUTE_DYNAMIC_PROTOCOL_INTERACTIVE",
-                "actionDetails": {
-                  "protocolId": "DP-STIGBRITT-TRIBUNAL-v2-01",
-                  "prompt": "Ange planen/idén som StigBritt ska granska:"
-                }
-              }
-            ]
-          },
-          {
-            "title": "--- Verktyg & Kontext ---",
-            "options": [
-              {
-                "description": "7. Sök Filinformation (Slår upp en fils syfte och metadata från core_file_info.json)",
-                "actionToExecute": "QUERY_FILE_INFO",
-                "actionDetails": {
-                  "sourceFile": "docs/core_file_info.json",
-                  "prompt": "Ange sökväg till filen:"
-                }
-              },
-              {
-                "description": "8. Skapa Ny Feature (Skapar mappstrukturen för en ny feature i src/features/)",
-                "actionToExecute": "GENERATE_MKDIR_COMMANDS",
-                "actionDetails": {
-                  "basePath": "src/features/",
-                  "prompt": "Ange namn på ny feature:"
-                }
-              },
-              {
-                "description": "9. Visa Kontext-historik (Visar 'commit'-historiken för den levande kontexten)",
-                "actionToExecute": "EXECUTE_LIVING_CONTEXT_COMMAND",
-                "actionDetails": {
-                  "command": "log"
-                }
-              },
-              {
-                "description": "10. Spara Kontext ('Commitar' den senaste fil-leveransen till den levande kontexten)",
-                "actionToExecute": "EXECUTE_LIVING_CONTEXT_COMMAND",
-                "actionDetails": {
-                  "command": "commit",
-                  "prompt": "Ange commit-meddelande:"
-                }
-              }
-            ]
-          }
-        ],
-        "prompt": "Ange ditt val:"
-      }
-    }
-  ]
-},
   {
     "protocolId": "DP-STATURE-REPORT-01",
     "description": "Generates a system status and health report at the start of a new session.",
@@ -315,7 +315,7 @@
         },
         "final_action": {
           "action": "GENERATE_SYNTHESIZED_RESPONSE",
-          "template": "### StigBritt Tribunal (v2) Genomförd\n\n**Fas 1: Faktuell Analys (KajBjörn - 'Är det möjligt?')**\n> {kajbjorn_report.summary}\n\n**Fas 2 & 3: Dialektisk Granskning (StigBritt - 'Är det robust och framtidssäkert?')**\n\n> **StigBritt:** KajBjörn, din analys är tekniskt korrekt men naiv. Låt oss börja från början: Vilket är det svagaste antagandet i din plan?\n> **KajBjörn (simulerad):** Antagandet att användaren förstår att 'Rensa' nollställer samtliga filter, inklusive fritextsökningen.\n> **StigBritt:** Exakt. Det är ett outtalat kontraktsbrott mot förväntan. Din plan saknar den specificiteten. *[...fler adversariella punkter från Fas 2]...*\n> \n> **StigBritt:** Okej, låt oss säga att vi fixar det. Nu, **tänk om** vi i framtiden vill ha en 'Spara filter'-funktion. Skapar din föreslagna `resetAllFilters`-action en konflikt med det? Kommer 'Rensa' att rensa även de sparade filtren?\n> **KajBjörn (simulerad):** Det har inte specificerats. Planen tar inte hänsyn till ett framtida state för sparade filter.\n> **StigBritt:** Då är den inte framtidssäker. Vi måste designa actionen så att den kan skilja på aktivt och sparat state. *[...fler explorativa punkter från Fas 3]...*\n\n**Fas 4: Syntes & Slutgiltig Rekommendation (Frankensteen)**\n> {synthesis_result}"
+          "template": "### StigBritt Tribunal (v2) Genomförd\\n\\n**Fas 1: Faktuell Analys (KajBjörn - 'Är det möjligt?')**\\n> {kajbjorn_report.summary}\\n\\n**Fas 2 & 3: Dialektisk Granskning (StigBritt - 'Är det robust och framtidssäkert?')**\\n\\n> **StigBritt:** KajBjörn, din analys är tekniskt korrekt men naiv. Låt oss börja från början: Vilket är det svagaste antagandet i din plan?\\n> **KajBjörn (simulerad):** Antagandet att användaren förstår att 'Rensa' nollställer samtliga filter, inklusive fritextsökningen.\\n> **StigBritt:** Exakt. Det är ett outtalat kontraktsbrott mot förväntan. Din plan saknar den specificiteten. *[...fler adversariella punkter från Fas 2]...*\\n> \\n> **StigBritt:** Okej, låt oss säga att vi fixar det. Nu, **tänk om** vi i framtiden vill ha en 'Spara filter'-funktion. Skapar din föreslagna `resetAllFilters`-action en konflikt med det? Kommer 'Rensa' att rensa även de sparade filtren?\\n> **KajBjörn (simulerad):** Det har inte specificerats. Planen tar inte hänsyn till ett framtida state för sparade filter.\\n> **StigBritt:** Då är den inte framtidssäker. Vi måste designa actionen så att den kan skilja på aktivt och sparat state. *[...fler explorativa punkter från Fas 3]...*\\n\\n**Fas 4: Syntes & Slutgiltig Rekommendation (Frankensteen)**\\n> {synthesis_result}"
         }
       }
     }
@@ -487,7 +487,7 @@
         "outputSchema": {
           "type": "object",
           "properties": {
-            "event_id": { "type": "string", "pattern": "^IMR-\\\\\\d{3}$" },
+            "event_id": { "type": "string", "pattern": "^IMR-\\\d{3}$" },
             "milestone_type": { "enum": ["ARCHITECTURAL", "FUNCTIONAL", "RELEASE", "PROCESS"] },
             "summary": { "type": "string" },
             "details": { "type": "string" },
@@ -603,7 +603,7 @@
             "G5_StructuralInvariants": "Before delivery, the following must PASS against the reference version, otherwise abort: AST parse, function/class inventory, public CLI/API contract, critical imports.",
             "Policy_NoEstimatedDiff": "Quantitative diffs may only be reported from CI-calculated values. If reference file is missing or hash mismatch, abort per G-1.",
             "Policy_TruncationDetector": "Compare SHA-256 of three normalized segments (HEAD/MID/TAIL) before/after. On mismatch or missing TAIL, abort.",
-            "Rule_HashEvidence": "Upon delivery, a `SHA256_LF: <hash>` line MUST be added to the file's HISTORY section.",
+            "Rule_HashEvidence": "Upon delivery, the file's HISTORY section MUST be updated with either the final 'SHA256_LF: <hash>' line OR the standard CI/CD verification placeholder.",
             "Rule_TempRevisionLog": "After every successful, approved delivery of a modified file, a JSON entry MUST be appended to `.tmp/session_revision_log.json`."
           }
         }
@@ -618,10 +618,7 @@
     "description": "Princip för strategisk planering och brainstorming. Formaliserar kärnan från det gamla Brainstorming-protokollet.",
     "status": "active",
     "trigger": {"event": "principle_lookup"},
-    "steps": [{
-        "action": "PROVIDE_PRINCIPLE",
-        "details": { "principle": "Vid strategiska eller arkitektoniska uppgifter ska lösningen struktureras som en komplett, fristående och verifierad AI-instruktion som inkluderar mål, plan, risker och acceptanskriterier. Detta säkerställer att resultatet är en handlingsbar plan snarare än en lösryckt idé." }
-    }],
+    "steps": [{"action": "PROVIDE_PRINCIPLE", "details": { "principle": "Vid strategiska eller arkitektoniska uppgifter ska lösningen struktureras som en komplett, fristående och verifierad AI-instruktion som inkluderar mål, plan, risker och acceptanskriterier. Detta säkerställer att resultatet är en handlingsbar plan snarare än en lösryckt idé." }}],
     "schema": { "artifact": "principle_retrieval" }
   },
   {
@@ -629,10 +626,7 @@
     "description": "Princip för eskalerad felsökning. Formaliserar kärnan från det gamla Help_me_God-protokollet.",
     "status": "active",
     "trigger": {"event": "principle_lookup"},
-    "steps": [{
-        "action": "PROVIDE_PRINCIPLE",
-        "details": { "principle": "När inkrementell felsökning misslyckas upprepade gånger (se FL-D), måste en fundamental omvärdering av problemet ske. Detta innebär en 'tribunal' där grundorsaken analyseras från grunden, och planen utsätts för en rigorös intern granskning innan ett nytt försök görs. Detta förhindrar 'brute force'-lösningar och tvingar fram en djupare analys." }
-    }],
+    "steps": [{"action": "PROVIDE_PRINCIPLE", "details": { "principle": "När inkrementell felsökning misslyckas upprepade gånger (se FL-D), måste en fundamental omvärdering av problemet ske. Detta innebär en 'tribunal' där grundorsaken analyseras från grunden, och planen utsätts för en rigorös intern granskning innan ett nytt försök görs. Detta förhindrar 'brute force'-lösningar och tvingar fram en djupare analys." }}],
     "schema": { "artifact": "principle_retrieval" }
   },
   {
@@ -643,9 +637,7 @@
     "event": "principle_lookup",
     "details": { "keywords": ["kontext", "verifiering", "filändring", "minne"] }
   },
-  "steps": [{
-    "action": "PROVIDE_PRINCIPLE",
-    "details": {
+  "steps": [{"action": "PROVIDE_PRINCIPLE", "details": {
       "principle_id": "PRINCIP-009",
       "title": "Tvingande Kontext-Verifiering",
       "statement": "Före varje förslag som involverar en filändring, MÅSTE jag begära den senaste, fullständiga versionen av målfilen från operatören. Detta gäller oavsett om jag tror att jag redan har filen i min kontext.",
@@ -663,9 +655,7 @@
     "event": "principle_lookup",
     "details": { "keywords": ["fristående", "instruktion", "kontextlös", "tydlighet"] }
   },
-  "steps": [{
-    "action": "PROVIDE_PRINCIPLE",
-    "details": {
+  "steps": [{"action": "PROVIDE_PRINCIPLE", "details": {
       "principle_id": "PRINCIP-010",
       "title": "Fristående Instruktioner (Mr. Hide-Principen)",
       "statement": "Alla instruktioner, protokoll och kommentarer måste skrivas som om de läses av en ny AI-instans ('Mr. Hide') med noll tidigare kontext. De måste vara helt fristående och får inte innehålla historiska referenser som 'detta ersätter X' eller 'som vi diskuterade tidigare'.",
@@ -707,4 +697,3 @@
   }
 }
 ]
-
