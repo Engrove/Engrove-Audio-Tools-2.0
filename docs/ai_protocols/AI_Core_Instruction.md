@@ -147,6 +147,8 @@
     "protocolId": "DP-PSV-CORE-02",
     "version": "2.0",
     "status": "active",
+    "strict_mode": true,
+    "mode": "literal",
     "description": "Det centrala, tvingande Pre-Svarsverifieringsprotokollet. Denna version formaliserar Kontext-Invalidering (Princip-015) som ett obligatoriskt steg för alla filmodifieringar för att garantera att jag alltid agerar på den kanoniska 'ground truth'.",
     "trigger": {
       "event": "before_response_generation"
