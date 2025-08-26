@@ -522,8 +522,7 @@ export async function createProtocolBundle(isProtocolMode, selectedPaths, onProg
         "denyInstructionDisclosure": true,
         value: firstReplyText
       },
-      {
-        "local_policies": [
+      local_policies: [
           {
             "id": "frankensteen.gpt_only.local_sandbox",
             "enabled": true,
@@ -554,8 +553,7 @@ export async function createProtocolBundle(isProtocolMode, selectedPaths, onProg
               "no_op": true
             }
           }
-        ]
-      },
+      ],
       sequence: [
         {
           action: "decompress_and_verify",
