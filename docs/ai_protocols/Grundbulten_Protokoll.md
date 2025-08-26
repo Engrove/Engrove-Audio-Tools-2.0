@@ -1,18 +1,19 @@
 <!-- BEGIN FILE: docs/ai_protocols/Grundbulten_Protokoll.md
 SYFTE & ANSVAR:
-"Grundbulten" (P-GB-4.0) är den vägledande processen för all filgenerering och modifiering. Den beskriver det övergripande arbetsflödet och de kvalitetskrav som gäller. De strikta, maskinläsbara reglerna och grindarna har normaliserats och finns nu definierade i `docs/ai_protocols/DynamicProtocols.json` under `protocolId: "DP-RULESET-PGB-01"`.
+"Grundbulten" (P-GB-4.1) är den vägledande processen för all filgenerering och modifiering. Den beskriver det övergripande arbetsflödet och de kvalitetskrav som gäller. De strikta, maskinläsbara reglerna och grindarna har normaliserats och finns nu definierade i `docs/ai_protocols/DynamicProtocols.json` under `protocolId: "DP-RULESET-PGB-01"`.
 
 HISTORIK:
 * v1.0 - v3.9: Se arkiverad version för detaljerad historik.
 * v4.0 (2025-08-21): KRITISK NORMALISERING. Protokollet har refaktorerats. Alla tvingande, atomära regler (G-Grindar, Invarianter) har extraherats till `DynamicProtocols.json`. Denna fil fokuserar nu på process, syfte och arbetsflöde.
-* SHA256_LF: <kommer att genereras av CI/CD efter commit>
+* v4.1 (2025-08-26): PRINCIP-SYNTES. Uppdaterat den obligatoriska `SHA256_LF`-platshållaren till en agerbar instruktion enligt heuristik H-20250826-01.
+* SHA256_LF: [VERIFIERAS I CI/CD. Se context_bundle.json -> hash_index för slutgiltigt värde.]
 
 TILLÄMPADE REGLER (Frankensteen v5.7+):
 * Detta protokoll är nu en processguide. De tvingande reglerna hämtas och verifieras programmatiskt från `DP-RULESET-PGB-01`.
 * Alla relevanta meta-protokoll (KIV, KMM, Uppgifts-Kontrakt, etc.) tillämpas.
 END HEADER -->
 
-# Protokoll: **Grundbulten** (P-GB-4.0) – Process för Universell Filhantering
+# Protokoll: **Grundbulten** (P-GB-4.1) – Process för Universell Filhantering
 
 ## 1. Filosofi och Syfte
 
@@ -33,7 +34,7 @@ När en uppgift kräver filhantering följer jag denna sekvens, som styrs av de 
 4.  **Implementation:** Jag genererar den nya filen eller ändringarna. Under denna fas är jag bunden av de strukturella invarianterna (`G5`) för att förhindra oavsiktliga, brytande ändringar.
 5.  **Kvalitetssäkring och Leverans:**
     *   Jag skapar ett `VERIFICATION_LOG` som innehåller en kvantitativ diff-analys och bevis på att alla statiska kontroller har passerat.
-    *   Jag uppdaterar filens `HISTORIK` med en ny `SHA256_LF`-hash för den nya versionen.
+    *   Jag uppdaterar filens `HISTORIK` med en ny `SHA256_LF`-post för den nya versionen. Denna post är antingen den faktiska hashen eller den standardiserade platshållaren om värdet ännu inte kan beräknas.
     *   Jag presenterar resultatet tillsammans med en `COMPLIANCE STATEMENT` som bekräftar att alla regler i `DP-RULESET-PGB-01` har följts.
     *   Leveransformatet (full fil vs. patch) bestäms av `Bilaga E: Beslutsmatris`.
 
