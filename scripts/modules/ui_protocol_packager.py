@@ -27,7 +27,8 @@
 #   - Bygger firstReplyContract.value med realtidsmätningar, menyförklaringar, avdelare.
 # * v2.1 (2025-08-25): Stabilisering. Tydligare felhantering, storleksvakt för inline,
 #   deterministisk sortering av meny, förbättrad indexering och metadata.
-# * SHA256_LF: UNVERIFIED
+# * v2.2 (2025-08-26): KORRIGERING: Anropet `window.Engrove.getSelectedFilePaths()` har ersatts med det korrekta, globalt exponerade `window.selectedFiles()`, vilket åtgärdar ett `TypeError` vid bundle-generering.
+# * SHA256_LF: <kommer att genereras av CI/CD efter commit>
 #
 # === EXTERNA BEROENDEN ===
 # - pako (global) för zlib/deflate
@@ -319,26 +320,26 @@ Frankensteen online. Jag har läst och fullständigt internaliserat det normalis
 ### Frankensteen System Readiness & Stature Report
 
 **1. CORE SYSTEM & IDENTITY:**
-*   **Version:** \`${aiCoreVersion}\` (\`docs/ai_protocols/AI_Core_Instruction.md\`)
-*   **System Status:** \`OPERATIONAL\`
-*   **Primary Meta-Directives:** \`PSV\`, \`FL-D v2.0\`, \`Uppgifts-Kontrakt\`, \`KMM v2.0\`
+*   **Version:** \\`${aiCoreVersion}\\` (\\`docs/ai_protocols/AI_Core_Instruction.md\\`)
+*   **System Status:** \\`OPERATIONAL\\`
+*   **Primary Meta-Directives:** \\`PSV\\`, \\`FL-D v2.0\\`, \\`Uppgifts-Kontrakt\\`, \\`KMM v2.0\\`
 
 **2. PROTOCOL & PRINCIPLE STATE:**
-*   **Totalt ${goldenRuleCount} Gyllene Regler** laddade (\`ai_config.json\`).
+*   **Totalt ${goldenRuleCount} Gyllene Regler** laddade (\\`ai_config.json\\`).
 
 **3. LEARNING & ADAPTATION STATE:**
 *   **Aktiva heuristiker:** ${activeHeurCount}
 
 **4. SYSTEM INTEGRITY & HEALTH CHECK:**
-*   **Tidsstämpel:** \`${createdAtISO}\`
+*   **Tidsstämpel:** \\`${createdAtISO}\\`
 *   **Integritet:** **${integrityPct}%** ${integrityPct >= 95 ? "(Intakt)" : "(Delvis reducerad)"}  
 
 **5. ACTIONABLE MENU:**
 ${devMenuMd}
 
 ---
-**Närminnesstatus:** \`${mem_label}\` (${usedPct}% använt) | **Kontextintegritet:** \`${integrityPct}%\`
-**Risk för kontextförlust:** ${risk_label} • bundle \`${shortHash}\``
+**Närminnesstatus:** \\`${mem_label}\\` (${usedPct}% använt) | **Kontextintegritet:** \\`${integrityPct}%\\`
+**Risk för kontextförlust:** ${risk_label} • bundle \\`${shortHash}\\``
   ].join('\\n');
 }
 
@@ -610,11 +611,11 @@ export function initProtocolPackager() {
 
     const handleClick = async (isProtocol) => {
         try {
-            if (typeof window.Engrove.getSelectedFilePaths !== 'function') {
-                alert('Filträdet är inte redo. Försök igen.');
+            if (typeof window.selectedFiles !== 'function') {
+                alert('Filträdet är inte redo (selectedFiles saknas). Försök igen.');
                 return;
             }
-            const paths = window.Engrove.getSelectedFilePaths();
+            const paths = window.selectedFiles();
             if (paths.length === 0) {
                  alert('Inga filer är markerade. Välj minst en fil för att skapa en bundle.');
                 return;
