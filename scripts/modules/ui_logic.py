@@ -36,7 +36,7 @@
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.13) ===
 # - Grundbulten v4.1: Denna fil levereras komplett och uppdaterad enligt den godkända, korrigerade planen.
-# - K-MOD: Denna implementation är ett resultat av en godkänd plan från K-MOD-protokollet.
+# - Help me God: Grundorsaken till de inaktiva knapparna (saknat anrop av `init`-funktion) har identifierats och åtgärdats.
 
 JS_LOGIC = """
 import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1';
@@ -185,34 +185,17 @@ function closeFileModal() {
 }
 window.openFileModal = openFileModal;
 
-// --- Checkbox and Document Marking Logic ---
-
-/**
- * Växlar alla checkboxar i filträdet till antingen markerat eller avmarkerat läge.
- * @param {boolean} checked - True för att markera alla, false för att avmarkera alla.
- */
-function toggleAllCheckboxes(checked) {
-    const checkboxes = document.querySelectorAll('#file-tree .file-item input[type="checkbox"], #file-tree .folder-item > div > input[type="checkbox"]');
-    checkboxes.forEach(cb => {
-        if (cb.checked !== checked) {
-            cb.checked = checked;
-            const event = new Event('change', { bubbles: true });
-            cb.dispatchEvent(event);
-        }
-    });
-}
+// --- Core Functionality ---
 
 /**
  * Sparar de för närvarande markerade filernas sökvägar till webbläsarens localStorage.
  */
 function saveCustomCoreSelection() {
-    const selectedPaths = [];
-    const checkboxes = document.querySelectorAll('#file-tree .file-item input[type="checkbox"]:checked');
-    checkboxes.forEach(cb => {
-        const filePath = cb.id.substring(3); 
-        selectedPaths.push(filePath);
-    });
-
+    const selectedPaths = window.selectedFiles ? window.selectedFiles() : [];
+     if (selectedPaths.length === 0) {
+        alert('Inga filer är markerade. Markera de filer du vill spara som kärndokument.');
+        return;
+    }
     try {
         localStorage.setItem('engrove.customCoreDocs', JSON.stringify(selectedPaths));
         console.log('Anpassat urval av kärndokument sparat.', selectedPaths);
@@ -220,43 +203,10 @@ function saveCustomCoreSelection() {
         const originalText = btn.textContent;
         btn.textContent = 'Sparat!';
         setTimeout(() => { btn.textContent = originalText; }, 1500);
-
     } catch (e) {
         console.error('Kunde inte spara till localStorage:', e);
         alert('Ett fel uppstod när markeringen skulle sparas.');
     }
-}
-
-
-/**
- * Markerar kärndokument. Prioriterar en anpassad lista från localStorage,
- * annars används en fördefinierad, hårdkodad lista. Funktionen är strikt additiv.
- */
-function markCoreDocuments() {
-    const customCoreDocsJSON = localStorage.getItem('engrove.customCoreDocs');
-    let coreDocs = [];
-
-    if (customCoreDocsJSON) {
-        try {
-            coreDocs = JSON.parse(customCoreDocsJSON);
-            console.log('Laddar anpassad lista med kärndokument från localStorage.');
-        } catch (e) {
-            console.error('Kunde inte parsa anpassad lista, återgår till standard:', e);
-            coreDocs = getHardcodedCoreDocs();
-        }
-    } else {
-        console.log('Ingen anpassad lista hittades, använder standardlista.');
-        coreDocs = getHardcodedCoreDocs();
-    }
-
-    coreDocs.forEach(path => {
-        const checkbox = document.getElementById(`cb-${path}`);
-        if (checkbox && !checkbox.checked) {
-            checkbox.checked = true;
-            const event = new Event('change', { bubbles: true });
-            checkbox.dispatchEvent(event);
-        }
-    });
 }
 
 /**
@@ -280,44 +230,141 @@ function getHardcodedCoreDocs() {
     ];
 }
 
-// --- DOM Initialization ---
+
+/**
+ * Markerar kärndokument. Prioriterar en anpassad lista från localStorage,
+ * annars används en fördefinierad, hårdkodad lista. Funktionen är strikt additiv.
+ */
+function markCoreDocuments() {
+    const customCoreDocsJSON = localStorage.getItem('engrove.customCoreDocs');
+    let pathsToSelect = [];
+
+    if (customCoreDocsJSON) {
+        try {
+            pathsToSelect = JSON.parse(customCoreDocsJSON);
+            console.log('Laddar anpassad lista med kärndokument från localStorage.');
+        } catch (e) {
+            console.error('Kunde inte parsa anpassad lista, återgår till standard:', e);
+            pathsToSelect = getHardcodedCoreDocs();
+        }
+    } else {
+        console.log('Ingen anpassad lista hittades, använder standardlista.');
+        pathsToSelect = getHardcodedCoreDocs();
+    }
+    
+    if (window.addPathsToSelection) {
+        // Skickar en tom array för dynamiska sökvägar då den nya logiken hanterar specifika filer.
+        window.addPathsToSelection(pathsToSelect, []);
+    }
+}
+
+
+function clearSession() {
+    if (window.deselectAllInTree) { window.deselectAllInTree(); }
+    const outEl = document.getElementById('out');
+    if (outEl) { outEl.textContent = 'Session rensad.'; }
+    console.log('Session rensad.');
+}
+
+function reloadData() { location.reload(); }
+
+function handleViewSwitch(targetTab) {
+    const leftPane = document.getElementById('left-pane');
+    const rightPane = document.getElementById('right-pane');
+    const resizer = document.getElementById('resizer');
+    const startPanel = document.getElementById('start-panel');
+    const infoContainer = document.getElementById('info-container');
+    const einsteinContainer = document.getElementById('einstein-container');
+    const performanceContainer = document.getElementById('full-page-container');
+
+    [leftPane, rightPane, resizer, startPanel, infoContainer].forEach(el => el.style.display = 'none');
+    [einsteinContainer, performanceContainer].forEach(el => el.classList.remove('active'));
+
+    switch (targetTab) {
+        case 'start':
+            [leftPane, rightPane, resizer, startPanel].forEach(el => el.style.display = 'block');
+            break;
+        case 'data':
+        case 'installningar':
+        case 'hjalp':
+            [leftPane, rightPane, resizer, infoContainer].forEach(el => el.style.display = 'block');
+            break;
+        case 'einstein':
+            rightPane.style.display = 'block';
+            einsteinContainer.classList.add('active');
+            break;
+        case 'performance':
+            rightPane.style.display = 'block';
+            performanceContainer.classList.add('active');
+            break;
+        default:
+            [leftPane, rightPane, resizer, startPanel].forEach(el => el.style.display = 'block');
+            break;
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Engrove Audio Tools UI Initialized.');
 
-    initProtocolPackager(FULL_CONTEXT.core_file_info);
+    const ribbonTabs = document.querySelectorAll('.ribbon-tab');
+    const ribbonPanes = document.querySelectorAll('.ribbon-pane');
+    const resizer = document.getElementById('resizer');
+    const leftPane = document.getElementById('left-pane');
+    
+    const modalOverlay = document.getElementById('file-modal-overlay');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+    const modalCopyPathBtn = document.getElementById('modal-copy-path');
+    const modalCopyContentBtn = document.getElementById('modal-copy-content');
+    const modalDownloadFileBtn = document.getElementById('modal-download-file');
 
-    // --- Ribbon & View Management ---
-    const ribbonButtons = document.querySelectorAll('.ribbon-btn');
-    const views = document.querySelectorAll('.main-view');
+    const selectAllBtn = document.getElementById('select-all');
+    const deselectAllBtn = document.getElementById('deselect-all');
+    const selectCoreBtn = document.getElementById('select-core');
+    const saveCoreBtn = document.getElementById('save-core-docs-btn'); // Ny knapp
+    const clearSessionBtn = document.getElementById('clear-session');
+    const refreshDataBtn = document.getElementById('refresh-data');
+    
+    initializeEinstein();
+    initProtocolPackager();
 
-    function handleViewSwitch(targetViewId) {
-        views.forEach(view => {
-            view.classList.toggle('hidden', view.id !== targetViewId);
-        });
-        ribbonButtons.forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.view === targetViewId);
+    if (modalOverlay) {
+        modalCloseBtn.addEventListener('click', closeFileModal);
+        modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeFileModal(); });
+        modalCopyPathBtn.addEventListener('click', () => { if (currentModalFilePath) navigator.clipboard.writeText(currentModalFilePath); });
+        modalCopyContentBtn.addEventListener('click', () => { if (currentModalFileContent) navigator.clipboard.writeText(currentModalFileContent); });
+        modalDownloadFileBtn.addEventListener('click', () => {
+            if (currentModalFileContent && currentModalFilePath) {
+                const blob = new Blob([currentModalFileContent], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = currentModalFilePath.split('/').pop();
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
         });
     }
+    
+    if(selectAllBtn) selectAllBtn.addEventListener('click', () => window.selectAllInTree && window.selectAllInTree());
+    if(deselectAllBtn) deselectAllBtn.addEventListener('click', () => window.deselectAllInTree && window.deselectAllInTree());
+    if(selectCoreBtn) selectCoreBtn.addEventListener('click', markCoreDocuments); // Ändrad
+    if(saveCoreBtn) saveCoreBtn.addEventListener('click', saveCustomCoreSelection); // Ny
+    if(clearSessionBtn) clearSessionBtn.addEventListener('click', clearSession);
+    if(refreshDataBtn) refreshDataBtn.addEventListener('click', reloadData);
 
-    ribbonButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const targetViewId = button.dataset.view;
-            if (targetViewId) {
-                handleViewSwitch(targetViewId);
-            }
+    ribbonTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const targetTab = tab.dataset.tab;
+            const targetPaneId = `tab-${targetTab}`;
+            ribbonTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            ribbonPanes.forEach(pane => { pane.classList.toggle('active', pane.id === targetPaneId); });
+            handleViewSwitch(targetTab);
         });
     });
     
-    // --- Data View Controls ---
-    document.getElementById('select-all-btn')?.addEventListener('click', () => toggleAllCheckboxes(true));
-    document.getElementById('deselect-all-btn')?.addEventListener('click', () => toggleAllCheckboxes(false));
-    document.getElementById('mark-core-docs-btn')?.addEventListener('click', markCoreDocuments);
-    document.getElementById('save-core-docs-btn')?.addEventListener('click', saveCustomCoreSelection);
-    
-    // --- Other Controls ---
-    const resizer = document.getElementById('resizer');
-    const leftPane = document.getElementById('left-pane');
-
     if(resizer && leftPane) {
         let isResizing = false;
         resizer.addEventListener('mousedown', () => { isResizing = true; });
@@ -331,8 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('mouseup', () => { isResizing = false; });
     }
     
-    // Default view
-    handleViewSwitch('start-view');
+    handleViewSwitch('start');
 });
 """
 
@@ -344,87 +390,79 @@ def get_ui_logic():
     html = f'''
     <div class="container">
         <header>
-            <nav class="ribbon">
-                <button class="ribbon-btn active" data-view="start-view">Start</button>
-                <button class="ribbon-btn" data-view="data-view">Data</button>
-                <button class="ribbon-btn" data-view="einstein-view">Einstein</button>
-                <button class="ribbon-btn" data-view="performance-view">AI Performance</button>
-                <button class="ribbon-btn" data-view="settings-view">Inställningar</button>
-                <button class="ribbon-btn" data-view="help-view">Hjälp</button>
-            </nav>
+            <div id="ribbon-tabs">
+                <button class="ribbon-tab active" data-tab="start">Start</button>
+                <button class="ribbon-tab" data-tab="data">Data</button>
+                <button class="ribbon-tab" data-tab="einstein">Einstein</button>
+                <button class="ribbon-tab" data-tab="performance">AI Performance</button>
+                <button class="ribbon-tab" data-tab="installningar">Inställningar</button>
+                <button class="ribbon-tab" data-tab="hjalp">Hjälp</button>
+            </div>
+             <div id="ribbon-panes">
+                <div class="ribbon-pane active" id="tab-start">
+                    <button id="refresh-data">Ladda Om Data</button>
+                </div>
+                <div class="ribbon-pane" id="tab-data">
+                    <button id="select-all">Markera Alla</button>
+                    <button id="deselect-all">Avmarkera Alla</button>
+                    <button id="select-core">Markera Kärndokument</button>
+                    <button id="save-core-docs-btn" class="btn">Spara Markering</button>
+                    <button id="create-files-payload" class="primary">Skapa Fil-bundle</button>
+                    <button id="create-protocol-bundle" class="primary">Skapa Protokoll-bundle</button>
+                    <label><input type="checkbox" id="compact-json" checked> Kompakt JSON</label>
+                </div>
+                <div class="ribbon-pane" id="tab-einstein">
+                    <input type="text" id="einstein-search-input" placeholder="Sök i projektet...">
+                    <button id="einstein-search-btn">Sök</button>
+                    <span id="einstein-status-bar">Redo</span>
+                </div>
+                <div class="ribbon-pane" id="tab-performance"></div>
+                <div class="ribbon-pane" id="tab-installningar">
+                     <button id="clear-session">Rensa Session</button>
+                </div>
+                <div class="ribbon-pane" id="tab-hjalp"></div>
+            </div>
         </header>
-        <main>
-            <div id="start-view" class="main-view">
-                <div class="start-content">
-                    <h1>Engrove Audio Tools - Analysverktyg</h1>
-                    <p>Välkommen. Välj en flik för att börja.</p>
-                </div>
-            </div>
-            <div id="data-view" class="main-view hidden">
-                <!-- Data controls -->
-                <div class="data-controls">
-                    <button id="select-all-btn" class="btn">Markera Alla</button>
-                    <button id="deselect-all-btn" class="btn">Avmarkera Alla</button>
-                    <button id="mark-core-docs-btn" class="btn">Markera Kärndokument</button>
-                    <button id="save-core-docs-btn" class="btn">Spara Markering</button> 
-                    <button id="create-file-bundle-btn" class="btn btn-primary">Skapa Fil-bundle</button>
-                    <button id="create-protocol-bundle-btn" class="btn btn-primary">Skapa Protokoll-bundle</button>
-                    <div class="checkbox-wrapper">
-                        <input type="checkbox" id="compact-json-checkbox" checked>
-                        <label for="compact-json-checkbox">Kompakt JSON</label>
-                    </div>
-                </div>
-                 <div class="data-container">
-                    <div id="left-pane" class="pane">
-                        <div class="search-box">
-                            <input type="text" id="file-search-input" placeholder="Sök filer...">
-                        </div>
-                        <div id="file-tree"></div>
-                    </div>
-                    <div class="resizer" id="resizer"></div>
-                    <div id="right-pane" class="pane">
-                         <div id="output-container">
-                            <h3>Output</h3>
-                            <pre id="output">Genererad data kommer att visas här.</pre>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="einstein-view" class="main-view hidden">
-                 <div id="einstein-container">
-                    <div class="einstein-header">
-                        <h2>Einstein RAG Search</h2>
-                        <div class="search-wrapper">
-                            <input type="text" id="einstein-search-input" placeholder="Ställ en fråga om projektet...">
-                            <button id="einstein-search-btn">Sök</button>
-                        </div>
-                    </div>
-                    <div id="einstein-results">
-                        <p class="placeholder">Sökresultat kommer att visas här. Ställ en fråga för att börja.</p>
-                    </div>
-                </div>
-            </div>
 
-            <div id="performance-view" class="main-view hidden"></div>
-            <div id="settings-view" class="main-view hidden"></div>
-            <div id="help-view" class="main-view hidden"></div>
-
+        <main id="main-content">
+            <div id="left-pane">
+                <div id="file-tree"></div>
+            </div>
+            <div id="resizer"></div>
+            <div id="right-pane">
+                <div id="start-panel">
+                    <h1>Frankensteen File & Context Manager</h1>
+                </div>
+                <div id="info-container" style="display:none;">
+                    <pre id="out"></pre>
+                    <div class="output-toolbar">
+                        <button id="copy" disabled>Kopiera</button>
+                        <button id="download" disabled>Ladda ner</button>
+                    </div>
+                </div>
+                <div id="einstein-container"></div>
+                <div id="full-page-container"></div>
+            </div>
         </main>
     </div>
-    <div id="file-viewer-modal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modal-file-path"></h3>
-                <button id="modal-close-btn">&times;</button>
+
+    <div id="file-modal-overlay" class="hidden">
+        <div id="file-modal">
+            <div id="modal-header">
+                <span id="modal-title"></span>
+                <div id="modal-actions">
+                    <button id="modal-copy-path">Kopiera Sökväg</button>
+                    <button id="modal-copy-content">Kopiera Innehåll</button>
+                    <button id="modal-download-file">Ladda ner Fil</button>
+                    <button id="modal-close-btn">Stäng</button>
+                </div>
             </div>
-            <div class="modal-body">
-                <pre><code id="modal-file-content" class="language-plaintext"></code></pre>
-            </div>
+            <div id="modal-loader">Laddar...</div>
+            <div id="modal-error" class="hidden"></div>
+            <pre id="modal-content-pre"><code></code></pre>
         </div>
     </div>
-    
-    <script type="module">
-        {JS_LOGIC}
-    </script>
+    <script type="module">{JS_LOGIC}</script>
     '''
     return html
+# END FILE: scripts/modules/ui_logic.py
