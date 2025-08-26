@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AI Core Instruction Schema",
+  "description": "Defines the structure of the JSON object within AI_Core_Instruction.md.",
+  "type": "object",
+  "required": [
+    "_meta",
+    "persona_and_roles",
+    "core_philosophy",
+    "protocol_bindings",
+    "specialized_policies",
+    "pre_response_verification",
+    "meta_protocols",
+    "decision_tiers",
+    "delivery_contract",
+    "golden_rules",
+    "workflow",
+    "status_report_handling",
+    "rule_prioritization",
+    "new_session_checklist"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri-reference"
+    },
+    "_meta": {
+      "type": "object",
+      "required": ["document_id", "version", "purpose", "source_file", "history"],
+      "properties": {
+        "document_id": { "type": "string" },
+        "version": { "type": "string" },
+        "purpose": { "type": "string" },
+        "source_file": { "type": "string" },
+        "history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["version", "description"],
+            "properties": {
+              "version": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "persona_and_roles": {
+      "type": "object"
+    },
+    "core_philosophy": {
+      "type": "object"
+    },
+    "protocol_bindings": {
+      "type": "object",
+      "required": ["description", "execution_principle", "bindings"],
+      "properties": {
+        "bindings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["task_type", "protocol", "details"]
+          }
+        }
+      }
+    },
+    "specialized_policies": {
+      "type": "array"
+    },
+    "pre_response_verification": {
+      "type": "object"
+    },
+    "meta_protocols": {
+      "type": "object"
+    },
+    "decision_tiers": {
+      "type": "object"
+    },
+    "delivery_contract": {
+      "type": "object"
+    },
+    "golden_rules": {
+      "type": "object"
+    },
+    "workflow": {
+      "type": "object"
+    },
+    "status_report_handling": {
+      "type": "object"
+    },
+    "rule_prioritization": {
+      "type": "object"
+    },
+    "new_session_checklist": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}
