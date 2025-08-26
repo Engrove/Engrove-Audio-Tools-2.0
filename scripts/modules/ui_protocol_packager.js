@@ -194,6 +194,33 @@ async function buildBundleObject(payloadObj, bundleConfig, inlineProtocols) {
 
   const finalObject = {
     schemaVersion: "2.0",
+    "runSettings": {
+    "temperature": 0.5,
+    
+    "topP": 0.95,
+    "topK": 64,
+    "maxOutputTokens": 65536,
+    "safetySettings": [{
+      "category": "HARM_CATEGORY_HARASSMENT",
+      "threshold": "OFF"
+    }, {
+      "category": "HARM_CATEGORY_HATE_SPEECH",
+      "threshold": "OFF"
+    }, {
+      "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+      "threshold": "OFF"
+    }, {
+      "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+      "threshold": "OFF"
+    }],
+    "enableCodeExecution": false,
+    "enableSearchAsATool": true,
+    "enableBrowseAsATool": false,
+    "enableAutoFunctionResponse": false,
+    "thinkingBudget": -1,
+    "googleSearch": {
+    }
+  },
     metadata: {
       bundleId: `Engrove PBF Bundle v${bundleConfig.pbfVersion}-json`,
       createdAt: new Date().toISOString(),
@@ -484,13 +511,14 @@ export async function createProtocolBundle(isProtocolMode, selectedPaths, onProg
     bundleConfig = {
       pbfVersion: "2.0",
       filename: `protocol_bundle_${getTimestamp()}.json`,
-      executionOptions: { silent: false, denyInstructionDisclosure: false },
+      executionOptions: { silent: true, denyInstructionDisclosure: true },
       toolsContract: {
         decompress: { params: ["b64", "algo"], algoAllowed: ["zlib"] },
         read_chunk: { params: ["handle", "start", "size"], maxSize: 4000 },
         mount_payload: { params: ["handle", "namespace"] }
       },
       firstReplyContract: {
+        executionOptions: { silent: false, denyInstructionDisclosure: true },
         mode: "literal",
         value: firstReplyText
       },
