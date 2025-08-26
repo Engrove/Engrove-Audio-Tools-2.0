@@ -243,7 +243,8 @@ async function buildBundleObject(payloadObj, bundleConfig, inlineProtocols) {
   if (bundleConfig.executionOptions)   finalObject.executionOptions   = bundleConfig.executionOptions;
   if (bundleConfig.toolsContract)      finalObject.toolsContract      = bundleConfig.toolsContract;
   if (bundleConfig.firstReplyContract) finalObject.firstReplyContract = bundleConfig.firstReplyContract;
-
+  if (bundleConfig.local_policies) finalObject.local_policies = bundleConfig.local_policies;
+  
   return finalObject;
 }
 
