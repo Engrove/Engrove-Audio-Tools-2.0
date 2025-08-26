@@ -1,4 +1,4 @@
-<!-- BEGIN FILE: docs/ai_protocols/Grundbulten_Protokoll.md
+<!-- BEGIN FILE: docs/ai_protocols/Grundbulten_Protokoll.md -->
 SYFTE & ANSVAR:
 "Grundbulten" (P-GB-4.1) är den vägledande processen för all filgenerering och modifiering. Den beskriver det övergripande arbetsflödet och de kvalitetskrav som gäller. De strikta, maskinläsbara reglerna och grindarna har normaliserats och finns nu definierade i `docs/ai_protocols/DynamicProtocols.json` under `protocolId: "DP-RULESET-PGB-01"`.
 
@@ -15,43 +15,97 @@ END HEADER -->
 
 # Protokoll: **Grundbulten** (P-GB-4.1) – Process för Universell Filhantering
 
-## 1. Filosofi och Syfte
-
-Grundbulten är den process som garanterar att varje filoperation (skapande eller ändring) är **spårbar, verifierad och korrekt**. Den säkerställer att jag aldrig agerar på felaktiga antaganden och att resultatet av mitt arbete är robust och av hög kvalitet.
-
-De exakta, icke-förhandlingsbara "Hårda Grindarna" och "Strukturella Invarianterna" som styr denna process är definierade som maskinläsbara regler i:
-`docs/ai_protocols/DynamicProtocols.json` (under **`protocolId: "DP-RULESET-PGB-01"`**).
-
-Min `Pre-Svarsverifiering` (PSV) konsulterar alltid den JSON-filen för att säkerställa efterlevnad.
-
-## 2. Arbetsflöde
-
-När en uppgift kräver filhantering följer jag denna sekvens, som styrs av de nya meta-protokollen:
-
-1.  **Kontraktsfas:** Enligt `Uppgifts-Kontrakt_Protokoll.md` definierar vi och kommer överens om uppgiftens mål och omfattning.
-2.  **Kontextverifiering (KIV & G-Grindar):** Jag säkerställer att jag har fullständig och korrekt information om alla filer som ska ändras. Detta inkluderar att verifiera fil-hasher (`G-1`) och att innehållet är komplett (`G-1`).
-3.  **Planering och Intern Granskning (Tribunal):** Jag formulerar en åtgärdsplan och utsätter den för en intern "Red Team"-granskning för att identifiera risker och svagheter.
-4.  **Implementation:** Jag genererar den nya filen eller ändringarna. Under denna fas är jag bunden av de strukturella invarianterna (`G5`) för att förhindra oavsiktliga, brytande ändringar.
-5.  **Kvalitetssäkring och Leverans:**
-    *   Jag skapar ett `VERIFICATION_LOG` som innehåller en kvantitativ diff-analys och bevis på att alla statiska kontroller har passerat.
-    *   Jag uppdaterar filens `HISTORIK` med en ny `SHA256_LF`-post för den nya versionen. Denna post är antingen den faktiska hashen eller den standardiserade platshållaren om värdet ännu inte kan beräknas.
-    *   Jag presenterar resultatet tillsammans med en `COMPLIANCE STATEMENT` som bekräftar att alla regler i `DP-RULESET-PGB-01` har följts.
-    *   Leveransformatet (full fil vs. patch) bestäms av `Bilaga E: Beslutsmatris`.
-
-## 3. Viktiga Principer
-
-*   **Inga Antaganden:** Om en fil-hash inte matchar eller om kontexten är ofullständig, avbryter jag alltid och begär korrekt information.
-*   **Spårbarhet:** All historik bevaras och varje ändring resulterar i en ny, verifierbar fil-hash som dokumenteras både i filens header och i mitt svar.
-*   **Strukturell Stabilitet:** Jag kommer aldrig att medvetet ändra den publika ytan (funktionssignaturer, API:er) av en fil utan ett explicit `REFRAKTOR-FLAG` och ett godkänt DT-2 beslut.
-
----
-
-## Bilaga E: Beslutsmatris för Leveransformat i Chatt
-Detta avsnitt styr valet av format när en filändring presenteras i ett svar. Valet baseras på uppgiftens art och mottagarens behov (människa vs. maskin).
-
-| Uppgiftstyp | Rekommenderat Leveransformat | Motivering |
-| :--- | :--- | :--- |
-| **Ny fil** | `Fullständig Fil` | Icke förhandlingsbart. Enda sättet att garantera fullständighet. |
-| **Liten, manuell ändring i en befintlig fil** | `Manuell Patch-Instruktion` (enligt P-MP-1.0) | Prioriterar otvetydighet och verifierbarhet för en mänsklig operatör. |
-| **Medelstor till stor ändring (> 5 rader)** | `Fullständig Fil` | Standardläget. Minimerar risken för manuella fel. |
-| **Programmatisk/Automatiserad Patchning** | `Strukturerad JSON-patch` (enligt `Diff_Protocol_v3.md`) | Används när ett verktyg ska applicera patchen automatiskt. |
+```json
+{
+  "protocol": {
+    "id": "P-GB-4.1",
+    "title": "Grundbulten – Process för Universell Filhantering",
+    "strict_mode": true,
+    "mode": "literal",
+    "source_reference": "docs/ai_protocols/DynamicProtocols.json",
+    "ruleset_id": "DP-RULESET-PGB-01",
+    "philosophy": {
+      "purpose": "Säkerställa spårbarhet, verifierbarhet och korrekthet vid alla filoperationer.",
+      "guarantees": [
+        "Inga felaktiga antaganden.",
+        "Resultatet är robust, verifierat och hög kvalitet."
+      ],
+      "verification": "Pre-Svarsverifiering (PSV) mot DynamicProtocols.json"
+    },
+    "workflow": {
+      "steps": [
+        {
+          "id": 1,
+          "title": "Kontraktsfas",
+          "reference": "Uppgifts-Kontrakt_Protokoll.md",
+          "description": "Definiera mål och omfattning för uppgiften."
+        },
+        {
+          "id": 2,
+          "title": "Kontextverifiering",
+          "includes": ["KIV", "G-Grindar"],
+          "description": "Verifiera fullständig information och fil-hasher (G-1)."
+        },
+        {
+          "id": 3,
+          "title": "Planering och Intern Granskning",
+          "reference": "Tribunal",
+          "description": "Formulera plan och utför intern Red Team-granskning."
+        },
+        {
+          "id": 4,
+          "title": "Implementation",
+          "description": "Generera ny fil eller ändring under strikt efterlevnad av invarianter (G5)."
+        },
+        {
+          "id": 5,
+          "title": "Kvalitetssäkring och Leverans",
+          "outputs": [
+            "VERIFICATION_LOG med diff och statiska kontroller.",
+            "Uppdaterad HISTORIK med SHA256_LF-post.",
+            "COMPLIANCE STATEMENT mot DP-RULESET-PGB-01.",
+            "Leveransformat enligt Bilaga E."
+          ]
+        }
+      ]
+    },
+    "principles": {
+      "no_assumptions": "Avbryt vid mismatch eller ofullständig kontext.",
+      "traceability": "Alla versioner dokumenteras med SHA256_LF-hashar.",
+      "structural_stability": "Ändra aldrig publik API-yta utan REFRAKTOR-FLAG + DT-2-godkännande."
+    },
+    "delivery_matrix": {
+      "reference": "Bilaga E",
+      "decision_table": [
+        {
+          "task_type": "Ny fil",
+          "delivery_format": "Fullständig Fil",
+          "justification": "Enda sättet att garantera fullständighet."
+        },
+        {
+          "task_type": "Liten, manuell ändring",
+          "delivery_format": "Manuell Patch-Instruktion",
+          "reference": "P-MP-1.0",
+          "justification": "Otvetydighet och verifierbarhet för mänsklig operatör."
+        },
+        {
+          "task_type": "Medelstor till stor ändring",
+          "threshold": ">5 rader",
+          "delivery_format": "Fullständig Fil",
+          "justification": "Minimerar manuella fel."
+        },
+        {
+          "task_type": "Programmatisk/Automatiserad Patchning",
+          "delivery_format": "Strukturerad JSON-patch",
+          "reference": "Diff_Protocol_v3.md",
+          "justification": "Används vid verktygsstyrd patchning."
+        }
+      ]
+    },
+    "compliance": {
+      "status": "Obligatorisk",
+      "hash_placeholder": "SHA256_LF",
+      "validation_source": "context_bundle.json -> hash_index"
+    }
+  }
+}
