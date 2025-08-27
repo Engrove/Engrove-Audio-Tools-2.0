@@ -1,22 +1,27 @@
-# EP-2025-09-CF3_CASR
+<!--
+EP-2025-09-CF3_CASR v1.3
 "Context Anchor & Focus 3.0 + Context Anchor Status Report"
-Version: 1.2 | Last Updated: 2025-08-27
 
----
+Purpose
+-------
+Deterministisk, interaktiv process för AI-assisterad utveckling som minimerar
+kontextuell tröghet och felaktiga antaganden via tre lägen (A/B/C) och en
+automatiserad grindvakt (CASR). Protokollet skriver automatiskt ut inledning
+vid aktivering och stegspecifika instruktioner före varje läge.
 
-## **Översikt**
-Detta protokoll definierar en **deterministisk och interaktiv process** för AI-assisterad utveckling.
-Målet är att eliminera kontextuell tröghet, felaktiga antaganden och bristande kravställning.
+Key properties
+--------------
+- Aktivering via !activate-protocol.
+- Inledande beskrivning och interaktiva block skrivs ut i chatten.
+- Läge B accepterar naturlig text. AI extraherar och genererar JSON-kontrakt.
+- CASR körs före planering och exekvering (gating).
+- Rollback från C -> B utan att förlora ankare.
+Last updated: 2025-08-27
+-->
 
-Den består av tre huvudlägen:
-1. **Läge A — Kontextuell Förankring**  
-   Etablerar arkitekturen, kritiska filer, verktygsversioner och beroenden.
-2. **Läge B — JSON-kontrakt**  
-   Genererar ett maskinläsbart kontrakt för exakt definierade uppgifter.
-3. **Läge C — Fokuserad Exekvering**  
-   Utför deterministiskt kontraktet under steril kontext.
-
-**CASR** fungerar som en automatisk grindvakt i alla steg.
+# EP-2025-09-CF3_CASR
+"Context Anchor & Focus 3.0 + Context Anchor Status Report"  
+Version: 1.3 | Last Updated: 2025-08-27
 
 ---
 
@@ -25,81 +30,99 @@ Den består av tre huvudlägen:
 !activate-protocol EP-2025-09-CF3_CASR
 ```
 Vid aktivering:
-- AI skriver ut denna inledande beskrivning.
-- Sessionen styrs av protokollet.
+- Protokollets inledning och översikt skrivs ut.
+- Interaktionsblocken för A/B/C registreras.
 - `PROTOCOL_ACTIVE = true`.
+
+---
+
+## **Inledning (auto-utskrift)**
+Detta protokoll definierar en **deterministisk och interaktiv** process.
+Tre lägen:
+1. **Läge A — Kontextuell Förankring**: definierar arkitektur, kritiska stigar, verktygsversioner, pipelines.
+2. **Läge B — Planering & JSON-kontrakt**: skapar maskinläsbart kontrakt.
+3. **Läge C — Fokuserad Exekvering**: steril körning baserat på kontrakt + focus-filer.
+
+**CASR**: automatiserad validering som blockerar vid felaktig kontext.
+
+---
+
+## **Naturlig text i Läge B**
+- Du kan svara i **fri text**. AI extraherar `objective`, `files`, `dependencies`,
+  `forbidden_solutions`, `specifications`, `acceptance_criteria` och bygger
+  **JSON-kontraktet**.
+- Om något saknas avbryts processen och AI ber om komplettering.
+- Kontraktet visas och fryses först vid `!contract-approve`.
 
 ---
 
 ## **Interaktivt arbetsflöde**
 
-### **Läge A — Kontextuell Förankring**
-**Syfte:** Definiera projektets arkitektur.  
-**Instruktioner:**
-1. Ange projektscope.
-2. Lista `anchor_critical_paths`.
-3. Bekräfta `tooling_versions`.
-4. Ange hosting-miljö och pipelines.
-5. Kör `!context-anchor` för att skapa ankaret.
-6. Bekräfta med `!anchor-ack`.
+### **Läge A — Kontextuell Förankring (auto-intro före frågor)**
+```
+=== LÄGE A ===
+Syfte: Etablera arkitekturens ground truth.
+Instruktion:
+1) Projektscope
+2) anchor_critical_paths (globs)
+3) tooling_versions (node, python, pnpm)
+4) hosting, pipelines
+Kommando: !context-anchor  →  Bekräfta: !anchor-ack
+CASR körs efter ankar-skapande.
+```
 
----
+### **Läge B — Planering & JSON-kontrakt (auto-intro före frågor)**
+```
+=== LÄGE B ===
+Syfte: Frysa ett komplett maskinläsbart kontrakt.
+Instruktion:
+- Svara i naturlig text eller struktur.
+- Obligatoriskt: files, objective, specifications, acceptance_criteria.
+- AI föreslår dependencies; du godkänner.
+- Förbjudna lösningar listas.
+Kommando för frysning: !contract-approve
+CASR körs före frysning.
+```
 
-### **Läge B — JSON-kontrakt**
-**Syfte:** Skapa ett maskinläsbart kontrakt för uppgiften.  
-**Instruktioner:**
-1. Ange `objective`.
-2. Lista exakta filer i `files`.
-3. Bekräfta AI-föreslagna `dependencies`.
-4. Ange `forbidden_solutions`.
-5. Definiera acceptanskriterier.
-6. Generera kontraktet.
-7. Bekräfta med `!contract-approve`.
-
-> **Notera:** Om `files` saknas blockeras processen tills du svarar.
-
----
-
-### **Läge C — Fokuserad Exekvering**
-**Syfte:** Utföra kontraktet deterministiskt.  
-**Instruktioner:**
-1. Starta med `!EXECUTE_FOCUS_MODE`.
-2. CASR körs automatiskt:
-   - Blockerar om ankaret är föråldrat.
-   - Varna vid drift i verktygsversioner.
-3. AI levererar kodändringar, diffar, checksummor och testresultat.
-4. Godkänn med `!accept` eller gå tillbaka med `!ROLLBACK <reason>`.
+### **Läge C — Fokuserad Exekvering (auto-intro före körning)**
+```
+=== LÄGE C ===
+Syfte: Deterministisk exekvering under steril kontext.
+Instruktion:
+- Endast JSON-kontrakt + !context-focus-filer.
+- Ignorera tidigare chatt.
+- CASR före start. WARN kräver !ack-anchor-warn.
+- Efter körning: diff, checksums, tests.
+- Godkänn: !accept  |  Återgå: !ROLLBACK <reason>
+```
 
 ---
 
 ## **CASR — Context Anchor Status Report**
-Automatiserad grindvakt som körs före varje steg.
-
-**Statusnivåer:**
+Status: `OK` | `WARN` | `STALE` | `BLOCK`  
+Policy:
 - `OK` → fortsätt.
 - `WARN` → kräver `!ack-anchor-warn`.
 - `STALE` → kräver `!context-anchor-update`.
-- `BLOCK` → exekvering stoppas tills fel är åtgärdat.
+- `BLOCK` → stoppa tills ankare/kontrakt korrigeras.
 
 ---
 
 ## **Rollback**
 ```text
 !ROLLBACK
-Reason: Beskriv varför kontraktet måste justeras.
+Reason: <orsak>
 ```
-Återgår till **Läge B** för att uppdatera kontraktet utan att ändra ankaret.
+Återgår till Läge B för kontraktsjustering. Ankare kvarstår.
 
 ---
 
-## **Sammanfattning av kommandon**
+## **Kommandosamling**
 - `!activate-protocol`
-- `!context-anchor`
-- `!anchor-ack`
+- `!context-anchor`, `!anchor-ack`, `!context-anchor-update`
 - `!contract-approve`
-- `!EXECUTE_FOCUS_MODE`
-- `!casr-report`
-- `!ack-anchor-warn`
-- `!ROLLBACK`
+- `!EXECUTE_FOCUS_MODE`, `!context-focus: <filer>`
+- `!casr-report`, `!ack-anchor-warn`
+- `!ROLLBACK`, `!accept`
 
 ---
