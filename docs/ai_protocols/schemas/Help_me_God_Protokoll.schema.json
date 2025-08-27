@@ -1,0 +1,230 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "docs/ai_protocols/schemas/Help_me_God_Protokoll.schema.json",
+  "title": "Schema: \"Help me God\" – Felsökningsprotokoll (DP-DEBUG-HMG)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocolId",
+    "file_path",
+    "title",
+    "version",
+    "status",
+    "strict_mode",
+    "mode",
+    "normative_binding",
+    "activation_and_bounds",
+    "steps",
+    "root_cause_log",
+    "scorecard",
+    "delivery_artifacts",
+    "stop_levels",
+    "implementation_notes",
+    "references"
+  ],
+  "properties": {
+    "protocolId": { "const": "DP-DEBUG-HMG" },
+    "file_path": {
+      "type": "string",
+      "pattern": "^docs/ai_protocols/Help_me_God_Protokoll\\.md$"
+    },
+    "title": { "$ref": "#/$defs/nonEmptyString" },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+(?:\\.\\d+)*$"
+    },
+    "status": { "type": "string", "enum": ["active"] },
+    "strict_mode": { "const": true },
+    "mode": { "const": "literal" },
+
+    "normative_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["psv", "grundbulten", "scorecard_source"],
+      "properties": {
+        "psv": { "$ref": "#/$defs/nonEmptyString" },
+        "grundbulten": { "$ref": "#/$defs/nonEmptyString" },
+        "scorecard_source": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+
+    "activation_and_bounds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["activation", "attempt_id", "break_rules"],
+      "properties": {
+        "activation": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "attempt_id": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["start", "auto_increment_per_varv"],
+          "properties": {
+            "start": { "type": "integer", "minimum": 1 },
+            "auto_increment_per_varv": { "type": "boolean" }
+          }
+        },
+        "break_rules": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        }
+      }
+    },
+
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/step" }
+    },
+
+    "root_cause_log": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "schema"],
+      "properties": {
+        "format": { "const": "ndjson" },
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "required", "properties", "additionalProperties"],
+          "properties": {
+            "type": { "const": "object" },
+            "required": {
+              "type": "array",
+              "contains": { "const": "attempt_id" },
+              "minItems": 1,
+              "items": { "type": "string" }
+            },
+            "properties": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "attempt_id": { "type": "integer", "minimum": 1 },
+                "hypotes": { "$ref": "#/$defs/nonEmptyString" },
+                "test": { "$ref": "#/$defs/nonEmptyString" },
+                "resultat": { "$ref": "#/$defs/nonEmptyString" },
+                "lärdom": { "$ref": "#/$defs/nonEmptyString" },
+                "entropy_SE": { "type": "number" },
+                "entropy_shannon": { "type": "number" },
+                "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+                "actions": {
+                  "type": "array",
+                  "minItems": 0,
+                  "items": { "type": "string", "enum": ["PEAR", "HITL", "SANDBOX"] }
+                }
+              }
+            },
+            "additionalProperties": { "const": false }
+          }
+        }
+      }
+    },
+
+    "scorecard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["canonical_source", "local_rubrics_allowed"],
+      "properties": {
+        "canonical_source": { "$ref": "#/$defs/nonEmptyString" },
+        "local_rubrics_allowed": { "type": "boolean" }
+      }
+    },
+
+    "delivery_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/nonEmptyString" }
+    },
+
+    "stop_levels": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/nonEmptyString" }
+    },
+
+    "implementation_notes": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/nonEmptyString" }
+    },
+
+    "references": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sandbox_protocol", "stalemate_protocol", "hitl_points"],
+      "properties": {
+        "sandbox_protocol": { "$ref": "#/$defs/nonEmptyString" },
+        "stalemate_protocol": { "$ref": "#/$defs/nonEmptyString" },
+        "hitl_points": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    }
+  },
+
+  "$defs": {
+    "nonEmptyString": { "type": "string", "minLength": 1 },
+
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title"],
+      "properties": {
+        "id": { "type": "integer", "minimum": 0 },
+        "title": { "$ref": "#/$defs/nonEmptyString" },
+
+        "actions": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "pass_criteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "logging": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["root_cause_log"],
+          "properties": {
+            "root_cause_log": { "$ref": "#/$defs/nonEmptyString" }
+          }
+        },
+
+        "checks": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "outcome": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["approved", "rejected"],
+          "properties": {
+            "approved": { "$ref": "#/$defs/nonEmptyString" },
+            "rejected": { "$ref": "#/$defs/nonEmptyString" }
+          }
+        },
+        "signals": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+
+        "requirements": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "delivery_binding": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        }
+      }
+    }
+  }
+}
