@@ -2186,5 +2186,58 @@
     ],
     "success_score": 0,
     "operator_interventions": 5
+  },
+  {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "S-2025-08-27T12-43-00Z",
+    "timestamp_utc": "2025-08-27T12:43:00Z",
+    "summary": "Genomförde en djupgående grundorsaksanalys (RCA) av flera systemiska protokollfel. Implementerade och härdade systemet med fem nya kärnprinciper (017-021) som åtgärdar metadata-hantering, idempotent generering, meta-rapportering, datatypsintegritet och validering av unik protokoll-deklaration.",
+    "keywords": [
+      "protokoll-härdning",
+      "rca",
+      "grundorsaksanalys",
+      "kontext-desynkronisering",
+      "system-integritet",
+      "schema",
+      "princip-implementering"
+    ],
+    "modified_files": [
+      "docs/ai_protocols/DynamicProtocols.json",
+      "docs/ai_protocols/Uppgifts-Kontrakt_Protokoll.md",
+      "docs/ai_protocols/Grundbulten_Protokoll.md",
+      "docs/ai_protocols/AI_Chatt_Avslutningsprotokollet.md"
+    ],
+    "error_signatures": [
+      "CONTEXT_DESYNC_ERROR",
+      "PROTOCOL_HIERARCHY_CONFLICT",
+      "IMPLICIT_TYPE_CONVERSION"
+    ],
+    "success_score": 10,
+    "operator_interventions": 3
+  },
+  {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "S-2025-08-27T12-43-00Z",
+    "timestamp_utc": "2025-08-27T12:43:00Z",
+    "summary": "Implementerade Kärnprinciperna 017, 018 och 019 för att åtgärda systematiska protokollfel gällande metadata-bevarande, idempotent generering och garanterad statusrapportering.",
+    "keywords": [
+      "protokoll",
+      "kärnprincip",
+      "grundbulten",
+      "metadata",
+      "idempotens",
+      "system-integritet",
+      "rca"
+    ],
+    "modified_files": [
+      "docs/ai_protocols/DynamicProtocols.json",
+      "docs/ai_protocols/Uppgifts-Kontrakt_Protokoll.md",
+      "docs/ai_protocols/Grundbulten_Protokoll.md"
+    ],
+    "error_signatures": [],
+    "success_score": 10,
+    "operator_interventions": 2
   }
 ]
