@@ -1,4 +1,5 @@
 {
+  "$schema": "docs/ai_protocols/schemas/core_file_info.schema.json",
   "docs/ai_protocols/AI_Core_Instruction.md": {
     "purpose_and_responsibility": "Uppdaterad med de nya meta-protokollen KMM v2 (Konversationens Minnes-Monitor), KIV v1 (Kontextintegritets-Verifiering), PHS (Protokoll för Hantering av Sessionsstatus) och det förstärkta PKRV-protokollet (Protokoll för Fokuserad Kontext-Återhämtning).",
     "usage_context": "Dessa nya protokoll utgör nu en central del av mitt kärnbeteende för att säkerställa robusthet i långa konversationer och är integrerade i den stående PSV-ordern.",
