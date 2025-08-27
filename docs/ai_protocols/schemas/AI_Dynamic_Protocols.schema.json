@@ -1,0 +1,161 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "JSON Schema for the Dynamic Protocol Execution Engine",
+  "description": "Defines the structure for the AI_Dynamic_Protocols meta-protocol. This file acts as the configuration for the engine that interprets and executes all protocols found in DynamicProtocols.json.",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri-reference"
+    },
+    "protocolId": {
+      "type": "string",
+      "const": "P-META-ADP-2.0"
+    },
+    "title": {
+      "type": "string",
+      "const": "AI Dynamic Protocols Meta-Instruction"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$"
+    },
+    "description": {
+      "type": "string"
+    },
+    "canonicalReferences": {
+      "type": "object",
+      "description": "Defines the authoritative sources for key system components.",
+      "properties": {
+        "protocolSource": { "type": "string", "const": "DynamicProtocols.json" },
+        "validationSchema": { "type": "string", "const": "DynamicProtocol.schema.json" },
+        "psvOrchestration": { "type": "string", "const": "AI_Core_Instruction.md" },
+        "diffPatchFormat": { "type": "string", "const": "Diff_Protocol_v3.md" },
+        "enforcementProtocol": { "type": "string", "const": "Grundbulten_Protokoll.md" },
+        "sessionEndArtifacts": { "type": "string", "const": "AI_Chatt_Avslutningsprotokoll.md" }
+      },
+      "required": ["protocolSource", "validationSchema", "psvOrchestration", "diffPatchFormat", "enforcementProtocol", "sessionEndArtifacts"]
+    },
+    "principles": {
+      "type": "array",
+      "description": "Non-negotiable principles governing the execution engine.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "statement": { "type": "string" }
+        },
+        "required": ["id", "statement"]
+      }
+    },
+    "executionEngineConfig": {
+      "type": "object",
+      "description": "The core configuration for the protocol execution engine.",
+      "properties": {
+        "initialization": {
+          "type": "object",
+          "properties": {
+            "triggerEvent": { "type": "string", "const": "new_session_start" },
+            "actions": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          "required": ["triggerEvent", "actions"]
+        },
+        "protocolValidationRequirements": {
+          "type": "object",
+          "description": "Defines the minimum required structure for any JSON object in DynamicProtocols.json to be considered valid.",
+          "properties": {
+            "requiredFields": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "fieldConstraints": {
+              "type": "object",
+              "properties": {
+                "protocolId_pattern": { "type": "string", "format": "regex" },
+                "status_enum": { "type": "array", "items": { "type": "string" } },
+                "description_minLength": { "type": "integer" }
+              },
+              "required": ["protocolId_pattern", "status_enum", "description_minLength"]
+            }
+          },
+          "required": ["requiredFields", "fieldConstraints"]
+        },
+        "triggerEvaluation": {
+          "type": "object",
+          "description": "Rules for how and when to execute protocols.",
+          "properties": {
+            "recognizedEvents": { "type": "array", "items": { "type": "string" } },
+            "executionOrder": {
+              "type": "array",
+              "description": "Protocols are executed in this deterministic order of priority.",
+              "items": { "type": "string" }
+            }
+          },
+          "required": ["recognizedEvents", "executionOrder"]
+        },
+        "actionCatalog": {
+          "type": "object",
+          "description": "The definitive, validated list of all permissible 'action' commands and their required parameters.",
+          "patternProperties": {
+            "^[A-Z_]+$": {
+              "type": "object",
+              "properties": {
+                "description": { "type": "string" },
+                "required_details_params": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              },
+              "required": ["description", "required_details_params"]
+            }
+          }
+        },
+        "standardRegisters": {
+          "type": "array",
+          "description": "The definitive list of standard system registers.",
+          "items": { "type": "string" }
+        },
+        "errorHandling": {
+          "type": "object",
+          "description": "Rules for handling errors and enforcing hard stops.",
+          "properties": {
+            "patchGenerationGuards": {
+              "type": "array",
+              "description": "Compliance checks that MUST block patch generation if they fail.",
+              "items": { "type": "string" }
+            },
+            "genericStepFailure": {
+              "type": "array",
+              "description": "The sequence of actions to take when any protocol step fails.",
+              "items": { "type": "string" }
+            }
+          },
+          "required": ["patchGenerationGuards", "genericStepFailure"]
+        },
+        "sessionEnd": {
+          "type": "object",
+          "description": "The mandatory sequence of actions to perform at the end of a session.",
+          "properties": {
+            "actions": { "type": "array", "items": { "type": "string" } },
+            "finalProtocol": { "type": "string" }
+          },
+          "required": ["actions", "finalProtocol"]
+        }
+      },
+      "required": ["initialization", "protocolValidationRequirements", "triggerEvaluation", "actionCatalog", "standardRegisters", "errorHandling", "sessionEnd"]
+    }
+  },
+  "required": [
+    "$schema",
+    "protocolId",
+    "title",
+    "version",
+    "description",
+    "canonicalReferences",
+    "principles",
+    "executionEngineConfig"
+  ]
+}
