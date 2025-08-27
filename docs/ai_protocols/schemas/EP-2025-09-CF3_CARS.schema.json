@@ -1,7 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "docs/ai_protocols//schemas/EP-2025-09-CF3_CARS.schema.json",
+  "$id": "https://engrove.ai/schemas/EP-2025-09-CF3_CARS.schema.json",
   "title": "EP-2025-09-CF3_CASR Schema",
+  "version": "1.3",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -12,7 +13,8 @@
     "stages",
     "casr",
     "rollback",
-    "interaction"
+    "interaction",
+    "io_policy"
   ],
   "properties": {
     "$schema": {
@@ -40,19 +42,16 @@
       ],
       "properties": {
         "id": {
-          "type": "string",
-          "minLength": 1
+          "type": "string"
         },
         "title": {
-          "type": "string",
-          "minLength": 1
+          "type": "string"
         },
         "description": {
-          "type": "string",
-          "minLength": 1
+          "type": "string"
         },
         "version": {
-          "$ref": "#/$defs/semver"
+          "type": "string"
         },
         "last_updated": {
           "type": "string",
@@ -61,8 +60,7 @@
         "maintainers": {
           "type": "array",
           "items": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           },
           "minItems": 1
         }
@@ -89,8 +87,7 @@
           ],
           "properties": {
             "name": {
-              "type": "string",
-              "minLength": 1
+              "type": "string"
             },
             "init_command": {
               "type": "string",
@@ -110,11 +107,10 @@
               ],
               "properties": {
                 "anchor_id": {
-                  "type": "string",
-                  "minLength": 1
+                  "type": "string"
                 },
                 "version": {
-                  "$ref": "#/$defs/semver"
+                  "type": "string"
                 },
                 "timestamp_utc": {
                   "type": "string",
@@ -123,19 +119,21 @@
                 "architecture": {
                   "type": "object",
                   "additionalProperties": false,
+                  "required": [
+                    "frameworks",
+                    "hosting"
+                  ],
                   "properties": {
                     "frameworks": {
                       "type": "array",
                       "items": {
                         "type": "string"
-                      },
-                      "minItems": 0
+                      }
                     },
                     "pipelines": {
                       "type": "array",
                       "items": {
                         "type": "object",
-                        "additionalProperties": false,
                         "required": [
                           "name",
                           "version"
@@ -145,7 +143,7 @@
                             "type": "string"
                           },
                           "version": {
-                            "$ref": "#/$defs/semver"
+                            "type": "string"
                           }
                         }
                       }
@@ -156,41 +154,36 @@
                         "type": "string"
                       }
                     }
-                  },
-                  "required": [
-                    "frameworks",
-                    "hosting"
-                  ]
+                  }
                 },
                 "anchor_critical_paths": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/$defs/globPattern"
+                    "type": "string"
                   },
                   "minItems": 1
                 },
                 "tooling_versions": {
                   "type": "object",
-                  "additionalProperties": false,
-                  "properties": {
-                    "node": {
-                      "$ref": "#/$defs/semver"
-                    },
-                    "python": {
-                      "$ref": "#/$defs/semver"
-                    },
-                    "pnpm": {
-                      "$ref": "#/$defs/semver"
-                    }
-                  },
                   "required": [
                     "node",
                     "python",
                     "pnpm"
-                  ]
+                  ],
+                  "properties": {
+                    "node": {
+                      "type": "string"
+                    },
+                    "python": {
+                      "type": "string"
+                    },
+                    "pnpm": {
+                      "type": "string"
+                    }
+                  }
                 },
                 "protocol_version": {
-                  "$ref": "#/$defs/semver"
+                  "type": "string"
                 }
               }
             },
@@ -230,6 +223,7 @@
                 "dependencies",
                 "forbidden_solutions",
                 "specifications",
+                "acceptance_criteria",
                 "required_anchor"
               ],
               "properties": {
@@ -261,6 +255,13 @@
                 "specifications": {
                   "type": "object"
                 },
+                "acceptance_criteria": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "string"
+                  }
+                },
                 "required_anchor": {
                   "type": "object",
                   "additionalProperties": false,
@@ -274,10 +275,11 @@
                       "type": "string"
                     },
                     "version_min": {
-                      "$ref": "#/$defs/semver"
+                      "type": "string"
                     },
                     "hash": {
-                      "$ref": "#/$defs/sha256"
+                      "type": "string",
+                      "pattern": "^sha256:[0-9a-f]{64}$"
                     }
                   }
                 }
@@ -288,7 +290,8 @@
               "additionalProperties": false,
               "required": [
                 "files_required",
-                "dependencies_verified"
+                "dependencies_verified",
+                "gating"
               ],
               "properties": {
                 "files_required": {
@@ -296,6 +299,20 @@
                 },
                 "dependencies_verified": {
                   "type": "boolean"
+                },
+                "gating": {
+                  "type": "object",
+                  "required": [
+                    "block_if_missing"
+                  ],
+                  "properties": {
+                    "block_if_missing": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
                 }
               }
             },
@@ -303,11 +320,30 @@
               "type": "object",
               "additionalProperties": false,
               "required": [
-                "dependency_suggestions"
+                "dependency_suggestions",
+                "nlp_extraction"
               ],
               "properties": {
                 "dependency_suggestions": {
                   "type": "boolean"
+                },
+                "nlp_extraction": {
+                  "type": "object",
+                  "required": [
+                    "enabled",
+                    "required_fields"
+                  ],
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "required_fields": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -340,21 +376,19 @@
               "properties": {
                 "context_restriction": {
                   "type": "string",
-                  "enum": [
-                    "ignore-all-prior-conversation"
-                  ]
+                  "const": "ignore-all-prior-conversation"
                 },
                 "data_sources": {
                   "type": "array",
-                  "minItems": 1,
-                  "uniqueItems": true,
                   "items": {
                     "type": "string",
                     "enum": [
                       "json_contract",
                       "context_focus_files"
                     ]
-                  }
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
                 },
                 "execution_determinism": {
                   "type": "boolean"
@@ -377,7 +411,6 @@
       "properties": {
         "status": {
           "type": "array",
-          "minItems": 4,
           "items": {
             "type": "string",
             "enum": [
@@ -386,11 +419,11 @@
               "STALE",
               "BLOCK"
             ]
-          }
+          },
+          "minItems": 4
         },
         "blocking_conditions": {
           "type": "array",
-          "minItems": 1,
           "items": {
             "type": "string",
             "enum": [
@@ -400,7 +433,8 @@
               "critical paths changed",
               "tooling drift"
             ]
-          }
+          },
+          "minItems": 1
         },
         "warn_conditions": {
           "type": "array",
@@ -447,16 +481,13 @@
         },
         "required_fields": {
           "type": "array",
-          "minItems": 1,
           "items": {
             "type": "string",
             "enum": [
               "reason"
             ]
           },
-          "contains": {
-            "const": "reason"
-          }
+          "minItems": 1
         },
         "returns_to_stage": {
           "type": "string",
@@ -553,20 +584,47 @@
           }
         }
       }
-    }
-  },
-  "$defs": {
-    "semver": {
-      "type": "string",
-      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
     },
-    "sha256": {
-      "type": "string",
-      "pattern": "^sha256:[0-9a-f]{64}$"
-    },
-    "globPattern": {
-      "type": "string",
-      "pattern": "^(?:[\\w\\-./*?{}!\\[\\]]+)$"
+    "io_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "user_input_modes",
+        "ai_outputs",
+        "auto_print",
+        "step_intros"
+      ],
+      "properties": {
+        "user_input_modes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "natural_text",
+              "json"
+            ]
+          },
+          "minItems": 1
+        },
+        "ai_outputs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "json_contract"
+            ]
+          },
+          "minItems": 1
+        },
+        "auto_print": {
+          "type": "boolean",
+          "const": true
+        },
+        "step_intros": {
+          "type": "boolean",
+          "const": true
+        }
+      }
     }
   }
 }
