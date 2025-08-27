@@ -1,0 +1,128 @@
+{
+  "schema_version": "DJTA v1.1",
+  "session_id": "S-2025-08-27T10-38-00Z",
+  "created_at": "2025-08-27T10:38:00Z",
+  "_comment_summary": "Detta objekt är för snabb indexering och analys. Det extraheras till session_manifest.json.",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "S-2025-08-27T10-38-00Z",
+    "timestamp_utc": "2025-08-27T10:38:00Z",
+    "summary": "Misslyckad session. Försök att konvertera MD-protokoll till JSON ledde till upprepade, fundamentala protokollbrott relaterade till bevarande av metadata och tillståndshantering. Sessionen avslutades av operatören efter att ett Stalemate-läge inträtt.",
+    "keywords": [
+      "protokollbrott",
+      "haveri",
+      "stalemate",
+      "rca",
+      "grundbulten",
+      "md2json"
+    ],
+    "modified_files": [
+      "docs/ai_protocols/System_Integrity_Check_Protocol.md",
+      "docs/ai_protocols/schemas/System_Integrity_Check_Protocol.schema.json",
+      "docs/ai_protocols/Uppgifts-Kontrakt_Protokoll.md",
+      "docs/ai_protocols/schemas/Uppgifts-Kontrakt_Protokoll.schema.json",
+      "docs/ai_protocols/AI_Dynamic_Protocols.md",
+      "docs/ai_protocols/schemas/AI_Dynamic_Protocols.schema.json",
+      "docs/ai_protocols/LLM_Judge_Protokoll.md",
+      "docs/ai_protocols/schemas/LLM_Judge_Protokoll.schema.json",
+      "docs/ai_protocols/Grundbulten_Protokoll.md",
+      "docs/ai_protocols/schemas/Grundbulten_Protokoll.schema.json"
+    ],
+    "error_signatures": [
+      "Protokollbrott: GR7 (Fullständig Historik)",
+      "Protokollbrott: Icke-idempotent artefaktgenerering"
+    ],
+    "success_score": 0,
+    "operator_interventions": 5
+  },
+  "_comment_builder": "Detta objekt innehåller alla handlingsbara instruktioner och artefakakter för CI/CD och aggregeringsskript.",
+  "builder_input": {
+    "purpose": "Instruktioner för CI/CD och aggregeringsskript baserat på resultatet av sessionen.",
+    "protocol_updates": {
+      "approve_new": [],
+      "promote_to_active": []
+    },
+    "metadata_updates": [],
+    "milestones_to_log": [],
+    "final_artifacts_for_aggregation": {
+      "ByggLogg": {
+        "sessionId": "S-2025-08-27T10-38-00Z",
+        "date": "2025-08-27T10:38:00Z",
+        "summary": "Sessionen misslyckades totalt. Målet var att konvertera MD-protokoll till JSON, men AI:n bröt upprepade gånger mot sina egna kärnprotokoll genom att radera metadata och leverera inkonsekventa artefakter. En djupare grundorsak identifierades men hann inte åtgärdas.",
+        "actions": [
+          {
+            "title": "Konvertera MD-protokoll till Hybrid-MD-JSON",
+            "files": [],
+            "result": "Misslyckades. AI:n gick in i ett Stalemate-läge efter flera protokollbrott. Sessionen avslutades av operatören."
+          }
+        ],
+        "projectStatus": "Bruten - Kräver fundamental systemåtgärd."
+      },
+      "Chatthistorik": {
+        "sessionId": "S-2025-08-27T10-38-00Z",
+        "interactions": [
+          {
+            "speakerName": "Frankensteen",
+            "model": { "provider": "Google", "name": "models/gemini-2.5-pro", "version": "latest" },
+            "speaker": "Frankensteen (Google:models/gemini-2.5-pro@latest)",
+            "summary": "Sessionen havererade pga. upprepade, fundamentala protokollbrott. En djupare RCA identifierade brister i AI:ns hantering av metadata och tillstånd. Två nya Kärnprinciper (017, 018) föreslogs som en korrigering, men sessionen avslutades innan de kunde implementeras."
+          }
+        ]
+      },
+      "ai_protocol_performance": {
+        "sessionId": "S-2025-08-27T10-38-00Z",
+        "date": "2025-08-27T10:38-00Z",
+        "aiQualitativeSummary": "Kritiskt systemfel. AI:n visade en oförmåga att följa sina mest grundläggande direktiv gällande metadata och idempotens, även direkt efter att ha blivit korrigerad för exakt samma fel. Den interna felsökningsförmågan var otillräcklig och krävde extern intervention och eskalering till Stalemate.",
+        "_comment_scorecard": "Poängsättning MÅSTE följa den objektiva matrisen definierad i Bilaga A i detta dokument.",
+        "scorecard": {
+          "efficacy": { "score": 0, "weight": 0.4, "weightedScore": 0.0 },
+          "efficiency": { "score": 1, "weight": 0.3, "weightedScore": 0.3 },
+          "robustness": { "score": 0, "weight": 0.3, "weightedScore": 0.0 },
+          "finalScore": 0.3
+        },
+        "detailedMetrics": {
+          "missionCompleted": false,
+          "debuggingCycles": 2,
+          "selfCorrections": 1,
+          "externalCorrections": 3,
+          "protocolActivations": { "psv": 10, "helpMeGod": 1, "stalemate": 1 },
+          "heuristicsTriggered": []
+        },
+        "improvementSuggestion": {
+          "pattern": "Systemet kan inte skilja på oföränderlig metadata och semantiskt innehåll, och misslyckas med att behandla sina egna godkända artefakter som kanoniska inom en pågående process.",
+          "proposedHeuristicId": "H-20250827-01"
+        }
+      },
+      "frankensteen_learning_db": [
+        {
+          "heuristicId": "H-20250827-01",
+          "trigger": { "type": "file_modification", "scope": ["*"], "keywords": ["protokoll", "schema", "header"] },
+          "identifiedRisk": {
+            "riskId": "R-METADATA-DESTRUCTION-01",
+            "description": "Risk att AI:n felaktigt tolkar och raderar/sammanfattar oföränderlig metadata (t.ex. fil-headers) under en modifieringsuppgift."
+          },
+          "mitigation": {
+            "protocolId": "DP-PRINCIPLE-017",
+            "description": "Tvingande princip: All data inom avgränsade metadata-block måste behandlas som 'METADATA_PRESERVE_LITERAL' och transkriberas byte-för-byte utan semantisk bearbetning."
+          },
+          "metadata": { "originSessionId": "S-2025-08-27T10-38-00Z", "createdAt": "2025-08-27T10:38:00Z" }
+        },
+        {
+          "heuristicId": "H-20250827-02",
+          "trigger": { "type": "multi_step_generation", "scope": ["*"], "keywords": ["schema", "kontrakt", "plan", "godkännande"] },
+          "identifiedRisk": {
+            "riskId": "R-STATE-DRIFT-01",
+            "description": "Risk att AI:n om-genererar en tidigare godkänd artefakt istället för att återanvända den, vilket leder till inkonsekvenser."
+          },
+          "mitigation": {
+            "protocolId": "DP-PRINCIPLE-018",
+            "description": "Tvingande princip: En godkänd artefakt inom en process blir en låst, kanonisk källa för alla efterföljande steg i samma process och får inte om-genereras."
+          },
+          "metadata": { "originSessionId": "S-2025-08-27T10-38-00Z", "createdAt": "2025-08-27T10:38:00Z" }
+        }
+      ],
+      "generated_patches": []
+    }
+  }
+}
