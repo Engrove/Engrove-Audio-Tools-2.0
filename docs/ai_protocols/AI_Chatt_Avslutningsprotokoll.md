@@ -22,7 +22,8 @@
 ### SYSTEM_OVERRIDE: RUN_CONTEXT_BOOTSTRAP
 ### INIT_CONTEXT_MODE: TRUE
 ### PROTOCOL_START: P-HR_v2.8_FULL
-
+### KÄRNMETADATA FÖR PROTOKOLLEXEKVERING
+**delivery_override:** `FORCE_JSON_LITERAL`
 ## SYFTE & ANSVAR
 Detta dokument definierar det formella Avslutningsprotokollet.
 Syftet är att säkerställa perfekt kontextöverföring, spårbarhet och systematisk självförbättring och att standardisera slutleveransen av chattdata i slutet av en session eller fortsättning. 
