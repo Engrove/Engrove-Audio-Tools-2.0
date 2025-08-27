@@ -1,136 +1,358 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "JSON Schema for Grundbulten Universal File Handling Protocol",
-  "description": "Defines the structure for the machine-readable version of the Grundbulten Protocol (P-GB-4.0), making all file generation/modification rules deterministic and programmatically verifiable.",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "docs/ai_protocols/schemas/Grundbulten_Grotocol.schema.json",
+  "title": "Schema för Grundbulten – Universell filhantering (chattsession)",
   "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocolId",
+    "file_path",
+    "title",
+    "version",
+    "strict_mode",
+    "mode",
+    "purpose",
+    "goals",
+    "metadata",
+    "terminology_and_policy",
+    "gates",
+    "policies",
+    "steps",
+    "appendices"
+  ],
   "properties": {
-    "$schema": { "type": "string", "format": "uri-reference" },
-    "protocolId": { "type": "string", "const": "P-GB-4.0-JSON" },
-    "title": { "type": "string" },
-    "version": { "type": "string", "pattern": "^\\d+\\.\\d+$" },
-    "purpose": { "type": "string" },
-    "goals": { "type": "array", "items": { "type": "string" } },
-    "strict_mode": { "type": "boolean" },
-    "mode": { "type": "string", "enum": ["literal"] },
-
-    "phases": {
-      "type": "object",
-      "description": "Defines the mandatory, sequential phases of the file handling process.",
-      "properties": {
-        "PREPARATION": {
-          "type": "object",
-          "description": "Initial checks and metadata setup before any modification logic is developed.",
-          "properties": {
-            "checks": {
-              "type": "array",
-              "items": { "$ref": "#/definitions/checkObject" }
-            }
-          },
-          "required": ["checks"]
-        },
-        "VERIFICATION": {
-          "type": "object",
-          "description": "Pre-flight checks performed on the generated artifact before it is presented.",
-          "properties": {
-            "checks": {
-              "type": "array",
-              "items": { "$ref": "#/definitions/checkObject" }
-            }
-          },
-          "required": ["checks"]
-        },
-        "DELIVERY": {
-          "type": "object",
-          "description": "Rules governing the format and content of the final delivery.",
-          "properties": {
-            "deliveryMatrix": { "$ref": "#/definitions/deliveryMatrix" },
-            "capacityHandling": { "$ref": "#/definitions/capacityHandling" },
-            "complianceStatement": {
-              "type": "object",
-              "description": "Defines the structure of the mandatory compliance report.",
-              "properties": {
-                "required_fields": { "type": "array", "items": { "type": "string" } }
-              }
-            }
-          },
-          "required": ["deliveryMatrix", "capacityHandling", "complianceStatement"]
-        },
-        "POST_DELIVERY": {
-          "type": "object",
-          "description": "Archiving and logging actions performed after a successful delivery.",
-          "properties": {
-            "tasks": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "taskId": { "type": "string" },
-                  "description": { "type": "string" },
-                  "details": { "type": "object" }
-                },
-                "required": ["taskId", "description"]
-              }
-            }
-          },
-          "required": ["tasks"]
-        }
-      },
-      "required": ["PREPARATION", "VERIFICATION", "DELIVERY", "POST_DELIVERY"]
+    "protocolId": {
+      "type": "string",
+      "pattern": "^P-GB-\\d+(?:\\.\\d+)?$"
     },
-
-    "escalationProtocol": {
-      "type": "object",
-      "description": "Rules for handling repeated failures.",
-      "properties": {
-        "max_attempts": { "type": "integer" },
-        "escalation_target": { "type": "string", "description": "The protocol to trigger when max_attempts is reached." }
-      },
-      "required": ["max_attempts", "escalation_target"]
-    }
-  },
-  "required": ["$schema", "protocolId", "phases", "escalationProtocol"],
-
-  "definitions": {
-    "checkObject": {
-      "type": "object",
-      "properties": {
-        "checkId": { "type": "string", "description": "A unique identifier for the check, e.g., 'G1_CONTEXT_ABORT'." },
-        "description": { "type": "string" },
-        "condition": { "type": "string", "description": "A machine-evaluatable condition, e.g., 'is_content_full == false'." },
-        "actionOnFail": { "type": "string", "enum": ["ABORT", "WARN"] },
-        "errorMessage": { "type": "string", "description": "The message to output if the check fails." }
-      },
-      "required": ["checkId", "description", "condition", "actionOnFail", "errorMessage"]
+    "file_path": {
+      "type": "string",
+      "pattern": "^docs/ai_protocols/Grundbulten_Protokoll\\.md$"
     },
-    "deliveryMatrix": {
-      "type": "array",
-      "description": "Deterministic decision matrix for choosing the delivery format.",
-      "items": {
-        "type": "object",
-        "properties": {
-          "task_type": { "type": "string" },
-          "recommended_format": { "type": "string" },
-          "rationale": { "type": "string" }
-        },
-        "required": ["task_type", "recommended_format"]
+    "title": { "$ref": "#/$defs/nonEmptyString" },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+(?:\\.\\d+)*$"
+    },
+    "strict_mode": { "const": true },
+    "mode": { "const": "literal" },
+    "purpose": { "$ref": "#/$defs/nonEmptyString" },
+    "goals": { "$ref": "#/$defs/nonEmptyString" },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["date", "external_reviewer"],
+      "properties": {
+        "date": { "type": "string", "format": "date" },
+        "external_reviewer": { "$ref": "#/$defs/nonEmptyString" }
       }
     },
-    "capacityHandling": {
+    "terminology_and_policy": {
       "type": "object",
-      "description": "Rules for gracefully handling outputs that exceed token limits.",
+      "additionalProperties": false,
+      "required": ["refaktor_flag", "quantitative_diff_threshold_default"],
       "properties": {
-        "trigger": { "type": "string", "description": "Condition that triggers this rule, e.g., 'output_size_bytes > 60000'." },
-        "abortMessageTemplate": { "type": "string", "description": "Template for the abort message, e.g., 'KAPACITETSBLOCKERAD: kräver {N} meddelanden. Begär segmenterad leverans?'." },
-        "segmentationRules": {
+        "refaktor_flag": { "$ref": "#/$defs/nonEmptyString" },
+        "quantitative_diff_threshold_default": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "gates": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/gate" }
+    },
+    "policies": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/policy" }
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/step" }
+    },
+    "appendices": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["A", "B", "C", "D", "E"],
+      "properties": {
+        "A": {
           "type": "object",
+          "additionalProperties": false,
+          "required": ["typed_verification_matrix", "general"],
           "properties": {
-            "numbering_format": { "type": "string", "const": "Del [X/Y]" },
-            "completeness_rule": { "type": "string", "const": "Varje del måste vara en syntaktiskt komplett och fristående enhet." }
-          },
-          "required": ["numbering_format", "completeness_rule"]
+            "typed_verification_matrix": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["type", "rules"],
+                "properties": {
+                  "type": { "$ref": "#/$defs/nonEmptyString" },
+                  "rules": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": { "$ref": "#/$defs/nonEmptyString" }
+                  }
+                }
+              }
+            },
+            "general": { "$ref": "#/$defs/nonEmptyString" }
+          }
+        },
+        "B": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["anti_placeholder_regex"],
+          "properties": {
+            "anti_placeholder_regex": { "$ref": "#/$defs/nonEmptyString" }
+          }
+        },
+        "C": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["chat_mode"],
+          "properties": {
+            "chat_mode": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "$ref": "#/$defs/nonEmptyString" }
+            }
+          }
+        },
+        "D": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ci_recipe_template_yaml"],
+          "properties": {
+            "ci_recipe_template_yaml": { "$ref": "#/$defs/nonEmptyString" }
+          }
+        },
+        "E": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["delivery_matrix"],
+          "properties": {
+            "delivery_matrix": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["task_type", "recommended_format", "rationale"],
+                "properties": {
+                  "task_type": { "$ref": "#/$defs/nonEmptyString" },
+                  "recommended_format": { "$ref": "#/$defs/nonEmptyString" },
+                  "rationale": { "$ref": "#/$defs/nonEmptyString" }
+                }
+              }
+            }
+          }
         }
-      },
-      "required": ["trigger", "abortMessageTemplate", "segmentationRules"]
+      }
+    }
+  },
+  "$defs": {
+    "nonEmptyString": { "type": "string", "minLength": 1 },
+    "gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "abort_on_violation"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^G(?:-1|[0-5])$"
+        },
+        "title": { "$ref": "#/$defs/nonEmptyString" },
+        "abort_on_violation": { "type": "boolean" },
+        "rule": { "$ref": "#/$defs/nonEmptyString" },
+        "threshold": {
+          "type": "string",
+          "pattern": "^\\d{1,3}%$"
+        },
+        "condition": { "$ref": "#/$defs/nonEmptyString" },
+        "action": { "$ref": "#/$defs/nonEmptyString" },
+        "checks": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "policy_forbid_estimated_diff": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["rule", "on_missing_reference_or_hash_mismatch"],
+          "properties": {
+            "rule": { "$ref": "#/$defs/nonEmptyString" },
+            "on_missing_reference_or_hash_mismatch": { "$ref": "#/$defs/nonEmptyString" }
+          }
+        },
+        "truncation_detector": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["method", "abort_conditions"],
+          "properties": {
+            "method": { "$ref": "#/$defs/nonEmptyString" },
+            "abort_conditions": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "$ref": "#/$defs/nonEmptyString" }
+            }
+          }
+        },
+        "start_end_preserver": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["rule"],
+          "properties": {
+            "rule": { "$ref": "#/$defs/nonEmptyString" }
+          }
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "rules"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmptyString" },
+        "title": { "$ref": "#/$defs/nonEmptyString" },
+        "rules": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        }
+      }
+    },
+    "role": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "duty"],
+      "properties": {
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "duty": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "commentSyntaxRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ext", "syntax", "status"],
+      "properties": {
+        "ext": { "$ref": "#/$defs/nonEmptyString" },
+        "syntax": { "$ref": "#/$defs/nonEmptyString" },
+        "status": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "standards": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "javascript_vue": { "$ref": "#/$defs/nonEmptyString" },
+        "python": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "substep": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": ["string", "integer"],
+          "pattern": "^[0-9]+[a-z]?$"
+        },
+        "title": { "$ref": "#/$defs/nonEmptyString" },
+        "rule": { "$ref": "#/$defs/nonEmptyString" },
+        "comment_syntax_table": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/commentSyntaxRow" }
+        },
+        "example": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "scope": { "$ref": "#/$defs/nonEmptyString" },
+        "standards": { "$ref": "#/$defs/standards" },
+        "format": { "$ref": "#/$defs/nonEmptyString" },
+        "checks": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "path": { "$ref": "#/$defs/nonEmptyString" },
+        "required_fields": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        }
+      }
+    },
+    "verificationLog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "fields", "metrics_table_markdown_template"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "fields": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "metrics_table_markdown_template": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        }
+      }
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title"],
+      "properties": {
+        "id": { "type": "integer", "minimum": 0 },
+        "title": { "$ref": "#/$defs/nonEmptyString" },
+        "rules": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "substeps": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/substep" }
+        },
+        "code": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "non_code": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "general": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "verification_log": { "$ref": "#/$defs/verificationLog" },
+        "example_markdown": { "$ref": "#/$defs/nonEmptyString" },
+        "abort_on_fail": { "type": "boolean" },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/role" }
+        },
+        "attempt_counter": { "$ref": "#/$defs/nonEmptyString" },
+        "forced_escalations": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "meta_protocol": { "$ref": "#/$defs/nonEmptyString" },
+        "note_binding": { "$ref": "#/$defs/nonEmptyString" }
+      }
     }
   }
 }
