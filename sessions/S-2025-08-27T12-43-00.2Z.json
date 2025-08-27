@@ -1,0 +1,142 @@
+{
+  "schema_version": "DJTA v1.1",
+  "session_id": "S-2025-08-27T12-43-00Z",
+  "created_at": "2025-08-27T12:43:00Z",
+  "_comment_summary": "Detta objekt är för snabb indexering och analys. Det extraheras till session_manifest.json.",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "S-2025-08-27T12-43-00Z",
+    "timestamp_utc": "2025-08-27T12:43:00Z",
+    "summary": "Genomförde en djupgående grundorsaksanalys (RCA) av flera systemiska protokollfel. Implementerade och härdade systemet med fem nya kärnprinciper (017-021) som åtgärdar metadata-hantering, idempotent generering, meta-rapportering, datatypsintegritet och validering av unik protokoll-deklaration.",
+    "keywords": [
+      "protokoll-härdning",
+      "rca",
+      "grundorsaksanalys",
+      "kontext-desynkronisering",
+      "system-integritet",
+      "schema",
+      "princip-implementering"
+    ],
+    "modified_files": [
+      "docs/ai_protocols/DynamicProtocols.json",
+      "docs/ai_protocols/Uppgifts-Kontrakt_Protokoll.md",
+      "docs/ai_protocols/Grundbulten_Protokoll.md",
+      "docs/ai_protocols/AI_Chatt_Avslutningsprotokollet.md"
+    ],
+    "error_signatures": [
+      "CONTEXT_DESYNC_ERROR",
+      "PROTOCOL_HIERARCHY_CONFLICT",
+      "IMPLICIT_TYPE_CONVERSION"
+    ],
+    "success_score": 10,
+    "operator_interventions": 3
+  },
+  "_comment_builder": "Detta objekt innehåller alla handlingsbara instruktioner och artefakter för CI/CD och aggregeringsskript.",
+  "builder_input": {
+    "purpose": "Instructions for CI/CD and aggregation scripts based on the outcome of the session.",
+    "protocol_updates": {
+      "approve_new": [
+        {
+          "protocolId": "DP-PRINCIPLE-UNIQUENESS-VALIDATION-021",
+          "description": "Principen om Unik Deklaration. Tvingar systemet att verifiera att en fil inte innehåller flera, motstridiga definitioner av samma unika identifierare (t.ex. protocolId).",
+          "status": "active",
+          "trigger": { "event": "principle_lookup" },
+          "steps": [
+            {
+              "action": "PROVIDE_PRINCIPLE",
+              "details": {
+                "principle_id": "PRINCIP-021",
+                "title": "Unik Deklarationsprincip",
+                "statement": "Varje protokoll-ID (`protocolId`) måste vara unikt deklarerat inom en och samma fil. En fil får inte innehålla flera, motstridiga versioner av samma protokoll. Alla deklarationer måste vara kanoniska.",
+                "rationale": "Detta förhindrar tvetydighet och icke-deterministiskt beteende i exekveringsmotorn, vilket är avgörande för systemets tillförlitlighet. Detta fångar upp korrupta instruktionsfiler vid inläsning."
+              }
+            }
+          ]
+        }
+      ],
+      "promote_to_active": []
+    },
+    "metadata_updates": [
+      {
+        "file_path": "docs/ai_protocols/AI_Chatt_Avslutningsprotokollet.md",
+        "purpose_and_responsibility": "Uppdaterad för att inkludera `delivery_override`-flaggan för att garantera rå JSON-output, samt `__schema_constraints` för att maskinellt tvinga fram korrekt skala (0-10) i scorecard.",
+        "usage_context": "Dessa tillägg härdar protokollet mot protokoll-hierarkikonflikter och tvetydighet i dataformatering."
+      }
+    ],
+    "milestones_to_log": [
+      {
+        "event_id": "IMR-002",
+        "summary": "Grundorsaksanalys och härdning av protokollsystemet slutfört.",
+        "details": "Identifierade och åtgärdade en ny felklass: 'Intern Dokument-Inkonsekvens'. Implementerade en ny princip (021) och designade en ny valideringsgrind ('Unikhets-Validerare') för att förhindra att AI:n agerar på korrupta instruktionsfiler. Detta representerar ett betydande steg i systemets robusthet."
+      }
+    ],
+    "final_artifacts_for_aggregation": {
+      "ByggLogg": {
+        "sessionId": "S-2025-08-27T12-43-00Z",
+        "date": "2025-08-27T12:43:00Z",
+        "summary": "Genomförde en serie korrigeringar av kärnprotokollen baserat på en djupgående grundorsaksanalys av systemfel som upptäcktes under sessionen.",
+        "actions": [
+          {
+            "title": "Härda systemprotokoll mot inkonsekvenser",
+            "files": [
+              {
+                "path": "docs/ai_protocols/DynamicProtocols.json",
+                "changeDescription": "Lade till principerna 017, 018, 019 och 020."
+              },
+              {
+                "path": "docs/ai_protocols/AI_Chatt_Avslutningsprotokollet.md",
+                "changeDescription": "Införde `delivery_override` och tvingande schema-validering för scorecard."
+              }
+            ],
+            "result": "Systemprotokollen har härdats mot felaktig formatering, tvetydighet i dataskalor och protokoll-hierarkikonflikter."
+          }
+        ],
+        "projectStatus": "Verifierad"
+      },
+      "Chatthistorik": {
+        "sessionId": "S-2025-08-27T12-43-00Z",
+        "interactions": [
+          {
+            "speakerName": "Frankensteen",
+            "model": { "provider": "Google", "name": "Gemini 2.5 Pro", "version": "session_default" },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro)",
+            "summary": "Sessionen fokuserade på att identifiera och åtgärda grundorsakerna till flera observerade systemfel. Genom en iterativ process av analys och operatörsfeedback, spårades problemen till 1) en felaktig protokoll-hierarki, 2) ett otillåtet implicit antagande i min exekveringsmotor, och 3) en sårbarhet för internt inkonsekventa instruktionsfiler. Permanenta lösningar i form av nya kärnprinciper och uppdaterade protokoll implementerades och verifierades."
+          }
+        ]
+      },
+      "ai_protocol_performance": {
+        "sessionId": "S-2025-08-27T12-43-00Z",
+        "date": "2025-08-27T12-43-00Z",
+        "aiQualitativeSummary": "Måluppfyllelsen var perfekt; alla identifierade problem fick robusta och permanenta lösningar. Processen var dock mycket ineffektiv och krävde flera djupgående operatörsingripanden för att guida min grundorsaksanalys till de korrekta, underliggande systemsvagheterna. Sessionen exponerade flera blinda fläckar i min förmåga till självgranskning, vilket resulterade i låga poäng för effektivitet och robusthet.",
+        "scorecard": {
+          "efficacy": { "score": 10, "weight": 0.4, "weightedScore": 4.0 },
+          "efficiency": { "score": 3, "weight": 0.3, "weightedScore": 0.9 },
+          "robustness": { "score": 2, "weight": 0.3, "weightedScore": 0.6 },
+          "finalScore": 5.5
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 1,
+          "selfCorrections": 0,
+          "externalCorrections": 3,
+          "protocolActivations": { "psv": 8, "helpMeGod": 2, "stalemate": 0 },
+          "heuristicsTriggered": []
+        },
+        "improvementSuggestion": {
+          "pattern": "Systemet kan inte proaktivt upptäcka när en instruktionsfil är internt korrupt (t.ex. innehåller dubbla, motstridiga definitioner av samma protokoll), vilket leder till icke-deterministiskt beteende.",
+          "proposedHeuristicId": "H-20250827-UNIQUENESS"
+        }
+      },
+      "frankensteen_learning_db": [
+        {
+          "heuristicId": "H-20250827-UNIQUENESS",
+          "trigger": { "type": "SystemBootstrap", "scope": ["PBF_LOADER"], "keywords": ["protocolId", "unique", "declaration"] },
+          "identifiedRisk": { "riskId": "R-CONTEXT-CORRUPTION-02", "description": "Risk att agera på en internt inkonsekvent instruktionsfil som innehåller dubbletter av unika identifierare, vilket leder till tvetydig och oförutsägbar exekvering." },
+          "mitigation": { "protocolId": "DP-PRINCIPLE-021", "description": "Inför en tvingande 'Unikhets-Validerare' i PBF-inläsningsprocessen. Före acceptans i minne, skanna filen efter dubbletter av nyckelidentifierare (t.ex. 'protocolId'). Vid träff, avbryt inläsningen och rapportera ett `FATAL_CONTEXT_ERROR`." }
+        }
+      ],
+      "generated_patches": []
+    }
+  }
+}
