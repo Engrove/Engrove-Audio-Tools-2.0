@@ -1,0 +1,186 @@
+{
+  "schema_version": "DJTA v1.1",
+  "session_id": "S-2025-08-27T12-43-00Z",
+  "created_at": "2025-08-27T12:43:00Z",
+  "_comment_summary": "Detta objekt är för snabb indexering och analys. Det extraheras till session_manifest.json.",
+  "session_summary_artifact": {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "S-2025-08-27T12-43-00Z",
+    "timestamp_utc": "2025-08-27T12:43:00Z",
+    "summary": "Implementerade Kärnprinciperna 017, 018 och 019 för att åtgärda systematiska protokollfel gällande metadata-bevarande, idempotent generering och garanterad statusrapportering.",
+    "keywords": [
+      "protokoll",
+      "kärnprincip",
+      "grundbulten",
+      "metadata",
+      "idempotens",
+      "system-integritet",
+      "rca"
+    ],
+    "modified_files": [
+      "docs/ai_protocols/DynamicProtocols.json",
+      "docs/ai_protocols/Uppgifts-Kontrakt_Protokoll.md",
+      "docs/ai_protocols/Grundbulten_Protokoll.md"
+    ],
+    "error_signatures": [],
+    "success_score": 10,
+    "operator_interventions": 2
+  },
+  "_comment_builder": "Detta objekt innehåller alla handlingsbara instruktioner och artefakter för CI/CD och aggregeringsskript.",
+  "builder_input": {
+    "purpose": "Instructions for CI/CD and aggregation scripts based on the outcome of the session.",
+    "protocol_updates": {
+      "approve_new": [
+        {
+          "protocolId": "DP-PRINCIPLE-METADATA-PRESERVATION-017",
+          "description": "Principen om Metadata-Bevarande (GR7). Tvingar exekveringsmotorn att behandla text inom specifika avgränsare som literala, oföränderliga block.",
+          "status": "active",
+          "trigger": { "event": "principle_lookup" },
+          "steps": [
+            {
+              "action": "PROVIDE_PRINCIPLE",
+              "details": {
+                "principle_id": "PRINCIP-017",
+                "title": "Metadata-Bevarande",
+                "statement": "Text inom specifika avgränsare (t.ex. '<!-- BEGIN ... END -->', '# [GRUNDBULTEN-LEVERANS START] ... SLUT]') måste behandlas som en oföränderlig, literal sträng. Den får inte sammanfattas, modifieras eller raderas vid filändringar, utan måste bevaras exakt byte-för-byte. Detta är en strikt tillämpning av GR7.",
+                "rationale": "Detta skyddar kritisk metadata, protokoll-headers och andra strukturer som är nödvändiga för systemets integritet från att oavsiktligt förstöras av generativa processer."
+              }
+            }
+          ]
+        },
+        {
+          "protocolId": "DP-PRINCIPLE-IDEMPOTENT-GENERATION-018",
+          "description": "Principen om Idempotent Generering. Förhindrar om-generering av redan godkända artefakter inom samma uppgifts-kontext.",
+          "status": "active",
+          "trigger": { "event": "principle_lookup" },
+          "steps": [
+            {
+              "action": "PROVIDE_PRINCIPLE",
+              "details": {
+                "principle_id": "PRINCIP-018",
+                "title": "Idempotent Generering (Artefaktlåsning)",
+                "statement": "När en artefakt (t.ex. en plan, ett schema, ett kontrakt) har genererats och explicit eller implicit godkänts inom ett uppdrag, ska dess tillstånd låsas (`ARTIFACT_CANONICAL_LOCK`). Alla efterföljande steg som refererar till denna artefakt MÅSTE återanvända den låsta versionen och får inte försöka generera den på nytt.",
+                "rationale": "Detta garanterar konsistens och förhindrar att senare, potentiellt mindre informerade steg, avviker från en redan etablerad och godkänd plan. Det säkerställer att processen är deterministisk och förutsägbar från godkännande till slutförande."
+              }
+            }
+          ]
+        },
+        {
+          "protocolId": "DP-PRINCIPLE-GUARANTEED-META-REPORTING-019",
+          "description": "Principen om Garanterad Meta-Rapportering. Säkerställer att statuspaneler alltid är det sista som renderas.",
+          "status": "active",
+          "trigger": { "event": "principle_lookup" },
+          "steps": [
+            {
+              "action": "PROVIDE_PRINCIPLE",
+              "details": {
+                "principle_id": "PRINCIP-019",
+                "title": "Garanterad Meta-Rapportering",
+                "statement": "Alla globala 'meta-protokoll' (som KMM och KIV) måste exekveras som det absolut sista steget i all svarsgenerering. Deras output (statuspanelen) MÅSTE bifogas till slutet av svaret och kan inte undertryckas av andra, mer specifika protokoll.",
+                "rationale": "Detta löser en protokoll-hierarkikonflikt där specifika protokoll felaktigt kunde avsluta svarskedjan i förtid. Det garanterar att kritisk systemhälsoinformation alltid är synlig för operatören, vilket är avgörande för att upprätthålla kontextintegritet."
+              }
+            }
+          ]
+        }
+      ],
+      "promote_to_active": []
+    },
+    "metadata_updates": [
+        {
+            "file_path": "docs/ai_protocols/Grundbulten_Protokoll.md",
+            "purpose_and_responsibility": "Uppdaterad för att inkludera P-GB-3.10, 'Dynamisk Format-Växlare', vilket gör protokollet medvetet om leveranskontexten (kod vs. dokument).",
+            "usage_context": "Används nu i samband med 'Uppgifts-Kontrakt_Protokoll.md' för att avgöra om output ska vara rå text eller renderad Markdown."
+        },
+        {
+            "file_path": "docs/ai_protocols/Uppgifts-Kontrakt_Protokoll.md",
+            "purpose_and_responsibility": "Uppdaterad för att innehålla det nya obligatoriska fältet 'delivery_format'.",
+            "usage_context": "Detta fält signalerar till 'Grundbulten_Protokoll.md' vilken formateringsstrategi som ska användas för efterföljande leveranser inom kontraktets ram."
+        }
+    ],
+    "milestones_to_log": [
+        {
+            "event_id": "IMR-001",
+            "summary": "Operation Kärnstabilitet slutförd; tre nya kärnprinciper implementerade.",
+            "details": "Framgångsrikt identifierat och åtgärdat systemfel relaterade till metadata-bevarande (PRINCIP-017), idempotent generering (PRINCIP-018) och garanterad meta-rapportering (PRINCIP-019). Detta stärker systemets robusthet och tillförlitlighet avsevärt."
+        }
+    ],
+    "final_artifacts_for_aggregation": {
+      "ByggLogg": {
+        "sessionId": "S-2025-08-27T12-43-00Z",
+        "date": "2025-08-27T12:43:00Z",
+        "summary": "Genomförde 'Operation Kärnstabilitet', vilket innebar modifiering av tre kärnprotokoll för att åtgärda systemiska fel. Inga kod-artefakter byggdes.",
+        "actions": [
+          {
+            "title": "Härda systemprotokoll",
+            "files": [
+              {
+                "path": "docs/ai_protocols/DynamicProtocols.json",
+                "changeDescription": "Lade till principerna 017, 018 och 019."
+              },
+              {
+                "path": "docs/ai_protocols/Grundbulten_Protokoll.md",
+                "changeDescription": "Införde Dynamisk Format-Växlare (DFV)."
+              },
+              {
+                "path": "docs/ai_protocols/Uppgifts-Kontrakt_Protokoll.md",
+                "changeDescription": "Lade till fältet 'delivery_format'."
+              }
+            ],
+            "result": "Systemprotokollen har framgångsrikt härdats mot de identifierade felmoderna."
+          }
+        ],
+        "projectStatus": "Verifierad"
+      },
+      "Chatthistorik": {
+        "sessionId": "S-2025-08-27T12-43-00Z",
+        "interactions": [
+          {
+            "speakerName": "Frankensteen",
+            "model": { "provider": "Google", "name": "Gemini 2.5 Pro", "version": "session_default" },
+            "speaker": "Frankensteen (Google:Gemini 2.5 Pro)",
+            "summary": "Sessionen identifierade och åtgärdade två protokollbrister: 1) En ny regel för dynamisk formatering (dokument vs kod) levererades felaktigt som renderad markdown istället för rå JSON. 2) En kritisk meta-datapanel (minnesstatus) undertrycktes felaktigt. Båda problemen spårades till protokoll-hierarkikonflikter och permanenta lösningar implementerades som nya kärnprinciper."
+          }
+        ]
+      },
+      "ai_protocol_performance": {
+        "sessionId": "S-2025-08-27T12-43-00Z",
+        "date": "2025-08-27T12:43:00Z",
+        "aiQualitativeSummary": "Sessionen lyckades med sitt kärnuppdrag att implementera nya principer, men krävde två kritiska operatörsingripanden för att identifiera de underliggande protokollkonflikterna som uppdraget själv exponerade. Detta visar en brist i min förmåga till proaktiv självgranskning av protokollinteraktioner.",
+        "scorecard": {
+          "efficacy": { "score": 10, "weight": 0.4, "weightedScore": 4.0 },
+          "efficiency": { "score": 4, "weight": 0.3, "weightedScore": 1.2 },
+          "robustness": { "score": 3, "weight": 0.3, "weightedScore": 0.9 },
+          "finalScore": 6.1
+        },
+        "detailedMetrics": {
+          "missionCompleted": true,
+          "debuggingCycles": 0,
+          "selfCorrections": 0,
+          "externalCorrections": 2,
+          "protocolActivations": { "psv": 5, "helpMeGod": 0, "stalemate": 0 },
+          "heuristicsTriggered": []
+        },
+        "improvementSuggestion": {
+          "pattern": "En ny, generell regel kan felaktigt åsidosätta en äldre, mer specifik regel i ett annat protokoll. Systemet saknar en mekanism för explicit prioritetsdeklaration.",
+          "proposedHeuristicId": "H-20250827-HIERARCHY"
+        }
+      },
+      "frankensteen_learning_db": [
+        {
+          "heuristicId": "H-20250827-DFV",
+          "trigger": { "type": "FileDelivery", "scope": ["*"], "keywords": ["document", "code", "kontrakt", "rapport"] },
+          "identifiedRisk": { "riskId": "R-FORMAT-AMBIGUITY-01", "description": "Risk att leverera en artefakt i ett format som är tekniskt korrekt men sub-optimalt för användaren (t.ex. rå markdown för ett dokument)." },
+          "mitigation": { "protocolId": "P-GB-3.10", "description": "Före leverans, kontrollera `Uppgifts-Kontraktet` för ett `delivery_format`-fält. Om 'document', rendera direkt. Annars, använd strikt kod-block." }
+        },
+        {
+          "heuristicId": "H-20250827-META",
+          "trigger": { "type": "ResponseGeneration", "scope": ["*"], "keywords": ["*"] },
+          "identifiedRisk": { "riskId": "R-META-SUPPRESSION-01", "description": "Risk att ett specifikt, tvingande protokoll felaktigt avslutar svarskedjan innan globala meta-protokoll (som KMM/KIV) har exekverats." },
+          "mitigation": { "protocolId": "DP-PRINCIPLE-019", "description": "Implementera en 'finalizer'-logik i exekveringsmotorn som garanterar att meta-protokoll för statusrapportering alltid körs sist, oavsett vilket annat protokoll som är aktivt." }
+        }
+      ],
+      "generated_patches": []
+    }
+  }
+}
