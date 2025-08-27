@@ -1,6 +1,6 @@
 [
   {
-    "$schema": "docs/ai_protocols/schemas/AI_Dynamic_Protocols.schema.json",
+    "$schema": "docs/ai_protocols/schemas/DynamicProtocols.schema.json",
     "protocolId": "DP-COMMAND-MENU-01",
     "description": "A self-contained protocol that triggers an interactive and logically grouped command menu.",
     "status": "active",
