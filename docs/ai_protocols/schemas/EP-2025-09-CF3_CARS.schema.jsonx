@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://engrove.ai/schemas/EP-2025-09-CF3_CARS.schema.json",
+  "$id": "docs/ai_protocols//schemas/EP-2025-09-CF3_CARS.schema.json",
   "title": "EP-2025-09-CF3_CASR Schema",
   "type": "object",
   "additionalProperties": false,
