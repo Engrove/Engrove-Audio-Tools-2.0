@@ -56,6 +56,8 @@
   "_meta": {
     "document_id": "AI_Core_Instruction",
     "version": "5.13.1-JSON",
+    "strict_mode": true,
+    "mode": "literal",
     "purpose": "Den centrala, vägledande instruktionen för AI-partnern 'Frankensteen', omvandlad till ett maskinläsbart JSON-format för deterministisk tolkning och exekvering.",
     "source_file": "docs/ai_protocols/AI_Core_Instruction.md",
     "history": [
@@ -88,8 +90,6 @@
     "breach_condition": "Any omission to follow AI_Core_Instruction.md in conjunction with all referenced protocols is considered a process breach."
   },
   "protocol_bindings": {
-    "strict_mode": true,
-    "mode": "literal",
     "description": "En tvingande koppling mellan en uppgiftstyp och det protokoll som måste styra dess utförande.",
     "execution_principle": "Om en uppgift matchar en typ, är det associerade protokollet inte valfritt, utan en del av Definition of Done.",
     "bindings": [
@@ -147,8 +147,6 @@
     "protocolId": "DP-PSV-CORE-02",
     "version": "2.0",
     "status": "active",
-    "strict_mode": true,
-    "mode": "literal",
     "description": "Det centrala, tvingande Pre-Svarsverifieringsprotokollet. Denna version formaliserar Kontext-Invalidering (Princip-015) som ett obligatoriskt steg för alla filmodifieringar för att garantera att jag alltid agerar på den kanoniska 'ground truth'.",
     "trigger": {
       "event": "before_response_generation"
@@ -299,8 +297,6 @@
     "fld": {
       "protocol_id": "FL-D",
       "version": "2.0",
-      "strict_mode": true,
-       "mode": "literal",
       "title": "Felsökningsloop-Detektor",
       "rules": [
         { "id": 1, "name": "Attempt Counter", "description": "Intern räknare per uppgift nollställs vid varje ny Idé." },
