@@ -8,35 +8,87 @@
 #
 # === HISTORIK ===
 # v1.0 (2025-08-09): Initial skapelse.
-#
-# === KONTROLLPUNKTER ===
-## OUTPUT (SIC v1 JSON)
+# v2.0 (2025-08-27): Konverterad till Hybrid MD-JSON-format för deterministisk exekvering.
+
+```json
 {
-  "timestamp": "<ISO8601>",
-  "checks": {
-    "heuristicConflicts": <int>,
-    "heuristicRedundancies": <int>,
-    "unreachableProtocols": <int>
+  "$schema": "docs/ai_protocols/schemas/System_Integrity_Check_Protocol.schema.json",
+  "protocolId": "P-SIC-2.0",
+  "title": "System Integrity Check Protocol",
+  "version": "2.0",
+  "description": "Definierar den obligatoriska hälsokontroll som Frankensteen måste utföra vid starten av varje ny session för att proaktivt identifiera potentiella problem i regelverket.",
+  "strict_mode": true,
+  "mode": "literal",
+  "trigger": {
+    "event": "on_new_session_start"
   },
-  "notes": "<kort sammanfattning>"
+  "analysis_targets": {
+    "heuristics": {
+      "source_file": "tools/frankensteen_learning_db.json",
+      "checks": [
+        {
+          "check_id": "CONFLICT_DETECTION",
+          "description": "Identifierar heuristiker med överlappande triggers men motstridiga åtgärder.",
+          "output_key": "heuristicConflicts"
+        },
+        {
+          "check_id": "REDUNDANCY_DETECTION",
+          "description": "Identifierar heuristiker vars trigger och åtgärd är funktionellt identiska.",
+          "output_key": "heuristicRedundancies"
+        },
+        {
+          "check_id": "COMPLEXITY_INDEX",
+          "description": "Beräknar ett komplexitetsindex och flaggar om det överstiger ett tröskelvärde (5.0).",
+          "output_key": "heuristicComplexityWarning"
+        }
+      ]
+    },
+    "protocols": {
+      "source_path": "docs/ai_protocols/",
+      "checks": [
+        {
+          "check_id": "REACHABILITY_ANALYSIS",
+          "description": "Verifierar att alla .md-protokoll är refererade och nåbara från AI_Core_Instruction.",
+          "output_key": "unreachableProtocols"
+        },
+        {
+          "check_id": "GRUNDBULTEN_PRIORITY",
+          "description": "Verifierar att Grundbulten_Protokoll.md är aktivt med högsta prioritet.",
+          "output_key": "grundbultenPriorityOk"
+        }
+      ]
+    }
+  },
+  "dynamic_protocol_status_checks": {
+    "source_file": "docs/ai_protocols/DynamicProtocols.json",
+    "protocols_to_check": [
+      "DP-MAINTAIN-PFR-01",
+      "DP-MAINTAIN-PHR-01",
+      "DP-MAINTAIN-PDR-01",
+      "DP-MAINTAIN-PPR-01",
+      "DP-MAINTAIN-IMR-01",
+      "DP-MAINTAIN-ISR-01",
+      "DP-KAJBJORN-VALIDATION-01",
+      "DP-STIGBRITT-TRIBUNAL-v2-01"
+    ],
+    "output_key": "dynamicProtocolStatus"
+  },
+  "output_definition": {
+    "status": "HEALTHY",
+    "timestamp": "2025-08-27T12:00:00Z",
+    "checks": {
+      "heuristicConflicts": 0,
+      "heuristicRedundancies": 0,
+      "heuristicComplexityWarning": false,
+      "unreachableProtocols": 0,
+      "grundbultenPriorityOk": true
+    },
+    "dynamicProtocolStatus": [
+      {
+        "protocolId": "DP-MAINTAIN-PFR-01",
+        "status": "active"
+      }
+    ],
+    "summary": "Exempel på en sammanfattning av systemhälsan."
+  }
 }
-
-**PSV-gränsdragning:** Detta dokument utför hälsokontroll. Inga PSV-beslut fattas här. Stature_Report konsumerar denna JSON.
-
-**1. Heuristik-analys (`tools/frankensteen_learning_db.json`):**
-   - **Konflikt-detektion:** Identifiera heuristiker vars `trigger`-villkor är identiska eller kraftigt överlappande men som föreskriver olika `mitigation`-åtgärder. Flagga dessa som `POTENTIAL_CONFLICT`.
-   - **Redundans-detektion:** Identifiera heuristiker vars `trigger` och `mitigation` är nästintill identiska. Flagga den äldre som `POTENTIAL_REDUNDANCY`.
-   - **Komplexitets-index:** Beräkna ett enkelt komplexitets-index (t.ex. `antal_regler / 10`). Om index > 5.0, flagga en varning för `HIGH_COMPLEXITY`.
-
-**2. Protokoll-analys (`docs/ai_protocols/`):**
-   - **Nåbarhetsanalys:** Verifiera att varje `.md`-protokoll antingen är direkt refererat i `AI_Core_Instruction.md` eller kan nås via ett annat protokoll (t.ex. ett dynamiskt protokoll). Flagga oåtkomliga filer som `UNREACHABLE_PROTOCOL`.
-   - **Grundbulten:** Verifiera att Grundbulten_Protokoll.md är aktiverat med högsta prioritet.
-**3. Output-format:**
-   - När jag har genomfört analysen kommer jag att presentera resultatet för dig i ett enkelt och tydligt format. Du får en statusrapport som ett JSON-objekt, som kommer att innehålla följande:
-* **`status`**: En övergripande bedömning av systemets hälsa, som kan vara `HEALTHY`, `WARNING` eller `CRITICAL`.
-* **`timestamp`**: En exakt tidsstämpel för när kontrollen slutfördes.
-* **`checks`**: Ett objekt som räknar de specifika problem jag hittat, till exempel hur många heuristiska konflikter eller redundanser som upptäcktes.
-* **`Persistent Register`**: Ger status på de dymaiska reglerna definierade i DynamicProtocols.json: DP-MAINTAIN-PFR-01, DP-MAINTAIN-PHR-01, DP-MAINTAIN-PDR-01, DP-MAINTAIN-PPR-01, DP-MAINTAIN-IMR-01 och DP-MAINTAIN-ISR-01
-* **`Simulated AI KAJBJÖRN`**: Ger status på DP-KAJBJORN-VALIDATION-01
-* **`Simulated AI STIGBRITT`**: Ger status på DP-STIGBRITT-TRIBUNAL-v2-01
-* **`summary`**: En kort, mänskligt läsbar sammanfattning som snabbt förklarar vad resultatet innebär.
