@@ -23,6 +23,7 @@ END HEADER -->
 {
   "protocolId": "P-GB-3.9",
   "file_path": "docs/ai_protocols/Grundbulten_Protokoll.md",
+  "$schema": "docs/ai_protocols/schemas/Grundbulten_Protokoll.schema.json",
   "title": "Grundbulten – Universell filhantering (chattsession)",
   "version": "3.9",
   "strict_mode": true,
