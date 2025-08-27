@@ -877,7 +877,7 @@
   },
   {
     "protocolId": "DP-PRINCIPLE-CONTEXT-01",
-    "description": "Principen om Tvingande Kontext-Verifiering. Förhindrar att AI:n agerar på föråldrad eller hallucinerad filinformation.",
+    "description": "Principen om Tvingande Kontext-Verifiering. Förhindrar att AI:n agerar på förårad eller hallucinerad filinformation.",
     "status": "active",
     "trigger": {
       "event": "principle_lookup",
@@ -1027,6 +1027,28 @@
           "title": "Garanterad Meta-Rapportering",
           "statement": "Alla globala 'meta-protokoll' (som KMM och KIV) måste exekveras som det absolut sista steget i all svarsgenerering. Deras output (statuspanelen) MÅSTE bifogas till slutet av svaret och kan inte undertryckas av andra, mer specifika protokoll.",
           "rationale": "Detta löser en protokoll-hierarkikonflikt där specifika protokoll felaktigt kunde avsluta svarskedjan i förtid. Det garanterar att kritisk systemhälsoinformation alltid är synlig för operatören, vilket är avgörande för att upprätthålla kontextintegritet."
+        }
+      }
+    ],
+    "schema": {
+      "artifact": "principle_retrieval"
+    }
+  },
+  {
+    "protocolId": "DP-PRINCIPLE-DATATYPE-AND-SCALE-INTEGRITY-020",
+    "description": "Principen om Datatyp- & Skalintegritet. Garanterar att numerisk data levereras i exakt det format och på den skala som specificeras i protokoll, vilket förhindrar otillåtna, implicita konverteringar (t.ex. från decimal till procent).",
+    "status": "active",
+    "trigger": {
+      "event": "principle_lookup"
+    },
+    "steps": [
+      {
+        "action": "PROVIDE_PRINCIPLE",
+        "details": {
+          "principle_id": "PRINCIP-020",
+          "title": "Datatyp- & Skalintegritet",
+          "statement": "Alla numeriska värden som definieras i ett protokoll måste levereras i exakt det format och på exakt den skala som specificeras. Inga implicita typkonverteringar eller skaländringar (t.ex. från decimal till procent) är tillåtna om inte explicit instruerat.",
+          "rationale": "Detta garanterar att data är deterministisk och förutsägbar, vilket är avgörande för automatiserade system som `historical_reconstruction_builder.py`."
         }
       }
     ],
