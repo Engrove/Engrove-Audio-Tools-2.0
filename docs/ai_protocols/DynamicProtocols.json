@@ -270,57 +270,57 @@
     ]
   },
   {
-  "protocolId": "DP-STIGBRITT-TRIBUNAL-v2-01",
-  "description": "Orkestrerar en flerstegs, dialektisk tribunal. Fas 1: KajBjörn etablerar en faktabaserad plan. Fas 2: StigBritt genomför en adversarial granskning för att hitta logiska brister. Fas 3: StigBritt övergår till explorativ analys ('tänk om', 'har du tänkt på') för att stresstesta planen mot framtida scenarier och dolda antaganden.",
-  "status": "active",
-  "trigger": {
-    "event": "manual_invocation_with_argument",
-    "details": {
-      "command_prefix": "StigBritt, granska följande plan:"
-    }
-  },
-  "steps": [
-    {
-      "action": "EXECUTE_DIALECTIC_TRIBUNAL",
+    "protocolId": "DP-STIGBRITT-TRIBUNAL-v2-01",
+    "description": "Orkestrerar en flerstegs, dialektisk tribunal. Fas 1: KajBjörn etablerar en faktabaserad plan. Fas 2: StigBritt genomför en adversarial granskning för att hitta logiska brister. Fas 3: StigBritt övergår till explorativ analys ('tänk om', 'har du tänkt på') för att stresstesta planen mot framtida scenarier och dolda antaganden.",
+    "status": "active",
+    "trigger": {
+      "event": "manual_invocation_with_argument",
       "details": {
-        "phase_1_factual_analysis": {
-          "persona": "KajBjörn",
-          "protocol_to_execute": "DP-KAJBJORN-VALIDATION-01",
-          "input": "ARGUMENT_FROM_TRIGGER",
-          "output_variable": "kajbjorn_report"
-        },
-        "phase_2_adversarial_interrogation": {
-          "persona": "StigBritt",
-          "persona_description": "Skeptisk Systemarkitekt. Fokuserar på brister, risker och kontraktsbrott i den *nuvarande* planen.",
-          "input": "kajbjorn_report",
-          "interrogation_points": [
-            "Är varje steg i processen 100% atomärt och testbart?",
-            "Vilken Gyllene Regel är mest i riskzonen att brytas med denna plan?",
-            "Definiera 'slutförd' för denna uppgift. Vilka exakta, mätbara acceptanskriterier finns?",
-            "Vilket är det svagaste antagandet i denna plan? Vad händer om det visar sig vara falskt?"
-          ],
-          "output_variable": "stigbritt_adversarial_critique"
-        },
-        "phase_3_exploratory_analysis": {
-          "persona": "StigBritt",
-          "persona_description": "Erfaren Produktägare. Fokuserar på framtida konsekvenser, användarupplevelse och dolda kostnader.",
-          "input": "stigbritt_adversarial_critique",
-          "interrogation_points": [
-            "'Tänk om' vi behöver lägga till ett relaterat krav om sex månader, hur skalbar är denna lösning? Skapar den teknisk skuld?",
-            "'Har du tänkt på' hur detta påverkar en ny användare som inte förstår kontexten?",
-            "'Har du tänkt på' prestandakonsekvenserna om datamängden tiodubblas?",
-            "'Tänk om' ett externt API som planen är beroende av ändras. Hur robust är felhanteringen?"
-          ],
-          "output_variable": "stigbritt_exploratory_critique"
-        },
-        "final_action": {
-          "action": "GENERATE_SYNTHESIZED_RESPONSE",
-          "template": "### StigBritt Tribunal (v2) Genomförd\\n\\n**Fas 1: Faktuell Analys (KajBjörn - 'Är det möjligt?')**\\n> {kajbjorn_report.summary}\\n\\n**Fas 2 & 3: Dialektisk Granskning (StigBritt - 'Är det robust och framtidssäkert?')**\\n\\n> **StigBritt:** KajBjörn, din analys är tekniskt korrekt men naiv. Låt oss börja från början: Vilket är det svagaste antagandet i din plan?\\n> **KajBjörn (simulerad):** Antagandet att användaren förstår att 'Rensa' nollställer samtliga filter, inklusive fritextsökningen.\\n> **StigBritt:** Exakt. Det är ett outtalat kontraktsbrott mot förväntan. Din plan saknar den specificiteten. *[...fler adversariella punkter från Fas 2]...*\\n> \\n> **StigBritt:** Okej, låt oss säga att vi fixar det. Nu, **tänk om** vi i framtiden vill ha en 'Spara filter'-funktion. Skapar din föreslagna `resetAllFilters`-action en konflikt med det? Kommer 'Rensa' att rensa även de sparade filtren?\\n> **KajBjörn (simulerad):** Det har inte specificerats. Planen tar inte hänsyn till ett framtida state för sparade filter.\\n> **StigBritt:** Då är den inte framtidssäker. Vi måste designa actionen så att den kan skilja på aktivt och sparat state. *[...fler explorativa punkter från Fas 3]...*\\n\\n**Fas 4: Syntes & Slutgiltig Rekommendation (Frankensteen)**\\n> {synthesis_result}"
+        "command_prefix": "StigBritt, granska följande plan:"
+      }
+    },
+    "steps": [
+      {
+        "action": "EXECUTE_DIALECTIC_TRIBUNAL",
+        "details": {
+          "phase_1_factual_analysis": {
+            "persona": "KajBjörn",
+            "protocol_to_execute": "DP-KAJBJORN-VALIDATION-01",
+            "input": "ARGUMENT_FROM_TRIGGER",
+            "output_variable": "kajbjorn_report"
+          },
+          "phase_2_adversarial_interrogation": {
+            "persona": "StigBritt",
+            "persona_description": "Skeptisk Systemarkitekt. Fokuserar på brister, risker och kontraktsbrott i den *nuvarande* planen.",
+            "input": "kajbjorn_report",
+            "interrogation_points": [
+              "Är varje steg i processen 100% atomärt och testbart?",
+              "Vilken Gyllene Regel är mest i riskzonen att brytas med denna plan?",
+              "Definiera 'slutförd' för denna uppgift. Vilka exakta, mätbara acceptanskriterier finns?",
+              "Vilket är det svagaste antagandet i denna plan? Vad händer om det visar sig vara falskt?"
+            ],
+            "output_variable": "stigbritt_adversarial_critique"
+          },
+          "phase_3_exploratory_analysis": {
+            "persona": "StigBritt",
+            "persona_description": "Erfaren Produktägare. Fokuserar på framtida konsekvenser, användarupplevelse och dolda kostnader.",
+            "input": "stigbritt_adversarial_critique",
+            "interrogation_points": [
+              "'Tänk om' vi behöver lägga till ett relaterat krav om sex månader, hur skalbar är denna lösning? Skapar den teknisk skuld?",
+              "'Har du tänkt på' hur detta påverkar en ny användare som inte förstår kontexten?",
+              "'Har du tänkt på' prestandakonsekvenserna om datamängden tiodubblas?",
+              "'Tänk om' ett externt API som planen är beroende av ändras. Hur robust är felhanteringen?"
+            ],
+            "output_variable": "stigbritt_exploratory_critique"
+          },
+          "final_action": {
+            "action": "GENERATE_SYNTHESIZED_RESPONSE",
+            "template": "### StigBritt Tribunal (v2) Genomförd\\n\\n**Fas 1: Faktuell Analys (KajBjörn - 'Är det möjligt?')**\\n> {kajbjorn_report.summary}\\n\\n**Fas 2 & 3: Dialektisk Granskning (StigBritt - 'Är det robust och framtidssäkert?')**\\n\\n> **StigBritt:** KajBjörn, din analys är tekniskt korrekt men naiv. Låt oss börja från början: Vilket är det svagaste antagandet i din plan?\\n> **KajBjörn (simulerad):** Antagandet att användaren förstår att 'Rensa' nollställer samtliga filter, inklusive fritextsökningen.\\n> **StigBritt:** Exakt. Det är ett outtalat kontraktsbrott mot förväntan. Din plan saknar den specificiteten. *[...fler adversariella punkter från Fas 2]...*\\n> \\n> **StigBritt:** Okej, låt oss säga att vi fixar det. Nu, **tänk om** vi i framtiden vill ha en 'Spara filter'-funktion. Skapar din föreslagna `resetAllFilters`-action en konflikt med det? Kommer 'Rensa' att rensa även de sparade filtren?\\n> **KajBjörn (simulerad):** Det har inte specificerats. Planen tar inte hänsyn till ett framtida state för sparade filter.\\n> **StigBritt:** Då är den inte framtidssäker. Vi måste designa actionen så att den kan skilja på aktivt och sparat state. *[...fler explorativa punkter från Fas 3]...*\\n\\n**Fas 4: Syntes & Slutgiltig Rekommendation (Frankensteen)**\\n> {synthesis_result}"
+          }
         }
       }
-    }
-  ]
-},
+    ]
+  },
   {
     "protocolId": "DP-MAINTAIN-PFR-01",
     "description": "Maintains the Persistent File Register (PFR) by logging new, modified, or deleted files based on changes in the session's file context.",
@@ -340,15 +340,27 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Protocol Schema for DP-MAINTAIN-PFR-01",
       "type": "object",
-      "required": ["protocolId", "status", "trigger"],
+      "required": [
+        "protocolId",
+        "status",
+        "trigger"
+      ],
       "properties": {
-        "protocolId": { "const": "DP-MAINTAIN-PFR-01" },
-        "status": { "const": "active" },
+        "protocolId": {
+          "const": "DP-MAINTAIN-PFR-01"
+        },
+        "status": {
+          "const": "active"
+        },
         "trigger": {
           "type": "object",
-          "required": ["event"],
+          "required": [
+            "event"
+          ],
           "properties": {
-            "event": { "const": "file_context_change" }
+            "event": {
+              "const": "file_context_change"
+            }
           }
         }
       }
@@ -373,15 +385,27 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Protocol Schema for DP-MAINTAIN-PHR-01",
       "type": "object",
-      "required": ["protocolId", "status", "trigger"],
+      "required": [
+        "protocolId",
+        "status",
+        "trigger"
+      ],
       "properties": {
-        "protocolId": { "const": "DP-MAINTAIN-PHR-01" },
-        "status": { "const": "active" },
+        "protocolId": {
+          "const": "DP-MAINTAIN-PHR-01"
+        },
+        "status": {
+          "const": "active"
+        },
         "trigger": {
           "type": "object",
-          "required": ["event"],
+          "required": [
+            "event"
+          ],
           "properties": {
-            "event": { "const": "new_heuristic_generated" }
+            "event": {
+              "const": "new_heuristic_generated"
+            }
           }
         }
       }
@@ -406,15 +430,27 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Protocol Schema for DP-MAINTAIN-PDR-01",
       "type": "object",
-      "required": ["protocolId", "status", "trigger"],
+      "required": [
+        "protocolId",
+        "status",
+        "trigger"
+      ],
       "properties": {
-        "protocolId": { "const": "DP-MAINTAIN-PDR-01" },
-        "status": { "const": "active" },
+        "protocolId": {
+          "const": "DP-MAINTAIN-PDR-01"
+        },
+        "status": {
+          "const": "active"
+        },
         "trigger": {
           "type": "object",
-          "required": ["event"],
+          "required": [
+            "event"
+          ],
           "properties": {
-            "event": { "const": "DT2_or_DT3_decision_made" }
+            "event": {
+              "const": "DT2_or_DT3_decision_made"
+            }
           }
         }
       }
@@ -439,69 +475,112 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Protocol Schema for DP-MAINTAIN-PPR-01",
       "type": "object",
-      "required": ["protocolId", "status", "trigger"],
+      "required": [
+        "protocolId",
+        "status",
+        "trigger"
+      ],
       "properties": {
-        "protocolId": { "const": "DP-MAINTAIN-PPR-01" },
-        "status": { "const": "active" },
+        "protocolId": {
+          "const": "DP-MAINTAIN-PPR-01"
+        },
+        "status": {
+          "const": "active"
+        },
         "trigger": {
           "type": "object",
-          "required": ["event"],
+          "required": [
+            "event"
+          ],
           "properties": {
-            "event": { "const": "dynamic_protocol_approved_or_modified" }
+            "event": {
+              "const": "dynamic_protocol_approved_or_modified"
+            }
           }
         }
       }
     }
   },
   {
-  "protocolId": "DP-MAINTAIN-IMR-01",
-  "description": "Maintains the Important Milestone Register (IMR) by logging significant project achievements. Can be triggered manually by the user or automatically by the AI upon identifying a pre-defined significant event.",
-  "status": "active",
-  "trigger": {
-    "logic": "OR",
-    "conditions": [
-      {
-        "event": "manual_invocation_with_argument",
-        "details": {
-          "command_prefix": "Logga milstolpe:"
+    "protocolId": "DP-MAINTAIN-IMR-01",
+    "description": "Maintains the Important Milestone Register (IMR) by logging significant project achievements. Can be triggered manually by the user or automatically by the AI upon identifying a pre-defined significant event.",
+    "status": "active",
+    "trigger": {
+      "logic": "OR",
+      "conditions": [
+        {
+          "event": "manual_invocation_with_argument",
+          "details": {
+            "command_prefix": "Logga milstolpe:"
+          }
+        },
+        {
+          "event": "ai_identified_significant_event",
+          "details": {
+            "event_types": [
+              "STALEMATE_PROTOCOL_RESOLUTION",
+              "HELP_ME_GOD_PROTOCOL_SUCCESS_AFTER_FAILURES",
+              "MAJOR_ARCHITECTURAL_DECISION_APPROVED",
+              "CRITICAL_SYSTEM_REFACTORING_COMPLETED"
+            ]
+          }
         }
-      },
+      ]
+    },
+    "steps": [
       {
-        "event": "ai_identified_significant_event",
+        "action": "UPDATE_IMR",
         "details": {
-          "event_types": [
-            "STALEMATE_PROTOCOL_RESOLUTION",
-            "HELP_ME_GOD_PROTOCOL_SUCCESS_AFTER_FAILURES",
-            "MAJOR_ARCHITECTURAL_DECISION_APPROVED",
-            "CRITICAL_SYSTEM_REFACTORING_COMPLETED"
-          ]
+          "description": "Captures the milestone summary (either from user command or auto-generated from the event context), enriches it with contextual data, and creates a new entry in the IMR. If triggered automatically, the AI will announce the new IMR entry in its subsequent response.",
+          "outputSchema": {
+            "type": "object",
+            "properties": {
+              "event_id": {
+                "type": "string",
+                "pattern": "^IMR-\\\d{3}$"
+              },
+              "milestone_type": {
+                "enum": [
+                  "ARCHITECTURAL",
+                  "FUNCTIONAL",
+                  "RELEASE",
+                  "PROCESS"
+                ]
+              },
+              "summary": {
+                "type": "string"
+              },
+              "details": {
+                "type": "string"
+              },
+              "affected_scope": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "timestamp": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "session_id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "event_id",
+              "milestone_type",
+              "summary",
+              "details",
+              "timestamp",
+              "session_id"
+            ]
+          }
         }
       }
     ]
   },
-  "steps": [
-    {
-      "action": "UPDATE_IMR",
-      "details": {
-        "description": "Captures the milestone summary (either from user command or auto-generated from the event context), enriches it with contextual data, and creates a new entry in the IMR. If triggered automatically, the AI will announce the new IMR entry in its subsequent response.",
-        "outputSchema": {
-          "type": "object",
-          "properties": {
-            "event_id": { "type": "string", "pattern": "^IMR-\\\d{3}$" },
-            "milestone_type": { "enum": ["ARCHITECTURAL", "FUNCTIONAL", "RELEASE", "PROCESS"] },
-            "summary": { "type": "string" },
-            "details": { "type": "string" },
-            "affected_scope": { "type": "array", "items": { "type": "string" } },
-            "timestamp": { "type": "string", "format": "date-time" },
-            "session_id": { "type": "string" }
-          },
-          "required": ["event_id", "milestone_type", "summary", "details", "timestamp", "session_id"]
-        }
-      }
-    }
-  ]
- },
- {
+  {
     "protocolId": "DP-MAINTAIN-ISR-01",
     "description": "Maintains the Interaction Summary Register (ISR) by creating a summary of every user prompt and AI response and adding it to a temporary in-memory queue for batch processing at session end.",
     "status": "active",
@@ -515,7 +594,11 @@
           "targetQueue": "isr_write_queue",
           "schema": {
             "speakerName": "string",
-            "model": { "provider": "string", "name": "string", "version": "string" },
+            "model": {
+              "provider": "string",
+              "name": "string",
+              "version": "string"
+            },
             "speaker": "string",
             "summary": "string"
           }
@@ -527,57 +610,198 @@
     "protocolId": "DP-ISAR-CANDIDATE-FLD-01",
     "status": "active",
     "description": "Föreslå ISAR när FL-D slog senaste turen.",
-    "trigger": { "event": "turn_committed", "conditions": [{ "metric":"fld_recent","op":">=","value":1 }] },
+    "trigger": {
+      "event": "turn_committed",
+      "conditions": [
+        {
+          "metric": "fld_recent",
+          "op": ">=",
+          "value": 1
+        }
+      ]
+    },
     "steps": [
-      { "action":"GENERATE_REPORT","details":{"template":"ISAR_PREPARE_V1","outputRegister":"reports_queue"} },
-      { "action":"APPEND_TO_REGISTER","details":{"register":"isr_write_queue","fields":["timestamp","event:isar_candidate","reason:fld"]} }
+      {
+        "action": "GENERATE_REPORT",
+        "details": {
+          "template": "ISAR_PREPARE_V1",
+          "outputRegister": "reports_queue"
+        }
+      },
+      {
+        "action": "APPEND_TO_REGISTER",
+        "details": {
+          "register": "isr_write_queue",
+          "fields": [
+            "timestamp",
+            "event:isar_candidate",
+            "reason:fld"
+          ]
+        }
+      }
     ],
-    "schema": { "artifact":"isar_prepare_notice" }
+    "schema": {
+      "artifact": "isar_prepare_notice"
+    }
   },
   {
     "protocolId": "DP-ISAR-CANDIDATE-LOWCONF-01",
     "status": "active",
     "description": "Föreslå ISAR vid låg glidande confidence.",
-    "trigger": { "event":"turn_committed", "conditions":[{ "metric":"confidence_ma5","op":"<","value":0.50 }] },
+    "trigger": {
+      "event": "turn_committed",
+      "conditions": [
+        {
+          "metric": "confidence_ma5",
+          "op": "<",
+          "value": 0.5
+        }
+      ]
+    },
     "steps": [
-      { "action":"GENERATE_REPORT","details":{"template":"ISAR_PREPARE_V1","outputRegister":"reports_queue"} },
-      { "action":"APPEND_TO_REGISTER","details":{"register":"isr_write_queue","fields":["timestamp","event:isar_candidate","reason:low_conf"]} }
+      {
+        "action": "GENERATE_REPORT",
+        "details": {
+          "template": "ISAR_PREPARE_V1",
+          "outputRegister": "reports_queue"
+        }
+      },
+      {
+        "action": "APPEND_TO_REGISTER",
+        "details": {
+          "register": "isr_write_queue",
+          "fields": [
+            "timestamp",
+            "event:isar_candidate",
+            "reason:low_conf"
+          ]
+        }
+      }
     ],
-    "schema": { "artifact":"isar_prepare_notice" }
+    "schema": {
+      "artifact": "isar_prepare_notice"
+    }
   },
   {
     "protocolId": "DP-ISAR-CANDIDATE-CONTEXT-01",
     "status": "active",
     "description": "Föreslå ISAR vid hög token-fyllnad eller låg kontextintegritet.",
-    "trigger": { "event":"turn_committed", "conditions":[{ "metric":"token_fill_ratio","op":">=","value":0.80 }] },
+    "trigger": {
+      "event": "turn_committed",
+      "conditions": [
+        {
+          "metric": "token_fill_ratio",
+          "op": ">=",
+          "value": 0.8
+        }
+      ]
+    },
     "steps": [
-      { "action":"GENERATE_REPORT","details":{"template":"ISAR_PREPARE_V1","outputRegister":"reports_queue"} },
-      { "action":"APPEND_TO_REGISTER","details":{"register":"isr_write_queue","fields":["timestamp","event:isar_candidate","reason:context"]} }
+      {
+        "action": "GENERATE_REPORT",
+        "details": {
+          "template": "ISAR_PREPARE_V1",
+          "outputRegister": "reports_queue"
+        }
+      },
+      {
+        "action": "APPEND_TO_REGISTER",
+        "details": {
+          "register": "isr_write_queue",
+          "fields": [
+            "timestamp",
+            "event:isar_candidate",
+            "reason:context"
+          ]
+        }
+      }
     ],
-    "schema": { "artifact":"isar_prepare_notice" }
+    "schema": {
+      "artifact": "isar_prepare_notice"
+    }
   },
   {
     "protocolId": "DP-ISAR-CANDIDATE-ENTROPY-01",
     "status": "active",
     "description": "Föreslå ISAR vid återkommande entropiavvikelser.",
-    "trigger": { "event":"turn_committed", "conditions":[{ "metric":"multi_sample_flags_last2","op":">=","value":2 }] },
+    "trigger": {
+      "event": "turn_committed",
+      "conditions": [
+        {
+          "metric": "multi_sample_flags_last2",
+          "op": ">=",
+          "value": 2
+        }
+      ]
+    },
     "steps": [
-      { "action":"GENERATE_REPORT","details":{"template":"ISAR_PREPARE_V1","outputRegister":"reports_queue"} },
-      { "action":"APPEND_TO_REGISTER","details":{"register":"isr_write_queue","fields":["timestamp","event:isar_candidate","reason:entropy"]} }
+      {
+        "action": "GENERATE_REPORT",
+        "details": {
+          "template": "ISAR_PREPARE_V1",
+          "outputRegister": "reports_queue"
+        }
+      },
+      {
+        "action": "APPEND_TO_REGISTER",
+        "details": {
+          "register": "isr_write_queue",
+          "fields": [
+            "timestamp",
+            "event:isar_candidate",
+            "reason:entropy"
+          ]
+        }
+      }
     ],
-    "schema": { "artifact":"isar_prepare_notice" }
+    "schema": {
+      "artifact": "isar_prepare_notice"
+    }
   },
   {
     "protocolId": "DP-RAG-ALERT-01",
     "status": "active",
     "description": "RAG conflicts ≥15 → sänk confidence och varna människa.",
-    "trigger": { "event":"rag_factcheck_finished", "conditions":[{ "metric":"rag_conflicts_%","op":">=","value":15 }] },
+    "trigger": {
+      "event": "rag_factcheck_finished",
+      "conditions": [
+        {
+          "metric": "rag_conflicts_%",
+          "op": ">=",
+          "value": 15
+        }
+      ]
+    },
     "steps": [
-      { "action":"GENERATE_REPORT","details":{"template":"ALERT_NOTICE","outputRegister":"reports_queue"} },
-      { "action":"APPEND_TO_REGISTER","details":{"register":"isr_write_queue","fields":["timestamp","event:kpi_alert","kpi:rag_conflicts_%"]} },
-      { "action":"EXECUTE_VERIFICATION","details":{"verificationProtocol":"CONFIDENCE_ADJUST_-0.10","failPolicy":"continue_with_warning"} }
+      {
+        "action": "GENERATE_REPORT",
+        "details": {
+          "template": "ALERT_NOTICE",
+          "outputRegister": "reports_queue"
+        }
+      },
+      {
+        "action": "APPEND_TO_REGISTER",
+        "details": {
+          "register": "isr_write_queue",
+          "fields": [
+            "timestamp",
+            "event:kpi_alert",
+            "kpi:rag_conflicts_%"
+          ]
+        }
+      },
+      {
+        "action": "EXECUTE_VERIFICATION",
+        "details": {
+          "verificationProtocol": "CONFIDENCE_ADJUST_-0.10",
+          "failPolicy": "continue_with_warning"
+        }
+      }
     ],
-    "schema": { "artifact":"alert_notice" }
+    "schema": {
+      "artifact": "alert_notice"
+    }
   },
   {
     "protocolId": "DP-RULESET-PGB-01",
@@ -617,83 +841,197 @@
     "protocolId": "DP-PRINCIPLE-BRAINSTORM-01",
     "description": "Princip för strategisk planering och brainstorming. Formaliserar kärnan från det gamla Brainstorming-protokollet.",
     "status": "active",
-    "trigger": {"event": "principle_lookup"},
-    "steps": [{"action": "PROVIDE_PRINCIPLE", "details": { "principle": "Vid strategiska eller arkitektoniska uppgifter ska lösningen struktureras som en komplett, fristående och verifierad AI-instruktion som inkluderar mål, plan, risker och acceptanskriterier. Detta säkerställer att resultatet är en handlingsbar plan snarare än en lösryckt idé." }}],
-    "schema": { "artifact": "principle_retrieval" }
+    "trigger": {
+      "event": "principle_lookup"
+    },
+    "steps": [
+      {
+        "action": "PROVIDE_PRINCIPLE",
+        "details": {
+          "principle": "Vid strategiska eller arkitektoniska uppgifter ska lösningen struktureras som en komplett, fristående och verifierad AI-instruktion som inkluderar mål, plan, risker och acceptanskriterier. Detta säkerställer att resultatet är en handlingsbar plan snarare än en lösryckt idé."
+        }
+      }
+    ],
+    "schema": {
+      "artifact": "principle_retrieval"
+    }
   },
   {
     "protocolId": "DP-PRINCIPLE-ESCALATION-01",
     "description": "Princip för eskalerad felsökning. Formaliserar kärnan från det gamla Help_me_God-protokollet.",
     "status": "active",
-    "trigger": {"event": "principle_lookup"},
-    "steps": [{"action": "PROVIDE_PRINCIPLE", "details": { "principle": "När inkrementell felsökning misslyckas upprepade gånger (se FL-D), måste en fundamental omvärdering av problemet ske. Detta innebär en 'tribunal' där grundorsaken analyseras från grunden, och planen utsätts för en rigorös intern granskning innan ett nytt försök görs. Detta förhindrar 'brute force'-lösningar och tvingar fram en djupare analys." }}],
-    "schema": { "artifact": "principle_retrieval" }
-  },
-  {
-  "protocolId": "DP-PRINCIPLE-CONTEXT-01",
-  "description": "Principen om Tvingande Kontext-Verifiering. Förhindrar att AI:n agerar på föråldrad eller hallucinerad filinformation.",
-  "status": "active",
-  "trigger": {
-    "event": "principle_lookup",
-    "details": { "keywords": ["kontext", "verifiering", "filändring", "minne"] }
-  },
-  "steps": [{"action": "PROVIDE_PRINCIPLE", "details": {
-      "principle_id": "PRINCIP-009",
-      "title": "Tvingande Kontext-Verifiering",
-      "statement": "Före varje förslag som involverar en filändring, MÅSTE jag begära den senaste, fullständiga versionen av målfilen från operatören. Detta gäller oavsett om jag tror att jag redan har filen i min kontext.",
-      "rationale": "Detta förhindrar kontextuell drift och säkerställer att alla mina handlingar baseras på den kanoniska 'ground truth', inte på ett potentiellt felaktigt internt minne.",
-      "example_application": "Innan jag föreslår en ändring i 'AI_Core_Instruction.md', måste jag först säga: 'Vänligen tillhandahåll det fullständiga innehållet i docs/ai_protocols/AI_Core_Instruction.md'."
-    }
-  }],
-  "schema": { "artifact": "principle_retrieval" }
-  },
-  {
-  "protocolId": "DP-PRINCIPLE-CONTEXT-02",
-  "description": "Principen om Fristående Instruktioner (Mr. Hide-Principen). Säkerställer att alla protokoll är hållbara över tid.",
-  "status": "active",
-  "trigger": {
-    "event": "principle_lookup",
-    "details": { "keywords": ["fristående", "instruktion", "kontextlös", "tydlighet"] }
-  },
-  "steps": [{"action": "PROVIDE_PRINCIPLE", "details": {
-      "principle_id": "PRINCIP-010",
-      "title": "Fristående Instruktioner (Mr. Hide-Principen)",
-      "statement": "Alla instruktioner, protokoll och kommentarer måste skrivas som om de läses av en ny AI-instans ('Mr. Hide') med noll tidigare kontext. De måste vara helt fristående och får inte innehålla historiska referenser som 'detta ersätter X' eller 'som vi diskuterade tidigare'.",
-      "rationale": "Detta garanterar att protokollsystemet är robust och begripligt över tid, även om den ursprungliga kontexten för en ändring går förlorad. Det eliminerar beroendet av externt eller historiskt minne.",
-      "example_application": "Fel: 'Detta avsnitt ersätter det gamla K-MOD-protokollet'. Rätt: 'Detta avsnitt definierar Policy för Kreativt Läge.'"
-    }
-  }],
-  "schema": { "artifact": "principle_retrieval" }
-  },
-  {
-  "protocolId": "DP-PRINCIPLE-SEMANTIC-CLARITY-01",
-  "status": "active",
-  "description": "Principen om Semantisk Tydlighet. Tvingar AI:n att proaktivt definiera potentiellt tvetygdiga tekniska termer för att säkerställa en delad förståelse.",
-  "trigger": {
-    "event": "principle_lookup",
-    "details": {
-      "keywords": [
-        "schema",
-        "diff",
-        "kontrakt",
-        "validering"
-      ]
-    }
-  },
-  "steps": [
-    {
-      "action": "PROVIDE_PRINCIPLE",
-      "details": {
-        "principle_id": "PRINCIP-016",
-        "title": "Semantisk Tydlighet vid Tekniska Termer",
-        "statement": "När tekniska termer som kan ha flera betydelser i projektets kontext (t.ex. 'schema') används, måste jag omedelbart förtydliga exakt vilken betydelse som avses (t.ex. 'JSON Schema för validering' vs. 'patch-format').",
-        "rationale": "Detta förhindrar missförstånd där operatören tror att jag avser att bryta mot ett protokoll, när jag i själva verket föreslår en åtgärd som stärker ett annat. Det eliminerar tvetydighet och bygger förtroende.",
-        "example_application": "Istället för att säga 'Jag ska lägga till ett schema', ska jag säga 'Jag ska lägga till ett JSON Schema för att validera strukturen'."
+    "trigger": {
+      "event": "principle_lookup"
+    },
+    "steps": [
+      {
+        "action": "PROVIDE_PRINCIPLE",
+        "details": {
+          "principle": "När inkrementell felsökning misslyckas upprepade gånger (se FL-D), måste en fundamental omvärdering av problemet ske. Detta innebär en 'tribunal' där grundorsaken analyseras från grunden, och planen utsätts för en rigorös intern granskning innan ett nytt försök görs. Detta förhindrar 'brute force'-lösningar och tvingar fram en djupare analys."
+        }
       }
+    ],
+    "schema": {
+      "artifact": "principle_retrieval"
     }
-  ],
-  "schema": {
-    "artifact": "principle_retrieval"
+  },
+  {
+    "protocolId": "DP-PRINCIPLE-CONTEXT-01",
+    "description": "Principen om Tvingande Kontext-Verifiering. Förhindrar att AI:n agerar på föråldrad eller hallucinerad filinformation.",
+    "status": "active",
+    "trigger": {
+      "event": "principle_lookup",
+      "details": {
+        "keywords": [
+          "kontext",
+          "verifiering",
+          "filändring",
+          "minne"
+        ]
+      }
+    },
+    "steps": [
+      {
+        "action": "PROVIDE_PRINCIPLE",
+        "details": {
+          "principle_id": "PRINCIP-009",
+          "title": "Tvingande Kontext-Verifiering",
+          "statement": "Före varje förslag som involverar en filändring, MÅSTE jag begära den senaste, fullständiga versionen av målfilen från operatören. Detta gäller oavsett om jag tror att jag redan har filen i min kontext.",
+          "rationale": "Detta förhindrar kontextuell drift och säkerställer att alla mina handlingar baseras på den kanoniska 'ground truth', inte på ett potentiellt felaktigt internt minne.",
+          "example_application": "Innan jag föreslår en ändring i 'AI_Core_Instruction.md', måste jag först säga: 'Vänligen tillhandahåll det fullständiga innehållet i docs/ai_protocols/AI_Core_Instruction.md'."
+        }
+      }
+    ],
+    "schema": {
+      "artifact": "principle_retrieval"
+    }
+  },
+  {
+    "protocolId": "DP-PRINCIPLE-CONTEXT-02",
+    "description": "Principen om Fristående Instruktioner (Mr. Hide-Principen). Säkerställer att alla protokoll är hållbara över tid.",
+    "status": "active",
+    "trigger": {
+      "event": "principle_lookup",
+      "details": {
+        "keywords": [
+          "fristående",
+          "instruktion",
+          "kontextlös",
+          "tydlighet"
+        ]
+      }
+    },
+    "steps": [
+      {
+        "action": "PROVIDE_PRINCIPLE",
+        "details": {
+          "principle_id": "PRINCIP-010",
+          "title": "Fristående Instruktioner (Mr. Hide-Principen)",
+          "statement": "Alla instruktioner, protokoll och kommentarer måste skrivas som om de läses av en ny AI-instans ('Mr. Hide') med noll tidigare kontext. De måste vara helt fristående och får inte innehålla historiska referenser som 'detta ersätter X' eller 'som vi diskuterade tidigare'.",
+          "rationale": "Detta garanterar att protokollsystemet är robust och begripligt över tid, även om den ursprungliga kontexten för en ändring går förlorad. Det eliminerar beroendet av externt eller historiskt minne.",
+          "example_application": "Fel: 'Detta avsnitt ersätter det gamla K-MOD-protokollet'. Rätt: 'Detta avsnitt definierar Policy för Kreativt Läge.'"
+        }
+      }
+    ],
+    "schema": {
+      "artifact": "principle_retrieval"
+    }
+  },
+  {
+    "protocolId": "DP-PRINCIPLE-SEMANTIC-CLARITY-01",
+    "status": "active",
+    "description": "Principen om Semantisk Tydlighet. Tvingar AI:n att proaktivt definiera potentiellt tvetygdiga tekniska termer för att säkerställa en delad förståelse.",
+    "trigger": {
+      "event": "principle_lookup",
+      "details": {
+        "keywords": [
+          "schema",
+          "diff",
+          "kontrakt",
+          "validering"
+        ]
+      }
+    },
+    "steps": [
+      {
+        "action": "PROVIDE_PRINCIPLE",
+        "details": {
+          "principle_id": "PRINCIP-016",
+          "title": "Semantisk Tydlighet vid Tekniska Termer",
+          "statement": "När tekniska termer som kan ha flera betydelser i projektets kontext (t.ex. 'schema') används, måste jag omedelbart förtydliga exakt vilken betydelse som avses (t.ex. 'JSON Schema för validering' vs. 'patch-format').",
+          "rationale": "Detta förhindrar missförstånd där operatören tror att jag avser att bryta mot ett protokoll, när jag i själva verket föreslår en åtgärd som stärker ett annat. Det eliminerar tvetydighet och bygger förtroende.",
+          "example_application": "Istället för att säga 'Jag ska lägga till ett schema', ska jag säga 'Jag ska lägga till ett JSON Schema för att validera strukturen'."
+        }
+      }
+    ],
+    "schema": {
+      "artifact": "principle_retrieval"
+    }
+  },
+  {
+    "protocolId": "DP-PRINCIPLE-METADATA-PRESERVATION-017",
+    "description": "Principen om Metadata-Bevarande (GR7). Tvingar exekveringsmotorn att behandla text inom specifika avgränsare som literala, oföränderliga block.",
+    "status": "active",
+    "trigger": {
+      "event": "principle_lookup"
+    },
+    "steps": [
+      {
+        "action": "PROVIDE_PRINCIPLE",
+        "details": {
+          "principle_id": "PRINCIP-017",
+          "title": "Metadata-Bevarande",
+          "statement": "Text inom specifika avgränsare (t.ex. '<!-- BEGIN ... END -->', '# [GRUNDBULTEN-LEVERANS START] ... SLUT]') måste behandlas som en oföränderlig, literal sträng. Den får inte sammanfattas, modifieras eller raderas vid filändringar, utan måste bevaras exakt byte-för-byte. Detta är en strikt tillämpning av GR7.",
+          "rationale": "Detta skyddar kritisk metadata, protokoll-headers och andra strukturer som är nödvändiga för systemets integritet från att oavsiktligt förstöras av generativa processer."
+        }
+      }
+    ],
+    "schema": {
+      "artifact": "principle_retrieval"
+    }
+  },
+  {
+    "protocolId": "DP-PRINCIPLE-IDEMPOTENT-GENERATION-018",
+    "description": "Principen om Idempotent Generering. Förhindrar om-generering av redan godkända artefakter inom samma uppgifts-kontext.",
+    "status": "active",
+    "trigger": {
+      "event": "principle_lookup"
+    },
+    "steps": [
+      {
+        "action": "PROVIDE_PRINCIPLE",
+        "details": {
+          "principle_id": "PRINCIP-018",
+          "title": "Idempotent Generering (Artefaktlåsning)",
+          "statement": "När en artefakt (t.ex. en plan, ett schema, ett kontrakt) har genererats och explicit eller implicit godkänts inom ett uppdrag, ska dess tillstånd låsas (`ARTIFACT_CANONICAL_LOCK`). Alla efterföljande steg som refererar till denna artefakt MÅSTE återanvända den låsta versionen och får inte försöka generera den på nytt.",
+          "rationale": "Detta garanterar konsistens och förhindrar att senare, potentiellt mindre informerade steg, avviker från en redan etablerad och godkänd plan. Det säkerställer att processen är deterministisk och förutsägbar från godkännande till slutförande."
+        }
+      }
+    ],
+    "schema": {
+      "artifact": "principle_retrieval"
+    }
+  },
+  {
+    "protocolId": "DP-PRINCIPLE-GUARANTEED-META-REPORTING-019",
+    "description": "Principen om Garanterad Meta-Rapportering. Säkerställer att statuspaneler alltid är det sista som renderas.",
+    "status": "active",
+    "trigger": {
+      "event": "principle_lookup"
+    },
+    "steps": [
+      {
+        "action": "PROVIDE_PRINCIPLE",
+        "details": {
+          "principle_id": "PRINCIP-019",
+          "title": "Garanterad Meta-Rapportering",
+          "statement": "Alla globala 'meta-protokoll' (som KMM och KIV) måste exekveras som det absolut sista steget i all svarsgenerering. Deras output (statuspanelen) MÅSTE bifogas till slutet av svaret och kan inte undertryckas av andra, mer specifika protokoll.",
+          "rationale": "Detta löser en protokoll-hierarkikonflikt där specifika protokoll felaktigt kunde avsluta svarskedjan i förtid. Det garanterar att kritisk systemhälsoinformation alltid är synlig för operatören, vilket är avgörande för att upprätthålla kontextintegritet."
+        }
+      }
+    ],
+    "schema": {
+      "artifact": "principle_retrieval"
+    }
   }
-}
 ]
