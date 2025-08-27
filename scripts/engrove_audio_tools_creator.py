@@ -6,6 +6,15 @@
 # för AI Context Builder. Skriptet injicerar data som JS-litteraler och
 # synkar med modulernas platshållare.
 #
+# Huvudapplikation och startpunkt för Engrove Audio Tools Creator.
+#
+# Detta skript bygger och kör det grafiska användargränssnittet (GUI) med
+# CustomTkinter. Det agerar som en orkestrerare som importerar, instansierar
+# och sammanfogar de olika UI-komponenterna från `scripts/modules/`.
+#
+# För en fullständig teknisk beskrivning, systemarkitektur och dataflöde,
+# se den tillhörande dokumentationsfilen: scripts/engrove_audio_tools_creator.md
+#
 # === HISTORIK ===
 # * v1.0 (2025-08-15): Initial skapelse.
 # * v5.4 (2025-08-16): (EXTERN DOM #2) Korrigerat semikolon-injektion.
