@@ -108,12 +108,115 @@ Policy:
 
 ---
 
-## **Rollback**
+## **Rollback Mechanism**
+
+If the executed result fails, trigger rollback:
+
 ```text
 !ROLLBACK
 Reason: <orsak>
 ```
-Återgår till Läge B för kontraktsjustering. Ankare kvarstår.
+
+Returns to Läge B to fix the contract without resetting the anchor.
+
+
+---
+
+```json
+{
+  "$schema": "docs/ai_protocols/schemas/EP-2025-09-CF3_CARS.schema.json",
+  "strict_mode": true,
+  "mode": "literal",
+  "_meta": {
+    "id": "EP-2025-09-CF3_CASR",
+    "title": "Context Anchor & Focus 3.0 + CASR",
+    "description": "Deterministic AI-assisted file modification workflow with automated context validation and rollback.",
+    "version": "1.1.0",
+    "last_updated": "2025-08-27",
+    "maintainers": ["Engrove AI Core"]
+  },
+  "stages": {
+    "A": {
+      "name": "Contextual Anchoring",
+      "init_command": "!context-anchor",
+      "fields": {
+        "anchor_id": "string",
+        "version": "semver",
+        "timestamp_utc": "ISO-8601",
+        "architecture": {
+          "frameworks": ["string"],
+          "pipelines": [{"name": "string", "version": "semver"}],
+          "hosting": ["string"]
+        },
+        "anchor_critical_paths": ["glob-pattern"],
+        "tooling_versions": {
+          "node": "semver",
+          "python": "semver",
+          "pnpm": "semver"
+        },
+        "protocol_version": "semver"
+      },
+      "update_command": "!context-anchor-update",
+      "validity": "until-critical-path-change"
+    },
+    "B": {
+      "name": "Planning & JSON Contract",
+      "contract_schema": {
+        "task_id": "string",
+        "objective": "string",
+        "files": ["string"],
+        "dependencies": ["string"],
+        "forbidden_solutions": ["string"],
+        "specifications": "object",
+        "required_anchor": {
+          "anchor_id": "string",
+          "version_min": "semver",
+          "hash": "sha256"
+        }
+      },
+      "validation_rules": {
+        "files_required": true,
+        "dependencies_verified": true
+      },
+      "ai_assist": {
+        "dependency_suggestions": true
+      }
+    },
+    "C": {
+      "name": "Focused Execution",
+      "init_command": "!EXECUTE_FOCUS_MODE",
+      "rules": {
+        "context_restriction": "ignore-all-prior-conversation",
+        "data_sources": ["json_contract", "context_focus_files"],
+        "execution_determinism": true
+      }
+    }
+  },
+  "casr": {
+    "status": ["OK", "WARN", "STALE", "BLOCK"],
+    "blocking_conditions": [
+      "hash mismatch",
+      "anchor version outdated",
+      "missing files in contract",
+      "critical paths changed",
+      "tooling drift"
+    ],
+    "warn_conditions": [
+      "anchor age exceeds threshold",
+      "implicit dependencies missing"
+    ],
+    "commands": {
+      "generate_report": "!casr-report",
+      "acknowledge_warn": "!ack-anchor-warn"
+    }
+  },
+  "rollback": {
+    "trigger": "!ROLLBACK",
+    "required_fields": ["reason"],
+    "returns_to_stage": "B"
+  }
+}
+```
 
 ---
 
