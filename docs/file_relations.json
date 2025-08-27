@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-27T07:28:07.128575+00:00",
+    "generated_at": "2025-08-27T09:40:05.822264+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -2111,15 +2111,6 @@
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/ai_protocols/schemas/core_file_info.schema.json": {
-        "type": "JSON Config",
-        "category": "configuration",
-        "language": "json",
         "exports": [],
         "imports": [],
         "dependents_count": 0,

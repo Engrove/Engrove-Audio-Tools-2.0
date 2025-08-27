@@ -2153,5 +2153,38 @@
     ],
     "success_score": 6,
     "operator_interventions": 5
+  },
+  {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "S-2025-08-27T10-38-00Z",
+    "timestamp_utc": "2025-08-27T10:38:00Z",
+    "summary": "Misslyckad session. Försök att konvertera MD-protokoll till JSON ledde till upprepade, fundamentala protokollbrott relaterade till bevarande av metadata och tillståndshantering. Sessionen avslutades av operatören efter att ett Stalemate-läge inträtt.",
+    "keywords": [
+      "protokollbrott",
+      "haveri",
+      "stalemate",
+      "rca",
+      "grundbulten",
+      "md2json"
+    ],
+    "modified_files": [
+      "docs/ai_protocols/System_Integrity_Check_Protocol.md",
+      "docs/ai_protocols/schemas/System_Integrity_Check_Protocol.schema.json",
+      "docs/ai_protocols/Uppgifts-Kontrakt_Protokoll.md",
+      "docs/ai_protocols/schemas/Uppgifts-Kontrakt_Protokoll.schema.json",
+      "docs/ai_protocols/AI_Dynamic_Protocols.md",
+      "docs/ai_protocols/schemas/AI_Dynamic_Protocols.schema.json",
+      "docs/ai_protocols/LLM_Judge_Protokoll.md",
+      "docs/ai_protocols/schemas/LLM_Judge_Protokoll.schema.json",
+      "docs/ai_protocols/Grundbulten_Protokoll.md",
+      "docs/ai_protocols/schemas/Grundbulten_Protokoll.schema.json"
+    ],
+    "error_signatures": [
+      "Protokollbrott: GR7 (Fullständig Historik)",
+      "Protokollbrott: Icke-idempotent artefaktgenerering"
+    ],
+    "success_score": 0,
+    "operator_interventions": 5
   }
 ]
