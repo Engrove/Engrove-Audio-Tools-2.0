@@ -17,6 +17,9 @@ END HEADER -->
 
 ```json
 {
+  "$schema": "docs/ai_protocols/schemas/DynamicProtocols.schema.json",
+  "strict_mode": true,
+  "mode": "literal",
   "protocol": {
     "id": "P-GB-4.1",
     "title": "Grundbulten – Process för Universell Filhantering",
