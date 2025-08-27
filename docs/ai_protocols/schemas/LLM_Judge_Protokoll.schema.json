@@ -1,0 +1,181 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "JSON Schema for LLM Judge Protocol",
+  "description": "Defines the structure for the LLM Judge protocol, transforming it into a machine-readable configuration for deterministic, traceable assessment of code and artifacts.",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string", "format": "uri-reference" },
+    "protocolId": { "type": "string", "const": "P-LLMJ-3.0-JSON" },
+    "title": { "type": "string", "const": "LLM Judge Protocol" },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+$" },
+    "description": { "type": "string" },
+    "normativeBinding": {
+      "type": "object",
+      "properties": {
+        "psvHook": { "type": "string", "const": "AI_Core_Instruction.md v5.8+" },
+        "fileHandling": { "type": "string", "const": "Grundbulten_Protokoll.md P-GB-3.9+" }
+      },
+      "required": ["psvHook", "fileHandling"]
+    },
+    "rubric": {
+      "type": "object",
+      "description": "The core assessment framework.",
+      "properties": {
+        "categories": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["Correctness", "Style", "Efficiency", "Security", "Docs"] }
+        },
+        "scoringScale": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "score": { "type": "integer", "minimum": 0, "maximum": 5 },
+              "description": { "type": "string" }
+            },
+            "required": ["score", "description"]
+          }
+        },
+        "approvalThresholds": {
+          "type": "object",
+          "description": "Minimum scores required for an 'approve' recommendation.",
+          "properties": {
+            "Correctness": { "type": "integer", "minimum": 4 },
+            "Security": { "type": "integer", "minimum": 4 },
+            "default": { "type": "integer", "minimum": 3, "description": "Minimum score for all other categories." }
+          },
+          "required": ["Correctness", "Security", "default"]
+        }
+      },
+      "required": ["categories", "scoringScale", "approvalThresholds"]
+    },
+    "multiJudgeConfig": {
+      "type": "object",
+      "description": "Configuration for using multiple independent judges.",
+      "properties": {
+        "n_judges": { "type": "integer", "const": 3 },
+        "aggregationMethod": { "type": "string", "const": "median" },
+        "varianceCheck": {
+          "type": "object",
+          "properties": {
+            "threshold": { "type": "integer", "description": "Spread in scores that triggers a variance risk flag.", "const": 1 },
+            "output_key": { "type": "string", "const": "variance_risk" }
+          },
+          "required": ["threshold", "output_key"]
+        }
+      },
+      "required": ["n_judges", "aggregationMethod", "varianceCheck"]
+    },
+    "complianceRules": {
+      "type": "array",
+      "description": "Mandatory privacy and compliance checks.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "rule_id": { "type": "string" },
+          "description": { "type": "string" }
+        },
+        "required": ["rule_id", "description"]
+      }
+    },
+    "handoffRules": {
+      "type": "object",
+      "description": "Deterministic workflow rules based on the final recommendation.",
+      "patternProperties": {
+        "^(approve|nits|changes_requested|reject|variance_risk_true)$": {
+          "type": "object",
+          "properties": {
+            "action": { "type": "string", "description": "The next step in the workflow." },
+            "target": { "type": "string", "description": "The protocol or process to hand off to." }
+          },
+          "required": ["action", "target"]
+        }
+      }
+    },
+    "outputSchemaDefinition": {
+      "type": "object",
+      "description": "Defines the mandatory structure of the JSON artifact produced when this protocol is executed.",
+      "properties": {
+        "file": {
+          "type": "object",
+          "properties": {
+            "path": { "type": "string", "format": "uri-reference" },
+            "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+          },
+          "required": ["path", "sha256"]
+        },
+        "scores": {
+          "type": "object",
+          "properties": {
+            "Correctness": { "type": "integer", "minimum": 0, "maximum": 5 },
+            "Style": { "type": "integer", "minimum": 0, "maximum": 5 },
+            "Efficiency": { "type": "integer", "minimum": 0, "maximum": 5 },
+            "Security": { "type": "integer", "minimum": 0, "maximum": 5 },
+            "Docs": { "type": "integer", "minimum": 0, "maximum": 5 }
+          },
+          "required": ["Correctness", "Style", "Efficiency", "Security", "Docs"]
+        },
+        "inter_rater": {
+          "type": "object",
+          "properties": {
+            "n_judges": { "type": "integer" },
+            "per_judge": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "string" },
+                  "scores": { "$ref": "#/properties/outputSchemaDefinition/properties/scores" }
+                },
+                "required": ["id", "scores"]
+              }
+            },
+            "variance_risk": { "type": "boolean" }
+          },
+          "required": ["n_judges", "per_judge", "variance_risk"]
+        },
+        "violations": {
+          "type": "object",
+          "properties": {
+            "Security": { "type": "array", "items": { "type": "string" } },
+            "Style": { "type": "array", "items": { "type": "string" } },
+            "Efficiency": { "type": "array", "items": { "type": "string" } },
+            "Docs": { "type": "array", "items": { "type": "string" } }
+          },
+          "required": ["Security", "Style", "Efficiency", "Docs"]
+        },
+        "recommendation": {
+          "type": "string",
+          "enum": ["approve", "nits", "changes_requested", "reject"]
+        },
+        "comments": { "type": "string" },
+        "constraints": {
+          "type": "object",
+          "properties": {
+            "anchor_diff_v3_0_required": { "type": "boolean" }
+          }
+        },
+        "links": {
+          "type": "object",
+          "properties": {
+            "patch_protocol": { "type": "string" },
+            "post_fix_checklist": { "type": "string" },
+            "manual_patch_flow": { "type": "string" }
+          }
+        }
+      },
+      "required": ["file", "scores", "inter_rater", "violations", "recommendation", "comments"]
+    }
+  },
+  "required": [
+    "$schema",
+    "protocolId",
+    "title",
+    "version",
+    "rubric",
+    "multiJudgeConfig",
+    "complianceRules",
+    "handoffRules",
+    "outputSchemaDefinition"
+  ]
+}
