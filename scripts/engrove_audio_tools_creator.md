@@ -1,49 +1,79 @@
-<!-- BEGIN FILE: scripts/engrove_audio_tools_creator.md -->
-# scripts/engrove_audio_tools_creator.md
-#
-# === SYFTE & ANSVAR ===
-# Detta dokument är den primära tekniska referensen för byggskriptet `engrove_audio_tools_creator.py`
-# och det webb-UI (`index2.html`) det genererar. Det beskriver arkitektur, dataflöde,
-# modulansvar och den underliggande logiken för AI Context Builder-verktyget.
-#
-# === HISTORIK ===
-# * v1.0 (2025-08-17): Initial skapelse.
-# * v1.1 (2025-08-17): Lade till sektion 6, "Lärdomar & Felsökningshistorik", för att dokumentera viktiga upptäckter och förhindra regressioner.
-# * v2.0 (2025-08-18): (Engrove Mandate) Uppdaterad för att reflektera den nya arkitekturen med en dedikerad `ui_einstein_search.py`-modul och injicering av `core_file_info.json`.
-# * SHA256_LF: a8e0d4c7b8e5a6f2b1d3e4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b3c2d5e4
-#
-# === TILLÄMPADE REGLER (Frankensteen v5.7) ===
-# - Grundbulten v3.9: Denna dokumentationsfil har uppdaterats för att korrekt reflektera den nya systemarkitekturen.
+# Dokumentation: Engrove Audio Tools Creator
+**Version:** 1.0
+**Syfte:** Denna fil är den primära tekniska dokumentationen för GUI-verktyget `engrove_audio_tools_creator.py`. Den är genererad av AI-partnern Frankensteen baserat på en fullständig analys av systemets källkod och syftar till att fungera som en central "ground truth" för systemets arkitektur och funktion.
+
+---
 
 ## 1. Översikt
 
-`engrove_audio_tools_creator.py` är ett Python-baserat kommandoradsverktyg som fungerar som en statisk webbplatsbyggare. Dess enda syfte är att generera `index2.html` – en fristående, interaktiv webbapplikation kallad "AI Context Builder". Applikationen är designad för att låta en användare visuellt inspektera projektets filstruktur, välja relevanta filer och exportera en fokuserad `context.json`-fil för en AI-partner. Den innehåller även en avancerad semantisk sökfunktion ("Einstein").
+`Engrove Audio Tools Creator` är ett specialbyggt, Python-baserat GUI-verktyg som fungerar som en "Integrated Development Environment" (IDE) för att hantera, analysera och paketera instruktionsbuntar (PBF - Protocol Bundle Format) för AI-partnern Frankensteen. Trots sitt namn har verktyget evolverat från sitt ursprungliga syfte och är nu helt fokuserat på att skapa en strukturerad och feltolerant workflow för AI-interaktion.
 
-## 2. Arkitektur & Dataflöde
+Applikationen är byggd med **CustomTkinter** och har en modulär arkitektur där varje kärnfunktion är isolerad i sin egen UI-komponent.
 
-Verktyget följer ett modulärt och deterministiskt flöde:
+## 2. Systemarkitektur
 
-1.  **Anrop:** Skriptet anropas av CI/CD-pipelinen (`.github/workflows/ci.yml`) efter att alla metadata-artefakter har genererats.
-2.  **Indata:** Det tar emot sökvägarna till fyra kritiska JSON-filer som indata:
-    *   `context_bundle.json`: Innehåller hela filstrukturen och partiellt filinnehåll.
-    *   `file_relations.json`: Innehåller den analyserade beroendegrafen och filkategorier.
-    *   `project_overview.json`: Innehåller grundläggande repo-information.
-    *   `core_file_info.json`: Innehåller den kuraterade metadata (syfte, ansvar) för nyckelfiler, används av Einstein.
-3.  **Bearbetning:** Skriptet läser in dessa filer, berikar filstrukturen med metadata från relationsgrafen (t.ex. `category`), och transformerar den hierarkiska datan till ett format som är lämpligt för ett träd-UI.
-4.  **Sammansättning:** Det importerar HTML, CSS och JavaScript från sina respektive moduler i `scripts/modules/`. Datat (filträdet, kontexten, core_file_info) injiceras i JavaScript-modulerna.
-5.  **Utdat:** Skriptet skriver tre filer till output-mappen (`dist/` i CI-kontexten):
-    *   `index2.html`: Den sammansatta HTML-strukturen.
-    *   `styles.css`: De sammansatta CSS-reglerna.
-    *   `logic.js`: De sammansatta och databerikade JavaScript-modulerna.
+Systemet är uppbyggt kring en central orkestrerare (`engrove_audio_tools_creator.py`) som initierar och sammanfogar olika oberoende UI-moduler. Data och tillståndshantering centraliseras i en logik-modul (`ui_logic.py`) som agerar "controller" och datakälla för UI-komponenterna.
 
-## 3. Modulbeskrivningar (`scripts/modules/`)
+-   **Startpunkt:** `engrove_audio_tools_creator.py`
+    -   **Klass:** `App(ctk.CTk)`
+    -   **Ansvar:**
+        1.  Initierar huvudfönstret.
+        2.  Instansierar `UILogic` för att ladda all nödvändig metadata.
+        3.  Instansierar och placerar ut varje UI-ram (Frame) från `scripts/modules/`.
 
-Arkitekturen är starkt beroende av att separera presentation (HTML), stil (CSS) och logik (JS) i diskreta Python-moduler.
+## 3. Kärnkomponenter (Moduler)
 
-*   **`ui_template.py`**: Innehåller `HTML_TEMPLATE`. Detta är HTML-skelettet som definierar DOM-strukturen, inklusive platshållare.
-*   **`ui_styles.py`**: Innehåller `CSS_STYLES`. Denna sträng innehåller all CSS för verktyget.
-*   **`ui_logic.py`**: Innehåller `JS_LOGIC`. Detta är den generella JavaScript-koden för UI-interaktivitet, inklusive ribbon-menyn, resizer, filmodal och den grundläggande Einstein-söklogiken.
-*   **`ui_file_tree.py`**: Innehåller `JS_FILE_TREE_LOGIC`. Specialiserad modul som hanterar all komplex logik för det interaktiva filträdet.
+Varje `.py`-fil i `scripts/modules/` representerar en specifik panel eller funktion i GUI:t.
+
+#### `ui_logic.py` (Hjärnan)
+-   **Syfte:** Central logik- och datakontroller.
+-   **Funktion:** Laddar och cachar kritiska metadatafiler (`core_file_info.json`, `document_manifest.json`, `session_manifest.json`) vid start. Agerar som den enda källan till sanning för de andra UI-modulerna.
+
+#### `ui_file_tree.py` (Filträd)
+-   **Syfte:** Visa en interaktiv trädvy över projektets filstruktur.
+-   **Funktion:** Hämtar fildata från `UILogic` och renderar den. Låter användaren välja de filer som ska inkluderas i en PBF-bunt.
+
+#### `ui_protocol_packager.py` (PBF-Paketeraren)
+-   **Syfte:** Den kritiska komponenten som skapar de `protocol_bundle_...json`-filer som Frankensteen tar emot.
+-   **Funktion:**
+    1.  Tar emot en lista med valda filvägar.
+    2.  Läser filinnehåll och beräknar `sha256`-hash för varje fil.
+    3.  Komprimerar filinnehållet med `zlib`.
+    4.  Base64-kodar den komprimerade datan.
+    5.  Sammanställer en komplett PBF JSON-struktur, inklusive metadata och payload.
+    6.  Beräknar och infogar den slutgiltiga `sha256`-hashen för hela nyttolasten.
+
+#### `ui_einstein_search.py` & `ui_semantic_search.py` (Sök)
+-   **Syfte:** Tillhandahålla kraftfulla sökfunktioner över protokollen.
+-   **Funktion:**
+    -   **Einstein Search:** Strukturerad, indexbaserad sökning.
+    -   **Semantic Search:** Vektorbaserad sökning med `sentence-transformers` och `faiss` för att hitta resultat baserat på semantisk likhet.
+
+#### Övriga moduler
+-   **`ui_styles.py` & `ui_template.py`:** Hanterar visuell styling och UI-mallar för konsistens.
+-   **`data_converter.py`:** Hjälpfunktioner för datatransformering (t.ex. MD till YML).
+-   **`ui_core_docs_store.py`:** En panel för att visa information om kärndokument.
+-   **`ui_performance_dashboard.py`:** En panel för att visualisera prestandadata.
+
+## 4. Dataflöde (Användarscenario)
+1.  **Start:** `engrove_audio_tools_creator.py` exekveras.
+2.  **Laddning:** `UILogic` laddar all metadata från projektets JSON-filer.
+3.  **Interaktion:** Användaren väljer filer från filträdet och använder sökfunktionerna för att samla in relevant kontext.
+4.  **Paketering:** Användaren initierar paketering. `ui_protocol_packager.py` tar emot fillistan och genererar en komplett, signerad och komprimerad `protocol_bundle_...json`-fil.
+5.  **Leverans:** Filen är redo att skickas till Frankensteen.
+
+## 5. Beroenden
+-   **Python-bibliotek:** `customtkinter`, `pytest`, `sentence-transformers`, `faiss-cpu`. (En fullständig lista finns i `requirements.txt`).
+-   **Externa Datafiler:** Applikationens funktion är helt beroende av metadata i `core_file_info.json`, `document_manifest.json`, `session_manifest.json`, m.fl.
+
+## 6. CI/CD Pipeline (`.github/workflows/ci.yml`)
+Systemet stöds av en GitHub Actions-pipeline som automatiskt:
+1.  **Bygger och testar:** Kör `pytest` och bygger ett associerat (ej inkluderat) Node.js-frontend.
+2.  **Säkerhetsskannar:** Använder `Snyk` för att hitta sårbarheter.
+3.  **Publicerar Dokumentation:** Bygger och driftsätter dokumentation med `mkdocs`.
+
+## 7. Avskrivna Komponenter
+-   `scripts/modules/ui_protocol_packager.js`: Denna JavaScript-baserade paketerare är **avskriven** och används inte längre. All paketeringslogik hanteras nu av den mer kompletta Python-motsvarigheten.*   **`ui_file_tree.py`**: Innehåller `JS_FILE_TREE_LOGIC`. Specialiserad modul som hanterar all komplex logik för det interaktiva filträdet.
 *   **`ui_performance_dashboard.py`**: Innehåller `JS_PERFORMANCE_LOGIC`. Ansvarar för logiken i "AI Performance"-fliken.
 *   **`ui_einstein_search.py`**: Innehåller `JS_EINSTEIN_LOGIC`. Ansvarar för att rendera den strukturerade resultatlistan för Einstein-sökningar och hantera dess interaktivitet.
 
