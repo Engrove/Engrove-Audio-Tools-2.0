@@ -1,0 +1,572 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engrove.ai/schemas/EP-2025-09-CF3_CARS.schema.json",
+  "title": "EP-2025-09-CF3_CASR Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "strict_mode",
+    "mode",
+    "_meta",
+    "stages",
+    "casr",
+    "rollback",
+    "interaction"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "strict_mode": {
+      "type": "boolean"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "literal"
+      ]
+    },
+    "_meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "description",
+        "version",
+        "last_updated",
+        "maintainers"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "last_updated": {
+          "type": "string",
+          "format": "date"
+        },
+        "maintainers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "stages": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "A",
+        "B",
+        "C"
+      ],
+      "properties": {
+        "A": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name",
+            "init_command",
+            "fields",
+            "update_command",
+            "validity"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "init_command": {
+              "type": "string",
+              "const": "!context-anchor"
+            },
+            "fields": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "anchor_id",
+                "version",
+                "timestamp_utc",
+                "architecture",
+                "anchor_critical_paths",
+                "tooling_versions",
+                "protocol_version"
+              ],
+              "properties": {
+                "anchor_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "version": {
+                  "$ref": "#/$defs/semver"
+                },
+                "timestamp_utc": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "architecture": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "frameworks": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "minItems": 0
+                    },
+                    "pipelines": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "name",
+                          "version"
+                        ],
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "version": {
+                            "$ref": "#/$defs/semver"
+                          }
+                        }
+                      }
+                    },
+                    "hosting": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "frameworks",
+                    "hosting"
+                  ]
+                },
+                "anchor_critical_paths": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/globPattern"
+                  },
+                  "minItems": 1
+                },
+                "tooling_versions": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "node": {
+                      "$ref": "#/$defs/semver"
+                    },
+                    "python": {
+                      "$ref": "#/$defs/semver"
+                    },
+                    "pnpm": {
+                      "$ref": "#/$defs/semver"
+                    }
+                  },
+                  "required": [
+                    "node",
+                    "python",
+                    "pnpm"
+                  ]
+                },
+                "protocol_version": {
+                  "$ref": "#/$defs/semver"
+                }
+              }
+            },
+            "update_command": {
+              "type": "string",
+              "const": "!context-anchor-update"
+            },
+            "validity": {
+              "type": "string",
+              "enum": [
+                "until-critical-path-change",
+                "custom"
+              ]
+            }
+          }
+        },
+        "B": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name",
+            "contract_schema",
+            "validation_rules",
+            "ai_assist"
+          ],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "contract_schema": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "task_id",
+                "objective",
+                "files",
+                "dependencies",
+                "forbidden_solutions",
+                "specifications",
+                "required_anchor"
+              ],
+              "properties": {
+                "task_id": {
+                  "type": "string"
+                },
+                "objective": {
+                  "type": "string"
+                },
+                "files": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "dependencies": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "forbidden_solutions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "specifications": {
+                  "type": "object"
+                },
+                "required_anchor": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "anchor_id",
+                    "version_min",
+                    "hash"
+                  ],
+                  "properties": {
+                    "anchor_id": {
+                      "type": "string"
+                    },
+                    "version_min": {
+                      "$ref": "#/$defs/semver"
+                    },
+                    "hash": {
+                      "$ref": "#/$defs/sha256"
+                    }
+                  }
+                }
+              }
+            },
+            "validation_rules": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "files_required",
+                "dependencies_verified"
+              ],
+              "properties": {
+                "files_required": {
+                  "type": "boolean"
+                },
+                "dependencies_verified": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "ai_assist": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "dependency_suggestions"
+              ],
+              "properties": {
+                "dependency_suggestions": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        },
+        "C": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name",
+            "init_command",
+            "rules"
+          ],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "init_command": {
+              "type": "string",
+              "const": "!EXECUTE_FOCUS_MODE"
+            },
+            "rules": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "context_restriction",
+                "data_sources",
+                "execution_determinism"
+              ],
+              "properties": {
+                "context_restriction": {
+                  "type": "string",
+                  "enum": [
+                    "ignore-all-prior-conversation"
+                  ]
+                },
+                "data_sources": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "json_contract",
+                      "context_focus_files"
+                    ]
+                  }
+                },
+                "execution_determinism": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "casr": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "blocking_conditions",
+        "warn_conditions",
+        "commands"
+      ],
+      "properties": {
+        "status": {
+          "type": "array",
+          "minItems": 4,
+          "items": {
+            "type": "string",
+            "enum": [
+              "OK",
+              "WARN",
+              "STALE",
+              "BLOCK"
+            ]
+          }
+        },
+        "blocking_conditions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "hash mismatch",
+              "anchor version outdated",
+              "missing files in contract",
+              "critical paths changed",
+              "tooling drift"
+            ]
+          }
+        },
+        "warn_conditions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "anchor age exceeds threshold",
+              "implicit dependencies missing"
+            ]
+          }
+        },
+        "commands": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "generate_report",
+            "acknowledge_warn"
+          ],
+          "properties": {
+            "generate_report": {
+              "type": "string",
+              "const": "!casr-report"
+            },
+            "acknowledge_warn": {
+              "type": "string",
+              "const": "!ack-anchor-warn"
+            }
+          }
+        }
+      }
+    },
+    "rollback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "trigger",
+        "required_fields",
+        "returns_to_stage"
+      ],
+      "properties": {
+        "trigger": {
+          "type": "string",
+          "const": "!ROLLBACK"
+        },
+        "required_fields": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "reason"
+            ]
+          },
+          "contains": {
+            "const": "reason"
+          }
+        },
+        "returns_to_stage": {
+          "type": "string",
+          "const": "B"
+        }
+      }
+    },
+    "interaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "activation",
+        "steps"
+      ],
+      "properties": {
+        "activation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "command",
+            "print_overview"
+          ],
+          "properties": {
+            "command": {
+              "type": "string",
+              "const": "!activate-protocol"
+            },
+            "print_overview": {
+              "type": "boolean",
+              "const": true
+            }
+          }
+        },
+        "steps": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "A",
+            "B",
+            "C"
+          ],
+          "properties": {
+            "A": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "intro_text",
+                "ack_command"
+              ],
+              "properties": {
+                "intro_text": {
+                  "type": "string"
+                },
+                "ack_command": {
+                  "type": "string",
+                  "const": "!anchor-ack"
+                }
+              }
+            },
+            "B": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "intro_text",
+                "approval_command"
+              ],
+              "properties": {
+                "intro_text": {
+                  "type": "string"
+                },
+                "approval_command": {
+                  "type": "string",
+                  "const": "!contract-approve"
+                }
+              }
+            },
+            "C": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "intro_text",
+                "execution_command"
+              ],
+              "properties": {
+                "intro_text": {
+                  "type": "string"
+                },
+                "execution_command": {
+                  "type": "string",
+                  "const": "!EXECUTE_FOCUS_MODE"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "globPattern": {
+      "type": "string",
+      "pattern": "^(?:[\\w\\-./*?{}!\\[\\]]+)$"
+    }
+  }
+}
