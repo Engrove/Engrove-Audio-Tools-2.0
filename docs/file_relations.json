@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-27T14:37:43.812213+00:00",
+    "generated_at": "2025-08-27T17:41:48.625492+00:00",
     "nodes": {
       "src/main.js": {
         "type": "JavaScript Module",
@@ -1275,162 +1275,6 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "scripts/protocol_packager.py": {
-        "type": "Python Script",
-        "category": "code",
-        "language": "py",
-        "exports": [
-          {
-            "symbol": "_norm_text",
-            "type": "function"
-          },
-          {
-            "symbol": "_sha256",
-            "type": "function"
-          },
-          {
-            "symbol": "PackedFile",
-            "type": "class"
-          },
-          {
-            "symbol": "PackContext",
-            "type": "class"
-          },
-          {
-            "symbol": "is_text_file",
-            "type": "function"
-          },
-          {
-            "symbol": "read_text_file",
-            "type": "function"
-          },
-          {
-            "symbol": "collect_from_files",
-            "type": "function"
-          },
-          {
-            "symbol": "collect_from_dir_flat",
-            "type": "function"
-          },
-          {
-            "symbol": "collect_from_dir_recursive",
-            "type": "function"
-          },
-          {
-            "symbol": "pack_files",
-            "type": "function"
-          },
-          {
-            "symbol": "build_payload",
-            "type": "function"
-          },
-          {
-            "symbol": "compress_payload",
-            "type": "function"
-          },
-          {
-            "symbol": "make_pbf",
-            "type": "function"
-          },
-          {
-            "symbol": "bundle_protocols",
-            "type": "function"
-          },
-          {
-            "symbol": "parse_args",
-            "type": "function"
-          },
-          {
-            "symbol": "main",
-            "type": "function"
-          }
-        ],
-        "imports": [
-          {
-            "source": "os",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "argparse",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "base64",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "hashlib",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "json",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "re",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "sys",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "zlib",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "dataclasses",
-            "symbols": [
-              "dataclass",
-              "field"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "pathlib",
-            "symbols": [
-              "Path"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "typing",
-            "symbols": [
-              "Dict",
-              "List",
-              "Iterable",
-              "Set"
-            ],
-            "type": "library_import"
-          }
-        ],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
       "scripts/docs/file_relations.json": {
         "type": "JSON Config",
         "category": "configuration",
@@ -2576,6 +2420,15 @@
         "criticality_score": 0.0
       },
       "docs/ai_protocols/Sandbox_Execution_Protokoll.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/EP-2025-09-CF3_CASR.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
