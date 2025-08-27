@@ -190,6 +190,7 @@
     },
 
     {
+    {
       "id": 6,
       "title": "ACTIONABLE MENU (villkorad ordning)",
       "sources": { "domains": "@domains" },
@@ -202,7 +203,17 @@
         "numbered_menu": true,
         "items": [
           { "kind": "integrity_review", "label": "Granska Systemintegritet: ..." },
-          { "kind": "from_domains",      "label": "auto" }
+          { "kind": "from_domains",      "label": "auto" },
+          {
+            "kind": "protocol_activation",
+            "label": "Aktivera CASR-protokollet för kodgranskning och statisk analys (`EP-2025-09-CF3_CASR.md`)",
+            "target_protocol": "docs/ai_protocols/EP-2025-09-CF3_CASR.md"
+          },
+          {
+            "kind": "protocol_activation",
+            "label": "Starta en kreativ session med K-MOD-protokollet (`K-MOD_Protokoll.md`)",
+            "target_protocol": "docs/ai_protocols/K-MOD_Protokoll.md"
+          }
         ]
       }
     },
