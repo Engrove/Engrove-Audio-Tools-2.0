@@ -1,0 +1,393 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "docs/ai_protocols/schemas/Stature_Report_Protocol.schema.json",
+  "title": "Schema: Stature Report Protocol (P-SRP-3.1)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocolId",
+    "file_path",
+    "title",
+    "version",
+    "strict_mode",
+    "mode",
+    "runtime_config",
+    "bindings",
+    "render_templates",
+    "steps",
+    "ci_overrides"
+  ],
+  "properties": {
+    "protocolId": { "const": "P-SRP-3.0" },
+    "file_path": { "type": "string", "pattern": "^docs/ai_protocols/Stature_Report_Protocol\\.md$" },
+    "title": { "$ref": "#/$defs/nonEmptyString" },
+    "version": { "type": "string", "pattern": "^\\d+(?:\\.\\d+)*$" },
+    "strict_mode": { "type": "boolean" },
+    "mode": { "type": "string", "enum": ["literal"] },
+
+    "runtime_config": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runtime_mode", "limits", "cache", "missing_policy", "sections"],
+      "properties": {
+        "runtime_mode": { "type": "string", "enum": ["strict", "balanced", "fast"] },
+        "limits": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["max_scan_files", "max_scan_bytes", "timeout_ms"],
+          "properties": {
+            "max_scan_files": { "type": "integer", "minimum": 0 },
+            "max_scan_bytes": { "type": "integer", "minimum": 0 },
+            "timeout_ms": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "cache": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["enable", "ttl_minutes", "path"],
+          "properties": {
+            "enable": { "type": "boolean" },
+            "ttl_minutes": { "type": "integer", "minimum": 0 },
+            "path": { "$ref": "#/$defs/nonEmptyString" }
+          }
+        },
+        "missing_policy": { "type": "string", "enum": ["warn_and_NA"] },
+        "sections": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["sec3_protocol_principles", "sec4_learning", "sec5_sic"],
+          "properties": {
+            "sec3_protocol_principles": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["enabled", "detail"],
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "detail": { "type": "string", "enum": ["summary", "full"] }
+              }
+            },
+            "sec4_learning": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["enabled", "recent_count", "recent_days"],
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "recent_count": { "type": "integer", "minimum": 0 },
+                "recent_days": { "type": "integer", "minimum": 0 }
+              }
+            },
+            "sec5_sic": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["mode", "fallback"],
+              "properties": {
+                "mode": { "type": "string", "enum": ["light", "full"] },
+                "fallback": { "type": "string", "enum": ["use_last_pass_if_recent", "none"] }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ai_core_instruction",
+        "ai_config",
+        "dynamic_protocols",
+        "learning_db",
+        "sic_protocol",
+        "domains"
+      ],
+      "properties": {
+        "ai_core_instruction": { "$ref": "#/$defs/nonEmptyString" },
+        "ai_config": { "$ref": "#/$defs/nonEmptyString" },
+        "dynamic_protocols": { "$ref": "#/$defs/nonEmptyString" },
+        "learning_db": { "$ref": "#/$defs/nonEmptyString" },
+        "sic_protocol": { "$ref": "#/$defs/nonEmptyString" },
+        "domains": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+
+    "render_templates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["report_header", "section_titles"],
+      "properties": {
+        "report_header": { "$ref": "#/$defs/nonEmptyString" },
+        "section_titles": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["core_identity", "protocol_state", "learning_state", "sic_state", "menu"],
+          "properties": {
+            "core_identity": { "$ref": "#/$defs/nonEmptyString" },
+            "protocol_state": { "$ref": "#/$defs/nonEmptyString" },
+            "learning_state": { "$ref": "#/$defs/nonEmptyString" },
+            "sic_state": { "$ref": "#/$defs/nonEmptyString" },
+            "menu": { "$ref": "#/$defs/nonEmptyString" }
+          }
+        }
+      }
+    },
+
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/step" }
+    },
+
+    "ci_overrides": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strict_mode", "runtime_mode", "sections", "abort_policy", "cache"],
+      "properties": {
+        "strict_mode": { "type": "boolean" },
+        "runtime_mode": { "type": "string", "enum": ["strict"] },
+        "sections": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["sec3_protocol_principles", "sec4_learning", "sec5_sic"],
+          "properties": {
+            "sec3_protocol_principles": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": { "detail": { "type": "string", "enum": ["full", "summary"] } }
+            },
+            "sec4_learning": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "recent_count": { "type": "integer", "minimum": 0 },
+                "recent_days": { "type": "integer", "minimum": 0 }
+              }
+            },
+            "sec5_sic": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "mode": { "type": "string", "enum": ["full", "light"] },
+                "fallback": { "type": "string", "enum": ["none", "use_last_pass_if_recent"] }
+              }
+            }
+          }
+        },
+        "abort_policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["on_missing_sources", "on_sic_critical"],
+          "properties": {
+            "on_missing_sources": { "type": "boolean" },
+            "on_sic_critical": { "type": "boolean" }
+          }
+        },
+        "cache": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["enable"],
+          "properties": { "enable": { "type": "boolean" } }
+        }
+      }
+    }
+  },
+
+  "$defs": {
+    "nonEmptyString": { "type": "string", "minLength": 1 },
+
+    "dataBindingSingle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "field"],
+      "properties": {
+        "source": { "$ref": "#/$defs/nonEmptyString" },
+        "field": { "$ref": "#/$defs/nonEmptyString" },
+        "fallback": { "type": ["string", "number", "integer", "boolean"] }
+      }
+    },
+    "dataBindingMulti": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "fields"],
+      "properties": {
+        "source": { "$ref": "#/$defs/nonEmptyString" },
+        "fields": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "fallback": { "type": ["string", "number", "integer", "boolean"] }
+      }
+    },
+    "dataBindingsMap": {
+      "type": "object",
+      "additionalProperties": {
+        "anyOf": [
+          { "$ref": "#/$defs/dataBindingSingle" },
+          { "$ref": "#/$defs/dataBindingMulti" }
+        ]
+      }
+    },
+
+    "render": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "markdown": { "$ref": "#/$defs/nonEmptyString" },
+        "header": { "$ref": "#/$defs/nonEmptyString" },
+        "lines": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "list": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "status_text_map": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "advice_on_non_healthy": { "$ref": "#/$defs/nonEmptyString" },
+        "numbered_menu": { "type": "boolean" },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "label"],
+            "properties": {
+              "kind": { "type": "string", "enum": ["integrity_review", "from_domains"] },
+              "label": { "$ref": "#/$defs/nonEmptyString" }
+            }
+          }
+        }
+      }
+    },
+
+    "modeRules": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "balanced_fast": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "use_cache": { "type": "boolean" },
+            "summaries_only": { "type": "boolean" },
+            "no_abort_on_missing": { "type": "boolean" }
+          }
+        },
+        "strict": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "use_cache": { "type": "boolean" },
+            "summaries_only": { "type": "boolean" },
+            "no_abort_on_missing": { "type": "boolean" }
+          }
+        }
+      }
+    },
+
+    "exec": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "check": { "$ref": "#/$defs/nonEmptyString" },
+        "on_error": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "abort_protocol": { "type": "boolean" },
+            "render_only": { "$ref": "#/$defs/nonEmptyString" }
+          }
+        },
+        "light": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "method": { "type": "string", "enum": ["fast_index_scan"] },
+            "outputs": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/nonEmptyString" }
+            }
+          }
+        },
+        "full": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "method": { "type": "string", "enum": ["execute_protocol"] },
+            "protocol": { "$ref": "#/$defs/nonEmptyString" }
+          }
+        }
+      }
+    },
+
+    "abortPolicyStep": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "chat": { "type": "string", "enum": ["never"] },
+        "strict": { "type": "string", "enum": ["only_on_fatal_parse", "on_critical"] }
+      }
+    },
+
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title"],
+      "properties": {
+        "id": { "type": "integer", "minimum": 0 },
+        "title": { "$ref": "#/$defs/nonEmptyString" },
+
+        "exec": { "$ref": "#/$defs/exec" },
+        "data": { "$ref": "#/$defs/dataBindingsMap" },
+        "sources": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "logic": {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              { "$ref": "#/$defs/nonEmptyString" },
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "anyOf": [
+                    { "$ref": "#/$defs/nonEmptyString" },
+                    { "type": "object" }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "fallbacks": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "mode_rules": { "$ref": "#/$defs/modeRules" },
+        "render": { "$ref": "#/$defs/render" },
+
+        "sic_mode": { "type": "string", "enum": ["light", "full"] },
+        "cache_fallback": { "type": "string", "enum": ["use_last_pass_if_recent", "none"] },
+        "calibration_formula": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": { "js": { "$ref": "#/$defs/nonEmptyString" } }
+        },
+        "ordering_logic": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "if_chat_and_sic_light_and_not_critical": { "const": "put_integrity_review_last" },
+            "otherwise": { "const": "put_integrity_review_first" }
+          }
+        },
+        "abort_policy": { "$ref": "#/$defs/abortPolicyStep" }
+      }
+    }
+  }
+}
