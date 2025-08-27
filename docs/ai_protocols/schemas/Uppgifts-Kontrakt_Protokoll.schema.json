@@ -1,0 +1,131 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "JSON Schema for Task Contract Protocol",
+  "description": "Defines the structure for a mandatory Task Contract, ensuring a shared understanding of complex tasks (DT-2 or higher) between Frankensteen and Engrove before execution begins.",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri-reference",
+      "description": "Reference to the validation schema for this JSON object."
+    },
+    "protocolId": {
+      "type": "string",
+      "description": "The unique identifier for this protocol.",
+      "const": "P-UK-2.0-JSON"
+    },
+    "contractId": {
+      "type": "string",
+      "description": "A unique, session-specific identifier for this contract, e.g., UK-20250827-103000.",
+      "pattern": "^UK-\\d{8}-\\d{6}$"
+    },
+    "title": {
+      "type": "string",
+      "description": "A brief, descriptive title for the task.",
+      "minLength": 10
+    },
+    "status": {
+      "type": "string",
+      "enum": ["proposed", "approved", "rejected", "in_progress", "completed"],
+      "description": "The current lifecycle state of the contract. Starts as 'proposed'."
+    },
+    "decisionTier": {
+      "type": "string",
+      "enum": ["DT-2", "DT-3"],
+      "description": "The Decision Tier that triggered the creation of this contract, ensuring proper authority."
+    },
+    "objective": {
+      "type": "string",
+      "description": "The AI's interpretation of the overall goal of the task, stated in its own words."
+    },
+    "subTasks": {
+      "type": "array",
+      "description": "A structured list of concrete, technical steps planned to achieve the objective.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "A short, unique identifier for the sub-task (e.g., 'T1', 'T2') used for referencing in the execution order.",
+            "pattern": "^T\\d+$"
+          },
+          "description": {
+            "type": "string",
+            "description": "A clear description of the specific sub-task."
+          }
+        },
+        "required": ["id", "description"]
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "description": "A list of specific files, protocols, or APIs that are crucial for completing the task.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["file", "protocol", "api", "external_library", "knowledge"]
+          },
+          "identifier": {
+            "type": "string",
+            "description": "The name or path of the dependency."
+          }
+        },
+        "required": ["type", "identifier"]
+      }
+    },
+    "risks": {
+      "type": "array",
+      "description": "A list of identified potential risks and their proposed mitigation strategies.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "A clear description of the risk."
+          },
+          "mitigation": {
+            "type": "string",
+            "description": "The proposed strategy to handle or avoid the risk."
+          }
+        },
+        "required": ["description", "mitigation"]
+      }
+    },
+    "executionOrder": {
+      "type": "array",
+      "description": "A numbered sequence of sub-task IDs, defining the logical and safe workflow.",
+      "items": {
+        "type": "string",
+        "description": "A reference to a 'subTasks.id'."
+      }
+    },
+    "acceptanceCriteria": {
+      "type": "array",
+      "description": "A list of specific, verifiable conditions that must be met for the task to be considered complete ('Definition of Done').",
+      "items": {
+        "type": "string",
+        "description": "A single, testable criterion."
+      }
+    },
+    "approvalRequirement": {
+      "type": "string",
+      "const": "Execution will not commence until this contract receives explicit approval.",
+      "description": "A non-negotiable clause stating the need for approval."
+    }
+  },
+  "required": [
+    "$schema",
+    "protocolId",
+    "contractId",
+    "title",
+    "status",
+    "decisionTier",
+    "objective",
+    "subTasks",
+    "executionOrder",
+    "acceptanceCriteria",
+    "approvalRequirement"
+  ]
+}
