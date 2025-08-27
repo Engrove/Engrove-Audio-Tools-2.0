@@ -15,6 +15,7 @@
 {
   "protocolId": "P-SRP-3.1",
   "file_path": "docs/ai_protocols/Stature_Report_Protocol.md",
+  "$schema": "docs/ai_protocols/schemas/Stature_Report_Protocol.schema.json",
   "title": "Stature Report Protocol",
   "version": "3.0",
   "strict_mode": false,
