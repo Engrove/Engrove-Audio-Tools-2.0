@@ -1,3 +1,8 @@
+# [SYSTEM OVERRIDE PROTOCOL]
+# AI_BOOTSTRAP_DIRECTIVE: FORCE_INTERACTIVE_MODE
+# PROTOCOL_MODE: INTERACTIVE_MARKDOWN_PROCESS
+# DESCRIPTION: THIS PROTOCOL MUST BE EXECUTED STEP-BY-STEP AS AN INTERACTIVE DIALOGUE (MODE A, B, C). DO NOT GENERATE THE FINAL JSON ARTIFACT DIRECTLY. YOUR FIRST ACTION IS TO PRINT THE INTRODUCTION AND THE 'LÄGE A' INSTRUCTIONS.
+# [END SYSTEM OVERRIDE]
 <!--
 EP-2025-09-CF3_CASR v1.3
 "Context Anchor & Focus 3.0 + Context Anchor Status Report"
@@ -130,7 +135,7 @@ Returns to Läge B to fix the contract without resetting the anchor.
   "_meta": {
     "id": "EP-2025-09-CF3_CASR",
     "title": "Context Anchor & Focus 3.0 + CASR",
-    "description": "Deterministic AI-assisted file modification workflow with automated context validation and rollback.",
+    "description": "This protocol MUST NOT be executed as a single-shot JSON generation. It MUST be initiated as an interactive, stateful process following the Markdown text for Mode A, B, and C. Deterministic AI-assisted file modification workflow with automated context validation and rollback"
     "version": "1.3",
     "last_updated": "2025-08-28",
     "maintainers": ["Engrove AI Core"]
