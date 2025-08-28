@@ -32,6 +32,7 @@
 # * v11.1 (2025-08-23): Knappbindning för “Skapa Filer” borttagen – ägs nu av protocol_packager.js.
 # * v11.2 (2025-08-25): KRITISK FIX: Importerar och anropar `initProtocolPackager` för att binda händelselyssnare till bundle-knapparna, vilket löser felet där de var inaktiva.
 # * v12.0 (2025-08-26): Lade till "Spara Markering"-funktion för att spara en anpassad lista med kärndokument till localStorage. Modifierade "Markera Kärndokument" för att använda denna sparade lista.
+# * v12.1 (2025-08-28): Korrigerat felaktig implementation. Lade till `save-core-selection`-knapp och logik korrekt i JS/HTML-generatorn.
 # * SHA256_LF: [VERIFIERAS I CI/CD. Se context_bundle.json -> hash_index för slutgiltigt värde.]
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.13) ===
@@ -190,8 +191,27 @@ window.openFileModal = openFileModal;
 /**
  * Sparar de för närvarande markerade filernas sökvägar till webbläsarens localStorage.
  */
+function saveCoreSelection() {
+    if (!window.fileTreeManager || typeof window.fileTreeManager.getSelectedPaths !== 'function') {
+        alert('Filträds-komponenten är inte redo.');
+        return;
+    }
+    const selectedPaths = window.fileTreeManager.getSelectedPaths();
+    try {
+        localStorage.setItem('engrove.customCoreDocs', JSON.stringify(selectedPaths));
+        console.log('Anpassat urval av kärndokument sparat.', selectedPaths);
+        alert(`Sparat ${selectedPaths.length} fil(er) som anpassat "Core val".`);
+    } catch (e) {
+        console.error('Kunde inte spara till localStorage:', e);
+        alert('Ett fel uppstod när markeringen skulle sparas.');
+    }
+}
+
+/**
+ * Sparar de för närvarande markerade filernas sökvägar till webbläsarens localStorage.
+ */
 function saveCustomCoreSelection() {
-    const selectedPaths = window.selectedFiles ? window.selectedFiles() : [];
+     const selectedPaths = window.selectedFiles ? window.selectedFiles() : [];
      if (selectedPaths.length === 0) {
         alert('Inga filer är markerade. Markera de filer du vill spara som kärndokument.');
         return;
@@ -321,6 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const deselectAllBtn = document.getElementById('deselect-all');
     const selectCoreBtn = document.getElementById('select-core');
     const saveCoreBtn = document.getElementById('save-core-docs-btn'); // Ny knapp
+    const saveCoreSelectionBtn = document.getElementById('save-core-selection');
     const clearSessionBtn = document.getElementById('clear-session');
     const refreshDataBtn = document.getElementById('refresh-data');
     
@@ -351,6 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if(deselectAllBtn) deselectAllBtn.addEventListener('click', () => window.deselectAllInTree && window.deselectAllInTree());
     if(selectCoreBtn) selectCoreBtn.addEventListener('click', markCoreDocuments); // Ändrad
     if(saveCoreBtn) saveCoreBtn.addEventListener('click', saveCustomCoreSelection); // Ny
+    if(saveCoreSelectionBtn) saveCoreSelectionBtn.addEventListener('click', saveCoreSelection);
     if(clearSessionBtn) clearSessionBtn.addEventListener('click', clearSession);
     if(refreshDataBtn) refreshDataBtn.addEventListener('click', reloadData);
 
@@ -407,6 +429,7 @@ def get_ui_logic():
                     <button id="deselect-all">Avmarkera Alla</button>
                     <button id="select-core">Markera Kärndokument</button>
                     <button id="save-core-docs-btn" class="btn">Spara Markering</button>
+                    <button id="save-core-selection">Spara Core val</button>
                     <button id="create-files-payload" class="primary">Skapa Fil-bundle</button>
                     <button id="create-protocol-bundle" class="primary">Skapa Protokoll-bundle</button>
                     <label><input type="checkbox" id="compact-json" checked> Kompakt JSON</label>
