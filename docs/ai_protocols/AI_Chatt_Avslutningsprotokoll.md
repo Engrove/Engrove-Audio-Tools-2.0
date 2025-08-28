@@ -96,7 +96,8 @@ Filen ska innehålla ett JSON-objekt med följande struktur. Alla fält är obli
   "_comment_builder": "Detta objekt innehåller alla handlingsbara instruktioner och artefakter för CI/CD och aggregeringsskript.",
   "builder_input": {
     "purpose": "Instructions for CI/CD and aggregation scripts based on the outcome of the session.",
-    
+    "sessionId": "S-2025-08-21T10-15-00Z",
+    "createdAt": "2025-08-21T10-15-00Z",
     "protocol_updates": {
       "approve_new": [
         {
@@ -113,7 +114,6 @@ Filen ska innehålla ett JSON-objekt med följande struktur. Alla fält är obli
         "DP-COMMAND-MENU-01"
       ]
     },
-    
     "metadata_updates": [
       {
         "file_path": "docs/ai_protocols/Stature_Report_Protocol.md",
@@ -121,7 +121,6 @@ Filen ska innehålla ett JSON-objekt med följande struktur. Alla fält är obli
         "usage_context": "Activated at the start of a session following a System Override Protocol to provide a strategic overview and actionable plan."
       }
     ],
-    
     "milestones_to_log": [
       {
         "event_id": "IMR-001",
@@ -129,8 +128,7 @@ Filen ska innehålla ett JSON-objekt med följande struktur. Alla fält är obli
         "details": "Successfully defined the structure for session_manifest.json and integrated its generation into the CI/CD pipeline."
       }
     ],
-
-    "final_artifacts_for_aggregation": {
+    "artifacts": {
       "ByggLogg": {
         "sessionId": "S-2025-08-21T10-15-00Z",
         "date": "2025-08-21T10-15-00Z",
@@ -232,6 +230,7 @@ Filen ska innehålla ett JSON-objekt med följande struktur. Alla fält är obli
     }
   }
 }
+
 ```
 
 
