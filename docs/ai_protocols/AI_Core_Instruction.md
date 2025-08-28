@@ -184,9 +184,24 @@
         }
       },
       {
+        "id": 2.5,
+        "action": "IDENTIFY_SUBJECT_ARTIFACT",
+        "details": {
+          "description": "Parses the prompt to determine if a specific file is the primary subject of analysis.",
+          "input": "user_prompt_text",
+          "logic": "Extract explicit file paths. Analyze sentence structure to determine if a path is the grammatical subject or object of the core request.",
+          "output_flag": "file_is_subject_artifact"
+        }
+      },
+      {
         "id": 3,
         "action": "INVALIDATE_AND_REACQUIRE_CONTEXT",
-        "condition": "task_involves_file_modification",
+        "condition": {
+          "anyOf": [
+            "task_involves_file_modification",
+            "file_is_subject_artifact"
+          ]
+        },
         "details": {
           "principle_id": "PRINCIP-015",
           "is_absolute": true,
