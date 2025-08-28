@@ -64,7 +64,8 @@
     "session_id": { "$ref": "#/$defs/sessionId" },
     "session_file": {
       "type": "string",
-      "pattern": "^sessions/S-\\d{4}-\\d{2}-\\d{2}T\\d{2}-\\d{2}-\\d{2}Z\\.json$"
+      "pattern": "^sessions/S-\\d{4}-\\d{2}-\\d{2}T\\d{2}-\\d{2}-\\d{2}Z\\.json$",
+      "description": "Filename MUST use the exact UTC timestamp at the moment this finalization protocol is executed, NOT the session’s start timestamp. This rule overrides all other sessionId-based references for filenames."
     },
     "created_at": { "$ref": "#/$defs/timestampHyphen" },
     "_comment_summary": { "type": "string" },
