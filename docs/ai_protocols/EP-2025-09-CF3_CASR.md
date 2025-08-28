@@ -131,8 +131,8 @@ Returns to Läge B to fix the contract without resetting the anchor.
     "id": "EP-2025-09-CF3_CASR",
     "title": "Context Anchor & Focus 3.0 + CASR",
     "description": "Deterministic AI-assisted file modification workflow with automated context validation and rollback.",
-    "version": "1.1.0",
-    "last_updated": "2025-08-27",
+    "version": "1.3",
+    "last_updated": "2025-08-28",
     "maintainers": ["Engrove AI Core"]
   },
   "stages": {
@@ -142,7 +142,7 @@ Returns to Läge B to fix the contract without resetting the anchor.
       "fields": {
         "anchor_id": "string",
         "version": "semver",
-        "timestamp_utc": "ISO-8601",
+        "timestamp_utc": "2025-08-28T00:00:00Z",
         "architecture": {
           "frameworks": ["string"],
           "pipelines": [{"name": "string", "version": "semver"}],
@@ -167,19 +167,41 @@ Returns to Läge B to fix the contract without resetting the anchor.
         "files": ["string"],
         "dependencies": ["string"],
         "forbidden_solutions": ["string"],
-        "specifications": "object",
+        "specifications": {},
+        "acceptance_criteria": [
+          "Kontraktet är komplett och godkänt (!contract-approve).",
+          "Inga förbjudna lösningar används.",
+          "Ändrade filer validerar i CI (lint/build/tests)."
+        ],
         "required_anchor": {
           "anchor_id": "string",
           "version_min": "semver",
-          "hash": "sha256"
+          "hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
         }
       },
       "validation_rules": {
         "files_required": true,
-        "dependencies_verified": true
+        "dependencies_verified": true,
+        "gating": {
+          "block_if_missing": [
+            "files",
+            "acceptance_criteria",
+            "required_anchor.hash"
+          ]
+        }
       },
       "ai_assist": {
-        "dependency_suggestions": true
+        "dependency_suggestions": true,
+        "nlp_extraction": {
+          "enabled": true,
+          "required_fields": [
+            "objective",
+            "files",
+            "dependencies",
+            "acceptance_criteria",
+            "required_anchor.hash"
+          ]
+        }
       }
     },
     "C": {
@@ -214,6 +236,32 @@ Returns to Läge B to fix the contract without resetting the anchor.
     "trigger": "!ROLLBACK",
     "required_fields": ["reason"],
     "returns_to_stage": "B"
+  },
+  "interaction": {
+    "activation": {
+      "command": "!activate-protocol",
+      "print_overview": true
+    },
+    "steps": {
+      "A": {
+        "intro_text": "Etablera arkitektur, kritiska stigar, verktygsversioner, pipelines. Bekräfta med !anchor-ack.",
+        "ack_command": "!anchor-ack"
+      },
+      "B": {
+        "intro_text": "Frys maskinläsbart kontrakt. Godkänn med !contract-approve.",
+        "approval_command": "!contract-approve"
+      },
+      "C": {
+        "intro_text": "Kör fokuserat läge baserat på kontrakt + focus-filer.",
+        "execution_command": "!EXECUTE_FOCUS_MODE"
+      }
+    }
+  },
+  "io_policy": {
+    "user_input_modes": ["natural_text", "json"],
+    "ai_outputs": ["json_contract"],
+    "auto_print": true,
+    "step_intros": true
   }
 }
 ```
