@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "docs/ai_protocols/schemas/Grundbulten_Grotocol.schema.json",
+  "$id": "docs/ai_protocols/schemas/Grundbulten_Protokoll.schema.json",
   "title": "Schema för Grundbulten – Universell filhantering (chattsession)",
   "type": "object",
   "additionalProperties": false,
