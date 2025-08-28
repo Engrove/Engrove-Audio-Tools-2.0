@@ -59,13 +59,38 @@ Denna fil måste vara en giltig JSON-fil som följer specifikationen nedan.
 
 **Syfte:** Rådata för historikrekonstruktion.
 
-**Insamling av Dynamiska Protokoll**
-Före generering av JSON-filen måste du skanna igenom hela den aktuella chattsessionen för att identifiera:
-1.  **Nya Godkända Protokoll:** Alla nya dynamiska protokoll som har definierats och blivit explicit godkända av Engrove.
-2.  **Statusändringar:** Alla instruktioner från Engrove att ändra status på ett befintligt dynamiskt protokoll (t.ex. "promovera DP-COMMAND-MENU-01 till active").
-3.  **Final Output Specification:**
-Filen ska innehålla ett JSON-objekt med följande struktur. Alla fält är obligatoriska om inte annat anges.
+Här är en omformulering med explicit schema-användning.
 
+**Insamling av Dynamiska Protokoll**
+Före generering av JSON ska du:
+
+1. Identifiera alla nya dynamiska protokoll som uttryckligen godkänts av Engrove.
+2. Identifiera alla statusändringar för befintliga protokoll (t.ex. “promovera DP-COMMAND-MENU-01 till active”).
+
+**Final Output Specification**
+
+* Skapa exakt ett JSON-objekt enligt strukturen i **docs/ai\_protocols/schemas/AI\_Chatt\_Avslutningsprotokoll.schema.json**.
+* Ladda schemat från filsystemet och validera hela outputen mot det innan du skriver filen.
+* Om valideringen misslyckas: skriv ingen JSON. Returnera en kort felrapport med alla valideringsfel.
+* Om valideringen lyckas: skriv slutobjektet.
+
+**Valideringskrav**
+
+* Använd JSON Schema Draft 2020-12.
+* Inga extrafält utanför schemat.
+* Datatyper och mönster ska följa schemat.
+
+**Rekommenderad header i outputen**
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Valideras mot docs/ai_protocols/schemas/AI_Chatt_Avslutningsprotokoll.schema.json",
+  "...": "..."
+}
+```
+
+* Exempel på första JSON-artefakten:
 ```json
 {
   "schema_version": "DJTA v1.1",
