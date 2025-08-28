@@ -394,6 +394,41 @@
           ]
         }
       ]
+    },
+    "pcp": {
+      "protocol_id": "P-CP-1.0",
+      "version": "1.0",
+      "title": "Context Pinning Protocol",
+      "strict_mode": true,
+      "mode": "literal",
+      "description": "A meta-protocol for temporarily locking a data artifact (e.g., a code file) into the context as a high-priority, canonical source of truth, exempt from standard context window eviction.",
+      "state_management": {
+        "storage": "session.pinned_artifacts",
+        "default_state": [],
+        "max_pins": 5
+      },
+      "commands": [
+        {
+          "command": "!pin-context",
+          "params": [ { "name": "file_path", "type": "string", "required": true } ],
+          "action": "ADD_TO_STATE",
+          "response_template": "BEKRÄFTAT: `Context Pinning Protocol` är nu aktivt för `{{file_path}}`. Denna fil kommer att användas som den kanoniska referensen för alla efterföljande operationer."
+        },
+        {
+          "command": "!release-context",
+          "params": [ { "name": "file_path", "type": "string", "required": true } ],
+          "action": "REMOVE_FROM_STATE",
+          "response_template": "BEKRÄFTAT: `Context Pinning Protocol` är nu deaktiverat för `{{file_path}}`. Filen kommer åter att hanteras som standardkontext."
+        }
+      ],
+      "psv_integration": {
+        "hook_point": "before_step_3",
+        "action_description": "For each path in `session.pinned_artifacts`, perform a strict consistency check. If the prompt's subject artifact or intended modifications conflict with a pinned file, the protocol must report the conflict and escalate.",
+        "on_conflict": {
+          "escalate_to": "DT-2",
+          "response_template": "[PINNED_CONTEXT_VALIDATION]: KONFLIKT IDENTIFIERAD.\n\nDin instruktion står i konflikt med den pinnade versionen av `{{conflicting_file}}`.\n\nBeslut krävs (DT-2):\n1. Ignorera den pinnade versionen och fortsätt med den nya instruktionen?\n2. Avbryt och respektera den pinnade versionen?"
+        }
+      }
     }
   },
   "decision_tiers": {
