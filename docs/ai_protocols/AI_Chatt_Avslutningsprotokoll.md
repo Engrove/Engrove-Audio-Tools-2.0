@@ -1,7 +1,3 @@
-# FIL: docs/ai_protocols/AI_Chatt_Avslutningsprotokollet.md
-# BASE_CHECKSUM_SHA256: 26229a9e3117ddfd106bcb8983e3f0b65d1d06622a150ba568c6692370fccd2d
-# NY_CHECKSUM_SHA256: c3989c9225883d3e8623b08e5c3c0a373b313a2a490d1f7c04f98cf4a95610ec
-# ---
 # AI Chatt Avslutningsprotokoll
 # docs/ai_protocols/AI_Chatt_Avslutningsprotokollet.md
 #
@@ -22,6 +18,7 @@
 # * v8.0 (2025-08-15): Lade till den nya toppnivånyckeln `importantMilestonesLogged` i `Builder-Input v1`-schemat för att säkerställa att IMR-poster sparas permanent.
 # * v9.0 (2025-08-15): Lade till Steg 0 för att formalisera bearbetningen av den nya, sessionsbaserade ISR-kön (Interaction Summary Register) som den primära källan för Chatthistorik.
 # * v9.1 (2025-08-27): Lade till `delivery_override` för att lösa protokoll-hierarkikonflikt och säkerställa maskinläsbar JSON-output. Lade till `__schema_constraints` för att tvinga scorecard-skalan (0-10).
+# * v9.2 (2025-08-27): KRITISK PRECISION: Tvingar `session_file`-nyckeln att använda den exakta exekveringstiden istället för sessionens start-timestamp, i enlighet med PRINCIP-022.
 #
 ### AI_BOOTSTRAP_DIRECTIVE: EXECUTE_FULL_PROTOCOL_NOW
 ### SYSTEM_OVERRIDE: RUN_CONTEXT_BOOTSTRAP
@@ -54,7 +51,7 @@ Som det allra första steget i avslutningsprocessen kommer jag att hämta alla s
 Inget annat innehåll får förekomma före, mellan eller efter dessa två block.
 
 ## PROCESS: Block A – Builder-Input v1 (första JSON-artefakten)
-En enda fil med namnet `[SESSIONID].json` genereras där SESSIONID har formen `S-[CURRENT DATETIMESTAMP]`. 
+En enda fil med namnet `[SESSIONID].json` genereras. **Regel för Tidsstämpling:** Filnamnets timestamp (t.ex. `S-2025-08-27T15-30-00Z.json`) **MÅSTE** reflektera den aktuella UTC-tiden då detta protokoll exekveras och får **INTE** återanvända sessionens start-ID.
 Denna fil måste vara en giltig JSON-fil som följer specifikationen nedan.
 
 **Syfte:** Rådata för historikrekonstruktion.
@@ -69,7 +66,7 @@ Före generering av JSON ska du:
 
 **Final Output Specification**
 
-* Skapa exakt ett JSON-objekt enligt strukturen i **docs/ai\_protocols/schemas/AI\_Chatt\_Avslutningsprotokoll.schema.json**.
+* Skapa exakt ett JSON-objekt enligt strukturen i **docs/ai_protocols/schemas/AI_Chatt_Avslutningsprotokollet.schema.json**.
 * Ladda schemat från filsystemet och validera hela outputen mot det innan du skriver filen.
 * Om valideringen misslyckas: skriv ingen JSON. Returnera en kort felrapport med alla valideringsfel.
 * Om valideringen lyckas: skriv slutobjektet.
@@ -85,7 +82,7 @@ Före generering av JSON ska du:
 ```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$comment": "Valideras mot docs/ai_protocols/schemas/AI_Chatt_Avslutningsprotokoll.schema.json",
+  "$comment": "Valideras mot docs/ai_protocols/schemas/AI_Chatt_Avslutningsprotokollet.schema.json",
   "...": "..."
 }
 ```
@@ -95,7 +92,7 @@ Före generering av JSON ska du:
 {
   "schema_version": "DJTA v1.1",
   "session_id": "S-2025-08-21T10-15-00Z",
-  "session_file": "sessions/S-2025-08-21T10-15-00Z.json",
+  "session_file": "sessions/S-2025-08-21T11-30-00Z.json",
   "created_at": "2025-08-21T10-15-00Z",
 
   "_comment_summary": "Detta objekt är för snabb indexering och analys. Det extraheras till session_manifest.json.",
@@ -123,7 +120,6 @@ Före generering av JSON ska du:
   "builder_input": {
     "purpose": "Instructions for CI/CD and aggregation scripts based on the outcome of the session.",
     "sessionId": "S-2025-08-21T10-15-00Z",
-    "fileID": "sessions/S-2025-08-21T10-15-00Z.json",
     "createdAt": "2025-08-21T10-15-00Z",
     "protocol_updates": {
       "approve_new": [
@@ -158,7 +154,7 @@ Före generering av JSON ska du:
     "artifacts": {
       "ByggLogg": {
         "sessionId": "S-2025-08-21T10-15-00Z",
-        "date": "2025-08-21T10-15-00Z",
+        "date": "2025-08-21T10-15:00Z",
         "summary": "Refactoring of AudioPlayer.vue completed with one TypeScript error corrected by the operator.",
         "actions": [
           {
@@ -257,7 +253,6 @@ Före generering av JSON ska du:
     }
   }
 }
-
 ```
 
 
