@@ -33,6 +33,7 @@
 # * v11.2 (2025-08-25): KRITISK FIX: Importerar och anropar `initProtocolPackager` för att binda händelselyssnare till bundle-knapparna, vilket löser felet där de var inaktiva.
 # * v12.0 (2025-08-26): Lade till "Spara Markering"-funktion för att spara en anpassad lista med kärndokument till localStorage. Modifierade "Markera Kärndokument" för att använda denna sparade lista.
 # * v12.1 (2025-08-28): Korrigerat felaktig implementation. Lade till `save-core-selection`-knapp och logik korrekt i JS/HTML-generatorn.
+# * v12.2 (2025-08-28): Korrigerat bugg i `saveCoreSelection` som anropade en inkorrekt, icke-existerande global funktion.
 # * SHA256_LF: [VERIFIERAS I CI/CD. Se context_bundle.json -> hash_index för slutgiltigt värde.]
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.13) ===
@@ -192,20 +193,21 @@ window.openFileModal = openFileModal;
  * Sparar de för närvarande markerade filernas sökvägar till webbläsarens localStorage.
  */
 function saveCoreSelection() {
-    if (!window.fileTreeManager || typeof window.fileTreeManager.getSelectedPaths !== 'function') {
-        alert('Filträds-komponenten är inte redo.');
+    const selectedPaths = window.selectedFiles ? window.selectedFiles() : [];
+    if (selectedPaths.length === 0) {
+        alert('Inga filer är markerade. Markera de filer du vill spara som ditt "Core val".');
         return;
     }
-    const selectedPaths = window.fileTreeManager.getSelectedPaths();
     try {
         localStorage.setItem('engrove.customCoreDocs', JSON.stringify(selectedPaths));
-        console.log('Anpassat urval av kärndokument sparat.', selectedPaths);
-        alert(`Sparat ${selectedPaths.length} fil(er) som anpassat "Core val".`);
+        console.log('Anpassat "Core val" sparat till localStorage.', selectedPaths);
+        alert(`Sparade ${selectedPaths.length} fil(er) som ditt anpassade "Core val".`);
     } catch (e) {
-        console.error('Kunde inte spara till localStorage:', e);
-        alert('Ett fel uppstod när markeringen skulle sparas.');
+        console.error('Kunde inte spara "Core val" till localStorage:', e);
+        alert('Ett fel uppstod när ditt "Core val" skulle sparas.');
     }
 }
+
 
 /**
  * Sparar de för närvarande markerade filernas sökvägar till webbläsarens localStorage.
