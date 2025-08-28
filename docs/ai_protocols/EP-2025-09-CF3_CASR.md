@@ -124,7 +124,7 @@ Returns to Läge B to fix the contract without resetting the anchor.
 
 ```json
 {
-  "$schema": "docs/ai_protocols/schemas/EP-2025-09-CF3_CARS.schema.json",
+  "$schema": "docs/ai_protocols/schemas/EP-2025-09-CF3_CASR.schema.json",
   "strict_mode": true,
   "mode": "literal",
   "_meta": {
