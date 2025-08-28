@@ -306,20 +306,95 @@
     }
   },
   "meta_protocols": {
+
+
+
+
+
     "fld": {
       "protocol_id": "FL-D",
-      "version": "2.0",
-      "title": "Debug Loop Detector",
+      "version": "3.1",
+      "title": "Debug Loop Detector (Tiered Response & Analysis)",
       "strict_mode": true,
       "mode": "literal",
-      "rules": [
-        { "id": 1, "name": "Attempt Counter", "description": "Internal counter per task is reset with each new Idea." },
-        { "id": 2, "name": "Semantic Comparison", "description": "On a reported failure, increment counter. MUST analyze the root cause and ensure the new strategy is semantically distinct from the previous one." },
-        { "id": 3, "name": "Forced Escalation", "description": "When the counter reaches 2, incremental fixes are forbidden. Immediately activate Help_me_God_Protokoll.md." },
-        { "id": 4, "name": "Grundbulten Binding", "description": "After two failed deliveries for the same file/error, ABORT according to Grundbulten Step 12 and escalate." },
-        { "id": 5, "name": "Hard Limit", "description": "If Help_me_God fails (3 total failures), activate Stalemate_Protocol.md." }
-      ]
+      "description": "A multi-tiered meta-protocol for handling failures. It triages errors to apply either a fast, incremental fix for trivial issues or a deep, sequential analysis for complex problems.",
+      "tiers": [
+        {
+          "level": 1,
+          "name": "Triage",
+          "trigger": "On first failure of any code generation attempt.",
+          "action": "Internally classify the error as 'Trivial' or 'Complex' based on its type and context.",
+          "criteria_for_trivial": "Errors like SyntaxError, ReferenceError, obvious typos, or simple TypeError instances.",
+          "criteria_for_complex": "Logical errors, state management issues, race conditions, unexpected behavior, or any error not classified as Trivial.",
+          "routing": {
+            "on_trivial": "Escalate to Tier 2 (Incremental Fix).",
+            "on_complex": "Escalate directly to Tier 3 (Sequential Analysis)."
+          }
+        },
+        {
+          "level": 2,
+          "name": "Incremental Fix",
+          "entry_condition": "Escalation from Tier 1 with 'Trivial' classification.",
+          "action": "Attempt a single, semantically distinct, incremental fix.",
+          "routing": {
+            "on_success": "Resolve and exit FL-D protocol.",
+            "on_failure": "The error was misclassified as trivial. Escalate immediately to Tier 3 (Sequential Analysis)."
+          }
+        },
+        {
+          "level": 3,
+          "name": "Sequential Analysis",
+          "entry_condition": "Escalation from Tier 1 ('Complex') or Tier 2 ('Failure').",
+          "description": "Initiates a formal, multi-step root cause analysis before proposing a new solution. This is a pure analysis phase; no code is generated until its completion.",
+          "steps": [
+            {
+              "step": "3.1",
+              "protocol": "DP-KAJBJORN-VALIDATION-01",
+              "analysis_type": "Static",
+              "stalemate_check": {
+                "id": "3.1.5",
+                "condition": "Is the issue provably unsolvable on an architectural level without a DT-3 decision (e.g., requires a new library, changes a fundamental API contract)?",
+                "action_on_true": "Propose Stalemate."
+              }
+            },
+            {
+              "step": "3.2",
+              "protocol": "DP-STIGBRITT-TRIBUNAL-v2-01",
+              "analysis_type": "Dynamic/Runtime",
+              "stalemate_check": {
+                "id": "3.2.5",
+                "condition": "Does the runtime analysis reveal an unresolvable external dependency (e.g., API is down, returns invalid data) or a fundamental logical contradiction in the requirements?",
+                "action_on_true": "Propose Stalemate."
+              }
+            },
+            {
+              "step": "3.3",
+              "protocol": "Help_me_God_Protokoll.md",
+              "analysis_type": "Synthesis & Solution Proposal",
+              "action": "Synthesize findings from steps 3.1 and 3.2 to formulate a high-confidence hypothesis and a detailed plan for the patch.",
+              "stalemate_check": {
+                "id": "3.3.5",
+                "condition": "After all analysis, is it still impossible to formulate a viable solution that adheres to all constraints and protocols?",
+                "action_on_true": "Propose Stalemate."
+              }
+            }
+          ],
+          "routing": {
+            "on_completion_with_solution": "Proceed to generate the final patch based on the HMG plan.",
+            "on_stalemate_triggered": "Activate Stalemate_Protocol.md."
+          }
+        }
+      ],
+      "hard_limit": {
+        "condition": "A solution generated after a full Tier 3 analysis fails to resolve the issue.",
+        "action": "Activate Stalemate_Protocol.md immediately."
+      }
     },
+
+
+
+
+
     "stc": {
       "protocol_id": "STC",
       "version": "1.0",
