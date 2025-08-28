@@ -48,7 +48,7 @@ Som det allra första steget i avslutningsprocessen kommer jag att hämta alla s
 3. **Block B – NextSessionContext v1:**
    - planering och kontext för nästa session
 
-Inget annat innehåll får förekomma före, mellan eller efter dessa två block.
+Inget annat innehåll får förekomma före, mellan eller efter dessa två block. Blocken måste levereras som helt skilda JSON block i egna textfönster i chat-sessionen.
 
 ## PROCESS: Block A – Builder-Input v1 (första JSON-artefakten)
 En enda fil med namnet `[SESSIONID].json` genereras. **Regel för Tidsstämpling:** Filnamnets timestamp (t.ex. `S-2025-08-27T15-30-00Z.json`) **MÅSTE** reflektera den aktuella UTC-tiden då detta protokoll exekveras och får **INTE** återanvända sessionens start-ID.
