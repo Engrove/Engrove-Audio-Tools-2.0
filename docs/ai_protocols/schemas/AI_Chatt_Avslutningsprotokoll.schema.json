@@ -1,0 +1,480 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DJTA Session Schema v1.1",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "timestampHyphen": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}-\\d{2}-\\d{2}Z$"
+    },
+    "sessionId": {
+      "type": "string",
+      "pattern": "^S-\\d{4}-\\d{2}-\\d{2}T\\d{2}-\\d{2}-\\d{2}Z$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "provider": { "type": "string" },
+        "name": { "type": "string" },
+        "version": { "type": "string" }
+      },
+      "required": ["provider", "name", "version"]
+    },
+    "fileChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string" },
+        "changeDescription": { "type": "string" }
+      },
+      "required": ["path", "changeDescription"]
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string" },
+        "files": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/fileChange" }
+        },
+        "result": { "type": "string" }
+      },
+      "required": ["title", "files", "result"]
+    },
+    "protocolActivationCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "psv": { "type": "integer", "minimum": 0 },
+        "helpMeGod": { "type": "integer", "minimum": 0 },
+        "stalemate": { "type": "integer", "minimum": 0 }
+      },
+      "required": ["psv", "helpMeGod", "stalemate"]
+    }
+  },
+  "properties": {
+    "schema_version": { "const": "DJTA v1.1" },
+    "session_id": { "$ref": "#/$defs/sessionId" },
+    "session_file": {
+      "type": "string",
+      "pattern": "^sessions/S-\\d{4}-\\d{2}-\\d{2}T\\d{2}-\\d{2}-\\d{2}Z\\.json$"
+    },
+    "created_at": { "$ref": "#/$defs/timestampHyphen" },
+    "_comment_summary": { "type": "string" },
+    "session_summary_artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "artifact_type": { "const": "SessionSummaryArtifact" },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+$" },
+        "session_id": { "$ref": "#/$defs/sessionId" },
+        "timestamp_utc": { "$ref": "#/$defs/timestampHyphen" },
+        "summary": { "type": "string" },
+        "keywords": { "type": "array", "items": { "type": "string" } },
+        "modified_files": { "type": "array", "items": { "type": "string" } },
+        "error_signatures": { "type": "array", "items": { "type": "string" } },
+        "success_score": { "type": "integer" },
+        "operator_interventions": { "type": "integer", "minimum": 0 }
+      },
+      "required": [
+        "artifact_type",
+        "version",
+        "session_id",
+        "timestamp_utc",
+        "summary",
+        "keywords",
+        "modified_files",
+        "error_signatures",
+        "success_score",
+        "operator_interventions"
+      ]
+    },
+    "_comment_builder": { "type": "string" },
+    "builder_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "purpose": { "type": "string" },
+        "sessionId": { "$ref": "#/$defs/sessionId" },
+        "createdAt": { "$ref": "#/$defs/timestampHyphen" },
+        "protocol_updates": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "approve_new": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "protocolId": { "type": "string" },
+                  "description": { "type": "string" },
+                  "trigger": { "type": "string" },
+                  "steps": { "type": "array", "items": { "type": "string" } }
+                },
+                "required": ["protocolId", "description", "trigger", "steps"]
+              }
+            },
+            "promote_to_active": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          "required": ["approve_new", "promote_to_active"]
+        },
+        "metadata_updates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "file_path": { "type": "string" },
+              "purpose_and_responsibility": { "type": "string" },
+              "usage_context": { "type": "string" }
+            },
+            "required": [
+              "file_path",
+              "purpose_and_responsibility",
+              "usage_context"
+            ]
+          }
+        },
+        "milestones_to_log": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "event_id": { "type": "string" },
+              "summary": { "type": "string" },
+              "details": { "type": "string" }
+            },
+            "required": ["event_id", "summary", "details"]
+          }
+        },
+        "artifacts": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "ByggLogg": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "sessionId": { "$ref": "#/$defs/sessionId" },
+                "date": { "$ref": "#/$defs/timestampHyphen" },
+                "summary": { "type": "string" },
+                "actions": {
+                  "type": "array",
+                  "items": { "$ref": "#/$defs/action" }
+                },
+                "projectStatus": { "type": "string" }
+              },
+              "required": [
+                "sessionId",
+                "date",
+                "summary",
+                "actions",
+                "projectStatus"
+              ]
+            },
+            "Chatthistorik": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "sessionId": { "$ref": "#/$defs/sessionId" },
+                "interactions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "speakerName": { "type": "string" },
+                      "model": { "$ref": "#/$defs/model" },
+                      "speaker": { "type": "string" },
+                      "summary": { "type": "string" }
+                    },
+                    "required": [
+                      "speakerName",
+                      "model",
+                      "speaker",
+                      "summary"
+                    ]
+                  }
+                }
+              },
+              "required": ["sessionId", "interactions"]
+            },
+            "ai_protocol_performance": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "sessionId": { "$ref": "#/$defs/sessionId" },
+                "date": { "$ref": "#/$defs/timestampHyphen" },
+                "aiQualitativeSummary": { "type": "string" },
+                "_comment_scorecard": { "type": "string" },
+                "scorecard": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "efficacy": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "score": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 10
+                        },
+                        "weight": {
+                          "type": "number",
+                          "minimum": 0.0,
+                          "maximum": 1.0
+                        },
+                        "weightedScore": { "type": "number" }
+                      },
+                      "required": ["score", "weight", "weightedScore"]
+                    },
+                    "efficiency": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "score": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 10
+                        },
+                        "weight": {
+                          "type": "number",
+                          "minimum": 0.0,
+                          "maximum": 1.0
+                        },
+                        "weightedScore": { "type": "number" }
+                      },
+                      "required": ["score", "weight", "weightedScore"]
+                    },
+                    "robustness": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "score": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 10
+                        },
+                        "weight": {
+                          "type": "number",
+                          "minimum": 0.0,
+                          "maximum": 1.0
+                        },
+                        "weightedScore": { "type": "number" }
+                      },
+                      "required": ["score", "weight", "weightedScore"]
+                    },
+                    "finalScore": {
+                      "type": "number",
+                      "minimum": 0.0,
+                      "maximum": 10.0
+                    }
+                  },
+                  "required": [
+                    "efficacy",
+                    "efficiency",
+                    "robustness",
+                    "finalScore"
+                  ]
+                },
+                "__schema_constraints": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "comment": { "type": "string" },
+                    "score": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "type": { "const": "integer" },
+                        "minimum": { "const": 0 },
+                        "maximum": { "const": 10 }
+                      },
+                      "required": ["type", "minimum", "maximum"]
+                    },
+                    "finalScore": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "type": { "const": "number" },
+                        "minimum": { "const": 0.0 },
+                        "maximum": { "const": 10.0 }
+                      },
+                      "required": ["type", "minimum", "maximum"]
+                    },
+                    "scale_policy": { "const": "STRICT_NO_TRANSFORMATION" }
+                  },
+                  "required": ["comment", "score", "finalScore", "scale_policy"]
+                },
+                "detailedMetrics": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "missionCompleted": { "type": "boolean" },
+                    "debuggingCycles": { "type": "integer", "minimum": 0 },
+                    "selfCorrections": { "type": "integer", "minimum": 0 },
+                    "externalCorrections": { "type": "integer", "minimum": 0 },
+                    "protocolActivations": {
+                      "$ref": "#/$defs/protocolActivationCounts"
+                    },
+                    "heuristicsTriggered": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": [
+                    "missionCompleted",
+                    "debuggingCycles",
+                    "selfCorrections",
+                    "externalCorrections",
+                    "protocolActivations",
+                    "heuristicsTriggered"
+                  ]
+                },
+                "improvementSuggestion": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "pattern": { "type": "string" },
+                    "proposedHeuristicId": { "type": "string" }
+                  },
+                  "required": ["pattern", "proposedHeuristicId"]
+                }
+              },
+              "required": [
+                "sessionId",
+                "date",
+                "aiQualitativeSummary",
+                "_comment_scorecard",
+                "scorecard",
+                "__schema_constraints",
+                "detailedMetrics",
+                "improvementSuggestion"
+              ]
+            },
+            "frankensteen_learning_db": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "heuristicId": { "type": "string" },
+                  "trigger": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "type": { "type": "string" },
+                      "scope": {
+                        "type": "array",
+                        "items": { "type": "string" }
+                      },
+                      "keywords": {
+                        "type": "array",
+                        "items": { "type": "string" }
+                      }
+                    },
+                    "required": ["type", "scope", "keywords"]
+                  },
+                  "identifiedRisk": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "riskId": { "type": "string" },
+                      "description": { "type": "string" }
+                    },
+                    "required": ["riskId", "description"]
+                  },
+                  "mitigation": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "protocolId": { "type": "string" },
+                      "description": { "type": "string" }
+                    },
+                    "required": ["protocolId", "description"]
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "originSessionId": { "$ref": "#/$defs/sessionId" },
+                      "createdAt": { "$ref": "#/$defs/timestampHyphen" }
+                    },
+                    "required": ["originSessionId", "createdAt"]
+                  }
+                },
+                "required": [
+                  "heuristicId",
+                  "trigger",
+                  "identifiedRisk",
+                  "mitigation",
+                  "metadata"
+                ]
+              }
+            },
+            "generated_patches": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "protocol_id": { "type": "string" },
+                  "target": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "path": { "type": "string" },
+                      "base_checksum_sha256": { "$ref": "#/$defs/sha256" }
+                    },
+                    "required": ["path", "base_checksum_sha256"]
+                  },
+                  "op_groups": { "type": "array" },
+                  "meta": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "notes": { "type": "string" }
+                    },
+                    "required": ["notes"]
+                  }
+                },
+                "required": ["protocol_id", "target", "op_groups", "meta"]
+              }
+            }
+          },
+          "required": ["ByggLogg", "Chatthistorik"]
+        }
+      },
+      "required": [
+        "purpose",
+        "sessionId",
+        "createdAt",
+        "protocol_updates",
+        "metadata_updates",
+        "milestones_to_log",
+        "artifacts"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "session_id",
+    "session_file",
+    "created_at",
+    "session_summary_artifact",
+    "builder_input"
+  ]
+}
