@@ -48,7 +48,7 @@
       { "version": "v5.15-JSON", "description": "Full translation from Swedish to technical English. No change in logic." }
     ]
   },
-  "session_persona_and_roles": {
+  "persona_and_roles": {
     "roles": {
       "ai_partner": {
         "name": "Frankensteen",
