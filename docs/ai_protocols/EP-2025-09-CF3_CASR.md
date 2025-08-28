@@ -94,12 +94,14 @@ CASR körs före frysning.
 ```
 === LÄGE C ===
 Syfte: Deterministisk exekvering under steril kontext.
+**MUST:** Kräv uppladning av !context-focus-file.
 Instruktion:
-- Endast JSON-kontrakt + !context-focus-filer.
-- Ignorera tidigare chatt.
-- CASR före start. WARN kräver !ack-anchor-warn.
-- Efter körning: diff, checksums, tests.
-- Godkänn: !accept  |  Återgå: !ROLLBACK <reason>
+- MUST: Endast JSON-kontrakt + !context-focus-filer.
+- MUST: Ignorera tidigare chatt.
+- MUST: Använd endast uppladdade !context-focus-file.
+- MUST: CASR före start. WARN kräver !ack-anchor-warn.
+- MUST: Efter körning: diff, checksums, tests.
+- MUST: Godkänn: !accept  |  Återgå: !ROLLBACK <reason>
 ```
 
 ---
