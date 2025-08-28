@@ -98,6 +98,7 @@ Filen ska innehålla ett JSON-objekt med följande struktur. Alla fält är obli
   "builder_input": {
     "purpose": "Instructions for CI/CD and aggregation scripts based on the outcome of the session.",
     "sessionId": "S-2025-08-21T10-15-00Z",
+    "fileID": "sessions/S-2025-08-21T10-15-00Z.json",
     "createdAt": "2025-08-21T10-15-00Z",
     "protocol_updates": {
       "approve_new": [
