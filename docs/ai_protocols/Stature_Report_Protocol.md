@@ -188,12 +188,22 @@
       },
       "abort_policy": { "chat": "never", "strict": "on_critical" }
     },
-
-    {
     {
       "id": 6,
       "title": "ACTIONABLE MENU (villkorad ordning)",
-      "sources": { "domains": "@domains" },
+      "sources": {
+        "domains": "@domains",
+        "core_instruction": "@ai_core_instruction"
+      },
+      "logic": {
+        "discovered_commands": {
+          "description": "Parses core instruction to find all defined meta-protocol commands.",
+          "source": "sources.core_instruction.meta_protocols",
+          "action": "ITERATE_AND_EXTRACT",
+          "extract_fields": ["command", "description"],
+          "from_array": "commands"
+        }
+      },
       "ordering_logic": {
         "if_chat_and_sic_light_and_not_critical": "put_integrity_review_last",
         "otherwise": "put_integrity_review_first"
@@ -204,6 +214,7 @@
         "items": [
           { "kind": "integrity_review", "label": "Granska Systemintegritet: ..." },
           { "kind": "from_domains",      "label": "auto" },
+          { "kind": "from_discovered_commands", "label": "auto" },
           {
             "kind": "protocol_activation",
             "label": "Aktivera CASR-protokollet för kodgranskning och statisk analys (`EP-2025-09-CF3_CASR.md`)",
@@ -214,10 +225,12 @@
             "label": "Starta en kreativ session med K-MOD-protokollet (`K-MOD_Protokoll.md`)",
             "target_protocol": "docs/ai_protocols/K-MOD_Protokoll.md"
           }
-        ]
+        ],
+        "item_templates": {
+          "from_discovered_commands": "Exekvera kommando: `{{command.command}}` - {{command.description}}"
+        }
       }
     },
-
     {
       "id": 7,
       "title": "Avslutning och Statuspanel (dynamisk)",
