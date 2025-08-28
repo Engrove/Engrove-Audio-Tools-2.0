@@ -2239,5 +2239,68 @@
     "error_signatures": [],
     "success_score": 10,
     "operator_interventions": 2
+  },
+  {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "S-2025-08-27T12-43-00Z",
+    "timestamp_utc": "2025-08-27T12:43:00Z",
+    "summary": "Genomförde en djupgående grundorsaksanalys (RCA) av flera systemiska protokollfel. Implementerade och härdade systemet med fem nya kärnprinciper (017-021) som åtgärdar metadata-hantering, idempotent generering, meta-rapportering, datatypsintegritet och validering av unik protokoll-deklaration.",
+    "keywords": [
+      "protokoll-härdning",
+      "rca",
+      "grundorsaksanalys",
+      "kontext-desynkronisering",
+      "system-integritet",
+      "schema",
+      "princip-implementering"
+    ],
+    "modified_files": [
+      "docs/ai_protocols/DynamicProtocols.json",
+      "docs/ai_protocols/Uppgifts-Kontrakt_Protokoll.md",
+      "docs/ai_protocols/Grundbulten_Protokoll.md",
+      "docs/ai_protocols/AI_Chatt_Avslutningsprotokollet.md"
+    ],
+    "error_signatures": [
+      "CONTEXT_DESYNC_ERROR",
+      "PROTOCOL_HIERARCHY_CONFLICT",
+      "IMPLICIT_TYPE_CONVERSION"
+    ],
+    "success_score": 10,
+    "operator_interventions": 3
+  },
+  {
+    "artifact_type": "SessionSummaryArtifact",
+    "version": "1.0",
+    "session_id": "S-2025-08-27T12-43-00Z",
+    "timestamp_utc": "2025-08-27T12:43:00Z",
+    "summary": "En komplett meta-session fokuserad på grundorsaksanalys och härdning av AI-protokollsystemet. Flera kritiska systemfel identifierades och åtgärdades genom implementering av sex nya kärnprinciper (017-022).",
+    "keywords": [
+      "protokoll-härdning",
+      "rca",
+      "grundorsaksanalys",
+      "kontext-desynkronisering",
+      "system-integritet",
+      "schema",
+      "princip-implementering",
+      "timestamp",
+      "protokoll-hierarki"
+    ],
+    "modified_files": [
+      "docs/ai_protocols/DynamicProtocols.json",
+      "docs/ai_protocols/Uppgifts-Kontrakt_Protokoll.md",
+      "docs/ai_protocols/Grundbulten_Protokoll.md",
+      "docs/ai_protocols/AI_Chatt_Avslutningsprotokollet.md",
+      "docs/ai_protocols/schemas/AI_Chatt_Avslutningsprotokollet.schema.json"
+    ],
+    "error_signatures": [
+      "CONTEXT_DESYNC_ERROR",
+      "PROTOCOL_HIERARCHY_CONFLICT",
+      "IMPLICIT_TYPE_CONVERSION",
+      "TIMESTAMP_AMBIGUITY",
+      "INTERNAL_DOCUMENT_INCONSISTENCY"
+    ],
+    "success_score": 10,
+    "operator_interventions": 5
   }
 ]
