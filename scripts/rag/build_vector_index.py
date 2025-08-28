@@ -1,4 +1,4 @@
-# BEGIN FILE: scripts/rag/build_vector_index.py
+0# BEGIN FILE: scripts/rag/build_vector_index.py
 # scripts/rag/build_vector_index.py
 #
 # === SYFTE & ANSVAR ===
@@ -44,7 +44,7 @@ except ImportError:
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 INCLUDED_EXTENSIONS = ['.md', '.py', '.js', '.vue', '.json', '.css', '.html', '.txt', '.toml', '.yml', '.yaml']
-EXCLUDED_DIRS = ['node_modules', '.git', 'dist', '__pycache__', 'vector_store']
+EXCLUDED_DIRS = ['node_modules', '.git', 'dist', '__pycache__', 'vector_store', 'sessions', '_archive', 'public']
 CHUNK_SIZE = 1000
 CHUNK_OVERLAP = 200
 EMBEDDING_MODEL = 'all-MiniLM-L6-v2'
