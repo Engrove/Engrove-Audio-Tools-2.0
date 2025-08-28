@@ -80,7 +80,7 @@ try:
     from modules.ui_styles import CSS_STYLES
     from modules.ui_logic import JS_LOGIC
     from modules.ui_file_tree import JS_FILE_TREE_LOGIC
-    from modules.ui_performance_dashboard import JS_PERFORMANCE_LOGIC
+    from modules.ui_performance_dashboard import PerformanceDashboardUI
     from modules.ui_einstein_search import JS_EINSTEIN_LOGIC
     from modules.ui_protocol_packager import JS_PROTOCOL_PACKAGER
 except ModuleNotFoundError:
@@ -93,7 +93,7 @@ except ModuleNotFoundError:
     from ui_styles import CSS_STYLES
     from ui_logic import JS_LOGIC
     from ui_file_tree import JS_FILE_TREE_LOGIC
-    from ui_performance_dashboard import JS_PERFORMANCE_LOGIC
+    from ui_performance_dashboard import PerformanceDashboardUI
     from ui_einstein_search import JS_EINSTEIN_LOGIC
     from ui_protocol_packager import JS_PROTOCOL_PACKAGER
 
