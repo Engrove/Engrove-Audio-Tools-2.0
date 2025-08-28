@@ -195,5 +195,5 @@ class PerformanceDashboardUI(ttk.Frame):
             self.html_view.configure(state="normal")
             self.html_view.delete("1.0", "end")
             self.html_view.insert("1.0", error_message, ("error",))
-            self.html_view.configure(state="disabled")```
+            self.html_view.configure(state="disabled")
 
