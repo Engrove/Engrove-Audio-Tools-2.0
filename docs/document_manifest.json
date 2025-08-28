@@ -58,6 +58,15 @@
     "sha256": "744f93e94a11a54bc895c47f5c2877502939002a4624350d90e29b8829422681"
   },
   {
+    "file_path": "docs/EP-2025-09-CF3_README.md",
+    "purpose": "t är att etablera en **deterministisk, feltolerant och interaktiv** process för AI-assisterad utveckling.",
+    "keywords": [
+      "ep-2025-09-cf3",
+      "readme"
+    ],
+    "sha256": "515d38d4ec1a87b16317ca756f2d41c4312c980270200e86ecb39268bcf5de3a"
+  },
+  {
     "file_path": "docs/Engrove_Audio_Toolkit_Datainsamlings_och_Berikningssystem.md",
     "purpose": "No purpose statement found.",
     "keywords": [

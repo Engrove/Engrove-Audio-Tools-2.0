@@ -30,17 +30,8 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-27T19:34:22.225516+00:00",
+    "generated_at": "2025-08-28T02:58:40.135933+00:00",
     "nodes": {
-      "src/main.js": {
-        "type": "JavaScript Module",
-        "category": "code",
-        "language": "js",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
       "src/debug.js": {
         "type": "JavaScript Module",
         "category": "code",
@@ -59,7 +50,7 @@
         "dependents_count": 1,
         "criticality_score": 10.0
       },
-      "src/showcase.js": {
+      "src/main.js": {
         "type": "JavaScript Module",
         "category": "code",
         "language": "js",
@@ -68,59 +59,14 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "src/widgets/GlobalFooter/GlobalFooter.vue": {
-        "type": "Vue Component",
+      "src/showcase.js": {
+        "type": "JavaScript Module",
         "category": "code",
-        "language": "vue",
+        "language": "js",
         "exports": [],
         "imports": [],
-        "dependents_count": 1,
-        "criticality_score": 10.0
-      },
-      "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 1,
-        "criticality_score": 10.0
-      },
-      "src/widgets/MobileNavMenu/MobileNavMenu.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 1,
-        "criticality_score": 10.0
-      },
-      "src/widgets/ComparisonTray/ui/ComparisonTray.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 1,
-        "criticality_score": 10.0
-      },
-      "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 1,
-        "criticality_score": 10.0
-      },
-      "src/widgets/GlobalHeader/GlobalHeader.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 1,
-        "criticality_score": 10.0
+        "dependents_count": 0,
+        "criticality_score": 0.0
       },
       "src/app/router.js": {
         "type": "JavaScript Module",
@@ -135,6 +81,15 @@
         "type": "JavaScript Module",
         "category": "code",
         "language": "js",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "src/app/styles/_components.css": {
+        "type": "Unknown",
+        "category": "code",
+        "language": "css",
         "exports": [],
         "imports": [],
         "dependents_count": 0,
@@ -158,241 +113,6 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "src/app/styles/_components.css": {
-        "type": "Unknown",
-        "category": "code",
-        "language": "css",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "src/shared/ui/BaseCheckbox.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 3,
-        "criticality_score": 30.0
-      },
-      "src/shared/ui/BaseSelect.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 1,
-        "criticality_score": 10.0
-      },
-      "src/shared/ui/BaseRadio.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 1,
-        "criticality_score": 10.0
-      },
-      "src/shared/ui/BaseInput.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 3,
-        "criticality_score": 30.0
-      },
-      "src/shared/ui/BaseCanvasTextViewer.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 1,
-        "criticality_score": 10.0
-      },
-      "src/shared/ui/BaseTable.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 2,
-        "criticality_score": 20.0
-      },
-      "src/shared/ui/BaseButton.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 10,
-        "criticality_score": 100.0
-      },
-      "src/shared/ui/Logo.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 1,
-        "criticality_score": 10.0
-      },
-      "src/shared/ui/BaseMultiSelect.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 1,
-        "criticality_score": 10.0
-      },
-      "src/shared/ui/RangeFilter.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 1,
-        "criticality_score": 10.0
-      },
-      "src/shared/ui/BaseModal.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 4,
-        "criticality_score": 40.0
-      },
-      "src/shared/ui/BaseToggle.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 1,
-        "criticality_score": 10.0
-      },
-      "src/features/item-details/ui/ItemDetailModal.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 1,
-        "criticality_score": 10.0
-      },
-      "src/features/density-toggle/ui/DensityToggle.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 2,
-        "criticality_score": 20.0
-      },
-      "src/features/mobile-menu-toggle/model/useMobileMenu.js": {
-        "type": "JavaScript Module",
-        "category": "code",
-        "language": "js",
-        "exports": [
-          {
-            "symbol": "useMobileMenu",
-            "type": "unknown"
-          }
-        ],
-        "imports": [],
-        "dependents_count": 3,
-        "criticality_score": 30.0
-      },
-      "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 1,
-        "criticality_score": 10.0
-      },
-      "src/features/theme-toggle/model/themeStore.js": {
-        "type": "JavaScript Module",
-        "category": "code",
-        "language": "js",
-        "exports": [
-          {
-            "symbol": "useThemeStore",
-            "type": "unknown"
-          }
-        ],
-        "imports": [],
-        "dependents_count": 5,
-        "criticality_score": 50.0
-      },
-      "src/features/theme-toggle/ui/ThemeToggle.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 1,
-        "criticality_score": 10.0
-      },
-      "src/features/license-modal/ui/LicenseModal.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 2,
-        "criticality_score": 20.0
-      },
-      "src/features/comparison-modal/ui/ComparisonModal.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 1,
-        "criticality_score": 10.0
-      },
-      "src/pages/home/HomePage.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 1,
-        "criticality_score": 10.0
-      },
-      "src/pages/license/LicensePage.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "src/pages/data-explorer/DataExplorerPage.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 1,
-        "criticality_score": 10.0
-      },
-      "src/pages/about/AboutPage.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 1,
-        "criticality_score": 10.0
-      },
       "src/entities/comparison/model/comparisonStore.js": {
         "type": "JavaScript Module",
         "category": "code",
@@ -406,6 +126,24 @@
         "imports": [],
         "dependents_count": 2,
         "criticality_score": 20.0
+      },
+      "src/entities/logger/model/loggerStore.js": {
+        "type": "JavaScript Module",
+        "category": "code",
+        "language": "js",
+        "exports": [
+          {
+            "symbol": "IS_DEBUG_MODE",
+            "type": "unknown"
+          },
+          {
+            "symbol": "useLoggerStore",
+            "type": "unknown"
+          }
+        ],
+        "imports": [],
+        "dependents_count": 5,
+        "criticality_score": 50.0
       },
       "src/entities/settings/model/settingsStore.js": {
         "type": "JavaScript Module",
@@ -510,20 +248,6 @@
         "dependents_count": 3,
         "criticality_score": 30.0
       },
-      "src/entities/data-explorer/lib/transformer.js": {
-        "type": "JavaScript Module",
-        "category": "code",
-        "language": "js",
-        "exports": [
-          {
-            "symbol": "transformAndClassifyData",
-            "type": "unknown"
-          }
-        ],
-        "imports": [],
-        "dependents_count": 1,
-        "criticality_score": 10.0
-      },
       "src/entities/data-explorer/lib/filters.js": {
         "type": "JavaScript Module",
         "category": "code",
@@ -542,23 +266,505 @@
         "dependents_count": 1,
         "criticality_score": 10.0
       },
-      "src/entities/logger/model/loggerStore.js": {
+      "src/entities/data-explorer/lib/transformer.js": {
         "type": "JavaScript Module",
         "category": "code",
         "language": "js",
         "exports": [
           {
-            "symbol": "IS_DEBUG_MODE",
+            "symbol": "transformAndClassifyData",
             "type": "unknown"
-          },
+          }
+        ],
+        "imports": [],
+        "dependents_count": 1,
+        "criticality_score": 10.0
+      },
+      "src/features/comparison-modal/ui/ComparisonModal.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 1,
+        "criticality_score": 10.0
+      },
+      "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 1,
+        "criticality_score": 10.0
+      },
+      "src/features/mobile-menu-toggle/model/useMobileMenu.js": {
+        "type": "JavaScript Module",
+        "category": "code",
+        "language": "js",
+        "exports": [
           {
-            "symbol": "useLoggerStore",
+            "symbol": "useMobileMenu",
+            "type": "unknown"
+          }
+        ],
+        "imports": [],
+        "dependents_count": 3,
+        "criticality_score": 30.0
+      },
+      "src/features/license-modal/ui/LicenseModal.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 2,
+        "criticality_score": 20.0
+      },
+      "src/features/item-details/ui/ItemDetailModal.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 1,
+        "criticality_score": 10.0
+      },
+      "src/features/density-toggle/ui/DensityToggle.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 2,
+        "criticality_score": 20.0
+      },
+      "src/features/theme-toggle/ui/ThemeToggle.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 1,
+        "criticality_score": 10.0
+      },
+      "src/features/theme-toggle/model/themeStore.js": {
+        "type": "JavaScript Module",
+        "category": "code",
+        "language": "js",
+        "exports": [
+          {
+            "symbol": "useThemeStore",
             "type": "unknown"
           }
         ],
         "imports": [],
         "dependents_count": 5,
         "criticality_score": 50.0
+      },
+      "src/shared/ui/BaseRadio.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 1,
+        "criticality_score": 10.0
+      },
+      "src/shared/ui/RangeFilter.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 1,
+        "criticality_score": 10.0
+      },
+      "src/shared/ui/BaseModal.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 4,
+        "criticality_score": 40.0
+      },
+      "src/shared/ui/BaseCheckbox.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 3,
+        "criticality_score": 30.0
+      },
+      "src/shared/ui/BaseInput.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 3,
+        "criticality_score": 30.0
+      },
+      "src/shared/ui/BaseButton.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 10,
+        "criticality_score": 100.0
+      },
+      "src/shared/ui/BaseSelect.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 1,
+        "criticality_score": 10.0
+      },
+      "src/shared/ui/BaseCanvasTextViewer.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 1,
+        "criticality_score": 10.0
+      },
+      "src/shared/ui/BaseTable.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 2,
+        "criticality_score": 20.0
+      },
+      "src/shared/ui/BaseToggle.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 1,
+        "criticality_score": 10.0
+      },
+      "src/shared/ui/Logo.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 1,
+        "criticality_score": 10.0
+      },
+      "src/shared/ui/BaseMultiSelect.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 1,
+        "criticality_score": 10.0
+      },
+      "src/pages/home/HomePage.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 1,
+        "criticality_score": 10.0
+      },
+      "src/pages/data-explorer/DataExplorerPage.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 1,
+        "criticality_score": 10.0
+      },
+      "src/pages/license/LicensePage.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "src/pages/about/AboutPage.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 1,
+        "criticality_score": 10.0
+      },
+      "src/widgets/GlobalFooter/GlobalFooter.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 1,
+        "criticality_score": 10.0
+      },
+      "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 1,
+        "criticality_score": 10.0
+      },
+      "src/widgets/ComparisonTray/ui/ComparisonTray.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 1,
+        "criticality_score": 10.0
+      },
+      "src/widgets/MobileNavMenu/MobileNavMenu.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 1,
+        "criticality_score": 10.0
+      },
+      "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 1,
+        "criticality_score": 10.0
+      },
+      "src/widgets/GlobalHeader/GlobalHeader.vue": {
+        "type": "Vue Component",
+        "category": "code",
+        "language": "vue",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 1,
+        "criticality_score": 10.0
+      },
+      "scripts/process_ai_metrics.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [
+          {
+            "symbol": "load_json_file",
+            "type": "function"
+          },
+          {
+            "symbol": "main",
+            "type": "function"
+          }
+        ],
+        "imports": [
+          {
+            "source": "json",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "sys",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "pathlib",
+            "symbols": [
+              "Path"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "typing",
+            "symbols": [
+              "Any",
+              "Union"
+            ],
+            "type": "library_import"
+          }
+        ],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/build_relations_graph.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [
+          {
+            "symbol": "normalize_path",
+            "type": "function"
+          },
+          {
+            "symbol": "resolve_dependency_path",
+            "type": "function"
+          },
+          {
+            "symbol": "analyze_python_ast",
+            "type": "function"
+          },
+          {
+            "symbol": "analyze_javascript_symbols",
+            "type": "function"
+          },
+          {
+            "symbol": "get_file_category",
+            "type": "function"
+          },
+          {
+            "symbol": "analyze_file",
+            "type": "function"
+          },
+          {
+            "symbol": "find_source_files",
+            "type": "function"
+          },
+          {
+            "symbol": "main",
+            "type": "function"
+          }
+        ],
+        "imports": [
+          {
+            "source": "json",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "re",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "ast",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "pathlib",
+            "symbols": [
+              "Path"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "typing",
+            "symbols": [
+              "Dict",
+              "Any",
+              "List",
+              "Union",
+              "Set",
+              "Tuple"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "datetime",
+            "symbols": [
+              "datetime",
+              "timezone"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "sys",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          }
+        ],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/process_ai_instructions.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [
+          {
+            "symbol": "log_error",
+            "type": "function"
+          },
+          {
+            "symbol": "extract_protocol_register",
+            "type": "function"
+          },
+          {
+            "symbol": "main",
+            "type": "function"
+          }
+        ],
+        "imports": [
+          {
+            "source": "json",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "os",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "re",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "sys",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          }
+        ],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/engrove_audio_tools_creator.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
       },
       "scripts/build_document_manifest.py": {
         "type": "Python Script",
@@ -587,6 +793,35 @@
           },
           {
             "source": "hashlib",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "pathlib",
+            "symbols": [
+              "Path"
+            ],
+            "type": "library_import"
+          }
+        ],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/build_session_manifest.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [
+          {
+            "symbol": "main",
+            "type": "function"
+          }
+        ],
+        "imports": [
+          {
+            "source": "json",
             "symbols": [
               "*"
             ],
@@ -800,35 +1035,6 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "scripts/wrap_json_in_html.py": {
-        "type": "Python Script",
-        "category": "code",
-        "language": "py",
-        "exports": [
-          {
-            "symbol": "main",
-            "type": "function"
-          }
-        ],
-        "imports": [
-          {
-            "source": "os",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "sys",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          }
-        ],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
       "scripts/update_core_info.py": {
         "type": "Python Script",
         "category": "code",
@@ -887,80 +1093,17 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "scripts/process_ai_metrics.py": {
+      "scripts/wrap_json_in_html.py": {
         "type": "Python Script",
         "category": "code",
         "language": "py",
         "exports": [
-          {
-            "symbol": "load_json_file",
-            "type": "function"
-          },
           {
             "symbol": "main",
             "type": "function"
           }
         ],
         "imports": [
-          {
-            "source": "json",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "sys",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "pathlib",
-            "symbols": [
-              "Path"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "typing",
-            "symbols": [
-              "Any",
-              "Union"
-            ],
-            "type": "library_import"
-          }
-        ],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "scripts/process_ai_instructions.py": {
-        "type": "Python Script",
-        "category": "code",
-        "language": "py",
-        "exports": [
-          {
-            "symbol": "log_error",
-            "type": "function"
-          },
-          {
-            "symbol": "extract_protocol_register",
-            "type": "function"
-          },
-          {
-            "symbol": "main",
-            "type": "function"
-          }
-        ],
-        "imports": [
-          {
-            "source": "json",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          },
           {
             "source": "os",
             "symbols": [
@@ -969,54 +1112,9 @@
             "type": "library_import"
           },
           {
-            "source": "re",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          },
-          {
             "source": "sys",
             "symbols": [
               "*"
-            ],
-            "type": "library_import"
-          }
-        ],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "scripts/engrove_audio_tools_creator.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "scripts/build_session_manifest.py": {
-        "type": "Python Script",
-        "category": "code",
-        "language": "py",
-        "exports": [
-          {
-            "symbol": "main",
-            "type": "function"
-          }
-        ],
-        "imports": [
-          {
-            "source": "json",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "pathlib",
-            "symbols": [
-              "Path"
             ],
             "type": "library_import"
           }
@@ -1177,7 +1275,188 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "scripts/build_relations_graph.py": {
+      "scripts/modules/ui_file_tree.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/modules/ui_semantic_search.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/modules/ui_protocol_packager.js": {
+        "type": "JavaScript Module",
+        "category": "code",
+        "language": "js",
+        "exports": [
+          {
+            "symbol": "initProtocolPackager",
+            "type": "unknown"
+          }
+        ],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/modules/ui_core_docs_store.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/modules/ui_template.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/modules/data_converter.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [
+          {
+            "symbol": "convert_json_to_msgpack",
+            "type": "function"
+          }
+        ],
+        "imports": [
+          {
+            "source": "json",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "msgpack",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "os",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          }
+        ],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/modules/ui_performance_dashboard.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/modules/ui_logic.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [
+          {
+            "symbol": "get_ui_logic",
+            "type": "function"
+          }
+        ],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/modules/ui_styles.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/modules/ui_einstein_search.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/modules/ui_protocol_packager.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/docs/file_relations.json": {
+        "type": "JSON Config",
+        "category": "configuration",
+        "language": "json",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/history/run.txt": {
+        "type": "Unknown",
+        "category": "documentation",
+        "language": "txt",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/history/heuristics_maintenance.json": {
+        "type": "JSON Config",
+        "category": "configuration",
+        "language": "json",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/history/P-HR_v2.2.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/history/P-HR_v2.1.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/history/historical_reconstruction_builder.py": {
         "type": "Python Script",
         "category": "code",
         "language": "py",
@@ -1191,15 +1470,11 @@
             "type": "function"
           },
           {
-            "symbol": "analyze_python_ast",
+            "symbol": "get_json_type",
             "type": "function"
           },
           {
-            "symbol": "analyze_javascript_symbols",
-            "type": "function"
-          },
-          {
-            "symbol": "get_file_category",
+            "symbol": "infer_schema_from_data",
             "type": "function"
           },
           {
@@ -1231,13 +1506,6 @@
             "type": "library_import"
           },
           {
-            "source": "ast",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          },
-          {
             "source": "pathlib",
             "symbols": [
               "Path"
@@ -1251,8 +1519,7 @@
               "Any",
               "List",
               "Union",
-              "Set",
-              "Tuple"
+              "Set"
             ],
             "type": "library_import"
           },
@@ -1263,24 +1530,8 @@
               "timezone"
             ],
             "type": "library_import"
-          },
-          {
-            "source": "sys",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
           }
         ],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "scripts/docs/file_relations.json": {
-        "type": "JSON Config",
-        "category": "configuration",
-        "language": "json",
-        "exports": [],
-        "imports": [],
         "dependents_count": 0,
         "criticality_score": 0.0
       },
@@ -1448,257 +1699,6 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "scripts/history/P-HR_v2.1.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "scripts/history/run.txt": {
-        "type": "Unknown",
-        "category": "documentation",
-        "language": "txt",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "scripts/history/historical_reconstruction_builder.py": {
-        "type": "Python Script",
-        "category": "code",
-        "language": "py",
-        "exports": [
-          {
-            "symbol": "normalize_path",
-            "type": "function"
-          },
-          {
-            "symbol": "resolve_dependency_path",
-            "type": "function"
-          },
-          {
-            "symbol": "get_json_type",
-            "type": "function"
-          },
-          {
-            "symbol": "infer_schema_from_data",
-            "type": "function"
-          },
-          {
-            "symbol": "analyze_file",
-            "type": "function"
-          },
-          {
-            "symbol": "find_source_files",
-            "type": "function"
-          },
-          {
-            "symbol": "main",
-            "type": "function"
-          }
-        ],
-        "imports": [
-          {
-            "source": "json",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "re",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "pathlib",
-            "symbols": [
-              "Path"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "typing",
-            "symbols": [
-              "Dict",
-              "Any",
-              "List",
-              "Union",
-              "Set"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "datetime",
-            "symbols": [
-              "datetime",
-              "timezone"
-            ],
-            "type": "library_import"
-          }
-        ],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "scripts/history/heuristics_maintenance.json": {
-        "type": "JSON Config",
-        "category": "configuration",
-        "language": "json",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "scripts/history/P-HR_v2.2.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "scripts/modules/ui_performance_dashboard.py": {
-        "type": "Python Script",
-        "category": "code",
-        "language": "py",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "scripts/modules/ui_protocol_packager.py": {
-        "type": "Python Script",
-        "category": "code",
-        "language": "py",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "scripts/modules/ui_core_docs_store.py": {
-        "type": "Python Script",
-        "category": "code",
-        "language": "py",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "scripts/modules/ui_protocol_packager.js": {
-        "type": "JavaScript Module",
-        "category": "code",
-        "language": "js",
-        "exports": [
-          {
-            "symbol": "initProtocolPackager",
-            "type": "unknown"
-          }
-        ],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "scripts/modules/ui_styles.py": {
-        "type": "Python Script",
-        "category": "code",
-        "language": "py",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "scripts/modules/ui_template.py": {
-        "type": "Python Script",
-        "category": "code",
-        "language": "py",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "scripts/modules/ui_logic.py": {
-        "type": "Python Script",
-        "category": "code",
-        "language": "py",
-        "exports": [
-          {
-            "symbol": "get_ui_logic",
-            "type": "function"
-          }
-        ],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "scripts/modules/ui_semantic_search.py": {
-        "type": "Python Script",
-        "category": "code",
-        "language": "py",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "scripts/modules/ui_file_tree.py": {
-        "type": "Python Script",
-        "category": "code",
-        "language": "py",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "scripts/modules/data_converter.py": {
-        "type": "Python Script",
-        "category": "code",
-        "language": "py",
-        "exports": [
-          {
-            "symbol": "convert_json_to_msgpack",
-            "type": "function"
-          }
-        ],
-        "imports": [
-          {
-            "source": "json",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "msgpack",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          },
-          {
-            "source": "os",
-            "symbols": [
-              "*"
-            ],
-            "type": "library_import"
-          }
-        ],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "scripts/modules/ui_einstein_search.py": {
-        "type": "Python Script",
-        "category": "code",
-        "language": "py",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
       "scripts/plugins/patch_center.py": {
         "type": "Python Script",
         "category": "code",
@@ -1717,7 +1717,16 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "public/images/placeholders/placeholder.txt": {
+      "public/data/data-filters-map.json": {
+        "type": "Unknown",
+        "category": "data",
+        "language": "json",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "public/data/ai_audit_instruction.txt": {
         "type": "Unknown",
         "category": "documentation",
         "language": "txt",
@@ -1726,7 +1735,43 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "public/data/pickups-static-estimation-rules.json": {
+      "public/data/cartridges-classifications.json": {
+        "type": "Unknown",
+        "category": "data",
+        "language": "json",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "public/data/cartridges-static-estimation-rules.json": {
+        "type": "Unknown",
+        "category": "data",
+        "language": "json",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "public/data/tonearms-data.json": {
+        "type": "Unknown",
+        "category": "data",
+        "language": "json",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "public/data/cartridges-estimation-rules.json": {
+        "type": "Unknown",
+        "category": "data",
+        "language": "json",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "public/data/pickups-estimation-rules.json": {
         "type": "Unknown",
         "category": "data",
         "language": "json",
@@ -1753,33 +1798,6 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "public/data/cartridges-data.json": {
-        "type": "Unknown",
-        "category": "data",
-        "language": "json",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "public/data/data-filters-map.json": {
-        "type": "Unknown",
-        "category": "data",
-        "language": "json",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "public/data/cartridges-classifications.json": {
-        "type": "Unknown",
-        "category": "data",
-        "language": "json",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
       "public/data/pickups-confidence-levels.json": {
         "type": "Unknown",
         "category": "data",
@@ -1789,7 +1807,7 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "public/data/cartridges-static-estimation-rules.json": {
+      "public/data/pickups-static-estimation-rules.json": {
         "type": "Unknown",
         "category": "data",
         "language": "json",
@@ -1798,43 +1816,7 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "public/data/tonearms-classifications.json": {
-        "type": "Unknown",
-        "category": "data",
-        "language": "json",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "public/data/ai_audit_instruction.txt": {
-        "type": "Unknown",
-        "category": "documentation",
-        "language": "txt",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "public/data/cartridges-estimation-rules.json": {
-        "type": "Unknown",
-        "category": "data",
-        "language": "json",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "public/data/pickups-estimation-rules.json": {
-        "type": "Unknown",
-        "category": "data",
-        "language": "json",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "public/data/tonearms-data.json": {
+      "public/data/cartridges-data.json": {
         "type": "Unknown",
         "category": "data",
         "language": "json",
@@ -1852,19 +1834,28 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      ".github/workflows/ci.yml": {
-        "type": "YAML Config",
-        "category": "configuration",
-        "language": "yml",
+      "public/data/tonearms-classifications.json": {
+        "type": "Unknown",
+        "category": "data",
+        "language": "json",
         "exports": [],
         "imports": [],
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "docs/AR_Protractor_Teknisk_Dokumentation.md": {
-        "type": "Markdown Document",
+      "public/images/placeholders/placeholder.txt": {
+        "type": "Unknown",
         "category": "documentation",
-        "language": "md",
+        "language": "txt",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      ".github/workflows/ci.yml": {
+        "type": "YAML Config",
+        "category": "configuration",
+        "language": "yml",
         "exports": [],
         "imports": [],
         "dependents_count": 0,
@@ -1888,15 +1879,6 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "docs/core_file_info.json": {
-        "type": "JSON Config",
-        "category": "configuration",
-        "language": "json",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
       "docs/AR_Protractor_Teknisk_Analys.md": {
         "type": "Markdown Document",
         "category": "documentation",
@@ -1906,106 +1888,7 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "docs/document_manifest.json": {
-        "type": "JSON Config",
-        "category": "configuration",
-        "language": "json",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/HomePage_Tekniska_Detaljer.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/session_manifest.json": {
-        "type": "JSON Config",
-        "category": "configuration",
-        "language": "json",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/Global_UI-Standard_Komponentspecifikation.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/ai_protocol_performance.json": {
-        "type": "JSON Config",
-        "category": "configuration",
-        "language": "json",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
       "docs/Engrove_Audio_Toolkit_v2.0_Analys.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/Chatthistorik.json": {
-        "type": "JSON Config",
-        "category": "configuration",
-        "language": "json",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/Governance_Driven_Component_Logic_Analysis.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/Blueprint_för_Migrering_v1_till_v2.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/Global_UI-Standard_för_Engrove-plattformen.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/UI_Testverktyg_Showcase.html.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/Testing_Strategy.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
@@ -2023,7 +1906,88 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "docs/AR_Protractor_Förbättrad_Precision.md": {
+      "docs/EP-2025-09-CF3_README.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/Blueprint_för_Migrering_v1_till_v2.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/Chatthistorik.json": {
+        "type": "JSON Config",
+        "category": "configuration",
+        "language": "json",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/Testing_Strategy.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/Global_UI-Standard_Komponentspecifikation.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/document_manifest.json": {
+        "type": "JSON Config",
+        "category": "configuration",
+        "language": "json",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/core_file_info.json": {
+        "type": "JSON Config",
+        "category": "configuration",
+        "language": "json",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/Manufacturers_URL_Database_Instruktion.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/HomePage_Tekniska_Detaljer.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/AR_Protractor_Teknisk_Dokumentation.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
@@ -2050,7 +2014,16 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "docs/Wow_Effekten_och_UX_Strategi.md": {
+      "docs/ai_protocol_performance.json": {
+        "type": "JSON Config",
+        "category": "configuration",
+        "language": "json",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/AR_Protractor_Förbättrad_Precision.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
@@ -2059,7 +2032,25 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "docs/Databehandlingskedja_för_Engrove_Audio_Toolkit.md": {
+      "docs/session_manifest.json": {
+        "type": "JSON Config",
+        "category": "configuration",
+        "language": "json",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/Governance_Driven_Component_Logic_Analysis.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/Wow_Effekten_och_UX_Strategi.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
@@ -2077,7 +2068,7 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "docs/Manufacturers_URL_Database_Instruktion.md": {
+      "docs/UI_Testverktyg_Showcase.html.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
@@ -2086,16 +2077,7 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "docs/ai_protocols/full_code_chat_contract.txt": {
-        "type": "Unknown",
-        "category": "documentation",
-        "language": "txt",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/ai_protocols/Micro_Retrospective.md": {
+      "docs/Global_UI-Standard_för_Engrove-plattformen.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
@@ -2104,7 +2086,7 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "docs/ai_protocols/Diff_Protocol_v3.md": {
+      "docs/Databehandlingskedja_för_Engrove_Audio_Toolkit.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
@@ -2113,7 +2095,7 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "docs/ai_protocols/Manuell_Patch_Protokoll.md": {
+      "docs/ai_protocols/Hallucination_Leaderboard_Check.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
@@ -2122,7 +2104,7 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "docs/ai_protocols/Multi_Sample_Protokoll.md": {
+      "docs/ai_protocols/Sandbox_Execution_Protokoll.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
@@ -2131,7 +2113,7 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "docs/ai_protocols/bygglogg_chathistorik.md": {
+      "docs/ai_protocols/Beroendeanalys_Protokoll.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
@@ -2149,7 +2131,7 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "docs/ai_protocols/context_instruction.md": {
+      "docs/ai_protocols/LLM_Judge_Protokoll.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
@@ -2158,25 +2140,7 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "docs/ai_protocols/HITL_Interrupt_Points.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/ai_protocols/MAS_Architecture_Guide.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/ai_protocols/Uppgifts-Kontrakt_Protokoll.md": {
+      "docs/ai_protocols/Stalemate_Protocol.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
@@ -2203,96 +2167,6 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "docs/ai_protocols/Autonomy_Charter.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/ai_protocols/development_domains.json": {
-        "type": "JSON Config",
-        "category": "configuration",
-        "language": "json",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/ai_protocols/K-MOD_Protokoll.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/ai_protocols/ai_config.json": {
-        "type": "JSON Config",
-        "category": "configuration",
-        "language": "json",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/ai_protocols/document_classifications.json": {
-        "type": "JSON Config",
-        "category": "configuration",
-        "language": "json",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/ai_protocols/Mappstruktur_och_Arbetsflöde.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/ai_protocols/Stalemate_Protocol.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/ai_protocols/DynamicProtocols.json": {
-        "type": "JSON Config",
-        "category": "configuration",
-        "language": "json",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/ai_protocols/AI_JSON_standard.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/ai_protocols/Hallucination_Leaderboard_Check.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
       "docs/ai_protocols/In-Session_Amnesiac_Reset_Protocol.md": {
         "type": "Markdown Document",
         "category": "documentation",
@@ -2302,25 +2176,7 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "docs/ai_protocols/Help_me_God_Protokoll.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/ai_protocols/Confidence_Protocol.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/ai_protocols/Levande_Kontext_Protokoll.md": {
+      "docs/ai_protocols/HITL_Interrupt_Points.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
@@ -2338,16 +2194,7 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "docs/ai_protocols/Beroendeanalys_Protokoll.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/ai_protocols/Grundbulten_Protokoll.md": {
+      "docs/ai_protocols/Diff_Protocol_v3.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
@@ -2365,34 +2212,7 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "docs/ai_protocols/frankensteen_persona.v1.0.json": {
-        "type": "JSON Config",
-        "category": "configuration",
-        "language": "json",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/ai_protocols/System_Integrity_Check_Protocol.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/ai_protocols/LLM_Judge_Protokoll.md": {
-        "type": "Markdown Document",
-        "category": "documentation",
-        "language": "md",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 0,
-        "criticality_score": 0.0
-      },
-      "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md": {
+      "docs/ai_protocols/Grundbulten_Protokoll.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
@@ -2410,6 +2230,78 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
+      "docs/ai_protocols/Mappstruktur_och_Arbetsflöde.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/DynamicProtocols.json": {
+        "type": "JSON Config",
+        "category": "configuration",
+        "language": "json",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/Uppgifts-Kontrakt_Protokoll.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/Levande_Kontext_Protokoll.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/Help_me_God_Protokoll.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/document_classifications.json": {
+        "type": "JSON Config",
+        "category": "configuration",
+        "language": "json",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/K-MOD_Protokoll.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
       "docs/ai_protocols/md2yml_protocol_loader.md": {
         "type": "Markdown Document",
         "category": "documentation",
@@ -2419,10 +2311,46 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
-      "docs/ai_protocols/Sandbox_Execution_Protokoll.md": {
+      "docs/ai_protocols/Autonomy_Charter.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/Micro_Retrospective.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/MAS_Architecture_Guide.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/AI_JSON_standard.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/ai_config.json": {
+        "type": "JSON Config",
+        "category": "configuration",
+        "language": "json",
         "exports": [],
         "imports": [],
         "dependents_count": 0,
@@ -2438,6 +2366,87 @@
         "criticality_score": 0.0
       },
       "docs/ai_protocols/AI_Dynamic_Protocols.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/bygglogg_chathistorik.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/Manuell_Patch_Protokoll.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/Multi_Sample_Protokoll.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/frankensteen_persona.v1.0.json": {
+        "type": "JSON Config",
+        "category": "configuration",
+        "language": "json",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/Confidence_Protocol.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/full_code_chat_contract.txt": {
+        "type": "Unknown",
+        "category": "documentation",
+        "language": "txt",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/System_Integrity_Check_Protocol.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/development_domains.json": {
+        "type": "JSON Config",
+        "category": "configuration",
+        "language": "json",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "docs/ai_protocols/context_instruction.md": {
         "type": "Markdown Document",
         "category": "documentation",
         "language": "md",
@@ -2547,6 +2556,186 @@
         "type": "code_import"
       },
       {
+        "from": "src/app/router.js",
+        "to": "src/pages/home/HomePage.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/app/router.js",
+        "to": "src/pages/about/AboutPage.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/app/router.js",
+        "to": "src/pages/data-explorer/DataExplorerPage.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/app/main.js",
+        "to": "src/App.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/app/main.js",
+        "to": "src/app/router.js",
+        "type": "code_import"
+      },
+      {
+        "from": "src/entities/data-explorer/model/explorerStore.js",
+        "to": "src/entities/data-explorer/api/fetchExplorerData.js",
+        "type": "code_import"
+      },
+      {
+        "from": "src/entities/data-explorer/model/explorerStore.js",
+        "to": "src/entities/data-explorer/lib/transformer.js",
+        "type": "code_import"
+      },
+      {
+        "from": "src/entities/data-explorer/model/explorerStore.js",
+        "to": "src/entities/data-explorer/lib/filters.js",
+        "type": "code_import"
+      },
+      {
+        "from": "src/entities/data-explorer/model/explorerStore.js",
+        "to": "src/entities/logger/model/loggerStore.js",
+        "type": "code_import"
+      },
+      {
+        "from": "src/features/comparison-modal/ui/ComparisonModal.vue",
+        "to": "src/shared/ui/BaseModal.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/features/comparison-modal/ui/ComparisonModal.vue",
+        "to": "src/shared/ui/BaseTable.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
+        "to": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
+        "type": "code_import"
+      },
+      {
+        "from": "src/features/license-modal/ui/LicenseModal.vue",
+        "to": "src/shared/ui/BaseModal.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/features/item-details/ui/ItemDetailModal.vue",
+        "to": "src/shared/ui/BaseModal.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/features/density-toggle/ui/DensityToggle.vue",
+        "to": "src/entities/settings/model/settingsStore.js",
+        "type": "code_import"
+      },
+      {
+        "from": "src/features/density-toggle/ui/DensityToggle.vue",
+        "to": "src/shared/ui/BaseButton.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/features/theme-toggle/ui/ThemeToggle.vue",
+        "to": "src/features/theme-toggle/model/themeStore.js",
+        "type": "code_import"
+      },
+      {
+        "from": "src/features/theme-toggle/ui/ThemeToggle.vue",
+        "to": "src/shared/ui/BaseButton.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/shared/ui/RangeFilter.vue",
+        "to": "src/shared/ui/BaseInput.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/shared/ui/BaseCanvasTextViewer.vue",
+        "to": "src/features/theme-toggle/model/themeStore.js",
+        "type": "code_import"
+      },
+      {
+        "from": "src/shared/ui/BaseTable.vue",
+        "to": "src/shared/ui/BaseCheckbox.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/shared/ui/BaseMultiSelect.vue",
+        "to": "src/shared/ui/BaseCheckbox.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/pages/home/HomePage.vue",
+        "to": "src/features/theme-toggle/model/themeStore.js",
+        "type": "code_import"
+      },
+      {
+        "from": "src/pages/home/HomePage.vue",
+        "to": "src/shared/ui/BaseButton.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/pages/data-explorer/DataExplorerPage.vue",
+        "to": "src/entities/data-explorer/model/explorerStore.js",
+        "type": "code_import"
+      },
+      {
+        "from": "src/pages/data-explorer/DataExplorerPage.vue",
+        "to": "src/entities/comparison/model/comparisonStore.js",
+        "type": "code_import"
+      },
+      {
+        "from": "src/pages/data-explorer/DataExplorerPage.vue",
+        "to": "src/entities/logger/model/loggerStore.js",
+        "type": "code_import"
+      },
+      {
+        "from": "src/pages/data-explorer/DataExplorerPage.vue",
+        "to": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/pages/data-explorer/DataExplorerPage.vue",
+        "to": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/pages/data-explorer/DataExplorerPage.vue",
+        "to": "src/features/item-details/ui/ItemDetailModal.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/pages/data-explorer/DataExplorerPage.vue",
+        "to": "src/features/comparison-modal/ui/ComparisonModal.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/pages/data-explorer/DataExplorerPage.vue",
+        "to": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/pages/data-explorer/DataExplorerPage.vue",
+        "to": "src/shared/ui/BaseButton.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/pages/license/LicensePage.vue",
+        "to": "src/shared/ui/BaseCanvasTextViewer.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/pages/about/AboutPage.vue",
+        "to": "src/shared/ui/BaseButton.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/pages/about/AboutPage.vue",
+        "to": "src/features/license-modal/ui/LicenseModal.vue",
+        "type": "code_import"
+      },
+      {
         "from": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
         "to": "src/entities/data-explorer/model/explorerStore.js",
         "type": "code_import"
@@ -2572,11 +2761,6 @@
         "type": "code_import"
       },
       {
-        "from": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
-        "to": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
-        "type": "code_import"
-      },
-      {
         "from": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
         "to": "src/entities/comparison/model/comparisonStore.js",
         "type": "code_import"
@@ -2594,6 +2778,11 @@
       {
         "from": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
         "to": "src/shared/ui/BaseButton.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
+        "to": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
         "type": "code_import"
       },
       {
@@ -2644,186 +2833,6 @@
       {
         "from": "src/widgets/GlobalHeader/GlobalHeader.vue",
         "to": "src/shared/ui/BaseButton.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/app/router.js",
-        "to": "src/pages/home/HomePage.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/app/router.js",
-        "to": "src/pages/about/AboutPage.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/app/router.js",
-        "to": "src/pages/data-explorer/DataExplorerPage.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/app/main.js",
-        "to": "src/App.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/app/main.js",
-        "to": "src/app/router.js",
-        "type": "code_import"
-      },
-      {
-        "from": "src/shared/ui/BaseCanvasTextViewer.vue",
-        "to": "src/features/theme-toggle/model/themeStore.js",
-        "type": "code_import"
-      },
-      {
-        "from": "src/shared/ui/BaseTable.vue",
-        "to": "src/shared/ui/BaseCheckbox.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/shared/ui/BaseMultiSelect.vue",
-        "to": "src/shared/ui/BaseCheckbox.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/shared/ui/RangeFilter.vue",
-        "to": "src/shared/ui/BaseInput.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/features/item-details/ui/ItemDetailModal.vue",
-        "to": "src/shared/ui/BaseModal.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/features/density-toggle/ui/DensityToggle.vue",
-        "to": "src/entities/settings/model/settingsStore.js",
-        "type": "code_import"
-      },
-      {
-        "from": "src/features/density-toggle/ui/DensityToggle.vue",
-        "to": "src/shared/ui/BaseButton.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
-        "to": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
-        "type": "code_import"
-      },
-      {
-        "from": "src/features/theme-toggle/ui/ThemeToggle.vue",
-        "to": "src/features/theme-toggle/model/themeStore.js",
-        "type": "code_import"
-      },
-      {
-        "from": "src/features/theme-toggle/ui/ThemeToggle.vue",
-        "to": "src/shared/ui/BaseButton.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/features/license-modal/ui/LicenseModal.vue",
-        "to": "src/shared/ui/BaseModal.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/features/comparison-modal/ui/ComparisonModal.vue",
-        "to": "src/shared/ui/BaseModal.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/features/comparison-modal/ui/ComparisonModal.vue",
-        "to": "src/shared/ui/BaseTable.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/pages/home/HomePage.vue",
-        "to": "src/features/theme-toggle/model/themeStore.js",
-        "type": "code_import"
-      },
-      {
-        "from": "src/pages/home/HomePage.vue",
-        "to": "src/shared/ui/BaseButton.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/pages/license/LicensePage.vue",
-        "to": "src/shared/ui/BaseCanvasTextViewer.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/pages/data-explorer/DataExplorerPage.vue",
-        "to": "src/entities/data-explorer/model/explorerStore.js",
-        "type": "code_import"
-      },
-      {
-        "from": "src/pages/data-explorer/DataExplorerPage.vue",
-        "to": "src/entities/comparison/model/comparisonStore.js",
-        "type": "code_import"
-      },
-      {
-        "from": "src/pages/data-explorer/DataExplorerPage.vue",
-        "to": "src/entities/logger/model/loggerStore.js",
-        "type": "code_import"
-      },
-      {
-        "from": "src/pages/data-explorer/DataExplorerPage.vue",
-        "to": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/pages/data-explorer/DataExplorerPage.vue",
-        "to": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/pages/data-explorer/DataExplorerPage.vue",
-        "to": "src/features/item-details/ui/ItemDetailModal.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/pages/data-explorer/DataExplorerPage.vue",
-        "to": "src/features/comparison-modal/ui/ComparisonModal.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/pages/data-explorer/DataExplorerPage.vue",
-        "to": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/pages/data-explorer/DataExplorerPage.vue",
-        "to": "src/shared/ui/BaseButton.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/pages/about/AboutPage.vue",
-        "to": "src/shared/ui/BaseButton.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/pages/about/AboutPage.vue",
-        "to": "src/features/license-modal/ui/LicenseModal.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/entities/data-explorer/model/explorerStore.js",
-        "to": "src/entities/data-explorer/api/fetchExplorerData.js",
-        "type": "code_import"
-      },
-      {
-        "from": "src/entities/data-explorer/model/explorerStore.js",
-        "to": "src/entities/data-explorer/lib/transformer.js",
-        "type": "code_import"
-      },
-      {
-        "from": "src/entities/data-explorer/model/explorerStore.js",
-        "to": "src/entities/data-explorer/lib/filters.js",
-        "type": "code_import"
-      },
-      {
-        "from": "src/entities/data-explorer/model/explorerStore.js",
-        "to": "src/entities/logger/model/loggerStore.js",
         "type": "code_import"
       }
     ]
