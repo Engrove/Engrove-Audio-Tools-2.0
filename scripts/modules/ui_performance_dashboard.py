@@ -82,7 +82,7 @@ class PerformanceDashboardUI(ttk.Frame):
         # TODO: Skapa JavaScript-blocket för att rendera grafer och data
         
         # Temporär HTML för att visa att data laddats
-        html_output = f\"\"\"
+        html_output = f"""
         <!DOCTYPE html>
         <html>
         <head>
@@ -93,7 +93,7 @@ class PerformanceDashboardUI(ttk.Frame):
             <pre>{json.dumps(data, indent=2)}</pre>
         </body>
         </html>
-        \"\"\"
+        """
         return html_output
 
     def load_and_display_dashboard(self):
