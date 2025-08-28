@@ -19,7 +19,7 @@
   {
   "protocolId": "DP-DEBUG-HMG",
   "file_path": "docs/ai_protocols/Help_me_God_Protokoll.md",
-  "$schema": "docs/ai_protocols/schemas/AI_Core_Instruction.schema.json",
+  "$schema": "docs/ai_protocols/schemas/Help_me_God_Protokoll.schema.json",
   "title": "\"Help me God\" – Felsökningsprotokoll",
   "version": "2.2",
   "status": "active",
