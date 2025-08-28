@@ -6,15 +6,6 @@
 # för AI Context Builder. Skriptet injicerar data som JS-litteraler och
 # synkar med modulernas platshållare.
 #
-# Huvudapplikation och startpunkt för Engrove Audio Tools Creator.
-#
-# Detta skript bygger och kör det grafiska användargränssnittet (GUI) med
-# CustomTkinter. Det agerar som en orkestrerare som importerar, instansierar
-# och sammanfogar de olika UI-komponenterna från `scripts/modules/`.
-#
-# För en fullständig teknisk beskrivning, systemarkitektur och dataflöde,
-# se den tillhörande dokumentationsfilen: scripts/engrove_audio_tools_creator.md
-#
 # === HISTORIK ===
 # * v1.0 (2025-08-15): Initial skapelse.
 # * v5.4 (2025-08-16): (EXTERN DOM #2) Korrigerat semikolon-injektion.
@@ -80,7 +71,7 @@ try:
     from modules.ui_styles import CSS_STYLES
     from modules.ui_logic import JS_LOGIC
     from modules.ui_file_tree import JS_FILE_TREE_LOGIC
-    from modules.ui_performance_dashboard import PerformanceDashboardUI
+    from modules.ui_performance_dashboard import JS_PERFORMANCE_LOGIC
     from modules.ui_einstein_search import JS_EINSTEIN_LOGIC
     from modules.ui_protocol_packager import JS_PROTOCOL_PACKAGER
 except ModuleNotFoundError:
@@ -93,7 +84,7 @@ except ModuleNotFoundError:
     from ui_styles import CSS_STYLES
     from ui_logic import JS_LOGIC
     from ui_file_tree import JS_FILE_TREE_LOGIC
-    from ui_performance_dashboard import PerformanceDashboardUI
+    from ui_performance_dashboard import JS_PERFORMANCE_LOGIC
     from ui_einstein_search import JS_EINSTEIN_LOGIC
     from ui_protocol_packager import JS_PROTOCOL_PACKAGER
 
