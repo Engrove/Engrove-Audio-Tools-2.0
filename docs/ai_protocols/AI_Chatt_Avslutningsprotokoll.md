@@ -90,7 +90,7 @@ Före generering av JSON ska du:
 }
 ```
 
-* Exempel på första JSON-artefakten:
+**Exempel på första JSON-artefakten**
 ```json
 {
   "schema_version": "DJTA v1.1",
