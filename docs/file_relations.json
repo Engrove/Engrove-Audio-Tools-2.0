@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-28T17:50:38.540141+00:00",
+    "generated_at": "2025-08-28T18:44:55.935391+00:00",
     "nodes": {
       "src/debug.js": {
         "type": "JavaScript Module",
