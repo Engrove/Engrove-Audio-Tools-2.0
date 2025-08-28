@@ -13,6 +13,8 @@ beautifulsoup4==4.12.3
 msgpack==1.0.8
 jsonschema==4.23.0
 
+customtkinter
+
 # --- Einstein RAG System Dependencies ---
 sentence-transformers
 torch
