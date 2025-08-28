@@ -23,6 +23,7 @@
 # * v5.5 (2025-08-18): Uppdaterat ID för 'Skapa Filer'-knappen.
 # * v6.0 (2025-08-23): (ARKITEKTURÄNDRING) Infört platshållare för "Data Islands" i <head> för robust datainjektion.
 # * v6.1 (2025-08-25): Uppdaterat knapptexter och ID för att göra Protokoll/Fil-bundle-valet explicit.
+# * v6.2 (2025-08-28): Lade till knappen "Spara Core val" för att persistera anpassade kärndokumentlistor.
 # * SHA256_LF: a8e0d4c7b8e5a6f2b1d3e4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b3c2d5e4
 #
 # === TILLÄMPADE REGLER (Frankensteen v5.13) ===
@@ -68,7 +69,7 @@ HTML_TEMPLATE = """
                 <div class=\"ribbon-group\">\
                     <button id=\"clear-session\">Töm Val & Output</button>\
                     <button id=\"refresh-data\">Ladda om Data</button>\
-                </div>
+                </div>\
                 <div class=\"ribbon-group\">\
                     <button id=\"run-analysis\">Kör Analys</button>\
                     <button id=\"export-overview\">Exportera Projektöversikt</button>\
@@ -80,7 +81,8 @@ HTML_TEMPLATE = """
                     <button id=\"select-all\">Markera Alla</button>\
                     <button id=\"deselect-all\">Avmarkera Alla</button>\
                     <button id=\"select-core\">Markera Kärndokument</button>\
-                </div>
+                    <button id=\"save-core-selection\">Spara Core val</button>\
+                </div>\
                 <div class=\"ribbon-group\">\
                     <button id=\"create-context-btn\">Skapa Fil-bundle</button>\
                     <button id=\"create-files-btn\">Skapa Protokoll-bundle</button>\
@@ -94,22 +96,22 @@ HTML_TEMPLATE = """
                 <div class=\"ribbon-group\">\
                     <input type=\"search\" id=\"einstein-search-input\" placeholder=\"Ställ en semantisk fråga...\">\
                     <button id=\"einstein-search-btn\">Sök</button>\
-                </div>
+                </div>\
                  <div class=\"ribbon-group\">\
                     <span id=\"einstein-status-bar\" class=\"small\">Redo.</span>\
                 </div>\
-            </div>
+            </div>\
             <div id=\"tab-performance\" class=\"ribbon-pane\">\
                 <div class=\"ribbon-group\">\
                     <button>Uppdatera Data</button>\
                 </div>\
-            </div>
+            </div>\
             <div id=\"tab-installningar\" class=\"ribbon-pane\">\
                  <div class=\"ribbon-group\">\
                     <button>Mörkt Tema</button>\
                     <button>Ljust Tema</button>\
                 </div>\
-            </div>
+            </div>\
             <div id=\"tab-hjalp\" class=\"ribbon-pane\">\
                 <div class=\"ribbon-group\">\
                     <button>Dokumentation</button>\
