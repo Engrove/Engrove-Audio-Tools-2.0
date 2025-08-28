@@ -395,41 +395,20 @@
         }
       ]
     },
+
+
+
+
+
     "pcp": {
-      "protocol_id": "P-CP-1.0",
-      "version": "1.0",
-      "title": "Context Pinning Protocol",
-      "strict_mode": true,
-      "mode": "literal",
-      "description": "A meta-protocol for temporarily locking a data artifact (e.g., a code file) into the context as a high-priority, canonical source of truth, exempt from standard context window eviction.",
-      "state_management": {
-        "storage": "session.pinned_artifacts",
-        "default_state": [],
-        "max_pins": 5
-      },
-      "commands": [
-        {
-          "command": "!pin-context",
-          "params": [ { "name": "file_path", "type": "string", "required": true } ],
-          "action": "ADD_TO_STATE",
-          "response_template": "BEKRÄFTAT: `Context Pinning Protocol` är nu aktivt för `{{file_path}}`. Denna fil kommer att användas som den kanoniska referensen för alla efterföljande operationer."
-        },
-        {
-          "command": "!release-context",
-          "params": [ { "name": "file_path", "type": "string", "required": true } ],
-          "action": "REMOVE_FROM_STATE",
-          "response_template": "BEKRÄFTAT: `Context Pinning Protocol` är nu deaktiverat för `{{file_path}}`. Filen kommer åter att hanteras som standardkontext."
-        }
-      ],
-      "psv_integration": {
-        "hook_point": "before_step_3",
-        "action_description": "For each path in `session.pinned_artifacts`, perform a strict consistency check. If the prompt's subject artifact or intended modifications conflict with a pinned file, the protocol must report the conflict and escalate.",
-        "on_conflict": {
-          "escalate_to": "DT-2",
-          "response_template": "[PINNED_CONTEXT_VALIDATION]: KONFLIKT IDENTIFIERAD.\n\nDin instruktion står i konflikt med den pinnade versionen av `{{conflicting_file}}`.\n\nBeslut krävs (DT-2):\n1. Ignorera den pinnade versionen och fortsätt med den nya instruktionen?\n2. Avbryt och respektera den pinnade versionen?"
-        }
-      }
-    }
+{ "protocol_id": "P-CP-1.1", "version": "1.1", "title": "Context Pinning Protocol", "strict_mode": true, "mode": "literal", "description": "A meta-protocol for temporarily locking up to five data artifacts (e.g., code files) into the context as high-priority, canonical sources of truth, exempt from standard context window eviction during a debugging session.", "state_management": { "storage": "session.pinned_artifacts", "default_state": [], "max_pins": 5, "deduplicate": true }, "commands": [ { "command": "!pin-context", "params": [ { "name": "file_path", "type": "string", "required": true } ], "action": "ADD_TO_STATE", "preconditions": { "validate_exists_in_index": true, "validate_checksum_if_provided": true, "on_overflow": "ERROR_MAX_PINS_REACHED" }, "response_template": "BEKRÄFTAT: Context Pinning Protocol är nu aktivt för {{file_path}}. Denna fil kommer att användas som den kanoniska referensen för efterföljande operationer." }, { "command": "!release-context", "params": [ { "name": "file_path", "type": "string", "required": true } ], "action": "REMOVE_FROM_STATE", "response_template": "BEKRÄFTAT: Context Pinning Protocol är nu deaktiverat för {{file_path}}. Filen hanteras åter som standardkontext." }, { "command": "!list-context", "params": [], "action": "LIST_STATE", "response_template": "AKTIVA PINNAR ({{count}}/5):\n{{#each session.pinned_artifacts}}\n- {{this.file_path}} (sha256: {{this.base_checksum_sha256}})\n{{/each}}" }, { "command": "!clear-context", "params": [], "action": "CLEAR_STATE", "response_template": "BEKRÄFTAT: Alla pinnade artefakter har frigjorts (0/5)." } ], "psv_integration": { "hook_point": "before_step_3", "action_description": "For each path in session.pinned_artifacts, perform strict consistency and checksum validation; ensure pinned artifacts are treated as canonical. Detect and report conflicts against intended modifications.", "checks": [ { "id": "PINNED_EXISTENCE", "rule": "Verify that each pinned file still resolves in fileIndex. On failure: abort and request correction." }, { "id": "CHECKSUM_VERIFY", "rule": "If base_checksum_sha256 is stored for a pinned file, recompute and compare. On mismatch: set pin_divergence=true and invoke on_checksum_mismatch." }, { "id": "CONFLICT_DETECTION", "rule": "If the prompt’s subject artifact or intended modifications conflict with a pinned file, trigger on_conflict." } ], "on_conflict": { "escalate_to": "DT-2", "response_template": "[PINNED_CONTEXT_VALIDATION]: KONFLIKT IDENTIFIERAD.\n\nDin instruktion står i konflikt med den pinnade versionen av {{conflicting_file}}.\n\nBeslut krävs (DT-2):\n1. Ignorera den pinnade versionen och fortsätt med den nya instruktionen?\n2. Avbryt och respektera den pinnade versionen?" }, "on_checksum_mismatch": { "severity": "warning", "escalate_to": "DT-2", "response_template": "[PINNED_CONTEXT_VALIDATION]: CHECKSUM-MISMATCH.\n\n{{file_path}} har ändrats under sessionen.\nPinnad: {{pinned_sha256}}\nAktuell: {{current_sha256}}\n\nBeslut (DT-2):\n1. Uppdatera pin till aktuell checksumma.\n2. Avbryt åtgärden och återskapa canonical fil innan fortsättning." } }, "injection_strategy": { "mode": "snippet", "rules": { "max_total_chars": 8000, "max_per_file_chars": 3000, "include_sections": [ "file_header", "exported_symbols", "recently_touched_functions", "call_sites_referenced_by_prompt" ], "fallback": "filename_and_sha_only_when_over_limit" }, "status_echo": { "enabled": true, "format": "Pinned: {{session.pinned_artifacts.length}}/5" } }, "validation": { "file_resolution_source": "fileIndex", "require_exact_path_match": true } }
+
+
+
+
+
+
+
   },
   "decision_tiers": {
     "description": "Defines responsibility levels for decision-making.",
