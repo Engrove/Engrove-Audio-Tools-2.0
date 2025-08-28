@@ -70,6 +70,7 @@ Filen ska innehålla ett JSON-objekt med följande struktur. Alla fält är obli
 {
   "schema_version": "DJTA v1.1",
   "session_id": "S-2025-08-21T10-15-00Z",
+  "session_file": "sessions/S-2025-08-21T10-15-00Z.json",
   "created_at": "2025-08-21T10-15-00Z",
 
   "_comment_summary": "Detta objekt är för snabb indexering och analys. Det extraheras till session_manifest.json.",
