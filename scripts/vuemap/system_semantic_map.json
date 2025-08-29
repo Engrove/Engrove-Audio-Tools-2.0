@@ -1,7 +1,7 @@
 {
   "$schema": "./system_semantic_map.schema.json",
   "version": "1.1.0",
-  "createdAt": "2025-08-29T18:10:17.305873+00:00",
+  "createdAt": "2025-08-29T18:16:05.356773+00:00",
   "nodes": [
     {
       "id": "src/debug.js",
