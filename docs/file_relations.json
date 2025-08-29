@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-29T17:55:52.127252+00:00",
+    "generated_at": "2025-08-29T18:10:17.139485+00:00",
     "nodes": {
       "src/debug.js": {
         "type": "JavaScript Module",
@@ -1708,6 +1708,15 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
+      "scripts/vuemap/system_semantic_map.json": {
+        "type": "JSON Config",
+        "category": "configuration",
+        "language": "json",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
       "scripts/vuemap/system_semantic_map.py": {
         "type": "Python Script",
         "category": "code",
@@ -1772,7 +1781,7 @@
             "type": "library_import"
           },
           {
-            "source": "esprima",
+            "source": "pyjsparser",
             "symbols": [
               "*"
             ],

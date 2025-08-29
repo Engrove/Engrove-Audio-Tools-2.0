@@ -1,7 +1,7 @@
 {
   "$schema": "./system_semantic_map.schema.json",
-  "version": "1.0.0",
-  "createdAt": "2025-08-29T17:55:52.396544+00:00",
+  "version": "1.1.0",
+  "createdAt": "2025-08-29T18:10:17.305873+00:00",
   "nodes": [
     {
       "id": "src/debug.js",
@@ -607,620 +607,249 @@
   "edges": [
     {
       "source": "src/debug.js",
-      "target": "vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/debug.js",
-      "target": "pinia",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/debug.js",
-      "target": "pinia-plugin-persistedstate",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/debug.js",
-      "target": "./entities/logger/model/loggerStore.js",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 15: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/App.vue",
-      "target": "vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/App.vue",
-      "target": "vue-router",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/App.vue",
-      "target": "./features/theme-toggle/model/themeStore.js",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/App.vue",
-      "target": "./entities/settings/model/settingsStore.js",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/App.vue",
-      "target": "./widgets/GlobalHeader/GlobalHeader.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/App.vue",
-      "target": "./widgets/GlobalFooter/GlobalFooter.vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 2: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/main.js",
-      "target": "vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/main.js",
-      "target": "pinia",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/main.js",
-      "target": "pinia-plugin-persistedstate",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/main.js",
-      "target": "@unhead/vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/main.js",
-      "target": "../App.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/main.js",
-      "target": "./router.js",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/main.js",
-      "target": "./styles/_tokens.css",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/main.js",
-      "target": "./styles/_global.css",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 8: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/showcase.js",
-      "target": "vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/showcase.js",
-      "target": "pinia",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/showcase.js",
-      "target": "pinia-plugin-persistedstate",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/showcase.js",
-      "target": "./features/theme-toggle/model/themeStore.js",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/showcase.js",
-      "target": "./entities/settings/model/settingsStore.js",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/showcase.js",
-      "target": "./shared/ui/BaseButton.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/showcase.js",
-      "target": "./shared/ui/BaseInput.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/showcase.js",
-      "target": "./shared/ui/BaseSelect.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/showcase.js",
-      "target": "./shared/ui/BaseToggle.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/showcase.js",
-      "target": "./shared/ui/BaseCheckbox.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/showcase.js",
-      "target": "./shared/ui/BaseRadio.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/showcase.js",
-      "target": "./shared/ui/BaseModal.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/showcase.js",
-      "target": "./features/license-modal/ui/LicenseModal.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/showcase.js",
-      "target": "./features/density-toggle/ui/DensityToggle.vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 9: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/app/router.js",
-      "target": "vue-router",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/app/router.js",
-      "target": "../pages/home/HomePage.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/app/router.js",
-      "target": "../pages/about/AboutPage.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/app/router.js",
-      "target": "../pages/data-explorer/DataExplorerPage.vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 7: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/app/main.js",
-      "target": "vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/app/main.js",
-      "target": "pinia",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/app/main.js",
-      "target": "pinia-plugin-persistedstate",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/app/main.js",
-      "target": "@unhead/vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/app/main.js",
-      "target": "../App.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/app/main.js",
-      "target": "./router.js",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/app/main.js",
-      "target": "./styles/_tokens.css",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/app/main.js",
-      "target": "./styles/_global.css",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 11: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/entities/comparison/model/comparisonStore.js",
-      "target": "pinia",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/entities/comparison/model/comparisonStore.js",
-      "target": "vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 2: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/entities/logger/model/loggerStore.js",
-      "target": "vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/entities/logger/model/loggerStore.js",
-      "target": "pinia",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 20: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/entities/settings/model/settingsStore.js",
-      "target": "pinia",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 9: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
-      "source": "src/entities/settings/model/settingsStore.js",
-      "target": "vue",
-      "type": "IMPORTS"
+      "source": "src/entities/data-explorer/api/fetchExplorerData.js",
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 20: ExportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/entities/data-explorer/model/state.js",
-      "target": "vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 8: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/entities/data-explorer/model/explorerStore.js",
       "target": "PARSING_ERROR",
       "type": "HAS_ERROR",
-      "details": "Line 56: Unexpected token ."
+      "details": "Line 25: ImportDeclaration is not supported by ECMA 5.1."
+    },
+    {
+      "source": "src/entities/data-explorer/lib/filters.js",
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 21: ExportDeclaration is not supported by ECMA 5.1."
+    },
+    {
+      "source": "src/entities/data-explorer/lib/transformer.js",
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 15: ExportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
-      "target": "vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
-      "target": "@/entities/comparison/model/comparisonStore",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
-      "target": "@/entities/data-explorer/model/explorerStore",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
-      "target": "@/shared/ui/BaseModal.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
-      "target": "@/shared/ui/BaseTable.vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 21: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
-      "target": "../model/useMobileMenu.js",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 2: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
-      "target": "vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 6: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/features/license-modal/ui/LicenseModal.vue",
-      "target": "vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/features/license-modal/ui/LicenseModal.vue",
-      "target": "../../../shared/ui/BaseModal.vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 2: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/features/item-details/ui/ItemDetailModal.vue",
-      "target": "vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/features/item-details/ui/ItemDetailModal.vue",
-      "target": "@/shared/ui/BaseModal.vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 23: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/features/density-toggle/ui/DensityToggle.vue",
-      "target": "../../../entities/settings/model/settingsStore.js",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/features/density-toggle/ui/DensityToggle.vue",
-      "target": "../../../shared/ui/BaseButton.vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 2: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/features/theme-toggle/ui/ThemeToggle.vue",
-      "target": "../model/themeStore.js",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/features/theme-toggle/ui/ThemeToggle.vue",
-      "target": "../../../shared/ui/BaseButton.vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 2: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/features/theme-toggle/model/themeStore.js",
-      "target": "pinia",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 6: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/shared/ui/BaseRadio.vue",
-      "target": "vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 2: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/shared/ui/RangeFilter.vue",
-      "target": "vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/shared/ui/RangeFilter.vue",
-      "target": "./BaseInput.vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 2: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/shared/ui/BaseModal.vue",
-      "target": "vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 2: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/shared/ui/BaseButton.vue",
-      "target": "vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 2: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/shared/ui/BaseSelect.vue",
-      "target": "vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 2: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/shared/ui/BaseCanvasTextViewer.vue",
-      "target": "vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/shared/ui/BaseCanvasTextViewer.vue",
-      "target": "../../features/theme-toggle/model/themeStore.js",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 2: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/shared/ui/BaseTable.vue",
-      "target": "@/shared/ui/BaseCheckbox.vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 24: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/shared/ui/Logo.vue",
-      "target": "vue-router",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 2: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/shared/ui/BaseMultiSelect.vue",
-      "target": "vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/shared/ui/BaseMultiSelect.vue",
-      "target": "@/shared/ui/BaseCheckbox.vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 28: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/pages/home/HomePage.vue",
       "target": "PARSING_ERROR",
       "type": "HAS_ERROR",
-      "details": "Line 20: Unexpected token ."
+      "details": "Line 2: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "pinia",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "@/entities/data-explorer/model/explorerStore.js",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "@/entities/comparison/model/comparisonStore.js",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "@/entities/logger/model/loggerStore.js",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "@/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "@/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "@/features/item-details/ui/ItemDetailModal.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "@/features/comparison-modal/ui/ComparisonModal.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "@/widgets/ComparisonTray/ui/ComparisonTray.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "@/shared/ui/BaseButton.vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 2: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/pages/license/LicensePage.vue",
-      "target": "vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/pages/license/LicensePage.vue",
-      "target": "../../shared/ui/BaseCanvasTextViewer.vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 2: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/pages/about/AboutPage.vue",
-      "target": "vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/pages/about/AboutPage.vue",
-      "target": "../../shared/ui/BaseButton.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/pages/about/AboutPage.vue",
-      "target": "../../features/license-modal/ui/LicenseModal.vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 2: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/widgets/GlobalFooter/GlobalFooter.vue",
-      "target": "vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/GlobalFooter/GlobalFooter.vue",
-      "target": "vue-router",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 2: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-      "target": "pinia",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-      "target": "@/entities/data-explorer/model/explorerStore.js",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-      "target": "@/shared/ui/BaseButton.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-      "target": "@/shared/ui/BaseInput.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-      "target": "@/shared/ui/BaseMultiSelect.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-      "target": "@/shared/ui/RangeFilter.vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 2: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
-      "target": "vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
-      "target": "@/entities/comparison/model/comparisonStore.js",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
-      "target": "@/entities/data-explorer/model/explorerStore.js",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
-      "target": "@/entities/logger/model/loggerStore.js",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
-      "target": "@/shared/ui/BaseButton.vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 2: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
-      "target": "vue-router",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
-      "target": "../../features/mobile-menu-toggle/model/useMobileMenu.js",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 2: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
-      "target": "@/shared/ui/BaseTable.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
-      "target": "@/shared/ui/BaseButton.vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 2: ImportDeclaration is not supported by ECMA 5.1."
     },
     {
       "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "vue-router",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "../../features/mobile-menu-toggle/model/useMobileMenu.js",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "../../entities/logger/model/loggerStore.js",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "../../shared/ui/Logo.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "../../features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "../MobileNavMenu/MobileNavMenu.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "../../features/theme-toggle/ui/ThemeToggle.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "../../features/density-toggle/ui/DensityToggle.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "../../shared/ui/BaseButton.vue",
-      "type": "IMPORTS"
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "Line 2: ImportDeclaration is not supported by ECMA 5.1."
     }
   ]
 }
