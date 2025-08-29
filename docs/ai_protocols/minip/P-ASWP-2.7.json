@@ -22,7 +22,7 @@
       "anyOf": [
         "prompt_is_complex_bug_report_with_code",
         "prompt_requests_architectural_change",
-        "user_reques"
+        "user_requests_specific_protocol"
       ]
     }
   },
