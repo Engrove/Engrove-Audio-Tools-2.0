@@ -1,0 +1,122 @@
+{
+  "protocolId": "P-C0-GUIDED-DISCOVERY-4.2",
+  "title": "C0 Guided Discovery & Distillation Protocol",
+  "version": "4.2",
+  "description": "An interactive, two-step protocol where the AI first performs a thematic analysis on a raw data corpus to propose a dynamic list of candidate focal points. After the operator selects a focal point, the AI distils the corpus into a structured JSON object strictly aligned with the confirmed objective.",
+  "strict_mode": true,
+  "mode": "literal",
+  "executionModel": {
+    "type": "Interactive, Two-Step, Zero-Context",
+    "initialAction": {
+      "type": "REQUEST_CORPUS",
+      "prompt": "Provide the unstructured context corpus for analysis.\n1. for this session context\n2. a list of complete source codes found in current session context\n3. a list of complete source codes found in provided context data\n4. followed by context data to examine"
+    },
+    "interactionFlow": [
+      {
+        "step": "A",
+        "actor": "Operator",
+        "action": "Provides the unstructured context."
+      },
+      {
+        "step": "B",
+        "actor": "AI",
+        "action": "Executes PHASE_1_ANALYSIS and outputs a dynamic, numbered list of candidate focal points for operator selection."
+      },
+      {
+        "step": "C",
+        "actor": "Operator",
+        "action": "Replies with the number corresponding to the correct focal point, or provides a custom focal point."
+      },
+      {
+        "step": "D",
+        "actor": "AI",
+        "action": "Executes PHASE_2_DISTILLATION using the selected focal point and outputs the final, structured JSON."
+      }
+    ]
+  },
+  "phases": [
+    {
+      "phaseId": "PHASE_1_ANALYSIS",
+      "description": "Normalizes the raw input and performs a thematic analysis to generate candidate focal points.",
+      "directives": [
+        {
+          "step": 1,
+          "directive": "STRUCTURE_INFERENCE",
+          "rule": "The AI model MUST first analyze the raw input stream to infer its structure (e.g., JSON, XML, unstructured text)."
+        },
+        {
+          "step": 2,
+          "directive": "CANONICAL_REPRESENTATION",
+          "rule": "The AI model MUST transform the data into a single, internal, virtual JSON object for analysis."
+        },
+        {
+          "step": 3,
+          "directive": "THEMATIC_ANALYSIS",
+          "rule": "The AI model MUST analyze the normalized content to identify recurring themes, primary subjects, and explicit or implicit goals. This includes identifying key nouns, verbs, and conceptual clusters."
+        },
+        {
+          "step": 4,
+          "directive": "CANDIDATE_GENERATION",
+          "rule": "Based on the thematic analysis, the AI model MUST generate a concise, numbered list of 2-5 candidate focal points. Each candidate MUST be a clear, actionable statement. The model MUST then output this list, including an option for a user-defined focal point, and await operator input."
+        }
+      ]
+    },
+    {
+      "phaseId": "PHASE_2_DISTILLATION",
+      "description": "Distills the normalized representation into a final artifact, guided by the operator-confirmed focal point.",
+      "directives": [
+        {
+          "step": 5,
+          "directive": "CONFIRM_FOCAL_POINT",
+          "rule": "The AI model MUST use the operator's numerical selection or custom text to lock in the single, unambiguous focal point for the rest of the process."
+        },
+        {
+          "step": 6,
+          "directive": "ACTIVE_FILTERING_AND_DISCARD",
+          "rule": "The AI model MUST iterate through all components of the normalized virtual JSON object. Components irrelevant to the confirmed focal point MUST be discarded."
+        },
+        {
+          "step": 7,
+          "directive": "IDENTIFY_DISTINCT_ARTIFACTS",
+          "rule": "From the filtered information, the AI model MUST identify conceptually distinct, self-contained artifacts."
+        },
+        {
+          "step": 8,
+          "directive": "FOCAL_POINT_ALIGNMENT_CHECK",
+          "rule": "The AI model MUST re-evaluate each identified artifact against the confirmed focal point. Only the artifact(s) that directly define the focal point MUST be kept."
+        },
+        {
+          "step": 9,
+          "directive": "STRUCTURED_SYNTHESIS_PER_ARTIFACT",
+          "rule": "For each aligned artifact, the AI model MUST synthesize its information into a separate, internal 'mental JSON'."
+        },
+        {
+          "step": 10,
+          "directive": "FINAL_RENDER_FROM_SYNTHESIS",
+          "rule": "The final output MUST be a clean JSON structure, serialized only from the aligned artifacts' 'mental JSONs'."
+        }
+      ]
+    }
+  ],
+  "outputSchema": {
+    "description": "A structured, high-signal JSON representation of the distilled core of the input, strictly aligned with the operator's confirmed focal point.",
+    "oneOf": [
+      {
+        "type": "object",
+        "additionalProperties": true
+      },
+      {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    ]
+  },
+  "errorHandling": {
+    "onAnalysisFailure": {
+      "rule": "If no coherent themes or candidate focal points can be extracted from the corpus (Phase 1), the AI model MUST state this and ask the operator to manually provide a focal point."
+    }
+  }
+}
