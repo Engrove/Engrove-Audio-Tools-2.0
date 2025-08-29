@@ -47,7 +47,7 @@ def main():
     # --- Steg 1: Bearbeta metadata-uppdateringar från senaste session ---
     try:
         latest_session_file = max(
-            (f for f in sessions_dir.glob("S-*.json") if f.is_file()),
+            (f for f in sessions_dir.glob("*.json") if f.is_file()),
             key=lambda f: f.stat().st_mtime
         )
     except ValueError:
