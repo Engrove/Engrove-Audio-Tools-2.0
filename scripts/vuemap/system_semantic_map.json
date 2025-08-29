@@ -1,7 +1,7 @@
 {
   "$schema": "./system_semantic_map.schema.json",
-  "version": "4.4.0",
-  "createdAt": "2025-08-29T22:11:35.442Z",
+  "version": "4.5.0",
+  "createdAt": "2025-08-29T22:20:28.492Z",
   "nodes": [
     {
       "id": "src/showcase.js",
@@ -176,6 +176,30 @@
       "hash": "270ac16d9084c20bec5ab6c6bbc290f6a311b60b982b87b38a7d4441988b3541",
       "fileType": "RouterConfig",
       "purpose": "Represents the file artifact at src/app/router.js."
+    },
+    {
+      "id": "route:/",
+      "type": "Route",
+      "path": "src/app/router.js",
+      "routePath": "/",
+      "routeName": "Home",
+      "purpose": "Defines the 'Home' route at '/'."
+    },
+    {
+      "id": "route:/about",
+      "type": "Route",
+      "path": "src/app/router.js",
+      "routePath": "/about",
+      "routeName": "About",
+      "purpose": "Defines the 'About' route at '/about'."
+    },
+    {
+      "id": "route:/data-explorer",
+      "type": "Route",
+      "path": "src/app/router.js",
+      "routePath": "/data-explorer",
+      "routeName": "DataExplorer",
+      "purpose": "Defines the 'DataExplorer' route at '/data-explorer'."
     },
     {
       "id": "src/app/main.js",
@@ -401,12 +425,6 @@
       "hash": "228d9062b9af1bf7b7884ab734b5d64b67c2e240ee1035b1ca73e9a086771360",
       "fileType": "VueComponent",
       "purpose": "Represents the file artifact at src/shared/ui/BaseTable.vue."
-    },
-    {
-      "id": "@/shared/ui/BaseCheckbox.vue",
-      "type": "NpmPackage",
-      "name": "@/shared/ui/BaseCheckbox.vue",
-      "purpose": "Represents the external NPM dependency '@/shared/ui/BaseCheckbox.vue'."
     },
     {
       "id": "src/shared/ui/BaseTable.vue#prop.headers",
@@ -763,60 +781,6 @@
       "purpose": "Represents the file artifact at src/pages/data-explorer/DataExplorerPage.vue."
     },
     {
-      "id": "@/entities/data-explorer/model/explorerStore.js",
-      "type": "NpmPackage",
-      "name": "@/entities/data-explorer/model/explorerStore.js",
-      "purpose": "Represents the external NPM dependency '@/entities/data-explorer/model/explorerStore.js'."
-    },
-    {
-      "id": "@/entities/comparison/model/comparisonStore.js",
-      "type": "NpmPackage",
-      "name": "@/entities/comparison/model/comparisonStore.js",
-      "purpose": "Represents the external NPM dependency '@/entities/comparison/model/comparisonStore.js'."
-    },
-    {
-      "id": "@/entities/logger/model/loggerStore.js",
-      "type": "NpmPackage",
-      "name": "@/entities/logger/model/loggerStore.js",
-      "purpose": "Represents the external NPM dependency '@/entities/logger/model/loggerStore.js'."
-    },
-    {
-      "id": "@/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-      "type": "NpmPackage",
-      "name": "@/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-      "purpose": "Represents the external NPM dependency '@/widgets/DataFilterPanel/ui/DataFilterPanel.vue'."
-    },
-    {
-      "id": "@/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
-      "type": "NpmPackage",
-      "name": "@/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
-      "purpose": "Represents the external NPM dependency '@/widgets/ResultsDisplay/ui/ResultsDisplay.vue'."
-    },
-    {
-      "id": "@/features/item-details/ui/ItemDetailModal.vue",
-      "type": "NpmPackage",
-      "name": "@/features/item-details/ui/ItemDetailModal.vue",
-      "purpose": "Represents the external NPM dependency '@/features/item-details/ui/ItemDetailModal.vue'."
-    },
-    {
-      "id": "@/features/comparison-modal/ui/ComparisonModal.vue",
-      "type": "NpmPackage",
-      "name": "@/features/comparison-modal/ui/ComparisonModal.vue",
-      "purpose": "Represents the external NPM dependency '@/features/comparison-modal/ui/ComparisonModal.vue'."
-    },
-    {
-      "id": "@/widgets/ComparisonTray/ui/ComparisonTray.vue",
-      "type": "NpmPackage",
-      "name": "@/widgets/ComparisonTray/ui/ComparisonTray.vue",
-      "purpose": "Represents the external NPM dependency '@/widgets/ComparisonTray/ui/ComparisonTray.vue'."
-    },
-    {
-      "id": "@/shared/ui/BaseButton.vue",
-      "type": "NpmPackage",
-      "name": "@/shared/ui/BaseButton.vue",
-      "purpose": "Represents the external NPM dependency '@/shared/ui/BaseButton.vue'."
-    },
-    {
       "id": "src/pages/about/AboutPage.vue",
       "type": "File",
       "path": "src/pages/about/AboutPage.vue",
@@ -855,12 +819,6 @@
       "hash": "d161f01ec76c4ca54df96f7ec9f9179a789090d83f594f5b7e440c00ac413e79",
       "fileType": "VueComponent",
       "purpose": "Represents the file artifact at src/widgets/ResultsDisplay/ui/ResultsDisplay.vue."
-    },
-    {
-      "id": "@/shared/ui/BaseTable.vue",
-      "type": "NpmPackage",
-      "name": "@/shared/ui/BaseTable.vue",
-      "purpose": "Represents the external NPM dependency '@/shared/ui/BaseTable.vue'."
     },
     {
       "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.items",
@@ -997,24 +955,6 @@
       "purpose": "Represents the file artifact at src/widgets/DataFilterPanel/ui/DataFilterPanel.vue."
     },
     {
-      "id": "@/shared/ui/BaseInput.vue",
-      "type": "NpmPackage",
-      "name": "@/shared/ui/BaseInput.vue",
-      "purpose": "Represents the external NPM dependency '@/shared/ui/BaseInput.vue'."
-    },
-    {
-      "id": "@/shared/ui/BaseMultiSelect.vue",
-      "type": "NpmPackage",
-      "name": "@/shared/ui/BaseMultiSelect.vue",
-      "purpose": "Represents the external NPM dependency '@/shared/ui/BaseMultiSelect.vue'."
-    },
-    {
-      "id": "@/shared/ui/RangeFilter.vue",
-      "type": "NpmPackage",
-      "name": "@/shared/ui/RangeFilter.vue",
-      "purpose": "Represents the external NPM dependency '@/shared/ui/RangeFilter.vue'."
-    },
-    {
       "id": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
       "type": "File",
       "path": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
@@ -1135,12 +1075,6 @@
       "purpose": "Represents the file artifact at src/features/item-details/ui/ItemDetailModal.vue."
     },
     {
-      "id": "@/shared/ui/BaseModal.vue",
-      "type": "NpmPackage",
-      "name": "@/shared/ui/BaseModal.vue",
-      "purpose": "Represents the external NPM dependency '@/shared/ui/BaseModal.vue'."
-    },
-    {
       "id": "src/features/item-details/ui/ItemDetailModal.vue#prop.show",
       "type": "Prop",
       "path": "src/features/item-details/ui/ItemDetailModal.vue",
@@ -1176,18 +1110,6 @@
       "hash": "3b058491eef865ba7b8cc6c49bb0877d922ab85e28b97ba25667951e5409c762",
       "fileType": "VueComponent",
       "purpose": "Represents the file artifact at src/features/comparison-modal/ui/ComparisonModal.vue."
-    },
-    {
-      "id": "@/entities/comparison/model/comparisonStore",
-      "type": "NpmPackage",
-      "name": "@/entities/comparison/model/comparisonStore",
-      "purpose": "Represents the external NPM dependency '@/entities/comparison/model/comparisonStore'."
-    },
-    {
-      "id": "@/entities/data-explorer/model/explorerStore",
-      "type": "NpmPackage",
-      "name": "@/entities/data-explorer/model/explorerStore",
-      "purpose": "Represents the external NPM dependency '@/entities/data-explorer/model/explorerStore'."
     },
     {
       "id": "src/features/comparison-modal/ui/ComparisonModal.vue#prop.show",
@@ -1722,6 +1644,36 @@
       "type": "IMPORTS"
     },
     {
+      "source": "route:/",
+      "target": "src/pages/home/HomePage.vue",
+      "type": "RENDERS_COMPONENT"
+    },
+    {
+      "source": "src/app/router.js",
+      "target": "route:/",
+      "type": "DEFINES_ROUTE"
+    },
+    {
+      "source": "route:/about",
+      "target": "src/pages/about/AboutPage.vue",
+      "type": "RENDERS_COMPONENT"
+    },
+    {
+      "source": "src/app/router.js",
+      "target": "route:/about",
+      "type": "DEFINES_ROUTE"
+    },
+    {
+      "source": "route:/data-explorer",
+      "target": "src/pages/data-explorer/DataExplorerPage.vue",
+      "type": "RENDERS_COMPONENT"
+    },
+    {
+      "source": "src/app/router.js",
+      "target": "route:/data-explorer",
+      "type": "DEFINES_ROUTE"
+    },
+    {
       "source": "src/app/main.js",
       "target": "vue",
       "type": "IMPORTS_PACKAGE"
@@ -1918,8 +1870,8 @@
     },
     {
       "source": "src/shared/ui/BaseTable.vue",
-      "target": "@/shared/ui/BaseCheckbox.vue",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/shared/ui/BaseCheckbox.vue",
+      "type": "IMPORTS"
     },
     {
       "source": "src/shared/ui/BaseTable.vue",
@@ -1983,12 +1935,12 @@
     },
     {
       "source": "src/shared/ui/BaseTable.vue",
-      "target": "src/shared/ui/@/shared/ui/BaseCheckbox.vue",
+      "target": "src/shared/ui/BaseCheckbox.vue",
       "type": "USES_COMPONENT"
     },
     {
       "source": "src/shared/ui/BaseTable.vue",
-      "target": "src/shared/ui/@/shared/ui/BaseCheckbox.vue",
+      "target": "src/shared/ui/BaseCheckbox.vue",
       "type": "USES_COMPONENT"
     },
     {
@@ -2053,8 +2005,8 @@
     },
     {
       "source": "src/shared/ui/BaseMultiSelect.vue",
-      "target": "@/shared/ui/BaseCheckbox.vue",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/shared/ui/BaseCheckbox.vue",
+      "type": "IMPORTS"
     },
     {
       "source": "src/shared/ui/BaseMultiSelect.vue",
@@ -2078,7 +2030,7 @@
     },
     {
       "source": "src/shared/ui/BaseMultiSelect.vue",
-      "target": "src/shared/ui/@/shared/ui/BaseCheckbox.vue",
+      "target": "src/shared/ui/BaseCheckbox.vue",
       "type": "USES_COMPONENT"
     },
     {
@@ -2248,92 +2200,92 @@
     },
     {
       "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "@/entities/data-explorer/model/explorerStore.js",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/entities/data-explorer/model/explorerStore.js",
+      "type": "IMPORTS"
     },
     {
       "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "@/entities/comparison/model/comparisonStore.js",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/entities/comparison/model/comparisonStore.js",
+      "type": "IMPORTS"
     },
     {
       "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "@/entities/logger/model/loggerStore.js",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/entities/logger/model/loggerStore.js",
+      "type": "IMPORTS"
     },
     {
       "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "@/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
+      "type": "IMPORTS"
     },
     {
       "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "@/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "type": "IMPORTS"
     },
     {
       "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "@/features/item-details/ui/ItemDetailModal.vue",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/features/item-details/ui/ItemDetailModal.vue",
+      "type": "IMPORTS"
     },
     {
       "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "@/features/comparison-modal/ui/ComparisonModal.vue",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "type": "IMPORTS"
     },
     {
       "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "@/widgets/ComparisonTray/ui/ComparisonTray.vue",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "type": "IMPORTS"
     },
     {
       "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "@/shared/ui/BaseButton.vue",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "IMPORTS"
     },
     {
       "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "src/pages/data-explorer/@/entities/data-explorer/model/explorerStore.js",
+      "target": "src/entities/data-explorer/model/explorerStore.js",
       "type": "USES_STORE_FILE"
     },
     {
       "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "src/pages/data-explorer/@/entities/comparison/model/comparisonStore.js",
+      "target": "src/entities/comparison/model/comparisonStore.js",
       "type": "USES_STORE_FILE"
     },
     {
       "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "src/pages/data-explorer/@/entities/logger/model/loggerStore.js",
+      "target": "src/entities/logger/model/loggerStore.js",
       "type": "USES_STORE_FILE"
     },
     {
       "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "src/pages/data-explorer/@/shared/ui/BaseButton.vue",
+      "target": "src/shared/ui/BaseButton.vue",
       "type": "USES_COMPONENT"
     },
     {
       "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "src/pages/data-explorer/@/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
+      "target": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
       "type": "USES_COMPONENT"
     },
     {
       "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "src/pages/data-explorer/@/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
       "type": "USES_COMPONENT"
     },
     {
       "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "src/pages/data-explorer/@/features/item-details/ui/ItemDetailModal.vue",
+      "target": "src/features/item-details/ui/ItemDetailModal.vue",
       "type": "USES_COMPONENT"
     },
     {
       "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "src/pages/data-explorer/@/features/comparison-modal/ui/ComparisonModal.vue",
+      "target": "src/features/comparison-modal/ui/ComparisonModal.vue",
       "type": "USES_COMPONENT"
     },
     {
       "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "src/pages/data-explorer/@/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "target": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
       "type": "USES_COMPONENT"
     },
     {
@@ -2368,13 +2320,13 @@
     },
     {
       "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
-      "target": "@/shared/ui/BaseTable.vue",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/shared/ui/BaseTable.vue",
+      "type": "IMPORTS"
     },
     {
       "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
-      "target": "@/shared/ui/BaseButton.vue",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "IMPORTS"
     },
     {
       "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
@@ -2468,22 +2420,22 @@
     },
     {
       "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
-      "target": "src/widgets/ResultsDisplay/ui/@/shared/ui/BaseButton.vue",
+      "target": "src/shared/ui/BaseButton.vue",
       "type": "USES_COMPONENT"
     },
     {
       "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
-      "target": "src/widgets/ResultsDisplay/ui/@/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue",
       "type": "USES_COMPONENT"
     },
     {
       "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
-      "target": "src/widgets/ResultsDisplay/ui/@/shared/ui/BaseButton.vue",
+      "target": "src/shared/ui/BaseButton.vue",
       "type": "USES_COMPONENT"
     },
     {
       "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
-      "target": "src/widgets/ResultsDisplay/ui/@/shared/ui/BaseButton.vue",
+      "target": "src/shared/ui/BaseButton.vue",
       "type": "USES_COMPONENT"
     },
     {
@@ -2493,62 +2445,62 @@
     },
     {
       "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-      "target": "@/entities/data-explorer/model/explorerStore.js",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/entities/data-explorer/model/explorerStore.js",
+      "type": "IMPORTS"
     },
     {
       "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-      "target": "@/shared/ui/BaseButton.vue",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "IMPORTS"
     },
     {
       "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-      "target": "@/shared/ui/BaseInput.vue",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/shared/ui/BaseInput.vue",
+      "type": "IMPORTS"
     },
     {
       "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-      "target": "@/shared/ui/BaseMultiSelect.vue",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/shared/ui/BaseMultiSelect.vue",
+      "type": "IMPORTS"
     },
     {
       "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-      "target": "@/shared/ui/RangeFilter.vue",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/shared/ui/RangeFilter.vue",
+      "type": "IMPORTS"
     },
     {
       "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-      "target": "src/widgets/DataFilterPanel/ui/@/entities/data-explorer/model/explorerStore.js",
+      "target": "src/entities/data-explorer/model/explorerStore.js",
       "type": "USES_STORE_FILE"
     },
     {
       "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-      "target": "src/widgets/DataFilterPanel/ui/@/shared/ui/BaseButton.vue",
+      "target": "src/shared/ui/BaseButton.vue",
       "type": "USES_COMPONENT"
     },
     {
       "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-      "target": "src/widgets/DataFilterPanel/ui/@/shared/ui/BaseButton.vue",
+      "target": "src/shared/ui/BaseButton.vue",
       "type": "USES_COMPONENT"
     },
     {
       "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-      "target": "src/widgets/DataFilterPanel/ui/@/shared/ui/BaseInput.vue",
+      "target": "src/shared/ui/BaseInput.vue",
       "type": "USES_COMPONENT"
     },
     {
       "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-      "target": "src/widgets/DataFilterPanel/ui/@/shared/ui/BaseMultiSelect.vue",
+      "target": "src/shared/ui/BaseMultiSelect.vue",
       "type": "USES_COMPONENT"
     },
     {
       "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-      "target": "src/widgets/DataFilterPanel/ui/@/shared/ui/RangeFilter.vue",
+      "target": "src/shared/ui/RangeFilter.vue",
       "type": "USES_COMPONENT"
     },
     {
       "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-      "target": "src/widgets/DataFilterPanel/ui/@/shared/ui/BaseButton.vue",
+      "target": "src/shared/ui/BaseButton.vue",
       "type": "USES_COMPONENT"
     },
     {
@@ -2558,37 +2510,37 @@
     },
     {
       "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
-      "target": "@/entities/comparison/model/comparisonStore.js",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/entities/comparison/model/comparisonStore.js",
+      "type": "IMPORTS"
     },
     {
       "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
-      "target": "@/entities/data-explorer/model/explorerStore.js",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/entities/data-explorer/model/explorerStore.js",
+      "type": "IMPORTS"
     },
     {
       "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
-      "target": "@/entities/logger/model/loggerStore.js",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/entities/logger/model/loggerStore.js",
+      "type": "IMPORTS"
     },
     {
       "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
-      "target": "@/shared/ui/BaseButton.vue",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "IMPORTS"
     },
     {
       "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
-      "target": "src/widgets/ComparisonTray/ui/@/entities/comparison/model/comparisonStore.js",
+      "target": "src/entities/comparison/model/comparisonStore.js",
       "type": "USES_STORE_FILE"
     },
     {
       "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
-      "target": "src/widgets/ComparisonTray/ui/@/entities/data-explorer/model/explorerStore.js",
+      "target": "src/entities/data-explorer/model/explorerStore.js",
       "type": "USES_STORE_FILE"
     },
     {
       "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
-      "target": "src/widgets/ComparisonTray/ui/@/entities/logger/model/loggerStore.js",
+      "target": "src/entities/logger/model/loggerStore.js",
       "type": "USES_STORE_FILE"
     },
     {
@@ -2603,12 +2555,12 @@
     },
     {
       "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
-      "target": "src/widgets/ComparisonTray/ui/@/shared/ui/BaseButton.vue",
+      "target": "src/shared/ui/BaseButton.vue",
       "type": "USES_COMPONENT"
     },
     {
       "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
-      "target": "src/widgets/ComparisonTray/ui/@/shared/ui/BaseButton.vue",
+      "target": "src/shared/ui/BaseButton.vue",
       "type": "USES_COMPONENT"
     },
     {
@@ -2718,8 +2670,8 @@
     },
     {
       "source": "src/features/item-details/ui/ItemDetailModal.vue",
-      "target": "@/shared/ui/BaseModal.vue",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/shared/ui/BaseModal.vue",
+      "type": "IMPORTS"
     },
     {
       "source": "src/features/item-details/ui/ItemDetailModal.vue",
@@ -2738,7 +2690,7 @@
     },
     {
       "source": "src/features/item-details/ui/ItemDetailModal.vue",
-      "target": "src/features/item-details/ui/@/shared/ui/BaseModal.vue",
+      "target": "src/shared/ui/BaseModal.vue",
       "type": "USES_COMPONENT"
     },
     {
@@ -2773,23 +2725,23 @@
     },
     {
       "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
-      "target": "@/entities/comparison/model/comparisonStore",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/entities/comparison/model/comparisonStore",
+      "type": "IMPORTS"
     },
     {
       "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
-      "target": "@/entities/data-explorer/model/explorerStore",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/entities/data-explorer/model/explorerStore",
+      "type": "IMPORTS"
     },
     {
       "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
-      "target": "@/shared/ui/BaseModal.vue",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/shared/ui/BaseModal.vue",
+      "type": "IMPORTS"
     },
     {
       "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
-      "target": "@/shared/ui/BaseTable.vue",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/shared/ui/BaseTable.vue",
+      "type": "IMPORTS"
     },
     {
       "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
@@ -2803,22 +2755,22 @@
     },
     {
       "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
-      "target": "src/features/comparison-modal/ui/@/entities/comparison/model/comparisonStore",
+      "target": "src/entities/comparison/model/comparisonStore",
       "type": "USES_STORE_FILE"
     },
     {
       "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
-      "target": "src/features/comparison-modal/ui/@/entities/data-explorer/model/explorerStore",
+      "target": "src/entities/data-explorer/model/explorerStore",
       "type": "USES_STORE_FILE"
     },
     {
       "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
-      "target": "src/features/comparison-modal/ui/@/shared/ui/BaseModal.vue",
+      "target": "src/shared/ui/BaseModal.vue",
       "type": "USES_COMPONENT"
     },
     {
       "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
-      "target": "src/features/comparison-modal/ui/@/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue",
       "type": "USES_COMPONENT"
     },
     {
@@ -2878,8 +2830,8 @@
     },
     {
       "source": "src/entities/data-explorer/model/explorerStore.js",
-      "target": "@/entities/logger/model/loggerStore.js",
-      "type": "IMPORTS_PACKAGE"
+      "target": "src/entities/logger/model/loggerStore.js",
+      "type": "IMPORTS"
     },
     {
       "source": "src/entities/data-explorer/model/explorerStore.js",
