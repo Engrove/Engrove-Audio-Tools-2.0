@@ -1,5 +1,5 @@
 // scripts/vuemap/generate-ssm.mjs
-// v3.3
+// v3.4
 // === SYFTE & ANSVAR ===
 // Detta Node.js-skript genererar en System Semantic Map (SSM) i JSON-format.
 // Det använder industristandardverktyg för att tillförlitligt parsa modern
@@ -10,14 +10,13 @@
 //       den felaktiga 'traverse' från 'eslint-visitor-keys' mot den korrekta
 //       'traverseNodes' från 'vue-eslint-parser' för att lösa SyntaxError.
 // v3.2: Korrigerat ESM/CJS-interoperabilitetsproblem för 'vue-eslint-parser'.
-// v3.3: Ersatt felaktigt anrop till 'traverseNodes' med korrekt 'visitor.traverse'.
+// v3.4: Final fix. Changed import to correctly use named export 'visitor' for traversal.
 
 import fs from 'fs/promises';
 import path from 'path';
 import crypto from 'crypto';
 import { glob } from 'glob';
-import vueEslintParser from 'vue-eslint-parser';
-const { parseForESLint } = vueEslintParser;
+import { parseForESLint, visitor } from 'vue-eslint-parser';
 
 
 // --- Kärnfunktioner ---
@@ -65,7 +64,7 @@ function analyzePiniaStore(ast, fileId) {
     let storeId = null;
     let mainStoreNode = null;
 
-    vueEslintParser.visitor.traverse(ast, {
+    visitor.traverse(ast, {
         enter(node) {
             if (node.type === 'CallExpression' && node.callee.name === 'defineStore') {
                 if (node.arguments.length > 0 && node.arguments[0].type === 'Literal') {
@@ -117,7 +116,7 @@ function analyzePiniaStore(ast, fileId) {
                                 storeNodes.push(propNode);
                                 storeEdges.push({ source: storeId, target: propNode.id, type: 'DEFINES' });
 
-                                vueEslintParser.visitor.traverse(prop.value.body, {
+                                visitor.traverse(prop.value.body, {
                                     enter(childNode, parentNode) {
                                         if (childNode.type === 'MemberExpression' && childNode.object.type === 'ThisExpression') {
                                             const propertyName = childNode.property.name;
