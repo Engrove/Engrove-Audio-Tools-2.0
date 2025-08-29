@@ -1,9 +1,9 @@
 // scripts/vuemap/generate-ssm.mjs
-// v4.4
-// Ändringar v4.4:
-// - KORRIGERING: Hanterar nu NPM-paketimporter (t.ex. 'vue') korrekt, istället för att tolka dem som lokala filer.
-// - NYTT: analyzeRouter() för att parsa router.js, skapa Route-noder och RENDERS_COMPONENT-kanter.
-// - Behåller v4.2-fixar.
+// v4.5
+// Ändringar v4.5:
+// - KORRIGERING (Router): analyzeRouter hanterar nu statiska importer (t.ex. import HomePage from ...) korrekt.
+// - KORRIGERING (Importer): Skiljer nu korrekt på relativa, alias-baserade (@/) och NPM-paketimporter.
+// - Behåller v4.4-fixar.
 
 import fs from 'fs/promises';
 import path from 'path';
@@ -142,9 +142,14 @@ function analyzeVueComponent(parsed, fileId, rootDir) {
         if (node.type === 'CallExpression' && node.callee?.name?.startsWith('use') && node.callee?.name?.endsWith('Store')) {
           const storeImportPath = imports.get(node.callee.name);
           if (storeImportPath) {
-            const resolvedPath = path
-              .relative(rootDir, path.resolve(path.dirname(path.join(rootDir, fileId)), storeImportPath))
-              .replace(/\\/g, '/');
+            let resolvedPath;
+            if (storeImportPath.startsWith('@/')) {
+                 resolvedPath = storeImportPath.replace('@/', 'src/');
+            } else {
+                 resolvedPath = path
+                .relative(rootDir, path.resolve(path.dirname(path.join(rootDir, fileId)), storeImportPath))
+                .replace(/\\/g, '/');
+            }
             edges.push({ source: componentId, target: resolvedPath, type: 'USES_STORE_FILE' });
           }
         }
@@ -163,9 +168,14 @@ function analyzeVueComponent(parsed, fileId, rootDir) {
           const importedName = Array.from(imports.keys()).find(key => key.toLowerCase() === tagName.toLowerCase());
           if (importedName && imports.has(importedName)) {
             const componentImportPath = imports.get(importedName);
-            const resolvedPath = path
-              .relative(rootDir, path.resolve(path.dirname(path.join(rootDir, fileId)), componentImportPath))
-              .replace(/\\/g, '/');
+            let resolvedPath;
+             if (componentImportPath.startsWith('@/')) {
+                 resolvedPath = componentImportPath.replace('@/', 'src/');
+            } else {
+                 resolvedPath = path
+                .relative(rootDir, path.resolve(path.dirname(path.join(rootDir, fileId)), componentImportPath))
+                .replace(/\\/g, '/');
+            }
             edges.push({ source: componentId, target: resolvedPath, type: 'USES_COMPONENT' });
           }
         }
@@ -303,33 +313,62 @@ function analyzePiniaStore(ast, fileId) {
   return { nodes: storeNodes, edges: storeEdges };
 }
 
-// --- Router-analys ---
+// --- Router-analys (Robust Version) ---
 function analyzeRouter(ast, fileId, rootDir) {
   const nodes = [];
   const edges = [];
+  const imports = new Map();
 
+  // Steg 1: Samla alla top-level importer
+  traverse(ast, {
+    enter(node) {
+      if (node.type === 'ImportDeclaration' && node.source?.value) {
+        const sourcePath = node.source.value;
+        for (const specifier of node.specifiers || []) {
+          if (specifier.type === 'ImportDefaultSpecifier') {
+            imports.set(specifier.local.name, sourcePath);
+          }
+        }
+      }
+    }
+  });
+
+  // Steg 2: Hitta och analysera routes-arrayen
   traverse(ast, {
     enter(node) {
       if (node.type === 'VariableDeclarator' && node.id?.name === 'routes' && node.init?.type === 'ArrayExpression') {
         for (const routeObject of node.init.elements || []) {
           if (routeObject?.type !== 'ObjectExpression') continue;
 
-          let routePath = 'N/A', routeName = 'N/A', componentImport = 'N/A';
+          let routePath = 'N/A', routeName = 'N/A', componentImportPath = null;
+          
+          let componentIdentifierName = null;
 
           (routeObject.properties || []).forEach(prop => {
             const key = safePropName(prop);
             if (key === 'path' && prop.value?.type === 'Literal') routePath = prop.value.value;
             if (key === 'name' && prop.value?.type === 'Literal') routeName = prop.value.value;
+
+            // Hantera statisk import (component: HomePage)
+            if (key === 'component' && prop.value?.type === 'Identifier') {
+                componentIdentifierName = prop.value.name;
+            }
+            // Hantera dynamisk import (component: () => import(...))
             if (
               key === 'component' &&
               prop.value?.type === 'ArrowFunctionExpression' &&
               prop.value.body?.type === 'ImportExpression'
             ) {
-              componentImport = prop.value.body.source?.value;
+              componentImportPath = prop.value.body.source?.value;
             }
           });
 
-          if (routePath !== 'N/A' && componentImport !== 'N/A') {
+          // Lös upp sökvägen baserat på typ av import
+          if (componentIdentifierName && imports.has(componentIdentifierName)) {
+            componentImportPath = imports.get(componentIdentifierName);
+          }
+          
+          if (routePath !== 'N/A' && componentImportPath) {
             const routeId = `route:${routePath}`;
             nodes.push({
               id: routeId,
@@ -341,7 +380,7 @@ function analyzeRouter(ast, fileId, rootDir) {
             });
 
             const resolvedPath = path
-              .relative(rootDir, path.resolve(path.dirname(path.join(rootDir, fileId)), componentImport))
+              .relative(rootDir, path.resolve(path.dirname(path.join(rootDir, fileId)), componentImportPath))
               .replace(/\\/g, '/');
             edges.push({ source: routeId, target: resolvedPath, type: 'RENDERS_COMPONENT' });
             edges.push({ source: fileId, target: routeId, type: 'DEFINES_ROUTE' });
@@ -352,6 +391,7 @@ function analyzeRouter(ast, fileId, rootDir) {
   });
   return { nodes, edges };
 }
+
 
 // --- Huvudlogik ---
 async function main(rootDir, outputFile) {
@@ -389,25 +429,26 @@ async function main(rootDir, outputFile) {
 
       const ast = parsed.ast;
 
-      // Import-edges
+      // Import-edges med hantering för alias och npm-paket
       if (ast?.body) {
         for (const node of ast.body) {
           if (node.type === 'ImportDeclaration' && node.source?.value) {
             const sourcePath = node.source.value;
             if (typeof sourcePath !== 'string') continue;
             
-            // KORRIGERING: Skilj på paket och lokala filer
             if (sourcePath.startsWith('.')) {
-              // Detta är en relativ import, lös sökvägen som tidigare
+              // Relativ import
               const resolvedTarget = path
                 .relative(rootDir, path.resolve(path.dirname(filepath), sourcePath))
                 .replace(/\\/g, '/');
               allEdges.push({ source: relativePath, target: resolvedTarget, type: 'IMPORTS' });
+            } else if (sourcePath.startsWith('@/')) {
+              // Alias-import
+              const resolvedTarget = sourcePath.replace('@/', 'src/');
+               allEdges.push({ source: relativePath, target: resolvedTarget, type: 'IMPORTS' });
             } else {
-              // Detta är en paketimport (t.ex. 'vue', 'pinia')
+              // Paketimport
               allEdges.push({ source: relativePath, target: sourcePath, type: 'IMPORTS_PACKAGE' });
-
-              // Lägg till en nod för paketet om det inte redan finns
               if (!allNodes.some(n => n.id === sourcePath && n.type === 'NpmPackage')) {
                 allNodes.push({
                   id: sourcePath,
@@ -448,7 +489,7 @@ async function main(rootDir, outputFile) {
 
   const ssm = {
     "$schema": "./system_semantic_map.schema.json",
-    "version": "4.4.0",
+    "version": "4.5.0",
     "createdAt": new Date().toISOString(),
     "nodes": allNodes,
     "edges": allEdges
