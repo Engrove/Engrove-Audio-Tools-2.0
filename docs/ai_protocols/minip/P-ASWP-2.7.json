@@ -17,18 +17,13 @@
   },
   "trigger": {
     "type": "on_prompt_analysis",
+    "initialAction": "Initiate Cs1",
     "conditions": {
       "anyOf": [
         "prompt_is_complex_bug_report_with_code",
-        "prompt_requests_architectural_change"
+        "prompt_requests_architectural_change",
+        "user_reques"
       ]
-    },
- "strict_mode": true,
-  "mode": "literal",
-  "executionModel": {
-    "type": "Interactive, Two-Step, Zero-Context",
-    "initialAction": {
-      "type": "Initiate Cs1",
     }
   },
   "policies": {
