@@ -1,23 +1,20 @@
 // scripts/vuemap/generate-ssm.mjs
-// v3.0
+// v3.1
 // === SYFTE & ANSVAR ===
 // Detta Node.js-skript genererar en System Semantic Map (SSM) i JSON-format.
-// Det använder industristandardverktyg för att parsa modern Vue 3 och JavaScript
-// och bygger en djup, semantisk graf över kodbasens struktur och beroenden.
+// Det använder industristandardverktyg för att tillförlitligt parsa modern
+// Vue 3 och JavaScript-syntax (ES2020+).
 // === HISTORIK ===
-// v2.0: Grundläggande version som endast mappar filer och importer.
-// v3.0: (Help me God - Domslut) Stor uppgradering. Skriptet kan nu parsa Pinia
-//       stores (Options API) för att extrahera noder för state, getters och actions.
-//       Det analyserar även funktionskroppar för att skapa kanter för
-//       READS_STATE, MODIFIES_STATE och CALLS, vilket automatiserar den
-//       semantiska berikningen.
+// v3.0: Uppgraderad för att parsa Pinia stores och interna relationer.
+// v3.1: (Help me God - Domslut) Korrigerat ett kritiskt importfel. Byt ut
+//       den felaktiga 'traverse' från 'eslint-visitor-keys' mot den korrekta
+//       'traverseNodes' från 'vue-eslint-parser' för att lösa SyntaxError.
 
 import fs from 'fs/promises';
 import path from 'path';
 import crypto from 'crypto';
 import { glob } from 'glob';
-import { parseForESLint } from 'vue-eslint-parser';
-import { traverse } from 'eslint-visitor-keys';
+import { parseForESLint, traverseNodes } from 'vue-eslint-parser'; // KORRIGERAD IMPORT
 
 // --- Kärnfunktioner ---
 
@@ -56,7 +53,6 @@ async function createFileNode(filepath, rootDir) {
     };
 }
 
-
 // --- AST Analys & Berikning ---
 
 function analyzePiniaStore(ast, fileId) {
@@ -65,7 +61,7 @@ function analyzePiniaStore(ast, fileId) {
     let storeId = null;
     let mainStoreNode = null;
 
-    traverse(ast, {
+    traverseNodes(ast, { // KORRIGERAT FUNKTIONSANROP
         enter(node) {
             if (node.type === 'CallExpression' && node.callee.name === 'defineStore') {
                 if (node.arguments.length > 0 && node.arguments[0].type === 'Literal') {
@@ -93,7 +89,7 @@ function analyzePiniaStore(ast, fileId) {
                                 type: 'StateVariable',
                                 path: fileId,
                                 parent: storeId,
-                                dataType: 'Unknown', // Kan förbättras
+                                dataType: 'Unknown',
                                 purpose: `Represents the '${prop.key.name}' state property.`
                             };
                             storeNodes.push(stateNode);
@@ -117,27 +113,21 @@ function analyzePiniaStore(ast, fileId) {
                                 storeNodes.push(propNode);
                                 storeEdges.push({ source: storeId, target: propNode.id, type: 'DEFINES' });
 
-                                // Analysera funktionens kropp för beroenden
-                                traverse(prop.value.body, {
-                                    enter(childNode) {
-                                        // Hitta this.property access
+                                traverseNodes(prop.value.body, { // KORRIGERAT FUNKTIONSANROP
+                                    enter(childNode, parentNode) {
                                         if (childNode.type === 'MemberExpression' && childNode.object.type === 'ThisExpression') {
                                             const propertyName = childNode.property.name;
                                             const stateId = `${storeId}#state.${propertyName}`;
-                                            const actionId = `${storeId}#actions.${propertyName}`;
-                                            const getterId = `${storeId}#getters.${propertyName}`;
                                             
-                                            // Är det en state-modifiering (t.ex. this.foo = ...)
-                                            if (this.parent.type === 'AssignmentExpression' && this.parent.left === childNode) {
+                                            if (parentNode.type === 'AssignmentExpression' && parentNode.left === childNode) {
                                                 storeEdges.push({ source: propNode.id, target: stateId, type: 'MODIFIES_STATE' });
-                                            } else { // Annars är det en läsning
+                                            } else {
                                                 storeEdges.push({ source: propNode.id, target: stateId, type: 'READS_STATE' });
                                             }
                                         }
-                                        // Hitta this.function() anrop
                                         if(childNode.type === 'CallExpression' && childNode.callee.type === 'MemberExpression' && childNode.callee.object.type === 'ThisExpression') {
                                             const calleeName = childNode.callee.property.name;
-                                            const targetId = `${storeId}#actions.${calleeName}`; // Antar att actions anropar andra actions
+                                            const targetId = `${storeId}#actions.${calleeName}`;
                                             storeEdges.push({ source: propNode.id, target: targetId, type: 'CALLS' });
                                         }
                                     }
@@ -185,7 +175,6 @@ async function main(rootDir, outputFile) {
                 ecmaVersion: 'latest'
             }).ast;
             
-            // Extrahera importer
             if (ast.body) {
                 for (const node of ast.body) {
                     if (node.type === 'ImportDeclaration' && node.source && node.source.value) {
@@ -198,7 +187,6 @@ async function main(rootDir, outputFile) {
                 }
             }
 
-            // Om det är en Pinia store, kör djupanalys
             if (fileNode.fileType === 'PiniaStore') {
                 const { nodes: storeNodes, edges: storeEdges } = analyzePiniaStore(ast, relativePath);
                 allNodes.push(...storeNodes);
@@ -218,7 +206,7 @@ async function main(rootDir, outputFile) {
 
     const ssm = {
         "$schema": "./system_semantic_map.schema.json",
-        "version": "3.0.0",
+        "version": "3.1.0",
         "createdAt": new Date().toISOString(),
         "nodes": allNodes,
         "edges": allEdges
@@ -234,7 +222,6 @@ async function main(rootDir, outputFile) {
     console.log(`  - Output: ${outputFile}`);
 }
 
-// Kör skriptet
 const rootDir = process.argv[2] || '.';
 const outputFile = process.argv[3] || 'scripts/vuemap/system_semantic_map.json';
 main(rootDir, outputFile).catch(console.error);
