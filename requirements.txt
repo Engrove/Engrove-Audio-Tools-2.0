@@ -6,15 +6,19 @@
 # * v2.0 (2025-08-17): Lade till sentence-transformers, torch, chromadb för RAG.
 # * v2.1 (2025-08-17): (Help me God - Grundorsaksanalys) Tog bort chromadb eftersom det inte längre används i den klient-sidiga arkitekturen.
 # * v2.2 (2025-08-17): (Help me God - Domslut) Låst versioner till senast kända fungerande för att säkerställa reproducerbara byggen.
-# * SHA256_LF: e1a2b3c4d5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2
+# * v3.0 (2025-08-29): Bytte till esprima-fork för bättre JS-stöd och låste alla versioner.
+# * SHA256_LF: <ny hash här när du sparar filen>
 
 requests==2.32.3
 beautifulsoup4==4.12.3
 msgpack==1.0.8
 jsonschema==4.23.0
-customtkinter
-esprima-python
+-esprima-python
++esprima-fork==4.0.1.2 # Byt ut esprima-python mot denna mer underhållna fork och lås versionen
+
 # --- Einstein RAG System Dependencies ---
-sentence-transformers
-torch
+# Not: Lås även dessa versioner för att garantera reproducerbara byggen
+sentence-transformers==2.7.0 
+torch==2.3.1
+customtkinter==5.2.2 # Låst version för customtkinter
 # END FILE: requirements.txt
