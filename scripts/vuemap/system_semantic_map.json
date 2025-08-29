@@ -1,7 +1,7 @@
 {
   "$schema": "./system_semantic_map.schema.json",
   "version": "3.1.0",
-  "createdAt": "2025-08-29T19:57:51.915Z",
+  "createdAt": "2025-08-29T20:07:11.463Z",
   "nodes": [
     {
       "id": "src/showcase.js",
@@ -1126,7 +1126,7 @@
       "source": "src/features/theme-toggle/model/themeStore.js",
       "target": "PARSING_ERROR",
       "type": "HAS_ERROR",
-      "details": "traverseNodes is not a function"
+      "details": "Cannot read properties of undefined (reading 'traverse')"
     },
     {
       "source": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
@@ -1207,7 +1207,7 @@
       "source": "src/entities/settings/model/settingsStore.js",
       "target": "PARSING_ERROR",
       "type": "HAS_ERROR",
-      "details": "traverseNodes is not a function"
+      "details": "Cannot read properties of undefined (reading 'traverse')"
     },
     {
       "source": "src/entities/logger/model/loggerStore.js",
@@ -1223,7 +1223,7 @@
       "source": "src/entities/logger/model/loggerStore.js",
       "target": "PARSING_ERROR",
       "type": "HAS_ERROR",
-      "details": "traverseNodes is not a function"
+      "details": "Cannot read properties of undefined (reading 'traverse')"
     },
     {
       "source": "src/entities/data-explorer/model/state.js",
@@ -1259,7 +1259,7 @@
       "source": "src/entities/data-explorer/model/explorerStore.js",
       "target": "PARSING_ERROR",
       "type": "HAS_ERROR",
-      "details": "traverseNodes is not a function"
+      "details": "Cannot read properties of undefined (reading 'traverse')"
     },
     {
       "source": "src/entities/comparison/model/comparisonStore.js",
@@ -1275,7 +1275,7 @@
       "source": "src/entities/comparison/model/comparisonStore.js",
       "target": "PARSING_ERROR",
       "type": "HAS_ERROR",
-      "details": "traverseNodes is not a function"
+      "details": "Cannot read properties of undefined (reading 'traverse')"
     }
   ]
 }
