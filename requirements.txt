@@ -13,8 +13,7 @@ requests==2.32.3
 beautifulsoup4==4.12.3
 msgpack==1.0.8
 jsonschema==4.23.0
--esprima-python
-+esprima-fork==4.0.1.2 # Byt ut esprima-python mot denna mer underhållna fork och lås versionen
+esprima-fork==4.0.1.2 # Byt ut esprima-python mot denna mer underhållna fork och lås versionen
 
 # --- Einstein RAG System Dependencies ---
 # Not: Lås även dessa versioner för att garantera reproducerbara byggen
