@@ -23,7 +23,13 @@
         "prompt_requests_architectural_change"
       ]
     },
-    "action": "Initiate Cs1"
+ "strict_mode": true,
+  "mode": "literal",
+  "executionModel": {
+    "type": "Interactive, Two-Step, Zero-Context",
+    "initialAction": {
+      "type": "Initiate Cs1",
+    }
   },
   "policies": {
     "assumptionPolicy": "forbidden",
