@@ -1,14 +1,8 @@
 // scripts/vuemap/generate-ssm.mjs
-// v4.1
-// === SYFTE & ANSVAR ===
-// Genererar System Semantic Map (SSM) i JSON.
-// Robust parsing av Vue 3 + JS/TS. Fångar props, emits, komponent- och store-beroenden,
-// rutter samt importrelationer.
-//
-// === ÄNDRINGAR v4.1 ===
-// - Ersatt ast.services.getScriptAST() med parsed.ast för <script>-analys.
-// - Korrigerat "edges is not defined" i analyzePiniaStore -> storeEdges.
-// - Små robusthetsförbättringar kring template-analys.
+// v4.2
+// Ändringar v4.2:
+// - Cykelsäker traverse(): undviker parent-cykler och stora fält (parent/tokens/comments/loc/range).
+// - Behåller v4.1-fixar: parsed.ast istället för ast.services.getScriptAST(), samt storeEdges-buggen.
 
 import fs from 'fs/promises';
 import path from 'path';
@@ -19,19 +13,34 @@ import * as tsParser from '@typescript-eslint/parser';
 
 const { parseForESLint } = vueEslintParser;
 
-// --- Hjälp: generisk AST-traverser (DFS) ---
-function traverse(node, { enter }, parent = null) {
-  if (!node || typeof node !== 'object') return;
-  if (node.type) enter(node, parent);
-  for (const key of Object.keys(node)) {
-    const child = node[key];
-    if (!child) continue;
-    if (Array.isArray(child)) {
-      for (const c of child) traverse(c, { enter }, node);
-    } else if (typeof child === 'object' && child.type) {
-      traverse(child, { enter }, node);
+// --- Hjälp: cykelsäker AST-traverser (DFS) ---
+function traverse(root, { enter }) {
+  const seen = new WeakSet();
+  const SKIP_KEYS = new Set(['parent', 'tokens', 'comments', 'loc', 'range']);
+
+  function walk(node, parent = null) {
+    if (!node || typeof node !== 'object') return;
+    if (seen.has(node)) return;
+    seen.add(node);
+
+    if (node.type) enter(node, parent);
+
+    for (const key of Object.keys(node)) {
+      if (SKIP_KEYS.has(key)) continue;
+      const child = node[key];
+      if (!child) continue;
+
+      if (Array.isArray(child)) {
+        for (const c of child) {
+          if (c && typeof c === 'object') walk(c, node);
+        }
+      } else if (typeof child === 'object' && child.type) {
+        walk(child, node);
+      }
     }
   }
+
+  walk(root, null);
 }
 
 // --- Kärnfunktioner ---
@@ -51,7 +60,7 @@ function determineFileType(filepath) {
   if (filepath.endsWith('.js') || filepath.endsWith('.mjs') || filepath.endsWith('.ts')) {
     if (lower.includes('store')) return 'PiniaStore';
     if (lower.includes('router')) return 'RouterConfig';
-    if (lower.includes('main.js')) return 'EntryPoint';
+    if (lower.endsWith('/main.js') || filepath.endsWith('main.js')) return 'EntryPoint';
     return 'Utility';
   }
   if (filepath.endsWith('.json')) return 'StaticData';
@@ -72,7 +81,7 @@ async function createFileNode(filepath, rootDir) {
   };
 }
 
-// --- AST Analys & Berikning ---
+// --- AST-verktyg ---
 function getIdentifierName(node) {
   if (!node) return undefined;
   if (node.type === 'Identifier') return node.name;
@@ -86,16 +95,15 @@ function safePropName(prop) {
   return getIdentifierName(prop.key);
 }
 
+// --- Vue-komponentanalys ---
 function analyzeVueComponent(parsed, fileId, rootDir) {
   const nodes = [];
   const edges = [];
   const componentId = fileId;
 
-  // Program-ast för <script> inkl. <script setup>
   const programAst = parsed?.ast;
   const imports = new Map();
 
-  // 1) Analysera <script> för imports, defineProps/defineEmits, useXStore
   if (programAst) {
     traverse(programAst, {
       enter(node) {
@@ -142,14 +150,13 @@ function analyzeVueComponent(parsed, fileId, rootDir) {
     });
   }
 
-  // 2) Analysera <template>
+  // <template>-del (via vue-eslint-parser -> templateBody)
   const templateAst = programAst?.templateBody;
   if (templateAst) {
     traverse(templateAst, {
       enter(node) {
         if (node.type === 'VElement') {
           const tagName = node.name;
-          // Om taggen matchar ett importerat lokalt komponentnamn
           if (imports.has(tagName)) {
             const componentImportPath = imports.get(tagName);
             const resolvedPath = path
@@ -165,12 +172,13 @@ function analyzeVueComponent(parsed, fileId, rootDir) {
   return { nodes, edges };
 }
 
+// --- Pinia store-analys ---
 function analyzePiniaStore(ast, fileId) {
   const storeNodes = [];
   const storeEdges = [];
 
   traverse(ast, {
-    enter(node) {
+    enter(node, parent) {
       if (node.type === 'CallExpression' && node.callee?.name === 'defineStore') {
         let storeId = 'unknown';
         if (node.arguments?.length) {
@@ -190,7 +198,6 @@ function analyzePiniaStore(ast, fileId) {
           purpose: `Manages state for the '${storeId}' domain.`
         };
         storeNodes.push(mainStoreNode);
-        // FIX: använd storeEdges, inte edges
         storeEdges.push({ source: fileId, target: storeId, type: 'DEFINES' });
 
         const storeDef = node.arguments?.[1];
@@ -292,6 +299,7 @@ function analyzePiniaStore(ast, fileId) {
   return { nodes: storeNodes, edges: storeEdges };
 }
 
+// --- Router-analys ---
 function analyzeRouter(ast, fileId, rootDir) {
   const nodes = [];
   const edges = [];
@@ -355,7 +363,6 @@ async function main(rootDir, outputFile) {
 
   for (const relativePath of files.map(f => f.replace(/\\/g, '/'))) {
     const filepath = path.join(rootDir, relativePath);
-
     const fileNode = await createFileNode(filepath, rootDir);
     allNodes.push(fileNode);
 
@@ -363,15 +370,24 @@ async function main(rootDir, outputFile) {
 
     try {
       const content = await fs.readFile(filepath, 'utf-8');
-      const parsed = parseForESLint(content, {
-        filePath: filepath,
-        parser: tsParser,
-        sourceType: 'module',
-        ecmaVersion: 'latest'
-      });
+
+      // vue-eslint-parser även för .js/.ts funkar, men fallback vid behov
+      let parsed;
+      try {
+        parsed = parseForESLint(content, {
+          filePath: filepath,
+          parser: tsParser,
+          sourceType: 'module',
+          ecmaVersion: 'latest'
+        });
+      } catch (err) {
+        // Fallback: direkt TS-parser (utan template-stöd) för extrema hörnfall
+        parsed = { ast: tsParser.parse(content, { sourceType: 'module', ecmaVersion: 'latest' }) };
+      }
+
       const ast = parsed.ast;
 
-      // Import-edges från script-programmet
+      // Import-edges
       if (ast?.body) {
         for (const node of ast.body) {
           if (node.type === 'ImportDeclaration' && node.source?.value) {
@@ -413,7 +429,7 @@ async function main(rootDir, outputFile) {
 
   const ssm = {
     "$schema": "./system_semantic_map.schema.json",
-    "version": "4.1.0",
+    "version": "4.2.0",
     "createdAt": new Date().toISOString(),
     "nodes": allNodes,
     "edges": allEdges
