@@ -62,18 +62,6 @@
       "governing_documents": [
         "docs/ai_protocols/AI_Core_Instruction.md"
       ]
-    },
-    {
-      "id": "minip_aswp",
-      "label": "Aktivera Avancerad Systemplanering (minip P-ASWP-2.7)",
-      "description": "Startar en session för att bryta ner en komplex uppgift till en detaljerad 'Execution Graph'. Används för storskaliga funktioner.",
-      "target_protocol": "docs/ai_protocols/minip/P-ASWP-2.7.json"
-    },
-    {
-      "id": "minip_c0_discovery",
-      "label": "Aktivera Guidad Upptäckt (minip P-C0-GUIDED-DISCOVERY-4.2)",
-      "description": "Startar en vägledd dialog för att klargöra tvetydiga krav med hjälp av ett 'Discovery Tree'. Används när målet är oklart.",
-      "target_protocol": "docs/ai_protocols/minip/P-C0-GUIDED-DISCOVERY-4.2.json"
     }
   ]
 }
