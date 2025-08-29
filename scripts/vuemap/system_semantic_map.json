@@ -1,7 +1,7 @@
 {
   "$schema": "./system_semantic_map.schema.json",
-  "version": "2.0.0",
-  "createdAt": "2025-08-29T19:03:54.968Z",
+  "version": "3.1.0",
+  "createdAt": "2025-08-29T19:57:51.915Z",
   "nodes": [
     {
       "id": "src/showcase.js",
@@ -1123,6 +1123,12 @@
       "type": "IMPORTS"
     },
     {
+      "source": "src/features/theme-toggle/model/themeStore.js",
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "traverseNodes is not a function"
+    },
+    {
       "source": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
       "target": "../model/useMobileMenu.js",
       "type": "IMPORTS"
@@ -1198,6 +1204,12 @@
       "type": "IMPORTS"
     },
     {
+      "source": "src/entities/settings/model/settingsStore.js",
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "traverseNodes is not a function"
+    },
+    {
       "source": "src/entities/logger/model/loggerStore.js",
       "target": "vue",
       "type": "IMPORTS"
@@ -1206,6 +1218,12 @@
       "source": "src/entities/logger/model/loggerStore.js",
       "target": "pinia",
       "type": "IMPORTS"
+    },
+    {
+      "source": "src/entities/logger/model/loggerStore.js",
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "traverseNodes is not a function"
     },
     {
       "source": "src/entities/data-explorer/model/state.js",
@@ -1238,6 +1256,12 @@
       "type": "IMPORTS"
     },
     {
+      "source": "src/entities/data-explorer/model/explorerStore.js",
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "traverseNodes is not a function"
+    },
+    {
       "source": "src/entities/comparison/model/comparisonStore.js",
       "target": "pinia",
       "type": "IMPORTS"
@@ -1246,6 +1270,12 @@
       "source": "src/entities/comparison/model/comparisonStore.js",
       "target": "vue",
       "type": "IMPORTS"
+    },
+    {
+      "source": "src/entities/comparison/model/comparisonStore.js",
+      "target": "PARSING_ERROR",
+      "type": "HAS_ERROR",
+      "details": "traverseNodes is not a function"
     }
   ]
 }
