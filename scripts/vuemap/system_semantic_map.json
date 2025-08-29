@@ -1,7 +1,7 @@
 {
   "$schema": "./system_semantic_map.schema.json",
   "version": "4.2.0",
-  "createdAt": "2025-08-29T21:25:35.745Z",
+  "createdAt": "2025-08-29T21:53:41.162Z",
   "nodes": [
     {
       "id": "src/showcase.js",
@@ -739,7 +739,7 @@
       "type": "File",
       "path": "src/app/styles/_tokens.css",
       "hash": "a48d94bf02ab3f00483c2624e9938fbf74d508cf6f71bca0dc1a8862f6eb2994",
-      "fileType": "Other",
+      "fileType": "StyleSheet",
       "purpose": "Represents the file artifact at src/app/styles/_tokens.css."
     },
     {
@@ -747,7 +747,7 @@
       "type": "File",
       "path": "src/app/styles/_global.css",
       "hash": "55119df7537b8c21e457c36edda590732381cc34c2ef40d0774c3b5541b500ae",
-      "fileType": "Other",
+      "fileType": "StyleSheet",
       "purpose": "Represents the file artifact at src/app/styles/_global.css."
     },
     {
@@ -755,7 +755,7 @@
       "type": "File",
       "path": "src/app/styles/_components.css",
       "hash": "50285bacbdad7503905b5018e5cd1274f56a0e06dafe7cb7db76df756cb215d8",
-      "fileType": "Other",
+      "fileType": "StyleSheet",
       "purpose": "Represents the file artifact at src/app/styles/_components.css."
     },
     {
