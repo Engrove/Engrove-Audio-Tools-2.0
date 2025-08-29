@@ -1,7 +1,7 @@
 {
   "$schema": "./system_semantic_map.schema.json",
   "version": "3.1.0",
-  "createdAt": "2025-08-29T20:25:03.424Z",
+  "createdAt": "2025-08-29T20:34:42.060Z",
   "nodes": [
     {
       "id": "src/showcase.js",
@@ -484,6 +484,42 @@
       "purpose": "Represents the file artifact at src/features/theme-toggle/model/themeStore.js."
     },
     {
+      "id": "theme",
+      "type": "Store",
+      "path": "src/features/theme-toggle/model/themeStore.js",
+      "storeId": "theme",
+      "purpose": "Manages state for the 'theme' domain."
+    },
+    {
+      "id": "theme#state.currentTheme",
+      "type": "StateVariable",
+      "path": "src/features/theme-toggle/model/themeStore.js",
+      "parent": "theme",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'currentTheme' state property."
+    },
+    {
+      "id": "theme#getters.isDarkTheme",
+      "type": "Getter",
+      "path": "src/features/theme-toggle/model/themeStore.js",
+      "parent": "theme",
+      "purpose": "A getter for the 'theme' store."
+    },
+    {
+      "id": "theme#actions.toggleTheme",
+      "type": "Action",
+      "path": "src/features/theme-toggle/model/themeStore.js",
+      "parent": "theme",
+      "purpose": "A action for the 'theme' store."
+    },
+    {
+      "id": "theme#actions.setTheme",
+      "type": "Action",
+      "path": "src/features/theme-toggle/model/themeStore.js",
+      "parent": "theme",
+      "purpose": "A action for the 'theme' store."
+    },
+    {
       "id": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
       "type": "File",
       "path": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
@@ -540,12 +576,26 @@
       "purpose": "Represents the file artifact at src/entities/settings/model/settingsStore.js."
     },
     {
+      "id": "settings",
+      "type": "Store",
+      "path": "src/entities/settings/model/settingsStore.js",
+      "storeId": "settings",
+      "purpose": "Manages state for the 'settings' domain."
+    },
+    {
       "id": "src/entities/logger/model/loggerStore.js",
       "type": "File",
       "path": "src/entities/logger/model/loggerStore.js",
       "hash": "73af6e5030ffc155f6f22526ba3ca6bc3312974609a9d5fe066078df6ad90703",
       "fileType": "PiniaStore",
       "purpose": "Represents the file artifact at src/entities/logger/model/loggerStore.js."
+    },
+    {
+      "id": "logger",
+      "type": "Store",
+      "path": "src/entities/logger/model/loggerStore.js",
+      "storeId": "logger",
+      "purpose": "Manages state for the 'logger' domain."
     },
     {
       "id": "src/entities/data-explorer/model/state.js",
@@ -562,6 +612,237 @@
       "hash": "ac4c0f9f7d4bd6ab4b4dfa1e8d4ca79ef6a28524939eb9fe1619188258682c28",
       "fileType": "PiniaStore",
       "purpose": "Represents the file artifact at src/entities/data-explorer/model/explorerStore.js."
+    },
+    {
+      "id": "explorer",
+      "type": "Store",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "storeId": "explorer",
+      "purpose": "Manages state for the 'explorer' domain."
+    },
+    {
+      "id": "explorer#state.isLoading",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'isLoading' state property."
+    },
+    {
+      "id": "explorer#state.error",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'error' state property."
+    },
+    {
+      "id": "explorer#state.allItems",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'allItems' state property."
+    },
+    {
+      "id": "explorer#state.filtersMap",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'filtersMap' state property."
+    },
+    {
+      "id": "explorer#state.translationMap",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'translationMap' state property."
+    },
+    {
+      "id": "explorer#state.classifications",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'classifications' state property."
+    },
+    {
+      "id": "explorer#state.dataType",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'dataType' state property."
+    },
+    {
+      "id": "explorer#state.searchTerm",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'searchTerm' state property."
+    },
+    {
+      "id": "explorer#state.categoryFilters",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'categoryFilters' state property."
+    },
+    {
+      "id": "explorer#state.numericFilters",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'numericFilters' state property."
+    },
+    {
+      "id": "explorer#state.sortKey",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'sortKey' state property."
+    },
+    {
+      "id": "explorer#state.sortOrder",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'sortOrder' state property."
+    },
+    {
+      "id": "explorer#state.currentPage",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'currentPage' state property."
+    },
+    {
+      "id": "explorer#state.itemsPerPage",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'itemsPerPage' state property."
+    },
+    {
+      "id": "explorer#getters.currentItems",
+      "type": "Getter",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A getter for the 'explorer' store."
+    },
+    {
+      "id": "explorer#getters.availableFilters",
+      "type": "Getter",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A getter for the 'explorer' store."
+    },
+    {
+      "id": "explorer#getters.availableNumericFilters",
+      "type": "Getter",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A getter for the 'explorer' store."
+    },
+    {
+      "id": "explorer#getters.currentResults",
+      "type": "Getter",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A getter for the 'explorer' store."
+    },
+    {
+      "id": "explorer#getters.totalResults",
+      "type": "Getter",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A getter for the 'explorer' store."
+    },
+    {
+      "id": "explorer#getters.totalPages",
+      "type": "Getter",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A getter for the 'explorer' store."
+    },
+    {
+      "id": "explorer#getters.paginatedResults",
+      "type": "Getter",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A getter for the 'explorer' store."
+    },
+    {
+      "id": "explorer#getters.currentHeaders",
+      "type": "Getter",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A getter for the 'explorer' store."
+    },
+    {
+      "id": "explorer#getters.isPristine",
+      "type": "Getter",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A getter for the 'explorer' store."
+    },
+    {
+      "id": "explorer#actions._initializeAndResetFilters",
+      "type": "Action",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A action for the 'explorer' store."
+    },
+    {
+      "id": "explorer#actions.setDataType",
+      "type": "Action",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A action for the 'explorer' store."
+    },
+    {
+      "id": "explorer#actions.resetFilters",
+      "type": "Action",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A action for the 'explorer' store."
+    },
+    {
+      "id": "explorer#actions.setSort",
+      "type": "Action",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A action for the 'explorer' store."
+    },
+    {
+      "id": "explorer#actions.setPage",
+      "type": "Action",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A action for the 'explorer' store."
+    },
+    {
+      "id": "explorer#actions.initializeData",
+      "type": "Action",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A action for the 'explorer' store."
+    },
+    {
+      "id": "explorer#actions.exportToCSV",
+      "type": "Action",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A action for the 'explorer' store."
     },
     {
       "id": "src/entities/data-explorer/lib/transformer.js",
@@ -594,6 +875,13 @@
       "hash": "64a875da3d12af31ce81d9fbd1cb96a6f1d1d25782d122d6117a6ac3ef465a40",
       "fileType": "PiniaStore",
       "purpose": "Represents the file artifact at src/entities/comparison/model/comparisonStore.js."
+    },
+    {
+      "id": "comparison",
+      "type": "Store",
+      "path": "src/entities/comparison/model/comparisonStore.js",
+      "storeId": "comparison",
+      "purpose": "Manages state for the 'comparison' domain."
     }
   ],
   "edges": [
@@ -1124,9 +1412,43 @@
     },
     {
       "source": "src/features/theme-toggle/model/themeStore.js",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Cannot read properties of undefined (reading 'traverse')"
+      "target": "theme",
+      "type": "DEFINES"
+    },
+    {
+      "source": "theme",
+      "target": "theme#state.currentTheme",
+      "type": "DEFINES"
+    },
+    {
+      "source": "theme",
+      "target": "theme#getters.isDarkTheme",
+      "type": "DEFINES"
+    },
+    {
+      "source": "theme",
+      "target": "theme#actions.toggleTheme",
+      "type": "DEFINES"
+    },
+    {
+      "source": "theme#actions.toggleTheme",
+      "target": "theme#state.currentTheme",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "theme#actions.toggleTheme",
+      "target": "theme#state.currentTheme",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "theme",
+      "target": "theme#actions.setTheme",
+      "type": "DEFINES"
+    },
+    {
+      "source": "theme#actions.setTheme",
+      "target": "theme#state.currentTheme",
+      "type": "MODIFIES_STATE"
     },
     {
       "source": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
@@ -1205,9 +1527,8 @@
     },
     {
       "source": "src/entities/settings/model/settingsStore.js",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Cannot read properties of undefined (reading 'traverse')"
+      "target": "settings",
+      "type": "DEFINES"
     },
     {
       "source": "src/entities/logger/model/loggerStore.js",
@@ -1221,9 +1542,8 @@
     },
     {
       "source": "src/entities/logger/model/loggerStore.js",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Cannot read properties of undefined (reading 'traverse')"
+      "target": "logger",
+      "type": "DEFINES"
     },
     {
       "source": "src/entities/data-explorer/model/state.js",
@@ -1257,9 +1577,478 @@
     },
     {
       "source": "src/entities/data-explorer/model/explorerStore.js",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Cannot read properties of undefined (reading 'traverse')"
+      "target": "explorer",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.isLoading",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.error",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.allItems",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.filtersMap",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.translationMap",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.classifications",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.dataType",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.searchTerm",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.categoryFilters",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.numericFilters",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.sortKey",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.sortOrder",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.currentPage",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.itemsPerPage",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#getters.currentItems",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#getters.availableFilters",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#getters.availableNumericFilters",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#getters.currentResults",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer#getters.currentResults",
+      "target": "explorer#state.dataType",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#getters.currentResults",
+      "target": "explorer#state.currentItems",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#getters.currentResults",
+      "target": "explorer#state.currentItems",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#getters.currentResults",
+      "target": "explorer#state.searchTerm",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#getters.currentResults",
+      "target": "explorer#state.categoryFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#getters.currentResults",
+      "target": "explorer#state.numericFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#getters.currentResults",
+      "target": "explorer#state.sortKey",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#getters.currentResults",
+      "target": "explorer#state.sortOrder",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#getters.totalResults",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer#getters.totalResults",
+      "target": "explorer#state.currentResults",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#getters.totalPages",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer#getters.totalPages",
+      "target": "explorer#state.totalResults",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#getters.totalPages",
+      "target": "explorer#state.itemsPerPage",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#getters.paginatedResults",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer#getters.paginatedResults",
+      "target": "explorer#state.currentPage",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#getters.paginatedResults",
+      "target": "explorer#state.itemsPerPage",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#getters.paginatedResults",
+      "target": "explorer#state.itemsPerPage",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#getters.paginatedResults",
+      "target": "explorer#state.currentResults",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#getters.currentHeaders",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#getters.isPristine",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#actions._initializeAndResetFilters",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.dataType",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.searchTerm",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.currentPage",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.sortKey",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.sortOrder",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.availableFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.availableNumericFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.categoryFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.categoryFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.numericFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.numericFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.availableFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.categoryFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.availableNumericFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.numericFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.categoryFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.numericFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#actions.setDataType",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer#actions.setDataType",
+      "target": "explorer#state.dataType",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions.setDataType",
+      "target": "explorer#state.dataType",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions.setDataType",
+      "target": "explorer#actions._initializeAndResetFilters",
+      "type": "CALLS"
+    },
+    {
+      "source": "explorer#actions.setDataType",
+      "target": "explorer#state._initializeAndResetFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#actions.resetFilters",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer#actions.resetFilters",
+      "target": "explorer#actions._initializeAndResetFilters",
+      "type": "CALLS"
+    },
+    {
+      "source": "explorer#actions.resetFilters",
+      "target": "explorer#state._initializeAndResetFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#actions.setSort",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer#actions.setSort",
+      "target": "explorer#state.sortKey",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions.setSort",
+      "target": "explorer#state.sortOrder",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions.setSort",
+      "target": "explorer#state.sortOrder",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions.setSort",
+      "target": "explorer#state.sortKey",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions.setSort",
+      "target": "explorer#state.sortOrder",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions.setSort",
+      "target": "explorer#state.currentPage",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#actions.setPage",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer#actions.setPage",
+      "target": "explorer#state.totalPages",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions.setPage",
+      "target": "explorer#state.currentPage",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#actions.initializeData",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state.isLoading",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state.allItems",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state.isLoading",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state.error",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state.allItems",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state.filtersMap",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state.translationMap",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state.classifications",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state.allItems",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state.filtersMap",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#actions._initializeAndResetFilters",
+      "type": "CALLS"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state._initializeAndResetFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state.error",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state.isLoading",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#actions.exportToCSV",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer#actions.exportToCSV",
+      "target": "explorer#state.currentResults",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions.exportToCSV",
+      "target": "explorer#state.currentHeaders",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions.exportToCSV",
+      "target": "explorer#state.currentHeaders",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions.exportToCSV",
+      "target": "explorer#state.dataType",
+      "type": "READS_STATE"
     },
     {
       "source": "src/entities/comparison/model/comparisonStore.js",
@@ -1273,9 +2062,8 @@
     },
     {
       "source": "src/entities/comparison/model/comparisonStore.js",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Cannot read properties of undefined (reading 'traverse')"
+      "target": "comparison",
+      "type": "DEFINES"
     }
   ]
 }
