@@ -1,7 +1,7 @@
 {
   "$schema": "./system_semantic_map.schema.json",
-  "version": "4.1.0",
-  "createdAt": "2025-08-29T21:19:34.461Z",
+  "version": "4.2.0",
+  "createdAt": "2025-08-29T21:25:35.745Z",
   "nodes": [
     {
       "id": "src/showcase.js",
@@ -300,6 +300,34 @@
       "purpose": "Represents the file artifact at src/shared/ui/RangeFilter.vue."
     },
     {
+      "id": "src/shared/ui/RangeFilter.vue#prop.modelValue",
+      "type": "Prop",
+      "path": "src/shared/ui/RangeFilter.vue",
+      "parent": "src/shared/ui/RangeFilter.vue",
+      "name": "modelValue"
+    },
+    {
+      "id": "src/shared/ui/RangeFilter.vue#prop.label",
+      "type": "Prop",
+      "path": "src/shared/ui/RangeFilter.vue",
+      "parent": "src/shared/ui/RangeFilter.vue",
+      "name": "label"
+    },
+    {
+      "id": "src/shared/ui/RangeFilter.vue#prop.unit",
+      "type": "Prop",
+      "path": "src/shared/ui/RangeFilter.vue",
+      "parent": "src/shared/ui/RangeFilter.vue",
+      "name": "unit"
+    },
+    {
+      "id": "src/shared/ui/RangeFilter.vue#event.update:modelValue",
+      "type": "Event",
+      "path": "src/shared/ui/RangeFilter.vue",
+      "parent": "src/shared/ui/RangeFilter.vue",
+      "name": "update:modelValue"
+    },
+    {
       "id": "src/shared/ui/Logo.vue",
       "type": "File",
       "path": "src/shared/ui/Logo.vue",
@@ -316,12 +344,117 @@
       "purpose": "Represents the file artifact at src/shared/ui/BaseToggle.vue."
     },
     {
+      "id": "src/shared/ui/BaseToggle.vue#prop.modelValue",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseToggle.vue",
+      "parent": "src/shared/ui/BaseToggle.vue",
+      "name": "modelValue"
+    },
+    {
+      "id": "src/shared/ui/BaseToggle.vue#prop.disabled",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseToggle.vue",
+      "parent": "src/shared/ui/BaseToggle.vue",
+      "name": "disabled"
+    },
+    {
+      "id": "src/shared/ui/BaseToggle.vue#event.update:modelValue",
+      "type": "Event",
+      "path": "src/shared/ui/BaseToggle.vue",
+      "parent": "src/shared/ui/BaseToggle.vue",
+      "name": "update:modelValue"
+    },
+    {
       "id": "src/shared/ui/BaseTable.vue",
       "type": "File",
       "path": "src/shared/ui/BaseTable.vue",
       "hash": "228d9062b9af1bf7b7884ab734b5d64b67c2e240ee1035b1ca73e9a086771360",
       "fileType": "VueComponent",
       "purpose": "Represents the file artifact at src/shared/ui/BaseTable.vue."
+    },
+    {
+      "id": "src/shared/ui/BaseTable.vue#prop.headers",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseTable.vue",
+      "parent": "src/shared/ui/BaseTable.vue",
+      "name": "headers"
+    },
+    {
+      "id": "src/shared/ui/BaseTable.vue#prop.items",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseTable.vue",
+      "parent": "src/shared/ui/BaseTable.vue",
+      "name": "items"
+    },
+    {
+      "id": "src/shared/ui/BaseTable.vue#prop.sortKey",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseTable.vue",
+      "parent": "src/shared/ui/BaseTable.vue",
+      "name": "sortKey"
+    },
+    {
+      "id": "src/shared/ui/BaseTable.vue#prop.sortOrder",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseTable.vue",
+      "parent": "src/shared/ui/BaseTable.vue",
+      "name": "sortOrder"
+    },
+    {
+      "id": "src/shared/ui/BaseTable.vue#prop.showSelection",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseTable.vue",
+      "parent": "src/shared/ui/BaseTable.vue",
+      "name": "showSelection"
+    },
+    {
+      "id": "src/shared/ui/BaseTable.vue#prop.isItemSelected",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseTable.vue",
+      "parent": "src/shared/ui/BaseTable.vue",
+      "name": "isItemSelected"
+    },
+    {
+      "id": "src/shared/ui/BaseTable.vue#prop.selectionLimitReached",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseTable.vue",
+      "parent": "src/shared/ui/BaseTable.vue",
+      "name": "selectionLimitReached"
+    },
+    {
+      "id": "src/shared/ui/BaseTable.vue#prop.allVisibleItemsSelected",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseTable.vue",
+      "parent": "src/shared/ui/BaseTable.vue",
+      "name": "allVisibleItemsSelected"
+    },
+    {
+      "id": "src/shared/ui/BaseTable.vue#event.sort",
+      "type": "Event",
+      "path": "src/shared/ui/BaseTable.vue",
+      "parent": "src/shared/ui/BaseTable.vue",
+      "name": "sort"
+    },
+    {
+      "id": "src/shared/ui/BaseTable.vue#event.row-click",
+      "type": "Event",
+      "path": "src/shared/ui/BaseTable.vue",
+      "parent": "src/shared/ui/BaseTable.vue",
+      "name": "row-click"
+    },
+    {
+      "id": "src/shared/ui/BaseTable.vue#event.toggle-item-selection",
+      "type": "Event",
+      "path": "src/shared/ui/BaseTable.vue",
+      "parent": "src/shared/ui/BaseTable.vue",
+      "name": "toggle-item-selection"
+    },
+    {
+      "id": "src/shared/ui/BaseTable.vue#event.toggle-select-all-visible",
+      "type": "Event",
+      "path": "src/shared/ui/BaseTable.vue",
+      "parent": "src/shared/ui/BaseTable.vue",
+      "name": "toggle-select-all-visible"
     },
     {
       "id": "src/shared/ui/BaseSelect.vue",
@@ -332,12 +465,75 @@
       "purpose": "Represents the file artifact at src/shared/ui/BaseSelect.vue."
     },
     {
+      "id": "src/shared/ui/BaseSelect.vue#prop.modelValue",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseSelect.vue",
+      "parent": "src/shared/ui/BaseSelect.vue",
+      "name": "modelValue"
+    },
+    {
+      "id": "src/shared/ui/BaseSelect.vue#prop.disabled",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseSelect.vue",
+      "parent": "src/shared/ui/BaseSelect.vue",
+      "name": "disabled"
+    },
+    {
+      "id": "src/shared/ui/BaseSelect.vue#prop.options",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseSelect.vue",
+      "parent": "src/shared/ui/BaseSelect.vue",
+      "name": "options"
+    },
+    {
+      "id": "src/shared/ui/BaseSelect.vue#event.update:modelValue",
+      "type": "Event",
+      "path": "src/shared/ui/BaseSelect.vue",
+      "parent": "src/shared/ui/BaseSelect.vue",
+      "name": "update:modelValue"
+    },
+    {
       "id": "src/shared/ui/BaseRadio.vue",
       "type": "File",
       "path": "src/shared/ui/BaseRadio.vue",
       "hash": "847a895fe4cfe341724243363eaaa79e32ff6d9ae5288c06b4f079e191bb9a81",
       "fileType": "VueComponent",
       "purpose": "Represents the file artifact at src/shared/ui/BaseRadio.vue."
+    },
+    {
+      "id": "src/shared/ui/BaseRadio.vue#prop.modelValue",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseRadio.vue",
+      "parent": "src/shared/ui/BaseRadio.vue",
+      "name": "modelValue"
+    },
+    {
+      "id": "src/shared/ui/BaseRadio.vue#prop.value",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseRadio.vue",
+      "parent": "src/shared/ui/BaseRadio.vue",
+      "name": "value"
+    },
+    {
+      "id": "src/shared/ui/BaseRadio.vue#prop.name",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseRadio.vue",
+      "parent": "src/shared/ui/BaseRadio.vue",
+      "name": "name"
+    },
+    {
+      "id": "src/shared/ui/BaseRadio.vue#prop.disabled",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseRadio.vue",
+      "parent": "src/shared/ui/BaseRadio.vue",
+      "name": "disabled"
+    },
+    {
+      "id": "src/shared/ui/BaseRadio.vue#event.update:modelValue",
+      "type": "Event",
+      "path": "src/shared/ui/BaseRadio.vue",
+      "parent": "src/shared/ui/BaseRadio.vue",
+      "name": "update:modelValue"
     },
     {
       "id": "src/shared/ui/BaseMultiSelect.vue",
@@ -348,12 +544,61 @@
       "purpose": "Represents the file artifact at src/shared/ui/BaseMultiSelect.vue."
     },
     {
+      "id": "src/shared/ui/BaseMultiSelect.vue#prop.options",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseMultiSelect.vue",
+      "parent": "src/shared/ui/BaseMultiSelect.vue",
+      "name": "options"
+    },
+    {
+      "id": "src/shared/ui/BaseMultiSelect.vue#prop.modelValue",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseMultiSelect.vue",
+      "parent": "src/shared/ui/BaseMultiSelect.vue",
+      "name": "modelValue"
+    },
+    {
+      "id": "src/shared/ui/BaseMultiSelect.vue#prop.label",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseMultiSelect.vue",
+      "parent": "src/shared/ui/BaseMultiSelect.vue",
+      "name": "label"
+    },
+    {
+      "id": "src/shared/ui/BaseMultiSelect.vue#event.update:modelValue",
+      "type": "Event",
+      "path": "src/shared/ui/BaseMultiSelect.vue",
+      "parent": "src/shared/ui/BaseMultiSelect.vue",
+      "name": "update:modelValue"
+    },
+    {
       "id": "src/shared/ui/BaseModal.vue",
       "type": "File",
       "path": "src/shared/ui/BaseModal.vue",
       "hash": "9f372bbe13ee1e82d8ff6d4b1f360ea565cbca7d903d4406854794493470bc79",
       "fileType": "VueComponent",
       "purpose": "Represents the file artifact at src/shared/ui/BaseModal.vue."
+    },
+    {
+      "id": "src/shared/ui/BaseModal.vue#prop.show",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseModal.vue",
+      "parent": "src/shared/ui/BaseModal.vue",
+      "name": "show"
+    },
+    {
+      "id": "src/shared/ui/BaseModal.vue#prop.maxWidth",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseModal.vue",
+      "parent": "src/shared/ui/BaseModal.vue",
+      "name": "maxWidth"
+    },
+    {
+      "id": "src/shared/ui/BaseModal.vue#event.close",
+      "type": "Event",
+      "path": "src/shared/ui/BaseModal.vue",
+      "parent": "src/shared/ui/BaseModal.vue",
+      "name": "close"
     },
     {
       "id": "src/shared/ui/BaseInput.vue",
@@ -364,12 +609,61 @@
       "purpose": "Represents the file artifact at src/shared/ui/BaseInput.vue."
     },
     {
+      "id": "src/shared/ui/BaseInput.vue#prop.modelValue",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseInput.vue",
+      "parent": "src/shared/ui/BaseInput.vue",
+      "name": "modelValue"
+    },
+    {
+      "id": "src/shared/ui/BaseInput.vue#prop.placeholder",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseInput.vue",
+      "parent": "src/shared/ui/BaseInput.vue",
+      "name": "placeholder"
+    },
+    {
+      "id": "src/shared/ui/BaseInput.vue#prop.disabled",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseInput.vue",
+      "parent": "src/shared/ui/BaseInput.vue",
+      "name": "disabled"
+    },
+    {
+      "id": "src/shared/ui/BaseInput.vue#event.update:modelValue",
+      "type": "Event",
+      "path": "src/shared/ui/BaseInput.vue",
+      "parent": "src/shared/ui/BaseInput.vue",
+      "name": "update:modelValue"
+    },
+    {
       "id": "src/shared/ui/BaseCheckbox.vue",
       "type": "File",
       "path": "src/shared/ui/BaseCheckbox.vue",
       "hash": "5d75d0680c36e26158ae71bf613169f97c6664cf91a226857cf5ac072ff157f1",
       "fileType": "VueComponent",
       "purpose": "Represents the file artifact at src/shared/ui/BaseCheckbox.vue."
+    },
+    {
+      "id": "src/shared/ui/BaseCheckbox.vue#prop.modelValue",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseCheckbox.vue",
+      "parent": "src/shared/ui/BaseCheckbox.vue",
+      "name": "modelValue"
+    },
+    {
+      "id": "src/shared/ui/BaseCheckbox.vue#prop.disabled",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseCheckbox.vue",
+      "parent": "src/shared/ui/BaseCheckbox.vue",
+      "name": "disabled"
+    },
+    {
+      "id": "src/shared/ui/BaseCheckbox.vue#event.update:modelValue",
+      "type": "Event",
+      "path": "src/shared/ui/BaseCheckbox.vue",
+      "parent": "src/shared/ui/BaseCheckbox.vue",
+      "name": "update:modelValue"
     },
     {
       "id": "src/shared/ui/BaseCanvasTextViewer.vue",
@@ -380,12 +674,33 @@
       "purpose": "Represents the file artifact at src/shared/ui/BaseCanvasTextViewer.vue."
     },
     {
+      "id": "src/shared/ui/BaseCanvasTextViewer.vue#prop.text",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseCanvasTextViewer.vue",
+      "parent": "src/shared/ui/BaseCanvasTextViewer.vue",
+      "name": "text"
+    },
+    {
       "id": "src/shared/ui/BaseButton.vue",
       "type": "File",
       "path": "src/shared/ui/BaseButton.vue",
       "hash": "729eac8b83570e6bf6650bfd8f97abd897ee0f06286ca865c0229fa2e700a0b9",
       "fileType": "VueComponent",
       "purpose": "Represents the file artifact at src/shared/ui/BaseButton.vue."
+    },
+    {
+      "id": "src/shared/ui/BaseButton.vue#prop.variant",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseButton.vue",
+      "parent": "src/shared/ui/BaseButton.vue",
+      "name": "variant"
+    },
+    {
+      "id": "src/shared/ui/BaseButton.vue#prop.disabled",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseButton.vue",
+      "parent": "src/shared/ui/BaseButton.vue",
+      "name": "disabled"
     },
     {
       "id": "src/pages/license/LicensePage.vue",
@@ -452,6 +767,132 @@
       "purpose": "Represents the file artifact at src/widgets/ResultsDisplay/ui/ResultsDisplay.vue."
     },
     {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.items",
+      "type": "Prop",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "items"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.headers",
+      "type": "Prop",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "headers"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.dataType",
+      "type": "Prop",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "dataType"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.totalResults",
+      "type": "Prop",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "totalResults"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.totalPages",
+      "type": "Prop",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "totalPages"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.currentPage",
+      "type": "Prop",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "currentPage"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.sortKey",
+      "type": "Prop",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "sortKey"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.sortOrder",
+      "type": "Prop",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "sortOrder"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.showSelection",
+      "type": "Prop",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "showSelection"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.isItemSelected",
+      "type": "Prop",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "isItemSelected"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.selectionLimitReached",
+      "type": "Prop",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "selectionLimitReached"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.allVisibleItemsSelected",
+      "type": "Prop",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "allVisibleItemsSelected"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#event.row-click",
+      "type": "Event",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "row-click"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#event.sort",
+      "type": "Event",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "sort"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#event.page-change",
+      "type": "Event",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "page-change"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#event.export-csv",
+      "type": "Event",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "export-csv"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#event.toggle-item-selection",
+      "type": "Event",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "toggle-item-selection"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#event.toggle-select-all-visible",
+      "type": "Event",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "toggle-select-all-visible"
+    },
+    {
       "id": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
       "type": "File",
       "path": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
@@ -466,6 +907,20 @@
       "hash": "a8d09641b57c36b174db3576c1f94c43197f7852c8b38edc7493f30dc8f5f7f0",
       "fileType": "VueComponent",
       "purpose": "Represents the file artifact at src/widgets/ComparisonTray/ui/ComparisonTray.vue."
+    },
+    {
+      "id": "src/widgets/ComparisonTray/ui/ComparisonTray.vue#event.compare",
+      "type": "Event",
+      "path": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "parent": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "name": "compare"
+    },
+    {
+      "id": "src/widgets/ComparisonTray/ui/ComparisonTray.vue#event.clear",
+      "type": "Event",
+      "path": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "parent": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "name": "clear"
     },
     {
       "id": "src/features/theme-toggle/ui/ThemeToggle.vue",
@@ -544,12 +999,47 @@
       "purpose": "Represents the file artifact at src/features/license-modal/ui/LicenseModal.vue."
     },
     {
+      "id": "src/features/license-modal/ui/LicenseModal.vue#prop.isOpen",
+      "type": "Prop",
+      "path": "src/features/license-modal/ui/LicenseModal.vue",
+      "parent": "src/features/license-modal/ui/LicenseModal.vue",
+      "name": "isOpen"
+    },
+    {
+      "id": "src/features/license-modal/ui/LicenseModal.vue#event.update:isOpen",
+      "type": "Event",
+      "path": "src/features/license-modal/ui/LicenseModal.vue",
+      "parent": "src/features/license-modal/ui/LicenseModal.vue",
+      "name": "update:isOpen"
+    },
+    {
       "id": "src/features/item-details/ui/ItemDetailModal.vue",
       "type": "File",
       "path": "src/features/item-details/ui/ItemDetailModal.vue",
       "hash": "f1c379a50771a41cb8c661d93a4ac15125cc63cc87835d2ba45c1d58d899f37d",
       "fileType": "VueComponent",
       "purpose": "Represents the file artifact at src/features/item-details/ui/ItemDetailModal.vue."
+    },
+    {
+      "id": "src/features/item-details/ui/ItemDetailModal.vue#prop.show",
+      "type": "Prop",
+      "path": "src/features/item-details/ui/ItemDetailModal.vue",
+      "parent": "src/features/item-details/ui/ItemDetailModal.vue",
+      "name": "show"
+    },
+    {
+      "id": "src/features/item-details/ui/ItemDetailModal.vue#prop.item",
+      "type": "Prop",
+      "path": "src/features/item-details/ui/ItemDetailModal.vue",
+      "parent": "src/features/item-details/ui/ItemDetailModal.vue",
+      "name": "item"
+    },
+    {
+      "id": "src/features/item-details/ui/ItemDetailModal.vue#event.close",
+      "type": "Event",
+      "path": "src/features/item-details/ui/ItemDetailModal.vue",
+      "parent": "src/features/item-details/ui/ItemDetailModal.vue",
+      "name": "close"
     },
     {
       "id": "src/features/density-toggle/ui/DensityToggle.vue",
@@ -566,6 +1056,20 @@
       "hash": "3b058491eef865ba7b8cc6c49bb0877d922ab85e28b97ba25667951e5409c762",
       "fileType": "VueComponent",
       "purpose": "Represents the file artifact at src/features/comparison-modal/ui/ComparisonModal.vue."
+    },
+    {
+      "id": "src/features/comparison-modal/ui/ComparisonModal.vue#prop.show",
+      "type": "Prop",
+      "path": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "parent": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "name": "show"
+    },
+    {
+      "id": "src/features/comparison-modal/ui/ComparisonModal.vue#event.close",
+      "type": "Event",
+      "path": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "parent": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "name": "close"
     },
     {
       "id": "src/entities/settings/model/settingsStore.js",
@@ -1047,9 +1551,13 @@
     },
     {
       "source": "src/App.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
+      "target": "src/features/theme-toggle/model/themeStore.js",
+      "type": "USES_STORE_FILE"
+    },
+    {
+      "source": "src/App.vue",
+      "target": "src/entities/settings/model/settingsStore.js",
+      "type": "USES_STORE_FILE"
     },
     {
       "source": "src/app/router.js",
@@ -1122,12 +1630,6 @@
       "type": "IMPORTS"
     },
     {
-      "source": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
-    },
-    {
       "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
       "target": "src/widgets/GlobalHeader/vue-router",
       "type": "IMPORTS"
@@ -1173,12 +1675,6 @@
       "type": "IMPORTS"
     },
     {
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
-    },
-    {
       "source": "src/widgets/GlobalFooter/GlobalFooter.vue",
       "target": "src/widgets/GlobalFooter/vue",
       "type": "IMPORTS"
@@ -1187,12 +1683,6 @@
       "source": "src/widgets/GlobalFooter/GlobalFooter.vue",
       "target": "src/widgets/GlobalFooter/vue-router",
       "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/GlobalFooter/GlobalFooter.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
     },
     {
       "source": "src/shared/ui/RangeFilter.vue",
@@ -1206,9 +1696,23 @@
     },
     {
       "source": "src/shared/ui/RangeFilter.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
+      "target": "src/shared/ui/RangeFilter.vue#prop.modelValue",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/RangeFilter.vue",
+      "target": "src/shared/ui/RangeFilter.vue#prop.label",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/RangeFilter.vue",
+      "target": "src/shared/ui/RangeFilter.vue#prop.unit",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/RangeFilter.vue",
+      "target": "src/shared/ui/RangeFilter.vue#event.update:modelValue",
+      "type": "DEFINES_EVENT"
     },
     {
       "source": "src/shared/ui/Logo.vue",
@@ -1216,16 +1720,19 @@
       "type": "IMPORTS"
     },
     {
-      "source": "src/shared/ui/Logo.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
+      "source": "src/shared/ui/BaseToggle.vue",
+      "target": "src/shared/ui/BaseToggle.vue#prop.modelValue",
+      "type": "DEFINES_PROP"
     },
     {
       "source": "src/shared/ui/BaseToggle.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
+      "target": "src/shared/ui/BaseToggle.vue#prop.disabled",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseToggle.vue",
+      "target": "src/shared/ui/BaseToggle.vue#event.update:modelValue",
+      "type": "DEFINES_EVENT"
     },
     {
       "source": "src/shared/ui/BaseTable.vue",
@@ -1234,9 +1741,63 @@
     },
     {
       "source": "src/shared/ui/BaseTable.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
+      "target": "src/shared/ui/BaseTable.vue#prop.headers",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue#prop.items",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue#prop.sortKey",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue#prop.sortOrder",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue#prop.showSelection",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue#prop.isItemSelected",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue#prop.selectionLimitReached",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue#prop.allVisibleItemsSelected",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue#event.sort",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue#event.row-click",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue#event.toggle-item-selection",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue#event.toggle-select-all-visible",
+      "type": "DEFINES_EVENT"
     },
     {
       "source": "src/shared/ui/BaseSelect.vue",
@@ -1245,9 +1806,23 @@
     },
     {
       "source": "src/shared/ui/BaseSelect.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
+      "target": "src/shared/ui/BaseSelect.vue#prop.modelValue",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseSelect.vue",
+      "target": "src/shared/ui/BaseSelect.vue#prop.disabled",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseSelect.vue",
+      "target": "src/shared/ui/BaseSelect.vue#prop.options",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseSelect.vue",
+      "target": "src/shared/ui/BaseSelect.vue#event.update:modelValue",
+      "type": "DEFINES_EVENT"
     },
     {
       "source": "src/shared/ui/BaseRadio.vue",
@@ -1256,9 +1831,28 @@
     },
     {
       "source": "src/shared/ui/BaseRadio.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
+      "target": "src/shared/ui/BaseRadio.vue#prop.modelValue",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseRadio.vue",
+      "target": "src/shared/ui/BaseRadio.vue#prop.value",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseRadio.vue",
+      "target": "src/shared/ui/BaseRadio.vue#prop.name",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseRadio.vue",
+      "target": "src/shared/ui/BaseRadio.vue#prop.disabled",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseRadio.vue",
+      "target": "src/shared/ui/BaseRadio.vue#event.update:modelValue",
+      "type": "DEFINES_EVENT"
     },
     {
       "source": "src/shared/ui/BaseMultiSelect.vue",
@@ -1272,9 +1866,23 @@
     },
     {
       "source": "src/shared/ui/BaseMultiSelect.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
+      "target": "src/shared/ui/BaseMultiSelect.vue#prop.options",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseMultiSelect.vue",
+      "target": "src/shared/ui/BaseMultiSelect.vue#prop.modelValue",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseMultiSelect.vue",
+      "target": "src/shared/ui/BaseMultiSelect.vue#prop.label",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseMultiSelect.vue",
+      "target": "src/shared/ui/BaseMultiSelect.vue#event.update:modelValue",
+      "type": "DEFINES_EVENT"
     },
     {
       "source": "src/shared/ui/BaseModal.vue",
@@ -1283,21 +1891,53 @@
     },
     {
       "source": "src/shared/ui/BaseModal.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
+      "target": "src/shared/ui/BaseModal.vue#prop.show",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseModal.vue",
+      "target": "src/shared/ui/BaseModal.vue#prop.maxWidth",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseModal.vue",
+      "target": "src/shared/ui/BaseModal.vue#event.close",
+      "type": "DEFINES_EVENT"
     },
     {
       "source": "src/shared/ui/BaseInput.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
+      "target": "src/shared/ui/BaseInput.vue#prop.modelValue",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseInput.vue",
+      "target": "src/shared/ui/BaseInput.vue#prop.placeholder",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseInput.vue",
+      "target": "src/shared/ui/BaseInput.vue#prop.disabled",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseInput.vue",
+      "target": "src/shared/ui/BaseInput.vue#event.update:modelValue",
+      "type": "DEFINES_EVENT"
     },
     {
       "source": "src/shared/ui/BaseCheckbox.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
+      "target": "src/shared/ui/BaseCheckbox.vue#prop.modelValue",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseCheckbox.vue",
+      "target": "src/shared/ui/BaseCheckbox.vue#prop.disabled",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseCheckbox.vue",
+      "target": "src/shared/ui/BaseCheckbox.vue#event.update:modelValue",
+      "type": "DEFINES_EVENT"
     },
     {
       "source": "src/shared/ui/BaseCanvasTextViewer.vue",
@@ -1311,9 +1951,13 @@
     },
     {
       "source": "src/shared/ui/BaseCanvasTextViewer.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
+      "target": "src/shared/ui/BaseCanvasTextViewer.vue#prop.text",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseCanvasTextViewer.vue",
+      "target": "src/features/theme-toggle/model/themeStore.js",
+      "type": "USES_STORE_FILE"
     },
     {
       "source": "src/shared/ui/BaseButton.vue",
@@ -1322,9 +1966,13 @@
     },
     {
       "source": "src/shared/ui/BaseButton.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
+      "target": "src/shared/ui/BaseButton.vue#prop.variant",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseButton.vue",
+      "target": "src/shared/ui/BaseButton.vue#prop.disabled",
+      "type": "DEFINES_PROP"
     },
     {
       "source": "src/pages/license/LicensePage.vue",
@@ -1335,12 +1983,6 @@
       "source": "src/pages/license/LicensePage.vue",
       "target": "src/shared/ui/BaseCanvasTextViewer.vue",
       "type": "IMPORTS"
-    },
-    {
-      "source": "src/pages/license/LicensePage.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
     },
     {
       "source": "src/pages/home/HomePage.vue",
@@ -1364,9 +2006,8 @@
     },
     {
       "source": "src/pages/home/HomePage.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
+      "target": "src/features/theme-toggle/model/themeStore.js",
+      "type": "USES_STORE_FILE"
     },
     {
       "source": "src/pages/data-explorer/DataExplorerPage.vue",
@@ -1425,9 +2066,18 @@
     },
     {
       "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
+      "target": "src/pages/data-explorer/@/entities/data-explorer/model/explorerStore.js",
+      "type": "USES_STORE_FILE"
+    },
+    {
+      "source": "src/pages/data-explorer/DataExplorerPage.vue",
+      "target": "src/pages/data-explorer/@/entities/comparison/model/comparisonStore.js",
+      "type": "USES_STORE_FILE"
+    },
+    {
+      "source": "src/pages/data-explorer/DataExplorerPage.vue",
+      "target": "src/pages/data-explorer/@/entities/logger/model/loggerStore.js",
+      "type": "USES_STORE_FILE"
     },
     {
       "source": "src/pages/about/AboutPage.vue",
@@ -1445,12 +2095,6 @@
       "type": "IMPORTS"
     },
     {
-      "source": "src/pages/about/AboutPage.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
-    },
-    {
       "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
       "target": "src/widgets/ResultsDisplay/ui/@/shared/ui/BaseTable.vue",
       "type": "IMPORTS"
@@ -1462,9 +2106,93 @@
     },
     {
       "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.items",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.headers",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.dataType",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.totalResults",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.totalPages",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.currentPage",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.sortKey",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.sortOrder",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.showSelection",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.isItemSelected",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.selectionLimitReached",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.allVisibleItemsSelected",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#event.row-click",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#event.sort",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#event.page-change",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#event.export-csv",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#event.toggle-item-selection",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#event.toggle-select-all-visible",
+      "type": "DEFINES_EVENT"
     },
     {
       "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
@@ -1498,9 +2226,8 @@
     },
     {
       "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
+      "target": "src/widgets/DataFilterPanel/ui/@/entities/data-explorer/model/explorerStore.js",
+      "type": "USES_STORE_FILE"
     },
     {
       "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
@@ -1529,9 +2256,28 @@
     },
     {
       "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
+      "target": "src/widgets/ComparisonTray/ui/@/entities/comparison/model/comparisonStore.js",
+      "type": "USES_STORE_FILE"
+    },
+    {
+      "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "target": "src/widgets/ComparisonTray/ui/@/entities/data-explorer/model/explorerStore.js",
+      "type": "USES_STORE_FILE"
+    },
+    {
+      "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "target": "src/widgets/ComparisonTray/ui/@/entities/logger/model/loggerStore.js",
+      "type": "USES_STORE_FILE"
+    },
+    {
+      "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "target": "src/widgets/ComparisonTray/ui/ComparisonTray.vue#event.compare",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "target": "src/widgets/ComparisonTray/ui/ComparisonTray.vue#event.clear",
+      "type": "DEFINES_EVENT"
     },
     {
       "source": "src/features/theme-toggle/ui/ThemeToggle.vue",
@@ -1545,9 +2291,8 @@
     },
     {
       "source": "src/features/theme-toggle/ui/ThemeToggle.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
+      "target": "src/features/theme-toggle/model/themeStore.js",
+      "type": "USES_STORE_FILE"
     },
     {
       "source": "src/features/theme-toggle/model/themeStore.js",
@@ -1600,12 +2345,6 @@
       "type": "IMPORTS"
     },
     {
-      "source": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
-    },
-    {
       "source": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
       "target": "src/features/mobile-menu-toggle/model/vue",
       "type": "IMPORTS"
@@ -1622,9 +2361,13 @@
     },
     {
       "source": "src/features/license-modal/ui/LicenseModal.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
+      "target": "src/features/license-modal/ui/LicenseModal.vue#prop.isOpen",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/features/license-modal/ui/LicenseModal.vue",
+      "target": "src/features/license-modal/ui/LicenseModal.vue#event.update:isOpen",
+      "type": "DEFINES_EVENT"
     },
     {
       "source": "src/features/item-details/ui/ItemDetailModal.vue",
@@ -1638,9 +2381,18 @@
     },
     {
       "source": "src/features/item-details/ui/ItemDetailModal.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
+      "target": "src/features/item-details/ui/ItemDetailModal.vue#prop.show",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/features/item-details/ui/ItemDetailModal.vue",
+      "target": "src/features/item-details/ui/ItemDetailModal.vue#prop.item",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/features/item-details/ui/ItemDetailModal.vue",
+      "target": "src/features/item-details/ui/ItemDetailModal.vue#event.close",
+      "type": "DEFINES_EVENT"
     },
     {
       "source": "src/features/density-toggle/ui/DensityToggle.vue",
@@ -1654,9 +2406,8 @@
     },
     {
       "source": "src/features/density-toggle/ui/DensityToggle.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
+      "target": "src/entities/settings/model/settingsStore.js",
+      "type": "USES_STORE_FILE"
     },
     {
       "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
@@ -1685,9 +2436,23 @@
     },
     {
       "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
-      "target": "PARSING_ERROR",
-      "type": "HAS_ERROR",
-      "details": "Maximum call stack size exceeded"
+      "target": "src/features/comparison-modal/ui/ComparisonModal.vue#prop.show",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "target": "src/features/comparison-modal/ui/ComparisonModal.vue#event.close",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "target": "src/features/comparison-modal/ui/@/entities/comparison/model/comparisonStore",
+      "type": "USES_STORE_FILE"
+    },
+    {
+      "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "target": "src/features/comparison-modal/ui/@/entities/data-explorer/model/explorerStore",
+      "type": "USES_STORE_FILE"
     },
     {
       "source": "src/entities/settings/model/settingsStore.js",
