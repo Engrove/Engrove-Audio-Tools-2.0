@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-29T16:09:47.184816+00:00",
+    "generated_at": "2025-08-29T17:55:52.127252+00:00",
     "nodes": {
       "src/debug.js": {
         "type": "JavaScript Module",
@@ -1705,6 +1705,88 @@
         "language": "py",
         "exports": [],
         "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "scripts/vuemap/system_semantic_map.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [
+          {
+            "symbol": "calculate_sha256",
+            "type": "function"
+          },
+          {
+            "symbol": "is_binary",
+            "type": "function"
+          },
+          {
+            "symbol": "extract_script_from_vue",
+            "type": "function"
+          },
+          {
+            "symbol": "process_js_or_vue",
+            "type": "function"
+          },
+          {
+            "symbol": "process_json_file",
+            "type": "function"
+          },
+          {
+            "symbol": "create_file_node",
+            "type": "function"
+          },
+          {
+            "symbol": "main",
+            "type": "function"
+          }
+        ],
+        "imports": [
+          {
+            "source": "os",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "json",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "hashlib",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "argparse",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "esprima",
+            "symbols": [
+              "*"
+            ],
+            "type": "library_import"
+          },
+          {
+            "source": "datetime",
+            "symbols": [
+              "datetime",
+              "timezone"
+            ],
+            "type": "library_import"
+          }
+        ],
         "dependents_count": 0,
         "criticality_score": 0.0
       },
