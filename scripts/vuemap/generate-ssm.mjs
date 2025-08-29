@@ -57,6 +57,7 @@ function isBinary(filepath) {
 function determineFileType(filepath) {
   const lower = filepath.toLowerCase();
   if (filepath.endsWith('.vue')) return 'VueComponent';
+  if (filepath.endsWith('.css')) return 'StyleSheet';
   if (filepath.endsWith('.js') || filepath.endsWith('.mjs') || filepath.endsWith('.ts')) {
     if (lower.includes('store')) return 'PiniaStore';
     if (lower.includes('router')) return 'RouterConfig';
