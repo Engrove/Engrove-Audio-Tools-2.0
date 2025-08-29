@@ -1,5 +1,5 @@
 // scripts/vuemap/generate-ssm.mjs
-// v3.4
+// v3.5
 // === SYFTE & ANSVAR ===
 // Detta Node.js-skript genererar en System Semantic Map (SSM) i JSON-format.
 // Det använder industristandardverktyg för att tillförlitligt parsa modern
@@ -10,13 +10,14 @@
 //       den felaktiga 'traverse' från 'eslint-visitor-keys' mot den korrekta
 //       'traverseNodes' från 'vue-eslint-parser' för att lösa SyntaxError.
 // v3.2: Korrigerat ESM/CJS-interoperabilitetsproblem för 'vue-eslint-parser'.
-// v3.4: Final fix. Changed import to correctly use named export 'visitor' for traversal.
+// v3.5: Final fix. Implemented the correct default import pattern for CJS module interop.
 
 import fs from 'fs/promises';
 import path from 'path';
 import crypto from 'crypto';
 import { glob } from 'glob';
-import { parseForESLint, visitor } from 'vue-eslint-parser';
+import vueEslintParser from 'vue-eslint-parser';
+const { parseForESLint, visitor } = vueEslintParser;
 
 
 // --- Kärnfunktioner ---
