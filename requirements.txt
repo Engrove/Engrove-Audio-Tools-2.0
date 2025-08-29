@@ -13,7 +13,7 @@ requests==2.32.3
 beautifulsoup4==4.12.3
 msgpack==1.0.8
 jsonschema==4.23.0
-esprima-fork
+yjsparser
 
 # --- Einstein RAG System Dependencies ---
 # Not: Lås även dessa versioner för att garantera reproducerbara byggen
