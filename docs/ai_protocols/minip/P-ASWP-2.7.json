@@ -23,7 +23,7 @@
         "prompt_requests_architectural_change"
       ]
     },
-    "action": "Propose initiation of the P-ASWP-2.7 workflow."
+    "action": "Initiate Cs1"
   },
   "policies": {
     "assumptionPolicy": "forbidden",
