@@ -1,5 +1,5 @@
 // scripts/vuemap/generate-ssm.mjs
-// v3.1
+// v3.2
 // === SYFTE & ANSVAR ===
 // Detta Node.js-skript genererar en System Semantic Map (SSM) i JSON-format.
 // Det använder industristandardverktyg för att tillförlitligt parsa modern
@@ -9,12 +9,15 @@
 // v3.1: (Help me God - Domslut) Korrigerat ett kritiskt importfel. Byt ut
 //       den felaktiga 'traverse' från 'eslint-visitor-keys' mot den korrekta
 //       'traverseNodes' från 'vue-eslint-parser' för att lösa SyntaxError.
+// v3.2: Korrigerat ESM/CJS-interoperabilitetsproblem för 'vue-eslint-parser'.
 
 import fs from 'fs/promises';
 import path from 'path';
 import crypto from 'crypto';
 import { glob } from 'glob';
-import { parseForESLint, traverseNodes } from 'vue-eslint-parser'; // KORRIGERAD IMPORT
+import vueEslintParser from 'vue-eslint-parser';
+const { parseForESLint, traverseNodes } = vueEslintParser;
+
 
 // --- Kärnfunktioner ---
 
@@ -61,7 +64,7 @@ function analyzePiniaStore(ast, fileId) {
     let storeId = null;
     let mainStoreNode = null;
 
-    traverseNodes(ast, { // KORRIGERAT FUNKTIONSANROP
+    traverseNodes(ast, {
         enter(node) {
             if (node.type === 'CallExpression' && node.callee.name === 'defineStore') {
                 if (node.arguments.length > 0 && node.arguments[0].type === 'Literal') {
@@ -113,7 +116,7 @@ function analyzePiniaStore(ast, fileId) {
                                 storeNodes.push(propNode);
                                 storeEdges.push({ source: storeId, target: propNode.id, type: 'DEFINES' });
 
-                                traverseNodes(prop.value.body, { // KORRIGERAT FUNKTIONSANROP
+                                traverseNodes(prop.value.body, {
                                     enter(childNode, parentNode) {
                                         if (childNode.type === 'MemberExpression' && childNode.object.type === 'ThisExpression') {
                                             const propertyName = childNode.property.name;
