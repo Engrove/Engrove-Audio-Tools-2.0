@@ -1,16 +1,14 @@
 // scripts/vuemap/generate-ssm.mjs
-// v4.0
+// v4.1
 // === SYFTE & ANSVAR ===
-// Detta Node.js-skript genererar en System Semantic Map (SSM) i JSON-format.
-// Det använder industristandardverktyg för att tillförlitligt parsa modern
-// Vue 3- och JavaScript-syntax (ES2020+).
-// === HISTORIK ===
-// v3.0 - v3.5: Se tidigare versioner.
-// v3.6: Egen generisk AST-traverser. Robust hantering av getters/actions.
-// v4.0: KRITISK UPPGRADERING. Infört djupgående analys av Vue-komponenter
-//       (<script> och <template>) samt Vue Router. Mappar nu props, emits,
-//       komponentanvändning, store-beroenden och rutter för en fullständig
-//       semantisk systemgraf.
+// Genererar System Semantic Map (SSM) i JSON.
+// Robust parsing av Vue 3 + JS/TS. Fångar props, emits, komponent- och store-beroenden,
+// rutter samt importrelationer.
+//
+// === ÄNDRINGAR v4.1 ===
+// - Ersatt ast.services.getScriptAST() med parsed.ast för <script>-analys.
+// - Korrigerat "edges is not defined" i analyzePiniaStore -> storeEdges.
+// - Små robusthetsförbättringar kring template-analys.
 
 import fs from 'fs/promises';
 import path from 'path';
@@ -76,11 +74,11 @@ async function createFileNode(filepath, rootDir) {
 
 // --- AST Analys & Berikning ---
 function getIdentifierName(node) {
-    if (!node) return undefined;
-    if (node.type === 'Identifier') return node.name;
-    if (node.type === 'Literal') return String(node.value);
-    if (node.type === 'TemplateLiteral' && node.quasis.length === 1) return node.quasis[0].value.raw;
-    return undefined;
+  if (!node) return undefined;
+  if (node.type === 'Identifier') return node.name;
+  if (node.type === 'Literal') return String(node.value);
+  if (node.type === 'TemplateLiteral' && node.quasis.length === 1) return node.quasis[0].value.raw;
+  return undefined;
 }
 
 function safePropName(prop) {
@@ -88,78 +86,86 @@ function safePropName(prop) {
   return getIdentifierName(prop.key);
 }
 
-function analyzeVueComponent(ast, fileId, rootDir) {
-    const nodes = [];
-    const edges = [];
-    const componentId = fileId;
-    const scriptAst = ast.services.getScriptAST();
-    const imports = new Map();
+function analyzeVueComponent(parsed, fileId, rootDir) {
+  const nodes = [];
+  const edges = [];
+  const componentId = fileId;
 
-    // 1. Analysera <script> först för att samla in beroenden
-    traverse(scriptAst, {
-        enter(node) {
-            // Samla imports för att kunna mappa komponentnamn till sökvägar
-            if (node.type === 'ImportDeclaration' && node.source.value) {
-                const sourcePath = node.source.value;
-                for (const specifier of node.specifiers) {
-                    if (specifier.type === 'ImportDefaultSpecifier' || specifier.type === 'ImportSpecifier') {
-                        imports.set(specifier.local.name, sourcePath);
-                    }
-                }
-            }
-            // defineProps, defineEmits
-            if (node.type === 'CallExpression' && ['defineProps', 'defineEmits'].includes(node.callee.name)) {
-                const type = node.callee.name === 'defineProps' ? 'Prop' : 'Event';
-                const edgeType = node.callee.name === 'defineProps' ? 'DEFINES_PROP' : 'DEFINES_EVENT';
-                const arg = node.arguments[0];
-                let items = [];
+  // Program-ast för <script> inkl. <script setup>
+  const programAst = parsed?.ast;
+  const imports = new Map();
 
-                if (arg?.type === 'ArrayExpression') {
-                    items = arg.elements.map(el => getIdentifierName(el)).filter(Boolean);
-                } else if (arg?.type === 'ObjectExpression') {
-                    items = arg.properties.map(p => safePropName(p)).filter(Boolean);
-                }
-
-                for (const itemName of items) {
-                    const nodeId = `${componentId}#${type.toLowerCase()}.${itemName}`;
-                    nodes.push({ id: nodeId, type, path: fileId, parent: componentId, name: itemName });
-                    edges.push({ source: componentId, target: nodeId, type: edgeType });
-                }
+  // 1) Analysera <script> för imports, defineProps/defineEmits, useXStore
+  if (programAst) {
+    traverse(programAst, {
+      enter(node) {
+        // Imports
+        if (node.type === 'ImportDeclaration' && node.source?.value) {
+          const sourcePath = node.source.value;
+          for (const specifier of node.specifiers || []) {
+            if (specifier.type === 'ImportDefaultSpecifier' || specifier.type === 'ImportSpecifier') {
+              imports.set(specifier.local.name, sourcePath);
             }
-            // useStore anrop
-            if (node.type === 'CallExpression' && node.callee.name?.startsWith('use') && node.callee.name?.endsWith('Store')) {
-                const storeImportPath = imports.get(node.callee.name);
-                if (storeImportPath) {
-                    const resolvedPath = path.relative(rootDir, path.resolve(path.dirname(path.join(rootDir, fileId)), storeImportPath)).replace(/\\/g, '/');
-                    edges.push({ source: componentId, target: resolvedPath, type: 'USES_STORE_FILE' });
-                }
-            }
+          }
         }
-    });
-    
-    // 2. Analysera <template>
-    const templateAst = ast.templateBody;
-    if (templateAst) {
-        traverse(templateAst, {
-            enter(node) {
-                if (node.type === 'VElement') {
-                    const tagName = node.name;
-                    // Mappa tagg till importerad komponent
-                    if (imports.has(tagName)) {
-                        const componentImportPath = imports.get(tagName);
-                        const resolvedPath = path.relative(rootDir, path.resolve(path.dirname(path.join(rootDir, fileId)), componentImportPath)).replace(/\\/g, '/');
-                        edges.push({ source: componentId, target: resolvedPath, type: 'USES_COMPONENT' });
-                    }
-                }
-            }
-        });
-    }
+        // defineProps / defineEmits
+        if (node.type === 'CallExpression' && ['defineProps', 'defineEmits'].includes(node.callee?.name)) {
+          const type = node.callee.name === 'defineProps' ? 'Prop' : 'Event';
+          const edgeType = node.callee.name === 'defineProps' ? 'DEFINES_PROP' : 'DEFINES_EVENT';
+          const arg = node.arguments?.[0];
+          let items = [];
 
-    return { nodes, edges };
+          if (arg?.type === 'ArrayExpression') {
+            items = (arg.elements || []).map(el => getIdentifierName(el)).filter(Boolean);
+          } else if (arg?.type === 'ObjectExpression') {
+            items = (arg.properties || []).map(p => safePropName(p)).filter(Boolean);
+          }
+
+          for (const itemName of items) {
+            const nodeId = `${componentId}#${type.toLowerCase()}.${itemName}`;
+            nodes.push({ id: nodeId, type, path: fileId, parent: componentId, name: itemName });
+            edges.push({ source: componentId, target: nodeId, type: edgeType });
+          }
+        }
+
+        // useXStore()
+        if (node.type === 'CallExpression' && node.callee?.name?.startsWith('use') && node.callee?.name?.endsWith('Store')) {
+          const storeImportPath = imports.get(node.callee.name);
+          if (storeImportPath) {
+            const resolvedPath = path
+              .relative(rootDir, path.resolve(path.dirname(path.join(rootDir, fileId)), storeImportPath))
+              .replace(/\\/g, '/');
+            edges.push({ source: componentId, target: resolvedPath, type: 'USES_STORE_FILE' });
+          }
+        }
+      }
+    });
+  }
+
+  // 2) Analysera <template>
+  const templateAst = programAst?.templateBody;
+  if (templateAst) {
+    traverse(templateAst, {
+      enter(node) {
+        if (node.type === 'VElement') {
+          const tagName = node.name;
+          // Om taggen matchar ett importerat lokalt komponentnamn
+          if (imports.has(tagName)) {
+            const componentImportPath = imports.get(tagName);
+            const resolvedPath = path
+              .relative(rootDir, path.resolve(path.dirname(path.join(rootDir, fileId)), componentImportPath))
+              .replace(/\\/g, '/');
+            edges.push({ source: componentId, target: resolvedPath, type: 'USES_COMPONENT' });
+          }
+        }
+      }
+    });
+  }
+
+  return { nodes, edges };
 }
 
 function analyzePiniaStore(ast, fileId) {
-  // ... (befintlig kod för analyzePiniaStore är oförändrad) ...
   const storeNodes = [];
   const storeEdges = [];
 
@@ -176,19 +182,28 @@ function analyzePiniaStore(ast, fileId) {
           }
         }
 
-        const mainStoreNode = { id: storeId, type: 'Store', path: fileId, storeId, purpose: `Manages state for the '${storeId}' domain.` };
+        const mainStoreNode = {
+          id: storeId,
+          type: 'Store',
+          path: fileId,
+          storeId,
+          purpose: `Manages state for the '${storeId}' domain.`
+        };
         storeNodes.push(mainStoreNode);
-        edges.push({ source: fileId, target: storeId, type: 'DEFINES' });
+        // FIX: använd storeEdges, inte edges
+        storeEdges.push({ source: fileId, target: storeId, type: 'DEFINES' });
 
         const storeDef = node.arguments?.[1];
         if (storeDef?.type === 'ObjectExpression') {
           const props = storeDef.properties || [];
+
+          // state
           const stateProp = props.find(p => safePropName(p) === 'state');
           let stateObj = null;
           if (stateProp?.value?.type === 'ArrowFunctionExpression' || stateProp?.value?.type === 'FunctionExpression') {
             const body = stateProp.value.body;
             if (body?.type === 'BlockStatement') {
-              const ret = body.body?.find(n => n.type === 'ReturnStatement');
+              const ret = (body.body || []).find(n => n.type === 'ReturnStatement');
               if (ret?.argument?.type === 'ObjectExpression') stateObj = ret.argument;
             } else if (body?.type === 'ObjectExpression') {
               stateObj = body;
@@ -199,10 +214,19 @@ function analyzePiniaStore(ast, fileId) {
               const keyName = safePropName(prop);
               if (!keyName) continue;
               const stateNodeId = `${storeId}#state.${keyName}`;
-              storeNodes.push({ id: stateNodeId, type: 'StateVariable', path: fileId, parent: storeId, dataType: 'Unknown', purpose: `Represents the '${keyName}' state property.` });
+              storeNodes.push({
+                id: stateNodeId,
+                type: 'StateVariable',
+                path: fileId,
+                parent: storeId,
+                dataType: 'Unknown',
+                purpose: `Represents the '${keyName}' state property.`
+              });
               storeEdges.push({ source: storeId, target: stateNodeId, type: 'DEFINES' });
             }
           }
+
+          // getters / actions
           for (const section of ['getters', 'actions']) {
             const sectionProp = props.find(p => safePropName(p) === section);
             if (sectionProp?.value?.type === 'ObjectExpression') {
@@ -211,8 +235,15 @@ function analyzePiniaStore(ast, fileId) {
                 if (!name) continue;
                 const propType = section === 'getters' ? 'Getter' : 'Action';
                 const propId = `${storeId}#${section}.${name}`;
-                storeNodes.push({ id: propId, type: propType, path: fileId, parent: storeId, purpose: `A ${section.slice(0, -1)} for the '${storeId}' store.` });
+                storeNodes.push({
+                  id: propId,
+                  type: propType,
+                  path: fileId,
+                  parent: storeId,
+                  purpose: `A ${section.slice(0, -1)} for the '${storeId}' store.`
+                });
                 storeEdges.push({ source: storeId, target: propId, type: 'DEFINES' });
+
                 const v = prop.value;
                 let body = null;
                 if (v?.type === 'FunctionExpression' || v?.type === 'ArrowFunctionExpression') {
@@ -221,9 +252,10 @@ function analyzePiniaStore(ast, fileId) {
                   body = v.value.body;
                 }
                 if (!body) continue;
-                const bodyNode = body;
-                traverse(bodyNode, {
+
+                traverse(body, {
                   enter(childNode, parentNode) {
+                    // this.x läs/skriv
                     if (childNode.type === 'MemberExpression' && childNode.object?.type === 'ThisExpression') {
                       const propertyName = childNode.property?.name || childNode.property?.value;
                       if (!propertyName) return;
@@ -234,7 +266,12 @@ function analyzePiniaStore(ast, fileId) {
                         storeEdges.push({ source: propId, target: stateId, type: 'READS_STATE' });
                       }
                     }
-                    if (childNode.type === 'CallExpression' && childNode.callee?.type === 'MemberExpression' && childNode.callee.object?.type === 'ThisExpression') {
+                    // this.action()
+                    if (
+                      childNode.type === 'CallExpression' &&
+                      childNode.callee?.type === 'MemberExpression' &&
+                      childNode.callee.object?.type === 'ThisExpression'
+                    ) {
                       const calleeName = childNode.callee.property?.name || childNode.callee.property?.value;
                       if (!calleeName) return;
                       const targetId = `${storeId}#actions.${calleeName}`;
@@ -251,43 +288,57 @@ function analyzePiniaStore(ast, fileId) {
       }
     }
   });
+
   return { nodes: storeNodes, edges: storeEdges };
 }
 
 function analyzeRouter(ast, fileId, rootDir) {
-    const nodes = [];
-    const edges = [];
+  const nodes = [];
+  const edges = [];
 
-    traverse(ast, {
-        enter(node) {
-            if (node.type === 'VariableDeclarator' && node.id.name === 'routes' && node.init.type === 'ArrayExpression') {
-                for (const routeObject of node.init.elements) {
-                    if (routeObject.type !== 'ObjectExpression') continue;
+  traverse(ast, {
+    enter(node) {
+      if (node.type === 'VariableDeclarator' && node.id?.name === 'routes' && node.init?.type === 'ArrayExpression') {
+        for (const routeObject of node.init.elements || []) {
+          if (routeObject?.type !== 'ObjectExpression') continue;
 
-                    let routePath = 'N/A', routeName = 'N/A', componentImport = 'N/A';
-                    
-                    routeObject.properties.forEach(prop => {
-                        const key = safePropName(prop);
-                        if (key === 'path' && prop.value.type === 'Literal') routePath = prop.value.value;
-                        if (key === 'name' && prop.value.type === 'Literal') routeName = prop.value.value;
-                        if (key === 'component' && prop.value.type === 'ArrowFunctionExpression' && prop.value.body.type === 'ImportExpression') {
-                            componentImport = prop.value.body.source.value;
-                        }
-                    });
+          let routePath = 'N/A', routeName = 'N/A', componentImport = 'N/A';
 
-                    if (routePath !== 'N/A' && componentImport !== 'N/A') {
-                        const routeId = `route:${routePath}`;
-                        nodes.push({ id: routeId, type: 'Route', path: fileId, routePath, routeName, purpose: `Defines the '${routeName}' route at '${routePath}'.` });
-                        
-                        const resolvedPath = path.relative(rootDir, path.resolve(path.dirname(path.join(rootDir, fileId)), componentImport)).replace(/\\/g, '/');
-                        edges.push({ source: routeId, target: resolvedPath, type: 'RENDERS_COMPONENT' });
-                        edges.push({ source: fileId, target: routeId, type: 'DEFINES_ROUTE' });
-                    }
-                }
+          (routeObject.properties || []).forEach(prop => {
+            const key = safePropName(prop);
+            if (key === 'path' && prop.value?.type === 'Literal') routePath = prop.value.value;
+            if (key === 'name' && prop.value?.type === 'Literal') routeName = prop.value.value;
+            if (
+              key === 'component' &&
+              prop.value?.type === 'ArrowFunctionExpression' &&
+              prop.value.body?.type === 'ImportExpression'
+            ) {
+              componentImport = prop.value.body.source?.value;
             }
+          });
+
+          if (routePath !== 'N/A' && componentImport !== 'N/A') {
+            const routeId = `route:${routePath}`;
+            nodes.push({
+              id: routeId,
+              type: 'Route',
+              path: fileId,
+              routePath,
+              routeName,
+              purpose: `Defines the '${routeName}' route at '${routePath}'.`
+            });
+
+            const resolvedPath = path
+              .relative(rootDir, path.resolve(path.dirname(path.join(rootDir, fileId)), componentImport))
+              .replace(/\\/g, '/');
+            edges.push({ source: routeId, target: resolvedPath, type: 'RENDERS_COMPONENT' });
+            edges.push({ source: fileId, target: routeId, type: 'DEFINES_ROUTE' });
+          }
         }
-    });
-    return { nodes, edges };
+      }
+    }
+  });
+  return { nodes, edges };
 }
 
 // --- Huvudlogik ---
@@ -316,21 +367,20 @@ async function main(rootDir, outputFile) {
         filePath: filepath,
         parser: tsParser,
         sourceType: 'module',
-        ecmaVersion: 'latest',
-        parserOptions: {
-            templateTokenizer: { patch: true }
-        }
+        ecmaVersion: 'latest'
       });
       const ast = parsed.ast;
 
-      // Import edges
+      // Import-edges från script-programmet
       if (ast?.body) {
         for (const node of ast.body) {
           if (node.type === 'ImportDeclaration' && node.source?.value) {
             const sourcePath = node.source.value;
             if (typeof sourcePath === 'string') {
-                const resolvedTarget = path.relative(rootDir, path.resolve(path.dirname(filepath), sourcePath)).replace(/\\/g, '/');
-                allEdges.push({ source: relativePath, target: resolvedTarget, type: 'IMPORTS' });
+              const resolvedTarget = path
+                .relative(rootDir, path.resolve(path.dirname(filepath), sourcePath))
+                .replace(/\\/g, '/');
+              allEdges.push({ source: relativePath, target: resolvedTarget, type: 'IMPORTS' });
             }
           }
         }
@@ -363,7 +413,7 @@ async function main(rootDir, outputFile) {
 
   const ssm = {
     "$schema": "./system_semantic_map.schema.json",
-    "version": "4.0.0",
+    "version": "4.1.0",
     "createdAt": new Date().toISOString(),
     "nodes": allNodes,
     "edges": allEdges
