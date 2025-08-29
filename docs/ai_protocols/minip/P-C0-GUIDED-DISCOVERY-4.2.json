@@ -5,6 +5,22 @@
   "description": "An interactive, two-step protocol where the AI first performs a thematic analysis on a raw data corpus to propose a dynamic list of candidate focal points. After the operator selects a focal point, the AI distils the corpus into a structured JSON object strictly aligned with the confirmed objective.",
   "strict_mode": true,
   "mode": "literal",
+
+  "trigger": { 
+    "type": "on_each_turn_analysis", 
+    "initialAction": "Initiate_Context_Summary_And_Verification", 
+    "conditions": { 
+      "anyOf": [ "user_invokes_safeword_protocol", 
+                 "ai_explicitly_states_assumption", 
+                 "user_correction_rate_exceeds_threshold", 
+                 "session_context_contradiction_detected", 
+                 "session_turn_count_exceeds_safe_limit" 
+                ] 
+    } 
+  },
+
+
+  
   "executionModel": {
     "type": "Interactive, Two-Step, Zero-Context",
     "initialAction": {
