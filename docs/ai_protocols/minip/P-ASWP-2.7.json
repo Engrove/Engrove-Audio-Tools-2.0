@@ -22,6 +22,7 @@
       "anyOf": [
         "prompt_is_complex_bug_report_with_code",
         "prompt_requests_architectural_change",
+        "prompt_describes_intermittent_or_concurrency_issue",
         "user_requests_specific_protocol"
       ]
     }
