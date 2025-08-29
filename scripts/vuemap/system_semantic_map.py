@@ -1,5 +1,5 @@
 # scripts/vuemap/system_semantic_map.py
-# v1.0
+# v1.1
 # === SYFTE & ANSVAR ===
 # Detta skript genererar en System Semantic Map (SSM) i JSON-format.
 # Kartan representerar kodbasens artefakter (noder) och deras inbördes
@@ -7,13 +7,19 @@
 # Det är designat för att köras i en CI/CD-miljö för att säkerställa
 # att kartan alltid är synkroniserad med den faktiska koden.
 #
-# Beroenden: esprima-python
+# Beroenden: pyjsparser
+#
+# === HISTORIK ===
+# v1.0: Initial version med esprima-python.
+# v1.1: (Help me God - Domslut) Ersatt esprima-python med pyjsparser för att
+#       korrekt hantera modern JavaScript-syntax (ES2020+), specifikt
+#       optional chaining ('?.').
 
 import os
 import json
 import hashlib
 import argparse
-import esprima
+import pyjsparser  # Byt ut esprima mot pyjsparser
 from datetime import datetime, timezone
 
 # --- Kärnfunktioner för filhantering ---
@@ -34,21 +40,19 @@ def is_binary(filepath):
 def extract_script_from_vue(content):
     """Extraherar innehållet från <script setup> eller <script> i en .vue-fil."""
     try:
-        # Föredrar <script setup>
         script_content = content.split('<script setup>')[1].split('</script>')[0]
         return script_content
     except IndexError:
         try:
-            # Fallback till <script>
             script_content = content.split('<script>')[1].split('</script>')[0]
             return script_content
         except IndexError:
-            return "" # Ingen script-tagg hittades
+            return ""
 
 # --- Bearbetningslogik för olika filtyper ---
 
 def process_js_or_vue(filepath, root_dir):
-    """Analyserar .js- eller .vue-filer med Esprima för att extrahera noder och kanter."""
+    """Analyserar .js- eller .vue-filer med PyJsParser för att extrahera noder och kanter."""
     nodes, edges = [], []
     relative_path = os.path.relpath(filepath, root_dir)
     file_id = relative_path
@@ -59,30 +63,23 @@ def process_js_or_vue(filepath, root_dir):
     code_to_parse = extract_script_from_vue(content) if filepath.endswith('.vue') else content
 
     if not code_to_parse.strip():
-        return nodes, edges # Hoppa över filer utan script
+        return nodes, edges
 
     try:
-        # Parsa koden till ett AST
-        ast = esprima.parseModule(code_to_parse, {'range': True, 'loc': True})
+        # Parsa koden till ett AST med pyjsparser
+        ast = pyjsparser.parse(code_to_parse)
         
         # Hitta importer
-        for node in ast.body:
-            if node.type == 'ImportDeclaration' and node.source and node.source.value:
-                import_path = node.source.value
-                # Skapa en IMPORT-kant
-                # Not: En mer avancerad version skulle lösa relativa sökvägar
+        for node in ast.get('body', []):
+            if node.get('type') == 'ImportDeclaration' and node.get('source', {}).get('value'):
+                import_path = node['source']['value']
                 edges.append({
                     "source": file_id,
                     "target": import_path,
                     "type": "IMPORTS"
                 })
-
-        # Ytterligare analys för funktioner, exporter, etc. kan läggas till här
-        # Detta är en grundläggande implementation fokuserad på beroenden.
-
     except Exception as e:
         print(f"    - Varning: Kunde inte parsa {relative_path}: {e}")
-        # Lägg till en kant som indikerar ett parsingfel för felsökning
         edges.append({
             "source": file_id,
             "target": "PARSING_ERROR",
@@ -94,13 +91,11 @@ def process_js_or_vue(filepath, root_dir):
 
 def process_json_file(filepath, root_dir):
     """Bearbetar en JSON-fil, lägger bara till den som en nod."""
-    # Framtida utökning: Parsa innehållet för att identifiera nyckelstrukturer.
     return [], []
 
 def create_file_node(filepath, root_dir):
     """Skapar en grundläggande fil-nod för alla filtyper."""
     relative_path = os.path.relpath(filepath, root_dir)
-    file_id = relative_path
     
     file_type = "VueComponent" if filepath.endswith('.vue') \
         else "PiniaStore" if 'store' in filepath.lower() and filepath.endswith('.js') \
@@ -111,7 +106,7 @@ def create_file_node(filepath, root_dir):
         else "Other"
 
     return {
-        "id": file_id,
+        "id": relative_path,
         "type": "File",
         "path": relative_path,
         "hash": calculate_sha256(filepath),
@@ -140,11 +135,9 @@ def main(root_dir, output_file):
             for filename in files:
                 filepath = os.path.join(subdir, filename)
                 
-                # 1. Skapa alltid en fil-nod
                 file_node = create_file_node(filepath, root_dir)
                 all_nodes.append(file_node)
 
-                # 2. Utför djupare analys baserat på filtyp
                 if filepath.endswith(('.js', '.vue')):
                     nodes, edges = process_js_or_vue(filepath, root_dir)
                     all_nodes.extend(nodes)
@@ -153,18 +146,15 @@ def main(root_dir, output_file):
                     nodes, edges = process_json_file(filepath, root_dir)
                     all_nodes.extend(nodes)
                     all_edges.extend(edges)
-                # Binära och andra filer behöver ingen ytterligare parsning
                 
-    # Skapa slutgiltig SSM-struktur
     ssm = {
         "$schema": "./system_semantic_map.schema.json",
-        "version": "1.0.0",
+        "version": "1.1.0",
         "createdAt": datetime.now(timezone.utc).isoformat(),
         "nodes": all_nodes,
         "edges": all_edges
     }
     
-    # Skriv till output-fil
     output_path = os.path.join(root_dir, output_file)
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     with open(output_path, 'w', encoding='utf-8') as f:
@@ -174,7 +164,6 @@ def main(root_dir, output_file):
     print(f"  - Noder: {len(all_nodes)}")
     print(f"  - Kanter: {len(all_edges)}")
     print(f"  - Output: {output_file}")
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate a System Semantic Map (SSM) for a Vue.js project.")
