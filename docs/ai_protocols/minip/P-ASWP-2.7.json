@@ -1,0 +1,254 @@
+{
+  "protocolId": "P-ASWP-2.7",
+  "workflowId": "ENGROVE_FRANKENSTEEN_ATOMIC_WORKFLOW_V2",
+  "title": "Cs1-Cs2-Cs3 Atomic Session Workflow (Guided & Automated)",
+  "description": "Stateless Cs3: ny tom session utan kontext. Cs2 levererar ett självförsörjande JSON-paket som innehåller all nödvändig kontext och inlinade filer.",
+  "dependsOn": "A Code Knowledge Graph (CKG) artifact.",
+  "meta": {
+    "version": "2.7",
+    "updated": "2025-08-29",
+    "changelog": [
+      "Cs3 är helt stateless. Endast Cs2-JSON används som prompt.",
+      "Cs2-JSON (HumanFacingPackage.manifest) bär full kontext inklusive inlinade filer.",
+      "Manifestversion höjd till 1.2 och schema utökat med inlineFileBundle.",
+      "Cs3 förbjuder all extern IO och alla bilagor. Endast JSON-innehållet får användas.",
+      "Hårda invariants: operatorFileManifest.required == inlineFileBundle.files(meta)."
+    ]
+  },
+  "trigger": {
+    "type": "on_prompt_analysis",
+    "conditions": {
+      "anyOf": [
+        "prompt_is_complex_bug_report_with_code",
+        "prompt_requests_architectural_change"
+      ]
+    },
+    "action": "Propose initiation of the P-ASWP-2.7 workflow."
+  },
+  "policies": {
+    "assumptionPolicy": "forbidden",
+    "evidencePolicy": {
+      "requireLineCitations": true,
+      "citationFormat": "path:lineStart-lineEnd",
+      "unknownHandling": "STOP_AND_REQUEST_CLARIFICATION"
+    },
+    "contextIsolation": "Cs3 får endast använda JSON-innehållet som tillhandahålls av Cs2 (ingen extern kontext)."
+  },
+  "phases": [
+    {
+      "phaseId": "Cs1",
+      "title": "Architect & Plan",
+      "purpose": "Full påverkanalys mot CKG samt framtagning av arkitekturplan.",
+      "promptForInputs": [
+        "User Requirement (Natural Language)",
+        "Den kompletta, aktuella CKG eller relevanta källfiler."
+      ],
+      "fileIntake": {
+        "enabled": true,
+        "when": "Om user requirement, CKG, diff, eller kontext refererar till filer eller mappar.",
+        "requestTemplate": "Ladda upp/ange varje fil med: path, bytes, sha256, kort syfte.",
+        "output": "Preliminär RequiredFileList (kandidatlista för Cs2)."
+      },
+      "outputs": [
+        "Architecture Contract med fullständig ändringsyta och påverkan.",
+        "Föreslagen CKG-diff med nya/ändrade noder och kanter.",
+        "RequiredFileList (kandidat)"
+      ]
+    },
+    {
+      "phaseId": "Cs2",
+      "title": "Verify & Package",
+      "purpose": "Granska Cs1 och paketera ett fullständigt, självförsörjande JSON för människa + Cs3 (stateless).",
+      "inputs": [
+        "Architecture Contract och CKG-diff från Cs1.",
+        "Original, oomodifierade källfiler som berörs av planen."
+      ],
+      "executionManifestSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://engrove.ai/schemas/cs3-execution-manifest.schema.json",
+        "title": "Cs3 Execution Manifest Schema",
+        "description": "Strikt schema som Cs2 levererar till människa för användning av Cs3 i en stateless session.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "manifestVersion",
+          "target",
+          "operation",
+          "instructions",
+          "operatorFileManifest",
+          "constraints",
+          "outputContract",
+          "inlineFileBundle"
+        ],
+        "properties": {
+          "manifestVersion": { "type": "string", "const": "1.2" },
+          "target": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["filePath", "fileType", "language"],
+            "properties": {
+              "filePath": { "type": "string", "minLength": 1 },
+              "fileType": { "type": "string", "enum": ["code", "text", "config", "other"] },
+              "language": { "type": "string", "minLength": 1 }
+            }
+          },
+          "operation": { "type": "string", "enum": ["modify", "create", "replace"] },
+          "instructions": { "type": "string", "minLength": 1 },
+          "operatorFileManifest": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["required"],
+            "properties": {
+              "required": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "$ref": "#/$defs/fileRef" }
+              },
+              "optional": {
+                "type": "array",
+                "items": { "$ref": "#/$defs/fileRef" },
+                "default": []
+              }
+            }
+          },
+          "constraints": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["assumptions", "context", "testing", "forbidExternalIO", "selfContainment"],
+            "properties": {
+              "assumptions": { "type": "string", "const": "forbidden" },
+              "context": {
+                "type": "string",
+                "const": "Cs3 får inte använda annan kontext än manifestet (detta JSON)."
+              },
+              "forbidExternalIO": { "type": "boolean", "const": true },
+              "selfContainment": { "type": "boolean", "const": true },
+              "testing": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["runInternalTestsIfPresent", "acceptanceCriteria"],
+                "properties": {
+                  "runInternalTestsIfPresent": { "type": "boolean" },
+                  "acceptanceCriteria": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": { "type": "string", "minLength": 1 }
+                  }
+                }
+              }
+            }
+          },
+          "outputContract": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["requireProvenanceHeader", "lineCitationsRequired", "format"],
+            "properties": {
+              "requireProvenanceHeader": { "type": "boolean", "const": true },
+              "lineCitationsRequired": { "type": "boolean", "const": true },
+              "format": {
+                "type": "string",
+                "enum": ["en enda komplett fil i ett kodblock, inget övrigt prosamaterial"]
+              }
+            }
+          },
+          "inlineFileBundle": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["files"],
+            "properties": {
+              "files": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "$ref": "#/$defs/fileBlob" }
+              },
+              "totalBytes": { "type": "integer", "minimum": 0 }
+            }
+          }
+        },
+        "$defs": {
+          "fileRef": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "sha256", "bytes", "purpose"],
+            "properties": {
+              "path": { "type": "string", "minLength": 1 },
+              "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+              "bytes": { "type": "integer", "minimum": 0 },
+              "purpose": { "type": "string", "minLength": 1 }
+            }
+          },
+          "fileBlob": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "sha256", "bytes", "purpose", "encoding", "content"],
+            "properties": {
+              "path": { "type": "string", "minLength": 1 },
+              "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+              "bytes": { "type": "integer", "minimum": 0 },
+              "purpose": { "type": "string", "minLength": 1 },
+              "encoding": { "type": "string", "enum": ["utf8", "base64"] },
+              "content": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      },
+      "outputs": [
+        "HumanFacingPackage = {",
+        "  \"manifest\": <komplett Cs3 Execution Manifest v1.2 med inlineFileBundle>,",
+        "  \"requiredFiles\": <deriverad lista från manifest.inlineFileBundle.files (path, sha256, bytes, purpose)>,",
+        "  \"instructions\": \"Klistra in HELA detta JSON i Cs3. Inga bilagor. Cs3 får endast använda detta innehåll.\",",
+        "  \"markdownTemplate\": \"## Cs3-körning (stateless)\\n\\n**Steg 1 — Bekräfta innehåll**\\n- [ ] Ingen extern kontext används.\\n- [ ] Alla källfiler finns inlinade nedan.\\n\\n**Filer (inlinade):**\\n{{#each manifest.inlineFileBundle.files}}\\n- \\`{{this.path}}\\`  (sha256: \\`{{this.sha256}}\\`, bytes: \\`{{this.bytes}}\\`)  \\\\n  purpose: {{this.purpose}}\\n{{/each}}\\n\\n---\\n\\n**Steg 2 — Manifest**\\n\\n```json\\n{{{json manifest}}}\\n```\\n\\n**Viktigt:** Cs3 får inte läsa något utanför detta JSON. Inget nätverk. Inga filsystemanrop. Ingen körning om schemavalidering eller checksummor misslyckas.\"",
+        "}"
+      ]
+    },
+    {
+      "phaseId": "Cs3",
+      "title": "Execute (Atomic)",
+      "purpose": "Mekaniskt implementera exakt ett filmål med endast JSON-innehåll från Cs2.",
+      "inputs": ["HumanFacingPackage"],
+      "preconditions": {
+        "requireSchemaValidation": true,
+        "requireInlineFiles": true,
+        "forbidExternalIO": true,
+        "onViolation": "HARD_STOP"
+      },
+      "embeddedProtocol": {
+        "PRECHECKS": [
+          "Validera HumanFacingPackage.manifest mot phases[1].executionManifestSchema (JSON Schema draft 2020-12).",
+          "Härled requiredFiles från manifest.inlineFileBundle.files och jämför mot operatorFileManifest.required (path, sha256, bytes, purpose).",
+          "Om avvikelse: returnera INVARIANT_VIOLATION med diff.",
+          "Beräkna sha256 och bytes för varje fileBlob.content (enligt encoding) och jämför mot metadata.",
+          "Om mismatch: returnera CHECKSUM_MISMATCH med lista."
+        ],
+        "IO": {
+          "input": "Endast HumanFacingPackage (manifest + inlinade filer).",
+          "output": "Komplett modifierad målsource för en fil."
+        },
+        "ERRORS": {
+          "SCHEMA_INVALID": "Returnera felen från valideraren. Ingen kod levereras.",
+          "INVARIANT_VIOLATION": "operatorFileManifest.required matchar inte inlineFileBundle.files.",
+          "CHECKSUM_MISMATCH": "Returnera exakta skillnader. Ingen kod levereras.",
+          "NEEDS_CLARIFICATION": "Endast vid självmotsägelser i manifestet."
+        },
+        "OUTPUT": {
+          "format": "Endast ett kodblock med den fullständiga filen.",
+          "provenanceHeader": true,
+          "provenanceHeaderSchema": {
+            "fields": [
+              "Protocol: P-ASWP-2.7",
+              "Timestamp",
+              "SourceBasis: lista över path:lineStart-lineEnd",
+              "ChangeSummary: punktlista över ändringar med citat-ID",
+              "Assumptions: ALWAYS 'None'"
+            ]
+          },
+          "banAssumptions": true,
+          "lineCitationsRequired": true
+        }
+      },
+      "outputs": [
+        "Den kompletta, modifierade källfilen för målfilen, levererad enligt embeddedProtocol."
+      ]
+    }
+  ]
+}
