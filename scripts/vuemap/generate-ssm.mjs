@@ -1,8 +1,9 @@
 // scripts/vuemap/generate-ssm.mjs
-// v4.2
-// Ändringar v4.2:
-// - Cykelsäker traverse(): undviker parent-cykler och stora fält (parent/tokens/comments/loc/range).
-// - Behåller v4.1-fixar: parsed.ast istället för ast.services.getScriptAST(), samt storeEdges-buggen.
+// v4.4
+// Ändringar v4.4:
+// - KORRIGERING: Hanterar nu NPM-paketimporter (t.ex. 'vue') korrekt, istället för att tolka dem som lokala filer.
+// - NYTT: analyzeRouter() för att parsa router.js, skapa Route-noder och RENDERS_COMPONENT-kanter.
+// - Behåller v4.2-fixar.
 
 import fs from 'fs/promises';
 import path from 'path';
@@ -158,8 +159,10 @@ function analyzeVueComponent(parsed, fileId, rootDir) {
       enter(node) {
         if (node.type === 'VElement') {
           const tagName = node.name;
-          if (imports.has(tagName)) {
-            const componentImportPath = imports.get(tagName);
+          // Korrigering för att matcha komponentnamn som 'Logo' med importnamn
+          const importedName = Array.from(imports.keys()).find(key => key.toLowerCase() === tagName.toLowerCase());
+          if (importedName && imports.has(importedName)) {
+            const componentImportPath = imports.get(importedName);
             const resolvedPath = path
               .relative(rootDir, path.resolve(path.dirname(path.join(rootDir, fileId)), componentImportPath))
               .replace(/\\/g, '/');
@@ -372,7 +375,6 @@ async function main(rootDir, outputFile) {
     try {
       const content = await fs.readFile(filepath, 'utf-8');
 
-      // vue-eslint-parser även för .js/.ts funkar, men fallback vid behov
       let parsed;
       try {
         parsed = parseForESLint(content, {
@@ -382,7 +384,6 @@ async function main(rootDir, outputFile) {
           ecmaVersion: 'latest'
         });
       } catch (err) {
-        // Fallback: direkt TS-parser (utan template-stöd) för extrema hörnfall
         parsed = { ast: tsParser.parse(content, { sourceType: 'module', ecmaVersion: 'latest' }) };
       }
 
@@ -393,11 +394,28 @@ async function main(rootDir, outputFile) {
         for (const node of ast.body) {
           if (node.type === 'ImportDeclaration' && node.source?.value) {
             const sourcePath = node.source.value;
-            if (typeof sourcePath === 'string') {
+            if (typeof sourcePath !== 'string') continue;
+            
+            // KORRIGERING: Skilj på paket och lokala filer
+            if (sourcePath.startsWith('.')) {
+              // Detta är en relativ import, lös sökvägen som tidigare
               const resolvedTarget = path
                 .relative(rootDir, path.resolve(path.dirname(filepath), sourcePath))
                 .replace(/\\/g, '/');
               allEdges.push({ source: relativePath, target: resolvedTarget, type: 'IMPORTS' });
+            } else {
+              // Detta är en paketimport (t.ex. 'vue', 'pinia')
+              allEdges.push({ source: relativePath, target: sourcePath, type: 'IMPORTS_PACKAGE' });
+
+              // Lägg till en nod för paketet om det inte redan finns
+              if (!allNodes.some(n => n.id === sourcePath && n.type === 'NpmPackage')) {
+                allNodes.push({
+                  id: sourcePath,
+                  type: 'NpmPackage',
+                  name: sourcePath,
+                  purpose: `Represents the external NPM dependency '${sourcePath}'.`
+                });
+              }
             }
           }
         }
@@ -430,7 +448,7 @@ async function main(rootDir, outputFile) {
 
   const ssm = {
     "$schema": "./system_semantic_map.schema.json",
-    "version": "4.2.0",
+    "version": "4.4.0",
     "createdAt": new Date().toISOString(),
     "nodes": allNodes,
     "edges": allEdges
