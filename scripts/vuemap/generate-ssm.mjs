@@ -1,9 +1,11 @@
 // scripts/vuemap/generate-ssm.mjs
-// v4.5
-// Ändringar v4.5:
-// - KORRIGERING (Router): analyzeRouter hanterar nu statiska importer (t.ex. import HomePage from ...) korrekt.
-// - KORRIGERING (Importer): Skiljer nu korrekt på relativa, alias-baserade (@/) och NPM-paketimporter.
-// - Behåller v4.4-fixar.
+// v5.0
+// Ändringar v5.0:
+// - PROTOKOLL-TRANSFORMATION: Genererar nu en fullständig, exekverbar protokollfil (P-SAAP-1.0).
+// - ARKITEKTURREGLER: Innehåller nu definitioner för arkitektoniska lager, placeringsregler och beroenderegler.
+// - AKTIV VALIDERING: Validerar aktivt filstrukturen och importer mot de definierade reglerna under körning.
+// - RAPPORTERING: Lägger till en `violations`-sektion i outputen för att rapportera alla upptäckta arkitektoniska avvikelser.
+// - Behåller v4.5-fixar.
 
 import fs from 'fs/promises';
 import path from 'path';
@@ -13,6 +15,36 @@ import vueEslintParser from 'vue-eslint-parser';
 import * as tsParser from '@typescript-eslint/parser';
 
 const { parseForESLint } = vueEslintParser;
+
+// --- DEFINITION AV ARKITEKTURREGLER (Protokollets Kärna) ---
+
+const ARCHITECTURAL_LAYERS = [
+  { layer: 0, name: "shared", pathPrefix: "src/shared" },
+  { layer: 1, name: "entities", pathPrefix: "src/entities" },
+  { layer: 2, name: "features", pathPrefix: "src/features" },
+  { layer: 3, name: "widgets", pathPrefix: "src/widgets" },
+  { layer: 4, name: "pages", pathPrefix: "src/pages" },
+  { layer: 5, name: "app", pathPrefix: "src/app" },
+];
+
+const PLACEMENT_RULES = [
+  { fileType: "VueComponent", purpose: "UI Primitive", allowedPath: /^src\/shared\/ui\/.*\.vue$/ },
+  { fileType: "PiniaStore", purpose: "Business Entity State", allowedPath: /^src\/entities\/[a-zA-Z0-9-]+\/model\/.*\.js$/ },
+  { fileType: "VueComponent", purpose: "Feature Implementation", allowedPath: /^src\/features\/[a-zA-Z0-9-]+\/ui\/.*\.vue$/ },
+  { fileType: "VueComponent", purpose: "Page Layout", allowedPath: /^src\/pages\/[a-zA-Z0-9-]+\/.*\.vue$/ },
+  { fileType: "RouterConfig", purpose: "Application Routing", allowedPath: /^src\/app\/router\.js$/ },
+  { fileType: "EntryPoint", purpose: "Application Entry Point", allowedPath: /^src\/app\/main\.js$/ },
+];
+
+const DEPENDENCY_RULES = {
+  "app": ["pages", "widgets", "features", "entities", "shared"],
+  "pages": ["widgets", "features", "entities", "shared"],
+  "widgets": ["features", "entities", "shared"],
+  "features": ["entities", "shared"],
+  "entities": ["shared"],
+  "shared": ["shared"],
+};
+
 
 // --- Hjälp: cykelsäker AST-traverser (DFS) ---
 function traverse(root, { enter }) {
@@ -60,9 +92,9 @@ function determineFileType(filepath) {
   if (filepath.endsWith('.vue')) return 'VueComponent';
   if (filepath.endsWith('.css')) return 'StyleSheet';
   if (filepath.endsWith('.js') || filepath.endsWith('.mjs') || filepath.endsWith('.ts')) {
-    if (lower.includes('store')) return 'PiniaStore';
-    if (lower.includes('router')) return 'RouterConfig';
-    if (lower.endsWith('/main.js') || filepath.endsWith('main.js')) return 'EntryPoint';
+    if (lower.includes('/model/') && (lower.endsWith('store.js') || lower.endsWith('store.ts'))) return 'PiniaStore';
+    if (lower.includes('/app/router')) return 'RouterConfig';
+    if (lower.includes('/app/main')) return 'EntryPoint';
     return 'Utility';
   }
   if (filepath.endsWith('.json')) return 'StaticData';
@@ -70,17 +102,30 @@ function determineFileType(filepath) {
   return 'Other';
 }
 
+function determinePurpose(fileNode) {
+    if (fileNode.fileType === 'VueComponent') {
+        if (fileNode.path.startsWith('src/shared/ui/')) return 'UI Primitive';
+        if (fileNode.path.startsWith('src/features/')) return 'Feature Implementation';
+        if (fileNode.path.startsWith('src/pages/')) return 'Page Layout';
+    }
+    if (fileNode.fileType === 'PiniaStore') return 'Business Entity State';
+    if (fileNode.fileType === 'RouterConfig') return 'Application Routing';
+    if (fileNode.fileType === 'EntryPoint') return 'Application Entry Point';
+    return `Represents the file artifact at ${fileNode.path}.`;
+}
+
 async function createFileNode(filepath, rootDir) {
   const relativePath = path.relative(rootDir, filepath).replace(/\\/g, '/');
-  const fileType = determineFileType(filepath);
-  return {
+  const fileNode = {
     id: relativePath,
     type: 'File',
     path: relativePath,
     hash: await calculateSha256(filepath),
-    fileType,
-    purpose: `Represents the file artifact at ${relativePath}.`
+    fileType: determineFileType(filepath),
+    purpose: '' // Placeholder
   };
+  fileNode.purpose = determinePurpose(fileNode);
+  return fileNode;
 }
 
 // --- AST-verktyg ---
@@ -97,7 +142,61 @@ function safePropName(prop) {
   return getIdentifierName(prop.key);
 }
 
-// --- Vue-komponentanalys ---
+// --- Arkitekturvalidering ---
+function getLayer(filePath) {
+    const layer = ARCHITECTURAL_LAYERS.find(l => filePath.startsWith(l.pathPrefix));
+    return layer ? layer : null;
+}
+
+function validatePlacement(fileNode) {
+    const applicableRule = PLACEMENT_RULES.find(r => r.fileType === fileNode.fileType && (r.purpose ? r.purpose === fileNode.purpose : true));
+    if (applicableRule && !applicableRule.allowedPath.test(fileNode.path)) {
+        return {
+            type: 'PLACEMENT_VIOLATION',
+            source: fileNode.path,
+            details: `File of type '${fileNode.fileType}' with purpose '${fileNode.purpose}' is misplaced. Expected location matching: ${applicableRule.allowedPath.toString()}`
+        };
+    }
+    return null;
+}
+
+function validateDependency(edge, fileNodes) {
+    if (edge.type !== 'IMPORTS' || !edge.target.endsWith('.js') && !edge.target.endsWith('.vue')) {
+        return null; // Validera bara interna JS/Vue-importer
+    }
+
+    const sourceLayer = getLayer(edge.source);
+    const targetLayer = getLayer(edge.target);
+
+    if (!sourceLayer || !targetLayer) {
+        return null; // Kan inte validera om en fil inte tillhör ett lager
+    }
+
+    if (sourceLayer.layer < targetLayer.layer) {
+        return {
+            type: 'DEPENDENCY_VIOLATION',
+            source: edge.source,
+            target: edge.target,
+            details: `Illegal import from lower layer '${sourceLayer.name}' (L${sourceLayer.layer}) to higher layer '${targetLayer.name}' (L${targetLayer.layer}).`
+        };
+    }
+    
+    const allowedImports = DEPENDENCY_RULES[sourceLayer.name] || [];
+    if (!allowedImports.includes(targetLayer.name)) {
+         return {
+            type: 'DEPENDENCY_VIOLATION',
+            source: edge.source,
+            target: edge.target,
+            details: `Layer '${sourceLayer.name}' is not allowed to import from layer '${targetLayer.name}'. Allowed: [${allowedImports.join(', ')}]`
+        };
+    }
+
+    return null;
+}
+
+
+// --- Specifik filanalys (Vue, Pinia, Router) ---
+// (Funktionerna analyzeVueComponent, analyzePiniaStore, analyzeRouter förblir i stort sett oförändrade från v4.5)
 function analyzeVueComponent(parsed, fileId, rootDir) {
   const nodes = [];
   const edges = [];
@@ -185,8 +284,6 @@ function analyzeVueComponent(parsed, fileId, rootDir) {
 
   return { nodes, edges };
 }
-
-// --- Pinia store-analys ---
 function analyzePiniaStore(ast, fileId) {
   const storeNodes = [];
   const storeEdges = [];
@@ -312,8 +409,6 @@ function analyzePiniaStore(ast, fileId) {
 
   return { nodes: storeNodes, edges: storeEdges };
 }
-
-// --- Router-analys (Robust Version) ---
 function analyzeRouter(ast, fileId, rootDir) {
   const nodes = [];
   const edges = [];
@@ -392,44 +487,49 @@ function analyzeRouter(ast, fileId, rootDir) {
   return { nodes, edges };
 }
 
-
 // --- Huvudlogik ---
 async function main(rootDir, outputFile) {
-  console.log('Startar generering av System Semantic Map (SSM)...');
+  console.log('Startar generering av System Architecture Adherence Protocol (SAAP)...');
 
   const allNodes = [];
   const allEdges = [];
+  const allViolations = [];
 
   const targetPatterns = ['src/**/*.{js,ts,vue,json,css}', 'public/data/**/*.{json,webp}'];
   const files = await glob(targetPatterns, { cwd: rootDir, nodir: true });
 
   console.log(`  - Hittade ${files.length} relevanta filer...`);
 
+  // Steg 1: Skapa alla filnoder och validera placering
   for (const relativePath of files.map(f => f.replace(/\\/g, '/'))) {
     const filepath = path.join(rootDir, relativePath);
     const fileNode = await createFileNode(filepath, rootDir);
     allNodes.push(fileNode);
 
+    const placementViolation = validatePlacement(fileNode);
+    if (placementViolation) {
+        allViolations.push(placementViolation);
+    }
+  }
+
+  // Steg 2: Parsa filer och generera kanter
+  for (const fileNode of allNodes.filter(n => n.type === 'File')) {
+    const { path: relativePath } = fileNode;
+    const filepath = path.join(rootDir, relativePath);
+
     if (isBinary(filepath) || filepath.endsWith('.json') || filepath.endsWith('.css')) continue;
 
     try {
       const content = await fs.readFile(filepath, 'utf-8');
-
       let parsed;
       try {
-        parsed = parseForESLint(content, {
-          filePath: filepath,
-          parser: tsParser,
-          sourceType: 'module',
-          ecmaVersion: 'latest'
-        });
+        parsed = parseForESLint(content, { filePath, parser: tsParser, sourceType: 'module', ecmaVersion: 'latest' });
       } catch (err) {
         parsed = { ast: tsParser.parse(content, { sourceType: 'module', ecmaVersion: 'latest' }) };
       }
-
       const ast = parsed.ast;
 
-      // Import-edges med hantering för alias och npm-paket
+      // Import-edges
       if (ast?.body) {
         for (const node of ast.body) {
           if (node.type === 'ImportDeclaration' && node.source?.value) {
@@ -437,25 +537,16 @@ async function main(rootDir, outputFile) {
             if (typeof sourcePath !== 'string') continue;
             
             if (sourcePath.startsWith('.')) {
-              // Relativ import
-              const resolvedTarget = path
-                .relative(rootDir, path.resolve(path.dirname(filepath), sourcePath))
-                .replace(/\\/g, '/');
-              allEdges.push({ source: relativePath, target: resolvedTarget, type: 'IMPORTS' });
+              const resolvedTarget = path.join(path.dirname(relativePath), sourcePath).replace(/\\/g, '/');
+              const finalTarget = path.normalize(resolvedTarget);
+              allEdges.push({ source: relativePath, target: finalTarget, type: 'IMPORTS' });
             } else if (sourcePath.startsWith('@/')) {
-              // Alias-import
               const resolvedTarget = sourcePath.replace('@/', 'src/');
-               allEdges.push({ source: relativePath, target: resolvedTarget, type: 'IMPORTS' });
+              allEdges.push({ source: relativePath, target: resolvedTarget, type: 'IMPORTS' });
             } else {
-              // Paketimport
               allEdges.push({ source: relativePath, target: sourcePath, type: 'IMPORTS_PACKAGE' });
               if (!allNodes.some(n => n.id === sourcePath && n.type === 'NpmPackage')) {
-                allNodes.push({
-                  id: sourcePath,
-                  type: 'NpmPackage',
-                  name: sourcePath,
-                  purpose: `Represents the external NPM dependency '${sourcePath}'.`
-                });
+                allNodes.push({ id: sourcePath, type: 'NpmPackage', name: sourcePath, purpose: `Represents the external NPM dependency '${sourcePath}'.` });
               }
             }
           }
@@ -478,20 +569,43 @@ async function main(rootDir, outputFile) {
       }
     } catch (e) {
       console.warn(`    - Varning: Kunde inte parsa ${relativePath}: ${e.message}`);
-      allEdges.push({
+      allViolations.push({
+        type: 'PARSING_ERROR',
         source: relativePath,
-        target: 'PARSING_ERROR',
-        type: 'HAS_ERROR',
         details: e.message
       });
     }
   }
+  
+  // Steg 3: Validera beroenden nu när alla kanter är skapade
+  console.log('  - Validerar arkitekturregler...');
+  for (const edge of allEdges) {
+      const dependencyViolation = validateDependency(edge, allNodes);
+      if (dependencyViolation) {
+          allViolations.push(dependencyViolation);
+      }
+  }
+
 
   const ssm = {
     "$schema": "./system_semantic_map.schema.json",
-    "version": "4.5.0",
+    "protocolId": "P-SAAP-1.0",
+    "title": "System Architecture Adherence Protocol",
+    "version": "1.0.0",
+    "strict_mode": true,
+    "mode": "literal",
     "createdAt": new Date().toISOString(),
+    "_comment_layers": "Defines the strict architectural hierarchy. Higher layers can import from lower layers, but not vice versa.",
+    "architecturalLayers": ARCHITECTURAL_LAYERS,
+    "_comment_placement": "Defines where files MUST be placed based on their type and purpose.",
+    "placementRules": PLACEMENT_RULES.map(r => ({...r, allowedPath: r.allowedPath.toString()})), // Konvertera RegExp till strängar för JSON
+    "_comment_dependencies": "Defines the legal import paths between layers.",
+    "dependencyRules": DEPENDENCY_RULES,
+    "_comment_violations": "A log of all detected architectural violations.",
+    "violations": allViolations,
+    "_comment_nodes": "The node registry for context and artifact identification.",
     "nodes": allNodes,
+    "_comment_edges": "The edge registry, superseded by 'dependencyRules' for validation.",
     "edges": allEdges
   };
 
@@ -499,9 +613,10 @@ async function main(rootDir, outputFile) {
   await fs.mkdir(path.dirname(outputPath), { recursive: true });
   await fs.writeFile(outputPath, JSON.stringify(ssm, null, 2));
 
-  console.log(`\nSSM genererad framgångsrikt!`);
+  console.log(`\nSAAP-protokoll genererat framgångsrikt!`);
   console.log(`  - Noder: ${allNodes.length}`);
   console.log(`  - Kanter: ${allEdges.length}`);
+  console.log(`  - Avvikelser: ${allViolations.length}`);
   console.log(`  - Output: ${outputFile}`);
 }
 
