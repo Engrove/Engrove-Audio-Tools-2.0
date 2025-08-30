@@ -11,6 +11,8 @@
         <router-link to="/about" class="footer-link">About & License</router-link>
       </div>
       <div class="footer-text">
+        <span v-if="gitHash !== 'N/A'" class="git-hash" title="Build Version (Git Commit)">{{ gitHash }}</span>
+        <span v-if="gitHash !== 'N/A'" class="link-divider">&nbsp;•&nbsp;</span>
         © {{ currentYear }} Engrove. All rights reserved.
       </div>
     </div>
@@ -23,6 +25,9 @@ import { RouterLink } from 'vue-router';
 
 // Beräknar det nuvarande året dynamiskt för copyright-meddelandet.
 const currentYear = computed(() => new Date().getFullYear());
+
+// Hämtar Git commit-hashen som injicerats av Vite vid byggtillfället.
+const gitHash = import.meta.env.VITE_APP_GIT_HASH;
 </script>
 
 <style scoped>
@@ -77,6 +82,14 @@ const currentYear = computed(() => new Date().getFullYear());
 .footer-text {
   font-size: var(--font-size-small);
   color: var(--color-text-low-emphasis);
+  display: flex;
+  align-items: center;
+}
+
+.git-hash {
+  font-family: var(--font-family-mono);
+  color: var(--color-text-low-emphasis);
+  cursor: help;
 }
 </style>
 <!-- src/widgets/GlobalFooter/GlobalFooter.vue -->
