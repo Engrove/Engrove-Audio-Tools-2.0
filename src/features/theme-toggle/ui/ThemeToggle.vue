@@ -20,7 +20,9 @@
 </template>
 
 <script setup>
-import { useThemeStore } from '../model/themeStore.js';
+
+  
+import { useThemeStore } from '@/entities/theme/model/themeStore.js';
 import BaseButton from '../../../shared/ui/BaseButton.vue';
 
 // Hämtar en instans av vår theme store.
