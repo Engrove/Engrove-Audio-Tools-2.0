@@ -87,8 +87,8 @@ Explore the Tools
 <script setup>
 import { ref, computed } from 'vue';
 import { RouterLink } from 'vue-router';
-import { useThemeStore } from '../../features/theme-toggle/model/themeStore.js';
-import BaseButton from '../../shared/ui/BaseButton.vue';
+import { useThemeStore } from '@entities/theme/model/themeStore.js';
+import BaseButton from '@shared/ui/BaseButton.vue';
 
 // Hämtar theme store för att dynamiskt kunna sätta klass på hero-sektionen
 const themeStore = useThemeStore();
