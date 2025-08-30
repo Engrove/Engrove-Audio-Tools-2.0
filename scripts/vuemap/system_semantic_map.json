@@ -1,7 +1,7 @@
 {
   "$schema": "./system_semantic_map.schema.json",
   "version": "4.7.0",
-  "createdAt": "2025-08-30T16:33:51.302Z",
+  "createdAt": "2025-08-30T16:52:57.350Z",
   "nodes": [
     {
       "id": "src/showcase.js",
@@ -350,18 +350,6 @@
       "fileType": "VueComponent",
       "layer": "widgets",
       "purpose": "Represents the file artifact at src/widgets/GlobalFooter/GlobalFooter.vue."
-    },
-    {
-      "id": "vue",
-      "type": "NpmPackage",
-      "name": "vue",
-      "purpose": "Represents the external NPM dependency 'vue'."
-    },
-    {
-      "id": "vue-router",
-      "type": "NpmPackage",
-      "name": "vue-router",
-      "purpose": "Represents the external NPM dependency 'vue-router'."
     },
     {
       "id": "src/shared/ui/RangeFilter.vue",
