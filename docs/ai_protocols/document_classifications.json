@@ -117,7 +117,7 @@
       ]
     },
     {
-      "pattern": "docs/ai_protocols/minip/P-ASWP-2.7.json",
+      "pattern": "docs/ai_protocols/minip/P-ASWP.json",
       "classification": "OPERATIONAL_PROTOCOL",
       "priority": 450,
       "description": "Mini-protokoll för 'Anticipatory Self-Correction Warning Protocol'. Specialiserat för att förutse och varna för problem.",
