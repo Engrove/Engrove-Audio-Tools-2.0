@@ -148,7 +148,7 @@ def main(root_dir, output_file):
                     all_edges.extend(edges)
                 
     ssm = {
-        "$schema": "./system_semantic_map.schema.json",
+        "$schema": "docs/ai_protocols/schemas/system_semantic_map.schema.json",
         "version": "1.1.0",
         "createdAt": datetime.now(timezone.utc).isoformat(),
         "nodes": all_nodes,
