@@ -162,7 +162,7 @@ jobs:
         id: generate-vuemap
         run: |
           echo "Generating System Semantic Map (SSM) with Node.js..."
-          node scripts/vuemap/generate-ssm.mjs . scripts/vuemap/system_semantic_map.json scripts/vuemap/saap.protocol.json REPORT
+          # node scripts/vuemap/generate-ssm.mjs . scripts/vuemap/system_semantic_map.json scripts/vuemap/saap.protocol.json REPORT
           node scripts/vuemap/generate-ssm.mjs . scripts/vuemap/system_semantic_map.json scripts/vuemap/saap.protocol.json STRICT
           echo "SSM generation complete."
           
