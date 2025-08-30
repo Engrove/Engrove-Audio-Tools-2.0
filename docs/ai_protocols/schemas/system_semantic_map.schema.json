@@ -1,0 +1,227 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "docs/ai_protocols/schemas/system_semantic_map.schema.json",
+  "title": "System Semantic Map Schema",
+  "description": "Defines the structure for a semantic graph representing a software project's architecture, dependencies, and relationships.",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri-reference",
+      "description": "A URI reference to the schema that defines this document's structure."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "The semantic version of the map data structure."
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The ISO 8601 timestamp when the map was generated."
+    },
+    "nodes": {
+      "type": "array",
+      "description": "An array of all identifiable entities (artifacts, concepts) in the system.",
+      "items": {
+        "$ref": "#/definitions/node"
+      }
+    },
+    "edges": {
+      "type": "array",
+      "description": "An array defining the relationships (edges) between the nodes.",
+      "items": {
+        "$ref": "#/definitions/edge"
+      }
+    }
+  },
+  "required": [
+    "version",
+    "createdAt",
+    "nodes",
+    "edges"
+  ],
+  "definitions": {
+    "node": {
+      "type": "object",
+      "description": "Represents a single node (entity) in the semantic graph.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "A unique identifier for the node within the map."
+        },
+        "type": {
+          "type": "string",
+          "description": "The primary semantic type of the node.",
+          "enum": [
+            "File",
+            "NpmPackage",
+            "Route",
+            "Store",
+            "StateVariable",
+            "Getter",
+            "Action",
+            "Prop",
+            "Event"
+          ]
+        },
+        "path": {
+          "type": "string",
+          "description": "The physical file path of the artifact."
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "The SHA-256 hash of the file's content, ensuring integrity."
+        },
+        "fileType": {
+          "type": "string",
+          "description": "A more specific classification for nodes of type 'File'.",
+          "enum": [
+            "Utility",
+            "EntryPoint",
+            "VueComponent",
+            "RouterConfig",
+            "StaticData",
+            "StyleSheet",
+            "PiniaStore"
+          ]
+        },
+        "purpose": {
+          "type": "string",
+          "description": "A human-readable explanation of the node's role in the system."
+        },
+        "name": {
+          "type": "string",
+          "description": "The canonical name of the entity (e.g., package name, component name)."
+        },
+        "parent": {
+          "type": "string",
+          "description": "The ID of the parent node this node belongs to (e.g., a Prop belongs to a VueComponent)."
+        },
+        "storeId": {
+          "type": "string",
+          "description": "The unique identifier for a Pinia store."
+        },
+        "routeName": {
+          "type": "string"
+        },
+        "routePath": {
+          "type": "string"
+        },
+        "dataType": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "path",
+        "purpose"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "File"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "hash",
+              "fileType"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "NpmPackage"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "name"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "Store"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "storeId"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": [
+                  "StateVariable",
+                  "Getter",
+                  "Action",
+                  "Prop",
+                  "Event"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "parent",
+              "name"
+            ]
+          }
+        }
+      ]
+    },
+    "edge": {
+      "type": "object",
+      "description": "Defines a directed relationship from a source node to a target node.",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The 'id' of the source node."
+        },
+        "target": {
+          "type": "string",
+          "description": "The 'id' of the target node."
+        },
+        "type": {
+          "type": "string",
+          "description": "The semantic type of the relationship.",
+          "enum": [
+            "IMPORTS_PACKAGE",
+            "IMPORTS",
+            "USES_STORE_FILE",
+            "USES_COMPONENT",
+            "RENDERS_COMPONENT",
+            "DEFINES_ROUTE",
+            "DEFINES_PROP",
+            "DEFINES_EVENT",
+            "DEFINES",
+            "MODIFIES_STATE",
+            "READS_STATE",
+            "CALLS"
+          ]
+        }
+      },
+      "required": [
+        "source",
+        "target",
+        "type"
+      ]
+    }
+  }
+}
