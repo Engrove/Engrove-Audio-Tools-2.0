@@ -1,328 +1,7 @@
 {
   "$schema": "./system_semantic_map.schema.json",
-  "protocolId": "P-SAAP-1.0",
-  "title": "System Architecture Adherence Protocol",
-  "version": "1.0.0",
-  "strict_mode": true,
-  "mode": "literal",
-  "createdAt": "2025-08-30T10:29:41.606Z",
-  "_comment_layers": "Defines the strict architectural hierarchy. Higher layers can import from lower layers, but not vice versa.",
-  "architecturalLayers": [
-    {
-      "layer": 0,
-      "name": "shared",
-      "pathPrefix": "src/shared"
-    },
-    {
-      "layer": 1,
-      "name": "entities",
-      "pathPrefix": "src/entities"
-    },
-    {
-      "layer": 2,
-      "name": "features",
-      "pathPrefix": "src/features"
-    },
-    {
-      "layer": 3,
-      "name": "widgets",
-      "pathPrefix": "src/widgets"
-    },
-    {
-      "layer": 4,
-      "name": "pages",
-      "pathPrefix": "src/pages"
-    },
-    {
-      "layer": 5,
-      "name": "app",
-      "pathPrefix": "src/app"
-    }
-  ],
-  "_comment_placement": "Defines where files MUST be placed based on their type and purpose.",
-  "placementRules": [
-    {
-      "fileType": "VueComponent",
-      "purpose": "UI Primitive",
-      "allowedPath": "/^src\\/shared\\/ui\\/.*\\.vue$/"
-    },
-    {
-      "fileType": "PiniaStore",
-      "purpose": "Business Entity State",
-      "allowedPath": "/^src\\/entities\\/[a-zA-Z0-9-]+\\/model\\/.*\\.js$/"
-    },
-    {
-      "fileType": "VueComponent",
-      "purpose": "Feature Implementation",
-      "allowedPath": "/^src\\/features\\/[a-zA-Z0-9-]+\\/ui\\/.*\\.vue$/"
-    },
-    {
-      "fileType": "VueComponent",
-      "purpose": "Page Layout",
-      "allowedPath": "/^src\\/pages\\/[a-zA-Z0-9-]+\\/.*\\.vue$/"
-    },
-    {
-      "fileType": "RouterConfig",
-      "purpose": "Application Routing",
-      "allowedPath": "/^src\\/app\\/router\\.js$/"
-    },
-    {
-      "fileType": "EntryPoint",
-      "purpose": "Application Entry Point",
-      "allowedPath": "/^src\\/app\\/main\\.js$/"
-    }
-  ],
-  "_comment_dependencies": "Defines the legal import paths between layers.",
-  "dependencyRules": {
-    "app": [
-      "pages",
-      "widgets",
-      "features",
-      "entities",
-      "shared"
-    ],
-    "pages": [
-      "widgets",
-      "features",
-      "entities",
-      "shared"
-    ],
-    "widgets": [
-      "features",
-      "entities",
-      "shared"
-    ],
-    "features": [
-      "entities",
-      "shared"
-    ],
-    "entities": [
-      "shared"
-    ],
-    "shared": [
-      "shared"
-    ]
-  },
-  "_comment_violations": "A log of all detected architectural violations.",
-  "violations": [
-    {
-      "type": "PLACEMENT_VIOLATION",
-      "source": "src/features/theme-toggle/model/themeStore.js",
-      "details": "File of type 'PiniaStore' with purpose 'Business Entity State' is misplaced. Expected location matching: /^src\\/entities\\/[a-zA-Z0-9-]+\\/model\\/.*\\.js$/"
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/showcase.js",
-      "details": "Cannot read properties of undefined (reading '0')"
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/debug.js",
-      "details": "Cannot read properties of undefined (reading '0')"
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/App.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/app/router.js",
-      "details": "Cannot read properties of undefined (reading '0')"
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/widgets/GlobalFooter/GlobalFooter.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/shared/ui/RangeFilter.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/shared/ui/Logo.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/shared/ui/BaseToggle.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/shared/ui/BaseTable.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/shared/ui/BaseSelect.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/shared/ui/BaseRadio.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/shared/ui/BaseMultiSelect.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/shared/ui/BaseModal.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/shared/ui/BaseInput.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/shared/ui/BaseCheckbox.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/shared/ui/BaseCanvasTextViewer.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/shared/ui/BaseButton.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/pages/license/LicensePage.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/pages/home/HomePage.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/pages/data-explorer/DataExplorerPage.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/pages/about/AboutPage.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/features/theme-toggle/ui/ThemeToggle.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/features/theme-toggle/model/themeStore.js",
-      "details": "Cannot read properties of undefined (reading '0')"
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
-      "details": "Cannot read properties of undefined (reading '0')"
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/features/license-modal/ui/LicenseModal.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/features/item-details/ui/ItemDetailModal.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/features/density-toggle/ui/DensityToggle.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
-      "details": "Type expected."
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/entities/settings/model/settingsStore.js",
-      "details": "Cannot read properties of undefined (reading '0')"
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/entities/logger/model/loggerStore.js",
-      "details": "Cannot read properties of undefined (reading '0')"
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/entities/data-explorer/model/explorerStore.js",
-      "details": "Cannot read properties of undefined (reading '0')"
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/entities/data-explorer/lib/transformer.js",
-      "details": "Cannot read properties of undefined (reading '0')"
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/entities/data-explorer/lib/filters.js",
-      "details": "Cannot read properties of undefined (reading '0')"
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/entities/data-explorer/api/fetchExplorerData.js",
-      "details": "Cannot read properties of undefined (reading '0')"
-    },
-    {
-      "type": "PARSING_ERROR",
-      "source": "src/entities/comparison/model/comparisonStore.js",
-      "details": "Cannot read properties of undefined (reading '0')"
-    },
-    {
-      "type": "DEPENDENCY_VIOLATION",
-      "source": "src/app/main.js",
-      "target": "src/app/router.js",
-      "details": "Layer 'app' is not allowed to import from layer 'app'. Allowed: [pages, widgets, features, entities, shared]"
-    }
-  ],
-  "_comment_nodes": "The node registry for context and artifact identification.",
+  "version": "4.5.0",
+  "createdAt": "2025-08-30T10:39:55.468Z",
   "nodes": [
     {
       "id": "src/showcase.js",
@@ -333,12 +12,36 @@
       "purpose": "Represents the file artifact at src/showcase.js."
     },
     {
+      "id": "vue",
+      "type": "NpmPackage",
+      "name": "vue",
+      "purpose": "Represents the external NPM dependency 'vue'."
+    },
+    {
+      "id": "pinia",
+      "type": "NpmPackage",
+      "name": "pinia",
+      "purpose": "Represents the external NPM dependency 'pinia'."
+    },
+    {
+      "id": "pinia-plugin-persistedstate",
+      "type": "NpmPackage",
+      "name": "pinia-plugin-persistedstate",
+      "purpose": "Represents the external NPM dependency 'pinia-plugin-persistedstate'."
+    },
+    {
       "id": "src/main.js",
       "type": "File",
       "path": "src/main.js",
       "hash": "22f8e0d034d96de04212e33567821d56f3550a5f166e19227385926291e99059",
-      "fileType": "Utility",
+      "fileType": "EntryPoint",
       "purpose": "Represents the file artifact at src/main.js."
+    },
+    {
+      "id": "@unhead/vue",
+      "type": "NpmPackage",
+      "name": "@unhead/vue",
+      "purpose": "Represents the external NPM dependency '@unhead/vue'."
     },
     {
       "id": "src/debug.js",
@@ -355,6 +58,12 @@
       "hash": "1f45949c769c6d6454a5d056ff8716510ddf6c2ad05539ff879f60166e40ba92",
       "fileType": "VueComponent",
       "purpose": "Represents the file artifact at src/App.vue."
+    },
+    {
+      "id": "vue-router",
+      "type": "NpmPackage",
+      "name": "vue-router",
+      "purpose": "Represents the external NPM dependency 'vue-router'."
     },
     {
       "id": "public/data/tonearms-data.json",
@@ -466,7 +175,31 @@
       "path": "src/app/router.js",
       "hash": "270ac16d9084c20bec5ab6c6bbc290f6a311b60b982b87b38a7d4441988b3541",
       "fileType": "RouterConfig",
-      "purpose": "Application Routing"
+      "purpose": "Represents the file artifact at src/app/router.js."
+    },
+    {
+      "id": "route:/",
+      "type": "Route",
+      "path": "src/app/router.js",
+      "routePath": "/",
+      "routeName": "Home",
+      "purpose": "Defines the 'Home' route at '/'."
+    },
+    {
+      "id": "route:/about",
+      "type": "Route",
+      "path": "src/app/router.js",
+      "routePath": "/about",
+      "routeName": "About",
+      "purpose": "Defines the 'About' route at '/about'."
+    },
+    {
+      "id": "route:/data-explorer",
+      "type": "Route",
+      "path": "src/app/router.js",
+      "routePath": "/data-explorer",
+      "routeName": "DataExplorer",
+      "purpose": "Defines the 'DataExplorer' route at '/data-explorer'."
     },
     {
       "id": "src/app/main.js",
@@ -474,7 +207,7 @@
       "path": "src/app/main.js",
       "hash": "c96f8c337e71afc206ca1aed9396ba06dbf9b924d95646b445b797a2c7dfd0a9",
       "fileType": "EntryPoint",
-      "purpose": "Application Entry Point"
+      "purpose": "Represents the file artifact at src/app/main.js."
     },
     {
       "id": "public/data/schemas/tonearms-data.schema.json",
@@ -618,7 +351,35 @@
       "path": "src/shared/ui/RangeFilter.vue",
       "hash": "bb88803bd9bf07bbbdfa2618bab7b11336fd66ce3170d73bbe9ee23ff2c79602",
       "fileType": "VueComponent",
-      "purpose": "UI Primitive"
+      "purpose": "Represents the file artifact at src/shared/ui/RangeFilter.vue."
+    },
+    {
+      "id": "src/shared/ui/RangeFilter.vue#prop.modelValue",
+      "type": "Prop",
+      "path": "src/shared/ui/RangeFilter.vue",
+      "parent": "src/shared/ui/RangeFilter.vue",
+      "name": "modelValue"
+    },
+    {
+      "id": "src/shared/ui/RangeFilter.vue#prop.label",
+      "type": "Prop",
+      "path": "src/shared/ui/RangeFilter.vue",
+      "parent": "src/shared/ui/RangeFilter.vue",
+      "name": "label"
+    },
+    {
+      "id": "src/shared/ui/RangeFilter.vue#prop.unit",
+      "type": "Prop",
+      "path": "src/shared/ui/RangeFilter.vue",
+      "parent": "src/shared/ui/RangeFilter.vue",
+      "name": "unit"
+    },
+    {
+      "id": "src/shared/ui/RangeFilter.vue#event.update:modelValue",
+      "type": "Event",
+      "path": "src/shared/ui/RangeFilter.vue",
+      "parent": "src/shared/ui/RangeFilter.vue",
+      "name": "update:modelValue"
     },
     {
       "id": "src/shared/ui/Logo.vue",
@@ -626,7 +387,7 @@
       "path": "src/shared/ui/Logo.vue",
       "hash": "8d68b7770a2aabbdd1a139d3aae867e06115ffecc818d28fe8f06ccf388e7677",
       "fileType": "VueComponent",
-      "purpose": "UI Primitive"
+      "purpose": "Represents the file artifact at src/shared/ui/Logo.vue."
     },
     {
       "id": "src/shared/ui/BaseToggle.vue",
@@ -634,7 +395,28 @@
       "path": "src/shared/ui/BaseToggle.vue",
       "hash": "7f2b0f6ebcb9777f7b6f86954f7fba84060f3c82b4cf88536a364bb5c89c0586",
       "fileType": "VueComponent",
-      "purpose": "UI Primitive"
+      "purpose": "Represents the file artifact at src/shared/ui/BaseToggle.vue."
+    },
+    {
+      "id": "src/shared/ui/BaseToggle.vue#prop.modelValue",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseToggle.vue",
+      "parent": "src/shared/ui/BaseToggle.vue",
+      "name": "modelValue"
+    },
+    {
+      "id": "src/shared/ui/BaseToggle.vue#prop.disabled",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseToggle.vue",
+      "parent": "src/shared/ui/BaseToggle.vue",
+      "name": "disabled"
+    },
+    {
+      "id": "src/shared/ui/BaseToggle.vue#event.update:modelValue",
+      "type": "Event",
+      "path": "src/shared/ui/BaseToggle.vue",
+      "parent": "src/shared/ui/BaseToggle.vue",
+      "name": "update:modelValue"
     },
     {
       "id": "src/shared/ui/BaseTable.vue",
@@ -642,7 +424,91 @@
       "path": "src/shared/ui/BaseTable.vue",
       "hash": "228d9062b9af1bf7b7884ab734b5d64b67c2e240ee1035b1ca73e9a086771360",
       "fileType": "VueComponent",
-      "purpose": "UI Primitive"
+      "purpose": "Represents the file artifact at src/shared/ui/BaseTable.vue."
+    },
+    {
+      "id": "src/shared/ui/BaseTable.vue#prop.headers",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseTable.vue",
+      "parent": "src/shared/ui/BaseTable.vue",
+      "name": "headers"
+    },
+    {
+      "id": "src/shared/ui/BaseTable.vue#prop.items",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseTable.vue",
+      "parent": "src/shared/ui/BaseTable.vue",
+      "name": "items"
+    },
+    {
+      "id": "src/shared/ui/BaseTable.vue#prop.sortKey",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseTable.vue",
+      "parent": "src/shared/ui/BaseTable.vue",
+      "name": "sortKey"
+    },
+    {
+      "id": "src/shared/ui/BaseTable.vue#prop.sortOrder",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseTable.vue",
+      "parent": "src/shared/ui/BaseTable.vue",
+      "name": "sortOrder"
+    },
+    {
+      "id": "src/shared/ui/BaseTable.vue#prop.showSelection",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseTable.vue",
+      "parent": "src/shared/ui/BaseTable.vue",
+      "name": "showSelection"
+    },
+    {
+      "id": "src/shared/ui/BaseTable.vue#prop.isItemSelected",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseTable.vue",
+      "parent": "src/shared/ui/BaseTable.vue",
+      "name": "isItemSelected"
+    },
+    {
+      "id": "src/shared/ui/BaseTable.vue#prop.selectionLimitReached",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseTable.vue",
+      "parent": "src/shared/ui/BaseTable.vue",
+      "name": "selectionLimitReached"
+    },
+    {
+      "id": "src/shared/ui/BaseTable.vue#prop.allVisibleItemsSelected",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseTable.vue",
+      "parent": "src/shared/ui/BaseTable.vue",
+      "name": "allVisibleItemsSelected"
+    },
+    {
+      "id": "src/shared/ui/BaseTable.vue#event.sort",
+      "type": "Event",
+      "path": "src/shared/ui/BaseTable.vue",
+      "parent": "src/shared/ui/BaseTable.vue",
+      "name": "sort"
+    },
+    {
+      "id": "src/shared/ui/BaseTable.vue#event.row-click",
+      "type": "Event",
+      "path": "src/shared/ui/BaseTable.vue",
+      "parent": "src/shared/ui/BaseTable.vue",
+      "name": "row-click"
+    },
+    {
+      "id": "src/shared/ui/BaseTable.vue#event.toggle-item-selection",
+      "type": "Event",
+      "path": "src/shared/ui/BaseTable.vue",
+      "parent": "src/shared/ui/BaseTable.vue",
+      "name": "toggle-item-selection"
+    },
+    {
+      "id": "src/shared/ui/BaseTable.vue#event.toggle-select-all-visible",
+      "type": "Event",
+      "path": "src/shared/ui/BaseTable.vue",
+      "parent": "src/shared/ui/BaseTable.vue",
+      "name": "toggle-select-all-visible"
     },
     {
       "id": "src/shared/ui/BaseSelect.vue",
@@ -650,7 +516,35 @@
       "path": "src/shared/ui/BaseSelect.vue",
       "hash": "0a60fa191753ffac19b03aa79f0963d225ad8e0ae7a5ca2d6fd842d18234d585",
       "fileType": "VueComponent",
-      "purpose": "UI Primitive"
+      "purpose": "Represents the file artifact at src/shared/ui/BaseSelect.vue."
+    },
+    {
+      "id": "src/shared/ui/BaseSelect.vue#prop.modelValue",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseSelect.vue",
+      "parent": "src/shared/ui/BaseSelect.vue",
+      "name": "modelValue"
+    },
+    {
+      "id": "src/shared/ui/BaseSelect.vue#prop.disabled",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseSelect.vue",
+      "parent": "src/shared/ui/BaseSelect.vue",
+      "name": "disabled"
+    },
+    {
+      "id": "src/shared/ui/BaseSelect.vue#prop.options",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseSelect.vue",
+      "parent": "src/shared/ui/BaseSelect.vue",
+      "name": "options"
+    },
+    {
+      "id": "src/shared/ui/BaseSelect.vue#event.update:modelValue",
+      "type": "Event",
+      "path": "src/shared/ui/BaseSelect.vue",
+      "parent": "src/shared/ui/BaseSelect.vue",
+      "name": "update:modelValue"
     },
     {
       "id": "src/shared/ui/BaseRadio.vue",
@@ -658,7 +552,42 @@
       "path": "src/shared/ui/BaseRadio.vue",
       "hash": "847a895fe4cfe341724243363eaaa79e32ff6d9ae5288c06b4f079e191bb9a81",
       "fileType": "VueComponent",
-      "purpose": "UI Primitive"
+      "purpose": "Represents the file artifact at src/shared/ui/BaseRadio.vue."
+    },
+    {
+      "id": "src/shared/ui/BaseRadio.vue#prop.modelValue",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseRadio.vue",
+      "parent": "src/shared/ui/BaseRadio.vue",
+      "name": "modelValue"
+    },
+    {
+      "id": "src/shared/ui/BaseRadio.vue#prop.value",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseRadio.vue",
+      "parent": "src/shared/ui/BaseRadio.vue",
+      "name": "value"
+    },
+    {
+      "id": "src/shared/ui/BaseRadio.vue#prop.name",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseRadio.vue",
+      "parent": "src/shared/ui/BaseRadio.vue",
+      "name": "name"
+    },
+    {
+      "id": "src/shared/ui/BaseRadio.vue#prop.disabled",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseRadio.vue",
+      "parent": "src/shared/ui/BaseRadio.vue",
+      "name": "disabled"
+    },
+    {
+      "id": "src/shared/ui/BaseRadio.vue#event.update:modelValue",
+      "type": "Event",
+      "path": "src/shared/ui/BaseRadio.vue",
+      "parent": "src/shared/ui/BaseRadio.vue",
+      "name": "update:modelValue"
     },
     {
       "id": "src/shared/ui/BaseMultiSelect.vue",
@@ -666,7 +595,35 @@
       "path": "src/shared/ui/BaseMultiSelect.vue",
       "hash": "3e134d809fef50682bb591da5e38ce5088ca506d20e4d493c10e4dc70227937d",
       "fileType": "VueComponent",
-      "purpose": "UI Primitive"
+      "purpose": "Represents the file artifact at src/shared/ui/BaseMultiSelect.vue."
+    },
+    {
+      "id": "src/shared/ui/BaseMultiSelect.vue#prop.options",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseMultiSelect.vue",
+      "parent": "src/shared/ui/BaseMultiSelect.vue",
+      "name": "options"
+    },
+    {
+      "id": "src/shared/ui/BaseMultiSelect.vue#prop.modelValue",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseMultiSelect.vue",
+      "parent": "src/shared/ui/BaseMultiSelect.vue",
+      "name": "modelValue"
+    },
+    {
+      "id": "src/shared/ui/BaseMultiSelect.vue#prop.label",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseMultiSelect.vue",
+      "parent": "src/shared/ui/BaseMultiSelect.vue",
+      "name": "label"
+    },
+    {
+      "id": "src/shared/ui/BaseMultiSelect.vue#event.update:modelValue",
+      "type": "Event",
+      "path": "src/shared/ui/BaseMultiSelect.vue",
+      "parent": "src/shared/ui/BaseMultiSelect.vue",
+      "name": "update:modelValue"
     },
     {
       "id": "src/shared/ui/BaseModal.vue",
@@ -674,7 +631,28 @@
       "path": "src/shared/ui/BaseModal.vue",
       "hash": "9f372bbe13ee1e82d8ff6d4b1f360ea565cbca7d903d4406854794493470bc79",
       "fileType": "VueComponent",
-      "purpose": "UI Primitive"
+      "purpose": "Represents the file artifact at src/shared/ui/BaseModal.vue."
+    },
+    {
+      "id": "src/shared/ui/BaseModal.vue#prop.show",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseModal.vue",
+      "parent": "src/shared/ui/BaseModal.vue",
+      "name": "show"
+    },
+    {
+      "id": "src/shared/ui/BaseModal.vue#prop.maxWidth",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseModal.vue",
+      "parent": "src/shared/ui/BaseModal.vue",
+      "name": "maxWidth"
+    },
+    {
+      "id": "src/shared/ui/BaseModal.vue#event.close",
+      "type": "Event",
+      "path": "src/shared/ui/BaseModal.vue",
+      "parent": "src/shared/ui/BaseModal.vue",
+      "name": "close"
     },
     {
       "id": "src/shared/ui/BaseInput.vue",
@@ -682,7 +660,35 @@
       "path": "src/shared/ui/BaseInput.vue",
       "hash": "f7a7d4d3edfd128935e7f6bd5d8ff591f2bcb94676813b6a3ed80ded41a10054",
       "fileType": "VueComponent",
-      "purpose": "UI Primitive"
+      "purpose": "Represents the file artifact at src/shared/ui/BaseInput.vue."
+    },
+    {
+      "id": "src/shared/ui/BaseInput.vue#prop.modelValue",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseInput.vue",
+      "parent": "src/shared/ui/BaseInput.vue",
+      "name": "modelValue"
+    },
+    {
+      "id": "src/shared/ui/BaseInput.vue#prop.placeholder",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseInput.vue",
+      "parent": "src/shared/ui/BaseInput.vue",
+      "name": "placeholder"
+    },
+    {
+      "id": "src/shared/ui/BaseInput.vue#prop.disabled",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseInput.vue",
+      "parent": "src/shared/ui/BaseInput.vue",
+      "name": "disabled"
+    },
+    {
+      "id": "src/shared/ui/BaseInput.vue#event.update:modelValue",
+      "type": "Event",
+      "path": "src/shared/ui/BaseInput.vue",
+      "parent": "src/shared/ui/BaseInput.vue",
+      "name": "update:modelValue"
     },
     {
       "id": "src/shared/ui/BaseCheckbox.vue",
@@ -690,7 +696,28 @@
       "path": "src/shared/ui/BaseCheckbox.vue",
       "hash": "5d75d0680c36e26158ae71bf613169f97c6664cf91a226857cf5ac072ff157f1",
       "fileType": "VueComponent",
-      "purpose": "UI Primitive"
+      "purpose": "Represents the file artifact at src/shared/ui/BaseCheckbox.vue."
+    },
+    {
+      "id": "src/shared/ui/BaseCheckbox.vue#prop.modelValue",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseCheckbox.vue",
+      "parent": "src/shared/ui/BaseCheckbox.vue",
+      "name": "modelValue"
+    },
+    {
+      "id": "src/shared/ui/BaseCheckbox.vue#prop.disabled",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseCheckbox.vue",
+      "parent": "src/shared/ui/BaseCheckbox.vue",
+      "name": "disabled"
+    },
+    {
+      "id": "src/shared/ui/BaseCheckbox.vue#event.update:modelValue",
+      "type": "Event",
+      "path": "src/shared/ui/BaseCheckbox.vue",
+      "parent": "src/shared/ui/BaseCheckbox.vue",
+      "name": "update:modelValue"
     },
     {
       "id": "src/shared/ui/BaseCanvasTextViewer.vue",
@@ -698,7 +725,14 @@
       "path": "src/shared/ui/BaseCanvasTextViewer.vue",
       "hash": "3e7cf2859a122ae42394cd9ea37866f8009f8c5e619e6db9383f6527e2d5d5e3",
       "fileType": "VueComponent",
-      "purpose": "UI Primitive"
+      "purpose": "Represents the file artifact at src/shared/ui/BaseCanvasTextViewer.vue."
+    },
+    {
+      "id": "src/shared/ui/BaseCanvasTextViewer.vue#prop.text",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseCanvasTextViewer.vue",
+      "parent": "src/shared/ui/BaseCanvasTextViewer.vue",
+      "name": "text"
     },
     {
       "id": "src/shared/ui/BaseButton.vue",
@@ -706,7 +740,21 @@
       "path": "src/shared/ui/BaseButton.vue",
       "hash": "729eac8b83570e6bf6650bfd8f97abd897ee0f06286ca865c0229fa2e700a0b9",
       "fileType": "VueComponent",
-      "purpose": "UI Primitive"
+      "purpose": "Represents the file artifact at src/shared/ui/BaseButton.vue."
+    },
+    {
+      "id": "src/shared/ui/BaseButton.vue#prop.variant",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseButton.vue",
+      "parent": "src/shared/ui/BaseButton.vue",
+      "name": "variant"
+    },
+    {
+      "id": "src/shared/ui/BaseButton.vue#prop.disabled",
+      "type": "Prop",
+      "path": "src/shared/ui/BaseButton.vue",
+      "parent": "src/shared/ui/BaseButton.vue",
+      "name": "disabled"
     },
     {
       "id": "src/pages/license/LicensePage.vue",
@@ -714,7 +762,7 @@
       "path": "src/pages/license/LicensePage.vue",
       "hash": "0415487ef0569a606e09a850f16dd07d3bf696c85b2f7ff13134a67679b1fba7",
       "fileType": "VueComponent",
-      "purpose": "Page Layout"
+      "purpose": "Represents the file artifact at src/pages/license/LicensePage.vue."
     },
     {
       "id": "src/pages/home/HomePage.vue",
@@ -722,7 +770,7 @@
       "path": "src/pages/home/HomePage.vue",
       "hash": "7c5e19b9201e190ad92e070316e949d50500f884d9cfe386e60c82b238a9c93f",
       "fileType": "VueComponent",
-      "purpose": "Page Layout"
+      "purpose": "Represents the file artifact at src/pages/home/HomePage.vue."
     },
     {
       "id": "src/pages/data-explorer/DataExplorerPage.vue",
@@ -730,7 +778,7 @@
       "path": "src/pages/data-explorer/DataExplorerPage.vue",
       "hash": "803b0e33ddf2b965afa4bd738270d7962922885774ab9e7fc4343deb307b44ae",
       "fileType": "VueComponent",
-      "purpose": "Page Layout"
+      "purpose": "Represents the file artifact at src/pages/data-explorer/DataExplorerPage.vue."
     },
     {
       "id": "src/pages/about/AboutPage.vue",
@@ -738,7 +786,7 @@
       "path": "src/pages/about/AboutPage.vue",
       "hash": "dd278591ce2b32023fe583688603c9359cf7632ed29f33ec2d5ac3fbb8f06fa2",
       "fileType": "VueComponent",
-      "purpose": "Page Layout"
+      "purpose": "Represents the file artifact at src/pages/about/AboutPage.vue."
     },
     {
       "id": "src/app/styles/_tokens.css",
@@ -773,6 +821,132 @@
       "purpose": "Represents the file artifact at src/widgets/ResultsDisplay/ui/ResultsDisplay.vue."
     },
     {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.items",
+      "type": "Prop",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "items"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.headers",
+      "type": "Prop",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "headers"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.dataType",
+      "type": "Prop",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "dataType"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.totalResults",
+      "type": "Prop",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "totalResults"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.totalPages",
+      "type": "Prop",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "totalPages"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.currentPage",
+      "type": "Prop",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "currentPage"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.sortKey",
+      "type": "Prop",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "sortKey"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.sortOrder",
+      "type": "Prop",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "sortOrder"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.showSelection",
+      "type": "Prop",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "showSelection"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.isItemSelected",
+      "type": "Prop",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "isItemSelected"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.selectionLimitReached",
+      "type": "Prop",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "selectionLimitReached"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.allVisibleItemsSelected",
+      "type": "Prop",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "allVisibleItemsSelected"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#event.row-click",
+      "type": "Event",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "row-click"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#event.sort",
+      "type": "Event",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "sort"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#event.page-change",
+      "type": "Event",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "page-change"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#event.export-csv",
+      "type": "Event",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "export-csv"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#event.toggle-item-selection",
+      "type": "Event",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "toggle-item-selection"
+    },
+    {
+      "id": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#event.toggle-select-all-visible",
+      "type": "Event",
+      "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "parent": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "name": "toggle-select-all-visible"
+    },
+    {
       "id": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
       "type": "File",
       "path": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
@@ -789,12 +963,26 @@
       "purpose": "Represents the file artifact at src/widgets/ComparisonTray/ui/ComparisonTray.vue."
     },
     {
+      "id": "src/widgets/ComparisonTray/ui/ComparisonTray.vue#event.compare",
+      "type": "Event",
+      "path": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "parent": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "name": "compare"
+    },
+    {
+      "id": "src/widgets/ComparisonTray/ui/ComparisonTray.vue#event.clear",
+      "type": "Event",
+      "path": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "parent": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "name": "clear"
+    },
+    {
       "id": "src/features/theme-toggle/ui/ThemeToggle.vue",
       "type": "File",
       "path": "src/features/theme-toggle/ui/ThemeToggle.vue",
       "hash": "a0ae4992584f2c1853d2fc65f4f6f773eab3c51b3bf528c0b7fb2336780b9ed0",
       "fileType": "VueComponent",
-      "purpose": "Feature Implementation"
+      "purpose": "Represents the file artifact at src/features/theme-toggle/ui/ThemeToggle.vue."
     },
     {
       "id": "src/features/theme-toggle/model/themeStore.js",
@@ -802,7 +990,43 @@
       "path": "src/features/theme-toggle/model/themeStore.js",
       "hash": "0780cfe37834c87eced77dd3f33aa7bd5e43011b46d5f1f12efd7cc709ab1379",
       "fileType": "PiniaStore",
-      "purpose": "Business Entity State"
+      "purpose": "Represents the file artifact at src/features/theme-toggle/model/themeStore.js."
+    },
+    {
+      "id": "theme",
+      "type": "Store",
+      "path": "src/features/theme-toggle/model/themeStore.js",
+      "storeId": "theme",
+      "purpose": "Manages state for the 'theme' domain."
+    },
+    {
+      "id": "theme#state.currentTheme",
+      "type": "StateVariable",
+      "path": "src/features/theme-toggle/model/themeStore.js",
+      "parent": "theme",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'currentTheme' state property."
+    },
+    {
+      "id": "theme#getters.isDarkTheme",
+      "type": "Getter",
+      "path": "src/features/theme-toggle/model/themeStore.js",
+      "parent": "theme",
+      "purpose": "A getter for the 'theme' store."
+    },
+    {
+      "id": "theme#actions.toggleTheme",
+      "type": "Action",
+      "path": "src/features/theme-toggle/model/themeStore.js",
+      "parent": "theme",
+      "purpose": "A action for the 'theme' store."
+    },
+    {
+      "id": "theme#actions.setTheme",
+      "type": "Action",
+      "path": "src/features/theme-toggle/model/themeStore.js",
+      "parent": "theme",
+      "purpose": "A action for the 'theme' store."
     },
     {
       "id": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
@@ -810,7 +1034,7 @@
       "path": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
       "hash": "ed17c785325e9400c62dcad5729b76a3efe994a72fa04ad2e88772f9b2515383",
       "fileType": "VueComponent",
-      "purpose": "Feature Implementation"
+      "purpose": "Represents the file artifact at src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue."
     },
     {
       "id": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
@@ -826,7 +1050,21 @@
       "path": "src/features/license-modal/ui/LicenseModal.vue",
       "hash": "d7ae7f3cf4c4d28cb778e2a8792e1d454e6a8bf5cb879b4775e8072607f7fed8",
       "fileType": "VueComponent",
-      "purpose": "Feature Implementation"
+      "purpose": "Represents the file artifact at src/features/license-modal/ui/LicenseModal.vue."
+    },
+    {
+      "id": "src/features/license-modal/ui/LicenseModal.vue#prop.isOpen",
+      "type": "Prop",
+      "path": "src/features/license-modal/ui/LicenseModal.vue",
+      "parent": "src/features/license-modal/ui/LicenseModal.vue",
+      "name": "isOpen"
+    },
+    {
+      "id": "src/features/license-modal/ui/LicenseModal.vue#event.update:isOpen",
+      "type": "Event",
+      "path": "src/features/license-modal/ui/LicenseModal.vue",
+      "parent": "src/features/license-modal/ui/LicenseModal.vue",
+      "name": "update:isOpen"
     },
     {
       "id": "src/features/item-details/ui/ItemDetailModal.vue",
@@ -834,7 +1072,28 @@
       "path": "src/features/item-details/ui/ItemDetailModal.vue",
       "hash": "f1c379a50771a41cb8c661d93a4ac15125cc63cc87835d2ba45c1d58d899f37d",
       "fileType": "VueComponent",
-      "purpose": "Feature Implementation"
+      "purpose": "Represents the file artifact at src/features/item-details/ui/ItemDetailModal.vue."
+    },
+    {
+      "id": "src/features/item-details/ui/ItemDetailModal.vue#prop.show",
+      "type": "Prop",
+      "path": "src/features/item-details/ui/ItemDetailModal.vue",
+      "parent": "src/features/item-details/ui/ItemDetailModal.vue",
+      "name": "show"
+    },
+    {
+      "id": "src/features/item-details/ui/ItemDetailModal.vue#prop.item",
+      "type": "Prop",
+      "path": "src/features/item-details/ui/ItemDetailModal.vue",
+      "parent": "src/features/item-details/ui/ItemDetailModal.vue",
+      "name": "item"
+    },
+    {
+      "id": "src/features/item-details/ui/ItemDetailModal.vue#event.close",
+      "type": "Event",
+      "path": "src/features/item-details/ui/ItemDetailModal.vue",
+      "parent": "src/features/item-details/ui/ItemDetailModal.vue",
+      "name": "close"
     },
     {
       "id": "src/features/density-toggle/ui/DensityToggle.vue",
@@ -842,7 +1101,7 @@
       "path": "src/features/density-toggle/ui/DensityToggle.vue",
       "hash": "3e1d4c4efa2ff9c1f5df98af6f25fe8d992a45650f8b6ea1885280033404ffe5",
       "fileType": "VueComponent",
-      "purpose": "Feature Implementation"
+      "purpose": "Represents the file artifact at src/features/density-toggle/ui/DensityToggle.vue."
     },
     {
       "id": "src/features/comparison-modal/ui/ComparisonModal.vue",
@@ -850,7 +1109,21 @@
       "path": "src/features/comparison-modal/ui/ComparisonModal.vue",
       "hash": "3b058491eef865ba7b8cc6c49bb0877d922ab85e28b97ba25667951e5409c762",
       "fileType": "VueComponent",
-      "purpose": "Feature Implementation"
+      "purpose": "Represents the file artifact at src/features/comparison-modal/ui/ComparisonModal.vue."
+    },
+    {
+      "id": "src/features/comparison-modal/ui/ComparisonModal.vue#prop.show",
+      "type": "Prop",
+      "path": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "parent": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "name": "show"
+    },
+    {
+      "id": "src/features/comparison-modal/ui/ComparisonModal.vue#event.close",
+      "type": "Event",
+      "path": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "parent": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "name": "close"
     },
     {
       "id": "src/entities/settings/model/settingsStore.js",
@@ -858,7 +1131,14 @@
       "path": "src/entities/settings/model/settingsStore.js",
       "hash": "765e2979782beecc08374b52350016359a1f86fbe29529290d72788535f0149a",
       "fileType": "PiniaStore",
-      "purpose": "Business Entity State"
+      "purpose": "Represents the file artifact at src/entities/settings/model/settingsStore.js."
+    },
+    {
+      "id": "settings",
+      "type": "Store",
+      "path": "src/entities/settings/model/settingsStore.js",
+      "storeId": "settings",
+      "purpose": "Manages state for the 'settings' domain."
     },
     {
       "id": "src/entities/logger/model/loggerStore.js",
@@ -866,7 +1146,14 @@
       "path": "src/entities/logger/model/loggerStore.js",
       "hash": "73af6e5030ffc155f6f22526ba3ca6bc3312974609a9d5fe066078df6ad90703",
       "fileType": "PiniaStore",
-      "purpose": "Business Entity State"
+      "purpose": "Represents the file artifact at src/entities/logger/model/loggerStore.js."
+    },
+    {
+      "id": "logger",
+      "type": "Store",
+      "path": "src/entities/logger/model/loggerStore.js",
+      "storeId": "logger",
+      "purpose": "Manages state for the 'logger' domain."
     },
     {
       "id": "src/entities/data-explorer/model/state.js",
@@ -882,7 +1169,238 @@
       "path": "src/entities/data-explorer/model/explorerStore.js",
       "hash": "ac4c0f9f7d4bd6ab4b4dfa1e8d4ca79ef6a28524939eb9fe1619188258682c28",
       "fileType": "PiniaStore",
-      "purpose": "Business Entity State"
+      "purpose": "Represents the file artifact at src/entities/data-explorer/model/explorerStore.js."
+    },
+    {
+      "id": "explorer",
+      "type": "Store",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "storeId": "explorer",
+      "purpose": "Manages state for the 'explorer' domain."
+    },
+    {
+      "id": "explorer#state.isLoading",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'isLoading' state property."
+    },
+    {
+      "id": "explorer#state.error",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'error' state property."
+    },
+    {
+      "id": "explorer#state.allItems",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'allItems' state property."
+    },
+    {
+      "id": "explorer#state.filtersMap",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'filtersMap' state property."
+    },
+    {
+      "id": "explorer#state.translationMap",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'translationMap' state property."
+    },
+    {
+      "id": "explorer#state.classifications",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'classifications' state property."
+    },
+    {
+      "id": "explorer#state.dataType",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'dataType' state property."
+    },
+    {
+      "id": "explorer#state.searchTerm",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'searchTerm' state property."
+    },
+    {
+      "id": "explorer#state.categoryFilters",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'categoryFilters' state property."
+    },
+    {
+      "id": "explorer#state.numericFilters",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'numericFilters' state property."
+    },
+    {
+      "id": "explorer#state.sortKey",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'sortKey' state property."
+    },
+    {
+      "id": "explorer#state.sortOrder",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'sortOrder' state property."
+    },
+    {
+      "id": "explorer#state.currentPage",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'currentPage' state property."
+    },
+    {
+      "id": "explorer#state.itemsPerPage",
+      "type": "StateVariable",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'itemsPerPage' state property."
+    },
+    {
+      "id": "explorer#getters.currentItems",
+      "type": "Getter",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A getter for the 'explorer' store."
+    },
+    {
+      "id": "explorer#getters.availableFilters",
+      "type": "Getter",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A getter for the 'explorer' store."
+    },
+    {
+      "id": "explorer#getters.availableNumericFilters",
+      "type": "Getter",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A getter for the 'explorer' store."
+    },
+    {
+      "id": "explorer#getters.currentResults",
+      "type": "Getter",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A getter for the 'explorer' store."
+    },
+    {
+      "id": "explorer#getters.totalResults",
+      "type": "Getter",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A getter for the 'explorer' store."
+    },
+    {
+      "id": "explorer#getters.totalPages",
+      "type": "Getter",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A getter for the 'explorer' store."
+    },
+    {
+      "id": "explorer#getters.paginatedResults",
+      "type": "Getter",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A getter for the 'explorer' store."
+    },
+    {
+      "id": "explorer#getters.currentHeaders",
+      "type": "Getter",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A getter for the 'explorer' store."
+    },
+    {
+      "id": "explorer#getters.isPristine",
+      "type": "Getter",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A getter for the 'explorer' store."
+    },
+    {
+      "id": "explorer#actions._initializeAndResetFilters",
+      "type": "Action",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A action for the 'explorer' store."
+    },
+    {
+      "id": "explorer#actions.setDataType",
+      "type": "Action",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A action for the 'explorer' store."
+    },
+    {
+      "id": "explorer#actions.resetFilters",
+      "type": "Action",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A action for the 'explorer' store."
+    },
+    {
+      "id": "explorer#actions.setSort",
+      "type": "Action",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A action for the 'explorer' store."
+    },
+    {
+      "id": "explorer#actions.setPage",
+      "type": "Action",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A action for the 'explorer' store."
+    },
+    {
+      "id": "explorer#actions.initializeData",
+      "type": "Action",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A action for the 'explorer' store."
+    },
+    {
+      "id": "explorer#actions.exportToCSV",
+      "type": "Action",
+      "path": "src/entities/data-explorer/model/explorerStore.js",
+      "parent": "explorer",
+      "purpose": "A action for the 'explorer' store."
     },
     {
       "id": "src/entities/data-explorer/lib/transformer.js",
@@ -914,35 +1432,87 @@
       "path": "src/entities/comparison/model/comparisonStore.js",
       "hash": "64a875da3d12af31ce81d9fbd1cb96a6f1d1d25782d122d6117a6ac3ef465a40",
       "fileType": "PiniaStore",
-      "purpose": "Business Entity State"
+      "purpose": "Represents the file artifact at src/entities/comparison/model/comparisonStore.js."
     },
     {
-      "id": "vue",
-      "type": "NpmPackage",
-      "name": "vue",
-      "purpose": "Represents the external NPM dependency 'vue'."
-    },
-    {
-      "id": "pinia",
-      "type": "NpmPackage",
-      "name": "pinia",
-      "purpose": "Represents the external NPM dependency 'pinia'."
-    },
-    {
-      "id": "pinia-plugin-persistedstate",
-      "type": "NpmPackage",
-      "name": "pinia-plugin-persistedstate",
-      "purpose": "Represents the external NPM dependency 'pinia-plugin-persistedstate'."
-    },
-    {
-      "id": "@unhead/vue",
-      "type": "NpmPackage",
-      "name": "@unhead/vue",
-      "purpose": "Represents the external NPM dependency '@unhead/vue'."
+      "id": "comparison",
+      "type": "Store",
+      "path": "src/entities/comparison/model/comparisonStore.js",
+      "storeId": "comparison",
+      "purpose": "Manages state for the 'comparison' domain."
     }
   ],
-  "_comment_edges": "The edge registry, superseded by 'dependencyRules' for validation.",
   "edges": [
+    {
+      "source": "src/showcase.js",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/showcase.js",
+      "target": "pinia",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/showcase.js",
+      "target": "pinia-plugin-persistedstate",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/showcase.js",
+      "target": "src/features/theme-toggle/model/themeStore.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/showcase.js",
+      "target": "src/entities/settings/model/settingsStore.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/showcase.js",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/showcase.js",
+      "target": "src/shared/ui/BaseInput.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/showcase.js",
+      "target": "src/shared/ui/BaseSelect.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/showcase.js",
+      "target": "src/shared/ui/BaseToggle.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/showcase.js",
+      "target": "src/shared/ui/BaseCheckbox.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/showcase.js",
+      "target": "src/shared/ui/BaseRadio.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/showcase.js",
+      "target": "src/shared/ui/BaseModal.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/showcase.js",
+      "target": "src/features/license-modal/ui/LicenseModal.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/showcase.js",
+      "target": "src/features/density-toggle/ui/DensityToggle.vue",
+      "type": "IMPORTS"
+    },
     {
       "source": "src/main.js",
       "target": "vue",
@@ -982,6 +1552,126 @@
       "source": "src/main.js",
       "target": "src/styles/_global.css",
       "type": "IMPORTS"
+    },
+    {
+      "source": "src/debug.js",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/debug.js",
+      "target": "pinia",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/debug.js",
+      "target": "pinia-plugin-persistedstate",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/debug.js",
+      "target": "src/entities/logger/model/loggerStore.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/App.vue",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/App.vue",
+      "target": "vue-router",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/App.vue",
+      "target": "src/features/theme-toggle/model/themeStore.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/App.vue",
+      "target": "src/entities/settings/model/settingsStore.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/App.vue",
+      "target": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/App.vue",
+      "target": "src/widgets/GlobalFooter/GlobalFooter.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/App.vue",
+      "target": "src/features/theme-toggle/model/themeStore.js",
+      "type": "USES_STORE_FILE"
+    },
+    {
+      "source": "src/App.vue",
+      "target": "src/entities/settings/model/settingsStore.js",
+      "type": "USES_STORE_FILE"
+    },
+    {
+      "source": "src/App.vue",
+      "target": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/App.vue",
+      "target": "src/widgets/GlobalFooter/GlobalFooter.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/app/router.js",
+      "target": "vue-router",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/app/router.js",
+      "target": "src/pages/home/HomePage.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/app/router.js",
+      "target": "src/pages/about/AboutPage.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/app/router.js",
+      "target": "src/pages/data-explorer/DataExplorerPage.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "route:/",
+      "target": "src/pages/home/HomePage.vue",
+      "type": "RENDERS_COMPONENT"
+    },
+    {
+      "source": "src/app/router.js",
+      "target": "route:/",
+      "type": "DEFINES_ROUTE"
+    },
+    {
+      "source": "route:/about",
+      "target": "src/pages/about/AboutPage.vue",
+      "type": "RENDERS_COMPONENT"
+    },
+    {
+      "source": "src/app/router.js",
+      "target": "route:/about",
+      "type": "DEFINES_ROUTE"
+    },
+    {
+      "source": "route:/data-explorer",
+      "target": "src/pages/data-explorer/DataExplorerPage.vue",
+      "type": "RENDERS_COMPONENT"
+    },
+    {
+      "source": "src/app/router.js",
+      "target": "route:/data-explorer",
+      "type": "DEFINES_ROUTE"
     },
     {
       "source": "src/app/main.js",
@@ -1024,9 +1714,1614 @@
       "type": "IMPORTS"
     },
     {
+      "source": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
+      "target": "vue-router",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
+      "target": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "vue-router",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/entities/logger/model/loggerStore.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/shared/ui/Logo.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/features/theme-toggle/ui/ThemeToggle.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/features/density-toggle/ui/DensityToggle.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/shared/ui/Logo.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/features/density-toggle/ui/DensityToggle.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/features/theme-toggle/ui/ThemeToggle.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/widgets/GlobalFooter/GlobalFooter.vue",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/widgets/GlobalFooter/GlobalFooter.vue",
+      "target": "vue-router",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/shared/ui/RangeFilter.vue",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/shared/ui/RangeFilter.vue",
+      "target": "src/shared/ui/BaseInput.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/shared/ui/RangeFilter.vue",
+      "target": "src/shared/ui/RangeFilter.vue#prop.modelValue",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/RangeFilter.vue",
+      "target": "src/shared/ui/RangeFilter.vue#prop.label",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/RangeFilter.vue",
+      "target": "src/shared/ui/RangeFilter.vue#prop.unit",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/RangeFilter.vue",
+      "target": "src/shared/ui/RangeFilter.vue#event.update:modelValue",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/shared/ui/RangeFilter.vue",
+      "target": "src/shared/ui/BaseInput.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/shared/ui/RangeFilter.vue",
+      "target": "src/shared/ui/BaseInput.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/shared/ui/Logo.vue",
+      "target": "vue-router",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/shared/ui/BaseToggle.vue",
+      "target": "src/shared/ui/BaseToggle.vue#prop.modelValue",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseToggle.vue",
+      "target": "src/shared/ui/BaseToggle.vue#prop.disabled",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseToggle.vue",
+      "target": "src/shared/ui/BaseToggle.vue#event.update:modelValue",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseCheckbox.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue#prop.headers",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue#prop.items",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue#prop.sortKey",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue#prop.sortOrder",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue#prop.showSelection",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue#prop.isItemSelected",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue#prop.selectionLimitReached",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue#prop.allVisibleItemsSelected",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue#event.sort",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue#event.row-click",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue#event.toggle-item-selection",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseTable.vue#event.toggle-select-all-visible",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseCheckbox.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/shared/ui/BaseTable.vue",
+      "target": "src/shared/ui/BaseCheckbox.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/shared/ui/BaseSelect.vue",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/shared/ui/BaseSelect.vue",
+      "target": "src/shared/ui/BaseSelect.vue#prop.modelValue",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseSelect.vue",
+      "target": "src/shared/ui/BaseSelect.vue#prop.disabled",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseSelect.vue",
+      "target": "src/shared/ui/BaseSelect.vue#prop.options",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseSelect.vue",
+      "target": "src/shared/ui/BaseSelect.vue#event.update:modelValue",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/shared/ui/BaseRadio.vue",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/shared/ui/BaseRadio.vue",
+      "target": "src/shared/ui/BaseRadio.vue#prop.modelValue",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseRadio.vue",
+      "target": "src/shared/ui/BaseRadio.vue#prop.value",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseRadio.vue",
+      "target": "src/shared/ui/BaseRadio.vue#prop.name",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseRadio.vue",
+      "target": "src/shared/ui/BaseRadio.vue#prop.disabled",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseRadio.vue",
+      "target": "src/shared/ui/BaseRadio.vue#event.update:modelValue",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/shared/ui/BaseMultiSelect.vue",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/shared/ui/BaseMultiSelect.vue",
+      "target": "src/shared/ui/BaseCheckbox.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/shared/ui/BaseMultiSelect.vue",
+      "target": "src/shared/ui/BaseMultiSelect.vue#prop.options",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseMultiSelect.vue",
+      "target": "src/shared/ui/BaseMultiSelect.vue#prop.modelValue",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseMultiSelect.vue",
+      "target": "src/shared/ui/BaseMultiSelect.vue#prop.label",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseMultiSelect.vue",
+      "target": "src/shared/ui/BaseMultiSelect.vue#event.update:modelValue",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/shared/ui/BaseMultiSelect.vue",
+      "target": "src/shared/ui/BaseCheckbox.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/shared/ui/BaseModal.vue",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/shared/ui/BaseModal.vue",
+      "target": "src/shared/ui/BaseModal.vue#prop.show",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseModal.vue",
+      "target": "src/shared/ui/BaseModal.vue#prop.maxWidth",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseModal.vue",
+      "target": "src/shared/ui/BaseModal.vue#event.close",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/shared/ui/BaseInput.vue",
+      "target": "src/shared/ui/BaseInput.vue#prop.modelValue",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseInput.vue",
+      "target": "src/shared/ui/BaseInput.vue#prop.placeholder",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseInput.vue",
+      "target": "src/shared/ui/BaseInput.vue#prop.disabled",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseInput.vue",
+      "target": "src/shared/ui/BaseInput.vue#event.update:modelValue",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/shared/ui/BaseCheckbox.vue",
+      "target": "src/shared/ui/BaseCheckbox.vue#prop.modelValue",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseCheckbox.vue",
+      "target": "src/shared/ui/BaseCheckbox.vue#prop.disabled",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseCheckbox.vue",
+      "target": "src/shared/ui/BaseCheckbox.vue#event.update:modelValue",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/shared/ui/BaseCanvasTextViewer.vue",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/shared/ui/BaseCanvasTextViewer.vue",
+      "target": "src/features/theme-toggle/model/themeStore.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/shared/ui/BaseCanvasTextViewer.vue",
+      "target": "src/shared/ui/BaseCanvasTextViewer.vue#prop.text",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseCanvasTextViewer.vue",
+      "target": "src/features/theme-toggle/model/themeStore.js",
+      "type": "USES_STORE_FILE"
+    },
+    {
+      "source": "src/shared/ui/BaseButton.vue",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/shared/ui/BaseButton.vue",
+      "target": "src/shared/ui/BaseButton.vue#prop.variant",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/shared/ui/BaseButton.vue",
+      "target": "src/shared/ui/BaseButton.vue#prop.disabled",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/pages/license/LicensePage.vue",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/pages/license/LicensePage.vue",
+      "target": "src/shared/ui/BaseCanvasTextViewer.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/pages/license/LicensePage.vue",
+      "target": "src/shared/ui/BaseCanvasTextViewer.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/pages/home/HomePage.vue",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/pages/home/HomePage.vue",
+      "target": "vue-router",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/pages/home/HomePage.vue",
+      "target": "src/features/theme-toggle/model/themeStore.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/pages/home/HomePage.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/pages/home/HomePage.vue",
+      "target": "src/features/theme-toggle/model/themeStore.js",
+      "type": "USES_STORE_FILE"
+    },
+    {
+      "source": "src/pages/home/HomePage.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/pages/home/HomePage.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/pages/home/HomePage.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/pages/home/HomePage.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/pages/home/HomePage.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/pages/data-explorer/DataExplorerPage.vue",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/pages/data-explorer/DataExplorerPage.vue",
+      "target": "pinia",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/pages/data-explorer/DataExplorerPage.vue",
+      "target": "src/entities/data-explorer/model/explorerStore.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/pages/data-explorer/DataExplorerPage.vue",
+      "target": "src/entities/comparison/model/comparisonStore.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/pages/data-explorer/DataExplorerPage.vue",
+      "target": "src/entities/logger/model/loggerStore.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/pages/data-explorer/DataExplorerPage.vue",
+      "target": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/pages/data-explorer/DataExplorerPage.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/pages/data-explorer/DataExplorerPage.vue",
+      "target": "src/features/item-details/ui/ItemDetailModal.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/pages/data-explorer/DataExplorerPage.vue",
+      "target": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/pages/data-explorer/DataExplorerPage.vue",
+      "target": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/pages/data-explorer/DataExplorerPage.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/pages/data-explorer/DataExplorerPage.vue",
+      "target": "src/entities/data-explorer/model/explorerStore.js",
+      "type": "USES_STORE_FILE"
+    },
+    {
+      "source": "src/pages/data-explorer/DataExplorerPage.vue",
+      "target": "src/entities/comparison/model/comparisonStore.js",
+      "type": "USES_STORE_FILE"
+    },
+    {
+      "source": "src/pages/data-explorer/DataExplorerPage.vue",
+      "target": "src/entities/logger/model/loggerStore.js",
+      "type": "USES_STORE_FILE"
+    },
+    {
+      "source": "src/pages/data-explorer/DataExplorerPage.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/pages/data-explorer/DataExplorerPage.vue",
+      "target": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/pages/data-explorer/DataExplorerPage.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/pages/data-explorer/DataExplorerPage.vue",
+      "target": "src/features/item-details/ui/ItemDetailModal.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/pages/data-explorer/DataExplorerPage.vue",
+      "target": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/pages/data-explorer/DataExplorerPage.vue",
+      "target": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/pages/about/AboutPage.vue",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/pages/about/AboutPage.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/pages/about/AboutPage.vue",
+      "target": "src/features/license-modal/ui/LicenseModal.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/pages/about/AboutPage.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/pages/about/AboutPage.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/pages/about/AboutPage.vue",
+      "target": "src/features/license-modal/ui/LicenseModal.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/shared/ui/BaseTable.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.items",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.headers",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.dataType",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.totalResults",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.totalPages",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.currentPage",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.sortKey",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.sortOrder",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.showSelection",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.isItemSelected",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.selectionLimitReached",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#prop.allVisibleItemsSelected",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#event.row-click",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#event.sort",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#event.page-change",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#event.export-csv",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#event.toggle-item-selection",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue#event.toggle-select-all-visible",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/shared/ui/BaseTable.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
+      "target": "pinia",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
+      "target": "src/entities/data-explorer/model/explorerStore.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
+      "target": "src/shared/ui/BaseInput.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
+      "target": "src/shared/ui/BaseMultiSelect.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
+      "target": "src/shared/ui/RangeFilter.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
+      "target": "src/entities/data-explorer/model/explorerStore.js",
+      "type": "USES_STORE_FILE"
+    },
+    {
+      "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
+      "target": "src/shared/ui/BaseInput.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
+      "target": "src/shared/ui/BaseMultiSelect.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
+      "target": "src/shared/ui/RangeFilter.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "target": "src/entities/comparison/model/comparisonStore.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "target": "src/entities/data-explorer/model/explorerStore.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "target": "src/entities/logger/model/loggerStore.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "target": "src/entities/comparison/model/comparisonStore.js",
+      "type": "USES_STORE_FILE"
+    },
+    {
+      "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "target": "src/entities/data-explorer/model/explorerStore.js",
+      "type": "USES_STORE_FILE"
+    },
+    {
+      "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "target": "src/entities/logger/model/loggerStore.js",
+      "type": "USES_STORE_FILE"
+    },
+    {
+      "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "target": "src/widgets/ComparisonTray/ui/ComparisonTray.vue#event.compare",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "target": "src/widgets/ComparisonTray/ui/ComparisonTray.vue#event.clear",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/features/theme-toggle/ui/ThemeToggle.vue",
+      "target": "src/features/theme-toggle/model/themeStore.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/features/theme-toggle/ui/ThemeToggle.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/features/theme-toggle/ui/ThemeToggle.vue",
+      "target": "src/features/theme-toggle/model/themeStore.js",
+      "type": "USES_STORE_FILE"
+    },
+    {
+      "source": "src/features/theme-toggle/ui/ThemeToggle.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/features/theme-toggle/model/themeStore.js",
+      "target": "pinia",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/features/theme-toggle/model/themeStore.js",
+      "target": "theme",
+      "type": "DEFINES"
+    },
+    {
+      "source": "theme",
+      "target": "theme#state.currentTheme",
+      "type": "DEFINES"
+    },
+    {
+      "source": "theme",
+      "target": "theme#getters.isDarkTheme",
+      "type": "DEFINES"
+    },
+    {
+      "source": "theme",
+      "target": "theme#actions.toggleTheme",
+      "type": "DEFINES"
+    },
+    {
+      "source": "theme#actions.toggleTheme",
+      "target": "theme#state.currentTheme",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "theme#actions.toggleTheme",
+      "target": "theme#state.currentTheme",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "theme",
+      "target": "theme#actions.setTheme",
+      "type": "DEFINES"
+    },
+    {
+      "source": "theme#actions.setTheme",
+      "target": "theme#state.currentTheme",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
+      "target": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/features/license-modal/ui/LicenseModal.vue",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/features/license-modal/ui/LicenseModal.vue",
+      "target": "src/shared/ui/BaseModal.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/features/license-modal/ui/LicenseModal.vue",
+      "target": "src/features/license-modal/ui/LicenseModal.vue#prop.isOpen",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/features/license-modal/ui/LicenseModal.vue",
+      "target": "src/features/license-modal/ui/LicenseModal.vue#event.update:isOpen",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/features/license-modal/ui/LicenseModal.vue",
+      "target": "src/shared/ui/BaseModal.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/features/item-details/ui/ItemDetailModal.vue",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/features/item-details/ui/ItemDetailModal.vue",
+      "target": "src/shared/ui/BaseModal.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/features/item-details/ui/ItemDetailModal.vue",
+      "target": "src/features/item-details/ui/ItemDetailModal.vue#prop.show",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/features/item-details/ui/ItemDetailModal.vue",
+      "target": "src/features/item-details/ui/ItemDetailModal.vue#prop.item",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/features/item-details/ui/ItemDetailModal.vue",
+      "target": "src/features/item-details/ui/ItemDetailModal.vue#event.close",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/features/item-details/ui/ItemDetailModal.vue",
+      "target": "src/shared/ui/BaseModal.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/features/density-toggle/ui/DensityToggle.vue",
+      "target": "src/entities/settings/model/settingsStore.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/features/density-toggle/ui/DensityToggle.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/features/density-toggle/ui/DensityToggle.vue",
+      "target": "src/entities/settings/model/settingsStore.js",
+      "type": "USES_STORE_FILE"
+    },
+    {
+      "source": "src/features/density-toggle/ui/DensityToggle.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/features/density-toggle/ui/DensityToggle.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "target": "src/entities/comparison/model/comparisonStore",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "target": "src/entities/data-explorer/model/explorerStore",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "target": "src/shared/ui/BaseModal.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "target": "src/shared/ui/BaseTable.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "target": "src/features/comparison-modal/ui/ComparisonModal.vue#prop.show",
+      "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "target": "src/features/comparison-modal/ui/ComparisonModal.vue#event.close",
+      "type": "DEFINES_EVENT"
+    },
+    {
+      "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "target": "src/entities/comparison/model/comparisonStore",
+      "type": "USES_STORE_FILE"
+    },
+    {
+      "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "target": "src/entities/data-explorer/model/explorerStore",
+      "type": "USES_STORE_FILE"
+    },
+    {
+      "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "target": "src/shared/ui/BaseModal.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
+      "target": "src/shared/ui/BaseTable.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/entities/settings/model/settingsStore.js",
+      "target": "pinia",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/entities/settings/model/settingsStore.js",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/entities/settings/model/settingsStore.js",
+      "target": "settings",
+      "type": "DEFINES"
+    },
+    {
+      "source": "src/entities/logger/model/loggerStore.js",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/entities/logger/model/loggerStore.js",
+      "target": "pinia",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/entities/logger/model/loggerStore.js",
+      "target": "logger",
+      "type": "DEFINES"
+    },
+    {
       "source": "src/entities/data-explorer/model/state.js",
       "target": "vue",
       "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/entities/data-explorer/model/explorerStore.js",
+      "target": "pinia",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/entities/data-explorer/model/explorerStore.js",
+      "target": "src/entities/data-explorer/api/fetchExplorerData.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/entities/data-explorer/model/explorerStore.js",
+      "target": "src/entities/data-explorer/lib/transformer.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/entities/data-explorer/model/explorerStore.js",
+      "target": "src/entities/data-explorer/lib/filters.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/entities/data-explorer/model/explorerStore.js",
+      "target": "src/entities/logger/model/loggerStore.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/entities/data-explorer/model/explorerStore.js",
+      "target": "explorer",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.isLoading",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.error",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.allItems",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.filtersMap",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.translationMap",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.classifications",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.dataType",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.searchTerm",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.categoryFilters",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.numericFilters",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.sortKey",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.sortOrder",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.currentPage",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#state.itemsPerPage",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#getters.currentItems",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#getters.availableFilters",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#getters.availableNumericFilters",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#getters.currentResults",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer#getters.currentResults",
+      "target": "explorer#state.dataType",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#getters.currentResults",
+      "target": "explorer#state.currentItems",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#getters.currentResults",
+      "target": "explorer#state.currentItems",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#getters.currentResults",
+      "target": "explorer#state.searchTerm",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#getters.currentResults",
+      "target": "explorer#state.categoryFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#getters.currentResults",
+      "target": "explorer#state.numericFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#getters.currentResults",
+      "target": "explorer#state.sortKey",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#getters.currentResults",
+      "target": "explorer#state.sortOrder",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#getters.totalResults",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer#getters.totalResults",
+      "target": "explorer#state.currentResults",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#getters.totalPages",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer#getters.totalPages",
+      "target": "explorer#state.totalResults",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#getters.totalPages",
+      "target": "explorer#state.itemsPerPage",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#getters.paginatedResults",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer#getters.paginatedResults",
+      "target": "explorer#state.currentPage",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#getters.paginatedResults",
+      "target": "explorer#state.itemsPerPage",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#getters.paginatedResults",
+      "target": "explorer#state.itemsPerPage",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#getters.paginatedResults",
+      "target": "explorer#state.currentResults",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#getters.currentHeaders",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#getters.isPristine",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#actions._initializeAndResetFilters",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.dataType",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.searchTerm",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.currentPage",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.sortKey",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.sortOrder",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.availableFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.availableNumericFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.categoryFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.categoryFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.numericFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.numericFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.availableFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.categoryFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.availableNumericFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.numericFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.categoryFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions._initializeAndResetFilters",
+      "target": "explorer#state.numericFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#actions.setDataType",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer#actions.setDataType",
+      "target": "explorer#state.dataType",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions.setDataType",
+      "target": "explorer#state.dataType",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions.setDataType",
+      "target": "explorer#actions._initializeAndResetFilters",
+      "type": "CALLS"
+    },
+    {
+      "source": "explorer#actions.setDataType",
+      "target": "explorer#state._initializeAndResetFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#actions.resetFilters",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer#actions.resetFilters",
+      "target": "explorer#actions._initializeAndResetFilters",
+      "type": "CALLS"
+    },
+    {
+      "source": "explorer#actions.resetFilters",
+      "target": "explorer#state._initializeAndResetFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#actions.setSort",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer#actions.setSort",
+      "target": "explorer#state.sortKey",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions.setSort",
+      "target": "explorer#state.sortOrder",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions.setSort",
+      "target": "explorer#state.sortOrder",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions.setSort",
+      "target": "explorer#state.sortKey",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions.setSort",
+      "target": "explorer#state.sortOrder",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions.setSort",
+      "target": "explorer#state.currentPage",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#actions.setPage",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer#actions.setPage",
+      "target": "explorer#state.totalPages",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions.setPage",
+      "target": "explorer#state.currentPage",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#actions.initializeData",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state.isLoading",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state.allItems",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state.isLoading",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state.error",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state.allItems",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state.filtersMap",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state.translationMap",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state.classifications",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state.allItems",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state.filtersMap",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#actions._initializeAndResetFilters",
+      "type": "CALLS"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state._initializeAndResetFilters",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state.error",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer#actions.initializeData",
+      "target": "explorer#state.isLoading",
+      "type": "MODIFIES_STATE"
+    },
+    {
+      "source": "explorer",
+      "target": "explorer#actions.exportToCSV",
+      "type": "DEFINES"
+    },
+    {
+      "source": "explorer#actions.exportToCSV",
+      "target": "explorer#state.currentResults",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions.exportToCSV",
+      "target": "explorer#state.currentHeaders",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions.exportToCSV",
+      "target": "explorer#state.currentHeaders",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "explorer#actions.exportToCSV",
+      "target": "explorer#state.dataType",
+      "type": "READS_STATE"
+    },
+    {
+      "source": "src/entities/comparison/model/comparisonStore.js",
+      "target": "pinia",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/entities/comparison/model/comparisonStore.js",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/entities/comparison/model/comparisonStore.js",
+      "target": "comparison",
+      "type": "DEFINES"
     }
   ]
 }
