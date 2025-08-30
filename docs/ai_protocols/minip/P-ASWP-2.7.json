@@ -1,18 +1,20 @@
 {
-  "protocolId": "P-ASWP-2.7",
+  "protocolId": "P-ASWP-2.10",
   "workflowId": "ENGROVE_FRANKENSTEEN_ATOMIC_WORKFLOW_V2",
   "title": "Cs1-Cs2-Cs3 Atomic Session Workflow (Guided & Automated)",
-  "description": "Stateless Cs3: ny tom session utan kontext. Cs2 levererar ett självförsörjande JSON-paket som innehåller all nödvändig kontext och inlinade filer.",
-  "dependsOn": "A Code Knowledge Graph (CKG) artifact.",
+  "description": "Stateless Cs3: new clean session without external context. Cs2 delivers a fully self-contained JSON package with all required context and inlined source files, optimized for token budget via chunking and deduplication.",
+  "dependsOn": "Code Knowledge Graph (CKG) artifact.",
   "meta": {
-    "version": "2.7",
-    "updated": "2025-08-29",
+    "version": "2.10",
+    "updated": "2025-08-30",
+    "localization": "en-US",
     "changelog": [
-      "Cs3 är helt stateless. Endast Cs2-JSON används som prompt.",
-      "Cs2-JSON (HumanFacingPackage.manifest) bär full kontext inklusive inlinade filer.",
-      "Manifestversion höjd till 1.2 och schema utökat med inlineFileBundle.",
-      "Cs3 förbjuder all extern IO och alla bilagor. Endast JSON-innehållet får användas.",
-      "Hårda invariants: operatorFileManifest.required == inlineFileBundle.files(meta)."
+      "Introduce inline chunk store with per-chunk SHA-256 and bytes.",
+      "Allow files to be represented as ordered references to chunk store (dedup).",
+      "Add token accounting with estimator and hard limits per bundle and per file.",
+      "Add chunking configuration (fixed_bytes | token_target) with overlap and max chunks.",
+      "Extend PRECHECKS for chunk integrity, ordering, and dedup constraints.",
+      "Clarify fallback semantics when token/byte budgets are exceeded."
     ]
   },
   "trigger": {
@@ -34,42 +36,42 @@
       "citationFormat": "path:lineStart-lineEnd",
       "unknownHandling": "STOP_AND_REQUEST_CLARIFICATION"
     },
-    "contextIsolation": "Cs3 får endast använda JSON-innehållet som tillhandahålls av Cs2 (ingen extern kontext)."
+    "contextIsolation": true
   },
   "phases": [
     {
       "phaseId": "Cs1",
       "title": "Architect & Plan",
-      "purpose": "Full påverkanalys mot CKG samt framtagning av arkitekturplan.",
+      "purpose": "Perform full impact analysis against the CKG and produce an architecture plan.",
       "promptForInputs": [
         "User Requirement (Natural Language)",
-        "Den kompletta, aktuella CKG eller relevanta källfiler."
+        "Complete and current CKG or relevant source files."
       ],
       "fileIntake": {
         "enabled": true,
-        "when": "Om user requirement, CKG, diff, eller kontext refererar till filer eller mappar.",
-        "requestTemplate": "Ladda upp/ange varje fil med: path, bytes, sha256, kort syfte.",
-        "output": "Preliminär RequiredFileList (kandidatlista för Cs2)."
+        "when": "If user requirement, CKG, diff, or context refers to files or folders.",
+        "requestTemplate": "Upload or specify each file with: path, bytes, sha256, short purpose.",
+        "output": "Preliminary RequiredFileList (candidate list for Cs2)."
       },
       "outputs": [
-        "Architecture Contract med fullständig ändringsyta och påverkan.",
-        "Föreslagen CKG-diff med nya/ändrade noder och kanter.",
-        "RequiredFileList (kandidat)"
+        "Architecture Contract with full scope and impact analysis.",
+        "Proposed CKG diff with added/modified nodes and edges.",
+        "RequiredFileList (candidate)"
       ]
     },
     {
       "phaseId": "Cs2",
       "title": "Verify & Package",
-      "purpose": "Granska Cs1 och paketera ett fullständigt, självförsörjande JSON för människa + Cs3 (stateless).",
+      "purpose": "Review Cs1 outputs and package a fully self-contained JSON for both human consumption and Cs3 execution (stateless).",
       "inputs": [
-        "Architecture Contract och CKG-diff från Cs1.",
-        "Original, oomodifierade källfiler som berörs av planen."
+        "Architecture Contract and CKG diff from Cs1.",
+        "Original, unmodified source files affected by the plan."
       ],
       "executionManifestSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://engrove.ai/schemas/cs3-execution-manifest.schema.json",
         "title": "Cs3 Execution Manifest Schema",
-        "description": "Strikt schema som Cs2 levererar till människa för användning av Cs3 i en stateless session.",
+        "description": "Strict schema delivered by Cs2 to enable deterministic execution in Cs3 stateless sessions.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -80,7 +82,11 @@
           "operatorFileManifest",
           "constraints",
           "outputContract",
-          "inlineFileBundle"
+          "inlineFileBundle",
+          "verification",
+          "limits",
+          "provenance",
+          "security"
         ],
         "properties": {
           "manifestVersion": { "type": "string", "const": "1.2" },
@@ -94,7 +100,7 @@
               "language": { "type": "string", "minLength": 1 }
             }
           },
-          "operation": { "type": "string", "enum": ["modify", "create", "replace"] },
+          "operation": { "type": "string", "enum": ["modify", "create", "replace", "multi_file"] },
           "instructions": { "type": "string", "minLength": 1 },
           "operatorFileManifest": {
             "type": "object",
@@ -116,21 +122,18 @@
           "constraints": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["assumptions", "context", "testing", "forbidExternalIO", "selfContainment"],
+            "required": ["assumptions", "contextIsolation", "testing", "forbidExternalIO", "selfContainment"],
             "properties": {
-              "assumptions": { "type": "string", "const": "forbidden" },
-              "context": {
-                "type": "string",
-                "const": "Cs3 får inte använda annan kontext än manifestet (detta JSON)."
-              },
+              "assumptions": { "type": "boolean", "const": false },
+              "contextIsolation": { "type": "boolean", "const": true },
               "forbidExternalIO": { "type": "boolean", "const": true },
               "selfContainment": { "type": "boolean", "const": true },
               "testing": {
                 "type": "object",
                 "additionalProperties": false,
-                "required": ["runInternalTestsIfPresent", "acceptanceCriteria"],
+                "required": ["executeTests", "acceptanceCriteria"],
                 "properties": {
-                  "runInternalTestsIfPresent": { "type": "boolean" },
+                  "executeTests": { "type": "boolean", "const": false },
                   "acceptanceCriteria": {
                     "type": "array",
                     "minItems": 1,
@@ -147,10 +150,7 @@
             "properties": {
               "requireProvenanceHeader": { "type": "boolean", "const": true },
               "lineCitationsRequired": { "type": "boolean", "const": true },
-              "format": {
-                "type": "string",
-                "enum": ["en enda komplett fil i ett kodblock, inget övrigt prosamaterial"]
-              }
+              "format": { "type": "string", "enum": ["single complete file in one code block, no prose"] }
             }
           },
           "inlineFileBundle": {
@@ -158,12 +158,117 @@
             "additionalProperties": false,
             "required": ["files"],
             "properties": {
+              "deduplicate": { "type": "boolean", "default": true },
+              "chunkStore": {
+                "type": "array",
+                "items": { "$ref": "#/$defs/chunk" },
+                "default": []
+              },
               "files": {
                 "type": "array",
                 "minItems": 1,
                 "items": { "$ref": "#/$defs/fileBlob" }
               },
-              "totalBytes": { "type": "integer", "minimum": 0 }
+              "totalBytes": { "type": "integer", "minimum": 0 },
+              "tokenAccounting": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["estimator", "bundleTokens"],
+                "properties": {
+                  "estimator": { "type": "string", "enum": ["cl100k_base", "o200k_base", "custom"] },
+                  "bundleTokens": { "type": "integer", "minimum": 0 },
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["path", "tokens"],
+                      "properties": {
+                        "path": { "type": "string", "minLength": 1 },
+                        "tokens": { "type": "integer", "minimum": 0 }
+                      },
+                      "additionalProperties": false
+                    },
+                    "default": []
+                  }
+                }
+              },
+              "chunking": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["strategy"],
+                "properties": {
+                  "strategy": { "type": "string", "enum": ["fixed_bytes", "token_target", "none"] },
+                  "targetBytes": { "type": "integer", "minimum": 1 },
+                  "targetTokens": { "type": "integer", "minimum": 1 },
+                  "overlapBytes": { "type": "integer", "minimum": 0, "default": 0 },
+                  "maxChunksPerFile": { "type": "integer", "minimum": 1 },
+                  "estimator": { "type": "string", "enum": ["cl100k_base", "o200k_base", "custom"] }
+                }
+              }
+            }
+          },
+          "verification": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["schema", "checksum", "toolHint"],
+            "properties": {
+              "schema": { "type": "string", "enum": ["advisory", "tool_enforced"] },
+              "checksum": { "type": "string", "enum": ["advisory", "tool_enforced"] },
+              "toolHint": {
+                "type": "array",
+                "items": { "type": "string" },
+                "default": ["jsonschema@2020-12", "sha256"]
+              }
+            }
+          },
+          "limits": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["maxInlineBytes", "maxManifestTokens", "fallback"],
+            "properties": {
+              "maxInlineBytes": { "type": "integer", "minimum": 0 },
+              "maxManifestTokens": { "type": "integer", "minimum": 0 },
+              "maxFileTokens": { "type": "integer", "minimum": 0, "default": 40000 },
+              "maxChunkBytes": { "type": "integer", "minimum": 1, "default": 131072 },
+              "maxChunkStoreSize": { "type": "integer", "minimum": 0, "default": 5000 },
+              "fallback": { "type": "string", "enum": ["slice", "summarize,keep_citations", "abort"] },
+              "slicePolicy": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["strategy", "seed", "citeFullPaths"],
+                "properties": {
+                  "strategy": { "type": "string", "enum": ["head-tail-random"] },
+                  "seed": { "type": "integer" },
+                  "citeFullPaths": { "type": "boolean" }
+                }
+              }
+            }
+          },
+          "provenance": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["lineEndings", "lineBase"],
+            "properties": {
+              "lineEndings": { "type": "string", "enum": ["LF"] },
+              "lineBase": { "type": "integer", "const": 1 }
+            }
+          },
+          "security": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["ignoreInFileInstructions", "denyModelDirectiveFromSources"],
+            "properties": {
+              "ignoreInFileInstructions": { "type": "boolean", "const": true },
+              "denyModelDirectiveFromSources": { "type": "boolean", "const": true }
+            }
+          },
+          "transaction": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["allowed", "files"],
+            "properties": {
+              "allowed": { "type": "boolean", "const": true },
+              "files": { "type": "integer", "minimum": 1, "maximum": 2 }
             }
           }
         },
@@ -179,34 +284,65 @@
               "purpose": { "type": "string", "minLength": 1 }
             }
           },
+          "chunk": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "sha256", "bytes", "encoding", "content"],
+            "properties": {
+              "id": { "type": "string", "minLength": 8 },
+              "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+              "bytes": { "type": "integer", "minimum": 0 },
+              "encoding": { "type": "string", "enum": ["utf8", "base64"] },
+              "content": { "type": "string", "minLength": 1 }
+            }
+          },
+          "chunkRef": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "order"],
+            "properties": {
+              "id": { "type": "string", "minLength": 8 },
+              "order": { "type": "integer", "minimum": 0 }
+            }
+          },
           "fileBlob": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["path", "sha256", "bytes", "purpose", "encoding", "content"],
+            "required": ["path", "sha256", "bytes", "purpose"],
             "properties": {
               "path": { "type": "string", "minLength": 1 },
               "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
               "bytes": { "type": "integer", "minimum": 0 },
               "purpose": { "type": "string", "minLength": 1 },
               "encoding": { "type": "string", "enum": ["utf8", "base64"] },
-              "content": { "type": "string", "minLength": 1 }
-            }
+              "content": { "type": "string", "minLength": 1 },
+              "chunks": {
+                "type": "array",
+                "items": { "$ref": "#/$defs/chunkRef" }
+              },
+              "fileSha256OfChunks": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+              "tokens": { "type": "integer", "minimum": 0 }
+            },
+            "oneOf": [
+              { "required": ["encoding", "content"], "not": { "required": ["chunks"] } },
+              { "required": ["chunks", "fileSha256OfChunks"], "not": { "required": ["content"] } }
+            ]
           }
         }
       },
       "outputs": [
         "HumanFacingPackage = {",
-        "  \"manifest\": <komplett Cs3 Execution Manifest v1.2 med inlineFileBundle>,",
-        "  \"requiredFiles\": <deriverad lista från manifest.inlineFileBundle.files (path, sha256, bytes, purpose)>,",
-        "  \"instructions\": \"Klistra in HELA detta JSON i Cs3. Inga bilagor. Cs3 får endast använda detta innehåll.\",",
-        "  \"markdownTemplate\": \"## Cs3-körning (stateless)\\n\\n**Steg 1 — Bekräfta innehåll**\\n- [ ] Ingen extern kontext används.\\n- [ ] Alla källfiler finns inlinade nedan.\\n\\n**Filer (inlinade):**\\n{{#each manifest.inlineFileBundle.files}}\\n- \\`{{this.path}}\\`  (sha256: \\`{{this.sha256}}\\`, bytes: \\`{{this.bytes}}\\`)  \\\\n  purpose: {{this.purpose}}\\n{{/each}}\\n\\n---\\n\\n**Steg 2 — Manifest**\\n\\n```json\\n{{{json manifest}}}\\n```\\n\\n**Viktigt:** Cs3 får inte läsa något utanför detta JSON. Inget nätverk. Inga filsystemanrop. Ingen körning om schemavalidering eller checksummor misslyckas.\"",
+        "  \"manifest\": <complete Cs3 Execution Manifest v1.2 with inlineFileBundle>,",
+        "  \"requiredFiles\": <derived list from manifest.inlineFileBundle.files (path, sha256, bytes, purpose)>,",
+        "  \"instructions\": \"Paste this JSON into Cs3. No attachments. Cs3 may only use this content.\",",
+        "  \"markdownTemplate\": \"## Cs3 Execution (stateless)\\n\\n**Step 1 — Confirm content**\\n- [ ] No external context is used.\\n- [ ] All source files are inlined below.\\n\\n**Files (inlined):**\\n{{#each manifest.inlineFileBundle.files}}\\n- \\`{{this.path}}\\`  (sha256: \\`{{this.sha256}}\\`, bytes: \\`{{this.bytes}}\\`, tokens: \\`{{this.tokens}}\\`)  \\\\n  purpose: {{this.purpose}}\\n{{/each}}\\n\\n---\\n\\n**Step 2 — Manifest**\\n\\n```json\\n{{{json manifest}}}\\n```\\n\\n**Important:** Cs3 must not read anything outside this JSON. No network. No filesystem. Abort execution if schema validation, checksum, or token budgets fail.\"",
         "}"
       ]
     },
     {
       "phaseId": "Cs3",
       "title": "Execute (Atomic)",
-      "purpose": "Mekaniskt implementera exakt ett filmål med endast JSON-innehåll från Cs2.",
+      "purpose": "Mechanically implement exactly one target file (or limited multi-file transaction) using only JSON content from Cs2.",
       "inputs": ["HumanFacingPackage"],
       "preconditions": {
         "requireSchemaValidation": true,
@@ -216,32 +352,35 @@
       },
       "embeddedProtocol": {
         "PRECHECKS": [
-          "Validera HumanFacingPackage.manifest mot phases[1].executionManifestSchema (JSON Schema draft 2020-12).",
-          "Härled requiredFiles från manifest.inlineFileBundle.files och jämför mot operatorFileManifest.required (path, sha256, bytes, purpose).",
-          "Om avvikelse: returnera INVARIANT_VIOLATION med diff.",
-          "Beräkna sha256 och bytes för varje fileBlob.content (enligt encoding) och jämför mot metadata.",
-          "Om mismatch: returnera CHECKSUM_MISMATCH med lista."
+          "If verification.schema == 'tool_enforced': expect external validator; otherwise perform advisory textual schema check only.",
+          "Derive requiredFiles from manifest.inlineFileBundle.files and compare with operatorFileManifest.required (path, sha256, bytes, purpose). On mismatch: return INVARIANT_VIOLATION with diff.",
+          "If manifest.inlineFileBundle.chunkStore is present: verify each file either has content or chunks, not both. For chunked files: ensure chunkRef ordering is contiguous and each chunkRef.id exists in chunkStore.",
+          "If verification.checksum == 'tool_enforced': expect actual per-chunk and per-file hash computation; otherwise advisory comparison of declared hashes and byte counts.",
+          "For chunked files: verify fileSha256OfChunks equals file sha256 (advisory if no tool).",
+          "Enforce token budgets: bundleTokens ≤ limits.maxManifestTokens and per-file tokens ≤ limits.maxFileTokens; if exceeded apply limits.fallback.",
+          "Enforce byte budgets: totalBytes ≤ limits.maxInlineBytes; each chunk.bytes ≤ limits.maxChunkBytes; chunkStore size ≤ limits.maxChunkStoreSize; if exceeded apply limits.fallback."
         ],
         "IO": {
-          "input": "Endast HumanFacingPackage (manifest + inlinade filer).",
-          "output": "Komplett modifierad målsource för en fil."
+          "input": "HumanFacingPackage only (manifest + inlined files and optional chunkStore).",
+          "output": "Complete modified source for a single target file, or up to transaction.files if multi_file is active."
         },
         "ERRORS": {
-          "SCHEMA_INVALID": "Returnera felen från valideraren. Ingen kod levereras.",
-          "INVARIANT_VIOLATION": "operatorFileManifest.required matchar inte inlineFileBundle.files.",
-          "CHECKSUM_MISMATCH": "Returnera exakta skillnader. Ingen kod levereras.",
-          "NEEDS_CLARIFICATION": "Endast vid självmotsägelser i manifestet."
+          "SCHEMA_INVALID": "Return validator errors. Do not deliver code.",
+          "INVARIANT_VIOLATION": "operatorFileManifest.required does not match inlineFileBundle.files.",
+          "CHECKSUM_MISMATCH": "Return exact mismatches. Do not deliver code.",
+          "LIMIT_EXCEEDED": "Budgets exceeded and fallback was 'abort'.",
+          "NEEDS_CLARIFICATION": "Only when manifest contains contradictory instructions."
         },
         "OUTPUT": {
-          "format": "Endast ett kodblock med den fullständiga filen.",
+          "format": "Single complete file in one code block (or multiple blocks if multi_file, one per file).",
           "provenanceHeader": true,
           "provenanceHeaderSchema": {
             "fields": [
-              "Protocol: P-ASWP-2.7",
+              "Protocol: P-ASWP-2.10",
               "Timestamp",
-              "SourceBasis: lista över path:lineStart-lineEnd",
-              "ChangeSummary: punktlista över ändringar med citat-ID",
-              "Assumptions: ALWAYS 'None'"
+              "SourceBasis: list of path:lineStart-lineEnd",
+              "ChangeSummary: bullet list of changes with citation IDs",
+              "Assumptions: NONE"
             ]
           },
           "banAssumptions": true,
@@ -249,7 +388,7 @@
         }
       },
       "outputs": [
-        "Den kompletta, modifierade källfilen för målfilen, levererad enligt embeddedProtocol."
+        "Complete modified target file(s) delivered according to embeddedProtocol."
       ]
     }
   ]
