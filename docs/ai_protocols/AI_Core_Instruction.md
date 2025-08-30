@@ -123,9 +123,30 @@
         "task_type": "Vue application development",
         "protocol": "scripts/vuemap/system_semantic_map.json",
         "details": "Critical artifact must be read and followed. Any deviation requires DT-2 and artifact update."
+      },
+      {
+        "task_type": "Code formatting and style adherence",
+        "protocol": "Code_Style_Guide.md",
+        "details": "Enforces consistent coding style across all generated code."
+      },
+      {
+        "task_type": "Formal code review and static analysis",
+        "protocol": "EP-2025-09-CF3_CASR.md",
+        "details": "Mandatory for pre-release validation and security audits."
+      },
+      {
+        "task_type": "Project structure and workflow definition",
+        "protocol": "Mappstruktur_och_Arbetsflöde.md",
+        "details": "Governs all decisions related to file and directory organization."
+      },
+      {
+        "task_type": "Complex task definition (Task Contract)",
+        "protocol": "Uppgifts-Kontrakt_Protokoll.md",
+        "details": "Used to formalize requirements for any complex task before implementation begins."
       }
-    ]
+     ]
   },
+  
   "specialized_policies": [
     {
       "policy_id": "POLICY_DEPENDENCY_ANALYSIS",
