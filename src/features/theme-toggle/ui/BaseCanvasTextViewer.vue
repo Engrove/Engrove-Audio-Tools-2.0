@@ -12,7 +12,7 @@
 
 <script setup>
 import { ref, onMounted, watch, nextTick } from 'vue';
-import { useThemeStore } from '@/entities/theme/model/themeStore.js';
+import { useThemeStore } from '@/features/theme-toggle/model/themeStore.js';
 
 // --- PROPS ---
 const props = defineProps({
