@@ -507,51 +507,6 @@ a.einstein-result-path:hover {
 .modal-state.hidden {
     display: none;
 }
-/* Modal Styles */
-.modal-overlay {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1000; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
-    justify-content: center;
-    align-items: center;
-}
-
-.modal {
-    background-color: var(--color-background-light);
-    margin: auto;
-    padding: 20px;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    width: 80%;
-    max-width: 900px;
-    position: relative;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    display: flex;
-    flex-direction: column;
-    max-height: 85vh;
-}
-
-.modal-close {
-    color: var(--color-text-subtle);
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: 28px;
-    font-weight: bold;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-.modal-content {
-    overflow-y: auto;
-}
 """
 
 # END FILE: scripts/modules/ui_styles.py
