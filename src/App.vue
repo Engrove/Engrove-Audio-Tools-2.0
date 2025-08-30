@@ -25,7 +25,7 @@
 <script setup>
 import { computed } from 'vue';
 import { RouterView } from 'vue-router';
-import { useThemeStore } from './features/theme-toggle/model/themeStore.js';
+import { useThemeStore } from './features/theme-toggle/ui/ThemeToggle.vue';
 import { useSettingsStore } from './entities/settings/model/settingsStore.js'; // Importerar den nya storen
 import GlobalHeader from './widgets/GlobalHeader/GlobalHeader.vue';
 import GlobalFooter from './widgets/GlobalFooter/GlobalFooter.vue';
