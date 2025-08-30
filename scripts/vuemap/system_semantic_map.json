@@ -1,7 +1,7 @@
 {
   "$schema": "./system_semantic_map.schema.json",
   "version": "4.7.0",
-  "createdAt": "2025-08-30T15:00:22.610Z",
+  "createdAt": "2025-08-30T16:33:51.302Z",
   "nodes": [
     {
       "id": "src/showcase.js",
@@ -346,10 +346,22 @@
       "id": "src/widgets/GlobalFooter/GlobalFooter.vue",
       "type": "File",
       "path": "src/widgets/GlobalFooter/GlobalFooter.vue",
-      "hash": "5b6c9f8a226730143855eea3aeeccaa216e6c6a17330682450cc1f4c47e46242",
+      "hash": "a6ed7b2e4af907876579e088000fbe4862390693725774ce97b68e2df8436812",
       "fileType": "VueComponent",
       "layer": "widgets",
       "purpose": "Represents the file artifact at src/widgets/GlobalFooter/GlobalFooter.vue."
+    },
+    {
+      "id": "vue",
+      "type": "NpmPackage",
+      "name": "vue",
+      "purpose": "Represents the external NPM dependency 'vue'."
+    },
+    {
+      "id": "vue-router",
+      "type": "NpmPackage",
+      "name": "vue-router",
+      "purpose": "Represents the external NPM dependency 'vue-router'."
     },
     {
       "id": "src/shared/ui/RangeFilter.vue",
