@@ -84,6 +84,7 @@ HTML_TEMPLATE = """
                     <button id=\"save-core-selection\">Spara Core val</button>\
                 </div>\
                 <div class=\"ribbon-group\">\
+                    <button id="patcher-tool-btn" class="button">Patch</button>
                     <button id=\"create-context-btn\">Skapa Fil-bundle</button>\
                     <button id=\"create-files-btn\">Skapa Protokoll-bundle</button>\
                      <label class=\"inline\">\
@@ -184,6 +185,15 @@ HTML_TEMPLATE = """
     </div>\
 \
     <script type=\"module\" src=\"logic.js\"></script>\
+    <div id="patcher-tool-modal-overlay" class="modal-overlay">
+    <div id="patcher-tool-modal" class="modal">
+        <button id="patcher-tool-modal-close" class="modal-close">&times;</button>
+        <div class="modal-content">
+            <h3>UI Patcher Tool Source</h3>
+            <pre id="patcher-tool-code-content">Laddar källkod...</pre>
+        </div>
+    </div>
+</div>
 </body>\
 </html>\
 """
