@@ -1,7 +1,7 @@
 {
   "$schema": "./system_semantic_map.schema.json",
-  "version": "4.5.0",
-  "createdAt": "2025-08-30T10:39:55.468Z",
+  "version": "4.7.0",
+  "createdAt": "2025-08-30T14:07:58.110Z",
   "nodes": [
     {
       "id": "src/showcase.js",
@@ -9,25 +9,8 @@
       "path": "src/showcase.js",
       "hash": "639bec630955a2777feb71e3a741b3c9499526bbad9495e0cc1382e7a1c7e763",
       "fileType": "Utility",
+      "layer": "src-other",
       "purpose": "Represents the file artifact at src/showcase.js."
-    },
-    {
-      "id": "vue",
-      "type": "NpmPackage",
-      "name": "vue",
-      "purpose": "Represents the external NPM dependency 'vue'."
-    },
-    {
-      "id": "pinia",
-      "type": "NpmPackage",
-      "name": "pinia",
-      "purpose": "Represents the external NPM dependency 'pinia'."
-    },
-    {
-      "id": "pinia-plugin-persistedstate",
-      "type": "NpmPackage",
-      "name": "pinia-plugin-persistedstate",
-      "purpose": "Represents the external NPM dependency 'pinia-plugin-persistedstate'."
     },
     {
       "id": "src/main.js",
@@ -35,13 +18,8 @@
       "path": "src/main.js",
       "hash": "22f8e0d034d96de04212e33567821d56f3550a5f166e19227385926291e99059",
       "fileType": "EntryPoint",
+      "layer": "src-other",
       "purpose": "Represents the file artifact at src/main.js."
-    },
-    {
-      "id": "@unhead/vue",
-      "type": "NpmPackage",
-      "name": "@unhead/vue",
-      "purpose": "Represents the external NPM dependency '@unhead/vue'."
     },
     {
       "id": "src/debug.js",
@@ -49,6 +27,7 @@
       "path": "src/debug.js",
       "hash": "031f0a2c2fa092f54c8b4374a638e17f3c28ba398464d36b09db3c98a442980b",
       "fileType": "Utility",
+      "layer": "src-other",
       "purpose": "Represents the file artifact at src/debug.js."
     },
     {
@@ -57,13 +36,8 @@
       "path": "src/App.vue",
       "hash": "1f45949c769c6d6454a5d056ff8716510ddf6c2ad05539ff879f60166e40ba92",
       "fileType": "VueComponent",
+      "layer": "src-other",
       "purpose": "Represents the file artifact at src/App.vue."
-    },
-    {
-      "id": "vue-router",
-      "type": "NpmPackage",
-      "name": "vue-router",
-      "purpose": "Represents the external NPM dependency 'vue-router'."
     },
     {
       "id": "public/data/tonearms-data.json",
@@ -71,6 +45,7 @@
       "path": "public/data/tonearms-data.json",
       "hash": "98e9ad0cd6b9bd3b3d439327cfa40001bce308d01cc4b63e8e27d249108e4950",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/tonearms-data.json."
     },
     {
@@ -79,6 +54,7 @@
       "path": "public/data/tonearms-classifications.json",
       "hash": "f49e8ce7386ba0aa6506e70fd24ec3b2faa75fbf1d1e0c8f3df1d58e9fcd9544",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/tonearms-classifications.json."
     },
     {
@@ -87,6 +63,7 @@
       "path": "public/data/pickups-static-estimation-rules.json",
       "hash": "41a2963972a72d6b21863e0ebdb6ecf5573e2b85937fcb66ceb2e96a0d7c09c3",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/pickups-static-estimation-rules.json."
     },
     {
@@ -95,6 +72,7 @@
       "path": "public/data/pickups-estimation-rules.json",
       "hash": "76e126d07b79b336b632643f48c8f8fe5f930cf3d22bd56f095689f23bf9f80c",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/pickups-estimation-rules.json."
     },
     {
@@ -103,6 +81,7 @@
       "path": "public/data/pickups-confidence-levels.json",
       "hash": "65712c3043215003a7081116cad47930bb6ebde5aa1a07f27426365ab632dffd",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/pickups-confidence-levels.json."
     },
     {
@@ -111,6 +90,7 @@
       "path": "public/data/data-translation-map.json",
       "hash": "ba4c24232fa39a3313955afa62e95e9d43e734a349eadb99bcac60b1f1cdebb1",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/data-translation-map.json."
     },
     {
@@ -119,6 +99,7 @@
       "path": "public/data/data-filters-map.json",
       "hash": "92563336241f00fdae26ecfac9ca80989ea11ee2a81cdd6e181cff5f8ba549e1",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/data-filters-map.json."
     },
     {
@@ -127,6 +108,7 @@
       "path": "public/data/data-aliases.json",
       "hash": "b12615dae28d2ac6d561286902932e4676d67e510ce821131e9f9635f0d0d942",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/data-aliases.json."
     },
     {
@@ -135,6 +117,7 @@
       "path": "public/data/cartridges-static-estimation-rules.json",
       "hash": "6491a74b5141dca5d8f508f0a0c8776805b7b039aa6604a65c040d14a2682254",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/cartridges-static-estimation-rules.json."
     },
     {
@@ -143,6 +126,7 @@
       "path": "public/data/cartridges-estimation-rules.json",
       "hash": "d11655467f164dd7374b7edc91c8f96a1f93af07d707ff721744a8592ee76b44",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/cartridges-estimation-rules.json."
     },
     {
@@ -151,6 +135,7 @@
       "path": "public/data/cartridges-data.json",
       "hash": "cc816e7239528d2b685f599c5e6d02d6e0de5297f79b2dda6cdac15f883699cb",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/cartridges-data.json."
     },
     {
@@ -159,6 +144,7 @@
       "path": "public/data/cartridges-confidence-levels.json",
       "hash": "5291503cba6b9339621c2e8769010deb8d8fa0a701b0c059f8c0d6eed904f61b",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/cartridges-confidence-levels.json."
     },
     {
@@ -167,6 +153,7 @@
       "path": "public/data/cartridges-classifications.json",
       "hash": "f4e96505b1d032e6152fc0e3bffe17e5d599b2b7baef047b5537af6656288fe9",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/cartridges-classifications.json."
     },
     {
@@ -175,6 +162,7 @@
       "path": "src/app/router.js",
       "hash": "270ac16d9084c20bec5ab6c6bbc290f6a311b60b982b87b38a7d4441988b3541",
       "fileType": "RouterConfig",
+      "layer": "app",
       "purpose": "Represents the file artifact at src/app/router.js."
     },
     {
@@ -207,6 +195,7 @@
       "path": "src/app/main.js",
       "hash": "c96f8c337e71afc206ca1aed9396ba06dbf9b924d95646b445b797a2c7dfd0a9",
       "fileType": "EntryPoint",
+      "layer": "app",
       "purpose": "Represents the file artifact at src/app/main.js."
     },
     {
@@ -215,6 +204,7 @@
       "path": "public/data/schemas/tonearms-data.schema.json",
       "hash": "a1fad1f9a302f36d7a23a71d00b67bd57187b1ac5ae1947ea102c2ac213cd901",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/schemas/tonearms-data.schema.json."
     },
     {
@@ -223,6 +213,7 @@
       "path": "public/data/schemas/tonearms-classifications.schema.json",
       "hash": "dca82b1259d8f0fcdf77415e28720fcd161b7fe1c656a5430d96c89be001fd36",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/schemas/tonearms-classifications.schema.json."
     },
     {
@@ -231,6 +222,7 @@
       "path": "public/data/schemas/pickups-static-estimation-rules.schema.json",
       "hash": "6cb1105206204346e5fa342d9f5bc29a1e3a1cf5196fa113999a141a02588fd2",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/schemas/pickups-static-estimation-rules.schema.json."
     },
     {
@@ -239,6 +231,7 @@
       "path": "public/data/schemas/pickups-estimation-rules.schema.json",
       "hash": "6cb1105206204346e5fa342d9f5bc29a1e3a1cf5196fa113999a141a02588fd2",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/schemas/pickups-estimation-rules.schema.json."
     },
     {
@@ -247,6 +240,7 @@
       "path": "public/data/schemas/pickups-confidence-levels.schema.json",
       "hash": "1bad46cc4f2f25cad79356515f67007eeaa48f3c33fffc3f203c259c74efc4d2",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/schemas/pickups-confidence-levels.schema.json."
     },
     {
@@ -255,6 +249,7 @@
       "path": "public/data/schemas/heuristics_maintenance.schema.json",
       "hash": "aae5f6334c86dfd696c8c457320e42ba5fa4f73ae7ff18d13bbf13050230bf93",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/schemas/heuristics_maintenance.schema.json."
     },
     {
@@ -263,6 +258,7 @@
       "path": "public/data/schemas/data-translation-map.schema.json",
       "hash": "a00e05177e16ceaa92317a1c8c0332757912ffee2bf63a6f2821a35eeb37f65f",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/schemas/data-translation-map.schema.json."
     },
     {
@@ -271,6 +267,7 @@
       "path": "public/data/schemas/data-filters-map.schema.json",
       "hash": "28a51d9524ef3ae495aaa065b55e74925cbbbe678f6db401f82545f247125309",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/schemas/data-filters-map.schema.json."
     },
     {
@@ -279,6 +276,7 @@
       "path": "public/data/schemas/data-aliases.schema.json",
       "hash": "84a86f65909320ff59d1214d8d63ecb194632ae46ae4c802c1aa5dd7478cf36b",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/schemas/data-aliases.schema.json."
     },
     {
@@ -287,6 +285,7 @@
       "path": "public/data/schemas/cartridges-static-estimation-rules.schema.json",
       "hash": "6cb1105206204346e5fa342d9f5bc29a1e3a1cf5196fa113999a141a02588fd2",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/schemas/cartridges-static-estimation-rules.schema.json."
     },
     {
@@ -295,6 +294,7 @@
       "path": "public/data/schemas/cartridges-estimation-rules.schema.json",
       "hash": "6cb1105206204346e5fa342d9f5bc29a1e3a1cf5196fa113999a141a02588fd2",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/schemas/cartridges-estimation-rules.schema.json."
     },
     {
@@ -303,6 +303,7 @@
       "path": "public/data/schemas/cartridges-data.schema.json",
       "hash": "2e636f81a42471e0bc8066addfd1081f11ba76854a7ad5b1b9c08499636b49ee",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/schemas/cartridges-data.schema.json."
     },
     {
@@ -311,6 +312,7 @@
       "path": "public/data/schemas/cartridges-confidence-levels.schema.json",
       "hash": "1bad46cc4f2f25cad79356515f67007eeaa48f3c33fffc3f203c259c74efc4d2",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/schemas/cartridges-confidence-levels.schema.json."
     },
     {
@@ -319,6 +321,7 @@
       "path": "public/data/schemas/cartridges-classifications.schema.json",
       "hash": "c5d8efcac9b071a4d0085b5ee508d996557822c31a9cd69a67e3a68ddc1b8922",
       "fileType": "StaticData",
+      "layer": "public",
       "purpose": "Represents the file artifact at public/data/schemas/cartridges-classifications.schema.json."
     },
     {
@@ -327,6 +330,7 @@
       "path": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
       "hash": "2515f59ff3810c4d6bde61f1c0514c6742791efc7f9aa6e427353b31f453ae07",
       "fileType": "VueComponent",
+      "layer": "widgets",
       "purpose": "Represents the file artifact at src/widgets/MobileNavMenu/MobileNavMenu.vue."
     },
     {
@@ -335,6 +339,7 @@
       "path": "src/widgets/GlobalHeader/GlobalHeader.vue",
       "hash": "b381ae9ceee38bbb7e7f82a8a937aca0006e5f8673f294e7d9596beda8133829",
       "fileType": "VueComponent",
+      "layer": "widgets",
       "purpose": "Represents the file artifact at src/widgets/GlobalHeader/GlobalHeader.vue."
     },
     {
@@ -343,6 +348,7 @@
       "path": "src/widgets/GlobalFooter/GlobalFooter.vue",
       "hash": "5b6c9f8a226730143855eea3aeeccaa216e6c6a17330682450cc1f4c47e46242",
       "fileType": "VueComponent",
+      "layer": "widgets",
       "purpose": "Represents the file artifact at src/widgets/GlobalFooter/GlobalFooter.vue."
     },
     {
@@ -351,6 +357,7 @@
       "path": "src/shared/ui/RangeFilter.vue",
       "hash": "bb88803bd9bf07bbbdfa2618bab7b11336fd66ce3170d73bbe9ee23ff2c79602",
       "fileType": "VueComponent",
+      "layer": "shared",
       "purpose": "Represents the file artifact at src/shared/ui/RangeFilter.vue."
     },
     {
@@ -387,6 +394,7 @@
       "path": "src/shared/ui/Logo.vue",
       "hash": "8d68b7770a2aabbdd1a139d3aae867e06115ffecc818d28fe8f06ccf388e7677",
       "fileType": "VueComponent",
+      "layer": "shared",
       "purpose": "Represents the file artifact at src/shared/ui/Logo.vue."
     },
     {
@@ -395,6 +403,7 @@
       "path": "src/shared/ui/BaseToggle.vue",
       "hash": "7f2b0f6ebcb9777f7b6f86954f7fba84060f3c82b4cf88536a364bb5c89c0586",
       "fileType": "VueComponent",
+      "layer": "shared",
       "purpose": "Represents the file artifact at src/shared/ui/BaseToggle.vue."
     },
     {
@@ -424,6 +433,7 @@
       "path": "src/shared/ui/BaseTable.vue",
       "hash": "228d9062b9af1bf7b7884ab734b5d64b67c2e240ee1035b1ca73e9a086771360",
       "fileType": "VueComponent",
+      "layer": "shared",
       "purpose": "Represents the file artifact at src/shared/ui/BaseTable.vue."
     },
     {
@@ -516,6 +526,7 @@
       "path": "src/shared/ui/BaseSelect.vue",
       "hash": "0a60fa191753ffac19b03aa79f0963d225ad8e0ae7a5ca2d6fd842d18234d585",
       "fileType": "VueComponent",
+      "layer": "shared",
       "purpose": "Represents the file artifact at src/shared/ui/BaseSelect.vue."
     },
     {
@@ -552,6 +563,7 @@
       "path": "src/shared/ui/BaseRadio.vue",
       "hash": "847a895fe4cfe341724243363eaaa79e32ff6d9ae5288c06b4f079e191bb9a81",
       "fileType": "VueComponent",
+      "layer": "shared",
       "purpose": "Represents the file artifact at src/shared/ui/BaseRadio.vue."
     },
     {
@@ -595,6 +607,7 @@
       "path": "src/shared/ui/BaseMultiSelect.vue",
       "hash": "3e134d809fef50682bb591da5e38ce5088ca506d20e4d493c10e4dc70227937d",
       "fileType": "VueComponent",
+      "layer": "shared",
       "purpose": "Represents the file artifact at src/shared/ui/BaseMultiSelect.vue."
     },
     {
@@ -631,6 +644,7 @@
       "path": "src/shared/ui/BaseModal.vue",
       "hash": "9f372bbe13ee1e82d8ff6d4b1f360ea565cbca7d903d4406854794493470bc79",
       "fileType": "VueComponent",
+      "layer": "shared",
       "purpose": "Represents the file artifact at src/shared/ui/BaseModal.vue."
     },
     {
@@ -660,6 +674,7 @@
       "path": "src/shared/ui/BaseInput.vue",
       "hash": "f7a7d4d3edfd128935e7f6bd5d8ff591f2bcb94676813b6a3ed80ded41a10054",
       "fileType": "VueComponent",
+      "layer": "shared",
       "purpose": "Represents the file artifact at src/shared/ui/BaseInput.vue."
     },
     {
@@ -696,6 +711,7 @@
       "path": "src/shared/ui/BaseCheckbox.vue",
       "hash": "5d75d0680c36e26158ae71bf613169f97c6664cf91a226857cf5ac072ff157f1",
       "fileType": "VueComponent",
+      "layer": "shared",
       "purpose": "Represents the file artifact at src/shared/ui/BaseCheckbox.vue."
     },
     {
@@ -720,26 +736,12 @@
       "name": "update:modelValue"
     },
     {
-      "id": "src/shared/ui/BaseCanvasTextViewer.vue",
-      "type": "File",
-      "path": "src/shared/ui/BaseCanvasTextViewer.vue",
-      "hash": "3e7cf2859a122ae42394cd9ea37866f8009f8c5e619e6db9383f6527e2d5d5e3",
-      "fileType": "VueComponent",
-      "purpose": "Represents the file artifact at src/shared/ui/BaseCanvasTextViewer.vue."
-    },
-    {
-      "id": "src/shared/ui/BaseCanvasTextViewer.vue#prop.text",
-      "type": "Prop",
-      "path": "src/shared/ui/BaseCanvasTextViewer.vue",
-      "parent": "src/shared/ui/BaseCanvasTextViewer.vue",
-      "name": "text"
-    },
-    {
       "id": "src/shared/ui/BaseButton.vue",
       "type": "File",
       "path": "src/shared/ui/BaseButton.vue",
       "hash": "729eac8b83570e6bf6650bfd8f97abd897ee0f06286ca865c0229fa2e700a0b9",
       "fileType": "VueComponent",
+      "layer": "shared",
       "purpose": "Represents the file artifact at src/shared/ui/BaseButton.vue."
     },
     {
@@ -760,8 +762,9 @@
       "id": "src/pages/license/LicensePage.vue",
       "type": "File",
       "path": "src/pages/license/LicensePage.vue",
-      "hash": "0415487ef0569a606e09a850f16dd07d3bf696c85b2f7ff13134a67679b1fba7",
+      "hash": "af8b7363e03ec651aa30cb917f3dc7006953deadd90fa1b09d16662901e2e359",
       "fileType": "VueComponent",
+      "layer": "pages",
       "purpose": "Represents the file artifact at src/pages/license/LicensePage.vue."
     },
     {
@@ -770,6 +773,7 @@
       "path": "src/pages/home/HomePage.vue",
       "hash": "7c5e19b9201e190ad92e070316e949d50500f884d9cfe386e60c82b238a9c93f",
       "fileType": "VueComponent",
+      "layer": "pages",
       "purpose": "Represents the file artifact at src/pages/home/HomePage.vue."
     },
     {
@@ -778,6 +782,7 @@
       "path": "src/pages/data-explorer/DataExplorerPage.vue",
       "hash": "803b0e33ddf2b965afa4bd738270d7962922885774ab9e7fc4343deb307b44ae",
       "fileType": "VueComponent",
+      "layer": "pages",
       "purpose": "Represents the file artifact at src/pages/data-explorer/DataExplorerPage.vue."
     },
     {
@@ -786,6 +791,7 @@
       "path": "src/pages/about/AboutPage.vue",
       "hash": "dd278591ce2b32023fe583688603c9359cf7632ed29f33ec2d5ac3fbb8f06fa2",
       "fileType": "VueComponent",
+      "layer": "pages",
       "purpose": "Represents the file artifact at src/pages/about/AboutPage.vue."
     },
     {
@@ -794,6 +800,7 @@
       "path": "src/app/styles/_tokens.css",
       "hash": "a48d94bf02ab3f00483c2624e9938fbf74d508cf6f71bca0dc1a8862f6eb2994",
       "fileType": "StyleSheet",
+      "layer": "app",
       "purpose": "Represents the file artifact at src/app/styles/_tokens.css."
     },
     {
@@ -802,6 +809,7 @@
       "path": "src/app/styles/_global.css",
       "hash": "55119df7537b8c21e457c36edda590732381cc34c2ef40d0774c3b5541b500ae",
       "fileType": "StyleSheet",
+      "layer": "app",
       "purpose": "Represents the file artifact at src/app/styles/_global.css."
     },
     {
@@ -810,6 +818,7 @@
       "path": "src/app/styles/_components.css",
       "hash": "50285bacbdad7503905b5018e5cd1274f56a0e06dafe7cb7db76df756cb215d8",
       "fileType": "StyleSheet",
+      "layer": "app",
       "purpose": "Represents the file artifact at src/app/styles/_components.css."
     },
     {
@@ -818,6 +827,7 @@
       "path": "src/widgets/ResultsDisplay/ui/ResultsDisplay.vue",
       "hash": "d161f01ec76c4ca54df96f7ec9f9179a789090d83f594f5b7e440c00ac413e79",
       "fileType": "VueComponent",
+      "layer": "widgets",
       "purpose": "Represents the file artifact at src/widgets/ResultsDisplay/ui/ResultsDisplay.vue."
     },
     {
@@ -952,6 +962,7 @@
       "path": "src/widgets/DataFilterPanel/ui/DataFilterPanel.vue",
       "hash": "dd771fa5699518304e86799f091fd2c008adee94bc0fadc2dd4528ba2e1d31b1",
       "fileType": "VueComponent",
+      "layer": "widgets",
       "purpose": "Represents the file artifact at src/widgets/DataFilterPanel/ui/DataFilterPanel.vue."
     },
     {
@@ -960,6 +971,7 @@
       "path": "src/widgets/ComparisonTray/ui/ComparisonTray.vue",
       "hash": "a8d09641b57c36b174db3576c1f94c43197f7852c8b38edc7493f30dc8f5f7f0",
       "fileType": "VueComponent",
+      "layer": "widgets",
       "purpose": "Represents the file artifact at src/widgets/ComparisonTray/ui/ComparisonTray.vue."
     },
     {
@@ -980,53 +992,26 @@
       "id": "src/features/theme-toggle/ui/ThemeToggle.vue",
       "type": "File",
       "path": "src/features/theme-toggle/ui/ThemeToggle.vue",
-      "hash": "a0ae4992584f2c1853d2fc65f4f6f773eab3c51b3bf528c0b7fb2336780b9ed0",
+      "hash": "13a4d839319fc0b5b55fd37f7328df12c730b66c3bebeac31961c9a18afd81c7",
       "fileType": "VueComponent",
+      "layer": "features",
       "purpose": "Represents the file artifact at src/features/theme-toggle/ui/ThemeToggle.vue."
     },
     {
-      "id": "src/features/theme-toggle/model/themeStore.js",
+      "id": "src/features/theme-toggle/ui/BaseCanvasTextViewer.vue",
       "type": "File",
-      "path": "src/features/theme-toggle/model/themeStore.js",
-      "hash": "0780cfe37834c87eced77dd3f33aa7bd5e43011b46d5f1f12efd7cc709ab1379",
-      "fileType": "PiniaStore",
-      "purpose": "Represents the file artifact at src/features/theme-toggle/model/themeStore.js."
+      "path": "src/features/theme-toggle/ui/BaseCanvasTextViewer.vue",
+      "hash": "a070c1f97e33c2df436bdbea7a00a1f9256f71362891964f99b5c3bd7642456f",
+      "fileType": "VueComponent",
+      "layer": "features",
+      "purpose": "Represents the file artifact at src/features/theme-toggle/ui/BaseCanvasTextViewer.vue."
     },
     {
-      "id": "theme",
-      "type": "Store",
-      "path": "src/features/theme-toggle/model/themeStore.js",
-      "storeId": "theme",
-      "purpose": "Manages state for the 'theme' domain."
-    },
-    {
-      "id": "theme#state.currentTheme",
-      "type": "StateVariable",
-      "path": "src/features/theme-toggle/model/themeStore.js",
-      "parent": "theme",
-      "dataType": "Unknown",
-      "purpose": "Represents the 'currentTheme' state property."
-    },
-    {
-      "id": "theme#getters.isDarkTheme",
-      "type": "Getter",
-      "path": "src/features/theme-toggle/model/themeStore.js",
-      "parent": "theme",
-      "purpose": "A getter for the 'theme' store."
-    },
-    {
-      "id": "theme#actions.toggleTheme",
-      "type": "Action",
-      "path": "src/features/theme-toggle/model/themeStore.js",
-      "parent": "theme",
-      "purpose": "A action for the 'theme' store."
-    },
-    {
-      "id": "theme#actions.setTheme",
-      "type": "Action",
-      "path": "src/features/theme-toggle/model/themeStore.js",
-      "parent": "theme",
-      "purpose": "A action for the 'theme' store."
+      "id": "src/features/theme-toggle/ui/BaseCanvasTextViewer.vue#prop.text",
+      "type": "Prop",
+      "path": "src/features/theme-toggle/ui/BaseCanvasTextViewer.vue",
+      "parent": "src/features/theme-toggle/ui/BaseCanvasTextViewer.vue",
+      "name": "text"
     },
     {
       "id": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
@@ -1034,6 +1019,7 @@
       "path": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
       "hash": "ed17c785325e9400c62dcad5729b76a3efe994a72fa04ad2e88772f9b2515383",
       "fileType": "VueComponent",
+      "layer": "features",
       "purpose": "Represents the file artifact at src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue."
     },
     {
@@ -1042,6 +1028,7 @@
       "path": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
       "hash": "dc4a0c03691d45b27f6cc0df19752407a8a73816fac0715036dfdbe62b6d7437",
       "fileType": "Utility",
+      "layer": "features",
       "purpose": "Represents the file artifact at src/features/mobile-menu-toggle/model/useMobileMenu.js."
     },
     {
@@ -1050,6 +1037,7 @@
       "path": "src/features/license-modal/ui/LicenseModal.vue",
       "hash": "d7ae7f3cf4c4d28cb778e2a8792e1d454e6a8bf5cb879b4775e8072607f7fed8",
       "fileType": "VueComponent",
+      "layer": "features",
       "purpose": "Represents the file artifact at src/features/license-modal/ui/LicenseModal.vue."
     },
     {
@@ -1072,6 +1060,7 @@
       "path": "src/features/item-details/ui/ItemDetailModal.vue",
       "hash": "f1c379a50771a41cb8c661d93a4ac15125cc63cc87835d2ba45c1d58d899f37d",
       "fileType": "VueComponent",
+      "layer": "features",
       "purpose": "Represents the file artifact at src/features/item-details/ui/ItemDetailModal.vue."
     },
     {
@@ -1101,6 +1090,7 @@
       "path": "src/features/density-toggle/ui/DensityToggle.vue",
       "hash": "3e1d4c4efa2ff9c1f5df98af6f25fe8d992a45650f8b6ea1885280033404ffe5",
       "fileType": "VueComponent",
+      "layer": "features",
       "purpose": "Represents the file artifact at src/features/density-toggle/ui/DensityToggle.vue."
     },
     {
@@ -1109,6 +1099,7 @@
       "path": "src/features/comparison-modal/ui/ComparisonModal.vue",
       "hash": "3b058491eef865ba7b8cc6c49bb0877d922ab85e28b97ba25667951e5409c762",
       "fileType": "VueComponent",
+      "layer": "features",
       "purpose": "Represents the file artifact at src/features/comparison-modal/ui/ComparisonModal.vue."
     },
     {
@@ -1126,11 +1117,57 @@
       "name": "close"
     },
     {
+      "id": "src/entities/theme/model/themeStore.js",
+      "type": "File",
+      "path": "src/entities/theme/model/themeStore.js",
+      "hash": "0780cfe37834c87eced77dd3f33aa7bd5e43011b46d5f1f12efd7cc709ab1379",
+      "fileType": "PiniaStore",
+      "layer": "entities",
+      "purpose": "Represents the file artifact at src/entities/theme/model/themeStore.js."
+    },
+    {
+      "id": "theme",
+      "type": "Store",
+      "path": "src/entities/theme/model/themeStore.js",
+      "storeId": "theme",
+      "purpose": "Manages state for the 'theme' domain."
+    },
+    {
+      "id": "theme#state.currentTheme",
+      "type": "StateVariable",
+      "path": "src/entities/theme/model/themeStore.js",
+      "parent": "theme",
+      "dataType": "Unknown",
+      "purpose": "Represents the 'currentTheme' state property."
+    },
+    {
+      "id": "theme#getters.isDarkTheme",
+      "type": "Getter",
+      "path": "src/entities/theme/model/themeStore.js",
+      "parent": "theme",
+      "purpose": "A getter for the 'theme' store."
+    },
+    {
+      "id": "theme#actions.toggleTheme",
+      "type": "Action",
+      "path": "src/entities/theme/model/themeStore.js",
+      "parent": "theme",
+      "purpose": "A action for the 'theme' store."
+    },
+    {
+      "id": "theme#actions.setTheme",
+      "type": "Action",
+      "path": "src/entities/theme/model/themeStore.js",
+      "parent": "theme",
+      "purpose": "A action for the 'theme' store."
+    },
+    {
       "id": "src/entities/settings/model/settingsStore.js",
       "type": "File",
       "path": "src/entities/settings/model/settingsStore.js",
       "hash": "765e2979782beecc08374b52350016359a1f86fbe29529290d72788535f0149a",
       "fileType": "PiniaStore",
+      "layer": "entities",
       "purpose": "Represents the file artifact at src/entities/settings/model/settingsStore.js."
     },
     {
@@ -1146,6 +1183,7 @@
       "path": "src/entities/logger/model/loggerStore.js",
       "hash": "73af6e5030ffc155f6f22526ba3ca6bc3312974609a9d5fe066078df6ad90703",
       "fileType": "PiniaStore",
+      "layer": "entities",
       "purpose": "Represents the file artifact at src/entities/logger/model/loggerStore.js."
     },
     {
@@ -1161,6 +1199,7 @@
       "path": "src/entities/data-explorer/model/state.js",
       "hash": "fa9dcdffc0700efc0350c1648910392b6e78229b2bc4aa4d412abe9055039b86",
       "fileType": "Utility",
+      "layer": "entities",
       "purpose": "Represents the file artifact at src/entities/data-explorer/model/state.js."
     },
     {
@@ -1169,6 +1208,7 @@
       "path": "src/entities/data-explorer/model/explorerStore.js",
       "hash": "ac4c0f9f7d4bd6ab4b4dfa1e8d4ca79ef6a28524939eb9fe1619188258682c28",
       "fileType": "PiniaStore",
+      "layer": "entities",
       "purpose": "Represents the file artifact at src/entities/data-explorer/model/explorerStore.js."
     },
     {
@@ -1408,6 +1448,7 @@
       "path": "src/entities/data-explorer/lib/transformer.js",
       "hash": "4c24a708abf3f2affdeda14a8734a70a09c2577d418ec9855f6cf6fa7c8b7add",
       "fileType": "Utility",
+      "layer": "entities",
       "purpose": "Represents the file artifact at src/entities/data-explorer/lib/transformer.js."
     },
     {
@@ -1416,6 +1457,7 @@
       "path": "src/entities/data-explorer/lib/filters.js",
       "hash": "31aff60638979608e11c013438b76049a983c07ae139825bfaec34e4d11265e1",
       "fileType": "Utility",
+      "layer": "entities",
       "purpose": "Represents the file artifact at src/entities/data-explorer/lib/filters.js."
     },
     {
@@ -1424,6 +1466,7 @@
       "path": "src/entities/data-explorer/api/fetchExplorerData.js",
       "hash": "e0bd2f0db30c6e68862d6ff7e5b76271409498183cf3ce47cc868011b6da0f1d",
       "fileType": "Utility",
+      "layer": "entities",
       "purpose": "Represents the file artifact at src/entities/data-explorer/api/fetchExplorerData.js."
     },
     {
@@ -1432,6 +1475,7 @@
       "path": "src/entities/comparison/model/comparisonStore.js",
       "hash": "64a875da3d12af31ce81d9fbd1cb96a6f1d1d25782d122d6117a6ac3ef465a40",
       "fileType": "PiniaStore",
+      "layer": "entities",
       "purpose": "Represents the file artifact at src/entities/comparison/model/comparisonStore.js."
     },
     {
@@ -1644,29 +1688,14 @@
       "type": "IMPORTS"
     },
     {
-      "source": "route:/",
-      "target": "src/pages/home/HomePage.vue",
-      "type": "RENDERS_COMPONENT"
-    },
-    {
       "source": "src/app/router.js",
       "target": "route:/",
       "type": "DEFINES_ROUTE"
     },
     {
-      "source": "route:/about",
-      "target": "src/pages/about/AboutPage.vue",
-      "type": "RENDERS_COMPONENT"
-    },
-    {
       "source": "src/app/router.js",
       "target": "route:/about",
       "type": "DEFINES_ROUTE"
-    },
-    {
-      "source": "route:/data-explorer",
-      "target": "src/pages/data-explorer/DataExplorerPage.vue",
-      "type": "RENDERS_COMPONENT"
     },
     {
       "source": "src/app/router.js",
@@ -2089,26 +2118,6 @@
       "type": "DEFINES_EVENT"
     },
     {
-      "source": "src/shared/ui/BaseCanvasTextViewer.vue",
-      "target": "vue",
-      "type": "IMPORTS_PACKAGE"
-    },
-    {
-      "source": "src/shared/ui/BaseCanvasTextViewer.vue",
-      "target": "src/features/theme-toggle/model/themeStore.js",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/shared/ui/BaseCanvasTextViewer.vue",
-      "target": "src/shared/ui/BaseCanvasTextViewer.vue#prop.text",
-      "type": "DEFINES_PROP"
-    },
-    {
-      "source": "src/shared/ui/BaseCanvasTextViewer.vue",
-      "target": "src/features/theme-toggle/model/themeStore.js",
-      "type": "USES_STORE_FILE"
-    },
-    {
       "source": "src/shared/ui/BaseButton.vue",
       "target": "vue",
       "type": "IMPORTS_PACKAGE"
@@ -2130,12 +2139,12 @@
     },
     {
       "source": "src/pages/license/LicensePage.vue",
-      "target": "src/shared/ui/BaseCanvasTextViewer.vue",
-      "type": "IMPORTS"
+      "target": "@features/theme-toggle/uBaseCanvasTextViewer.vue",
+      "type": "IMPORTS_PACKAGE"
     },
     {
       "source": "src/pages/license/LicensePage.vue",
-      "target": "src/shared/ui/BaseCanvasTextViewer.vue",
+      "target": "src/pages/license/@features/theme-toggle/uBaseCanvasTextViewer.vue",
       "type": "USES_COMPONENT"
     },
     {
@@ -2565,7 +2574,7 @@
     },
     {
       "source": "src/features/theme-toggle/ui/ThemeToggle.vue",
-      "target": "src/features/theme-toggle/model/themeStore.js",
+      "target": "src/entities/theme/model/themeStore.js",
       "type": "IMPORTS"
     },
     {
@@ -2575,7 +2584,7 @@
     },
     {
       "source": "src/features/theme-toggle/ui/ThemeToggle.vue",
-      "target": "src/features/theme-toggle/model/themeStore.js",
+      "target": "src/entities/theme/model/themeStore.js",
       "type": "USES_STORE_FILE"
     },
     {
@@ -2584,49 +2593,24 @@
       "type": "USES_COMPONENT"
     },
     {
-      "source": "src/features/theme-toggle/model/themeStore.js",
-      "target": "pinia",
+      "source": "src/features/theme-toggle/ui/BaseCanvasTextViewer.vue",
+      "target": "vue",
       "type": "IMPORTS_PACKAGE"
     },
     {
-      "source": "src/features/theme-toggle/model/themeStore.js",
-      "target": "theme",
-      "type": "DEFINES"
+      "source": "src/features/theme-toggle/ui/BaseCanvasTextViewer.vue",
+      "target": "src/entities/theme/model/themeStore.js",
+      "type": "IMPORTS"
     },
     {
-      "source": "theme",
-      "target": "theme#state.currentTheme",
-      "type": "DEFINES"
+      "source": "src/features/theme-toggle/ui/BaseCanvasTextViewer.vue",
+      "target": "src/features/theme-toggle/ui/BaseCanvasTextViewer.vue#prop.text",
+      "type": "DEFINES_PROP"
     },
     {
-      "source": "theme",
-      "target": "theme#getters.isDarkTheme",
-      "type": "DEFINES"
-    },
-    {
-      "source": "theme",
-      "target": "theme#actions.toggleTheme",
-      "type": "DEFINES"
-    },
-    {
-      "source": "theme#actions.toggleTheme",
-      "target": "theme#state.currentTheme",
-      "type": "MODIFIES_STATE"
-    },
-    {
-      "source": "theme#actions.toggleTheme",
-      "target": "theme#state.currentTheme",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "theme",
-      "target": "theme#actions.setTheme",
-      "type": "DEFINES"
-    },
-    {
-      "source": "theme#actions.setTheme",
-      "target": "theme#state.currentTheme",
-      "type": "MODIFIES_STATE"
+      "source": "src/features/theme-toggle/ui/BaseCanvasTextViewer.vue",
+      "target": "src/entities/theme/model/themeStore.js",
+      "type": "USES_STORE_FILE"
     },
     {
       "source": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
@@ -2774,6 +2758,16 @@
       "type": "USES_COMPONENT"
     },
     {
+      "source": "src/entities/theme/model/themeStore.js",
+      "target": "pinia",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/entities/theme/model/themeStore.js",
+      "target": "theme",
+      "type": "DEFINES"
+    },
+    {
       "source": "src/entities/settings/model/settingsStore.js",
       "target": "pinia",
       "type": "IMPORTS_PACKAGE"
@@ -2839,476 +2833,6 @@
       "type": "DEFINES"
     },
     {
-      "source": "explorer",
-      "target": "explorer#state.isLoading",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#state.error",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#state.allItems",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#state.filtersMap",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#state.translationMap",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#state.classifications",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#state.dataType",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#state.searchTerm",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#state.categoryFilters",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#state.numericFilters",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#state.sortKey",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#state.sortOrder",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#state.currentPage",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#state.itemsPerPage",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#getters.currentItems",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#getters.availableFilters",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#getters.availableNumericFilters",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#getters.currentResults",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer#getters.currentResults",
-      "target": "explorer#state.dataType",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#getters.currentResults",
-      "target": "explorer#state.currentItems",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#getters.currentResults",
-      "target": "explorer#state.currentItems",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#getters.currentResults",
-      "target": "explorer#state.searchTerm",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#getters.currentResults",
-      "target": "explorer#state.categoryFilters",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#getters.currentResults",
-      "target": "explorer#state.numericFilters",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#getters.currentResults",
-      "target": "explorer#state.sortKey",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#getters.currentResults",
-      "target": "explorer#state.sortOrder",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#getters.totalResults",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer#getters.totalResults",
-      "target": "explorer#state.currentResults",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#getters.totalPages",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer#getters.totalPages",
-      "target": "explorer#state.totalResults",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#getters.totalPages",
-      "target": "explorer#state.itemsPerPage",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#getters.paginatedResults",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer#getters.paginatedResults",
-      "target": "explorer#state.currentPage",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#getters.paginatedResults",
-      "target": "explorer#state.itemsPerPage",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#getters.paginatedResults",
-      "target": "explorer#state.itemsPerPage",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#getters.paginatedResults",
-      "target": "explorer#state.currentResults",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#getters.currentHeaders",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#getters.isPristine",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#actions._initializeAndResetFilters",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer#actions._initializeAndResetFilters",
-      "target": "explorer#state.dataType",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#actions._initializeAndResetFilters",
-      "target": "explorer#state.searchTerm",
-      "type": "MODIFIES_STATE"
-    },
-    {
-      "source": "explorer#actions._initializeAndResetFilters",
-      "target": "explorer#state.currentPage",
-      "type": "MODIFIES_STATE"
-    },
-    {
-      "source": "explorer#actions._initializeAndResetFilters",
-      "target": "explorer#state.sortKey",
-      "type": "MODIFIES_STATE"
-    },
-    {
-      "source": "explorer#actions._initializeAndResetFilters",
-      "target": "explorer#state.sortOrder",
-      "type": "MODIFIES_STATE"
-    },
-    {
-      "source": "explorer#actions._initializeAndResetFilters",
-      "target": "explorer#state.availableFilters",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#actions._initializeAndResetFilters",
-      "target": "explorer#state.availableNumericFilters",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#actions._initializeAndResetFilters",
-      "target": "explorer#state.categoryFilters",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#actions._initializeAndResetFilters",
-      "target": "explorer#state.categoryFilters",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#actions._initializeAndResetFilters",
-      "target": "explorer#state.numericFilters",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#actions._initializeAndResetFilters",
-      "target": "explorer#state.numericFilters",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#actions._initializeAndResetFilters",
-      "target": "explorer#state.availableFilters",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#actions._initializeAndResetFilters",
-      "target": "explorer#state.categoryFilters",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#actions._initializeAndResetFilters",
-      "target": "explorer#state.availableNumericFilters",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#actions._initializeAndResetFilters",
-      "target": "explorer#state.numericFilters",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#actions._initializeAndResetFilters",
-      "target": "explorer#state.categoryFilters",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#actions._initializeAndResetFilters",
-      "target": "explorer#state.numericFilters",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#actions.setDataType",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer#actions.setDataType",
-      "target": "explorer#state.dataType",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#actions.setDataType",
-      "target": "explorer#state.dataType",
-      "type": "MODIFIES_STATE"
-    },
-    {
-      "source": "explorer#actions.setDataType",
-      "target": "explorer#actions._initializeAndResetFilters",
-      "type": "CALLS"
-    },
-    {
-      "source": "explorer#actions.setDataType",
-      "target": "explorer#state._initializeAndResetFilters",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#actions.resetFilters",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer#actions.resetFilters",
-      "target": "explorer#actions._initializeAndResetFilters",
-      "type": "CALLS"
-    },
-    {
-      "source": "explorer#actions.resetFilters",
-      "target": "explorer#state._initializeAndResetFilters",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#actions.setSort",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer#actions.setSort",
-      "target": "explorer#state.sortKey",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#actions.setSort",
-      "target": "explorer#state.sortOrder",
-      "type": "MODIFIES_STATE"
-    },
-    {
-      "source": "explorer#actions.setSort",
-      "target": "explorer#state.sortOrder",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#actions.setSort",
-      "target": "explorer#state.sortKey",
-      "type": "MODIFIES_STATE"
-    },
-    {
-      "source": "explorer#actions.setSort",
-      "target": "explorer#state.sortOrder",
-      "type": "MODIFIES_STATE"
-    },
-    {
-      "source": "explorer#actions.setSort",
-      "target": "explorer#state.currentPage",
-      "type": "MODIFIES_STATE"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#actions.setPage",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer#actions.setPage",
-      "target": "explorer#state.totalPages",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#actions.setPage",
-      "target": "explorer#state.currentPage",
-      "type": "MODIFIES_STATE"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#actions.initializeData",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer#actions.initializeData",
-      "target": "explorer#state.isLoading",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#actions.initializeData",
-      "target": "explorer#state.allItems",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#actions.initializeData",
-      "target": "explorer#state.isLoading",
-      "type": "MODIFIES_STATE"
-    },
-    {
-      "source": "explorer#actions.initializeData",
-      "target": "explorer#state.error",
-      "type": "MODIFIES_STATE"
-    },
-    {
-      "source": "explorer#actions.initializeData",
-      "target": "explorer#state.allItems",
-      "type": "MODIFIES_STATE"
-    },
-    {
-      "source": "explorer#actions.initializeData",
-      "target": "explorer#state.filtersMap",
-      "type": "MODIFIES_STATE"
-    },
-    {
-      "source": "explorer#actions.initializeData",
-      "target": "explorer#state.translationMap",
-      "type": "MODIFIES_STATE"
-    },
-    {
-      "source": "explorer#actions.initializeData",
-      "target": "explorer#state.classifications",
-      "type": "MODIFIES_STATE"
-    },
-    {
-      "source": "explorer#actions.initializeData",
-      "target": "explorer#state.allItems",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#actions.initializeData",
-      "target": "explorer#state.filtersMap",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#actions.initializeData",
-      "target": "explorer#actions._initializeAndResetFilters",
-      "type": "CALLS"
-    },
-    {
-      "source": "explorer#actions.initializeData",
-      "target": "explorer#state._initializeAndResetFilters",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#actions.initializeData",
-      "target": "explorer#state.error",
-      "type": "MODIFIES_STATE"
-    },
-    {
-      "source": "explorer#actions.initializeData",
-      "target": "explorer#state.isLoading",
-      "type": "MODIFIES_STATE"
-    },
-    {
-      "source": "explorer",
-      "target": "explorer#actions.exportToCSV",
-      "type": "DEFINES"
-    },
-    {
-      "source": "explorer#actions.exportToCSV",
-      "target": "explorer#state.currentResults",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#actions.exportToCSV",
-      "target": "explorer#state.currentHeaders",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#actions.exportToCSV",
-      "target": "explorer#state.currentHeaders",
-      "type": "READS_STATE"
-    },
-    {
-      "source": "explorer#actions.exportToCSV",
-      "target": "explorer#state.dataType",
-      "type": "READS_STATE"
-    },
-    {
       "source": "src/entities/comparison/model/comparisonStore.js",
       "target": "pinia",
       "type": "IMPORTS_PACKAGE"
@@ -3323,5 +2847,246 @@
       "target": "comparison",
       "type": "DEFINES"
     }
-  ]
+  ],
+  "protocolId": "P-SAAP-1.2",
+  "title": "System Architecture Adherence Protocol",
+  "strict_mode": true,
+  "fail_fast": false,
+  "architecturalLayers": [
+    {
+      "layer": 0,
+      "name": "shared",
+      "layerPathPattern": "src/shared/**/*"
+    },
+    {
+      "layer": 1,
+      "name": "entities",
+      "layerPathPattern": "src/entities/**/*"
+    },
+    {
+      "layer": 2,
+      "name": "features",
+      "layerPathPattern": "src/features/**/*"
+    },
+    {
+      "layer": 3,
+      "name": "widgets",
+      "layerPathPattern": "src/widgets/**/*"
+    },
+    {
+      "layer": 4,
+      "name": "pages",
+      "layerPathPattern": "src/pages/**/*"
+    },
+    {
+      "layer": 5,
+      "name": "app",
+      "layerPathPattern": "src/app/**/*"
+    }
+  ],
+  "placementRules": [
+    {
+      "fileType": "VueComponent",
+      "allowedPath": "src/App.vue"
+    },
+    {
+      "fileType": "VueComponent",
+      "allowedPath": "src/shared/ui/**/*.vue"
+    },
+    {
+      "fileType": "VueComponent",
+      "allowedPath": "src/features/**/ui/**/*.vue"
+    },
+    {
+      "fileType": "VueComponent",
+      "allowedPath": "src/widgets/**/*.vue"
+    },
+    {
+      "fileType": "VueComponent",
+      "allowedPath": "src/pages/**/*.vue"
+    },
+    {
+      "fileType": "RouterConfig",
+      "allowedPath": "src/app/router.js"
+    }
+  ],
+  "dependencyRules": [
+    {
+      "from": "app",
+      "to": [
+        "app",
+        "pages",
+        "widgets",
+        "features",
+        "entities",
+        "shared"
+      ]
+    },
+    {
+      "from": "pages",
+      "to": [
+        "pages",
+        "widgets",
+        "features",
+        "entities",
+        "shared"
+      ]
+    },
+    {
+      "from": "widgets",
+      "to": [
+        "widgets",
+        "features",
+        "entities",
+        "shared"
+      ]
+    },
+    {
+      "from": "features",
+      "to": [
+        "features",
+        "entities",
+        "shared"
+      ]
+    },
+    {
+      "from": "entities",
+      "to": [
+        "entities",
+        "shared"
+      ]
+    },
+    {
+      "from": "shared",
+      "to": [
+        "shared"
+      ]
+    }
+  ],
+  "saapSnapshot": {
+    "protocolId": "P-SAAP-1.2",
+    "title": "System Architecture Adherence Protocol",
+    "version": "4.7.0",
+    "strict_mode": false,
+    "fail_fast": false,
+    "architecturalLayers": [
+      {
+        "layer": 0,
+        "name": "shared",
+        "layerPathPattern": "src/shared/**/*"
+      },
+      {
+        "layer": 1,
+        "name": "entities",
+        "layerPathPattern": "src/entities/**/*"
+      },
+      {
+        "layer": 2,
+        "name": "features",
+        "layerPathPattern": "src/features/**/*"
+      },
+      {
+        "layer": 3,
+        "name": "widgets",
+        "layerPathPattern": "src/widgets/**/*"
+      },
+      {
+        "layer": 4,
+        "name": "pages",
+        "layerPathPattern": "src/pages/**/*"
+      },
+      {
+        "layer": 5,
+        "name": "app",
+        "layerPathPattern": "src/app/**/*"
+      }
+    ],
+    "dependencyRules": [
+      {
+        "from": "app",
+        "to": [
+          "app",
+          "pages",
+          "widgets",
+          "features",
+          "entities",
+          "shared"
+        ]
+      },
+      {
+        "from": "pages",
+        "to": [
+          "pages",
+          "widgets",
+          "features",
+          "entities",
+          "shared"
+        ]
+      },
+      {
+        "from": "widgets",
+        "to": [
+          "widgets",
+          "features",
+          "entities",
+          "shared"
+        ]
+      },
+      {
+        "from": "features",
+        "to": [
+          "features",
+          "entities",
+          "shared"
+        ]
+      },
+      {
+        "from": "entities",
+        "to": [
+          "entities",
+          "shared"
+        ]
+      },
+      {
+        "from": "shared",
+        "to": [
+          "shared"
+        ]
+      }
+    ],
+    "placementRules": [
+      {
+        "fileType": "VueComponent",
+        "allowedPath": "src/App.vue"
+      },
+      {
+        "fileType": "VueComponent",
+        "allowedPath": "src/shared/ui/**/*.vue"
+      },
+      {
+        "fileType": "VueComponent",
+        "allowedPath": "src/features/**/ui/**/*.vue"
+      },
+      {
+        "fileType": "VueComponent",
+        "allowedPath": "src/widgets/**/*.vue"
+      },
+      {
+        "fileType": "VueComponent",
+        "allowedPath": "src/pages/**/*.vue"
+      },
+      {
+        "fileType": "RouterConfig",
+        "allowedPath": "src/app/router.js"
+      }
+    ]
+  },
+  "validation": {
+    "violations": [],
+    "summary": {
+      "total": 0,
+      "placement": 0,
+      "dependency": 0
+    }
+  }
 }

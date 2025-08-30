@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-30T10:39:54.465999+00:00",
+    "generated_at": "2025-08-30T14:07:56.819773+00:00",
     "nodes": {
       "src/debug.js": {
         "type": "JavaScript Module",
@@ -120,6 +120,20 @@
         "exports": [
           {
             "symbol": "useComparisonStore",
+            "type": "unknown"
+          }
+        ],
+        "imports": [],
+        "dependents_count": 2,
+        "criticality_score": 20.0
+      },
+      "src/entities/theme/model/themeStore.js": {
+        "type": "JavaScript Module",
+        "category": "code",
+        "language": "js",
+        "exports": [
+          {
+            "symbol": "useThemeStore",
             "type": "unknown"
           }
         ],
@@ -348,19 +362,14 @@
         "dependents_count": 1,
         "criticality_score": 10.0
       },
-      "src/features/theme-toggle/model/themeStore.js": {
-        "type": "JavaScript Module",
+      "src/features/theme-toggle/ui/BaseCanvasTextViewer.vue": {
+        "type": "Vue Component",
         "category": "code",
-        "language": "js",
-        "exports": [
-          {
-            "symbol": "useThemeStore",
-            "type": "unknown"
-          }
-        ],
+        "language": "vue",
+        "exports": [],
         "imports": [],
-        "dependents_count": 5,
-        "criticality_score": 50.0
+        "dependents_count": 0,
+        "criticality_score": 0.0
       },
       "src/shared/ui/BaseRadio.vue": {
         "type": "Vue Component",
@@ -417,15 +426,6 @@
         "criticality_score": 100.0
       },
       "src/shared/ui/BaseSelect.vue": {
-        "type": "Vue Component",
-        "category": "code",
-        "language": "vue",
-        "exports": [],
-        "imports": [],
-        "dependents_count": 1,
-        "criticality_score": 10.0
-      },
-      "src/shared/ui/BaseCanvasTextViewer.vue": {
         "type": "Vue Component",
         "category": "code",
         "language": "vue",
@@ -2591,11 +2591,6 @@
       },
       {
         "from": "src/App.vue",
-        "to": "src/features/theme-toggle/model/themeStore.js",
-        "type": "code_import"
-      },
-      {
-        "from": "src/App.vue",
         "to": "src/entities/settings/model/settingsStore.js",
         "type": "code_import"
       },
@@ -2607,11 +2602,6 @@
       {
         "from": "src/App.vue",
         "to": "src/widgets/GlobalFooter/GlobalFooter.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/showcase.js",
-        "to": "src/features/theme-toggle/model/themeStore.js",
         "type": "code_import"
       },
       {
@@ -2746,7 +2736,7 @@
       },
       {
         "from": "src/features/theme-toggle/ui/ThemeToggle.vue",
-        "to": "src/features/theme-toggle/model/themeStore.js",
+        "to": "src/entities/theme/model/themeStore.js",
         "type": "code_import"
       },
       {
@@ -2755,13 +2745,13 @@
         "type": "code_import"
       },
       {
-        "from": "src/shared/ui/RangeFilter.vue",
-        "to": "src/shared/ui/BaseInput.vue",
+        "from": "src/features/theme-toggle/ui/BaseCanvasTextViewer.vue",
+        "to": "src/entities/theme/model/themeStore.js",
         "type": "code_import"
       },
       {
-        "from": "src/shared/ui/BaseCanvasTextViewer.vue",
-        "to": "src/features/theme-toggle/model/themeStore.js",
+        "from": "src/shared/ui/RangeFilter.vue",
+        "to": "src/shared/ui/BaseInput.vue",
         "type": "code_import"
       },
       {
@@ -2772,11 +2762,6 @@
       {
         "from": "src/shared/ui/BaseMultiSelect.vue",
         "to": "src/shared/ui/BaseCheckbox.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/pages/home/HomePage.vue",
-        "to": "src/features/theme-toggle/model/themeStore.js",
         "type": "code_import"
       },
       {
@@ -2827,11 +2812,6 @@
       {
         "from": "src/pages/data-explorer/DataExplorerPage.vue",
         "to": "src/shared/ui/BaseButton.vue",
-        "type": "code_import"
-      },
-      {
-        "from": "src/pages/license/LicensePage.vue",
-        "to": "src/shared/ui/BaseCanvasTextViewer.vue",
         "type": "code_import"
       },
       {
