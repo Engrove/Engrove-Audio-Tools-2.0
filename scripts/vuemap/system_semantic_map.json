@@ -1,7 +1,7 @@
 {
   "$schema": "./system_semantic_map.schema.json",
   "version": "4.7.0",
-  "createdAt": "2025-08-30T19:06:24.825Z",
+  "createdAt": "2025-08-30T20:12:10.493Z",
   "nodes": [
     {
       "id": "src/showcase.js",
@@ -11,24 +11,6 @@
       "fileType": "Utility",
       "layer": "src-other",
       "purpose": "Represents the file artifact at src/showcase.js."
-    },
-    {
-      "id": "vue",
-      "type": "NpmPackage",
-      "name": "vue",
-      "purpose": "Represents the external NPM dependency 'vue'."
-    },
-    {
-      "id": "pinia",
-      "type": "NpmPackage",
-      "name": "pinia",
-      "purpose": "Represents the external NPM dependency 'pinia'."
-    },
-    {
-      "id": "pinia-plugin-persistedstate",
-      "type": "NpmPackage",
-      "name": "pinia-plugin-persistedstate",
-      "purpose": "Represents the external NPM dependency 'pinia-plugin-persistedstate'."
     },
     {
       "id": "src/main.js",
@@ -52,10 +34,16 @@
       "id": "src/App.vue",
       "type": "File",
       "path": "src/App.vue",
-      "hash": "db04ebf7e05a4e75341fa81f4e632251953fd0d560a40d9155dfa0de744b417b",
+      "hash": "967553f443884598dd0c26c87f1b964594b114555c292e55e3584a11991b35f6",
       "fileType": "VueComponent",
       "layer": "src-other",
       "purpose": "Represents the file artifact at src/App.vue."
+    },
+    {
+      "id": "vue",
+      "type": "NpmPackage",
+      "name": "vue",
+      "purpose": "Represents the external NPM dependency 'vue'."
     },
     {
       "id": "vue-router",
@@ -1653,7 +1641,7 @@
     },
     {
       "source": "src/App.vue",
-      "target": "src/features/theme-toggle/ui/ThemeToggle.vue",
+      "target": "src/entities/theme/model/themeStore.js",
       "type": "IMPORTS"
     },
     {
@@ -1673,7 +1661,7 @@
     },
     {
       "source": "src/App.vue",
-      "target": "src/features/theme-toggle/ui/ThemeToggle.vue",
+      "target": "src/entities/theme/model/themeStore.js",
       "type": "USES_STORE_FILE"
     },
     {

@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-30T19:06:24.062158+00:00",
+    "generated_at": "2025-08-30T20:12:09.794551+00:00",
     "nodes": {
       "src/debug.js": {
         "type": "JavaScript Module",
@@ -138,8 +138,8 @@
           }
         ],
         "imports": [],
-        "dependents_count": 3,
-        "criticality_score": 30.0
+        "dependents_count": 4,
+        "criticality_score": 40.0
       },
       "src/entities/logger/model/loggerStore.js": {
         "type": "JavaScript Module",
@@ -359,8 +359,8 @@
         "language": "vue",
         "exports": [],
         "imports": [],
-        "dependents_count": 2,
-        "criticality_score": 20.0
+        "dependents_count": 1,
+        "criticality_score": 10.0
       },
       "src/features/theme-toggle/ui/BaseCanvasTextViewer.vue": {
         "type": "Vue Component",
@@ -1397,20 +1397,7 @@
         "type": "Python Script",
         "category": "code",
         "language": "py",
-        "exports": [
-          {
-            "symbol": "get_html",
-            "type": "function"
-          },
-          {
-            "symbol": "get_styles",
-            "type": "function"
-          },
-          {
-            "symbol": "get_js",
-            "type": "function"
-          }
-        ],
+        "exports": [],
         "imports": [],
         "dependents_count": 0,
         "criticality_score": 0.0
@@ -2622,7 +2609,7 @@
       },
       {
         "from": "src/App.vue",
-        "to": "src/features/theme-toggle/ui/ThemeToggle.vue",
+        "to": "src/entities/theme/model/themeStore.js",
         "type": "code_import"
       },
       {
