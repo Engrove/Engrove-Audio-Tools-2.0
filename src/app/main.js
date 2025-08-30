@@ -7,7 +7,7 @@
 //   och registreras med `app.use(pinia)` innan appen monteras. Detta är
 //   avgörande för att alla Pinia-stores (inklusive den nya loggerStore)
 //   ska vara tillgängliga för komponenterna.
-
+//
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
