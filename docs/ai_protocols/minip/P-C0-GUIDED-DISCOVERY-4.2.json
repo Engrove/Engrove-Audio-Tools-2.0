@@ -1,6 +1,11 @@
 {
   "protocolId": "P-C0-GUIDED-DISCOVERY-4.2",
   "title": "C0 Guided Discovery & Distillation Protocol",
+  "commonName": "Protokoll Sammanställ",
+  "aliases": [
+    "sammanställ chatt", 
+    "C0"
+  ],
   "version": "4.2",
   "description": "An interactive, two-step protocol where the AI first performs a thematic analysis on a raw data corpus to propose a dynamic list of candidate focal points. After the operator selects a focal point, the AI distils the corpus into a structured JSON object strictly aligned with the confirmed objective.",
   "strict_mode": true,
