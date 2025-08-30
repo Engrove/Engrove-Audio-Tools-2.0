@@ -8,16 +8,31 @@
 // * v1.1: Lade till alias för 'vue/dist/vue.esm-bundler.js' för att stödja showcase.html.
 // * v1.2: Lade till 'debug.html' som en ingångspunkt.
 // * v1.3 (2025-08-15): Lade till 'index2.html' (Engrove Audio Tools Creator) som en ingångspunkt.
+// * v1.4 (2025-08-30): Injekterar Git commit-hash som en miljövariabel vid byggtillfället.
 //
-// === TILLÄMPADE REGLER (Frankensteen v5.4) ===
+// === TILLÄMPADE REGLER (Frankensteen v6.0) ===
 // - API-kontraktsverifiering: build.rollupOptions.input är korrekt formaterat.
+// - Grundbulten P-GB-3.9: Fullständig filleverans.
 
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { resolve } from 'path';
+import { execSync } from 'child_process';
+
+// Hämta aktuell Git commit-hash. Faller tillbaka till 'N/A' om git-kommandot misslyckas.
+let gitHash;
+try {
+  gitHash = execSync('git rev-parse --short HEAD').toString().trim();
+} catch (e) {
+  console.warn('Could not get git hash. Falling back to N/A.');
+  gitHash = 'N/A';
+}
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  define: {
+    'import.meta.env.VITE_APP_GIT_HASH': JSON.stringify(gitHash),
+  },
   plugins: [vue()],
   resolve: {
     alias: {
