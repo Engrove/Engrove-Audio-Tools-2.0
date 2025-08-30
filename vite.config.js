@@ -52,7 +52,7 @@ export default defineConfig({
         showcase: resolve(__dirname, 'showcase.html'),
         debug: resolve(__dirname, 'debug.html'),
         // NYTT: Lägger till vårt nya UI-verktyg som en fristående sida.
-        engrove_tools: resolve(__dirname, 'index2.html'),
+        //        engrove_tools: resolve(__dirname, 'index2.html'),
       }
     }
   }
