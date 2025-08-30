@@ -11,7 +11,7 @@ import { createApp, ref, computed } from 'vue';
 // --- Importera Pinia och Stores ---
 import { createPinia } from 'pinia';
 import piniaPluginPersistedState from 'pinia-plugin-persistedstate';
-import { useThemeStore } from './features/theme-toggle/model/themeStore.js';
+import { useThemeStore } from './entities/theme/model/themeStore.js';
 import { useSettingsStore } from './entities/settings/model/settingsStore.js';
 
 // --- Importera alla UI-komponenter och Features ---
