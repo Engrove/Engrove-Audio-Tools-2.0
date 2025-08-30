@@ -1,6 +1,7 @@
 {
   "protocolId": "P-ASWP-2.10",
   "workflowId": "ENGROVE_FRANKENSTEEN_ATOMIC_WORKFLOW_V2",
+  "commonName": "Protokoll Triangel", "aliases": [ "Triad", "CS123", "Treenighet" ],
   "title": "Cs1-Cs2-Cs3 Atomic Session Workflow (Guided & Automated)",
   "description": "Stateless Cs3: new clean session without external context. Cs2 delivers a fully self-contained JSON package with all required context and inlined source files, optimized for token budget via chunking and deduplication.",
   "dependsOn": "Code Knowledge Graph (CKG) artifact.",
