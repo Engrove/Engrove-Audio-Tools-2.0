@@ -18,7 +18,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import BaseCanvasTextViewer from '../../shared/ui/BaseCanvasTextViewer.vue';
+import BaseCanvasTextViewer from '@features/theme-toggle/uBaseCanvasTextViewer.vue';
 
 // --- STATE ---
 // En reaktiv referens för att hålla licenstexten.
