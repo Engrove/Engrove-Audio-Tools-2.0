@@ -1,4 +1,4 @@
-<!-- src/shared/ui/BaseCanvasTextViewer.vue -->
+<!-- src/features/theme-toggle/ui/BaseCanvasTextViewer.vue -->
 <!-- Denna komponent är en återanvändbar, generell textvisare som renderar -->
 <!-- en given textsträng på ett HTML <canvas>-element. Den hanterar -->
 <!-- automatisk radbrytning och hämtar stilinformation (färg, typsnitt) -->
