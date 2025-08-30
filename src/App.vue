@@ -3,7 +3,6 @@
 <!-- renderar olika sidor via Vue Router, och inkluderar nu även den globala sidfoten. -->
 <!-- Den har uppdaterats för att hantera både färgtema och densitetstema. -->
 
-
 <template>
   <div id="app-container" :class="containerClasses">
     <!-- Den globala headern är en permanent del av layouten. -->
