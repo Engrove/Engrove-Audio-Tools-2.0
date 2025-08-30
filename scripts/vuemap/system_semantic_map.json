@@ -1,16 +1,34 @@
 {
   "$schema": "./system_semantic_map.schema.json",
   "version": "4.7.0",
-  "createdAt": "2025-08-30T17:02:49.227Z",
+  "createdAt": "2025-08-30T19:06:24.825Z",
   "nodes": [
     {
       "id": "src/showcase.js",
       "type": "File",
       "path": "src/showcase.js",
-      "hash": "639bec630955a2777feb71e3a741b3c9499526bbad9495e0cc1382e7a1c7e763",
+      "hash": "2fc78d54fd6f1825e8760c10b9e720de86db4c7e44aaeca41ce8f08f8dde6c7c",
       "fileType": "Utility",
       "layer": "src-other",
       "purpose": "Represents the file artifact at src/showcase.js."
+    },
+    {
+      "id": "vue",
+      "type": "NpmPackage",
+      "name": "vue",
+      "purpose": "Represents the external NPM dependency 'vue'."
+    },
+    {
+      "id": "pinia",
+      "type": "NpmPackage",
+      "name": "pinia",
+      "purpose": "Represents the external NPM dependency 'pinia'."
+    },
+    {
+      "id": "pinia-plugin-persistedstate",
+      "type": "NpmPackage",
+      "name": "pinia-plugin-persistedstate",
+      "purpose": "Represents the external NPM dependency 'pinia-plugin-persistedstate'."
     },
     {
       "id": "src/main.js",
@@ -34,10 +52,16 @@
       "id": "src/App.vue",
       "type": "File",
       "path": "src/App.vue",
-      "hash": "1f45949c769c6d6454a5d056ff8716510ddf6c2ad05539ff879f60166e40ba92",
+      "hash": "db04ebf7e05a4e75341fa81f4e632251953fd0d560a40d9155dfa0de744b417b",
       "fileType": "VueComponent",
       "layer": "src-other",
       "purpose": "Represents the file artifact at src/App.vue."
+    },
+    {
+      "id": "vue-router",
+      "type": "NpmPackage",
+      "name": "vue-router",
+      "purpose": "Represents the external NPM dependency 'vue-router'."
     },
     {
       "id": "public/data/tonearms-data.json",
@@ -771,7 +795,7 @@
       "id": "src/pages/home/HomePage.vue",
       "type": "File",
       "path": "src/pages/home/HomePage.vue",
-      "hash": "7c5e19b9201e190ad92e070316e949d50500f884d9cfe386e60c82b238a9c93f",
+      "hash": "dd458c9eed203e2540223524a405b0bf98a1c84cfeb0d926dfff4f8b7960d7ee",
       "fileType": "VueComponent",
       "layer": "pages",
       "purpose": "Represents the file artifact at src/pages/home/HomePage.vue."
@@ -1001,7 +1025,7 @@
       "id": "src/features/theme-toggle/ui/BaseCanvasTextViewer.vue",
       "type": "File",
       "path": "src/features/theme-toggle/ui/BaseCanvasTextViewer.vue",
-      "hash": "a070c1f97e33c2df436bdbea7a00a1f9256f71362891964f99b5c3bd7642456f",
+      "hash": "2c0d4b1be6b4c209ed55fad351ca4859a89971bffe3203fd3449e04f914e92f9",
       "fileType": "VueComponent",
       "layer": "features",
       "purpose": "Represents the file artifact at src/features/theme-toggle/ui/BaseCanvasTextViewer.vue."
@@ -1504,7 +1528,7 @@
     },
     {
       "source": "src/showcase.js",
-      "target": "src/features/theme-toggle/model/themeStore.js",
+      "target": "src/entities/theme/model/themeStore.js",
       "type": "IMPORTS"
     },
     {
@@ -1629,7 +1653,7 @@
     },
     {
       "source": "src/App.vue",
-      "target": "src/features/theme-toggle/model/themeStore.js",
+      "target": "src/features/theme-toggle/ui/ThemeToggle.vue",
       "type": "IMPORTS"
     },
     {
@@ -1649,7 +1673,7 @@
     },
     {
       "source": "src/App.vue",
-      "target": "src/features/theme-toggle/model/themeStore.js",
+      "target": "src/features/theme-toggle/ui/ThemeToggle.vue",
       "type": "USES_STORE_FILE"
     },
     {
@@ -2159,7 +2183,7 @@
     },
     {
       "source": "src/pages/home/HomePage.vue",
-      "target": "src/features/theme-toggle/model/themeStore.js",
+      "target": "src/entities/theme/model/themeStore.js",
       "type": "IMPORTS"
     },
     {
@@ -2169,7 +2193,7 @@
     },
     {
       "source": "src/pages/home/HomePage.vue",
-      "target": "src/features/theme-toggle/model/themeStore.js",
+      "target": "src/entities/theme/model/themeStore.js",
       "type": "USES_STORE_FILE"
     },
     {
@@ -2599,7 +2623,7 @@
     },
     {
       "source": "src/features/theme-toggle/ui/BaseCanvasTextViewer.vue",
-      "target": "src/entities/theme/model/themeStore.js",
+      "target": "src/features/theme-toggle/model/themeStore.js",
       "type": "IMPORTS"
     },
     {
@@ -2609,7 +2633,7 @@
     },
     {
       "source": "src/features/theme-toggle/ui/BaseCanvasTextViewer.vue",
-      "target": "src/entities/theme/model/themeStore.js",
+      "target": "src/features/theme-toggle/model/themeStore.js",
       "type": "USES_STORE_FILE"
     },
     {

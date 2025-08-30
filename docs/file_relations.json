@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-30T17:02:48.568590+00:00",
+    "generated_at": "2025-08-30T19:06:24.062158+00:00",
     "nodes": {
       "src/debug.js": {
         "type": "JavaScript Module",
@@ -138,8 +138,8 @@
           }
         ],
         "imports": [],
-        "dependents_count": 2,
-        "criticality_score": 20.0
+        "dependents_count": 3,
+        "criticality_score": 30.0
       },
       "src/entities/logger/model/loggerStore.js": {
         "type": "JavaScript Module",
@@ -359,8 +359,8 @@
         "language": "vue",
         "exports": [],
         "imports": [],
-        "dependents_count": 1,
-        "criticality_score": 10.0
+        "dependents_count": 2,
+        "criticality_score": 20.0
       },
       "src/features/theme-toggle/ui/BaseCanvasTextViewer.vue": {
         "type": "Vue Component",
@@ -1393,6 +1393,28 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
+      "scripts/modules/ui_patcher_tool.py": {
+        "type": "Python Script",
+        "category": "code",
+        "language": "py",
+        "exports": [
+          {
+            "symbol": "get_html",
+            "type": "function"
+          },
+          {
+            "symbol": "get_styles",
+            "type": "function"
+          },
+          {
+            "symbol": "get_js",
+            "type": "function"
+          }
+        ],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
       "scripts/modules/ui_einstein_search.py": {
         "type": "Python Script",
         "category": "code",
@@ -2330,6 +2352,15 @@
         "dependents_count": 0,
         "criticality_score": 0.0
       },
+      "docs/ai_protocols/JSON_Diff_Protocol.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
       "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md": {
         "type": "Markdown Document",
         "category": "documentation",
@@ -2591,6 +2622,11 @@
       },
       {
         "from": "src/App.vue",
+        "to": "src/features/theme-toggle/ui/ThemeToggle.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/App.vue",
         "to": "src/entities/settings/model/settingsStore.js",
         "type": "code_import"
       },
@@ -2602,6 +2638,11 @@
       {
         "from": "src/App.vue",
         "to": "src/widgets/GlobalFooter/GlobalFooter.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/showcase.js",
+        "to": "src/entities/theme/model/themeStore.js",
         "type": "code_import"
       },
       {
@@ -2745,11 +2786,6 @@
         "type": "code_import"
       },
       {
-        "from": "src/features/theme-toggle/ui/BaseCanvasTextViewer.vue",
-        "to": "src/entities/theme/model/themeStore.js",
-        "type": "code_import"
-      },
-      {
         "from": "src/shared/ui/RangeFilter.vue",
         "to": "src/shared/ui/BaseInput.vue",
         "type": "code_import"
@@ -2762,6 +2798,11 @@
       {
         "from": "src/shared/ui/BaseMultiSelect.vue",
         "to": "src/shared/ui/BaseCheckbox.vue",
+        "type": "code_import"
+      },
+      {
+        "from": "src/pages/home/HomePage.vue",
+        "to": "src/entities/theme/model/themeStore.js",
         "type": "code_import"
       },
       {
