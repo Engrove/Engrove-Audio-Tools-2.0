@@ -429,39 +429,87 @@ function analyzeRouter(ast, fileId, rootDir) {
 // -------------------------------------------------------------
 // SAAP: laddning, standard, validering
 // -------------------------------------------------------------
-{
-  "protocolId": "P-SAAP-1.2",
-  "title": "System Architecture Adherence Protocol",
-  "version": "1.2.0",
-  "strict_mode": true,
-  "fail_fast": false,
+function defaultSAAP() {
+  return {
+    "protocolId": "P-SAAP-1.2",
+    "title": "System Architecture Adherence Protocol",
+    "version": "1.2.0",
+    "strict_mode": true,
+    "fail_fast": false,
 
-  "architecturalLayers": [
-    { "layer": 0, "name": "shared",   "layerPathPattern": "src/shared/**/*" },
-    { "layer": 1, "name": "entities", "layerPathPattern": "src/entities/**/*" },
-    { "layer": 2, "name": "features", "layerPathPattern": "src/features/**/*" },
-    { "layer": 3, "name": "widgets",  "layerPathPattern": "src/widgets/**/*" },
-    { "layer": 4, "name": "pages",    "layerPathPattern": "src/pages/**/*" },
-    { "layer": 5, "name": "app",      "layerPathPattern": "src/app/**/*" }
-  ],
+    "architecturalLayers": [
+      { "layer": 0, "name": "shared",   "layerPathPattern": "src/shared/**/*" },
+      { "layer": 1, "name": "entities", "layerPathPattern": "src/entities/**/*" },
+      { "layer": 2, "name": "features", "layerPathPattern": "src/features/**/*" },
+      { "layer": 3, "name": "widgets",  "layerPathPattern": "src/widgets/**/*" },
+      { "layer": 4, "name": "pages",    "layerPathPattern": "src/pages/**/*" },
+      { "layer": 5, "name": "app",      "layerPathPattern": "src/app/**/*" }
+    ],
 
-  "placementRules": [
-    { "fileType": "VueComponent", "allowedPath": "src/App.vue" },
-    { "fileType": "VueComponent", "allowedPath": "src/shared/ui/**/*.vue" },
-    { "fileType": "VueComponent", "allowedPath": "src/features/**/ui/**/*.vue" },
-    { "fileType": "VueComponent", "allowedPath": "src/widgets/**/*.vue" },       // täcker både widgets/*/*.vue och widgets/**/ui/*.vue
-    { "fileType": "VueComponent", "allowedPath": "src/pages/**/*.vue" },
-    { "fileType": "RouterConfig", "allowedPath": "src/app/router.js" }
-  ],
+    "placementRules": [
+      { "fileType": "VueComponent", "allowedPath": "src/App.vue" },
+      { "fileType": "VueComponent", "allowedPath": "src/shared/ui/**/*.vue" },
+      { "fileType": "VueComponent", "allowedPath": "src/features/**/ui/**/*.vue" },
+      { "fileType": "VueComponent", "allowedPath": "src/widgets/**/*.vue" },       // täcker både widgets/*/*.vue och widgets/**/ui/*.vue
+      { "fileType": "VueComponent", "allowedPath": "src/pages/**/*.vue" },
+      { "fileType": "RouterConfig", "allowedPath": "src/app/router.js" }
+    ],
 
-  "dependencyRules": [
-    { "from": "app",      "to": ["app","pages","widgets","features","entities","shared"] },
-    { "from": "pages",    "to": ["pages","widgets","features","entities","shared"] },
-    { "from": "widgets",  "to": ["widgets","features","entities","shared"] },
-    { "from": "features", "to": ["features","entities","shared"] },
-    { "from": "entities", "to": ["entities","shared"] },
-    { "from": "shared",   "to": ["shared"] }
-  ]
+    "dependencyRules": [
+      { "from": "app",      "to": ["app","pages","widgets","features","entities","shared"] },
+      { "from": "pages",    "to": ["pages","widgets","features","entities","shared"] },
+      { "from": "widgets",  "to": ["widgets","features","entities","shared"] },
+      { "from": "features", "to": ["features","entities","shared"] },
+      { "from": "entities", "to": ["entities","shared"] },
+      { "from": "shared",   "to": ["shared"] }
+    ]
+  };
+}
+
+async function fileExists(p) {
+  try { await fs.access(p); return true; } catch { return false; }
+}
+
+async function loadSAAP(rootDir, outputFile, protocolFile) {
+  // 1) explicit protokollfil
+  if (protocolFile) {
+    const abs = path.join(rootDir, protocolFile);
+    if (await fileExists(abs)) {
+      const json = JSON.parse(await fs.readFile(abs, 'utf-8'));
+      return { saap: json, origin: protocolFile };
+    }
+  }
+  // 2) default protokollfil
+  const defaultPath = path.join(rootDir, 'scripts/vuemap/saap.protocol.json');
+  if (await fileExists(defaultPath)) {
+    const json = JSON.parse(await fs.readFile(defaultPath, 'utf-8'));
+    return { saap: json, origin: 'scripts/vuemap/saap.protocol.json' };
+  }
+  // 3) inbäddad i tidigare SSM
+  const prevPath = path.join(rootDir, outputFile);
+  if (await fileExists(prevPath)) {
+    try {
+      const prev = JSON.parse(await fs.readFile(prevPath, 'utf-8'));
+      if (prev.architecturalLayers && prev.dependencyRules) {
+        const { architecturalLayers, dependencyRules, placementRules, strict_mode, fail_fast, protocolId, version, title } = prev;
+        return {
+          saap: {
+            protocolId: protocolId || 'P-SAAP-1.0',
+            title: title || 'Embedded SAAP',
+            version: version || '1.0.0',
+            strict_mode: strict_mode ?? true,
+            fail_fast: fail_fast ?? false,
+            architecturalLayers,
+            dependencyRules,
+            placementRules: placementRules || defaultSAAP().placementRules
+          },
+          origin: outputFile + ' (embedded)'
+        };
+      }
+    } catch { /* ignore */ }
+  }
+  // 4) fallback
+  return { saap: defaultSAAP(), origin: '(builtin default)' };
 }
 
 function ruleAllows(fromLayer, toLayer, saap) {
