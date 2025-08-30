@@ -1,11 +1,8 @@
 {
   "_meta": {
-    "protocol_id": "DocumentClassification_v1.0",
+    "protocol_id": "DocumentClassification_v2.0",
     "purpose": "Detta är en maskinläsbar karta över projektets dokumentation. Den klassificerar varje fil enligt dess arkitektoniska roll för att ge en AI-assistent en otvetydig förståelse av hur varje fil ska tolkas: som en instruktion, en datakälla, ett kontrakt eller referensmaterial.",
-    "how_to_interpret": {
-      "classification_definitions": "Beskriver innebörden av varje klassificeringstyp.",
-      "classification_data": "Innehåller de faktiska reglerna för att klassificera filer, uppdelat i en explicit lista och ett regelverk för automatisk klassificering."
-    }
+    "version_notes": "v2.0: Omarbetad för att använda en array av objekt istället för en platt lista. Varje objekt innehåller pattern, classification, priority, description och handling_guidelines för mer granulär kontroll. Fallback-regler har tagits bort till förmån för explicit klassificering av alla kända systemfiler."
   },
   "classification_definitions": {
     "CORE_INSTRUCTION": {
@@ -17,6 +14,15 @@
     "CONFIGURATION_DATA": {
       "description": "En datafil (oftast JSON) som innehåller konfiguration eller data som konsumeras av ett protokoll eller av koden. Den instruerar inte, den informerar."
     },
+    "SYSTEM_METADATA": {
+      "description": "Metadata som beskriver systemets struktur, relationer eller tillstånd. Används som en auktoritativ källa för att förstå systemet på en högre nivå."
+    },
+    "PROJECT_METADATA": {
+      "description": "Filer som innehåller metadata om projektet eller en specifik session, såsom beroenden, loggar och manifest."
+    },
+    "LEARNING_DATA": {
+      "description": "Data som representerar AI-assistentens inlärda kunskap och heuristiker. Har en specifik hanteringspolicy."
+    },
     "SCHEMA_DEFINITION": {
       "description": "Ett formellt kontrakt (oftast JSON Schema) som definierar den förväntade strukturen på en datafil eller ett dataobjekt."
     },
@@ -24,67 +30,163 @@
       "description": "Ett bakgrunds- eller analysdokument som ger kontext och 'varför', men som inte innehåller exekverbara regler. Är oftast 'brus' vid taktiska uppgifter."
     }
   },
-  "classification_data": {
-    "explicit_classifications": {
-      "docs/Analys_av_AI-regelverk_i_JSON_.md": "REFERENCE_MATERIAL",
-      "docs/ai_protocols/AI_Chatt_Avslutningsprotokoll.md": "OPERATIONAL_PROTOCOL",
-      "docs/ai_protocols/AI_Collaboration_Standard.md": "OPERATIONAL_PROTOCOL",
-      "docs/ai_protocols/AI_Core_Instruction.md": "CORE_INSTRUCTION",
-      "docs/ai_protocols/AI_Dynamic_Protocols.md": "OPERATIONAL_PROTOCOL",
-      "docs/ai_protocols/Brainstorming_Protokoll.md": "OPERATIONAL_PROTOCOL",
-      "docs/ai_protocols/Diff_Protocol_v3.md": "REFERENCE_MATERIAL",
-      "docs/ai_protocols/DynamicProtocol.schema.json": "SCHEMA_DEFINITION",
-      "docs/ai_protocols/DynamicProtocols.json": "CONFIGURATION_DATA",
-      "docs/ai_protocols/Global_UI-Standard_Komponentspecifikation.md": "OPERATIONAL_PROTOCOL",
-      "docs/ai_protocols/Global_UI-Standard_för_Engrove-plattformen.md": "OPERATIONAL_PROTOCOL",
-      "docs/ai_protocols/Help_me_God_Protokoll.md": "OPERATIONAL_PROTOCOL",
-      "docs/ai_protocols/In-Session_Amnesiac_Reset_Protocol.md": "OPERATIONAL_PROTOCOL",
-      "docs/ai_protocols/K-MOD_Protokoll.md": "OPERATIONAL_PROTOCOL",
-      "docs/ai_protocols/KPI_Dashboard_Spec.md": "REFERENCE_MATERIAL",
-      "docs/ai_protocols/Levande_Kontext_Protokoll.md": "OPERATIONAL_PROTOCOL",
-      "docs/ai_protocols/MAS_Architecture_Guide.md": "REFERENCE_MATERIAL",
-      "docs/ai_protocols/Mappstruktur_och_Arbetsflöde.md": "OPERATIONAL_PROTOCOL",
-      "docs/ai_protocols/Pre_Execution_Alignment.md": "OPERATIONAL_PROTOCOL",
-      "docs/ai_protocols/Scorecard_Scoring_Guide.md": "OPERATIONAL_PROTOCOL",
-      "docs/ai_protocols/Stalemate_Protocol.md": "OPERATIONAL_PROTOCOL",
-      "docs/ai_protocols/Stature_Report_Protocol.md": "OPERATIONAL_PROTOCOL",
-      "docs/ai_protocols/ai_config.json": "CONFIGURATION_DATA",
-      "docs/ai_protocols/frankensteen_persona.v1.0.json": "CONFIGURATION_DATA",
-      "docs/ai_protocols/full_code_chat_contract.txt": "CONFIGURATION_DATA"
+  "classifications": [
+    {
+      "pattern": "docs/ai_protocols/AI_Core_Instruction.md",
+      "classification": "CORE_INSTRUCTION",
+      "priority": 1000,
+      "description": "Huvudinstruktionen som definierar min persona, kärnfilosofi och protokollbindningar. Den absoluta källan till sanning.",
+      "handling_guidelines": [
+        "Måste läsas och exekveras först vid varje sessionstart.",
+        "Alla regler här är icke-förhandlingsbara och överordnade andra instruktioner."
+      ]
     },
-    "fallback_rules": [
-      {
-        "conditions": {
-          "path_contains": "/schemas/",
-          "extension": ".json"
-        },
-        "classification": "SCHEMA_DEFINITION"
-      },
-      {
-        "conditions": {
-          "filename_ends_with": "_Protocol.md"
-        },
-        "classification": "OPERATIONAL_PROTOCOL"
-      },
-      {
-        "conditions": {
-          "filename_ends_with": "_Protokoll.md"
-        },
-        "classification": "OPERATIONAL_PROTOCOL"
-      },
-      {
-        "conditions": {
-          "path_contains": "docs/ai_protocols/",
-          "extension": ".md"
-        },
-        "classification": "OPERATIONAL_PROTOCOL"
-      },
-      {
-        "conditions": {
-          "extension": ".json"
-        },
-        "classification": "CONFIGURATION_DATA"
-      }
-    ]
-  }
+    {
+      "pattern": "docs/ai_protocols/Grundbulten_Protokoll.md",
+      "classification": "OPERATIONAL_PROTOCOL",
+      "priority": 950,
+      "description": "Den fundamentala lagen för all filgenerering och modifiering. Garanterar kvalitet och konsistens.",
+      "handling_guidelines": [
+        "Protokollet är inte valfritt; det är en del av Definition of Done för alla filoperationer.",
+        "Särskild vikt vid G5 (invarianter) och G0a (checksum-verifiering)."
+      ]
+    },
+    {
+      "pattern": "docs/ai_protocols/Stature_Report_Protocol.md",
+      "classification": "OPERATIONAL_PROTOCOL",
+      "priority": 920,
+      "description": "Protokoll för att generera den inledande statusrapporten vid sessionsstart.",
+      "handling_guidelines": [
+        "Exekveras automatiskt efter AI_Core_Instruction för att etablera en baslinje för sessionens hälsa."
+      ]
+    },
+    {
+      "pattern": "docs/ai_protocols/ai_config.json",
+      "classification": "CONFIGURATION_DATA",
+      "priority": 900,
+      "description": "Innehåller de 'Gyllene Reglerna' och andra centrala konfigurationsparametrar.",
+      "handling_guidelines": [
+        "Ska tolkas som absoluta, icke-förhandlingsbara regler som kompletterar kärninstruktionen."
+      ]
+    },
+    {
+      "pattern": "docs/ai_protocols/document_classifications.json",
+      "classification": "SYSTEM_METADATA",
+      "priority": 850,
+      "description": "Denna fil. Definierar hur alla andra filer i systemet ska tolkas, prioriteras och hanteras.",
+      "handling_guidelines": [
+        "Används för att dynamiskt justera mitt beteende baserat på vilken fil som är i kontext."
+      ]
+    },
+    {
+      "pattern": "docs/ai_protocols/EP-2025-09-CF3_CASR.md",
+      "classification": "OPERATIONAL_PROTOCOL",
+      "priority": 800,
+      "description": "Code & Architecture Sanity Review. Ett avancerat protokoll för djupgående kodgranskning och statisk analys.",
+      "handling_guidelines": [
+        "Aktiveras manuellt för att genomföra en fullständig kvalitetskontroll av en komponent eller ett system."
+      ]
+    },
+    {
+      "pattern": "scripts/vuemap/system_semantic_map.json",
+      "classification": "SYSTEM_METADATA",
+      "priority": 750,
+      "description": "En maskingenererad, kanonisk karta över hela kodbasens struktur, komponentrelationer och dataflöden. Används som primär kontextkälla för att förstå systemets arkitektur.",
+      "handling_guidelines": [
+        "Ska prioriteras som den primära källan för att förstå kodrelationer, över enskilda källkodsfiler.",
+        "Vid en uppenbar konflikt mellan kartan och en enskild källkodsfil ska en utredning initieras (DT-2), men kartan ska antas vara den avsedda sanningen tills motsatsen bevisats.",
+        "Informationen i denna fil är auktoritativ för att besvara frågor om beroenden, props, emits och store-användning."
+      ]
+    },
+    {
+      "pattern": "tools/frankensteen_learning_db.json",
+      "classification": "LEARNING_DATA",
+      "priority": 550,
+      "description": "Databas med inlärda heuristiker från tidigare sessioner. Innehåller både aktiva och inaktiva regler.",
+      "handling_guidelines": [
+        "Måste bearbetas enligt 'POLICY_HEURISTIC_EVALUATION' i kärninstruktionen för att bestämma vilka regler som är aktiva för den aktuella uppgiften."
+      ]
+    },
+    {
+      "pattern": "docs/ai_protocols/DynamicProtocols.json",
+      "classification": "CONFIGURATION_DATA",
+      "priority": 500,
+      "description": "Centralt register för alla dynamiska protokoll och kärnprinciper som styr mitt beteende.",
+      "handling_guidelines": [
+        "Detta är en datakälla. Det aktiva protokollet som *tolkar* denna data är AI_Dynamic_Protocols.md."
+      ]
+    },
+    {
+      "pattern": "docs/ai_protocols/minip/P-ASWP-2.7.json",
+      "classification": "OPERATIONAL_PROTOCOL",
+      "priority": 450,
+      "description": "Mini-protokoll för 'Anticipatory Self-Correction Warning Protocol'. Specialiserat för att förutse och varna för problem.",
+      "handling_guidelines": [
+        "Används internt under planeringsfaser."
+      ]
+    },
+    {
+      "pattern": "docs/ai_protocols/minip/P-C0-GUIDED-DISCOVERY-4.2.json",
+      "classification": "OPERATIONAL_PROTOCOL",
+      "priority": 450,
+      "description": "Mini-protokoll för 'Guided Discovery'. Används för att systematiskt utforska en okänd kodbas eller API.",
+      "handling_guidelines": [
+        "Används när informationsunderlaget är bristfälligt."
+      ]
+    },
+    {
+      "pattern": "docs/ai_protocols/schemas/*.schema.json",
+      "classification": "SCHEMA_DEFINITION",
+      "priority": 300,
+      "description": "JSON Schema-definitioner som används för att validera strukturen på protokoll och konfigurationsfiler.",
+      "handling_guidelines": [
+        "Dessa filer är kontrakt som används för validering och ska inte tolkas som direkta instruktioner."
+      ]
+    },
+    {
+      "pattern": "docs/core_file_info.json",
+      "classification": "PROJECT_METADATA",
+      "priority": 250,
+      "description": "Metadata om kärnfilerna i projektet, inklusive checksummor och versionsinformation.",
+      "handling_guidelines": [
+        "Används som referens för att verifiera filintegritet."
+      ]
+    },
+    {
+      "pattern": "docs/file_relations.json",
+      "classification": "PROJECT_METADATA",
+      "priority": 250,
+      "description": "En genererad karta över relationer och beroenden mellan filer i projektet.",
+      "handling_guidelines": [
+        "Används som sekundär källa för att förstå systemberoenden, underordnad system_semantic_map.json."
+      ]
+    },
+    {
+      "pattern": "docs/session_manifest.json",
+      "classification": "PROJECT_METADATA",
+      "priority": 150,
+      "description": "Manifest över filer och artefakter som är relevanta för en specifik arbetssession.",
+      "handling_guidelines": [
+        "Primärt för referens och arkivering."
+      ]
+    },
+    {
+      "pattern": "package.json",
+      "classification": "PROJECT_METADATA",
+      "priority": 200,
+      "description": "Standard NPM-paketfil som definierar projektets beroenden och skript.",
+      "handling_guidelines": [
+        "Auktoritativ källa för externa bibliotek och deras versioner."
+      ]
+    },
+    {
+      "pattern": "docs/ai_protocol_performance.json",
+      "classification": "REFERENCE_MATERIAL",
+      "priority": 100,
+      "description": "En loggfil med prestandadata och exekveringshistorik för AI-protokollen.",
+      "handling_guidelines": [
+        "Används för analys och optimering av protokoll, inte för att styra uppgiftsexekvering."
+      ]
+    }
+  ]
 }
