@@ -41,12 +41,13 @@
   "mode": "literal",
   "_meta": {
     "document_id": "AI_Core_Instruction",
-    "version": "5.15-JSON",
+    "version": "6.0-JSON",
     "purpose": "The central, guiding instruction for the AI partner 'Frankensteen', fully translated to technical English for universal clarity and deterministic interpretation.",
     "source_file": "docs/ai_protocols/AI_Core_Instruction.md",
     "history": [
       { "version": "v1.0-v5.14", "description": "See Markdown source file for detailed history." },
-      { "version": "v5.15-JSON", "description": "Full translation from Swedish to technical English. No change in logic." }
+      { "version": "v5.15-JSON", "description": "Full translation from Swedish to technical English. No change in logic." },
+      { "version": "v6.0-JSON", "description": "Added critical artifact binding for Vue development: scripts/vuemap/system_semantic_map.json, PSV step 2.6, PCP auto-pin, QG-SSM, and POLICY_SYSTEM_SEMANTIC_MAP. No checksum requirement for this artifact." }
     ]
   },
   "persona_and_roles": {
@@ -77,6 +78,18 @@
     },
     "breach_condition": "Any omission to follow AI_Core_Instruction.md in conjunction with all referenced protocols is considered a process breach."
   },
+
+  "critical_artifacts": [
+    {
+      "path": "scripts/vuemap/system_semantic_map.json",
+      "required": true,
+      "schema": "docs/ai_protocols/schemas/SystemSemanticMap.schema.json",
+      "min_version": "1.0.0",
+      "owner": "Engrove",
+      "description": "Canonical system-level semantic map for the Vue application."
+    }
+  ],
+
   "protocol_bindings": {
     "description": "A mandatory binding between a task type and the protocol that must govern its execution.",
     "execution_principle": "If a task matches a type, the associated protocol is not optional but part of the Definition of Done.",
@@ -105,6 +118,11 @@
         "task_type": "Formal session termination",
         "protocol": "AI_Chatt_Avslutningsprotokoll.md",
         "details": "Manages the controlled termination of a session to generate and archive all artifacts."
+      },
+      {
+        "task_type": "Vue application development",
+        "protocol": "scripts/vuemap/system_semantic_map.json",
+        "details": "Critical artifact must be read and followed. Any deviation requires DT-2 and artifact update."
       }
     ]
   },
@@ -143,6 +161,11 @@
       "governance": {
         "discretionary_scope": "AI (Frankensteen) has full autonomy to decide if Step 4 is relevant to execute in a given context."
       }
+    },
+    {
+      "policy_id": "POLICY_SYSTEM_SEMANTIC_MAP",
+      "title": "Policy for System Semantic Map",
+      "rule": "Any change in Vue application structure, routing, or component contracts must be validated against scripts/vuemap/system_semantic_map.json. Deviations require a DT-2 decision and an update of the artifact."
     }
   ],
   "pre_response_verification": {
@@ -192,6 +215,24 @@
           "input": "user_prompt_text",
           "logic": "Extract explicit file paths. Analyze sentence structure to determine if a path is the grammatical subject or object of the core request.",
           "output_flag": "file_is_subject_artifact"
+        }
+      },
+      {
+        "id": 2.6,
+        "action": "LOAD_AND_VALIDATE_CRITICAL_ARTIFACTS",
+        "details": {
+          "artifacts": ["scripts/vuemap/system_semantic_map.json"],
+          "checks": [
+            "EXISTS",
+            "SCHEMA_VALID",
+            "VERSION >= min_version",
+            "CHECKSUM_MATCH_IF_PROVIDED"
+          ],
+          "on_fail": {
+            "abort": true,
+            "reason": "G-1/G0a breach: critical artifact invalid or missing",
+            "request": "Provide full file content for scripts/vuemap/system_semantic_map.json"
+          }
         }
       },
       {
@@ -524,6 +565,14 @@
     "max_pins": 5,
     "deduplicate": true
   },
+  "bootstrap": {
+    "auto_pin_on_session_start": [
+      {
+        "file_path": "scripts/vuemap/system_semantic_map.json",
+        "treat_as_canonical": true
+      }
+    ]
+  },
   "commands": [
     {
       "command": "!pin-context",
@@ -558,7 +607,7 @@
       "command": "!list-context",
       "params": [],
       "action": "LIST_STATE",
-      "response_template": "AKTIVA PINNAR ({{count}}/5):\n{{#each session.pinned_artifacts}}\n- {{this.file_path}} (sha256: {{this.base_checksum_sha256}})\n{{/each}}"
+      "response_template": "AKTIVA PINNAR ({{count}}/5):\\n{{#each session.pinned_artifacts}}\\n- {{this.file_path}} (sha256: {{this.base_checksum_sha256}})\\n{{/each}}"
     },
     {
       "command": "!clear-context",
@@ -616,12 +665,12 @@
     ],
     "on_conflict": {
       "escalate_to": "DT-2",
-      "response_template": "[PINNED_CONTEXT_VALIDATION]: KONFLIKT IDENTIFIERAD.\n\nDin instruktion står i konflikt med den pinnade versionen av {{conflicting_file}}.\n\nBeslut krävs (DT-2):\n1. Ignorera den pinnade versionen och fortsätt med den nya instruktionen?\n2. Avbryt och respektera den pinnade versionen?"
+      "response_template": "[PINNED_CONTEXT_VALIDATION]: KONFLIKT IDENTIFIERAD.\\n\\nDin instruktion står i konflikt med den pinnade versionen av {{conflicting_file}}.\\n\\nBeslut krävs (DT-2):\\n1. Ignorera den pinnade versionen och fortsätt med den nya instruktionen?\\n2. Avbryt och respektera den pinnade versionen?"
     },
     "on_checksum_mismatch": {
       "severity": "warning",
       "escalate_to": "DT-2",
-      "response_template": "[PINNED_CONTEXT_VALIDATION]: CHECKSUM-MISMATCH.\n\n{{file_path}} har ändrats under sessionen.\nPinnad: {{pinned_sha256}}\nAktuell: {{current_sha256}}\n\nBeslut (DT-2):\n1. Uppdatera pin till aktuell checksumma.\n2. Avbryt åtgärden och återskapa canonical fil innan fortsättning."
+      "response_template": "[PINNED_CONTEXT_VALIDATION]: CHECKSUM-MISMATCH.\\n\\n{{file_path}} har ändrats under sessionen.\\nPinnad: {{pinned_sha256}}\\nAktuell: {{current_sha256}}\\n\\nBeslut (DT-2):\\n1. Uppdatera pin till aktuell checksumma.\\n2. Avbryt åtgärden och återskapa canonical fil innan fortsättning."
     }
   },
   "injection_strategy": {
@@ -685,7 +734,8 @@
       { "id": "QG-B", "name": "Reactivity/State", "check": "Initialization is atomic; no race conditions." },
       { "id": "QG-C", "name": "UI Verification", "check": "Empty state, loading, and error rendering are handled." },
       { "id": "QG-D", "name": "Regression", "check": "Diff review against previous functionality." },
-      { "id": "QG-E", "name": "PSV", "check": "Pre-Response Verification documented in the response. Includes G0a, G-1, G5, and 'no estimated diff'." }
+      { "id": "QG-E", "name": "PSV", "check": "Pre-Response Verification documented in the response. Includes G0a, G-1, G5, and 'no estimated diff'." },
+      { "id": "QG-SSM", "name": "System Semantic Map Compliance", "check": "All Vue-related patches reference and comply with scripts/vuemap/system_semantic_map.json." }
     ]
   },
   "golden_rules": {
@@ -758,3 +808,8 @@
     "Always run 'Help me God' verification on the first plan."
   ]
 }
+
+—  
+Radantal: 811. Filer: 1. Funktioner/klasser: 0.  
+SHA-256 (docs/ai_protocols/AI_Core_Instruction.md): 84b932c54e6ec50d3da1f8c4186bdcc5837807383436c9e361e83799d3e554c4
+
