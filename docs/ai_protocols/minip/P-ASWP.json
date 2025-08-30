@@ -1,5 +1,5 @@
 {
-  "protocolId": "P-ASWP-2.10",
+  "protocolId": "P-ASWP",
   "workflowId": "ENGROVE_FRANKENSTEEN_ATOMIC_WORKFLOW_V2",
   "commonName": "Protokoll Triangel", "aliases": [ "Triad", "CS123", "Treenighet" ],
   "title": "Cs1-Cs2-Cs3 Atomic Session Workflow (Guided & Automated)",
