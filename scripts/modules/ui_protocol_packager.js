@@ -244,6 +244,7 @@ async function buildBundleObject(payloadObj, bundleConfig, inlineProtocols) {
   if (bundleConfig.executionOptions)   finalObject.executionOptions   = bundleConfig.executionOptions;
   if (bundleConfig.toolsContract)      finalObject.toolsContract      = bundleConfig.toolsContract;
   if (bundleConfig.firstReplyContract) finalObject.firstReplyContract = bundleConfig.firstReplyContract;
+  if (bundleConfig.local_policies)     finalObject.local_policies = bundleConfig.local_policies;
 
   return finalObject;
 }
@@ -554,7 +555,7 @@ export async function createProtocolBundle(isProtocolMode, selectedPaths, onProg
         { action: "release_output", params: { allowed_pattern: "^[\\s\\S]*$" } }
       ],
       {
-        "local_policies": [
+        local_policies: [
           {
             "id": "frankensteen.gpt_only.local_sandbox",
             "enabled": true,
