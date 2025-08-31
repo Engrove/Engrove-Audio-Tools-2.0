@@ -626,15 +626,29 @@ export async function createProtocolBundle(isProtocolMode, selectedPaths, onProg
     pbfVersion: "2.0",
     filename: `file_bundle_${getTimestamp()}.json`,
     sequence: [
-      {
-        action: "decode_and_verify_payload",
-        params: {
-          payload_ref: "payload",
-          encoding_chain: ["base64", "zlib"],
-          hash_ref: "metadata.hash",
-          hash_algorithm: "SHA-256"
+        {
+          action: "decompress_and_verify",
+          params: {
+            payload_ref: "$.payload",
+            encoding_chain: ["base64", "zlib"],
+            hash_ref: "$.metadata.hash",
+            hash_algorithm: "SHA-256",
+            algo: "zlib"
+          },
+          assign: { as_handle: "instr_handle" }
+        },
+        {
+          action: "mount_payload",
+          params: { handle: "$handles.instr_handle", namespace: "in_memory_files" }
+        },
+        { action: "enter_tool_only_mode" },
+        {
+          "action": "load_all_to_context",
+          "params": {
+            "source_ns": "in_memory_files",
+            "files_ref": "$.metadata.fileIndex"
+          }
         }
-      }
     ]
   };
 
