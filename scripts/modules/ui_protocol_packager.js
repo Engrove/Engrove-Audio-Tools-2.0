@@ -201,6 +201,11 @@ async function buildBundleObject(payloadObj, bundleConfig, inlineProtocols) {
       fileCount: (payloadObj.files || []).length + (inlineProtocols || []).length,
       payloadEncoding: "base64+zlib"
     },
+    "toolsContract": {
+      "decompress": { "params": ["b64", "algo"], "algoAllowed": ["zlib"] },
+      "read_chunk": { "params": ["handle", "start", "size"], "maxSize": 4000 },
+      "mount_payload": { "params": ["handle", "namespace"] }
+    },
     payload: base64,
     inlineProtocols: (inlineProtocols || []).map(p => ({
       path: p.path, sha256: p.sha256, content: p.content
@@ -591,17 +596,47 @@ export async function createProtocolBundle(isProtocolMode, selectedPaths, onProg
   const bundleConfigFile = {
     pbfVersion: "2.0",
     filename: `file_bundle_${getTimestamp()}.json`,
-    sequence: [
-      {
-        action: "decode_and_verify_payload",
-        params: {
-          payload_ref: "payload",
-          encoding_chain: ["base64", "zlib"],
-          hash_ref: "metadata.hash",
-          hash_algorithm: "SHA-256"
-        }
-      }
-    ]
+    "sequence": [
+  {
+    "action": "decompress_and_verify",
+    "params": {
+      "payload_ref": "$.payload",
+      "encoding_chain": ["base64","zlib"],
+      "hash_ref": "$.metadata.hash",
+      "hash_algorithm": "SHA-256",
+      "algo": "zlib"
+    },
+    "assign": { "as_handle": "payload_handle" }
+  },
+  {
+    "action": "mount_payload",
+    "params": { "handle": "$handles.payload_handle", "namespace": "in_memory_files" }
+  },
+  {
+    "action": "release_output",
+    "params": {
+      "literal": [
+        "[RUNTIME-DIRECTIVE]",
+        "Namespace monterat: in_memory_files.",
+        "fileIndex finns i $.metadata.fileIndex.",
+        "",
+        "Gör exakt följande i ordning:",
+        "1) Läs in $.metadata.fileIndex i minnet.",
+        "2) (Flyttad tidigare) För varje fil: beräkna ett preliminärt viktighetsmått.",
+        "   - Prioritera: core/protokoll, README/overview, entrypoints (index/main), körningsstyrande konfig, källkod före test, text före binär.",
+        "   - Avprioritera: bilder/media, stora data, lås-/cachefiler, genererat.",
+        "   - Om okänt: sniff via read_chunk(start=0,size<=4000).",
+        "   - Rangordna fallande på vikt.",
+        "3) Välj de 5 högst rankade (eller färre om färre finns).",
+        "4) För varje vald: skriv exakt '!pin-content <path>'.",
+        "5) Läs därefter varje vald fil fullt från in_memory_files (strömma vid behov).",
+        "6) Bekräfta per fil: '[READ-OK] <path> bytes=<n>'.",
+        "",
+        "Skriv inte ut rått filinnehåll om det inte efterfrågas."
+      ].join("\\n")
+    }
+  }
+]
   };
 
   overlay.setPhase('Komprimerar & bygger JSON-bundle…');
