@@ -625,31 +625,137 @@ export async function createProtocolBundle(isProtocolMode, selectedPaths, onProg
   const bundleConfigFile = {
     pbfVersion: "2.0",
     filename: `file_bundle_${getTimestamp()}.json`,
-    sequence: [
-        {
-          action: "decompress_and_verify",
-          params: {
-            payload_ref: "$.payload",
-            encoding_chain: ["base64", "zlib"],
-            hash_ref: "$.metadata.hash",
-            hash_algorithm: "SHA-256",
-            algo: "zlib"
-          },
-          assign: { as_handle: "instr_handle" }
+
+
+
+
+
+  "sequence": [
+    {
+      "action": "decompress_and_verify",
+      "params": {
+        "payload_ref": "$.payload",
+        "encoding_chain": ["base64","zlib"],
+        "hash_ref": "$.metadata.hash",
+        "hash_algorithm": "SHA-256",
+        "algo": "zlib"
+      },
+      "assign": { "as_handle": "instr_handle" }
+    },
+    {
+      "action": "mount_payload",
+      "params": { "handle": "$handles.instr_handle", "namespace": "in_memory_files" }
+    },
+    {
+      "action": "read_file_if_exists",
+      "params": {
+        "namespace": "in_memory_files",
+        "path": "scripts/vuemap/system_semantic_map.json",
+        "format": "json"
+      },
+      "assign": { "as_handle": "semantic_map" }
+    },
+    {
+      "action": "validate_schema_if_present",
+      "params": {
+        "json_ref": "$handles.semantic_map",
+        "required_fields": ["include_globs","exclude_globs","entrypoints","framework_rules"],
+        "optional_fields": ["component_globs","api_markers","risk_checks","weights","notes"]
+      },
+      "on_error": "warn_and_continue"
+    },
+
+    {
+      "action": "enter_tool_only_mode"
+    },
+    {
+      "action": "load_all_to_context",
+      "params": { "source_ns": "in_memory_files", "files_ref": "$.metadata.fileIndex" }
+    },
+    {
+      "action": "index_repository",
+      "params": {
+        "roots_ref": null,
+        "include_globs": { "$coalesce": ["$handles.semantic_map.include_globs", ["**/*.ts","**/*.tsx","**/*.js","**/*.jsx","**/*.vue","**/*.json","**/*.md"]] },
+        "exclude_globs": { "$coalesce": ["$handles.semantic_map.exclude_globs", ["**/node_modules/**","**/.git/**","**/dist/**","**/build/**","**/.output/**"]] },
+        "max_file_kb": 512
+      },
+      "assign": { "as_handle": "code_index" }
+    },
+    {
+      "action": "detect_frameworks",
+      "params": {
+        "index_ref": "$handles.code_index",
+        "rules": { "$coalesce": ["$handles.semantic_map.framework_rules", [
+          { "match": "vite.config.*", "label": "Vite" },
+          { "match": "nuxt.config.*", "label": "Nuxt" },
+          { "match": "package.json#dependencies.vue", "label": "Vue" }
+        ]]}
+      },
+      "assign": { "as_handle": "frameworks" }
+    },
+    {
+      "action": "map_entrypoints",
+      "params": {
+        "index_ref": "$handles.code_index",
+        "candidates": { "$coalesce": ["$handles.semantic_map.entrypoints", ["src/main.ts","src/main.js","src/app.ts","src/router/index.ts","src/App.vue"]] }
+      },
+      "assign": { "as_handle": "entrypoints" }
+    },
+    {
+      "action": "static_analysis",
+      "params": {
+        "index_ref": "$handles.code_index",
+        "linters": ["typescript-parser","vue-sfc-parser","eslint-lite"],
+        "emit_symbols": true
+      },
+      "assign": { "as_handle": "symbol_index" }
+    },
+    {
+      "action": "summarize_components",
+      "params": {
+        "symbol_index_ref": "$handles.symbol_index",
+        "component_globs": { "$coalesce": ["$handles.semantic_map.component_globs", ["src/components/**/*.vue","src/components/**/*.{ts,tsx,js,jsx}"]] },
+        "limit": 200
+      },
+      "assign": { "as_handle": "component_summary" }
+    },
+    {
+      "action": "summarize_dataflows",
+      "params": {
+        "index_ref": "$handles.code_index",
+        "look_for": { "$coalesce": ["$handles.semantic_map.api_markers", ["api","fetch","axios","graphql","pinia","vuex","router"]] },
+        "weights": { "$coalesce": ["$handles.semantic_map.weights", {"api":2,"state":1.5,"routing":1}] }
+      },
+      "assign": { "as_handle": "flow_summary" }
+    },
+    {
+      "action": "risk_scan",
+      "params": {
+        "index_ref": "$handles.code_index",
+        "checks": { "$coalesce": ["$handles.semantic_map.risk_checks", ["secrets","licenses","large_deps","circular_deps","unused_deps"]] }
+      },
+      "assign": { "as_handle": "risk_report" }
+    },
+    {
+      "action": "emit_context",
+      "params": {
+        "artifacts": {
+          "semantic_map": "$handles.semantic_map",
+          "frameworks": "$handles.frameworks",
+          "entrypoints": "$handles.entrypoints",
+          "components": "$handles.component_summary",
+          "dataflows": "$handles.flow_summary",
+          "risks": "$handles.risk_report"
         },
-        {
-          action: "mount_payload",
-          params: { handle: "$handles.instr_handle", namespace: "in_memory_files" }
-        },
-        { action: "enter_tool_only_mode" },
-        {
-          "action": "load_all_to_context",
-          "params": {
-            "source_ns": "in_memory_files",
-            "files_ref": "$.metadata.fileIndex"
-          }
-        }
-    ]
+        "as": "project_context"
+      }
+    }
+  ]
+
+
+
+  
   };
 
   overlay.setPhase('Komprimerar & bygger JSON-bundle…');
