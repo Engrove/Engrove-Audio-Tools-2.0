@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2025-08-31T15:08:54.798807+00:00",
+    "generated_at": "2025-08-31T16:37:14.223025+00:00",
     "nodes": {
       "src/debug.js": {
         "type": "JavaScript Module",
@@ -108,6 +108,24 @@
         "type": "Unknown",
         "category": "code",
         "language": "css",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "src/docs/EAT_AI_Roadmap.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
+        "exports": [],
+        "imports": [],
+        "dependents_count": 0,
+        "criticality_score": 0.0
+      },
+      "src/docs/EAT_AI_Source_files.md": {
+        "type": "Markdown Document",
+        "category": "documentation",
+        "language": "md",
         "exports": [],
         "imports": [],
         "dependents_count": 0,
