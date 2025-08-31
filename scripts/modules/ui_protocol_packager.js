@@ -628,7 +628,7 @@ export async function createProtocolBundle(isProtocolMode, selectedPaths, onProg
         "   - Om okänt: sniff via read_chunk(start=0,size<=4000).",
         "   - Rangordna fallande på vikt.",
         "3) Välj de 5 högst rankade (eller färre om färre finns).",
-        "4) För varje vald: skriv exakt '!pin-content <path>'.",
+        "4) För varje vald: skriv exakt '!pin-context <path>'.",
         "5) Läs därefter varje vald fil fullt från in_memory_files (strömma vid behov).",
         "6) Bekräfta per fil: '[READ-OK] <path> bytes=<n>'.",
         "",
