@@ -1,7 +1,7 @@
 {
   "$schema": "./system_semantic_map.schema.json",
   "version": "4.7.0",
-  "createdAt": "2025-09-12T02:56:13.464Z",
+  "createdAt": "2025-09-13T02:49:22.635Z",
   "nodes": [
     {
       "id": "src/showcase.js",
@@ -1085,15 +1085,6 @@
       "name": "close"
     },
     {
-      "id": "src/features/density-toggle/ui/DensityToggle.vue",
-      "type": "File",
-      "path": "src/features/density-toggle/ui/DensityToggle.vue",
-      "hash": "3e1d4c4efa2ff9c1f5df98af6f25fe8d992a45650f8b6ea1885280033404ffe5",
-      "fileType": "VueComponent",
-      "layer": "features",
-      "purpose": "Represents the file artifact at src/features/density-toggle/ui/DensityToggle.vue."
-    },
-    {
       "id": "src/features/comparison-modal/ui/ComparisonModal.vue",
       "type": "File",
       "path": "src/features/comparison-modal/ui/ComparisonModal.vue",
@@ -1115,6 +1106,15 @@
       "path": "src/features/comparison-modal/ui/ComparisonModal.vue",
       "parent": "src/features/comparison-modal/ui/ComparisonModal.vue",
       "name": "close"
+    },
+    {
+      "id": "src/features/density-toggle/ui/DensityToggle.vue",
+      "type": "File",
+      "path": "src/features/density-toggle/ui/DensityToggle.vue",
+      "hash": "3e1d4c4efa2ff9c1f5df98af6f25fe8d992a45650f8b6ea1885280033404ffe5",
+      "fileType": "VueComponent",
+      "layer": "features",
+      "purpose": "Represents the file artifact at src/features/density-toggle/ui/DensityToggle.vue."
     },
     {
       "id": "src/entities/theme/model/themeStore.js",
@@ -2678,31 +2678,6 @@
       "type": "USES_COMPONENT"
     },
     {
-      "source": "src/features/density-toggle/ui/DensityToggle.vue",
-      "target": "src/entities/settings/model/settingsStore.js",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/features/density-toggle/ui/DensityToggle.vue",
-      "target": "src/shared/ui/BaseButton.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/features/density-toggle/ui/DensityToggle.vue",
-      "target": "src/entities/settings/model/settingsStore.js",
-      "type": "USES_STORE_FILE"
-    },
-    {
-      "source": "src/features/density-toggle/ui/DensityToggle.vue",
-      "target": "src/shared/ui/BaseButton.vue",
-      "type": "USES_COMPONENT"
-    },
-    {
-      "source": "src/features/density-toggle/ui/DensityToggle.vue",
-      "target": "src/shared/ui/BaseButton.vue",
-      "type": "USES_COMPONENT"
-    },
-    {
       "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
       "target": "vue",
       "type": "IMPORTS_PACKAGE"
@@ -2755,6 +2730,31 @@
     {
       "source": "src/features/comparison-modal/ui/ComparisonModal.vue",
       "target": "src/shared/ui/BaseTable.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/features/density-toggle/ui/DensityToggle.vue",
+      "target": "src/entities/settings/model/settingsStore.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/features/density-toggle/ui/DensityToggle.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/features/density-toggle/ui/DensityToggle.vue",
+      "target": "src/entities/settings/model/settingsStore.js",
+      "type": "USES_STORE_FILE"
+    },
+    {
+      "source": "src/features/density-toggle/ui/DensityToggle.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/features/density-toggle/ui/DensityToggle.vue",
+      "target": "src/shared/ui/BaseButton.vue",
       "type": "USES_COMPONENT"
     },
     {
