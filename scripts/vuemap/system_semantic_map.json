@@ -1,7 +1,7 @@
 {
   "$schema": "./system_semantic_map.schema.json",
   "version": "4.7.0",
-  "createdAt": "2025-11-23T03:38:25.876Z",
+  "createdAt": "2025-11-24T03:25:52.541Z",
   "nodes": [
     {
       "id": "src/showcase.js",
