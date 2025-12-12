@@ -1,7 +1,7 @@
 {
   "$schema": "./system_semantic_map.schema.json",
   "version": "4.7.0",
-  "createdAt": "2025-12-11T03:26:51.690Z",
+  "createdAt": "2025-12-12T03:25:51.568Z",
   "nodes": [
     {
       "id": "src/showcase.js",
@@ -1117,6 +1117,22 @@
       "name": "close"
     },
     {
+      "id": "src/entities/settings/model/settingsStore.js",
+      "type": "File",
+      "path": "src/entities/settings/model/settingsStore.js",
+      "hash": "765e2979782beecc08374b52350016359a1f86fbe29529290d72788535f0149a",
+      "fileType": "PiniaStore",
+      "layer": "entities",
+      "purpose": "Represents the file artifact at src/entities/settings/model/settingsStore.js."
+    },
+    {
+      "id": "settings",
+      "type": "Store",
+      "path": "src/entities/settings/model/settingsStore.js",
+      "storeId": "settings",
+      "purpose": "Manages state for the 'settings' domain."
+    },
+    {
       "id": "src/entities/theme/model/themeStore.js",
       "type": "File",
       "path": "src/entities/theme/model/themeStore.js",
@@ -1160,22 +1176,6 @@
       "path": "src/entities/theme/model/themeStore.js",
       "parent": "theme",
       "purpose": "A action for the 'theme' store."
-    },
-    {
-      "id": "src/entities/settings/model/settingsStore.js",
-      "type": "File",
-      "path": "src/entities/settings/model/settingsStore.js",
-      "hash": "765e2979782beecc08374b52350016359a1f86fbe29529290d72788535f0149a",
-      "fileType": "PiniaStore",
-      "layer": "entities",
-      "purpose": "Represents the file artifact at src/entities/settings/model/settingsStore.js."
-    },
-    {
-      "id": "settings",
-      "type": "Store",
-      "path": "src/entities/settings/model/settingsStore.js",
-      "storeId": "settings",
-      "purpose": "Manages state for the 'settings' domain."
     },
     {
       "id": "src/entities/logger/model/loggerStore.js",
@@ -2758,16 +2758,6 @@
       "type": "USES_COMPONENT"
     },
     {
-      "source": "src/entities/theme/model/themeStore.js",
-      "target": "pinia",
-      "type": "IMPORTS_PACKAGE"
-    },
-    {
-      "source": "src/entities/theme/model/themeStore.js",
-      "target": "theme",
-      "type": "DEFINES"
-    },
-    {
       "source": "src/entities/settings/model/settingsStore.js",
       "target": "pinia",
       "type": "IMPORTS_PACKAGE"
@@ -2780,6 +2770,16 @@
     {
       "source": "src/entities/settings/model/settingsStore.js",
       "target": "settings",
+      "type": "DEFINES"
+    },
+    {
+      "source": "src/entities/theme/model/themeStore.js",
+      "target": "pinia",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/entities/theme/model/themeStore.js",
+      "target": "theme",
       "type": "DEFINES"
     },
     {
