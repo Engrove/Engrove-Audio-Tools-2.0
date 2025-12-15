@@ -1,7 +1,7 @@
 {
   "$schema": "./system_semantic_map.schema.json",
   "version": "4.7.0",
-  "createdAt": "2025-12-14T03:40:58.642Z",
+  "createdAt": "2025-12-15T03:44:03.452Z",
   "nodes": [
     {
       "id": "src/showcase.js",
@@ -1117,38 +1117,6 @@
       "name": "close"
     },
     {
-      "id": "src/entities/settings/model/settingsStore.js",
-      "type": "File",
-      "path": "src/entities/settings/model/settingsStore.js",
-      "hash": "765e2979782beecc08374b52350016359a1f86fbe29529290d72788535f0149a",
-      "fileType": "PiniaStore",
-      "layer": "entities",
-      "purpose": "Represents the file artifact at src/entities/settings/model/settingsStore.js."
-    },
-    {
-      "id": "settings",
-      "type": "Store",
-      "path": "src/entities/settings/model/settingsStore.js",
-      "storeId": "settings",
-      "purpose": "Manages state for the 'settings' domain."
-    },
-    {
-      "id": "src/entities/logger/model/loggerStore.js",
-      "type": "File",
-      "path": "src/entities/logger/model/loggerStore.js",
-      "hash": "73af6e5030ffc155f6f22526ba3ca6bc3312974609a9d5fe066078df6ad90703",
-      "fileType": "PiniaStore",
-      "layer": "entities",
-      "purpose": "Represents the file artifact at src/entities/logger/model/loggerStore.js."
-    },
-    {
-      "id": "logger",
-      "type": "Store",
-      "path": "src/entities/logger/model/loggerStore.js",
-      "storeId": "logger",
-      "purpose": "Manages state for the 'logger' domain."
-    },
-    {
       "id": "src/entities/theme/model/themeStore.js",
       "type": "File",
       "path": "src/entities/theme/model/themeStore.js",
@@ -1192,6 +1160,38 @@
       "path": "src/entities/theme/model/themeStore.js",
       "parent": "theme",
       "purpose": "A action for the 'theme' store."
+    },
+    {
+      "id": "src/entities/settings/model/settingsStore.js",
+      "type": "File",
+      "path": "src/entities/settings/model/settingsStore.js",
+      "hash": "765e2979782beecc08374b52350016359a1f86fbe29529290d72788535f0149a",
+      "fileType": "PiniaStore",
+      "layer": "entities",
+      "purpose": "Represents the file artifact at src/entities/settings/model/settingsStore.js."
+    },
+    {
+      "id": "settings",
+      "type": "Store",
+      "path": "src/entities/settings/model/settingsStore.js",
+      "storeId": "settings",
+      "purpose": "Manages state for the 'settings' domain."
+    },
+    {
+      "id": "src/entities/logger/model/loggerStore.js",
+      "type": "File",
+      "path": "src/entities/logger/model/loggerStore.js",
+      "hash": "73af6e5030ffc155f6f22526ba3ca6bc3312974609a9d5fe066078df6ad90703",
+      "fileType": "PiniaStore",
+      "layer": "entities",
+      "purpose": "Represents the file artifact at src/entities/logger/model/loggerStore.js."
+    },
+    {
+      "id": "logger",
+      "type": "Store",
+      "path": "src/entities/logger/model/loggerStore.js",
+      "storeId": "logger",
+      "purpose": "Manages state for the 'logger' domain."
     },
     {
       "id": "src/entities/data-explorer/model/state.js",
@@ -2758,6 +2758,16 @@
       "type": "USES_COMPONENT"
     },
     {
+      "source": "src/entities/theme/model/themeStore.js",
+      "target": "pinia",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/entities/theme/model/themeStore.js",
+      "target": "theme",
+      "type": "DEFINES"
+    },
+    {
       "source": "src/entities/settings/model/settingsStore.js",
       "target": "pinia",
       "type": "IMPORTS_PACKAGE"
@@ -2785,16 +2795,6 @@
     {
       "source": "src/entities/logger/model/loggerStore.js",
       "target": "logger",
-      "type": "DEFINES"
-    },
-    {
-      "source": "src/entities/theme/model/themeStore.js",
-      "target": "pinia",
-      "type": "IMPORTS_PACKAGE"
-    },
-    {
-      "source": "src/entities/theme/model/themeStore.js",
-      "target": "theme",
       "type": "DEFINES"
     },
     {
