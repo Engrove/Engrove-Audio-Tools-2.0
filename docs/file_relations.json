@@ -30,7 +30,7 @@
   },
   "graph_data": {
     "schema_version": "3.0",
-    "generated_at": "2026-02-13T04:23:28.199099+00:00",
+    "generated_at": "2026-02-14T04:12:18.290755+00:00",
     "nodes": {
       "src/App.vue": {
         "type": "Vue Component",
