@@ -1,8 +1,44 @@
 {
   "$schema": "./system_semantic_map.schema.json",
   "version": "4.7.0",
-  "createdAt": "2026-02-27T04:15:08.609Z",
+  "createdAt": "2026-02-28T03:57:29.309Z",
   "nodes": [
+    {
+      "id": "src/showcase.js",
+      "type": "File",
+      "path": "src/showcase.js",
+      "hash": "2fc78d54fd6f1825e8760c10b9e720de86db4c7e44aaeca41ce8f08f8dde6c7c",
+      "fileType": "Utility",
+      "layer": "src-other",
+      "purpose": "Represents the file artifact at src/showcase.js."
+    },
+    {
+      "id": "src/main.js",
+      "type": "File",
+      "path": "src/main.js",
+      "hash": "22f8e0d034d96de04212e33567821d56f3550a5f166e19227385926291e99059",
+      "fileType": "EntryPoint",
+      "layer": "src-other",
+      "purpose": "Represents the file artifact at src/main.js."
+    },
+    {
+      "id": "src/debug.js",
+      "type": "File",
+      "path": "src/debug.js",
+      "hash": "031f0a2c2fa092f54c8b4374a638e17f3c28ba398464d36b09db3c98a442980b",
+      "fileType": "Utility",
+      "layer": "src-other",
+      "purpose": "Represents the file artifact at src/debug.js."
+    },
+    {
+      "id": "src/App.vue",
+      "type": "File",
+      "path": "src/App.vue",
+      "hash": "967553f443884598dd0c26c87f1b964594b114555c292e55e3584a11991b35f6",
+      "fileType": "VueComponent",
+      "layer": "src-other",
+      "purpose": "Represents the file artifact at src/App.vue."
+    },
     {
       "id": "public/data/tonearms-data.json",
       "type": "File",
@@ -121,40 +157,46 @@
       "purpose": "Represents the file artifact at public/data/cartridges-classifications.json."
     },
     {
-      "id": "src/showcase.js",
+      "id": "src/app/router.js",
       "type": "File",
-      "path": "src/showcase.js",
-      "hash": "2fc78d54fd6f1825e8760c10b9e720de86db4c7e44aaeca41ce8f08f8dde6c7c",
-      "fileType": "Utility",
-      "layer": "src-other",
-      "purpose": "Represents the file artifact at src/showcase.js."
+      "path": "src/app/router.js",
+      "hash": "270ac16d9084c20bec5ab6c6bbc290f6a311b60b982b87b38a7d4441988b3541",
+      "fileType": "RouterConfig",
+      "layer": "app",
+      "purpose": "Represents the file artifact at src/app/router.js."
     },
     {
-      "id": "src/main.js",
+      "id": "route:/",
+      "type": "Route",
+      "path": "src/app/router.js",
+      "routePath": "/",
+      "routeName": "Home",
+      "purpose": "Defines the 'Home' route at '/'."
+    },
+    {
+      "id": "route:/about",
+      "type": "Route",
+      "path": "src/app/router.js",
+      "routePath": "/about",
+      "routeName": "About",
+      "purpose": "Defines the 'About' route at '/about'."
+    },
+    {
+      "id": "route:/data-explorer",
+      "type": "Route",
+      "path": "src/app/router.js",
+      "routePath": "/data-explorer",
+      "routeName": "DataExplorer",
+      "purpose": "Defines the 'DataExplorer' route at '/data-explorer'."
+    },
+    {
+      "id": "src/app/main.js",
       "type": "File",
-      "path": "src/main.js",
-      "hash": "22f8e0d034d96de04212e33567821d56f3550a5f166e19227385926291e99059",
+      "path": "src/app/main.js",
+      "hash": "c96f8c337e71afc206ca1aed9396ba06dbf9b924d95646b445b797a2c7dfd0a9",
       "fileType": "EntryPoint",
-      "layer": "src-other",
-      "purpose": "Represents the file artifact at src/main.js."
-    },
-    {
-      "id": "src/debug.js",
-      "type": "File",
-      "path": "src/debug.js",
-      "hash": "031f0a2c2fa092f54c8b4374a638e17f3c28ba398464d36b09db3c98a442980b",
-      "fileType": "Utility",
-      "layer": "src-other",
-      "purpose": "Represents the file artifact at src/debug.js."
-    },
-    {
-      "id": "src/App.vue",
-      "type": "File",
-      "path": "src/App.vue",
-      "hash": "967553f443884598dd0c26c87f1b964594b114555c292e55e3584a11991b35f6",
-      "fileType": "VueComponent",
-      "layer": "src-other",
-      "purpose": "Represents the file artifact at src/App.vue."
+      "layer": "app",
+      "purpose": "Represents the file artifact at src/app/main.js."
     },
     {
       "id": "public/data/schemas/tonearms-data.schema.json",
@@ -281,48 +323,6 @@
       "fileType": "StaticData",
       "layer": "public",
       "purpose": "Represents the file artifact at public/data/schemas/cartridges-classifications.schema.json."
-    },
-    {
-      "id": "src/app/router.js",
-      "type": "File",
-      "path": "src/app/router.js",
-      "hash": "270ac16d9084c20bec5ab6c6bbc290f6a311b60b982b87b38a7d4441988b3541",
-      "fileType": "RouterConfig",
-      "layer": "app",
-      "purpose": "Represents the file artifact at src/app/router.js."
-    },
-    {
-      "id": "route:/",
-      "type": "Route",
-      "path": "src/app/router.js",
-      "routePath": "/",
-      "routeName": "Home",
-      "purpose": "Defines the 'Home' route at '/'."
-    },
-    {
-      "id": "route:/about",
-      "type": "Route",
-      "path": "src/app/router.js",
-      "routePath": "/about",
-      "routeName": "About",
-      "purpose": "Defines the 'About' route at '/about'."
-    },
-    {
-      "id": "route:/data-explorer",
-      "type": "Route",
-      "path": "src/app/router.js",
-      "routePath": "/data-explorer",
-      "routeName": "DataExplorer",
-      "purpose": "Defines the 'DataExplorer' route at '/data-explorer'."
-    },
-    {
-      "id": "src/app/main.js",
-      "type": "File",
-      "path": "src/app/main.js",
-      "hash": "c96f8c337e71afc206ca1aed9396ba06dbf9b924d95646b445b797a2c7dfd0a9",
-      "fileType": "EntryPoint",
-      "layer": "app",
-      "purpose": "Represents the file artifact at src/app/main.js."
     },
     {
       "id": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
