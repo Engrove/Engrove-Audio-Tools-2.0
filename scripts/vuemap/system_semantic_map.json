@@ -1,7 +1,7 @@
 {
   "$schema": "./system_semantic_map.schema.json",
   "version": "4.7.0",
-  "createdAt": "2026-02-28T03:57:29.309Z",
+  "createdAt": "2026-03-01T04:24:39.259Z",
   "nodes": [
     {
       "id": "src/showcase.js",
@@ -1178,22 +1178,6 @@
       "purpose": "Manages state for the 'settings' domain."
     },
     {
-      "id": "src/entities/logger/model/loggerStore.js",
-      "type": "File",
-      "path": "src/entities/logger/model/loggerStore.js",
-      "hash": "73af6e5030ffc155f6f22526ba3ca6bc3312974609a9d5fe066078df6ad90703",
-      "fileType": "PiniaStore",
-      "layer": "entities",
-      "purpose": "Represents the file artifact at src/entities/logger/model/loggerStore.js."
-    },
-    {
-      "id": "logger",
-      "type": "Store",
-      "path": "src/entities/logger/model/loggerStore.js",
-      "storeId": "logger",
-      "purpose": "Manages state for the 'logger' domain."
-    },
-    {
       "id": "src/entities/data-explorer/model/state.js",
       "type": "File",
       "path": "src/entities/data-explorer/model/state.js",
@@ -1484,6 +1468,22 @@
       "path": "src/entities/comparison/model/comparisonStore.js",
       "storeId": "comparison",
       "purpose": "Manages state for the 'comparison' domain."
+    },
+    {
+      "id": "src/entities/logger/model/loggerStore.js",
+      "type": "File",
+      "path": "src/entities/logger/model/loggerStore.js",
+      "hash": "73af6e5030ffc155f6f22526ba3ca6bc3312974609a9d5fe066078df6ad90703",
+      "fileType": "PiniaStore",
+      "layer": "entities",
+      "purpose": "Represents the file artifact at src/entities/logger/model/loggerStore.js."
+    },
+    {
+      "id": "logger",
+      "type": "Store",
+      "path": "src/entities/logger/model/loggerStore.js",
+      "storeId": "logger",
+      "purpose": "Manages state for the 'logger' domain."
     }
   ],
   "edges": [
@@ -2783,21 +2783,6 @@
       "type": "DEFINES"
     },
     {
-      "source": "src/entities/logger/model/loggerStore.js",
-      "target": "vue",
-      "type": "IMPORTS_PACKAGE"
-    },
-    {
-      "source": "src/entities/logger/model/loggerStore.js",
-      "target": "pinia",
-      "type": "IMPORTS_PACKAGE"
-    },
-    {
-      "source": "src/entities/logger/model/loggerStore.js",
-      "target": "logger",
-      "type": "DEFINES"
-    },
-    {
       "source": "src/entities/data-explorer/model/state.js",
       "target": "vue",
       "type": "IMPORTS_PACKAGE"
@@ -2845,6 +2830,21 @@
     {
       "source": "src/entities/comparison/model/comparisonStore.js",
       "target": "comparison",
+      "type": "DEFINES"
+    },
+    {
+      "source": "src/entities/logger/model/loggerStore.js",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/entities/logger/model/loggerStore.js",
+      "target": "pinia",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/entities/logger/model/loggerStore.js",
+      "target": "logger",
       "type": "DEFINES"
     }
   ],
