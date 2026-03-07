@@ -1,7 +1,7 @@
 {
   "$schema": "./system_semantic_map.schema.json",
   "version": "4.7.0",
-  "createdAt": "2026-03-06T04:11:12.771Z",
+  "createdAt": "2026-03-07T04:02:44.654Z",
   "nodes": [
     {
       "id": "src/showcase.js",
@@ -1014,6 +1014,24 @@
       "name": "text"
     },
     {
+      "id": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
+      "type": "File",
+      "path": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
+      "hash": "ed17c785325e9400c62dcad5729b76a3efe994a72fa04ad2e88772f9b2515383",
+      "fileType": "VueComponent",
+      "layer": "features",
+      "purpose": "Represents the file artifact at src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue."
+    },
+    {
+      "id": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
+      "type": "File",
+      "path": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
+      "hash": "dc4a0c03691d45b27f6cc0df19752407a8a73816fac0715036dfdbe62b6d7437",
+      "fileType": "Utility",
+      "layer": "features",
+      "purpose": "Represents the file artifact at src/features/mobile-menu-toggle/model/useMobileMenu.js."
+    },
+    {
       "id": "src/features/license-modal/ui/LicenseModal.vue",
       "type": "File",
       "path": "src/features/license-modal/ui/LicenseModal.vue",
@@ -1035,24 +1053,6 @@
       "path": "src/features/license-modal/ui/LicenseModal.vue",
       "parent": "src/features/license-modal/ui/LicenseModal.vue",
       "name": "update:isOpen"
-    },
-    {
-      "id": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
-      "type": "File",
-      "path": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
-      "hash": "ed17c785325e9400c62dcad5729b76a3efe994a72fa04ad2e88772f9b2515383",
-      "fileType": "VueComponent",
-      "layer": "features",
-      "purpose": "Represents the file artifact at src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue."
-    },
-    {
-      "id": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
-      "type": "File",
-      "path": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
-      "hash": "dc4a0c03691d45b27f6cc0df19752407a8a73816fac0715036dfdbe62b6d7437",
-      "fileType": "Utility",
-      "layer": "features",
-      "purpose": "Represents the file artifact at src/features/mobile-menu-toggle/model/useMobileMenu.js."
     },
     {
       "id": "src/features/item-details/ui/ItemDetailModal.vue",
@@ -2613,6 +2613,16 @@
       "type": "USES_STORE_FILE"
     },
     {
+      "source": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
+      "target": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
       "source": "src/features/license-modal/ui/LicenseModal.vue",
       "target": "vue",
       "type": "IMPORTS_PACKAGE"
@@ -2636,16 +2646,6 @@
       "source": "src/features/license-modal/ui/LicenseModal.vue",
       "target": "src/shared/ui/BaseModal.vue",
       "type": "USES_COMPONENT"
-    },
-    {
-      "source": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
-      "target": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
-      "target": "vue",
-      "type": "IMPORTS_PACKAGE"
     },
     {
       "source": "src/features/item-details/ui/ItemDetailModal.vue",
