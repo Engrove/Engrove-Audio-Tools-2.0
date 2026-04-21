@@ -1,7 +1,7 @@
 {
   "$schema": "./system_semantic_map.schema.json",
   "version": "4.7.0",
-  "createdAt": "2026-04-20T05:15:07.697Z",
+  "createdAt": "2026-04-21T04:50:03.664Z",
   "nodes": [
     {
       "id": "src/showcase.js",
@@ -323,33 +323,6 @@
       "fileType": "StaticData",
       "layer": "public",
       "purpose": "Represents the file artifact at public/data/schemas/cartridges-classifications.schema.json."
-    },
-    {
-      "id": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
-      "type": "File",
-      "path": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
-      "hash": "2515f59ff3810c4d6bde61f1c0514c6742791efc7f9aa6e427353b31f453ae07",
-      "fileType": "VueComponent",
-      "layer": "widgets",
-      "purpose": "Represents the file artifact at src/widgets/MobileNavMenu/MobileNavMenu.vue."
-    },
-    {
-      "id": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "type": "File",
-      "path": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "hash": "b381ae9ceee38bbb7e7f82a8a937aca0006e5f8673f294e7d9596beda8133829",
-      "fileType": "VueComponent",
-      "layer": "widgets",
-      "purpose": "Represents the file artifact at src/widgets/GlobalHeader/GlobalHeader.vue."
-    },
-    {
-      "id": "src/widgets/GlobalFooter/GlobalFooter.vue",
-      "type": "File",
-      "path": "src/widgets/GlobalFooter/GlobalFooter.vue",
-      "hash": "a6ed7b2e4af907876579e088000fbe4862390693725774ce97b68e2df8436812",
-      "fileType": "VueComponent",
-      "layer": "widgets",
-      "purpose": "Represents the file artifact at src/widgets/GlobalFooter/GlobalFooter.vue."
     },
     {
       "id": "src/shared/ui/RangeFilter.vue",
@@ -757,6 +730,33 @@
       "path": "src/shared/ui/BaseButton.vue",
       "parent": "src/shared/ui/BaseButton.vue",
       "name": "disabled"
+    },
+    {
+      "id": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
+      "type": "File",
+      "path": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
+      "hash": "2515f59ff3810c4d6bde61f1c0514c6742791efc7f9aa6e427353b31f453ae07",
+      "fileType": "VueComponent",
+      "layer": "widgets",
+      "purpose": "Represents the file artifact at src/widgets/MobileNavMenu/MobileNavMenu.vue."
+    },
+    {
+      "id": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "type": "File",
+      "path": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "hash": "b381ae9ceee38bbb7e7f82a8a937aca0006e5f8673f294e7d9596beda8133829",
+      "fileType": "VueComponent",
+      "layer": "widgets",
+      "purpose": "Represents the file artifact at src/widgets/GlobalHeader/GlobalHeader.vue."
+    },
+    {
+      "id": "src/widgets/GlobalFooter/GlobalFooter.vue",
+      "type": "File",
+      "path": "src/widgets/GlobalFooter/GlobalFooter.vue",
+      "hash": "a6ed7b2e4af907876579e088000fbe4862390693725774ce97b68e2df8436812",
+      "fileType": "VueComponent",
+      "layer": "widgets",
+      "purpose": "Represents the file artifact at src/widgets/GlobalFooter/GlobalFooter.vue."
     },
     {
       "id": "src/pages/license/LicensePage.vue",
@@ -1743,101 +1743,6 @@
       "type": "IMPORTS"
     },
     {
-      "source": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
-      "target": "vue-router",
-      "type": "IMPORTS_PACKAGE"
-    },
-    {
-      "source": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
-      "target": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "vue-router",
-      "type": "IMPORTS_PACKAGE"
-    },
-    {
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "src/entities/logger/model/loggerStore.js",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "src/shared/ui/Logo.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "src/features/theme-toggle/ui/ThemeToggle.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "src/features/density-toggle/ui/DensityToggle.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "src/shared/ui/BaseButton.vue",
-      "type": "IMPORTS"
-    },
-    {
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "src/shared/ui/Logo.vue",
-      "type": "USES_COMPONENT"
-    },
-    {
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "src/shared/ui/BaseButton.vue",
-      "type": "USES_COMPONENT"
-    },
-    {
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "src/features/density-toggle/ui/DensityToggle.vue",
-      "type": "USES_COMPONENT"
-    },
-    {
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "src/features/theme-toggle/ui/ThemeToggle.vue",
-      "type": "USES_COMPONENT"
-    },
-    {
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
-      "type": "USES_COMPONENT"
-    },
-    {
-      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
-      "target": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
-      "type": "USES_COMPONENT"
-    },
-    {
-      "source": "src/widgets/GlobalFooter/GlobalFooter.vue",
-      "target": "vue",
-      "type": "IMPORTS_PACKAGE"
-    },
-    {
-      "source": "src/widgets/GlobalFooter/GlobalFooter.vue",
-      "target": "vue-router",
-      "type": "IMPORTS_PACKAGE"
-    },
-    {
       "source": "src/shared/ui/RangeFilter.vue",
       "target": "vue",
       "type": "IMPORTS_PACKAGE"
@@ -2131,6 +2036,101 @@
       "source": "src/shared/ui/BaseButton.vue",
       "target": "src/shared/ui/BaseButton.vue#prop.disabled",
       "type": "DEFINES_PROP"
+    },
+    {
+      "source": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
+      "target": "vue-router",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
+      "target": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "vue-router",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/features/mobile-menu-toggle/model/useMobileMenu.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/entities/logger/model/loggerStore.js",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/shared/ui/Logo.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/features/theme-toggle/ui/ThemeToggle.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/features/density-toggle/ui/DensityToggle.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "IMPORTS"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/shared/ui/Logo.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/shared/ui/BaseButton.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/features/density-toggle/ui/DensityToggle.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/features/theme-toggle/ui/ThemeToggle.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/features/mobile-menu-toggle/ui/MobileMenuToggle.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/widgets/GlobalHeader/GlobalHeader.vue",
+      "target": "src/widgets/MobileNavMenu/MobileNavMenu.vue",
+      "type": "USES_COMPONENT"
+    },
+    {
+      "source": "src/widgets/GlobalFooter/GlobalFooter.vue",
+      "target": "vue",
+      "type": "IMPORTS_PACKAGE"
+    },
+    {
+      "source": "src/widgets/GlobalFooter/GlobalFooter.vue",
+      "target": "vue-router",
+      "type": "IMPORTS_PACKAGE"
     },
     {
       "source": "src/pages/license/LicensePage.vue",
